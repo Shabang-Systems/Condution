@@ -1,7 +1,15 @@
+/* Globals */
+body {
+    margin: 0;
+}
+
 /* IDs */
 #main-head {
     -webkit-app-region: drag;
-    height: 20px;
-    background-color: red;
+    height: 34px;
+    background-color: #2e3f54;
+    width:100%;
+    padding: 0;
+    margin: 0;
 }
 
