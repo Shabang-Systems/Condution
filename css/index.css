@@ -2,6 +2,16 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-family: 'Work Sans', sans-serif;
+}
+
+/* Class */
+.greeting {
+
+}
+
+.menu-portion {
+    overflow-y: scroll;
 }
 
 /* IDs */
@@ -27,5 +37,17 @@ html, body {
     grid-column-start: 1;
     grid-column-end: 1;
     background-color: #434d5f;
+    padding: 40px 10px 10px 10px;
+    overflow: hidden;
+}
+
+#menu-area{
+    height: 100%;
+    display: grid;
+    grid-template-rows: 15% 42.5% 42.5%;
+}
+
+#content-area{
+    padding: 40px 10px 10px 10px;
 }
 
