@@ -6,12 +6,95 @@ html, body {
 }
 
 /* Class */
-.greeting {
-
-}
-
 .menu-portion {
     overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+.today-highlighted {
+    background-color: #1d293a;
+    color: #fafafafa !important;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-4px);
+}
+
+.today {
+    color: #f4f4f5;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-4px);
+    cursor: default;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-transition-property: color, background-color;
+    -webkit-transition-duration: 500ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: color, background-color;
+    transition-duration: 500ms;
+    transition-timing-function: ease-in-out;
+}
+
+.today:hover {
+    background-color: #1d293a !important;
+    color: #fafafafa !important;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-4px);
+}
+
+.perspective-selected {
+    background-color: #27303d !important;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-8px);
+    color: white !important;
+}
+
+.perspective-selected:hover {
+    background-color: #27303d;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-8px);
+    color: white !important;
+}
+
+.perspective:hover{
+    background-color: #374559;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-9px);
+    color: #9ea8b7 !important;
+}
+
+.labels {
+    font-weight: 300;
+    font-size: 10px;
+    color: #c4c4c6;
+}
+
+.perspective {
+    margin: 7px 5px 5px 10px;
+    color: #1a283d;
+    -webkit-transition-property: color, background-color;
+    -webkit-transition-duration: 500ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: color, background-color;
+    transition-duration: 500ms;
+    transition-timing-function: ease-in-out;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-9px);
+    cursor: default;
 }
 
 /* IDs */
@@ -44,10 +127,26 @@ html, body {
 #menu-area{
     height: 100%;
     display: grid;
-    grid-template-rows: 15% 42.5% 42.5%;
+    /*grid-template-rows: 60px 30px auto auto;*/
+    grid-template-rows: 30px auto auto;
+    grid-row-gap: 4px;
+    color: #e6e7e8;
 }
 
 #content-area{
     padding: 40px 10px 10px 10px;
+}
+
+#greeting {
+}
+
+#greeting-text {
+    font-weight: 200;
+    font-size: 17pt; 
+}
+
+#greeting-name {
+    font-weight: 500;
+    font-size: 11pt; 
 }
 
