@@ -1,5 +1,6 @@
 /* Globals */
-body {
+html, body {
+    height: 100%;
     margin: 0;
 }
 
@@ -11,5 +12,20 @@ body {
     width:100%;
     padding: 0;
     margin: 0;
+    position: fixed;
+}
+
+#content-wrapper{
+    margin: 0;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: grid;
+    grid-template-columns: 200px auto
+}
+
+#left-menu{
+    grid-column-start: 1;
+    grid-column-end: 1;
+    background-color: #434d5f;
 }
 
