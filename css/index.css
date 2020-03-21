@@ -6,6 +6,10 @@ html, body {
 }
 
 /* Class */
+.page {
+    
+}
+
 .menu-portion {
     overflow-y: scroll;
     margin-bottom: 10px;
@@ -22,7 +26,7 @@ html, body {
 }
 
 .today {
-    color: #f4f4f5;
+    color: #071121;
     padding: 4px 0 4px 10px;
     transform: translateX(-4px);
     cursor: default;
