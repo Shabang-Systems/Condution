@@ -137,7 +137,7 @@ html, body {
     height: 100%;
     display: grid;
     /*grid-template-rows: 60px 30px auto auto;*/
-    grid-template-rows: 30px auto auto;
+    grid-template-rows: 27px auto auto;
     grid-row-gap: 4px;
     color: #e6e7e8;
 }
