@@ -100,12 +100,11 @@ html, body {
 .task {
     background-color: #edeef2;
     padding: 10px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    border-bottom: 0.5px solid #e5e6e8;
-    border-right: 0.5px solid #e5e6e8;
-    height: 75px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border-bottom: 1px solid #e5e6e8;
+    border-right: 1px solid #e5e6e8;
+    min-height: 75px;
 }
 
 .task-name {
@@ -118,8 +117,7 @@ html, body {
     font-size: 9pt;
     font-weight:300;
     color: #777777;
-    margin-top: 4px;
-    padding: 0 3px 0 3px
+    padding: 0 5px 0 5px
 }
  
 .tick-icon {
@@ -130,26 +128,43 @@ html, body {
   user-select: none;
 }
 
+.task-toggle.active{
+    background-color: #dadeae;
+    box-shadow: 0;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    box-shadow: 0 5px 15px rgba(0,0,0,0);
+}
+
+.task-toggle {
+    background-color: #eaeaea;
+    height: 20px;
+    width: 40px;
+    font-size: 9px;
+    color: #2d2d2d;
+}
+
+
 /*-----*/
 /* Base for label styling */
-[type="checkbox"]:not(:checked),
-[type="checkbox"]:checked {
+.task-check:not(:checked),
+.task-check:checked {
   position: absolute;
   left: -9999px;
 }
-[type="checkbox"]:not(:checked) + label,
-[type="checkbox"]:checked + label {
+
+.task-check:not(:checked) + label,
+.task-check:checked + label {
   position: relative;
   padding-left: 1.95em;
   cursor: pointer;
 }
 
 /* checkbox aspect */
-[type="checkbox"]:not(:checked) + label:before,
-[type="checkbox"]:checked + label:before {
+.task-check:not(:checked) + label:before,
+.task-check:checked + label:before {
   content: '';
   position: absolute;
-  left: 0; top: 0;
+  left: 6px; top: 4.4px;
   width: 1em; height: 1em;
   border: 2px solid #ccc;
   /*background: #fff;*/
@@ -157,34 +172,38 @@ html, body {
   box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
 }
 /* checked mark aspect */
-[type="checkbox"]:not(:checked) + label:after,
-[type="checkbox"]:checked + label:after {
-      text-transform: text;           /* proposed */
-  font-variant-emoji: text;       /* proposed */
-  font-variant-color: monochrome; /* proposed */
-  font-color: monochrome;         /* proposed */
-  font-family: 'Inter', sans-serif;
-  content: '\002713';
+.task-check:not(:checked) + label:after,
+.task-check:checked + label:after {
+  font-family: FontAwesome;
+  font-weight: 900; /* Fix version 5.0.9 */
+  text-transform: text;           /* proposed */
+  content: '\f00c';
   position: absolute;
   top .15em; left: .10em;
-  font-size: 1.3em;
+  font-size: 9px;
   line-height: 0.6;
-  color: grey;
-  transition: all .2s;
+  color: #2b3749;
+  transition: all 400ms;
+  transform: translate(8px, 9.5px) !important;
 }
 /* checked mark aspect changes */
-[type="checkbox"]:not(:checked) + label:after {
+.task-check:not(:checked) + label:after {
   opacity: 0;
   transform: scale(0);
 }
-[type="checkbox"]:checked + label:after {
+.task-check:checked + label:after {
   opacity: 1;
   transform: scale(1);
 }
 
 /* hover style just for information */
 label:hover:before {
-  border: 2px solid #4778d9!important;
+   /*border: 2px solid #4778d9!important;*/
+    background-color: #e0e0e0 !important;
+}
+
+label:before {
+   transition: all 150ms linear;
 }
 /*-----*/
 
