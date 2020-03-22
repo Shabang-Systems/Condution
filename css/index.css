@@ -7,7 +7,7 @@ html, body {
 
 /* Class */
 .page {
-    
+    display: none;
 }
 
 .menu-portion {
@@ -39,6 +39,7 @@ html, body {
     transition-property: color, background-color;
     transition-duration: 500ms;
     transition-timing-function: ease-in-out;
+    border-bottom: 1px;
 }
 
 .today:hover {
@@ -99,6 +100,10 @@ html, body {
     padding: 4px 0 4px 10px;
     transform: translateX(-9px);
     cursor: default;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
 }
 
 /* IDs */
