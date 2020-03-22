@@ -91,10 +91,35 @@ html, body {
 
 }
 
-.labels {
+.label {
     font-weight: 300;
     font-size: 10px;
     color: #c4c4c6;
+}
+
+.task {
+    background-color: #edeef2;
+    padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border-bottom: 0.5px solid #e5e6e8;
+    border-right: 0.5px solid #e5e6e8;
+    height: 75px;
+}
+
+.task-name {
+    color: #071121;
+    font-size: 12pt;
+    font-weight:500;
+}
+
+.task-desc {
+    font-size: 9pt;
+    font-weight:300;
+    color: #777777;
+    margin-top: 4px;
+    padding: 0 3px 0 3px
 }
 
 /* IDs */
