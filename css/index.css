@@ -22,13 +22,13 @@ html, body {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    transform: translateX(-4px);
+    /*transform: translateX(-4px);*/
 }
 
 .today {
     color: #071121;
     padding: 4px 0 4px 10px;
-    transform: translateX(-4px);
+    /*transform: translateX(-4px);*/
     cursor: default;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -39,7 +39,7 @@ html, body {
     transition-property: color, background-color;
     transition-duration: 500ms;
     transition-timing-function: ease-in-out;
-    border-bottom: 1px;
+    border: 0.5px solid #071121;
 }
 
 .today:hover {
@@ -49,7 +49,7 @@ html, body {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    transform: translateX(-4px);
+    /*transform: translateX(-4px);*/
 }
 
 .perspective-selected {
