@@ -150,7 +150,7 @@ html, body {
     font-weight:300;
     background-color:#e8e8e8;
     color: #434d5f;
-    padding: 0px 2px 0 5px;
+    padding: 0px 2px 0 0;
     border: 0px;
     display: block;
     height: 20px;
@@ -160,6 +160,10 @@ html, body {
     transform: translateY(-1px);
     width: 19%;
     font-weight: 700;
+}
+
+.es-input {
+    background-color: #e8e8e8 !important;
 }
 
 
