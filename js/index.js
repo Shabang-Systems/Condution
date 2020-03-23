@@ -36,3 +36,10 @@ $(document).on('click', '.today', function(e) {
     }
     //console.log($(this).attr("id"));
 })
+
+$('.editable-select').editableSelect({
+    effects: 'fade',
+    duration: 200,
+    appendTo: 'body',
+});
+

@@ -22,7 +22,11 @@
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
+    "bootstrap-select-dropdown": "^0.14.6",
+    "fuse": "^0.4.0",
+    "fuse.js": "^5.0.7-beta",
     "jquery": "^3.4.1",
+    "jquery-editable-select": "^2.2.5",
     "popper.js": "^1.16.1"
   }
 }

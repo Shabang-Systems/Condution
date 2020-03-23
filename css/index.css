@@ -5,6 +5,10 @@ html, body {
     font-family: 'Inter', sans-serif;
 }
 
+*:focus {
+    outline: none;
+}
+
 /* Class */
 .page {
     display: none;
@@ -93,8 +97,10 @@ html, body {
 
 .label {
     font-weight: 300;
-    font-size: 10px;
-    color: #c4c4c6;
+    font-size: 13px;
+    color: #777777;
+    margin-right: 10px;
+    margin-left: 5px;
 }
 
 .task {
@@ -104,7 +110,7 @@ html, body {
     border-radius: 3px;
     border-bottom: 1px solid #e5e6e8;
     border-right: 1px solid #e5e6e8;
-    min-height: 75px;
+    min-height: 5px;
 }
 
 .task-name {
@@ -113,13 +119,49 @@ html, body {
     font-weight:500;
 }
 
+.task-desc:hover :focus {
+    background-color: #e3e4e5;
+}
+
 .task-desc {
     font-size: 9pt;
     font-weight:300;
+    background-color:inherit;
     color: #777777;
-    padding: 0 5px 0 5px
+    margin: 0 5px 0 0;
+    padding: 2px 1px 0 5px;
+    border: 0px;
+    display: block;
+    width: 100%;
+    height: 50px;
+    resize: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.task-desc::placeholder{
+    color: #bababa;
 }
  
+.datebox {
+    font-size: 7pt;
+    font-weight:300;
+    background-color:#e8e8e8;
+    color: #434d5f;
+    padding: 0px 2px 0 5px;
+    border: 0px;
+    display: block;
+    height: 20px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    transform: translateY(-1px);
+    width: 35%;
+    font-weight: 700;
+}
+
+
 .tick-icon {
   position: absolute;
   width: 0;
@@ -128,21 +170,59 @@ html, body {
   user-select: none;
 }
 
-.task-toggle.active{
+.task-flagged.active{
     background-color: #dadeae;
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
 }
 
-.task-toggle {
-    background-color: #eaeaea;
+.task-flagged {
+    background-color: #e8e8e8;
     height: 20px;
-    width: 40px;
+    width: 10%;
     font-size: 9px;
     color: #2d2d2d;
 }
 
+.es-list {
+    font-size: 10px;
+    background-color: #f7f9f9;
+    font-weight: 500;
+    color: #3a3a3a;
+}
+
+.es-visible{
+    transition: all 400ms;
+    /*height: 17px;*/
+}
+
+.editable-select {
+    transition: all 400ms;
+    font-weight: 500;
+}
+
+.task-floating.active{
+    background-color: #d1d1d1;
+    box-shadow: 0;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    box-shadow: 0 5px 15px rgba(0,0,0,0);
+}
+
+.task-floating {
+    background-color: #e8e8e8;
+    height: 20px;
+    width: 10%;
+    font-size: 9px;
+    color: #2d2d2d;
+}
+
+
+.task-tools {
+    display: flex;
+    margin-top: 10px;
+    justify-content: flex-start;
+}
 
 /*-----*/
 /* Base for label styling */
@@ -166,10 +246,10 @@ html, body {
   position: absolute;
   left: 6px; top: 4.4px;
   width: 1em; height: 1em;
-  border: 2px solid #ccc;
+  border: 1px solid #ccc;
   /*background: #fff;*/
   border-radius: 4px;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
+  /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
 }
 /* checked mark aspect */
 .task-check:not(:checked) + label:after,
