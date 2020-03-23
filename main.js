@@ -3,12 +3,12 @@ const { app, BrowserWindow } = require('electron')
 function createWindow () {
     // Create the browser window.
     let win = new BrowserWindow({
-        'width': 1000,
-        'height': 700,
-        'minWidth': 900,
+        'width': 950,
+        'height': 650,
+        'minWidth': 925,
         'minHeight': 600,
-        'maxWidth': 1200,
-        'maxHeight': 800,
+        'maxWidth': 950,
+        'maxHeight': 650,
         'fullscreen': false,
         'title': "Conduction",
         'webPreferences': {

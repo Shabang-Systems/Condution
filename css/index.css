@@ -110,6 +110,7 @@ html, body {
     border-radius: 3px;
     border-bottom: 1px solid #e5e6e8;
     border-right: 1px solid #e5e6e8;
+    width: 99.5%;
     min-height: 5px;
 }
 
@@ -157,7 +158,7 @@ html, body {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     transform: translateY(-1px);
-    width: 35%;
+    width: 18%;
     font-weight: 700;
 }
 
@@ -220,6 +221,7 @@ html, body {
 
 .task-tools {
     display: flex;
+    width: 75vw;
     margin-top: 10px;
     justify-content: flex-start;
 }
