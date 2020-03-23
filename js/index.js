@@ -43,3 +43,5 @@ $('.editable-select').editableSelect({
     appendTo: 'body',
 });
 
+$('.datebox').datepicker();
+

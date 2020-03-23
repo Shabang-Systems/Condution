@@ -27,6 +27,8 @@
     "fuse.js": "^5.0.7-beta",
     "jquery": "^3.4.1",
     "jquery-editable-select": "^2.2.5",
+    "jquery-ui": "^1.12.1",
+    "jquery-ui-dist": "^1.12.1",
     "popper.js": "^1.16.1"
   }
 }
