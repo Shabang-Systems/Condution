@@ -43,4 +43,10 @@ $('.editable-select').editableSelect({
     appendTo: 'body',
 });
 
+$('.datebox').datetimepicker({
+	controlType: 'select',
+	oneLine: true,
+	timeFormat: 'hh:mm tt'
+});
+
 

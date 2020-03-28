@@ -30,6 +30,7 @@
     "jquery-editable-select": "^2.2.5",
     "jquery-ui": "^1.12.1",
     "jquery-ui-dist": "^1.12.1",
+    "jquery-ui-timepicker-addon": "^1.6.3",
     "popper.js": "^1.16.1",
     "typeahead.js": "^0.11.1"
   }
