@@ -73,8 +73,11 @@
             <div id="content-area">
                 <div id="upcoming-page" class="page" style="display: block">
                     <div id="task-02932" class="task">
-                        <input type="checkbox" id="test1" class="task-check"/>
-                        <label class="task-name" id="task-name-02932"for="test1" style="font-family: 'Inter', sans-serif;">Eat Sheets Bob!</label>
+                        <div class="task-display">
+                            <input type="checkbox" id="task-check-02392" class="task-check"/>
+                            <label class="task-name" id="task-displayname-02932" for="task-check-02932" style="font-family: 'Inter', sans-serif;">Eat Sheets Bob!</label>
+                        </div>
+                        <!--<input class="textbox" id="task-name-02932" type="text" autocomplete="off" style="margin-right: 20px" value="Eat Sheets Bob!">-->
                         <textarea class="task-desc" id="task-desc-02932" type="text" autocomplete="off" placeholder="Description"></textarea>
                         <div class="task-tools" style="margin-bottom: 9px;">
                             <div class="label"><i class="fas fa-flag"></i></div>
@@ -112,7 +115,7 @@
                                 <option>Citroen</option>
                             </select>
                             <div class="label"><i class="fas fa-tags"></i></div>
-                            <input class="task-tag" id="task-tag-02932" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" />
+                            <input class="task-tag textbox" id="task-tag-02932" type="text" value="Pen, Pinapple, Apple, Pen" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" />
                         </div>
                     </div>
                 </div>
