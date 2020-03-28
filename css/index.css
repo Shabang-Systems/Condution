@@ -233,8 +233,53 @@ html, body {
 .ui-datepicker-calendar {
     color: grey;
 }
+
 .ui-state-default {
     color: grey !important;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: 0 !important;
+    background-color: #eeeeee !important;
+    border-color: #eeeeee !important;
+    vertical-align: middle;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.ui-state-default:hover {
+    background: 0 !important;
+    border-color: #a3a3a3 !important;
+    background-color: #f4f4f5 !important;
+}
+
+.ui-state-active {
+    background-color: #e0e0e0 !important;
+    color: black;
+}
+
+.ui-state-active:hover {
+    background-color: #e0e0e0 !important;
+    border: 0;
+}
+
+.ui-priority-secondary {
+    border-color: #bebebf !important;
+    border-width: 0px !important;
+    color: #434d5f !important;
+    box-shadow: 0;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    box-shadow: 0 5px 15px rgba(0,0,0,0) !important;
+}
+
+.ui-datepicker-close {
+    box-shadow: 0 !important;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0) !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0) !important;
 }
 
 #ui-datepicker-div {
@@ -246,6 +291,35 @@ html, body {
     background: 0;
     border: 0;
     background-color: #434d5f;
+}
+
+.ui-datepicker-prev {
+    transform: translateY(1px);
+}
+
+.ui-datepicker-prev-hover {
+    background: 0 !important;
+    border-color: #656e7a !important;
+    background-color: #656e7a !important;
+    transform: translate(1px, 2px);
+}
+.ui-datepicker-next {
+    transform: translateY(1px);
+}
+
+.ui-datepicker-next-hover {
+    background: 0 !important;
+    border-color: #656e7a !important;
+    background-color: #656e7a !important;
+    transform: translate(0px, 2px);
+}
+
+.ui-timepicker-select option {
+    font-size: 10px !important;
+}
+
+.datebox {
+    cursor: pointer;
 }
 
 /*-----*/

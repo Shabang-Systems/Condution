@@ -43,10 +43,24 @@ $('.editable-select').editableSelect({
     appendTo: 'body',
 });
 
-$('.datebox').datetimepicker({
-	controlType: 'select',
-	oneLine: true,
-	timeFormat: 'hh:mm tt'
-});
+function smartParse(timeformat, timeString, o) {
+    // smart, better date parsing with chrono
+    console.log("tes");
+    var d = chrono.parse(timeString)[0].start.date();
+    return {
+        hour: d.getHours(),
+        minute: d.getMinutes(),
+        second: d.getSeconds(),
+        millisec: d.getMilliseconds(),
+        microsec: d.getMicroseconds(),
+        timezone: d.getTimezoneOffset() * -1
+    };
+}
 
+$('.datebox').datetimepicker({
+    timeInput: true,
+    timeFormat: "hh:mm tt",
+	showHour: false,
+	showMinute: false,
+});
 

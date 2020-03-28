@@ -24,6 +24,7 @@
     "bootstrap": "^4.4.1",
     "bootstrap-select-dropdown": "^0.14.6",
     "bootstrap-tagsinput": "^0.7.1",
+    "chrono-node": "^1.4.4",
     "fuse": "^0.4.0",
     "fuse.js": "^5.0.7-beta",
     "jquery": "^3.4.1",
@@ -32,6 +33,7 @@
     "jquery-ui-dist": "^1.12.1",
     "jquery-ui-timepicker-addon": "^1.6.3",
     "popper.js": "^1.16.1",
+    "select2": "^4.0.13",
     "typeahead.js": "^0.11.1"
   }
 }
