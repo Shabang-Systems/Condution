@@ -7,8 +7,8 @@ function createWindow () {
         'height': 650,
         'minWidth': 950,
         'minHeight': 650,
-        'maxWidth': 950,
-        'maxHeight': 650,
+       /* 'maxWidth': 950,*/
+        /*'maxHeight': 650,*/
         'fullscreen': false,
         'title': "Conduction",
         'webPreferences': {

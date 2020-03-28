@@ -10,8 +10,10 @@
         <script>require('popper.js');</script>
         <script>require('bootstrap');</script>
         <script>require('fuse.js');</script>
+        <script>require('typeahead.js');</script>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <script>require('jquery-editable-select');</script>
+        <script>require('bootstrap-tagsinput');</script>
         <link href="https://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
 
         <!--Fonts and Icons-->
@@ -29,6 +31,7 @@
         <!--Unicode-->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
+
     <div id="main-head"></div>
     <body>
         <div id="content-wrapper">
@@ -58,6 +61,8 @@
                             <div>Projects</div>
                             <div>Projects</div>
                             <div>Projects</div>
+                            <div>Projects</div>
+                            <div>Projects</div>
                         </div>
                     </div>
                 </div>
@@ -68,9 +73,9 @@
                         <input type="checkbox" id="test1" class="task-check"/>
                         <label class="task-name" id="task-name-02932"for="test1" style="font-family: 'Inter', sans-serif;">Eat Sheets Bob!</label>
                         <textarea class="task-desc" id="task-desc-02932" type="text" autocomplete="off" placeholder="Description"></textarea>
-                        <div class="task-tools">
-                            <div class="label">Flagged</div>
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-right: 14px">
+                        <div class="task-tools" style="margin-bottom: 9px;">
+                            <div class="label"><i class="fas fa-flag"></i></div>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-right: 20px">
                                 <label class="btn active task-flagged">
                                     <input type="radio" name="task-flagged" id="option1-h" checked> <i class="far fa-circle" style="transform:translateY(-4px)"></i>
                                 </label>
@@ -78,7 +83,7 @@
                                     <input type="radio" name="task-flagged" id="option2-h"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i>
                                 </label>
                             </div>
-                            <div class="label">Floating</div>
+                            <div class="label"><i class="fas fa-globe-americas"></i></div>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-right: 14px">
                                 <label class="btn active task-floating">
                                     <input type="radio" name="task-floating" id="option1-f" checked> <i class="far fa-circle" style="transform:translateY(-4px)"></i>
@@ -88,21 +93,23 @@
                                 </label>
                             </div>
 
-                            <div class="label">Deferred</div>
-                            <input class="task-defer datebox" id="task-defer-02932" type="datetime-local" autocomplete="off" style="margin-right: 8px">
-                            <i class="fas fa-caret-right" style="color:#cccece; font-size:13px; transform: translateY(3px)"></i>
-                            <div class="label">Due</div>
+                            <div class="label"><i class="far fa-play-circle"></i></div>
+                            <input class="task-defer datebox" id="task-defer-02932" type="datetime-local" autocomplete="off" style="margin-right: 10px">
+                            <i class="fas fa-caret-right" style="color:#cccece; font-size:13px; transform: translateY(3px); margin-right: 5px"></i>
+                            <div class="label"><i class="far fa-stop-circle"></i></div>
                             <input class="task-due datebox" id="task-due-02932" type="datetime-local" autocomplete="off" style="margin-right: 20px">
                         </div>
                         <div class="task-tools">
-                            <div class="label">Project</div>
+                            <div class="label"><i class="fas fa-tasks"></i></div>
                             <!--<input class="task-project datebox" id="task-project-02932" type="text" autocomplete="off" style="margin-right: 20px">-->
-                            <select class="task-project datebox editable-select" id="task-project-02932">
+                            <select class="task-project datebox editable-select" id="task-project-02932" style="margin-right: 14px">
                                 <option>Alfa Romeo</option>
                                 <option>Audi</option>
                                 <option>BMW</option>
                                 <option>Citroen</option>
                             </select>
+                            <div class="label"><i class="fas fa-tags"></i></div>
+                            <input class="task-tag" id="task-tag-02932" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" />
                         </div>
                     </div>
                 </div>
