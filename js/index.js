@@ -254,6 +254,7 @@ $(document).on("dblclick", ".task-display", function(e) {
     activeTask = task;
     $("#task-edit-"+task).css("display", "block");
     $("#task-display-"+task).css("display", "none");
+    $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px", "box-shadow": "2px 2px #efefef !important"});
 });
 
 $(document).click(function(e){
@@ -263,6 +264,7 @@ $(document).click(function(e){
         }
         $("#task-edit-"+activeTask).css("display", "none");
         $("#task-display-"+activeTask).css("display", "block");
+        $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "box-shadow": "0"});
         isTaskActive = false;
         activeTask = null;
     }
