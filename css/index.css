@@ -13,6 +13,7 @@ html, body {
 /* Class */
 .page {
     display: none;
+    overflow-y: scroll;
 }
 
 .menu-portion {
@@ -105,20 +106,75 @@ html, body {
 }
 
 .task {
-    background-color: #edeef2;
-    padding: 10px;
+    /*background-color: #edeef2;*/
+    /*padding: 10px;*/
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    border-bottom: 1px solid #e5e6e8;
-    border-right: 1px solid #e5e6e8;
+    /*border-bottom: 1px solid #e5e6e8;*/
+    /*border-right: 1px solid #e5e6e8;*/
     width: 99.5%;
     min-height: 5px;
+    /*box-shadow: 2px 2px #efefef;*/
+}
+
+.task-displayname {
+    color: #071121;
+    font-size: 12pt;
+    font-weight:500;
 }
 
 .task-name {
     color: #071121;
     font-size: 12pt;
     font-weight:500;
+    background-color:inherit;
+    color: #434d5f;
+    padding: 10px 2px 10px 5px;
+    border: 0px;
+    display: inline-block;
+    height: 30px;
+    width: 90%;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    transform: translateY(-1px);
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.task-trash {
+    font-size: 10px;
+    vertical-align: middle;
+    text-align: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 3px;
+    border: 1px solid #dbdbdd;
+    color: #dbdbdd;
+    cursor: pointer;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.task-trash:hover {
+    color: #5b5b5e;
+    background-color: #e2e2e2;
+}
+
+.task-name:hover {
+    background-color: #e8e8e8;
+}
+
+.task-name:focus {
+    background-color: #e8e8e8;
 }
 
 .task-desc:hover :focus {
@@ -239,6 +295,10 @@ html, body {
     justify-content: flex-start;
 }
 
+.ui-datepicker {
+    font-size: 12px;
+}
+
 .ui-datepicker-calendar {
     color: grey;
 }
@@ -292,7 +352,7 @@ html, body {
 }
 
 #ui-datepicker-div {
-    transform: scale(0.7) translateY(-70px) translateX(-65px);
+    /*transform: scale(0.7) translateX(-65px);*/
     font-family: 'Inter', sans-serif;
 }
 
@@ -470,6 +530,7 @@ label:before {
     padding: 0;
     margin: 0;
     position: fixed;
+    z-index: 10000;
 }
 
 #content-wrapper{
@@ -499,6 +560,7 @@ label:before {
 
 #content-area{
     padding: 40px 10px 10px 10px;
+    overflow: scroll;
 }
 
 #greeting {
