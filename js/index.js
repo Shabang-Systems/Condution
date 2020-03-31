@@ -91,13 +91,12 @@ var displayTask = function(pageId, taskId) {
                     <div id="task-${taskId}" class="task">
                         <div id="task-display-${taskId}" class="task-display" style="display:block">
                             <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
-                            <label class="task-displayname" id="task-displayname-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">${name}</label>
+                            <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                            <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}">
+                            <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
+                            <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
                         </div>
                         <div id="task-edit-${taskId}" class="task-edit" style="display:none">
-                            <div style="width:100%; overflow: hidden;">
-                                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" style="margin-right: 20px" value="${name}">
-                                <div class="task-trash" id="task-trash-${taskId}" style="float: right"><i class="fas fa-trash"></i></div>
-                            </div>
                             <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea>
                             <div class="task-tools" style="margin-bottom: 9px;">
                                 <div class="label"><i class="fas fa-flag"></i></div>
@@ -205,7 +204,6 @@ $('.editable-select').editableSelect({
 
 function smartParse(timeformat, timeString, o) {
     // smart, better date parsing with chrono
-    console.log("tes");
     var d = chrono.parse(timeString)[0].start.date();
     return {
         hour: d.getHours(),
@@ -242,31 +240,62 @@ function smartParse(timeformat, timeString, o) {
   //}
 /*});*/
 
-displayTask("upcoming-page", 02131);
+displayTask("upcoming-page", "aoeu");
+displayTask("upcoming-page", "aoethu23uUNTHEO");
+displayTask("upcoming-page", "aoethu23uUNTHeO");
+displayTask("upcoming-page", "234uaou");
 
 var isTaskActive = false;
 var activeTask = null;
 
-$(document).on("dblclick", ".task-display", function(e) {
-    isTaskActive = true;
-    var taskInfo = $(this).attr("id").split("-")
-    var task = taskInfo[taskInfo.length - 1];
-    activeTask = task;
-    $("#task-edit-"+task).css("display", "block");
-    $("#task-display-"+task).css("display", "none");
-    $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px", "box-shadow": "2px 2px #efefef !important"});
-});
+var hideActiveTask = function() {
+    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+    $("#task-edit-"+activeTask).slideUp(400);
+    $("#task-trash-"+activeTask).css("display", "none");
+    $("#task-repeat-"+activeTask).css("display", "none");
+    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0"}, 200);
+    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+    isTaskActive = false;
+    activeTask = null;
+}
 
-$(document).click(function(e){
-    if (isTaskActive){
-        if( $(e.target).closest('#task-'+activeTask).length > 0 ) {
-            return false;
-        }
-        $("#task-edit-"+activeTask).css("display", "none");
-        $("#task-display-"+activeTask).css("display", "block");
-        $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "box-shadow": "0"});
-        isTaskActive = false;
-        activeTask = null;
+$(document).on("click", ".task-name", function(e) {
+    if($(this).attr('id')==="task-name-"+activeTask){
+        e.stopImmediatePropagation();
+        return;
+    }
+    if (isTaskActive){hideActiveTask();}
+    if($(e.target).attr('class')==="task-pseudocheck"){
+        e.stopImmediatePropagation();
+        return;
+    } else{
+        isTaskActive = true;
+        var taskInfo = $(this).attr("id").split("-")
+        var task = taskInfo[taskInfo.length - 1];
+        activeTask = task;
+        $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px"}, 500);
+        $("#task-edit-"+activeTask).slideDown(500);
+        $("#task-trash-"+activeTask).css("display", "block");
+        $("#task-repeat-"+activeTask).css("display", "block");
+        $("#task-"+task).css({"border-bottom": "2px solid #e5e6e8", "border-right": "2px solid #e5e6e8"});
     }
 });
+
+$(document).on("click", ".page, #left-menu", function(e){
+    if (isTaskActive){
+        if($(e.target).attr('class') !== "page" && $(this).attr('id') !== "left-menu") {
+            return false;
+        }
+        hideActiveTask();
+    }
+});
+
+//$(".task-displayname").after().click(function(e) {
+    //var cont = window.getComputedStyle(
+        //this, ':before'
+    //)
+    //console.log(e.target);
+    //console.log(cont);
+    //e.preventDefault();
+//});
 

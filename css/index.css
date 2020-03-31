@@ -14,6 +14,7 @@ html, body {
 .page {
     display: none;
     overflow-y: scroll;
+    height: 100%;
 }
 
 .menu-portion {
@@ -106,38 +107,34 @@ html, body {
 }
 
 .task {
-    /*background-color: #edeef2;*/
-    /*padding: 10px;*/
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    /*border-bottom: 1px solid #e5e6e8;*/
-    /*border-right: 1px solid #e5e6e8;*/
     width: 99.5%;
     min-height: 5px;
-    /*box-shadow: 2px 2px #efefef;*/
 }
 
 .task-displayname {
     color: #071121;
     font-size: 12pt;
     font-weight:500;
+    display: inline-block;
+    width: auto;
 }
 
 .task-name {
     color: #071121;
     font-size: 12pt;
-    font-weight:500;
+    font-weight:400;
     background-color:inherit;
     color: #434d5f;
     padding: 10px 2px 10px 5px;
     border: 0px;
     display: inline-block;
     height: 30px;
-    width: 90%;
+    width: 85%;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    transform: translateY(-1px);
     -webkit-transition-property: all;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -146,7 +143,7 @@ html, body {
     transition-timing-function: ease-in-out;
 }
 
-.task-trash {
+.task-subicon {
     font-size: 10px;
     vertical-align: middle;
     text-align: center;
@@ -156,6 +153,7 @@ html, body {
     border: 1px solid #dbdbdd;
     color: #dbdbdd;
     cursor: pointer;
+    margin-right: 6px;
     -webkit-transition-property: all;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -164,21 +162,25 @@ html, body {
     transition-timing-function: ease-in-out;
 }
 
-.task-trash:hover {
+.task-subicon:hover {
     color: #5b5b5e;
     background-color: #e2e2e2;
 }
 
 .task-name:hover {
-    background-color: #e8e8e8;
+    background-color: #eaeaea;
 }
 
 .task-name:focus {
-    background-color: #e8e8e8;
+    background-color: #eaeaea;
 }
 
-.task-desc:hover :focus {
-    background-color: #e3e4e5;
+.task-desc:hover {
+    background-color: #eaeaea;
+}
+
+.task-desc:focus{
+    background-color: #eaeaea;
 }
 
 .task-desc {
@@ -196,6 +198,12 @@ html, body {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
 }
 
 .task-desc::placeholder{
