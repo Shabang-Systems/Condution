@@ -250,10 +250,10 @@ var activeTask = null;
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
-    $("#task-edit-"+activeTask).slideUp(400);
+    $("#task-edit-"+activeTask).slideUp(300);
     $("#task-trash-"+activeTask).css("display", "none");
     $("#task-repeat-"+activeTask).css("display", "none");
-    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0"}, 200);
+    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "margin":"0"}, 200);
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
     isTaskActive = false;
     activeTask = null;
@@ -273,8 +273,8 @@ $(document).on("click", ".task-name", function(e) {
         var taskInfo = $(this).attr("id").split("-")
         var task = taskInfo[taskInfo.length - 1];
         activeTask = task;
-        $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px"}, 500);
-        $("#task-edit-"+activeTask).slideDown(500);
+        $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px", "margin":"15px 0 30px 0"}, 300);
+        $("#task-edit-"+activeTask).slideDown(200);
         $("#task-trash-"+activeTask).css("display", "block");
         $("#task-repeat-"+activeTask).css("display", "block");
         $("#task-"+task).css({"border-bottom": "2px solid #e5e6e8", "border-right": "2px solid #e5e6e8"});
