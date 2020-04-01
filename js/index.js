@@ -165,6 +165,21 @@ var displayTask = function(pageId, taskId) {
         appendTo: 'body',
     });
     $('#task-project-'+taskId).val(actualProject);
+     // ---------------------------------------------------------------------------------
+    // Action Behaviors
+
+    $('#task-check-'+taskId).change(function() {
+        if (this.checked) {
+            // Ask HuZah's code to complete the task
+            console.log(taskId, activeTask);
+            $('#task-name-'+taskId).css("color","#ccccc");
+            $('#task-name-'+taskId).css("text-decoration", "line-through");
+            $('#task-pseudocheck-'+taskId).css("opacity", "0.6");
+            $('#task-'+taskId).animate({"margin": "5px 0 5px 0"}, 200);
+            $('#task-'+taskId).slideUp(150);
+        }
+    });
+
 }
 
 var active = "today"
@@ -283,12 +298,15 @@ $(document).on("click", ".task-name", function(e) {
 
 $(document).on("click", ".page, #left-menu", function(e){
     if (isTaskActive){
-        if($(e.target).attr('class') !== "page" && $(this).attr('id') !== "left-menu") {
+        if($(e.target).attr('class') === "task-pseudocheck") {
+            $("#task-check-"+activeTask).toggle();
+        } else if ($(e.target).attr('class') !== "page" && $(this).attr('id') !== "left-menu") {
             return false;
         }
         hideActiveTask();
     }
 });
+
 
 //$(".task-displayname").after().click(function(e) {
     //var cont = window.getComputedStyle(

@@ -496,8 +496,9 @@ label:before {
     border-radius: 3px;
     min-height: 20px;
     transform: translateX(5px) translateY(1px);
-    min-width: 20px;
+    min-width: 80px;
     font-size: 9pt;
+    text-overflow: ellipsis;
     font-weight: 500;
     color: #434d5f;
     padding: 0px 2px 0 0;
