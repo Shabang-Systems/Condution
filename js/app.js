@@ -1,6 +1,8 @@
+// Chapter 1: Utilities!
+
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
-    var matches, substringRegex;
+    let matches, substringRegex;
 
     // an array that will be populated with substring matches
     matches = [];
@@ -20,6 +22,21 @@ var substringMatcher = function(strs) {
   };
 };
 
+var smartParse = function(timeformat, timeString, o) {
+    // smart, better date parsing with chrono
+    let d = chrono.parse(timeString)[0].start.date();
+    return {
+        hour: d.getHours(),
+        minute: d.getMinutes(),
+        second: d.getSeconds(),
+        millisec: d.getMilliseconds(),
+        microsec: d.getMicroseconds(),
+        timezone: d.getTimezoneOffset() * -1
+    };
+}
+
+// Chapter 2: Functions to Show and Hide Things!
+
 var showPage = function(pageId) {
     $("#"+pageId).css("display", "block");
     $("#content-area").children().each(function(){
@@ -30,17 +47,31 @@ var showPage = function(pageId) {
     });
 }
 
+var isTaskActive = false;
+var activeTask = null;
+
+var hideActiveTask = function() {
+    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+    $("#task-edit-"+activeTask).slideUp(300);
+    $("#task-trash-"+activeTask).css("display", "none");
+    $("#task-repeat-"+activeTask).css("display", "none");
+    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "margin":"0"}, 200);
+    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+    isTaskActive = false;
+    activeTask = null;
+}
+
 var displayTask = function(pageId, taskId) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
-    var possibleProjects = {"TaskIdUUID1":"Synthesis", "TaskIdUUID2":"Paperwork"} 
-    var actualProjectID = "TaskIdUUID1" 
+    let possibleProjects = {"TaskIdUUID1":"Synthesis", "TaskIdUUID2":"Paperwork"} 
+    let actualProjectID = "TaskIdUUID1" 
     var name = "Consume fabric, Bob!"
     var desc = "A process by which Robert consumes items made of fabric."
-    var defer = new Date(2020, 03, 19, 8, 32, 01, 01);
-    var due = new Date(2020, 03, 19, 8, 32, 01, 01);
-    var isFlagged = false
-    var isFloating = true
-    var possibleTags = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+    let defer = new Date(2020, 03, 19, 8, 32, 01, 01);
+    let due = new Date(2020, 03, 19, 8, 32, 01, 01);
+    let isFlagged = false
+    let isFloating = true
+    let possibleTags = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
       'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
       'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
       'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
@@ -50,18 +81,18 @@ var displayTask = function(pageId, taskId) {
       'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
       'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
     ];
-    var actualTags = ["Wyoming", "Alaska", "Hawaii"]
+    let actualTags = ["Wyoming", "Alaska", "Hawaii"]
     // ---------------------------------------------------------------------------------
     // Parse and pre-write some DOMs
-    var projectSelects = " " 
-    for (var i in possibleProjects){
+    let projectSelects = " " 
+    for (let i in possibleProjects){
         projectSelects = projectSelects+"<option>"+possibleProjects[i]+"</option> "
     }
-    var tagString = ""
-    for (var i in actualTags){
+    let tagString = ""
+    for (let i in actualTags){
         tagString = tagString+actualTags[i]+","
     }
-    var actualProject = possibleProjects[actualProjectID];
+    let actualProject = possibleProjects[actualProjectID];
     // Confused? The following sets the appearence of the checkboxes by manipulating active and checked
     if (isFlagged){
         var a1a = "";
@@ -167,11 +198,9 @@ var displayTask = function(pageId, taskId) {
     $('#task-project-'+taskId).val(actualProject);
      // ---------------------------------------------------------------------------------
     // Action Behaviors
-
     $('#task-check-'+taskId).change(function() {
         if (this.checked) {
             // Ask HuZah's code to complete the task
-            console.log(taskId, activeTask);
             $('#task-name-'+taskId).css("color","#ccccc");
             $('#task-name-'+taskId).css("text-decoration", "line-through");
             $('#task-pseudocheck-'+taskId).css("opacity", "0.6");
@@ -180,7 +209,10 @@ var displayTask = function(pageId, taskId) {
         }
     });
 
+
 }
+
+// Chapter 3: Animation Listeners!!
 
 var active = "today"
 
@@ -193,13 +225,9 @@ $(document).on('click', '.perspective', function(e) {
     } else if (active.includes("perspective")){
         $("#"+active).addClass("perspective-selected")
     }
-
-    //console.log($(this).attr("id"));
-    
 })
 
 $(document).on('click', '.today', function(e) {
-
     $("#"+active).removeClass('today-highlighted perspective-selected')
     showPage("upcoming-page")
     active = $(this).attr('id')
@@ -208,71 +236,7 @@ $(document).on('click', '.today', function(e) {
     } else if (active.includes("perspective")){
         $("#"+active).addClass("perspective-selected")
     }
-    //console.log($(this).attr("id"));
 })
-
-$('.editable-select').editableSelect({
-    effects: 'fade',
-    duration: 200,
-    appendTo: 'body',
-});
-
-function smartParse(timeformat, timeString, o) {
-    // smart, better date parsing with chrono
-    var d = chrono.parse(timeString)[0].start.date();
-    return {
-        hour: d.getHours(),
-        minute: d.getMinutes(),
-        second: d.getSeconds(),
-        millisec: d.getMilliseconds(),
-        microsec: d.getMicroseconds(),
-        timezone: d.getTimezoneOffset() * -1
-    };
-}
-
-//$('.datebox').datetimepicker({
-    //timeInput: true,
-    //timeFormat: "hh:mm tt",
-	//showHour: false,
-	//showMinute: false,
-//});
-
-
-//var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-      //'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-      //'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-      //'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-      //'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-      //'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-      //'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-      //'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-      //'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-    //];
-//$('.task-tag').tagsinput({
-  //typeaheadjs: {
-    //name: 'states',
-    //source: substringMatcher(states)
-  //}
-/*});*/
-
-displayTask("upcoming-page", "aoeu");
-displayTask("upcoming-page", "aoethu23uUNTHEO");
-displayTask("upcoming-page", "aoethu23uUNTHeO");
-displayTask("upcoming-page", "234uaou");
-
-var isTaskActive = false;
-var activeTask = null;
-
-var hideActiveTask = function() {
-    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
-    $("#task-edit-"+activeTask).slideUp(300);
-    $("#task-trash-"+activeTask).css("display", "none");
-    $("#task-repeat-"+activeTask).css("display", "none");
-    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "margin":"0"}, 200);
-    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
-    isTaskActive = false;
-    activeTask = null;
-}
 
 $(document).on("click", ".task-name", function(e) {
     if($(this).attr('id')==="task-name-"+activeTask){
@@ -306,6 +270,48 @@ $(document).on("click", ".page, #left-menu", function(e){
         hideActiveTask();
     }
 });
+
+//$('.editable-select').editableSelect({
+    //effects: 'fade',
+    //duration: 200,
+    //appendTo: 'body',
+/*});*/
+
+
+//$('.datebox').datetimepicker({
+    //timeInput: true,
+    //timeFormat: "hh:mm tt",
+	//showHour: false,
+	//showMinute: false,
+//});
+
+
+//var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+      //'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+      //'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+      //'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+      //'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+      //'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+      //'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+      //'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+      //'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+    //];
+//$('.task-tag').tagsinput({
+  //typeaheadjs: {
+    //name: 'states',
+    //source: substringMatcher(states)
+  //}
+/*});*/
+
+
+// Chapter 4: Demo Tasks!!
+
+displayTask("upcoming-page", "aoeu");
+displayTask("upcoming-page", "aoethu23uUNTHEO");
+displayTask("upcoming-page", "aoethu23uUNTHeO");
+displayTask("upcoming-page", "234uaou");
+
+
 
 
 //$(".task-displayname").after().click(function(e) {

@@ -7,8 +7,6 @@ function createWindow () {
         'height': 650,
         'minWidth': 950,
         'minHeight': 650,
-       /* 'maxWidth': 950,*/
-        /*'maxHeight': 650,*/
         'fullscreen': false,
         'title': "Conduction",
         'webPreferences': {
@@ -21,7 +19,7 @@ function createWindow () {
     });
 
     // and load the index.html of the app.
-    win.loadFile('index.html')
+    win.loadFile('app.html')
 }
 
 app.name = 'Condution';
