@@ -124,8 +124,8 @@ var displayTask = function(pageId, taskId) {
                             <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
                             <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
                             <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}">
-                            <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
-                            <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
+                            <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
+                            <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
                         </div>
                         <div id="task-edit-${taskId}" class="task-edit" style="display:none">
                             <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea>
@@ -196,7 +196,7 @@ var displayTask = function(pageId, taskId) {
         appendTo: 'body',
     });
     $('#task-project-'+taskId).val(actualProject);
-     // ---------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------
     // Action Behaviors
     $('#task-check-'+taskId).change(function() {
         if (this.checked) {
@@ -208,7 +208,12 @@ var displayTask = function(pageId, taskId) {
             $('#task-'+taskId).slideUp(150);
         }
     });
-
+    $("#task-trash-"+taskId).click(function() {
+        // Ask HuZah's code to delete the task
+        console.log("o");
+        hideActiveTask();
+        $('#task-'+taskId).slideUp(150);
+    });
 
 }
 
@@ -238,19 +243,19 @@ $(document).on('click', '.today', function(e) {
     }
 })
 
-$(document).on("click", ".task-name", function(e) {
-    if($(this).attr('id')==="task-name-"+activeTask){
+$(document).on("click", ".task", function(e) {
+    if($(this).attr('id')==="task-"+activeTask){
         e.stopImmediatePropagation();
         return;
     }
     if (isTaskActive){hideActiveTask();}
-    if($(e.target).attr('class')==="task-pseudocheck"){
+    if($(e.target).attr('class')==="task-pseudocheck" || $(e.target).attr('class')==="task-check"){
         e.stopImmediatePropagation();
         return;
     } else{
         isTaskActive = true;
-        var taskInfo = $(this).attr("id").split("-")
-        var task = taskInfo[taskInfo.length - 1];
+        let taskInfo = $(this).attr("id").split("-")
+        let task = taskInfo[taskInfo.length - 1];
         activeTask = task;
         $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px", "margin":"15px 0 30px 0"}, 300);
         $("#task-edit-"+activeTask).slideDown(200);
@@ -270,6 +275,12 @@ $(document).on("click", ".page, #left-menu", function(e){
         hideActiveTask();
     }
 });
+
+// Chapter 4: Eyecandy!
+$("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
+
+var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Guten Tag,"]
+$("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
 
 //$('.editable-select').editableSelect({
     //effects: 'fade',
@@ -304,7 +315,7 @@ $(document).on("click", ".page, #left-menu", function(e){
 /*});*/
 
 
-// Chapter 4: Demo Tasks!!
+// Chapter 5: Demo Tasks!!
 
 displayTask("upcoming-page", "aoeu");
 displayTask("upcoming-page", "aoethu23uUNTHEO");

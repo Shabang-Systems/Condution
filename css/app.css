@@ -15,6 +15,44 @@ html, body {
     display: none;
     overflow-y: scroll;
     height: 100%;
+    margin: 1px;
+}
+
+.perspective-title{
+    color: #838384;
+    font-size: 12px;
+    padding: 0;
+}
+
+.perspective-titleword{
+    padding-left:8px;
+    font-weight: 600;
+}
+
+.perspective-divider{
+    margin: 5px 0 5px 0;    
+    border: 0.5px #cecece solid !important;
+}
+
+#upcoming-header{
+    font-size: 13px;
+    color: #434d5f;
+}
+
+#greeting{
+    font-weight: 600;
+    padding-right: 3.5px;
+}
+
+#greeting-name{
+    font-weight: 300;
+    padding-right: 5px;
+}
+
+#greeting-date{
+    padding-left: 5px;
+    font-weight: 500;
+    font-size: 15px;
 }
 
 .menu-portion {
@@ -111,14 +149,11 @@ html, body {
     border-radius: 3px;
     width: 99.5%;
     min-height: 5px;
+    transition: background-color 200ms ease-in-out;
 }
 
-.task-displayname {
-    color: #071121;
-    font-size: 12pt;
-    font-weight:500;
-    display: inline-block;
-    width: auto;
+.task:hover {
+    background-color: #efefef !important;
 }
 
 .task-name {
@@ -127,7 +162,7 @@ html, body {
     font-weight:400;
     background-color:inherit;
     color: #434d5f;
-    padding: 10px 2px 10px 5px;
+    padding: 10px 5px 10px 5px;
     border: 0px;
     display: inline-block;
     height: 30px;
@@ -167,17 +202,14 @@ html, body {
     background-color: #e2e2e2;
 }
 
-.task-name:hover {
-    background-color: #eaeaea;
-}
 
 .task-name:focus {
     background-color: #eaeaea;
 }
 
-.task-desc:hover {
-    background-color: #eaeaea;
-}
+/*.task-desc:hover {*/
+    /*background-color: #eaeaea;*/
+/*}*/
 
 .task-desc:focus{
     background-color: #eaeaea;
@@ -570,19 +602,6 @@ label:before {
 #content-area{
     padding: 40px 10px 10px 10px;
     overflow: scroll;
-}
-
-#greeting {
-}
-
-#greeting-text {
-    font-weight: 200;
-    font-size: 17pt; 
-}
-
-#greeting-name {
-    font-weight: 500;
-    font-size: 11pt; 
 }
 
 /* Datepicker */
