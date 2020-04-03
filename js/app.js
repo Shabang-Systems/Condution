@@ -65,7 +65,8 @@ var displayTask = function(pageId, taskId) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let possibleProjects = {"TaskIdUUID1":"Synthesis", "TaskIdUUID2":"Paperwork"} 
     let actualProjectID = "TaskIdUUID1" 
-    var name = "Consume fabric, Bob!"
+    let taskNames = ["Z2_4: Second Pass", "Assignment Created - Optional: The Cartoon Guide to Chemistry Acid-Base / Equilibrium Readings, Foundations of Science", "science thursday presentation planned"]
+    var name = taskNames[Math.floor(Math.random() * taskNames.length)];
     var desc = "A process by which Robert consumes items made of fabric."
     let defer = new Date(2020, 03, 19, 8, 32, 01, 01);
     let due = new Date(2020, 03, 19, 8, 32, 01, 01);
@@ -249,7 +250,7 @@ $(document).on("click", ".task", function(e) {
         return;
     }
     if (isTaskActive){hideActiveTask();}
-    if($(e.target).attr('class')==="task-pseudocheck" || $(e.target).attr('class')==="task-check"){
+    if($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')){
         e.stopImmediatePropagation();
         return;
     } else{
@@ -265,11 +266,11 @@ $(document).on("click", ".task", function(e) {
     }
 });
 
-$(document).on("click", ".page, #left-menu", function(e){
+$(document).on("click", ".page, #left-menu div", function(e){
     if (isTaskActive){
-        if($(e.target).attr('class') === "task-pseudocheck") {
+        if($(e.target).hasClass("task-pseudocheck")) {
             $("#task-check-"+activeTask).toggle();
-        } else if ($(e.target).attr('class') !== "page" && $(this).attr('id') !== "left-menu") {
+        } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name')) {
             return false;
         }
         hideActiveTask();
@@ -317,10 +318,15 @@ $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
 
 // Chapter 5: Demo Tasks!!
 
-displayTask("upcoming-page", "aoeu");
-displayTask("upcoming-page", "aoethu23uUNTHEO");
-displayTask("upcoming-page", "aoethu23uUNTHeO");
-displayTask("upcoming-page", "234uaou");
+displayTask("inbox", "blahblahblah");
+displayTask("inbox", "nochisimo");
+displayTask("inbox", "nochisimo");
+displayTask("inbox", "nochisimo");
+displayTask("due-soon", "aeun");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+
 
 
 
