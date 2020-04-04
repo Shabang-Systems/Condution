@@ -19,7 +19,7 @@ function createWindow () {
     });
 
     // and load the index.html of the app.
-    win.loadFile('app.html')
+    win.loadFile('auth.html')
 }
 
 app.name = 'Condution';

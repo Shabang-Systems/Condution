@@ -1352,7 +1352,6 @@ var chrono = require('chrono-node');
             // smart, better date parsing with chrono
             try {
                 var d = chrono.parse(timeString)[0].start.date();
-                console.log(chrono.parse(timeString), d);
             } catch (err) {
                 $.timepicker.log("Cannot Smart Parse Date");
                 return false;

@@ -1,17 +1,39 @@
-// Chapter 1: Utilities!
+// Chapter 0: Fire! Base!
+var firebaseConfig = {
+    apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
+    authDomain: "condution-7133f.firebaseapp.com",
+    databaseURL: "https://condution-7133f.firebaseio.com",
+    projectId: "condution-7133f",
+    storageBucket: "condution-7133f.appspot.com",
+    messagingSenderId: "544684450810",
+    appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
+};
+firebase.initializeApp(firebaseConfig);
 
+// Check for Authentication
+firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        // User is signed in.
+        var displayName = user.displayName;
+        var email = user.email;
+        var emailVerified = user.emailVerified;
+        var photoURL = user.photoURL;
+        var isAnonymous = user.isAnonymous;
+        var uid = user.uid;
+        var providerData = user.providerData;
+    } else {
+        window.location.replace("auth.html");
+    }
+});
+
+
+// Chapter 1: Utilities!
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
     let matches, substringRegex;
 
-    // an array that will be populated with substring matches
     matches = [];
-
-    // regex used to determine if a string contains the substring `q`
     substrRegex = new RegExp(q, 'i');
-
-    // iterate through the pool of strings and for any string that
-    // contains the substring `q`, add it to the `matches` array
     $.each(strs, function(i, str) {
       if (substrRegex.test(str)) {
         matches.push(str);
@@ -34,6 +56,11 @@ var smartParse = function(timeformat, timeString, o) {
         timezone: d.getTimezoneOffset() * -1
     };
 }
+
+var numDaysBetween = function(d1, d2) {
+  var diff = Math.abs(d1.getTime() - d2.getTime());
+  return diff / (1000 * 60 * 60 * 24);
+};
 
 // Chapter 2: Functions to Show and Hide Things!
 
@@ -61,17 +88,18 @@ var hideActiveTask = function() {
     activeTask = null;
 }
 
-var displayTask = function(pageId, taskId) {
+var displayTask = async function(pageId, taskId) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let possibleProjects = {"TaskIdUUID1":"Synthesis", "TaskIdUUID2":"Paperwork"} 
     let actualProjectID = "TaskIdUUID1" 
     let taskNames = ["Z2_4: Second Pass", "Assignment Created - Optional: The Cartoon Guide to Chemistry Acid-Base / Equilibrium Readings, Foundations of Science", "science thursday presentation planned"]
     var name = taskNames[Math.floor(Math.random() * taskNames.length)];
     var desc = "A process by which Robert consumes items made of fabric."
-    let defer = new Date(2020, 03, 19, 8, 32, 01, 01);
-    let due = new Date(2020, 03, 19, 8, 32, 01, 01);
-    let isFlagged = false
-    let isFloating = true
+    let timezone = "America/Los_Angeles";
+    let defer = new Date(2020, 02, 19, 8, 32, 01, 01);
+    let due = new Date(2020, 04, 8, 32, 01, 00);
+    let isFlagged = false;
+    let isFloating = true;
     let possibleTags = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
       'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
       'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
@@ -116,6 +144,15 @@ var displayTask = function(pageId, taskId) {
         var b1b = " checked";
         var b2a = "";
         var b2b = "";
+    }
+    let defer_current;
+    let due_current;
+    if(isFloating){
+        defer_current = moment(defer).tz(timezone).local(true).toDate();
+        due_current = moment(due).tz(timezone).local(true).toDate();
+    } else {
+        defer_current = defer;
+        due_current = due;
     }
     // ---------------------------------------------------------------------------------
     // Light the fire, kick the Tires!
@@ -174,16 +211,25 @@ var displayTask = function(pageId, taskId) {
         timeFormat: "hh:mm tt",
         showHour: false,
         showMinute: false,
+        onSelect: function(e) {
+            let defer_set = $(this).datetimepicker('getDate');
+            // now, ask HuZah to actually do it
+        }
     });
-    $("#task-defer-"+taskId).datetimepicker('setDate', (defer));
+    $("#task-defer-"+taskId).datetimepicker('setDate', (defer_current));
     $("#task-due-"+taskId).datetimepicker({
         timeInput: true,
         timeFormat: "hh:mm tt",
         showHour: false,
         showMinute: false,
+        onSelect: function(e) {
+            let due_set = $(this).datetimepicker('getDate');
+            // now, ask HuZah to actually do it
+        }
+
     });
-    $("#task-due-"+taskId).datetimepicker('setDate', (due));
-    // Set Tags!
+    $("#task-due-"+taskId).datetimepicker('setDate', (due_current));
+    // Set Inputs!
     $('#task-tag-'+taskId).val(tagString);
     $('#task-tag-'+taskId).tagsinput({
         typeaheadjs: {
@@ -197,6 +243,14 @@ var displayTask = function(pageId, taskId) {
         appendTo: 'body',
     });
     $('#task-project-'+taskId).val(actualProject);
+    // Style'em Good!
+    if (new Date() > due_current){
+        $('#task-pseudocheck-'+taskId).addClass("od");
+    } else if (numDaysBetween(new Date(), due_current) <= 1){
+        $('#task-pseudocheck-'+taskId).addClass("ds");
+    } else if (new Date() < defer_current){
+        $('#task-name-'+taskId).css("opacity", "0.3");
+    }
     // ---------------------------------------------------------------------------------
     // Action Behaviors
     $('#task-check-'+taskId).change(function() {
@@ -209,13 +263,17 @@ var displayTask = function(pageId, taskId) {
             $('#task-'+taskId).slideUp(150);
         }
     });
-    $("#task-trash-"+taskId).click(function() {
+    $("#task-trash-"+taskId).click(function(e) {
         // Ask HuZah's code to delete the task
-        console.log("o");
         hideActiveTask();
         $('#task-'+taskId).slideUp(150);
     });
-
+    $("#task-name-"+taskId).change(function(e) {
+        // Ask HuZah's code to chang the task name
+    });
+    $("#task-desc-"+taskId).change(function(e) {
+        // Ask HuZah's code to chang the task description
+    });
 }
 
 // Chapter 3: Animation Listeners!!
@@ -277,10 +335,16 @@ $(document).on("click", ".page, #left-menu div", function(e){
     }
 });
 
+$(document).on("click", "#logout", function(e){
+    firebase.auth().signOut().then(function() {}, function(error) {
+        console.log(error);
+    });
+});
+
 // Chapter 4: Eyecandy!
 $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
 
-var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Guten Tag,"]
+var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
 $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
 
 //$('.editable-select').editableSelect({
@@ -319,8 +383,6 @@ $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
 // Chapter 5: Demo Tasks!!
 
 displayTask("inbox", "blahblahblah");
-displayTask("inbox", "nochisimo");
-displayTask("inbox", "nochisimo");
 displayTask("inbox", "nochisimo");
 displayTask("due-soon", "aeun");
 displayTask("due-soon", "chaAchKACh");

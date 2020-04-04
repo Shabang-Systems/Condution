@@ -8,11 +8,15 @@
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script>var chrono = require('chrono-node');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
+        <script>var firebase = require("firebase");</script>
+        <script>var firebaseui = require('firebaseui');</script>
         <script>require('popper.js');</script>
+        <script>var moment = require('moment-timezone');</script>
         <script>require('bootstrap');</script>
         <script>require('fuse.js');</script>
         <script>require('typeahead.js');</script>
         <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <script type='text/javascript' src="js/jquery-ui-timepicker-addon.js"></script>
         <script>require('jquery-editable-select');</script>
@@ -40,10 +44,6 @@
         <div id="content-wrapper">
             <div id="left-menu">
                 <div id="menu-area">
-                   <!-- <div id="greeting" class="menu-portion">-->
-                        <!--<t id="greeting-text">Good afternoon,</t> <br />-->
-                        <!--<t id="greeting-name">Mr. Snufflefluffulugus</t>-->
-                    <!--</div>-->
                     <div>
                         <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
                     </div>
@@ -66,6 +66,7 @@
                             <div>Projects</div>
                         </div>
                     </div>
+                    <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
                 </div>
             </div>
             <div id="content-area">
@@ -77,14 +78,13 @@
                         <hr class="perspective-divider"/>
                     </div>
                     <div class="perspective-subhead">
-                        Due Soon <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)">3</div>
-                    </div>
-                    <div id="due-soon" class="upcoming-section"> </div>
-
-                    <div class="perspective-subhead">
                         Unsorted <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)">3</div>
                     </div>
                     <div id="inbox" class="upcoming-section"> </div>
+                    <div class="perspective-subhead">
+                        Due Soon <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)">3</div>
+                    </div>
+                    <div id="due-soon" class="upcoming-section"> </div>
                 </div>
                 <div id="perspective-page" class="page">
                     Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. 
