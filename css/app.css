@@ -1,8 +1,9 @@
+
 /* Globals */
 html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: sans-serif;
     overflow: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar; /* White Scrollbar Fix, MSE Runtime */
 }

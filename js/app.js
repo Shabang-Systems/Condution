@@ -1,25 +1,32 @@
 // Chapter 0: Fire! Base!
-var firebaseConfig = {
-    apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
-    authDomain: "condution-7133f.firebaseapp.com",
-    databaseURL: "https://condution-7133f.firebaseio.com",
-    projectId: "condution-7133f",
-    storageBucket: "condution-7133f.appspot.com",
-    messagingSenderId: "544684450810",
-    appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
-};
-firebase.initializeApp(firebaseConfig);
+console.log("Initializing the galvanitizer!");
 
+//var firebaseConfig = {
+    //apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
+    //authDomain: "condution-7133f.firebaseapp.com",
+    //databaseURL: "https://condution-7133f.firebaseio.com",
+    //projectId: "condution-7133f",
+    //storageBucket: "condution-7133f.appspot.com",
+    //messagingSenderId: "544684450810",
+    //appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
+//};
+/*firebase.initializeApp(firebaseConfig);*/
+
+console.log("Authenticating the supergober!");
+var name;
+var uid;
 // Check for Authentication
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // User is signed in. Do user related things.
-        $("#greeting-name").html(user.displayName);
+        name = user.displayName;
+        uid = user.uid;
     } else {
         window.location.replace("auth.html");
     }
 });
 
+console.log("Constructing the buber-nuber!");
 // Chapter 1: Utilities!
 var substringMatcher = function(strs) {
   return function findMatches(q, cb) {
@@ -56,15 +63,39 @@ var numDaysBetween = function(d1, d2) {
 };
 
 // Chapter 2: Functions to Show and Hide Things!
-
-var showPage = function(pageId) {
-    $("#"+pageId).css("display", "block");
+console.log("Defining the Dilly-Daller!");
+var showPage = async function(pageId) {
     $("#content-area").children().each(function(){
         let item = $(this)
         if (item.attr("id") != pageId){
            item.css("display", "none")
        }
     });
+    // Ask HuZah's code to query for the tasks...
+    // Let's pretend we are doing that
+    if(pageId==="upcoming-page"){
+        // Special home page loads
+        $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
+        var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
+    $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
+        $("#greeting-name").html(name);
+        $("#inbox").empty();
+        $("#due-soon").empty();
+        displayTask("inbox", "blahblahblah");
+        displayTask("inbox", "nochisimo");
+        displayTask("due-soon", "aeun");
+        displayTask("due-soon", "chaAchKACh");
+        displayTask("due-soon", "chaAchKACh");
+        displayTask("due-soon", "chaAchKACh");
+        displayTask("due-soon", "chaAchKACh");
+        displayTask("due-soon", "chaAchKACh");
+        displayTask("due-soon", "chaAchKACh");
+    } else {
+        $("#"+pageId).empty();
+        // Sad normal perspective loads
+    }
+
+    $("#"+pageId).fadeIn(200);
 }
 
 var isTaskActive = false;
@@ -209,7 +240,6 @@ var displayTask = async function(pageId, taskId) {
             // now, ask HuZah to actually do it
         }
     });
-    $("#task-defer-"+taskId).datetimepicker('setDate', (defer_current));
     $("#task-due-"+taskId).datetimepicker({
         timeInput: true,
         timeFormat: "hh:mm tt",
@@ -221,7 +251,14 @@ var displayTask = async function(pageId, taskId) {
         }
 
     });
-    $("#task-due-"+taskId).datetimepicker('setDate', (due_current));
+    // So apparently setting dates is hard for this guy, so we run this async
+    let d1 = new Date().getTime();
+    let setDates = async () => {
+        $("#task-defer-"+taskId).datetimepicker('setTime', (defer_current));
+        $("#task-due-"+taskId).datetimepicker('setTime', (due_current));
+    };
+    setDates();
+    console.log((new Date()).getTime()-d1)
     // Set Inputs!
     $('#task-tag-'+taskId).val(tagString);
     $('#task-tag-'+taskId).tagsinput({
@@ -271,6 +308,7 @@ var displayTask = async function(pageId, taskId) {
 
 // Chapter 3: Animation Listeners!!
 
+console.log("Watching the clicy-pager!");
 var active = "today"
 
 $(document).on('click', '.perspective', function(e) {
@@ -334,79 +372,12 @@ $(document).on("click", "#logout", function(e){
     });
 });
 
-// Chapter 4: Eyecandy!
-$("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
 
-var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
-$("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
-
-//$('.editable-select').editableSelect({
-    //effects: 'fade',
-    //duration: 200,
-    //appendTo: 'body',
-/*});*/
-
-
-//$('.datebox').datetimepicker({
-    //timeInput: true,
-    //timeFormat: "hh:mm tt",
-	//showHour: false,
-	//showMinute: false,
-//});
-
-
-//var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-      //'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
-      //'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
-      //'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
-      //'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-      //'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
-      //'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
-      //'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-      //'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-    //];
-//$('.task-tag').tagsinput({
-  //typeaheadjs: {
-    //name: 'states',
-    //source: substringMatcher(states)
-  //}
-/*});*/
-
-
-// Chapter 5: Demo Tasks!!
-
-displayTask("inbox", "blahblahblah");
-displayTask("inbox", "nochisimo");
-displayTask("due-soon", "aeun");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-displayTask("due-soon", "chaAchKACh");
-
-
-
-
-
-//$(".task-displayname").after().click(function(e) {
-    //var cont = window.getComputedStyle(
-        //this, ':before'
-    //)
-    //console.log(e.target);
-    //console.log(cont);
-    //e.preventDefault();
-//});
+$(document).ready(function(){
+    console.log("Presenting the cuber-uber!");
+    showPage("upcoming-page");
+    console.log("Ready for broom action!");
+    $("#loading").hide();
+    $("#content-wrapper").fadeIn();
+});
 
