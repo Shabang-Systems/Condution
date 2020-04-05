@@ -39,11 +39,11 @@ async function getTasks(userID){
         .catch(err => {
             console.log('Error getting documents', err);
         });
-    console.log(docIds);
     return docIds;
 };
-function getTaskInformation(userID, taskID){
-    return db.collection("users").doc(userID).collection("tasks").doc(taskID);
+async function getTaskInformation(userID, taskID){
+    let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get()
+    return taskDoc.data();
 };
 async function getProjectsandTags(userID){
     let projectIDs = [];
@@ -67,13 +67,11 @@ async function getProjectsandTags(userID){
     //const projectIDs = db.collection("users").doc(userID).collection("projects").select();
     //const tags = db.collection("usnpm ers").doc(userID).collection("tags").select();
 
-    let projectcrapNames = [];
-    let projectcrapNamesReverse = [];
+    let projectcrapNames = {};
+    let projectcrapNamesReverse = {};
     let i;
     for (i=0; i<projectIDs.length; i++){
         let projectDocumentName = "errorThing";
-        console.log(i);
-        console.log(projectIDs[i]);
         await db.collection("users").doc(userID).collection("projects").doc(projectIDs[i]).get().then(function(doc) {
             if (doc.exists) {
                 projectDocumentName = doc.data().name;
@@ -85,7 +83,7 @@ async function getProjectsandTags(userID){
             console.log("Error getting document:", error);
         })
         if (projectDocumentName != "errorThing"){
-            console.log(projectDocumentName);
+            //console.log(projectDocumentName);
         }else{
             console.log("error, thread was either skipped, or name was null within document", projectIDs[i]);
         }
@@ -93,16 +91,14 @@ async function getProjectsandTags(userID){
         projectIDs[i]
 
          */
-        projectcrapNames.push({key:projectIDs[i], value:projectDocumentName});
-        projectcrapNamesReverse.push({key:projectDocumentName, value:projectIDs[i]});
+        projectcrapNames[projectIDs[i]]=projectDocumentName;
+        projectcrapNamesReverse[projectDocumentName]=projectIDs[i];
     }
     let tagcrapNames = [];
     let tagcrapNamesReverse = [];
     let j;
     for (j=0; j<tagIDs.length; j++){
         let tagDocumentName = "errorThing";
-        console.log(j);
-        console.log(tagIDs[j]);
         await db.collection("users").doc(userID).collection("tags").doc(tagIDs[j]).get().then(function(doc) {
             if (doc.exists) {
                 tagDocumentName = doc.data().name;
@@ -114,15 +110,14 @@ async function getProjectsandTags(userID){
             console.log("Error getting document:", error);
         })
         if (tagDocumentName != "errorThing"){
-            console.log(tagDocumentName);
+            //console.log(tagDocumentName);
         }else{
             console.log("error, thread was either skipped, or name was null within document", tagIDs[j]);
         }
-        tagcrapNames.push({key:tagIDs[j], value:tagDocumentName});
-        tagcrapNamesReverse.push({key:tagDocumentName, value:tagIDs[j]});
+        tagcrapNames[tagIDs[j]]=tagDocumentName;
+        tagcrapNamesReverse[tagDocumentName]=tagIDs[j];
     }
-    console.log(tagcrapNamesReverse, tagcrapNames);
-    return [tagcrapNames, tagcrapNamesReverse], [tagcrapNames, tagcrapNamesReverse];
+    return [[projectcrapNames, projectcrapNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
 }
 
 async function modifyTasks(userID, taskID, param, newVal){

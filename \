@@ -85,17 +85,28 @@ var displayTask = async function(pageId, taskId) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let pPandP = await getProjectsandTags(uid);
     let taskObj = await getTaskInformation(uid, taskId);
-    let possibleProjects = pPandP[0][0]; 
-    let possibleTags = pPandP[1][0]; 
+    let possibleProjects = pPandP[0]; 
     let actualProjectID = taskObj.project; 
-    var name = taskObj.name;
-    var desc = taskObj.desc;
+    console.log(pPandP, actualProjectID);
+    let taskNames = ["Z2_4: Second Pass", "Assignment Created - Optional: The Cartoon Guide to Chemistry Acid-Base / Equilibrium Readings, Foundations of Science", "science thursday presentation planned"]
+    var name = taskNames[Math.floor(Math.random() * taskNames.length)];
+    var desc = "A process by which Robert consumes items made of fabric."
     let timezone = "America/Los_Angeles";
-    let defer = new Date(taskObj.due.seconds*1000);
-    let due = new Date(taskObj.defer.seconds*1000);
-    let isFlagged = taskObj.isFlagged;
-    let isFloating = taskObj.isFloating;
-    let actualTags = taskObj.tags;
+    let defer = new Date(2020, 02, 19, 8, 32, 01, 01);
+    let due = new Date(2020, 03, 8, 32, 01, 00);
+    let isFlagged = false;
+    let isFloating = true;
+    let possibleTags = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+      'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+      'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+      'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+      'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+      'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+      'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+      'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+      'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+    ];
+    let actualTags = ["Wyoming", "Alaska", "Hawaii"]
     // ---------------------------------------------------------------------------------
     // Parse and pre-write some DOMs
     let projectSelects = " " 
@@ -104,7 +115,7 @@ var displayTask = async function(pageId, taskId) {
     }
     let tagString = ""
     for (let i in actualTags){
-        tagString = tagString+possibleTags[actualTags[i]]+","
+        tagString = tagString+actualTags[i]+","
     }
     let actualProject = possibleProjects[actualProjectID];
     // Confused? The following sets the appearence of the checkboxes by manipulating active and checked
@@ -214,8 +225,8 @@ var displayTask = async function(pageId, taskId) {
     });
     // So apparently setting dates is hard for this guy, so we run this async
     let setDates = async () => {
-        $("#task-defer-"+taskId).datetimepicker('setDate', (defer_current));
-        $("#task-due-"+taskId).datetimepicker('setDate', (due_current));
+        $("#task-defer-"+taskId).datetimepicker('setTime', (defer_current));
+        $("#task-due-"+taskId).datetimepicker('setTime', (due_current));
     };
     setDates();
     // Set Inputs!
