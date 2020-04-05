@@ -4,6 +4,11 @@ html, body {
     margin: 0;
     font-family: 'Inter', sans-serif;
     overflow: hidden;
+    -ms-overflow-style: -ms-autohiding-scrollbar; /* White Scrollbar Fix, MSE Runtime */
+}
+
+*::-webkit-scrollbar { 
+    display: none;  /* White Scrollbar Fix, Chrome Runtime */
 }
 
 *:focus {
