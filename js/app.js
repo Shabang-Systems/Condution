@@ -13,19 +13,12 @@ firebase.initializeApp(firebaseConfig);
 // Check for Authentication
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-        // User is signed in.
-        var displayName = user.displayName;
-        var email = user.email;
-        var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL;
-        var isAnonymous = user.isAnonymous;
-        var uid = user.uid;
-        var providerData = user.providerData;
+        // User is signed in. Do user related things.
+        $("#greeting-name").html(user.displayName);
     } else {
         window.location.replace("auth.html");
     }
 });
-
 
 // Chapter 1: Utilities!
 var substringMatcher = function(strs) {
@@ -97,7 +90,7 @@ var displayTask = async function(pageId, taskId) {
     var desc = "A process by which Robert consumes items made of fabric."
     let timezone = "America/Los_Angeles";
     let defer = new Date(2020, 02, 19, 8, 32, 01, 01);
-    let due = new Date(2020, 04, 8, 32, 01, 00);
+    let due = new Date(2020, 03, 8, 32, 01, 00);
     let isFlagged = false;
     let isFloating = true;
     let possibleTags = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
@@ -385,6 +378,21 @@ $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
 displayTask("inbox", "blahblahblah");
 displayTask("inbox", "nochisimo");
 displayTask("due-soon", "aeun");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
+displayTask("due-soon", "chaAchKACh");
 displayTask("due-soon", "chaAchKACh");
 displayTask("due-soon", "chaAchKACh");
 displayTask("due-soon", "chaAchKACh");

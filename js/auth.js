@@ -16,6 +16,7 @@ var auth = function(){
         console.log("Silly goose");
         var errorCode = error.code;
         var errorMessage = error.message;
+        $(".auth-upf").addClass("wrong");
     });
 }
 
@@ -25,6 +26,10 @@ $("#password").keydown(function(e) {
     }
 });
 
+$("#login").click(function(e) {
+    auth();
+});
+
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
         window.location = 'app.html'; 
@@ -32,4 +37,7 @@ firebase.auth().onAuthStateChanged(user => {
         $("#authwall").fadeIn();
     }
 });
+
+var greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"]
+$("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
 

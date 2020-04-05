@@ -67,17 +67,90 @@ html, body {
     transform: translateX(-2.5px);
 }
 
+#login {
+    bottom: 0;
+    width: 150px;
+    margin-top: auto;
+    color: #1a283d;
+    -webkit-transition-property: color, background-color;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: color, background-color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    margin-top: 15px;
+    padding: 4px 0 4px 10px;
+    transform: translateX(-1px);
+    cursor: default;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: #374559 1px solid;
+    float: right;
+    transform: translateX(-90px);
+}
+
+#login:hover {
+    background-color: #374559;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 0 4px 10px;
+    color: #ededed;
+}
+
+#auth-content-wrapper{
+    margin: 0;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: grid;
+    /*grid-template-columns: 700px auto*/
+}
+
+#auth-left-menu{
+    grid-column-start: 1;
+    grid-column-end: 1;
+    width: 250px;
+    padding: 40px 10px 10px 10px;
+    overflow: hidden;
+    background: url(https://source.unsplash.com/HzSLh5zV42s/1600x900);
+    background-size: cover;
+}
+
+#auth-image-credit{
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
+    color: #eaeaea;
+    font-size: 9px;
+    font-weight: 200;
+}
+
 #authwall {
-    width: 500px;
-	height: 300px;
+    width: 650px;
+	height: 100px;
+    display: block;
 	position: absolute;
 	top:0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
-    text-align: center;
     vertical-align: center;
+    padding-left: 50px;
+    transform: translate(120px, -30px);
+}
+
+#greeting-auth {
+    color: #434d5f;
+    font-weight: 700;
+    padding-right: 10px;
+}
+
+#greeting-auth-subtitle {
+    font-weight: 700;
+    font-size: 16px;
+    padding-top: 10px;
 }
 
 #upcoming-header{
@@ -266,9 +339,11 @@ html, body {
     margin-bottom: 5px;
 }
 
-.auth-upf:hover {
-    background-color: #eaeaea;
+.auth-upf.wrong {
+    border-color: red;
 }
+
+
 .auth-upf:focus {
     background-color: #eaeaea;
 }
@@ -771,7 +846,7 @@ label:before {
 }
 
 #content-area{
-    padding: 40px 10px 10px 10px;
+    padding: 40px 10px 0 10px;
     overflow: scroll;
 }
 

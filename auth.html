@@ -37,13 +37,20 @@
     </head>
 
     <body>
-        <div id="content-wrapper">
-            <div id="content-area">
-                <div id="authwall" style="display:none">
-                    <h1 style="display: inline-block; padding-right: 10px;">Hello</h1> <t>What. Is your name?</t>
-                    <input class="auth-upf" id="email" type="text" autocomplete="off" value="" placeholder="Email">
-                    <input class="auth-upf" id="password" type="password" autocomplete="off" value="" placeholder="Password">
+        <div id="auth-content-wrapper">
+            <div id="auth-left-menu">
+                <div id="menu-area" style="height:100%">
+                    <div id="auth-component"></div>
+                    <div id="auth-component"></div>
+                    <t id="auth-image-credit">Image by <t style="font-weight: 500;">Tobias Keller</t></t>
                 </div>
+            </div>
+            <div id="authwall" style="display:none">
+                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t>Welcome back to Condution.</t>
+                <h3 id="greeting-auth-subtitle">Authenticate yourself:</h3>
+                <input class="auth-upf" id="email" type="text" autocomplete="off" value="" placeholder="Email">
+                <input class="auth-upf" id="password" type="password" autocomplete="off" value="" placeholder="Password">
+                <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Let's Do This!</div>
             </div>
         </div>
         <script type='text/javascript' src="js/auth.js"></script>
