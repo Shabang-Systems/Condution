@@ -821,6 +821,11 @@ label:before {
     z-index: 10000;
 }
 
+#loading {
+    margin-top: 35px;
+    padding-left: 5px;
+}
+
 #content-wrapper{
     margin: 0;
     height: 100%;

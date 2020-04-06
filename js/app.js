@@ -44,6 +44,7 @@ var showPage = async function(pageId) {
            item.css("display", "none")
        }
     });
+    $("#page-loader").fadeIn(100);
     // Ask HuZah's code to query for the tasks...
     // Let's pretend we are doing that
     if(pageId==="upcoming-page"){
@@ -59,19 +60,26 @@ var showPage = async function(pageId) {
             let possibleProjects = pPandP[0][0]; 
             let possibleTags = pPandP[1][0]; 
             var bar = new Promise((resolve, reject) => {
+                let counter = 0
                 e.forEach((value, index, array) => {
-                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags]);
-                    if (index === array.length -1) resolve();
+                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags]).then(()=>{
+                        counter++;
+                        if (counter === array.length) resolve();
+                    });
                 });
             });
-            await bar;
+            bar.then(()=>{
+                $("#page-loader").fadeOut(100);
+                $("#"+pageId).fadeIn(200);
+            });
         })
     } else {
         $("#"+pageId).empty();
+        $("#page-loader").fadeOut(100);
+        $("#"+pageId).fadeIn(200);
         // Sad normal perspective loads
     }
 
-    $("#"+pageId).fadeIn(200);
 }
 
 var isTaskActive = false;
