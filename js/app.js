@@ -50,14 +50,21 @@ var showPage = async function(pageId) {
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
         var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
-    $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
+        $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
         $("#greeting-name").html(displayName);
         $("#inbox").empty();
         $("#due-soon").empty();
-        getTasks(uid).then(function(e){
-            e.forEach(function(i){
-                displayTask("inbox", i);
+        await getTasks(uid).then(async function(e){
+            let pPandP = await getProjectsandTags(uid);
+            let possibleProjects = pPandP[0][0]; 
+            let possibleTags = pPandP[1][0]; 
+            var bar = new Promise((resolve, reject) => {
+                e.forEach((value, index, array) => {
+                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags]);
+                    if (index === array.length -1) resolve();
+                });
             });
+            await bar;
         })
     } else {
         $("#"+pageId).empty();
@@ -81,16 +88,16 @@ var hideActiveTask = function() {
     activeTask = null;
 }
 
-var displayTask = async function(pageId, taskId) {
+var displayTask = async function(pageId, taskId, infoObj) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
-    let pPandP = await getProjectsandTags(uid);
     let taskObj = await getTaskInformation(uid, taskId);
-    let possibleProjects = pPandP[0][0]; 
-    let possibleTags = pPandP[1][0]; 
+    let pPandP = infoObj[0];
+    let possibleProjects = infoObj[1]; 
+    let possibleTags = infoObj[2]; 
     let actualProjectID = taskObj.project; 
     var name = taskObj.name;
     var desc = taskObj.desc;
-    let timezone = "America/Los_Angeles";
+    let timezone = taskObj.timezone;
     let defer = new Date(taskObj.due.seconds*1000);
     let due = new Date(taskObj.defer.seconds*1000);
     let isFlagged = taskObj.isFlagged;
@@ -334,8 +341,8 @@ $(document).on("click", "#logout", function(e){
 var displayName;
 var uid;
 
-var kickTheTires = function(){
-    showPage("upcoming-page");
+var kickTheTires = async function(){
+    await showPage("upcoming-page");
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
     console.log("Ready for broom action!");
