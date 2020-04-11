@@ -111,7 +111,7 @@ async function getProjectsandTags(userID) {
             }
         }).catch(function(error) {
             console.error("Error getting document:", error);
-        })
+        });
         if (tagDocumentName !== "errorThing") {
             //console.log(tagDocumentName);
         } else {
@@ -124,7 +124,7 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyTask(userID, taskID, updateQuery){
-    var taskData = "error";
+    let taskData = "error";
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
 
         if (doc.exists !== true) {
