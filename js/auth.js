@@ -32,7 +32,12 @@ $("#login").click(function(e) {
 
 firebase.auth().onAuthStateChanged(user => {
     if(user) {
-        window.location = 'app.html'; 
+        if (user.emailVerified){
+            window.location = 'app.html'; 
+        } else {
+            user.sendEmailVerification();
+            $('#need-verify').fadeIn();
+        }
     } else {
         $("#authwall").fadeIn();
     }

@@ -45,8 +45,9 @@ var showPage = async function(pageId) {
        }
     });
     $("#page-loader").fadeIn(100);
-    // Ask HuZah's code to query for the tasks...
-    // Let's pretend we are doing that
+    let pPandP = await getProjectsandTags(uid);
+    let possibleProjects = pPandP[0][0]; 
+    let possibleTags = pPandP[1][0]; 
     if(pageId==="upcoming-page"){
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
@@ -55,20 +56,30 @@ var showPage = async function(pageId) {
         $("#greeting-name").html(displayName);
         $("#inbox").empty();
         $("#due-soon").empty();
-        await getTasks(uid).then(async function(e){
-            let pPandP = await getProjectsandTags(uid);
-            let possibleProjects = pPandP[0][0]; 
-            let possibleTags = pPandP[1][0]; 
-            var bar = new Promise((resolve, reject) => {
-                let counter = 0
+
+        let inboxTasks = getInboxTasks(uid);
+
+        await inboxTasks.then(async function(e){
+                var bar = new Promise((resolve, reject) => {
+                let counter = 0;
+                let inboxCount = 0;
                 e.forEach((value, index, array) => {
-                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags]).then(()=>{
+                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags]).then((val)=>{
+                        if (val === 0){
+                            inboxCount++;
+                        }
                         counter++;
-                        if (counter === array.length) resolve();
+                        if (counter === array.length) resolve(inboxCount);
                     });
                 });
             });
-            bar.then(()=>{
+            bar.then((iC)=>{
+                if(iC === 0){
+                    $("#inbox-subhead").hide();
+                    $("#inbox").hide();
+                } else {
+                    $("#unsorted-badge").html(''+iC);
+                }
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
             });
@@ -99,6 +110,9 @@ var hideActiveTask = function() {
 var displayTask = async function(pageId, taskId, infoObj) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let taskObj = await getTaskInformation(uid, taskId);
+    if (taskObj.isComplete){
+        return 1;
+    }
     let pPandP = infoObj[0];
     let possibleProjects = infoObj[1]; 
     let possibleTags = infoObj[2]; 
@@ -259,7 +273,8 @@ var displayTask = async function(pageId, taskId, infoObj) {
     // Action Behaviors
     $('#task-check-'+taskId).change(function() {
         if (this.checked) {
-            // Ask HuZah's code to complete the task
+            completeTask(uid, taskId);
+            if(actualProject==="inbox")
             $('#task-name-'+taskId).css("color","#ccccc");
             $('#task-name-'+taskId).css("text-decoration", "line-through");
             $('#task-pseudocheck-'+taskId).css("opacity", "0.6");
@@ -273,11 +288,12 @@ var displayTask = async function(pageId, taskId, infoObj) {
         $('#task-'+taskId).slideUp(150);
     });
     $("#task-name-"+taskId).change(function(e) {
-        // Ask HuZah's code to chang the task name
+        modifyTask(uid, )
     });
     $("#task-desc-"+taskId).change(function(e) {
-        // Ask HuZah's code to chang the task description
+        // Ask HuZah's code to change the task description
     });
+    return 0;
 }
 
 // Chapter 3: Animation Listeners!!
@@ -349,11 +365,11 @@ $(document).on("click", "#logout", function(e){
 var displayName;
 var uid;
 
-var kickTheTires = async function(){
+var lightTheFire = async function(){
     await showPage("upcoming-page");
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
-    console.log("Ready for broom action!");
+    console.log("Kick the Tires!");
 }
 
 $(document).ready(function(){
@@ -362,11 +378,13 @@ $(document).ready(function(){
     // Check for Authentication
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-            // User is signed in. Do user related things.
-            displayName = user.displayName;
-            uid = user.uid;
-            console.log("Presenting the cuber-uber!");
-            kickTheTires();
+            if (user.emailVerified){
+                // User is signed in. Do user related things.
+                displayName = user.displayName;
+                uid = user.uid;
+                console.log("Presenting the cuber-uber!");
+                lightTheFire();
+            }
         } else {
             window.location.replace("auth.html");
         }

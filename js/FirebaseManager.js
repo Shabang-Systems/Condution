@@ -15,6 +15,7 @@ var firebaseConfig = {
     messagingSenderId: "544684450810",
     appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
 };
+
 const fields = {
     NAME: "name",
     DESC: "desc",
@@ -22,7 +23,8 @@ const fields = {
     FLAGGED: "isFlagged",
     FLOATING: "isFloating",
     PROJECT: "project",
-    TAGS: "tags"
+    TAGS: "tags",
+    TIMEZONE: "timezone"
 }
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -41,10 +43,25 @@ async function getTasks(userID){
         });
     return docIds;
 };
+
+async function getInboxTasks(userID){
+    let docIds = [];
+    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
+        snapshot.forEach(doc => {
+            docIds.push(doc.id);
+        });
+    })
+        .catch(err => {
+            console.log('Error getting documents', err);
+        });
+    return docIds;
+};
+
 async function getTaskInformation(userID, taskID){
     let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get()
     return taskDoc.data();
 };
+
 async function getProjectsandTags(userID){
     let projectIDs = [];
     let tagIDs = [];
@@ -120,13 +137,13 @@ async function getProjectsandTags(userID){
     return [[projectcrapNames, projectcrapNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
 }
 
-async function modifyTasks(userID, taskID, param, newVal){
+async function modifyTask(userID, taskID, param, newVal){
     var taskData = "error";
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
 
         if (doc.exists == true) {
             taskData = doc.data();
-        }else{
+        } else{
             throw "excuse me wth why are you gettingeddd me to modify something that does not exist???? *hacker noises*";
         }
     });
@@ -153,9 +170,10 @@ async function modifyTasks(userID, taskID, param, newVal){
         case fields.TAGS:
             taskData.tags = newVal;
             break;
+        case fields.TIMEZONE:
+            taskData.timezone = newVal;
+            break;
     }
-    console.log(taskData);
-
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).set(taskData);
 
 }
@@ -181,7 +199,7 @@ async function modifyTasks(userID, taskID, params){
 }
 */
 
-async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam){
+async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz){
     await db.collection("users").doc(userID).collection("tasks").add({
         name:nameParam,
         desc:descParam,
@@ -191,21 +209,22 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
         isFloating: isFloatingParam,
         project: projectParam,
         tags: tagsParam,
+        timezone: tz,
         isComplete: false
     });
 }
-/*
+
 async function completeTask(userID, taskID){
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
         if (doc.exists!=true) {
             throw "Document not found. Please don't try to set documents that don't exist.";
         }
     });
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).set({
+    await db.collection("users").doc(userID).collection("tasks").doc(taskID).update({
         isComplete: true
     });
 }
-*/
+
 async function deleteTask(userID, taskID){
     db.collection("users").doc(userID).collection("tasks").doc(taskID).delete().then(function() {
         console.log("Task successfully deleted!");
