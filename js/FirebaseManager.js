@@ -16,7 +16,7 @@ const firebaseConfig = {
     appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
 };
 
-// Initialize Firebase
+// Initialize Firebase Application
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
@@ -72,8 +72,7 @@ async function getProjectsandTags(userID) {
 
     let projectNames = {};
     let projectNamesReverse = {};
-    let i;
-    for (i=0; i<projectIDs.length; i++) {
+    for (let i=0; i<projectIDs.length; i++) {
         let projectDocumentName = "errorThing";
         await db.collection("users").doc(userID).collection("projects").doc(projectIDs[i]).get().then(function(doc) {
             if (doc.exists) {
@@ -97,10 +96,9 @@ async function getProjectsandTags(userID) {
         projectNames[projectIDs[i]]=projectDocumentName;
         projectNamesReverse[projectDocumentName]=projectIDs[i];
     }
-    let tagcrapNames = [];
-    let tagcrapNamesReverse = [];
-    let j;
-    for (j=0; j<tagIDs.length; j++) {
+    let tagNames = [];
+    let tagNamesReverse = [];
+    for (let j=0; j<tagIDs.length; j++) {
         let tagDocumentName = "errorThing";
         await db.collection("users").doc(userID).collection("tags").doc(tagIDs[j]).get().then(function(doc) {
             if (doc.exists) {
@@ -112,15 +110,13 @@ async function getProjectsandTags(userID) {
         }).catch(function(error) {
             console.error("Error getting document:", error);
         });
-        if (tagDocumentName !== "errorThing") {
-            //console.log(tagDocumentName);
-        } else {
+        if (tagDocumentName === "errorThing") {
             console.error("Thread was either skipped, or name was null within document", tagIDs[j]);
         }
-        tagcrapNames[tagIDs[j]]=tagDocumentName;
-        tagcrapNamesReverse[tagDocumentName]=tagIDs[j];
+        tagNames[tagIDs[j]] = tagDocumentName;
+        tagNamesReverse[tagDocumentName] = tagIDs[j];
     }
-    return [[projectNames, projectNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
+    return [[projectNames, projectNamesReverse], [tagNames, tagNamesReverse]];
 }
 
 async function modifyTask(userID, taskID, updateQuery){
@@ -152,7 +148,7 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
 
 async function completeTask(userID, taskID) {
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
-        if (doc.exists!=true) {
+        if (doc.exists !== true) {
             throw "Document not found. Please don't try to set documents that don't exist.";
         }
     });
