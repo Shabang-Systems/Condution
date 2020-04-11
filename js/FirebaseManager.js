@@ -1,12 +1,12 @@
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
-var firebase = require("firebase/app");
+const firebase = require("firebase/app");
 
 // Add the Firebase products that you want to use
 require("firebase/auth");
 require("firebase/firestore");
 
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
     authDomain: "condution-7133f.firebaseapp.com",
     databaseURL: "https://condution-7133f.firebaseio.com",
@@ -19,7 +19,7 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-var db = firebase.firestore();
+const db = firebase.firestore();
 
 async function getTasks(userID) {
     let docIds = [];
@@ -31,7 +31,7 @@ async function getTasks(userID) {
         console.log('Error getting documents', err);
     });
     return docIds;
-};
+}
 
 async function getInboxTasks(userID) {
     let docIds = [];
@@ -43,12 +43,12 @@ async function getInboxTasks(userID) {
         console.log('Error getting documents', err);
     });
     return docIds;
-};
+}
 
 async function getTaskInformation(userID, taskID) {
     let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get()
     return taskDoc.data();
-};
+}
 
 async function getProjectsandTags(userID) {
     let projectIDs = [];
@@ -58,20 +58,20 @@ async function getProjectsandTags(userID) {
             projectIDs.push(doc.id);
         });
     }).catch(err => {
-        console.log('Error getting documents', err);
+        console.error('Error getting documents', err);
     });
     await db.collection("users").doc(userID).collection("tags").get().then(snapshot => {
         snapshot.forEach(doc => {
             tagIDs.push(doc.id);
         });
     }).catch(err => {
-        console.log('Error getting documents', err);
+        console.error('Error getting documents', err);
     });
     //const projectIDs = db.collection("users").doc(userID).collection("projects").select();
     //const tags = db.collection("usnpm ers").doc(userID).collection("tags").select();
 
-    let projectcrapNames = {};
-    let projectcrapNamesReverse = {};
+    let projectNames = {};
+    let projectNamesReverse = {};
     let i;
     for (i=0; i<projectIDs.length; i++) {
         let projectDocumentName = "errorThing";
@@ -80,22 +80,22 @@ async function getProjectsandTags(userID) {
                 projectDocumentName = doc.data().name;
             } else {
                 // doc.data() will be undefined in this case
-                console.log("No such document!");
+                console.error("No such document!");
             }
         }).catch(function(error) {
-            console.log("Error getting document:", error);
+            console.error("Error getting document:", error);
         });
-        if (projectDocumentName != "errorThing") {
+        if (projectDocumentName !== "errorThing") {
             //console.log(projectDocumentName);
         } else {
-            console.log("error, thread was either skipped, or name was null within document", projectIDs[i]);
+            console.error("error, thread was either skipped, or name was null within document", projectIDs[i]);
         }
         /*
         projectIDs[i]
 
          */
-        projectcrapNames[projectIDs[i]]=projectDocumentName;
-        projectcrapNamesReverse[projectDocumentName]=projectIDs[i];
+        projectNames[projectIDs[i]]=projectDocumentName;
+        projectNamesReverse[projectDocumentName]=projectIDs[i];
     }
     let tagcrapNames = [];
     let tagcrapNamesReverse = [];
@@ -107,20 +107,20 @@ async function getProjectsandTags(userID) {
                 tagDocumentName = doc.data().name;
             } else {
                 // doc.data() will be undefined in this case
-                console.log("No such document!");
+                console.error("No such document!");
             }
         }).catch(function(error) {
-            console.log("Error getting document:", error);
+            console.error("Error getting document:", error);
         })
-        if (tagDocumentName != "errorThing") {
+        if (tagDocumentName !== "errorThing") {
             //console.log(tagDocumentName);
         } else {
-            console.log("error, thread was either skipped, or name was null within document", tagIDs[j]);
+            console.error("Thread was either skipped, or name was null within document", tagIDs[j]);
         }
         tagcrapNames[tagIDs[j]]=tagDocumentName;
         tagcrapNamesReverse[tagDocumentName]=tagIDs[j];
     }
-    return [[projectcrapNames, projectcrapNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
+    return [[projectNames, projectNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
 }
 
 async function modifyTask(userID, taskID, updateQuery){
@@ -128,7 +128,7 @@ async function modifyTask(userID, taskID, updateQuery){
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
 
         if (doc.exists !== true) {
-            throw "excuse me wth why are you gettingeddd me to modify something that does not exist???? *hacker noises*";
+            throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
         }
     });
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).update(updateQuery);
@@ -136,6 +136,7 @@ async function modifyTask(userID, taskID, updateQuery){
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) {
     await db.collection("users").doc(userID).collection("tasks").add({
+        // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
         defer:deferParam,
@@ -175,6 +176,7 @@ async function deleteProject(userID, projectID) {
         console.error("Error removing project: ", error);
     });
 }
+
 async function deleteTag(userID, tagID) {
     db.collection("users").doc(userID).collection("tag").doc(tagID).delete().then(function() {
         console.log("Tag successfully deleted!");

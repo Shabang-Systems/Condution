@@ -1,5 +1,5 @@
 // Chapter 0: Fire! Base!
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
     authDomain: "condution-7133f.firebaseapp.com",
     databaseURL: "https://condution-7133f.firebaseio.com",
@@ -10,18 +10,18 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-var auth = function() {
+let auth = function() {
     firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
         // Handle Errors here.
         console.log("Silly goose");
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         $(".auth-upf").addClass("wrong");
     });
-}
+};
 
 $("#password").keydown(function(e) {
-    if(e.keyCode == 13){
+    if (e.keyCode == 13) {
         auth();
     }
 });
@@ -31,7 +31,7 @@ $("#login").click(function(e) {
 });
 
 firebase.auth().onAuthStateChanged(user => {
-    if(user) {
+    if (user) {
         if (user.emailVerified){
             window.location = 'app.html'; 
         } else {
