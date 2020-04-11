@@ -59,25 +59,23 @@ var showPage = async function(pageId) {
         $("#inbox").empty();
         $("#due-soon").empty();
 
-        await getInboxTasks(uid).then(async function(e) {
-            new Promise((resolve, reject) => {
-                let counter = 0;
-                let inboxCount = 0;
-                e.forEach((value, index, array) => { // TODO: refactor, use promise.forEach
-                    displayTask("inbox", value, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then((val)=>{
-                        if (val === 0) {
-                            inboxCount++;
-                        }
-                        counter++;
-                        if (counter === array.length) resolve(inboxCount);
-                    });
-                });
-            }).then((iC)=>{
-                if (iC === 0) {
+        await getInboxTasks(uid).then(async (events) => { // TODO: what does function do?
+            // hide the inbox if there are no unfinished tasks
+            // TODO: test this function
+            Promise.all(                                            // execute each promise in
+                events.map(event => displayTask(                    // get displayTask promise form each event
+                    "inbox",
+                    event,
+                    [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
+                ))
+            )
+            .then(counts => counts.reduce((tot, cur) => tot + cur)) // sum the results of displayTask promises
+            .then(inboxCount => {
+                if (inboxCount === 0) {
                     $("#inbox-subhead").hide();
                     $("#inbox").hide();
                 } else {
-                    $("#unsorted-badge").html(''+iC);
+                    $("#unsorted-badge").html(''+inboxCount);
                 }
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
