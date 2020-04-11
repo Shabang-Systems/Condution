@@ -10,7 +10,7 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-var auth = function(){
+var auth = function() {
     firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
         // Handle Errors here.
         console.log("Silly goose");
@@ -43,6 +43,6 @@ firebase.auth().onAuthStateChanged(user => {
     }
 });
 
-var greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"]
+var greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"];
 $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
 
