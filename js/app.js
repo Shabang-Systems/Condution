@@ -46,8 +46,8 @@ var showPage = async function(pageId) {
     });
     $("#page-loader").fadeIn(100);
     let pPandP = await getProjectsandTags(uid);
-    let possibleProjects = pPandP[0][0]; 
-    let possibleTags = pPandP[1][0]; 
+    let possibleProjects = pPandP[0][0];
+    let possibleTags = pPandP[1][0];
     if(pageId==="upcoming-page"){
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
@@ -114,9 +114,9 @@ var displayTask = async function(pageId, taskId, infoObj) {
         return 1;
     }
     let pPandP = infoObj[0];
-    let possibleProjects = infoObj[1]; 
-    let possibleTags = infoObj[2]; 
-    let actualProjectID = taskObj.project; 
+    let possibleProjects = infoObj[1];
+    let possibleTags = infoObj[2];
+    let actualProjectID = taskObj.project;
     var name = taskObj.name;
     var desc = taskObj.desc;
     let timezone = taskObj.timezone;
@@ -127,7 +127,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     let actualTags = taskObj.tags;
     // ---------------------------------------------------------------------------------
     // Parse and pre-write some DOMs
-    let projectSelects = " " 
+    let projectSelects = " "
     for (let i in possibleProjects){
         projectSelects = projectSelects+"<option>"+possibleProjects[i]+"</option> "
     }

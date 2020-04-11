@@ -31,63 +31,59 @@ firebase.initializeApp(firebaseConfig);
 
 var db = firebase.firestore();
 
-async function getTasks(userID){
+async function getTasks(userID) {
     let docIds = [];
     await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
         snapshot.forEach(doc => {
             docIds.push(doc.id);
         });
-    })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
+    }).catch(err => {
+        console.log('Error getting documents', err);
+    });
     return docIds;
 };
 
-async function getInboxTasks(userID){
+async function getInboxTasks(userID) {
     let docIds = [];
     await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
         snapshot.forEach(doc => {
             docIds.push(doc.id);
         });
-    })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
+    }).catch(err => {
+        console.log('Error getting documents', err);
+    });
     return docIds;
 };
 
-async function getTaskInformation(userID, taskID){
+async function getTaskInformation(userID, taskID) {
     let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get()
     return taskDoc.data();
 };
 
-async function getProjectsandTags(userID){
+async function getProjectsandTags(userID) {
     let projectIDs = [];
     let tagIDs = [];
         await db.collection("users").doc(userID).collection("projects").get().then(snapshot => {
         snapshot.forEach(doc => {
             projectIDs.push(doc.id);
         });
-    })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
+    }).catch(err => {
+        console.log('Error getting documents', err);
+    });
     await db.collection("users").doc(userID).collection("tags").get().then(snapshot => {
         snapshot.forEach(doc => {
             tagIDs.push(doc.id);
         });
-    })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
+    }).catch(err => {
+        console.log('Error getting documents', err);
+    });
     //const projectIDs = db.collection("users").doc(userID).collection("projects").select();
     //const tags = db.collection("usnpm ers").doc(userID).collection("tags").select();
 
     let projectcrapNames = {};
     let projectcrapNamesReverse = {};
     let i;
-    for (i=0; i<projectIDs.length; i++){
+    for (i=0; i<projectIDs.length; i++) {
         let projectDocumentName = "errorThing";
         await db.collection("users").doc(userID).collection("projects").doc(projectIDs[i]).get().then(function(doc) {
             if (doc.exists) {
@@ -98,10 +94,10 @@ async function getProjectsandTags(userID){
             }
         }).catch(function(error) {
             console.log("Error getting document:", error);
-        })
-        if (projectDocumentName != "errorThing"){
+        });
+        if (projectDocumentName != "errorThing") {
             //console.log(projectDocumentName);
-        }else{
+        } else {
             console.log("error, thread was either skipped, or name was null within document", projectIDs[i]);
         }
         /*
@@ -114,7 +110,7 @@ async function getProjectsandTags(userID){
     let tagcrapNames = [];
     let tagcrapNamesReverse = [];
     let j;
-    for (j=0; j<tagIDs.length; j++){
+    for (j=0; j<tagIDs.length; j++) {
         let tagDocumentName = "errorThing";
         await db.collection("users").doc(userID).collection("tags").doc(tagIDs[j]).get().then(function(doc) {
             if (doc.exists) {
@@ -126,9 +122,9 @@ async function getProjectsandTags(userID){
         }).catch(function(error) {
             console.log("Error getting document:", error);
         })
-        if (tagDocumentName != "errorThing"){
+        if (tagDocumentName != "errorThing") {
             //console.log(tagDocumentName);
-        }else{
+        } else {
             console.log("error, thread was either skipped, or name was null within document", tagIDs[j]);
         }
         tagcrapNames[tagIDs[j]]=tagDocumentName;
@@ -137,18 +133,17 @@ async function getProjectsandTags(userID){
     return [[projectcrapNames, projectcrapNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
 }
 
-async function modifyTask(userID, taskID, param, newVal){
+async function modifyTask(userID, taskID, param, newVal) {
     var taskData = "error";
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
-
         if (doc.exists == true) {
             taskData = doc.data();
-        } else{
+        } else {
             throw "excuse me wth why are you gettingeddd me to modify something that does not exist???? *hacker noises*";
         }
     });
     console.log(taskData);
-    switch(param){
+    switch(param) {
         case fields.NAME:
             taskData.name = newVal;
             break;
@@ -175,7 +170,7 @@ async function modifyTask(userID, taskID, param, newVal){
             break;
     }
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).set(taskData);
-
+    // comment to take up the newline
 }
 
 /*
@@ -199,7 +194,7 @@ async function modifyTasks(userID, taskID, params){
 }
 */
 
-async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz){
+async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) {
     await db.collection("users").doc(userID).collection("tasks").add({
         name:nameParam,
         desc:descParam,
@@ -214,7 +209,7 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
     });
 }
 
-async function completeTask(userID, taskID){
+async function completeTask(userID, taskID) {
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
         if (doc.exists!=true) {
             throw "Document not found. Please don't try to set documents that don't exist.";
@@ -225,7 +220,7 @@ async function completeTask(userID, taskID){
     });
 }
 
-async function deleteTask(userID, taskID){
+async function deleteTask(userID, taskID) {
     db.collection("users").doc(userID).collection("tasks").doc(taskID).delete().then(function() {
         console.log("Task successfully deleted!");
     }).catch(function(error) {
@@ -233,14 +228,14 @@ async function deleteTask(userID, taskID){
     });
 }
 
-async function deleteProject(userID, projectID){
+async function deleteProject(userID, projectID) {
     db.collection("users").doc(userID).collection("projects").doc(projectID).delete().then(function() {
         console.log("Project successfully deleted!");
     }).catch(function(error) {
         console.error("Error removing project: ", error);
     });
 }
-async function deleteTag(userID, tagID){
+async function deleteTag(userID, tagID) {
     db.collection("users").doc(userID).collection("tag").doc(tagID).delete().then(function() {
         console.log("Tag successfully deleted!");
     }).catch(function(error) {
