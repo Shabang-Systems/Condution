@@ -68,14 +68,12 @@ var showPage = async function(pageId) {
                     element,
                     [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
                 ))
-            )
-            .then(counts => counts.reduce((tot, cur) => tot + (cur === 0), 0)) // sum the results of displayTask promises
-            .then(inboxCount => {
-                if (inboxCount === 0) {
+            ).then(() => {
+                if (elems.length === 0) {
                     $("#inbox-subhead").hide();
                     $("#inbox").hide();
                 } else {
-                    $("#unsorted-badge").html(''+inboxCount);
+                    $("#unsorted-badge").html('' + elems.length);
                 }
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
@@ -93,6 +91,7 @@ var showPage = async function(pageId) {
 
 var isTaskActive = false;
 var activeTask = null; // TODO: shouldn't this be undefined?
+var activeTaskDeInboxed = false;
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
@@ -103,14 +102,23 @@ var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
     isTaskActive = false;
     activeTask = null;
+    if (activeTaskDeInboxed) {
+        getInboxTasks(uid).then(function(e){
+            iC = e.length;
+            if (iC === 0) {
+                $("#inbox-subhead").slideUp(300);
+                $("#inbox").slideUp(300);
+            } else {
+                $("#unsorted-badge").html(''+iC);
+            }
+        });
+        activeTaskDeInboxed = false;
+    }
 }
 
 var displayTask = async function(pageId, taskId, infoObj) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let taskObj = await getTaskInformation(uid, taskId);
-    if (taskObj.isComplete){
-        return 1;
-    }
     let pPandP = infoObj[0];
     let possibleProjects = infoObj[1];
     let possibleTags = infoObj[2];
@@ -285,7 +293,10 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }).on('select.editable-select', function (e, li) {
         let projectSelected = li.text();
         let projId = possibleProjectsRev[projectSelected];
-        console.log(projId);
+        getTaskInformation(uid, taskId).then(function(e) {
+            if (e.project === "") activeTaskDeInboxed = true;
+        });
+        modifyTask(uid, taskId, {project:projId});
     });
     $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
@@ -298,7 +309,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }
     // ---------------------------------------------------------------------------------
     // Action Behaviors
-    $('#task-check-'+taskId).change(function() {
+    $('#task-check-'+taskId).change(function(e) {
         if (this.checked) {
             completeTask(uid, taskId);
             // if (actualProject === "inbox") // TODO: do whatever this is?
@@ -312,18 +323,48 @@ var displayTask = async function(pageId, taskId, infoObj) {
             $('#task-' + taskId).slideUp(150);
         }
     });
+    $('#task-project-' + taskId).change(function(e) {
+        if (this.value in possibleProjectsRev) {
+            let projId = possibleProjectsRev[this.value];
+            getTaskInformation(uid, taskId).then(function(e) {
+                if (e.project === "") activeTaskDeInboxed = true;
+            });
+            modifyTask(uid, taskId, {project:projId});
+        } else {
+            modifyTask(uid, taskId, {project:""});
+            this.value = ""
+        }
+    });
     $("#task-trash-" + taskId).click(function(e) {
         // Ask HuZah's code to delete the task
         hideActiveTask();
         $('#task-' + taskId).slideUp(150);
     });
     $("#task-name-" + taskId).change(function(e) {
-        modifyTask(uid, taskId, {name:$("#task-name-"+taskId).val()});
+        modifyTask(uid, taskId, {name:this.value});
     });
     $("#task-desc-" + taskId).change(function(e) {
-        modifyTask(uid, taskId, {desc:$("#task-desc-"+taskId).val()});
+        modifyTask(uid, taskId, {desc:this.value});
     });
-    return 0;
+    $('#task-tag-' + taskId).on('itemRemoved', function(e) {
+        let removedTag = possibleTagsRev[e.item];
+        actualTags = actualTags.filter(item => item !== removedTag);
+        modifyTask(uid, taskId, {tags:actualTags});
+    });
+    $('#task-tag-' + taskId).on('itemAdded', function(e) {
+        let addedTag = possibleTagsRev[e.item];
+        if (!addedTag){
+            newTag(uid, e.item).then(function(addedTag) {
+                actualTags.push(addedTag);
+                possibleTags[addedTag] = e.item;
+                possibleTags[e.item] = addedTag;
+                modifyTask(uid, taskId, {tags:actualTags});         
+            });
+        } else if (!(addedTag in actualTags)){
+            actualTags.push(addedTag);
+            modifyTask(uid, taskId, {tags:actualTags});
+        }       
+   });
 }
 
 // Chapter 3: Animation Listeners!!
