@@ -2,19 +2,19 @@ console.log("Initializing the galvanitizer!");
 
 // Chapter 1: Utilities!
 var substringMatcher = function(strs) {
-  return function findMatches(q, cb) {
-    let matches, substringRegex;
+    return function findMatches(q, cb) {
+        let matches, substringRegex;
 
-    matches = [];
-    substrRegex = new RegExp(q, 'i');
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
-      }
-    });
+        matches = [];
+        substrRegex = new RegExp(q, 'i');
+        $.each(strs, function(i, str) {
+            if (substrRegex.test(str)) {
+                matches.push(str);
+            }
+        });
 
-    cb(matches);
-  };
+        cb(matches);
+    };
 };
 
 var smartParse = function(timeformat, timeString, o) {
@@ -31,26 +31,26 @@ var smartParse = function(timeformat, timeString, o) {
 }
 
 var numDaysBetween = function(d1, d2) {
-  var diff = Math.abs(d1.getTime() - d2.getTime());
-  return diff / (1000 * 60 * 60 * 24);
+    var diff = Math.abs(d1.getTime() - d2.getTime());
+    return diff / (1000 * 60 * 60 * 24);
 };
 
 // Chapter 2: Functions to Show and Hide Things!
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
-    $("#content-area").children().each(function(){
+    $("#content-area").children().each(function() {
         let item = $(this)
         if (item.attr("id") != pageId){
-           item.css("display", "none")
-       }
+            item.css("display", "none")
+        }
     });
     $("#page-loader").fadeIn(100);
-    let pPandP = await getProjectsandTags(uid);
-    let possibleProjects = pPandP[0][0]; 
-    let possibleTags = pPandP[1][0]; 
-    let possibleProjectsRev = pPandP[0][1]; 
-    let possibleTagsRev = pPandP[1][1]; 
-    if(pageId==="upcoming-page"){
+    let pPandT = await getProjectsandTags(uid);
+    let possibleProjects = pPandT[0][0];
+    let possibleTags = pPandT[1][0];
+    let possibleProjectsRev = pPandT[0][1];
+    let possibleTagsRev = pPandT[1][1];
+    if (pageId === "upcoming-page") {
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
         var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
@@ -59,24 +59,21 @@ var showPage = async function(pageId) {
         $("#inbox").empty();
         $("#due-soon").empty();
 
-        let inboxTasks = getInboxTasks(uid);
-
-        await inboxTasks.then(async function(e){
-                var bar = new Promise((resolve, reject) => {
+        await getInboxTasks(uid).then(async function(e) {
+            new Promise((resolve, reject) => {
                 let counter = 0;
                 let inboxCount = 0;
-                e.forEach((value, index, array) => {
-                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then((val)=>{
-                        if (val === 0){
+                e.forEach((value, index, array) => { // TODO: refactor, use promise.forEach
+                    displayTask("inbox", value, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then((val)=>{
+                        if (val === 0) {
                             inboxCount++;
                         }
                         counter++;
                         if (counter === array.length) resolve(inboxCount);
                     });
                 });
-            });
-            bar.then((iC)=>{
-                if(iC === 0){
+            }).then((iC)=>{
+                if (iC === 0) {
                     $("#inbox-subhead").hide();
                     $("#inbox").hide();
                 } else {
@@ -85,18 +82,19 @@ var showPage = async function(pageId) {
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
             });
-        })
+        });
     } else {
         $("#"+pageId).empty();
         $("#page-loader").fadeOut(100);
         $("#"+pageId).fadeIn(200);
         // Sad normal perspective loads
+        // TODO: implement query rules for perspectives
     }
 
 }
 
 var isTaskActive = false;
-var activeTask = null;
+var activeTask = null; // TODO: shouldn't this be undefined?
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
@@ -116,11 +114,11 @@ var displayTask = async function(pageId, taskId, infoObj) {
         return 1;
     }
     let pPandP = infoObj[0];
-    let possibleProjects = infoObj[1]; 
-    let possibleTags = infoObj[2]; 
-    let possibleProjectsRev = infoObj[3]; 
-    let possibleTagsRev = infoObj[4]; 
-    let actualProjectID = taskObj.project; 
+    let possibleProjects = infoObj[1];
+    let possibleTags = infoObj[2];
+    let possibleProjectsRev = infoObj[3];
+    let possibleTagsRev = infoObj[4];
+    let actualProjectID = taskObj.project;
     var name = taskObj.name;
     var desc = taskObj.desc;
     let timezone = taskObj.timezone;
@@ -131,24 +129,24 @@ var displayTask = async function(pageId, taskId, infoObj) {
     let actualTags = taskObj.tags;
     // ---------------------------------------------------------------------------------
     // Parse and pre-write some DOMs
-    let projectSelects = " " 
-    for (let i in possibleProjects){
-        projectSelects = projectSelects+"<option>"+possibleProjects[i]+"</option> "
+    let projectSelects = " ";
+    for (let i in possibleProjects) {
+        projectSelects = projectSelects + "<option>" + possibleProjects[i] + "</option> ";
     }
-    let tagString = ""
-    for (let i in actualTags){
-        tagString = tagString+possibleTags[actualTags[i]]+","
+    let tagString = "";
+    for (let i in actualTags) {
+        tagString = tagString + possibleTags[actualTags[i]] + ",";
     }
     let actualProject = possibleProjects[actualProjectID];
-    let possibleTagNames = (()=>{
-        let res = []
-        for (let key in possibleTags){
-            res.push(possibleTags[key])
+    let possibleTagNames = (() => {
+        let res = [];
+        for (let key in possibleTags) {
+            res.push(possibleTags[key]);
         }
         return res;
-    })()
+    })();
     // Confused? The following sets the appearence of the checkboxes by manipulating active and checked
-    if (isFlagged){
+    if (isFlagged) {
         var a1a = "";
         var a1b = "";
         var a2a = " active";
@@ -159,7 +157,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
         var a2a = "";
         var a2b = "";
     }
-    if (isFloating){
+    if (isFloating) {
         var b1a = "";
         var b1b = "";
         var b2a = " active";
@@ -172,7 +170,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }
     let defer_current;
     let due_current;
-    if(isFloating){
+    if(isFloating) {
         defer_current = moment(defer).tz(timezone).local(true).toDate();
         due_current = moment(due).tz(timezone).local(true).toDate();
     } else {
@@ -181,7 +179,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }
     // ---------------------------------------------------------------------------------
     // Light the fire, kick the Tires!
-    $("#"+pageId).append(`
+    $("#" + pageId).append(`
                     <div id="task-${taskId}" class="task">
                         <div id="task-display-${taskId}" class="task-display" style="display:block">
                             <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
@@ -231,7 +229,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     `)
     // ---------------------------------------------------------------------------------
     // Set Dates!
-    $("#task-defer-"+taskId).datetimepicker({
+    $("#task-defer-" + taskId).datetimepicker({
         timeInput: true,
         timeFormat: "hh:mm tt",
         showHour: false,
@@ -239,15 +237,15 @@ var displayTask = async function(pageId, taskId, infoObj) {
         onSelect: function(e) {
             let defer_set = $(this).datetimepicker('getDate');
             let tz = moment.tz.guess();
-            if (new Date() < defer_set){
-                $('#task-name-'+taskId).css("opacity", "0.3");
+            if (new Date() < defer_set) {
+                $('#task-name-' + taskId).css("opacity", "0.3");
             } else {
-                $('#task-name-'+taskId).css("opacity", "1");
+                $('#task-name-' + taskId).css("opacity", "1");
             }
-            modifyTask(uid,taskId,{defer:defer_set, timezone:tz})
+            modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
         }
     });
-    $("#task-due-"+taskId).datetimepicker({
+    $("#task-due-" + taskId).datetimepicker({
         timeInput: true,
         timeFormat: "hh:mm tt",
         showHour: false,
@@ -255,131 +253,133 @@ var displayTask = async function(pageId, taskId, infoObj) {
         onSelect: function(e) {
             let due_set = $(this).datetimepicker('getDate');
             let tz = moment.tz.guess();
-            if (new Date() > due_set){
-                $('#task-pseudocheck-'+taskId).addClass("od");
-                $('#task-pseudocheck-'+taskId).removeClass("ds");
-            } else if (numDaysBetween(new Date(), due_set) <= 1){
-                $('#task-pseudocheck-'+taskId).addClass("ds");
-                $('#task-pseudocheck-'+taskId).removeClass("od");
+            if (new Date() > due_set) {
+                $('#task-pseudocheck-' + taskId).addClass("od");
+                $('#task-pseudocheck-' + taskId).removeClass("ds");
+            } else if (numDaysBetween(new Date(), due_set) <= 1) {
+                $('#task-pseudocheck-' + taskId).addClass("ds");
+                $('#task-pseudocheck-' + taskId).removeClass("od");
             } else {
-                $('#task-pseudocheck-'+taskId).removeClass("od");
-                $('#task-pseudocheck-'+taskId).removeClass("ds");
+                $('#task-pseudocheck-' + taskId).removeClass("od");
+                $('#task-pseudocheck-' + taskId).removeClass("ds");
             }
-            modifyTask(uid,taskId,{due:due_set, timezone:tz})
+            modifyTask(uid, taskId, {due:due_set, timezone:tz});
         }
-
     });
     // So apparently setting dates is hard for this guy, so we run this async
-    let setDates = async () => {
-        $("#task-defer-"+taskId).datetimepicker('setDate', (defer_current));
-        $("#task-due-"+taskId).datetimepicker('setDate', (due_current));
+    let setDates = async () => { // TODO: why is this defined async when its so short and also called immmmedietely after wth
+        $("#task-defer-" + taskId).datetimepicker('setDate', (defer_current));
+        $("#task-due-" + taskId).datetimepicker('setDate', (due_current));
     };
     setDates();
     // Set Inputs!
-    $('#task-tag-'+taskId).val(tagString);
-    $('#task-tag-'+taskId).tagsinput({
+    $('#task-tag-' + taskId).val(tagString);
+    $('#task-tag-' + taskId).tagsinput({
         typeaheadjs: {
             name: 'tags',
             source: substringMatcher(possibleTagNames)
-          }
+        }
     });
-    $('#task-project-'+taskId).editableSelect({
+    $('#task-project-' + taskId).editableSelect({
         effects: 'fade',
         duration: 200,
         appendTo: 'body',
     }).on('select.editable-select', function (e, li) {
         let projectSelected = li.text();
-        let projId = possibleProjectsRev[projectSelected]
-        console.log(projId);    
+        let projId = possibleProjectsRev[projectSelected];
+        console.log(projId);
     });
-    $('#task-project-'+taskId).val(actualProject);
+    $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
-    if (new Date() > due_current){
-        $('#task-pseudocheck-'+taskId).addClass("od");
-    } else if (numDaysBetween(new Date(), due_current) <= 1){
-        $('#task-pseudocheck-'+taskId).addClass("ds");
-    } else if (new Date() < defer_current){
-        $('#task-name-'+taskId).css("opacity", "0.3");
+    if (new Date() > due_current) {
+        $('#task-pseudocheck-' + taskId).addClass("od");
+    } else if (numDaysBetween(new Date(), due_current) <= 1) {
+        $('#task-pseudocheck-' + taskId).addClass("ds");
+    } else if (new Date() < defer_current) {
+        $('#task-name-' + taskId).css("opacity", "0.3");
     }
     // ---------------------------------------------------------------------------------
     // Action Behaviors
     $('#task-check-'+taskId).change(function() {
         if (this.checked) {
             completeTask(uid, taskId);
-            if(actualProject==="inbox")
-            $('#task-name-'+taskId).css("color","#ccccc");
-            $('#task-name-'+taskId).css("text-decoration", "line-through");
-            $('#task-pseudocheck-'+taskId).css("opacity", "0.6");
-            $('#task-'+taskId).animate({"margin": "5px 0 5px 0"}, 200);
-            $('#task-'+taskId).slideUp(150);
+            // if (actualProject === "inbox") // TODO: do whatever this is?
+            //      (if is a task is in the inbox and was just completed:
+            //      drop the badge on the inbox)
+
+            $('#task-name-' + taskId).css("color", "#ccccc");
+            $('#task-name-' + taskId).css("text-decoration", "line-through");
+            $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
+            $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
+            $('#task-' + taskId).slideUp(150);
         }
     });
-    $("#task-trash-"+taskId).click(function(e) {
+    $("#task-trash-" + taskId).click(function(e) {
         // Ask HuZah's code to delete the task
         hideActiveTask();
-        $('#task-'+taskId).slideUp(150);
+        $('#task-' + taskId).slideUp(150);
     });
-    $("#task-name-"+taskId).change(function(e) {
-        modifyTask(uid,taskId,{name:$("#task-name-"+taskId).val()})
+    $("#task-name-" + taskId).change(function(e) {
+        modifyTask(uid, taskId, {name:$("#task-name-"+taskId).val()});
     });
-    $("#task-desc-"+taskId).change(function(e) {
-        modifyTask(uid,taskId,{desc:$("#task-desc-"+taskId).val()})
+    $("#task-desc-" + taskId).change(function(e) {
+        modifyTask(uid, taskId, {desc:$("#task-desc-"+taskId).val()});
     });
     return 0;
 }
 
 // Chapter 3: Animation Listeners!!
 
-console.log("Watching the clicy-pager!");
-var active = "today"
+console.log("Watching the clicky-pager!");
+var active = "today";
 
 $(document).on('click', '.perspective', function(e) {
-    $("#"+active).removeClass('today-highlighted perspective-selected')
-    showPage("perspective-page")
-    active = $(this).attr('id')
-    if (active.includes("today")){
-        $("#"+active).addClass("today-highlighted")
-    } else if (active.includes("perspective")){
-        $("#"+active).addClass("perspective-selected")
-    }
-})
-
-$(document).on('click', '.today', function(e) {
-    $("#"+active).removeClass('today-highlighted perspective-selected')
-    showPage("upcoming-page")
-    active = $(this).attr('id')
-    if (active.includes("today")){
-        $("#"+active).addClass("today-highlighted")
-    } else if (active.includes("perspective")){
-        $("#"+active).addClass("perspective-selected")
-    }
-})
-
-$(document).on("click", ".task", function(e) {
-    if($(this).attr('id')==="task-"+activeTask){
-        e.stopImmediatePropagation();
-        return;
-    }
-    if (isTaskActive){hideActiveTask();}
-    if($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')){
-        e.stopImmediatePropagation();
-        return;
-    } else{
-        isTaskActive = true;
-        let taskInfo = $(this).attr("id").split("-")
-        let task = taskInfo[taskInfo.length - 1];
-        activeTask = task;
-        $("#task-"+task).animate({"background-color": "#edeef2", "padding": "10px", "margin":"15px 0 30px 0"}, 300);
-        $("#task-edit-"+activeTask).slideDown(200);
-        $("#task-trash-"+activeTask).css("display", "block");
-        $("#task-repeat-"+activeTask).css("display", "block");
-        $("#task-"+task).css({"border-bottom": "2px solid #e5e6e8", "border-right": "2px solid #e5e6e8"});
+    $("#"+active).removeClass('today-highlighted perspective-selected');
+    showPage("perspective-page");
+    active = $(this).attr('id');
+    if (active.includes("today")) {
+        $("#" + active).addClass("today-highlighted");
+    } else if (active.includes("perspective")) {
+        $("#"+active).addClass("perspective-selected");
     }
 });
 
-$(document).on("click", ".page, #left-menu div", function(e){
-    if (isTaskActive){
-        if($(e.target).hasClass("task-pseudocheck")) {
+$(document).on('click', '.today', function(e) {
+    $("#" + active).removeClass('today-highlighted perspective-selected');
+    showPage("upcoming-page");
+    active = $(this).attr('id');
+    if (active.includes("today")) {
+        $("#"+active).addClass("today-highlighted");
+    } else if (active.includes("perspective")) {
+        $("#"+active).addClass("perspective-selected");
+    }
+});
+
+$(document).on("click", ".task", function(e) {
+    if ($(this).attr('id') === "task-" + activeTask) {
+        e.stopImmediatePropagation();
+        return;
+    }
+    if (isTaskActive) hideActiveTask();
+    if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
+        e.stopImmediatePropagation();
+        return;
+    } else {
+        isTaskActive = true;
+        let taskInfo = $(this).attr("id").split("-");
+        let task = taskInfo[taskInfo.length - 1];
+        activeTask = task;
+        $("#task-" + task).animate({"background-color": "#edeef2", "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+        $("#task-edit-" + activeTask).slideDown(200);
+        $("#task-trash-" + activeTask).css("display", "block");
+        $("#task-repeat-" + activeTask).css("display", "block");
+        $("#task-" + task).css({"border-bottom": "2px solid #e5e6e8", "border-right": "2px solid #e5e6e8"});
+    }
+});
+
+$(document).on("click", ".page, #left-menu div", function(e) {
+    if (isTaskActive) {
+        if ($(e.target).hasClass("task-pseudocheck")) {
             $("#task-check-"+activeTask).toggle();
         } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name')) {
             return false;
@@ -388,29 +388,27 @@ $(document).on("click", ".page, #left-menu div", function(e){
     }
 });
 
-$(document).on("click", "#logout", function(e){
-    firebase.auth().signOut().then(function() {}, function(error) {
-        console.log(error);
-    });
+$(document).on("click", "#logout", function(e) {
+    firebase.auth().signOut().then(() => {}, console.error);
 });
 
 var displayName;
 var uid;
 
-var lightTheFire = async function(){
+var lightTheFire = async function() {
     await showPage("upcoming-page");
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
     console.log("Kick the Tires!");
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
     console.log("Authenticating the supergober!");
 
     // Check for Authentication
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-            if (user.emailVerified){
+            if (user.emailVerified) {
                 // User is signed in. Do user related things.
                 displayName = user.displayName;
                 uid = user.uid;
@@ -421,5 +419,5 @@ $(document).ready(function(){
             window.location.replace("auth.html");
         }
     });
-  });
+});
 
