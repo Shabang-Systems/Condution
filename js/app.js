@@ -59,17 +59,17 @@ var showPage = async function(pageId) {
         $("#inbox").empty();
         $("#due-soon").empty();
 
-        await getInboxTasks(uid).then(async (events) => { // TODO: what does function do?
+        await getInboxTasks(uid).then(async (elems) => { // TODO: what does function do?
             // hide the inbox if there are no unfinished tasks
             // TODO: test this function
             Promise.all(                                            // execute each promise in
-                events.map(event => displayTask(                    // get displayTask promise form each event
+                elems.map(element => displayTask(                    // get displayTask promise form each event
                     "inbox",
-                    event,
+                    element,
                     [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
                 ))
             )
-            .then(counts => counts.reduce((tot, cur) => tot + cur)) // sum the results of displayTask promises
+            .then(counts => counts.reduce((tot, cur) => tot + (cur === 0), 0)) // sum the results of displayTask promises
             .then(inboxCount => {
                 if (inboxCount === 0) {
                     $("#inbox-subhead").hide();
