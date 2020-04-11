@@ -610,6 +610,7 @@ html, body {
 
 .datebox {
     cursor: pointer;
+    padding-left: 4px;
 }
 
 /*-----*/
@@ -753,7 +754,7 @@ label:before {
     position: relative;
     background-color: #dadeae;
     display: inline-block;  /* <- ADD THIS */
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     font-size: 10px;
     padding: 1px 4px 1px 4px;
     border-radius: 2px;

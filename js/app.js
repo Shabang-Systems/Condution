@@ -48,6 +48,8 @@ var showPage = async function(pageId) {
     let pPandP = await getProjectsandTags(uid);
     let possibleProjects = pPandP[0][0]; 
     let possibleTags = pPandP[1][0]; 
+    let possibleProjectsRev = pPandP[0][1]; 
+    let possibleTagsRev = pPandP[1][1]; 
     if(pageId==="upcoming-page"){
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
@@ -64,7 +66,7 @@ var showPage = async function(pageId) {
                 let counter = 0;
                 let inboxCount = 0;
                 e.forEach((value, index, array) => {
-                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags]).then((val)=>{
+                    displayTask("inbox", value, [pPandP, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then((val)=>{
                         if (val === 0){
                             inboxCount++;
                         }
@@ -116,12 +118,14 @@ var displayTask = async function(pageId, taskId, infoObj) {
     let pPandP = infoObj[0];
     let possibleProjects = infoObj[1]; 
     let possibleTags = infoObj[2]; 
+    let possibleProjectsRev = infoObj[3]; 
+    let possibleTagsRev = infoObj[4]; 
     let actualProjectID = taskObj.project; 
     var name = taskObj.name;
     var desc = taskObj.desc;
     let timezone = taskObj.timezone;
-    let defer = new Date(taskObj.due.seconds*1000);
-    let due = new Date(taskObj.defer.seconds*1000);
+    let defer = new Date(taskObj.defer.seconds*1000);
+    let due = new Date(taskObj.due.seconds*1000);
     let isFlagged = taskObj.isFlagged;
     let isFloating = taskObj.isFloating;
     let actualTags = taskObj.tags;
@@ -136,6 +140,13 @@ var displayTask = async function(pageId, taskId, infoObj) {
         tagString = tagString+possibleTags[actualTags[i]]+","
     }
     let actualProject = possibleProjects[actualProjectID];
+    let possibleTagNames = (()=>{
+        let res = []
+        for (let key in possibleTags){
+            res.push(possibleTags[key])
+        }
+        return res;
+    })()
     // Confused? The following sets the appearence of the checkboxes by manipulating active and checked
     if (isFlagged){
         var a1a = "";
@@ -227,7 +238,13 @@ var displayTask = async function(pageId, taskId, infoObj) {
         showMinute: false,
         onSelect: function(e) {
             let defer_set = $(this).datetimepicker('getDate');
-            // now, ask HuZah to actually do it
+            let tz = moment.tz.guess();
+            if (new Date() < defer_set){
+                $('#task-name-'+taskId).css("opacity", "0.3");
+            } else {
+                $('#task-name-'+taskId).css("opacity", "1");
+            }
+            modifyTask(uid,taskId,{defer:defer_set, timezone:tz})
         }
     });
     $("#task-due-"+taskId).datetimepicker({
@@ -237,7 +254,18 @@ var displayTask = async function(pageId, taskId, infoObj) {
         showMinute: false,
         onSelect: function(e) {
             let due_set = $(this).datetimepicker('getDate');
-            // now, ask HuZah to actually do it
+            let tz = moment.tz.guess();
+            if (new Date() > due_set){
+                $('#task-pseudocheck-'+taskId).addClass("od");
+                $('#task-pseudocheck-'+taskId).removeClass("ds");
+            } else if (numDaysBetween(new Date(), due_set) <= 1){
+                $('#task-pseudocheck-'+taskId).addClass("ds");
+                $('#task-pseudocheck-'+taskId).removeClass("od");
+            } else {
+                $('#task-pseudocheck-'+taskId).removeClass("od");
+                $('#task-pseudocheck-'+taskId).removeClass("ds");
+            }
+            modifyTask(uid,taskId,{due:due_set, timezone:tz})
         }
 
     });
@@ -252,13 +280,17 @@ var displayTask = async function(pageId, taskId, infoObj) {
     $('#task-tag-'+taskId).tagsinput({
         typeaheadjs: {
             name: 'tags',
-            source: substringMatcher(possibleTags)
+            source: substringMatcher(possibleTagNames)
           }
     });
     $('#task-project-'+taskId).editableSelect({
         effects: 'fade',
         duration: 200,
         appendTo: 'body',
+    }).on('select.editable-select', function (e, li) {
+        let projectSelected = li.text();
+        let projId = possibleProjectsRev[projectSelected]
+        console.log(projId);    
     });
     $('#task-project-'+taskId).val(actualProject);
     // Style'em Good!
@@ -288,10 +320,10 @@ var displayTask = async function(pageId, taskId, infoObj) {
         $('#task-'+taskId).slideUp(150);
     });
     $("#task-name-"+taskId).change(function(e) {
-        modifyTask(uid, )
+        modifyTask(uid,taskId,{name:$("#task-name-"+taskId).val()})
     });
     $("#task-desc-"+taskId).change(function(e) {
-        // Ask HuZah's code to change the task description
+        modifyTask(uid,taskId,{desc:$("#task-desc-"+taskId).val()})
     });
     return 0;
 }

@@ -16,16 +16,6 @@ var firebaseConfig = {
     appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
 };
 
-const fields = {
-    NAME: "name",
-    DESC: "desc",
-    DEFER: "defer",
-    FLAGGED: "isFlagged",
-    FLOATING: "isFloating",
-    PROJECT: "project",
-    TAGS: "tags",
-    TIMEZONE: "timezone"
-}
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -137,45 +127,15 @@ async function getProjectsandTags(userID){
     return [[projectcrapNames, projectcrapNamesReverse], [tagcrapNames, tagcrapNamesReverse]];
 }
 
-async function modifyTask(userID, taskID, param, newVal){
+async function modifyTask(userID, taskID, updateQuery){
     var taskData = "error";
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
 
-        if (doc.exists == true) {
-            taskData = doc.data();
-        } else{
+        if (doc.exists !== true) {
             throw "excuse me wth why are you gettingeddd me to modify something that does not exist???? *hacker noises*";
         }
     });
-    console.log(taskData);
-    switch(param){
-        case fields.NAME:
-            taskData.name = newVal;
-            break;
-        case fields.DESC:
-            taskData.desc = newVal;
-            break;
-        case fields.DEFER:
-            taskData.defer = newVal;
-            break;
-        case fields.FLAGGED:
-            taskData.isFlagged = newVal;
-            break;
-        case fields.FLOATING:
-            taskData.isFloating = newVal;
-            break;
-        case fields.PROJECT:
-            taskData.project = newVal;
-            break;
-        case fields.TAGS:
-            taskData.tags = newVal;
-            break;
-        case fields.TIMEZONE:
-            taskData.timezone = newVal;
-            break;
-    }
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).set(taskData);
-
+    await db.collection("users").doc(userID).collection("tasks").doc(taskID).update(updateQuery);
 }
 
 /*
