@@ -186,3 +186,7 @@ async function deleteTag(userID, tagID) {
         console.error("Error removing tag: ", error);
     });
 }
+
+async function getTasksOfProjects(userID, taskID){
+
+}
