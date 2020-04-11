@@ -1,8 +1,7 @@
 // Firebase App (the core Firebase SDK) is always required and
 // must be listed before other Firebase SDKs
-const firebase = require("firebase/app");
+//const firebase = require("firebase/app");
 
-// Add the Firebase products that you want to use
 require("firebase/auth");
 require("firebase/firestore");
 
@@ -35,7 +34,7 @@ async function getTasks(userID) {
 
 async function getInboxTasks(userID) {
     let docIds = [];
-    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
+    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").where("isComplete", "==", false).get().then(snapshot => {
         snapshot.forEach(doc => {
             docIds.push(doc.id);
         });
@@ -144,6 +143,13 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
         timezone: tz,
         isComplete: false
     });
+}
+
+async function newTag(userID, tagName) {
+    let ntID = await db.collection("users").doc(userID).collection("tags").add({
+        name: tagName,
+    });
+    return ntID.id;
 }
 
 async function completeTask(userID, taskID) {

@@ -544,6 +544,7 @@ var chrono = require('chrono-node');
 						this.value = tp_inst.formattedTime;
 						this.blur();
 					}
+                    tp_inst._onSelectHandler();
 				});
 
 				if (this.inst !== null) {

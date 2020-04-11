@@ -7,7 +7,7 @@
         <!--Other People Codes-->
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
-        <script>var firebase = require("firebase");</script>
+        <script>var firebase = require("firebase/app");</script>
         <script>var firebaseui = require('firebaseui');</script>
         <script>require('popper.js');</script>
         <script>require('bootstrap');</script>
@@ -40,15 +40,14 @@
         <div id="auth-content-wrapper">
             <div id="auth-left-menu">
                 <div id="menu-area" style="height:100%">
-                    <div id="auth-component"></div>
-                    <!--TODO: @jack fix whatever this is-->
-                    <div id="auth-component"></div>
+                    <div class="auth-component"></div>
+                    <div class="auth-component"></div>
                     <t id="auth-image-credit">Image by <t style="font-weight: 500;">Tobias Keller</t></t>
                 </div>
             </div>
             <div id="authwall" style="display:none">
-                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t>Hey, you there!</t>
-                <h3 id="greeting-auth-subtitle">Identify yourself:</h3>
+                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t>You there...</t>
+                <h3 id="greeting-auth-subtitle">Welcome to Condution. Identify yourself:</h3>
                 <input class="auth-upf" id="email" type="text" autocomplete="off" value="" placeholder="Email">
                 <input class="auth-upf" id="password" type="password" autocomplete="off" value="" placeholder="Password">
                 <br />
