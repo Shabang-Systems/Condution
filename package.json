@@ -19,7 +19,8 @@
   "homepage": "https://github.com/Shabang-Systems/Condution#readme",
   "devDependencies": {
     "electron": "^8.1.1",
-    "electron-rebuild": "^1.10.1"
+    "electron-rebuild": "^1.10.1",
+    "jquery-sortablejs": "^1.0.1"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",

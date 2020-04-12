@@ -1,6 +1,9 @@
 console.log("Initializing the galvanitizer!");
 
 // Chapter 1: Utilities!
+//import Sortable from 'sortablejs';
+var Sortable = require('sortablejs')
+
 var substringMatcher = function(strings) {
     return function findMatches(q, cb) {
         let matches, substrRegex;
@@ -487,6 +490,12 @@ $(document).on("click", ".page, #left-menu div", function(e) {
 
 $(document).on("click", "#logout", function(e) {
     firebase.auth().signOut().then(() => {}, console.error);
+});
+
+var perspectivSort = new Sortable($(".perspectives")[0], {
+    multiDrag: true, // Enable the plugin
+	selectedClass: "menuitem-selected", // Class name for selected item
+	multiDragKey: 'SHIFT', // Key that must be down for items to be selected
 });
 
 // Chapter 4: Mainloop
