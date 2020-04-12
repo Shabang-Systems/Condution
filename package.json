@@ -39,6 +39,7 @@
     "moment-timezone": "^0.5.28",
     "popper.js": "^1.16.1",
     "select2": "^4.0.13",
+    "sortablejs": "^1.10.2",
     "typeahead.js": "^0.11.1"
   }
 }
