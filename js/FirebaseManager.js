@@ -188,50 +188,22 @@ async function deleteTag(userID, tagID) {
 }
 
 async function getTasksOfProjects(userID, projectID) {
-    let arrayOfChildren = [];
-    let projectCrap = await db.collection("users").doc(userID).collection("projects").doc(projectID).get();
-    let project = projectCrap.data();//TODO: merge with previous line
-    await db.collection("users").doc(userID)
-            .collection("projects").doc(projectID)
-            .collection("children").get()
-            .then(snapshot => {
-                snapshot.forEach(doc => {
-                    arrayOfChildren.push(doc.data());
-                });
-            }).catch(err => {
-        console.log('Error getting documents', err);
-    });
-    console.log("Made it passed just freaking reading stuff", arrayOfChildren);
-    if (project === "error") {
-        console.error("Project not received *sad noises* - Zach");
-    }
-    let childTasks = [];
-    let subProjects = [];
-    let children = [];
-    console.log("Starting something else dw about it");
-    for (let child of arrayOfChildren) {
-        console.log(child);
-        if (child.type === "task") {
-            console.log(child.childrenID);
-            childTasks.push(child.childrenID);
-        } else if (child.type === "project") {
-            console.log(child.childrenID);
-            subProjects.push(await getTasksOfProjects(userID, child.childrenID));
-        }
-    }
-    /*
-    for (let i = 0; i > arrayOfChildren.length; i++) {
-        if (arrayOfChildren[i].type == "task") {
-            childTasks.push(arrayOfChildren[i].childrenID);
-        } else if (arrayOfChildren[i].type == "project") {
-            subProjects.push(await getTasksOfProjects(firebase.auth().currentUser.uid, arrayOfChildren[i].childrenID));
-            subProjectCount++;
-        }
-    }*/
-    console.log("Finished something else dw about it", childTasks, subProjects);
-    if (subProjects.length) {
-        return [childTasks, project]
-    } else {
-        return [childTasks, project, subProjects]
-    }
+    let children = []; // TODO: shouldn't need this... can we just do some map shenanigans with the db result?
+
+    await db                                            //  await for processing to finish
+    .collection("users").doc(userID)                    //  navigate to this user
+    .collection("projects").doc(projectID)              //  navigate to this project
+    .collection("children").get()                       //  get the ids of the children of this project
+    .then(snapshot => {
+        snapshot.forEach(async doc => {                       //  for each child
+            if (doc.data().type === "task")             //      if the child is a task
+                children.push(doc.data().childrenID);   //          push it's ID to the array
+            else if (doc.data().type === "project")     //      if the child is a project
+                // push the children of this project---same structure as the return obj of this func
+                children.push(await getTasksOfProjects(userID, doc.data().childrenID));
+        });
+    }).catch(console.error);
+
+    //  NOTE: returns with `id` prop to preserve id of og project
+    return { id: projectID, children: children };
 }
