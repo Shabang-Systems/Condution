@@ -83,18 +83,16 @@ async function getTaskInformation(userID, taskID) {
 
 async function getProjectsAndTags(userID) {
     // TODO: untested
+    // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
     let projectNameById = {};
     await dbGet({users: userID, projects: undefined})
     .then(snap => snap.forEach(projID => {
         dbGet({users: userID, projects: projID})
+        .filter(proj => proj.exists)
         .then(proj => {
-            if (proj.exists) {
-                projectNameById[projID] = proj.data().name;
-                projectIdByName[proj.data().name] = projID;
-            } else {
-                console.error(`Couldn't get project ${projID} under user ${userID}.`);
-            }
+            projectNameById[projID] = proj.data().name;
+            projectIdByName[proj.data().name] = projID;
         })
     })).catch(console.error);
 
@@ -103,13 +101,10 @@ async function getProjectsAndTags(userID) {
     await dbGet({users: userID, tags: undefined})
     .then(snap => snap.map(tagID => {
         dbGet({users: userID, tags: tagID})
+        .filter(tag => tag.exists)
         .then(tag => {
-            if (tag.exists) {
-                tagNameById[tagID] = tag.data().name;
-                tagIdByName[tag.data().name] = tagID;
-            } else {
-                console.error(`Couldn't get tag ${tagID} under user ${userID}.`);
-            }
+            tagNameById[tagID] = tag.data().name;
+            tagIdByName[tag.data().name] = tagID;
         })
     })).catch(console.error);
 
