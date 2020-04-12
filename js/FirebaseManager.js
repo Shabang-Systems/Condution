@@ -34,9 +34,11 @@ async function getTasks(userID) {
 
 async function getInboxTasks(userID) {
     let docIds = [];
-    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").where("isComplete", "==", false).get().then(snapshot => {
+    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
         snapshot.forEach(doc => {
-            docIds.push(doc.id);
+            if(!doc.isComplete){
+                docIds.push(doc.id);
+            }
         });
     }).catch(err => {
         console.log('Error getting documents', err);
@@ -58,6 +60,13 @@ async function getDSTasks(userID) {
         console.log('Error getting documents', err);
     });
     return docIds;
+}
+
+async function getInboxandDS(userID) {
+    let ibt = await getInboxTasks(userID);
+    let dst = await getDSTasks(userID);
+    let dstWithoutIbt = dst.filter(x => ibt.indexOf(x) < 0);
+    return [ibt, dstWithoutIbt]
 }
 
 async function getTaskInformation(userID, taskID) {

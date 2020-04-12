@@ -59,21 +59,32 @@ var showPage = async function(pageId) {
         $("#inbox").empty();
         $("#due-soon").empty();
 
-        await getInboxTasks(uid).then(async (elems) => { // TODO: what does function do?
+        await getInboxandDS(uid).then(async (elems) => {
             // hide the inbox if there are no unfinished tasks
             // TODO: test this function
             Promise.all(                                            // execute each promise in
-                elems.map(element => displayTask(                    // get displayTask promise form each event
+                elems[0].map(element => displayTask(                    // get displayTask promise form each event
                     "inbox",
                     element,
                     [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
-                ))
+                )),
+                elems[1].map(element => displayTask(                    // get displayTask promise form each event
+                    "due-soon",
+                    element,
+                    [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
+                )),
             ).then(() => {
-                if (elems.length === 0) {
+                if (elems[0].length === 0) {
                     $("#inbox-subhead").hide();
                     $("#inbox").hide();
                 } else {
-                    $("#unsorted-badge").html('' + elems.length);
+                    $("#unsorted-badge").html('' + elems[0].length);
+                }
+                if (elems[1].length === 0) {
+                    $("#ds-subhead").hide();
+                    $("#due-soon").hide();
+                } else {
+                    $("#duesoon-badge").html('' + elems[1].length);
                 }
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
@@ -92,6 +103,7 @@ var showPage = async function(pageId) {
 var isTaskActive = false;
 var activeTask = null; // TODO: shouldn't this be undefined?
 var activeTaskDeInboxed = false;
+var activeTaskDeDsed = false;
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
@@ -110,6 +122,17 @@ var hideActiveTask = function() {
                 $("#inbox").slideUp(300);
             } else {
                 $("#unsorted-badge").html(''+iC);
+            }
+        });
+        activeTaskDeInboxed = false;
+    } else if (activeTaskDeDsed) {
+        getInboxandDS(uid).then(function(e){
+            dsC = e[1].length;
+            if (dsC === 0) {
+                $("#ds-subhead").slideUp(300);
+                $("#due-soon").slideUp(300);
+            } else {
+                $("#duesoon-badge").html(''+iC);
             }
         });
         activeTaskDeInboxed = false;
@@ -267,6 +290,9 @@ var displayTask = async function(pageId, taskId, infoObj) {
                 $('#task-pseudocheck-' + taskId).addClass("ds");
                 $('#task-pseudocheck-' + taskId).removeClass("od");
             } else {
+                if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                    activeTaskDeDsed = true;
+                }
                 $('#task-pseudocheck-' + taskId).removeClass("od");
                 $('#task-pseudocheck-' + taskId).removeClass("ds");
             }
@@ -299,6 +325,8 @@ var displayTask = async function(pageId, taskId, infoObj) {
             if (e.project === "") activeTaskDeInboxed = true;
         });
         modifyTask(uid, taskId, {project:projId});
+        actualProjectID = projId;
+        actualProject = this.value;
     });
     $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
@@ -332,9 +360,14 @@ var displayTask = async function(pageId, taskId, infoObj) {
                 if (e.project === "") activeTaskDeInboxed = true;
             });
             modifyTask(uid, taskId, {project:projId});
+            actualProjectID = projId;
+            actualProject = this.value;
         } else {
             modifyTask(uid, taskId, {project:""});
-            this.value = ""
+            this.value = "";
+            actualProject = "";
+            actualProjectID = "";
+            actualProject = undefined;
         }
     });
     $("#task-trash-" + taskId).click(function(e) {
@@ -397,7 +430,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
 // Chapter 3: Animation Listeners!!
 
 console.log("Watching the clicky-pager!");
-var active = "today";
+var active = "upcoming-page";
 
 $(document).on('click', '.perspective', function(e) {
     $("#"+active).removeClass('today-highlighted perspective-selected');
@@ -458,6 +491,7 @@ $(document).on("click", "#logout", function(e) {
     firebase.auth().signOut().then(() => {}, console.error);
 });
 
+// Chapter 4: Mainloop
 var displayName;
 var uid;
 
@@ -486,4 +520,6 @@ $(document).ready(function() {
         }
     });
 });
+
+// Chapter 5: Keyboard Shortcuts
 
