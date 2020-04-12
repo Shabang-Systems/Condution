@@ -12,10 +12,11 @@ var substringMatcher = function(strings) {
                 matches.push(str);
             }
         });
+
         cb(matches);
     };
 };
-/*
+
 var smartParse = function(timeformat, timeString, o) {
     // smart, better date parsing with chrono
     let d = chrono.parse(timeString)[0].start.date();
@@ -28,7 +29,6 @@ var smartParse = function(timeformat, timeString, o) {
         timezone: d.getTimezoneOffset() * -1
     };
 }
-*/
 
 var numDaysBetween = function(d1, d2) {
     var diff = Math.abs(d1.getTime() - d2.getTime());
@@ -430,28 +430,25 @@ var displayTask = async function(pageId, taskId, infoObj) {
 // Chapter 3: Animation Listeners!!
 
 console.log("Watching the clicky-pager!");
-var active = "upcoming-page";
+var active = "today";
 
-$(document).on('click', '.perspective', function(e) {
-    $("#"+active).removeClass('today-highlighted perspective-selected');
-    showPage("perspective-page");
+$(document).on('click', '.menuitem', function(e) {
+    $("#"+active).removeClass('today-highlighted menuitem-selected');
     active = $(this).attr('id');
-    if (active.includes("today")) {
-        $("#" + active).addClass("today-highlighted");
-    } else if (active.includes("perspective")) {
-        $("#"+active).addClass("perspective-selected");
+    if (active.includes("perspective")) {
+        showPage("perspective-page");
+        $("#"+active).addClass("menuitem-selected");
+    } else if (active.includes("project")) {
+        showPage("random-page");
+        $("#"+active).addClass("menuitem-selected");
     }
 });
 
 $(document).on('click', '.today', function(e) {
-    $("#" + active).removeClass('today-highlighted perspective-selected');
+    $("#" + active).removeClass('today-highlighted menuitem-selected');
     showPage("upcoming-page");
     active = $(this).attr('id');
-    if (active.includes("today")) {
-        $("#"+active).addClass("today-highlighted");
-    } else if (active.includes("perspective")) {
-        $("#"+active).addClass("perspective-selected");
-    }
+    $("#"+active).addClass("today-highlighted");
 });
 
 $(document).on("click", ".task", function(e) {
@@ -520,6 +517,4 @@ $(document).ready(function() {
         }
     });
 });
-
-// Chapter 5: Keyboard Shortcuts
 
