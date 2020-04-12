@@ -20,6 +20,7 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
+/*
 async function dbRef(path) {
     // TODO: untested
     let ref = db;
@@ -36,6 +37,54 @@ async function dbRef(path) {
     }
     return ref;
 }
+*/
+
+class DBManager {
+    constructor(database) {
+    }
+    static ref(path) {
+        // get the item from cach if possible, otherwise pull into the cache
+        let target = DBManager.db;
+        // crawl cache
+        const path_crawl = Object.entries(path)
+        for (let [key, val] of path_crawl) {
+            console.log(`getting doc ${val} from collection ${key}`);
+
+            if (ref.mirror.hasOwnProperty(key)) {   //  exists in cache
+                ref = ref.mirror[key];
+                if (typeof val === 'string')        // get doc
+                    ref = ref.doc(val);
+                else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
+                    ref = ref.where(...val);
+                else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
+                    break;
+            } else {                                //  have to pull from firebase
+                // TODO
+            }
+        }
+    }
+    static updateCache(path_crawl, curent_ref) {
+        // crawl the path on the database, and pull result into cache
+        // TODO
+    }
+}
+DBManager.db = firebase.firestore();
+DBManager.cache = {type: 'root', mirror: {}};
+
+/*
+async function getTasks(userID) {
+    let docIds = [];
+    await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
+        snapshot.forEach(doc => {
+            docIds.push(doc.id);
+            taskCache[doc.id] = doc.data();
+        });
+    }).catch(err => {
+        console.log('Error getting documents', err);
+    });
+    return docIds;
+}
+*/
 
 async function getTasks(userID) {
     // TODO: untested
