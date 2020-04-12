@@ -126,10 +126,8 @@ async function modifyTask(userID, taskID, updateQuery) {
         .catch(console.error);
 }
 
-// -------->8--------
-
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await db.collection("users").doc(userID).collection("tasks").add({
+    await dbRef({users: userID, tasks: undefined}).add({
         // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
@@ -143,6 +141,8 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
         isComplete: false
     });
 }
+
+// -------->8--------
 
 async function newTag(userID, tagName) {
     let ntID = await db.collection("users").doc(userID).collection("tags").add({
