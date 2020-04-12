@@ -497,6 +497,9 @@ var lightTheFire = async function() {
     console.log("Kick the Tires!");
 }
 
+var uid;
+var displayName;
+
 $(document).ready(function() {
     console.log("Authenticating the supergober!");
 

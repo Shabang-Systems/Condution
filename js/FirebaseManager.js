@@ -20,8 +20,6 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-var uid;
-var displayName;
 
 var taskCache = {}
 async function dbGet(path) {
@@ -289,9 +287,4 @@ async function getProjectStructure(userID, projectID) {
     return { id: projectID, children: children };
 }
 
-// Flush the taskCache every 20 mins
-// TODO: adjust before production
-setInterval(function() {
-    getTasks(uid);
-}, 20 * 60 * 1000); // 60 * 1000 milsec
 

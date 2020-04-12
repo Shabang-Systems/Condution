@@ -1,4 +1,3 @@
-
 /* Globals */
 html, body {
     height: 100%;
@@ -42,7 +41,6 @@ html, body {
     margin: 5px 0 5px 0;    
     border: 0.5px #cecece solid !important;
 }
-
 .perspective-subhead{
     color: #434d5f;
     font-weight: 500;
@@ -179,6 +177,11 @@ html, body {
     overflow-y: scroll;
 }
 
+.menu-divider{
+    margin: 1px 0 1px 0;    
+    border: 0.3px #303949 solid !important;
+}
+
 .today-highlighted {
     background-color: #1d293a !important;
     color: #fafafafa !important;
@@ -255,13 +258,6 @@ html, body {
 
 }
 
-.label {
-    font-weight: 300;
-    font-size: 13px;
-    color: #777777;
-    margin-right: 10px;
-    margin-left: 5px;
-}
 
 .task {
     -webkit-border-radius: 3px;
@@ -849,6 +845,14 @@ label:before {
     /*grid-template-rows: 60px 30px auto auto;*/
     color: #e6e7e8;
     flex-direction: column;
+}
+
+.label {
+    font-weight: 300;
+    font-size: 13px;
+    color: #777777;
+    margin-right: 10px;
+    margin-left: 5px;
 }
 
 #content-area{
