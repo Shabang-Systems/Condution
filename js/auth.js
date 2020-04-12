@@ -30,7 +30,7 @@ $("#login").click(function(e) {
     auth();
 });
 
-firebase.auth().onAuthStateChanged(git user => {
+firebase.auth().onAuthStateChanged(user => {
     if (user) {
         if (user.emailVerified){
             window.location = 'app.html'; 
