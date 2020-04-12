@@ -25,53 +25,48 @@ async function dbGet(path) {
     let ref = db;
     for (let [key, val] of path.entries()) {
         console.log(`getting doc ${val} from collection ${key}`);
+
         ref = ref.collection(key);
-        if (typeof val === "object") // use like {user: userID, project: undefined}
+        if (typeof val === 'string') // get doc
             ref = ref.doc(val);
+        else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
+            ref = ref.where(...val);
+        else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
+            break;
     }
     return await ref.get();
 }
 
 async function getTasks(userID) {
-    let docIds = [];
-    await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            docIds.push(doc.id);
-        });
-    }).catch(err => {
-        console.log('Error getting documents', err);
+    // TODO: untested
+    return dbGet({users: userID, tasks: undefined})
+    .then(snap=> snap
+        .map(doc => doc.id)
+    )
+    .catch(err => {
+        console.error('Error getting documents', err);
     });
-    return docIds;
 }
 
 async function getInboxTasks(userID) {
-    let docIds = [];
-    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            if(!doc.isComplete){
-                docIds.push(doc.id);
-            }
-        });
-    }).catch(err => {
-        console.log('Error getting documents', err);
+    // TODO: untested
+    return dbGet({users: userID, tasks: ['project', '==', '']})
+    .then(snap => snap
+        .filter(doc => !doc.isComplete)
+        .map(doc => doc.id)
+    ).catch(err => {
+        console.error('Error getting documents', err);
     });
-    return docIds;
 }
 
 async function getDSTasks(userID) {
-    let docIds = [];
-    let dsTime = new Date();
+    // TODO: untested
+    let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    await db.collection("users").doc(userID).collection("tasks").where("due", "<=", dsTime).get().then(snapshot => {
-        snapshot.forEach(doc => {
-            if(!doc.isComplete){
-                docIds.push(doc.id);
-            }
-        });
-    }).catch(err => {
-        console.log('Error getting documents', err);
-    });
-    return docIds;
+    return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
+    .then(snap => snap
+        .filter(doc => !doc.isComplete)
+    ).catch(console.error);
 }
 
 async function getInboxandDS(userID) {
@@ -82,55 +77,42 @@ async function getInboxandDS(userID) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get();
-    return taskDoc.data();
+    // TODO: untested
+    return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
 async function getProjectsandTags(userID) {
-    let projectIDs = [];
-    let tagIDs = [];
-        await db.collection("users").doc(userID).collection("projects").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            projectIDs.push(doc.id);
-        });
-    }).catch(err => {
-        console.error('Error getting documents', err);
-    });
-    await db.collection("users").doc(userID).collection("tags").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            tagIDs.push(doc.id);
-        });
-    }).catch(err => {
-        console.error('Error getting documents', err);
-    });
+    // TODO: untested
+    let projectIDs = await dbGet({users: userID, projects: undefined})
+    .then(snap => snap
+        .map(doc => doc.id)
+    ).catch(console.error);
+
+    let tagIDs = await dbGet({users: userID, tags: undefined})
+    .then(snap => snap
+        .map(doc => doc.id)
+    ).catch(console.error);
     //const projectIDs = db.collection("users").doc(userID).collection("projects").select();
     //const tags = db.collection("usnpm ers").doc(userID).collection("tags").select();
 
     let projectNames = {};
     let projectNamesReverse = {};
-    for (let i=0; i<projectIDs.length; i++) {
-        let projectDocumentName = "errorThing";
-        await db.collection("users").doc(userID).collection("projects").doc(projectIDs[i]).get().then(function(doc) {
+    // for (let i=0; i<projectIDs.length; i++) {
+    for (let projID of projectIds) {
+        let projectDocumentName;
+        await dbGet({users: userID, projects: projID}).then(function(doc) {
             if (doc.exists === true) {
                 projectDocumentName = doc.data().name;
+
+                projectNames[projID] = projectDocumentName;
+                projectNamesReverse[projectDocumentName] = projID;
+
             } else {
-                // doc.data() will be undefined in this case
-                console.error("No such document!");
+                console.error("No such project", projID);
             }
         }).catch(function(error) {
             console.error("Error getting document:", error);
         });
-        if (projectDocumentName !== "errorThing") {
-            //console.log(projectDocumentName);
-        } else {
-            console.error("error, thread was either skipped, or name was null within document", projectIDs[i]);
-        }
-        /*
-        projectIDs[i]
-
-         */
-        projectNames[projectIDs[i]]=projectDocumentName;
-        projectNamesReverse[projectDocumentName]=projectIDs[i];
     }
     let tagNames = [];
     let tagNamesReverse = [];
