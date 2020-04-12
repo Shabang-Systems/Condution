@@ -195,7 +195,7 @@ async function getTasksOfProjects(userID, projectID) {
     .collection("projects").doc(projectID)              //  navigate to this project
     .collection("children").get()                       //  get the ids of the children of this project
     .then(snapshot => {
-        snapshot.forEach(async doc => {                       //  for each child
+        snapshot.forEach(async doc => {                 //  for each child
             if (doc.data().type === "task")             //      if the child is a task
                 children.push(doc.data().childrenID);   //          push it's ID to the array
             else if (doc.data().type === "project")     //      if the child is a project
