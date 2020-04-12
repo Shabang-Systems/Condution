@@ -20,11 +20,17 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
+var uid;
+var displayName;
+
+var taskCache = {}
+
 async function getTasks(userID) {
     let docIds = [];
     await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
         snapshot.forEach(doc => {
             docIds.push(doc.id);
+            taskCache[doc.id] = doc.data();
         });
     }).catch(err => {
         console.log('Error getting documents', err);
@@ -33,16 +39,24 @@ async function getTasks(userID) {
 }
 
 async function getInboxTasks(userID) {
-    let docIds = [];
-    await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            if(!doc.isComplete){
-                docIds.push(doc.id);
-            }
-        });
-    }).catch(err => {
-        console.log('Error getting documents', err);
-    });
+    let docIds = []
+    for (key in taskCache){
+        task = taskCache[key]
+        if ((!task.isComplete) && (task.project == "")) {
+            docIds.push(key)
+        }
+    }
+/*    let docIds = [];*/
+    //await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
+        //snapshot.forEach(doc => {
+            //if(!doc.isComplete){
+                //docIds.push(doc.id);
+                //taskCache[doc.id] = doc.data();
+            //}
+        //});
+    //}).catch(err => {
+        //console.log('Error getting documents', err);
+    /*});*/
     return docIds;
 }
 
@@ -50,15 +64,22 @@ async function getDSTasks(userID) {
     let docIds = [];
     let dsTime = new Date();
     dsTime.setHours(dsTime.getHours() + 24);
-    await db.collection("users").doc(userID).collection("tasks").where("due", "<=", dsTime).get().then(snapshot => {
-        snapshot.forEach(doc => {
-            if(!doc.isComplete){
-                docIds.push(doc.id);
-            }
-        });
-    }).catch(err => {
-        console.log('Error getting documents', err);
-    });
+    for (key in taskCache){
+        task = taskCache[key]
+        if ((!task.isComplete) && (task.due <= dsTime)) {
+            docIds.push(key)
+        }
+    }
+   /* await db.collection("users").doc(userID).collection("tasks").where("due", "<=", dsTime).get().then(snapshot => {*/
+        //snapshot.forEach(doc => {
+            //if(!doc.isComplete){
+                //docIds.push(doc.id);
+                //taskCache[doc.id] = doc.data();
+            //}
+        //});
+    //}).catch(err => {
+        //console.log('Error getting documents', err);
+    /*});*/
     return docIds;
 }
 
@@ -70,8 +91,9 @@ async function getInboxandDS(userID) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get();
-    return taskDoc.data();
+    //let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get();
+    //return taskDoc.data();
+    return taskCache[taskID];
 }
 
 async function getProjectsandTags(userID) {
@@ -152,10 +174,13 @@ async function modifyTask(userID, taskID, updateQuery){
         }
     });
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).update(updateQuery);
+    for (key in updateQuery) {
+        taskCache[taskID][key] = updateQuery[key]
+    }
 }
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await db.collection("users").doc(userID).collection("tasks").add({
+    let res = await db.collection("users").doc(userID).collection("tasks").add({
         // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
@@ -168,13 +193,26 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
         timezone: tz,
         isComplete: false
     });
+    taskCache[res.id] = {
+        name:nameParam,
+        desc:descParam,
+        defer:deferParam,
+        due:dueParam,
+        isFlagged: isFlaggedParam,
+        isFloating: isFloatingParam,
+        project: projectParam,
+        tags: tagsParam,
+        timezone: tz,
+        isComplete: false
+    }
+    return res.id;
 }
 
 async function newTag(userID, tagName) {
-    let ntID = await db.collection("users").doc(userID).collection("tags").add({
+    let nt = await db.collection("users").doc(userID).collection("tags").add({
         name: tagName,
     });
-    return ntID.id;
+    return nt.id;
 }
 
 async function completeTask(userID, taskID) {
@@ -186,6 +224,9 @@ async function completeTask(userID, taskID) {
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).update({
         isComplete: true
     });
+    for (key in updateQuery) {
+        taskCache[taskID].isComplete = true;
+    }
 }
 
 async function deleteTask(userID, taskID) {
@@ -194,6 +235,7 @@ async function deleteTask(userID, taskID) {
     }).catch(function(error) {
         console.error("Error removing task: ", error);
     });
+    delete taskCache[taskID];
 }
 
 async function deleteProject(userID, projectID) {
@@ -222,7 +264,7 @@ async function getProjectStructure(userID, projectID) {
     .then(snapshot => {
         snapshot.forEach(async doc => {                 //  for each child
             if (doc.data().type === "task") {             //      if the child is a task
-                let order = (await db.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task
+                let order = taskCache[doc.data().childrenID].order; //  get the order of the task
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
@@ -235,3 +277,10 @@ async function getProjectStructure(userID, projectID) {
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order
     return { id: projectID, children: children };
 }
+
+// Flush the taskCache every 20 mins
+// TODO: adjust before production
+setInterval(function() {
+    getTasks(uid);
+}, 20 * 60 * 1000); // 60 * 1000 milsec
+
