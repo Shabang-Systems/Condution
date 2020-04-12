@@ -286,5 +286,3 @@ async function getProjectStructure(userID, projectID) {
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order
     return { id: projectID, children: children };
 }
-
-
