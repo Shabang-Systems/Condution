@@ -87,26 +87,28 @@ async function getProjectsAndTags(userID) {
     let projectIdByName = {};
     let projectNameById = {};
     await dbGet({users: userID, projects: undefined})
-    .then(snap => snap.forEach(projID => {
-        dbGet({users: userID, projects: projID})
-        .filter(proj => proj.exists)
-        .then(proj => {
-            projectNameById[projID] = proj.data().name;
-            projectIdByName[proj.data().name] = projID;
-        })
-    })).catch(console.error);
+        .then(snap => snap.forEach(projID => {
+            dbGet({users: userID, projects: projID})
+                .filter(proj => proj.exists)
+                .then(proj => {
+                    projectNameById[projID] = proj.data().name;
+                    projectIdByName[proj.data().name] = projID;
+                })
+        }))
+        .catch(console.error);
 
     let tagIdByName = {};
     let tagNameById = {};
     await dbGet({users: userID, tags: undefined})
-    .then(snap => snap.map(tagID => {
-        dbGet({users: userID, tags: tagID})
-        .filter(tag => tag.exists)
-        .then(tag => {
-            tagNameById[tagID] = tag.data().name;
-            tagIdByName[tag.data().name] = tagID;
-        })
-    })).catch(console.error);
+        .then(snap => snap.forEach(tagID => {
+            dbGet({users: userID, tags: tagID})
+                .filter(tag => tag.exists)
+                .then(tag => {
+                    tagNameById[tagID] = tag.data().name;
+                    tagIdByName[tag.data().name] = tagID;
+                })
+        }))
+        .catch(console.error);
 
     return [[projectIdByName, projectNameById], [tagIdByName, tagNameById]];
 }
