@@ -114,14 +114,15 @@ async function getProjectsAndTags(userID) {
 }
 
 async function modifyTask(userID, taskID, updateQuery){
-    let taskData = "error";
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
-
-        if (doc.exists !== true) {
+    // TODO: untested
+    dbGet({users: userID, tasks: taskID}).then((doc) => { // TODO: create a doc exists? wrapper
+        if (doc.exists !== true)
             throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
-        }
     });
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).update(updateQuery);
+
+    await dbRef({users: userID, tasks: taskID})
+        .update(updateQuery)
+        .catch(console.error);
 }
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
