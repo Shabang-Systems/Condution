@@ -1,22 +1,21 @@
 console.log("Initializing the galvanitizer!");
 
 // Chapter 1: Utilities!
-var substringMatcher = function(strs) {
+var substringMatcher = function(strings) {
     return function findMatches(q, cb) {
-        let matches, substringRegex;
+        let matches, substrRegex;
 
         matches = [];
         substrRegex = new RegExp(q, 'i');
-        $.each(strs, function(i, str) {
+        $.each(strings, function(i, str) {
             if (substrRegex.test(str)) {
                 matches.push(str);
             }
         });
-
         cb(matches);
     };
 };
-
+/*
 var smartParse = function(timeformat, timeString, o) {
     // smart, better date parsing with chrono
     let d = chrono.parse(timeString)[0].start.date();
@@ -29,6 +28,7 @@ var smartParse = function(timeformat, timeString, o) {
         timezone: d.getTimezoneOffset() * -1
     };
 }
+*/
 
 var numDaysBetween = function(d1, d2) {
     var diff = Math.abs(d1.getTime() - d2.getTime());
@@ -39,7 +39,7 @@ var numDaysBetween = function(d1, d2) {
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
     $("#content-area").children().each(function() {
-        let item = $(this)
+        let item = $(this);
         if (item.attr("id") != pageId){
             item.css("display", "none")
         }
@@ -301,7 +301,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
         }
     });
     // So apparently setting dates is hard for this guy, so we run this async
-    let setDates = async () => { // TODO: why is this defined async when its so short and also called immmmedietely after wth
+    let setDates = async () => {
         $("#task-defer-" + taskId).datetimepicker('setDate', (defer_current));
         $("#task-due-" + taskId).datetimepicker('setDate', (due_current));
     };
