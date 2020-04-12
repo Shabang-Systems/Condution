@@ -177,7 +177,6 @@ html, body {
 
 .menu-portion {
     overflow-y: scroll;
-    margin-bottom: 10px;
 }
 
 .today-highlighted {
@@ -218,7 +217,7 @@ html, body {
     /*transform: translateX(-4px);*/
 }
 
-.perspective-selected {
+.menuitem-selected {
     background-color: #27303d !important;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -228,7 +227,7 @@ html, body {
     color: white !important;
 }
 
-.perspective:hover{
+.menuitem:hover {
     background-color: #374559;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -238,7 +237,7 @@ html, body {
     color: #9ea8b7;
 }
 
-.perspective {
+.menuitem {
     margin: 7px 5px 5px 10px;
     color: #1a283d;
     -webkit-transition-property: color, background-color;
@@ -846,11 +845,10 @@ label:before {
 
 #menu-area{
     height: 100%;
-    display: grid;
+    display: flex;
     /*grid-template-rows: 60px 30px auto auto;*/
-    grid-template-rows: 27px auto auto;
-    grid-row-gap: 4px;
     color: #e6e7e8;
+    flex-direction: column;
 }
 
 #content-area{
