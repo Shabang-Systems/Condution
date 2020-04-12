@@ -44,6 +44,22 @@ async function getInboxTasks(userID) {
     return docIds;
 }
 
+async function getDSTasks(userID) {
+    let docIds = [];
+    let dsTime = new Date();
+    dsTime.setHours(dsTime.getHours() + 24);
+    await db.collection("users").doc(userID).collection("tasks").where("due", "<=", dsTime).get().then(snapshot => {
+        snapshot.forEach(doc => {
+            if(!doc.isComplete){
+                docIds.push(doc.id);
+            }
+        });
+    }).catch(err => {
+        console.log('Error getting documents', err);
+    });
+    return docIds;
+}
+
 async function getTaskInformation(userID, taskID) {
     let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get();
     return taskDoc.data();
