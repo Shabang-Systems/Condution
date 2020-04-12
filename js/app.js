@@ -249,6 +249,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
                 $('#task-name-' + taskId).css("opacity", "1");
             }
             modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+            defer = defer_set;
         }
     });
     $("#task-due-" + taskId).datetimepicker({
@@ -270,6 +271,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
                 $('#task-pseudocheck-' + taskId).removeClass("ds");
             }
             modifyTask(uid, taskId, {due:due_set, timezone:tz});
+            due = due_set;
         }
     });
     // So apparently setting dates is hard for this guy, so we run this async
@@ -364,6 +366,31 @@ var displayTask = async function(pageId, taskId, infoObj) {
             actualTags.push(addedTag);
             modifyTask(uid, taskId, {tags:actualTags});
         }       
+   });
+   $("#task-flagged-no-" + taskId).change(function(e) {
+        isFlagged = false;
+        modifyTask(uid, taskId, {isFlagged: false});
+       // TODO: Unflagged Style? So far flagged is
+       // just another filter for perspective selection
+   });
+   $("#task-flagged-yes-" + taskId).change(function(e) {
+        isFlagged = true;
+        modifyTask(uid, taskId, {isFlagged: true});
+       // TODO: Flagged Style?
+   });
+   $("#task-floating-no-" + taskId).change(function(e) {
+        isFloating = false;
+        modifyTask(uid, taskId, {isFloating: false});
+        defer_current = defer;
+        due_current = due;
+        setDates();
+   });
+   $("#task-floating-yes-" + taskId).change(function(e) {
+        isFloating = true;
+        modifyTask(uid, taskId, {isFloating: true});
+        defer_current = moment(defer).tz(timezone).local(true).toDate();
+        due_current = moment(due).tz(timezone).local(true).toDate();
+        setDates();
    });
 }
 
