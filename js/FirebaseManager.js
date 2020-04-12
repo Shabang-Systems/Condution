@@ -81,60 +81,39 @@ async function getTaskInformation(userID, taskID) {
     return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
-async function getProjectsandTags(userID) {
+async function getProjectsAndTags(userID) {
     // TODO: untested
-    let projectIDs = await dbGet({users: userID, projects: undefined})
-    .then(snap => snap
-        .map(doc => doc.id)
-    ).catch(console.error);
-
-    let tagIDs = await dbGet({users: userID, tags: undefined})
-    .then(snap => snap
-        .map(doc => doc.id)
-    ).catch(console.error);
-    //const projectIDs = db.collection("users").doc(userID).collection("projects").select();
-    //const tags = db.collection("usnpm ers").doc(userID).collection("tags").select();
-
-    let projectNames = {};
-    let projectNamesReverse = {};
-    // for (let i=0; i<projectIDs.length; i++) {
-    for (let projID of projectIds) {
-        let projectDocumentName;
-        await dbGet({users: userID, projects: projID}).then(function(doc) {
-            if (doc.exists === true) {
-                projectDocumentName = doc.data().name;
-
-                projectNames[projID] = projectDocumentName;
-                projectNamesReverse[projectDocumentName] = projID;
-
+    let projectIdByName = {};
+    let projectNameById = {};
+    await dbGet({users: userID, projects: undefined})
+    .then(snap => snap.forEach(projID => {
+        dbGet({users: userID, projects: projID})
+        .then(proj => {
+            if (proj.exists) {
+                projectNameById[projID] = proj.data().name;
+                projectIdByName[proj.data().name] = projID;
             } else {
-                console.error("No such project", projID);
+                console.error(`Couldn't get project ${projID} under user ${userID}.`);
             }
-        }).catch(function(error) {
-            console.error("Error getting document:", error);
-        });
-    }
-    let tagNames = [];
-    let tagNamesReverse = [];
-    for (let j=0; j<tagIDs.length; j++) {
-        let tagDocumentName = "errorThing";
-        await db.collection("users").doc(userID).collection("tags").doc(tagIDs[j]).get().then(function(doc) {
-            if (doc.exists === true) {
-                tagDocumentName = doc.data().name;
+        })
+    })).catch(console.error);
+
+    let tagIdByName = {};
+    let tagNameById = {};
+    await dbGet({users: userID, tags: undefined})
+    .then(snap => snap.map(tagID => {
+        dbGet({users: userID, tags: tagID})
+        .then(tag => {
+            if (tag.exists) {
+                tagNameById[tagID] = tag.data().name;
+                tagIdByName[tag.data().name] = tagID;
             } else {
-                // doc.data() will be undefined in this case
-                console.error("No such document!");
+                console.error(`Couldn't get tag ${tagID} under user ${userID}.`);
             }
-        }).catch(function(error) {
-            console.error("Error getting document:", error);
-        });
-        if (tagDocumentName === "errorThing") {
-            console.error("Thread was either skipped, or name was null within document", tagIDs[j]);
-        }
-        tagNames[tagIDs[j]] = tagDocumentName;
-        tagNamesReverse[tagDocumentName] = tagIDs[j];
-    }
-    return [[projectNames, projectNamesReverse], [tagNames, tagNamesReverse]];
+        })
+    })).catch(console.error);
+
+    return [[projectIdByName, projectNameById], [tagIdByName, tagNameById]];
 }
 
 async function modifyTask(userID, taskID, updateQuery){
