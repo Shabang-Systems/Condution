@@ -24,6 +24,17 @@ var uid;
 var displayName;
 
 var taskCache = {}
+async function dbGet(path) {
+    // TODO: untested
+    let ref = db;
+    for (let [key, val] of path.entries()) {
+        console.log(`getting doc ${val} from collection ${key}`);
+        ref = ref.collection(key);
+        if (typeof val === "object") // use like {user: userID, project: undefined}
+            ref = ref.doc(val);
+    }
+    return await ref.get();
+}
 
 async function getTasks(userID) {
     let docIds = [];
