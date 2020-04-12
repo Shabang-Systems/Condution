@@ -20,7 +20,7 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-async function dbGet(path) {
+async function dbRef(path) {
     // TODO: untested
     let ref = db;
     for (let [key, val] of path.entries()) {
@@ -34,13 +34,13 @@ async function dbGet(path) {
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
-    return await ref.get();
+    return ref;
 }
 
 async function getTasks(userID) {
     // TODO: untested
-    return dbGet({users: userID, tasks: undefined})
-    .then(snap=> snap
+    return dbRef({users: userID, tasks: undefined}).get()
+    .then(snap => snap
         .map(doc => doc.id)
     )
     .catch(err => {
@@ -50,7 +50,7 @@ async function getTasks(userID) {
 
 async function getInboxTasks(userID) {
     // TODO: untested
-    return dbGet({users: userID, tasks: ['project', '==', '']})
+    return dbRef({users: userID, tasks: ['project', '==', '']}).get()
     .then(snap => snap
         .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
@@ -63,7 +63,7 @@ async function getDSTasks(userID) {
     // TODO: untested
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
+    return dbRef({users: userID, tasks: ['due', '<=', dsTime]}).get()
     .then(snap => snap
         .filter(doc => !doc.isComplete)
     ).catch(console.error);
@@ -78,7 +78,7 @@ async function getInboxandDS(userID) {
 
 async function getTaskInformation(userID, taskID) {
     // TODO: untested
-    return (await dbGet({users: userID, tasks: taskID})).data();
+    return (await dbRef({users: userID, tasks: taskID}).get()).data();
 }
 
 async function getProjectsAndTags(userID) {
@@ -86,9 +86,9 @@ async function getProjectsAndTags(userID) {
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
     let projectNameById = {};
-    await dbGet({users: userID, projects: undefined})
+    await dbRef({users: userID, projects: undefined}).get()
         .then(snap => snap.forEach(projID => {
-            dbGet({users: userID, projects: projID})
+            dbRef({users: userID, projects: projID}).get()
                 .filter(proj => proj.exists)
                 .then(proj => {
                     projectNameById[projID] = proj.data().name;
@@ -99,9 +99,9 @@ async function getProjectsAndTags(userID) {
 
     let tagIdByName = {};
     let tagNameById = {};
-    await dbGet({users: userID, tags: undefined})
+    await dbRef({users: userID, tags: undefined}).get()
         .then(snap => snap.forEach(tagID => {
-            dbGet({users: userID, tags: tagID})
+            dbRef({users: userID, tags: tagID}).get()
                 .filter(tag => tag.exists)
                 .then(tag => {
                     tagNameById[tagID] = tag.data().name;
@@ -113,17 +113,20 @@ async function getProjectsAndTags(userID) {
     return [[projectIdByName, projectNameById], [tagIdByName, tagNameById]];
 }
 
-async function modifyTask(userID, taskID, updateQuery){
+async function modifyTask(userID, taskID, updateQuery) {
     // TODO: untested
-    dbGet({users: userID, tasks: taskID}).then((doc) => { // TODO: create a doc exists? wrapper
-        if (doc.exists !== true)
-            throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
-    });
+    dbRef({users: userID, tasks: taskID}).get()
+        .then((doc) => { // TODO: create a doc exists? wrapper
+            if (doc.exists !== true)
+                throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
+        });
 
     await dbRef({users: userID, tasks: taskID})
         .update(updateQuery)
         .catch(console.error);
 }
+
+// -------->8--------
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
     await db.collection("users").doc(userID).collection("tasks").add({
