@@ -187,7 +187,7 @@ async function deleteTag(userID, tagID) {
     });
 }
 
-async function getTasksOfProjects(userID, projectID) {
+async function getProjectStructure(userID, projectID) {
     let children = []; // TODO: shouldn't need this... can we just do some map shenanigans with the db result?
 
     await db                                            //  await for processing to finish
@@ -196,14 +196,17 @@ async function getTasksOfProjects(userID, projectID) {
     .collection("children").get()                       //  get the ids of the children of this project
     .then(snapshot => {
         snapshot.forEach(async doc => {                 //  for each child
-            if (doc.data().type === "task")             //      if the child is a task
-                children.push(doc.data().childrenID);   //          push it's ID to the array
-            else if (doc.data().type === "project")     //      if the child is a project
+            if (doc.data().type === "task") {             //      if the child is a task
+                let order = (await db.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order //  get the order of the task
+                children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
+            } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
-                children.push(await getTasksOfProjects(userID, doc.data().childrenID));
+                let order = (await db.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order //  get the order of the task
+                children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
+            }
         });
+        //  NOTE: returns with `id` prop to preserve id of og project
     }).catch(console.error);
-
-    //  NOTE: returns with `id` prop to preserve id of og project
+    children.sort((a,b)=>a.sortOrder-b.sortOrder) //  sort by ascending order of order
     return { id: projectID, children: children };
 }
