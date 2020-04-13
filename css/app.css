@@ -828,8 +828,7 @@ label:before {
 
 /*-----*/
 
-/* IDs */
-#main-head {
+.main-head {
     -webkit-app-region: drag;
     height: 34px;
     background-color: #2e3f54;
@@ -838,8 +837,10 @@ label:before {
     margin: 0;
     position: fixed;
     z-index: 10000;
+    display: none;
 }
 
+/* IDs */
 #loading {
     margin-top: 35px;
     padding-left: 5px;

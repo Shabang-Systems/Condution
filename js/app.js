@@ -1,5 +1,12 @@
 console.log("Initializing the galvanitizer!");
 
+// Chapter 0: The Header.
+if (process.platform === "win32") {
+    $("#main-head-win32").show();
+} else if (process.platform === "darwin") {
+    $("#main-head-darwin").show();
+}
+
 // Chapter 1: Utilities!
 //import Sortable from 'sortablejs';
 var Sortable = require('sortablejs')
