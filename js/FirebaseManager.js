@@ -20,11 +20,13 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-/*
+var quickDirtyCacheByIdsWithCollisionsTODO = {};
+const quickDirtyGetLastKeyOfDictTODO = (dict) => Object.values(dict)[Object.values(dict).length-1];
+
 async function dbRef(path) {
     // TODO: untested
     let ref = db;
-    for (let [key, val] of path.entries()) {
+    for (let [key, val] of Object.entries(path)) {
         console.log(`getting doc ${val} from collection ${key}`);
 
         ref = ref.collection(key);
@@ -37,58 +39,27 @@ async function dbRef(path) {
     }
     return ref;
 }
-*/
 
-class DBManager {
-    constructor(database) {
-    }
-    static ref(path) {
-        // get the item from cach if possible, otherwise pull into the cache
-        let target = DBManager.db;
-        // crawl cache
-        const path_crawl = Object.entries(path)
-        for (let [key, val] of path_crawl) {
-            console.log(`getting doc ${val} from collection ${key}`);
-
-            if (ref.mirror.hasOwnProperty(key)) {   //  exists in cache
-                ref = ref.mirror[key];
-                if (typeof val === 'string')        // get doc
-                    ref = ref.doc(val);
-                else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
-                    ref = ref.where(...val);
-                else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
-                    break;
-            } else {                                //  have to pull from firebase
-                // TODO
-            }
+async function dbGet(path) {
+    // TODO: untested
+    // NOTE: not awaited because this is an async function, should be awaited outside of it
+    const finalKey = quickDirtyGetLastKeyOfDictTODO(path);              //  get the final key
+    if (typeof finalKey === 'string') {                                 //  it's (probably) a id
+        if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey)) {   //  and the cache has it
+            return quickDirtyCacheByIdsWithCollisionsTODO[path];        //  return from cache
+        } else {                                                        //  doesn't exist in the cache yet
+            const snap = await dbRef(path).get();                       //  get snapshot from db
+            quickDirtyCacheByIdsWithCollisionsTODO[finalKey] = snap;    //  save snapshot to cache
+            return snap;                                                //  and return the new data
         }
-    }
-    static updateCache(path_crawl, curent_ref) {
-        // crawl the path on the database, and pull result into cache
-        // TODO
+    } else {                                                            //  TODO: query, too hard to cache
+        return dbGet(path).get();                                       //  do a database hit
     }
 }
-DBManager.db = firebase.firestore();
-DBManager.cache = {type: 'root', mirror: {}};
-
-/*
-async function getTasks(userID) {
-    let docIds = [];
-    await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            docIds.push(doc.id);
-            taskCache[doc.id] = doc.data();
-        });
-    }).catch(err => {
-        console.log('Error getting documents', err);
-    });
-    return docIds;
-}
-*/
 
 async function getTasks(userID) {
     // TODO: untested
-    return dbRef({users: userID, tasks: undefined}).get()
+    return dbGet({users: userID, tasks: undefined})
     .then(snap => snap
         .map(doc => doc.id)
     )
@@ -99,7 +70,7 @@ async function getTasks(userID) {
 
 async function getInboxTasks(userID) {
     // TODO: untested
-    return dbRef({users: userID, tasks: ['project', '==', '']}).get()
+    return dbGet({users: userID, tasks: ['project', '==', '']})
     .then(snap => snap
         .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
@@ -112,7 +83,7 @@ async function getDSTasks(userID) {
     // TODO: untested
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    return dbRef({users: userID, tasks: ['due', '<=', dsTime]}).get()
+    return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
     .then(snap => snap
         .filter(doc => !doc.isComplete)
     ).catch(console.error);
@@ -127,17 +98,17 @@ async function getInboxandDS(userID) {
 
 async function getTaskInformation(userID, taskID) {
     // TODO: untested
-    return (await dbRef({users: userID, tasks: taskID}).get()).data();
+    return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
-async function getProjectsAndTags(userID) {
+async function getProjectsandTags(userID) {
     // TODO: untested
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
     let projectNameById = {};
-    await dbRef({users: userID, projects: undefined}).get()
+    await dbGet({users: userID, projects: undefined})
         .then(snap => snap.forEach(projID => {
-            dbRef({users: userID, projects: projID}).get()
+            dbGet({users: userID, projects: projID})
                 .filter(proj => proj.exists)
                 .then(proj => {
                     projectNameById[projID] = proj.data().name;
@@ -148,9 +119,9 @@ async function getProjectsAndTags(userID) {
 
     let tagIdByName = {};
     let tagNameById = {};
-    await dbRef({users: userID, tags: undefined}).get()
+    await dbGet({users: userID, tags: undefined})
         .then(snap => snap.forEach(tagID => {
-            dbRef({users: userID, tags: tagID}).get()
+            dbGet({users: userID, tags: tagID})
                 .filter(tag => tag.exists)
                 .then(tag => {
                     tagNameById[tagID] = tag.data().name;
@@ -164,19 +135,19 @@ async function getProjectsAndTags(userID) {
 
 async function modifyTask(userID, taskID, updateQuery) {
     // TODO: untested
-    dbRef({users: userID, tasks: taskID}).get()
+    dbGet({users: userID, tasks: taskID})
         .then((doc) => { // TODO: create a doc exists? wrapper
             if (doc.exists !== true)
                 throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
         });
 
-    await dbRef({users: userID, tasks: taskID})
+    await dbGet({users: userID, tasks: taskID})
         .update(updateQuery)
         .catch(console.error);
 }
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await dbRef({users: userID, tasks: undefined}).add({
+    await dbGet({users: userID, tasks: undefined}).add({
         // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
