@@ -143,14 +143,6 @@ async function getProjectsandTags(userID) {
             console.error('Error getting documents', err);
         });
 
-    await db.collection("users").doc(userID).collection("tags").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            tagIDs.push(doc.id);
-        });
-    }).catch(err => {
-        console.error('Error getting documents', err);
-    });
-
     return [[projectNames, projectNamesReverse], [tagNames, tagNamesReverse]];
 }
 
