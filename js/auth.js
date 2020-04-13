@@ -43,5 +43,5 @@ firebase.auth().onAuthStateChanged(user => {
     }
 });
 
-var greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"];
+const greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"];
 $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
