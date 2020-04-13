@@ -214,17 +214,18 @@ html, body {
 }
 
 .today-highlighted {
-    background-color: #1d293a !important;
-    color: #fafafafa !important;
+    /*background-color: #4f5a6b !important;*/
+    background-color: #e1e2e5 !important;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
+    color: #323c4f !important;
     /*transform: translateX(-4px);*/
 }
 
 .today {
-    color: #071121;
+    color: #414c5e;
     padding: 4px 0 4px 10px;
     /*transform: translateX(-4px);*/
     cursor: default;
@@ -237,40 +238,38 @@ html, body {
     transition-property: color, background-color;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
-    border: 0.5px solid #071121;
     font-weight: 500;
 }
 
 .today:hover {
-    background-color: #374559;
-    color: #9ea8b7;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
+    background-color: #e5e7ea;
     /*transform: translateX(-4px);*/
 }
 
 .menuitem-selected {
-    background-color: #27303d !important;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    color: white !important;
+    background-color: #e1e2e5 !important;
+    color: #323c4f !important;
 }
 
 .mihov:hover {
-    background-color: #374559;
+    /*background-color: #d0d3d6;*/
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    color: #9ea8b7;
+    background-color: #e5e7ea;
 }
 
 .menuitem {
     margin: 2px 5px 5px 15px;
-    color: #1a283d;
+    color: #414c5e;
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -876,7 +875,7 @@ label:before {
 #left-menu{
     grid-column-start: 1;
     grid-column-end: 1;
-    background-color: #434d5f;
+    background-color: #eaebed;
     padding: 0 10px 10px 10px;
     overflow: hidden;
 }

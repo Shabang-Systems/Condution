@@ -2,7 +2,6 @@ console.log("Initializing the galvanitizer!");
 const { remote } = require('electron')
 
 // Chapter 0: The Header.
-// TODO: UNCOMMENT THIS TO AVOID DOUBLE HEADERS
 if (process.platform === "win32") {
     $("#main-head-win32").show();
     $("#left-menu").addClass("win32-windowing");
@@ -17,7 +16,7 @@ if (process.platform === "win32") {
     });
     $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
 } else if (process.platform === "darwin") {
-    $("#main-head-darwin").show();
+    //$("#main-head-darwin").show();
     $("#left-menu").addClass("darwin-windowing");
     $("#content-area").addClass("darwin-windowing");
 }
@@ -63,7 +62,6 @@ var numDaysBetween = function(d1, d2) {
 // Chapter 2: Functions to Show and Hide Things!
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
-    await sync(uid);
     $("#content-area").children().each(function() {
         let item = $(this);
         if (item.attr("id") != pageId){
@@ -71,6 +69,8 @@ var showPage = async function(pageId) {
         }
     });
     $("#page-loader").fadeIn(100);
+    // TODO: ADD THIS BACK BEFORE COMMIT TO CAUSE SYNC
+    await sync(uid);
     let pPandT = await getProjectsandTags(uid);
     let possibleProjects = pPandT[0][0];
     let possibleTags = pPandT[1][0];
