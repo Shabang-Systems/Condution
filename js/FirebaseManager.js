@@ -22,6 +22,11 @@ const db = firebase.firestore();
 
 
 var taskCache = {}
+var projectCache = {}
+var projectCacheReverse = {}
+var tagCache = {}
+var tagCacheReverse = {}
+
 async function dbGet(path) {
     // TODO: untested
     let ref = db;
@@ -34,17 +39,58 @@ async function dbGet(path) {
     return await ref.get();
 }
 
-async function getTasks(userID) {
-    let docIds = [];
+async function sync(userID) {
+    let taskIDs = [];
     await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
         snapshot.forEach(doc => {
-            docIds.push(doc.id);
+            taskIDs.push(doc.id);
             taskCache[doc.id] = doc.data();
         });
     }).catch(err => {
-        console.log('Error getting documents', err);
+        console.log('Error getting tasks', err);
     });
-    return docIds;
+
+    let projectIDs = [];
+    let tagIDs = [];
+    let projectNames = {};
+    let projectNamesReverse = {};
+    let tagNames = {};
+    let tagNamesReverse = {};
+
+    await db
+        .collection("users") // TODO: good time to use DBRef
+        .doc(userID)
+        .collection("projects")
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                projectIDs.push(doc.id);
+                projectNames[doc.id] = doc.data().name;
+                projectCache[doc.id] = doc.data().name;
+                projectNamesReverse[doc.data().name] = doc.id;
+                projectCacheReverse[doc.data().name] = doc.id;
+            });
+        }).catch(err => {
+            console.error('Error getting documents', err);
+        });
+
+    await db
+        .collection("users") // TODO: good time to use DBRef
+        .doc(userID)
+        .collection("tags")
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                tagIDs.push(doc.id);
+                tagNames[doc.id] = doc.data().name;
+                tagCache[doc.id] = doc.data().name;
+                tagNamesReverse[doc.data().name] = doc.id;
+                tagCacheReverse[doc.data().name] = doc.id;
+            });
+        }).catch(err => {
+            console.error('Error getting documents', err);
+        });
+    return docIDs, projectIDs, tagIDs;
 }
 
 async function getInboxTasks(userID) {
@@ -106,42 +152,7 @@ async function getTaskInformation(userID, taskID) {
 }
 
 async function getProjectsandTags(userID) {
-    let projectIDs = [];
-    let tagIDs = [];
-    let projectNames = {};
-    let projectNamesReverse = {};
-    let tagNames = {};
-    let tagNamesReverse = {};
-
-    await db
-        .collection("users") // TODO: good time to use DBRef
-        .doc(userID)
-        .collection("projects")
-        .get()
-        .then(snapshot => {
-            snapshot.forEach(doc => {
-                projectIDs.push(doc.id);
-                projectNames[doc.id] = doc.data().name;
-                projectNamesReverse[doc.data().name] = doc.id;
-            });
-        }).catch(err => {
-            console.error('Error getting documents', err);
-        });
-
-    await db
-        .collection("users") // TODO: good time to use DBRef
-        .doc(userID)
-        .collection("tags")
-        .get()
-        .then(snapshot => {
-            snapshot.forEach(doc => {
-                tagIDs.push(doc.id);
-                tagNames[doc.id] = doc.data().name;
-                tagNamesReverse[doc.data().name] = doc.id;
-            });
-        }).catch(err => {
-            console.error('Error getting documents', err);
-        });
+   
 
     return [[projectNames, projectNamesReverse], [tagNames, tagNamesReverse]];
 }
