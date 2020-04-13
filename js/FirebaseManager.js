@@ -25,7 +25,8 @@ const quickDirtyGetLastKeyOfDictTODO = (dict) => {
     Object.values(dict)[Object.values(dict).length-1]
 };
 
-async function dbRef(path) {
+// NOTE: not async to remove the need to await/then it
+function dbRef(path) {
     // TODO: untested
     let ref = db;
     for (let [key, val] of Object.entries(path)) {
@@ -40,11 +41,11 @@ async function dbRef(path) {
     return ref;
 }
 
-async function dbGet(path) {
+async function dbGet(path, debug=false) {
     // TODO: untested
     // NOTE: not awaited because this is an async function, should be awaited outside of it
     const finalKey = quickDirtyGetLastKeyOfDictTODO(path);              //  get the final key
-    console.log(typeof finalKey);
+    if (debug) console.log(finalKey); // TODO: remove debug things
     if (typeof finalKey === 'string') {                                 //  it's (probably) a id
             console.log('string aka doc');
         if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey) || false /* TODO remove */) {   //  and the cache has it
@@ -110,12 +111,13 @@ async function getProjectsandTags(userID) {
     let projectIdByName = {};
     let projectNameById = {};
     await dbGet({users: userID, projects: undefined})
-        .then(snap => snap.docs.forEach(projID => {
-            dbGet({users: userID, projects: projID})
-                .filter(proj => proj.exists)
+        .then(snap => snap.docs.forEach(proj => {
+            dbGet({users: userID, projects: proj.id})
                 .then(proj => {
-                    projectNameById[projID] = proj.data().name;
-                    projectIdByName[proj.data().name] = projID;
+                    if (proj.exists) {
+                        projectNameById[proj.id] = proj.data().name;
+                        projectIdByName[proj.data().name] = proj.id;
+                    }
                 })
         }))
         .catch(console.error);
@@ -123,15 +125,13 @@ async function getProjectsandTags(userID) {
     let tagIdByName = {};
     let tagNameById = {};
     await dbGet({users: userID, tags: undefined})
-        .then(snap => snap.docs.forEach(tagID => {
-            console.log('tagid:', tagId);
-            dbGet({users: userID, tags: tagID}).then(console.log);
-
-            dbGet({users: userID, tags: tagID})
-                .filter(tag => tag.exists) // TODO: filter not defined
+        .then(snap => snap.docs.forEach(tag => {
+            dbGet({users: userID, tags: tag.id})
                 .then(tag => {
-                    tagNameById[tagID] = tag.data().name;
-                    tagIdByName[tag.data().name] = tagID;
+                    if (tag.exists) {
+                        tagNameById[tag.id] = tag.data().name;
+                        tagIdByName[tag.data().name] = tag.id;
+                    }
                 })
         }))
         .catch(console.error);
@@ -148,7 +148,7 @@ async function modifyTask(userID, taskID, updateQuery) {
         });
 
     await dbRef({users: userID, tasks: taskID}) // TODO: use dbUpdate when implemented
-        .update(updateQuery)
+        .update(updateQuery) // TODO: why is update undefined?
         .catch(console.error);
 }
 
