@@ -41,7 +41,7 @@ var numDaysBetween = function(d1, d2) {
 // Chapter 2: Functions to Show and Hide Things!
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
-    sync(uid);
+    await sync(uid);
     $("#content-area").children().each(function() {
         let item = $(this);
         if (item.attr("id") != pageId){

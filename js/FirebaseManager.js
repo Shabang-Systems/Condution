@@ -90,7 +90,7 @@ async function sync(userID) {
         }).catch(err => {
             console.error('Error getting documents', err);
         });
-    return docIDs, projectIDs, tagIDs;
+    return taskIDs, projectIDs, tagIDs;
 }
 
 async function getInboxTasks(userID) {
@@ -101,17 +101,7 @@ async function getInboxTasks(userID) {
             docIds.push(key)
         }
     }
-/*    let docIds = [];*/
-    //await db.collection("users").doc(userID).collection("tasks").where("project", "==", "").get().then(snapshot => {
-        //snapshot.forEach(doc => {
-            //if(!doc.isComplete){
-                //docIds.push(doc.id);
-                //taskCache[doc.id] = doc.data();
-            //}
-        //});
-    //}).catch(err => {
-        //console.log('Error getting documents', err);
-    /*});*/
+
     return docIds;
 }
 
@@ -125,16 +115,6 @@ async function getDSTasks(userID) {
             docIds.push(key)
         }
     }
-   /* await db.collection("users").doc(userID).collection("tasks").where("due", "<=", dsTime).get().then(snapshot => {*/
-        //snapshot.forEach(doc => {
-            //if(!doc.isComplete){
-                //docIds.push(doc.id);
-                //taskCache[doc.id] = doc.data();
-            //}
-        //});
-    //}).catch(err => {
-        //console.log('Error getting documents', err);
-    /*});*/
     return docIds;
 }
 
@@ -152,9 +132,7 @@ async function getTaskInformation(userID, taskID) {
 }
 
 async function getProjectsandTags(userID) {
-   
-
-    return [[projectNames, projectNamesReverse], [tagNames, tagNamesReverse]];
+    return [[projectCache, projectCacheReverse], [tagCache, tagCacheReverse]];
 }
 
 async function modifyTask(userID, taskID, updateQuery){
