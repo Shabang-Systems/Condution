@@ -235,7 +235,6 @@ html, body {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 4px 0 4px 10px;
     color: #9ea8b7;
 }
 
@@ -248,12 +247,19 @@ html, body {
     transition-property: color, background-color;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
-    padding: 4px 0 4px 10px;
     cursor: default;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+}
 
+.perspective {
+    padding: 4px 0 4px 10px;
+}
+
+.project {
+    font-size: 13px;
+    padding: 2px 0 2px 10px;
 }
 
 

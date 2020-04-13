@@ -492,7 +492,7 @@ $(document).on("click", "#logout", function(e) {
     firebase.auth().signOut().then(() => {}, console.error);
 });
 
-var perspectivSort = new Sortable($(".perspectives")[0], {
+var perspectiveSort = new Sortable($(".perspectives")[0], {
     animation: 200,
     onStart: function(e) {
         // Make sure that elements don't think that they are being hovered
@@ -506,6 +506,27 @@ var perspectivSort = new Sortable($(".perspectives")[0], {
 	},
     onEnd: function(e) {
         $('.perspectives').children().each(function() {
+            // Aaand make elements hoverable after they've been dragged over
+            $(this).addClass("mihov")
+        })
+    }
+
+});
+
+var projectSort = new Sortable($(".projects")[0], {
+    animation: 200,
+    onStart: function(e) {
+        // Make sure that elements don't think that they are being hovered
+        // when they are being dragged over
+        let itemEl = $(e.item);
+        $('.projects').children().each(function() {
+            if ($(this) !== itemEl) {
+                $(this).removeClass("mihov")
+            }
+        })
+	},
+    onEnd: function(e) {
+        $('.projects').children().each(function() {
             // Aaand make elements hoverable after they've been dragged over
             $(this).addClass("mihov")
         })
