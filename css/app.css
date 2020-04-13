@@ -157,6 +157,16 @@ html, body {
     color: #434d5f;
 }
 
+#window-actions {
+    float: right;
+    padding: 0px 6px 0px 0px;
+    color: whitesmoke;
+}
+
+.window-action {
+    padding: 8px 10px 0px 10px;
+}
+
 #greeting{
     font-weight: 600;
     padding-right: 3.5px;
