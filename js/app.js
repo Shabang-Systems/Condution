@@ -493,9 +493,24 @@ $(document).on("click", "#logout", function(e) {
 });
 
 var perspectivSort = new Sortable($(".perspectives")[0], {
-    multiDrag: true, // Enable the plugin
-	selectedClass: "menuitem-selected", // Class name for selected item
-	multiDragKey: 'SHIFT', // Key that must be down for items to be selected
+    animation: 200,
+    onStart: function(e) {
+        // Make sure that elements don't think that they are being hovered
+        // when they are being dragged over
+        let itemEl = $(e.item);
+        $('.perspectives').children().each(function() {
+            if ($(this) !== itemEl) {
+                $(this).removeClass("mihov")
+            }
+        })
+	},
+    onEnd: function(e) {
+        $('.perspectives').children().each(function() {
+            // Aaand make elements hoverable after they've been dragged over
+            $(this).addClass("mihov")
+        })
+    }
+
 });
 
 // Chapter 4: Mainloop

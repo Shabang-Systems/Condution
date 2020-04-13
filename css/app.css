@@ -174,6 +174,7 @@ html, body {
 }
 
 .menu-portion {
+    transform: translateX(-9px);
     overflow-y: scroll;
 }
 
@@ -226,17 +227,15 @@ html, body {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    transform: translateX(-8px);
     color: white !important;
 }
 
-.menuitem:hover {
+.mihov:hover {
     background-color: #374559;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    transform: translateX(-9px);
     color: #9ea8b7;
 }
 
@@ -250,7 +249,6 @@ html, body {
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
     padding: 4px 0 4px 10px;
-    transform: translateX(-9px);
     cursor: default;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
