@@ -21,14 +21,14 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 var quickDirtyCacheByIdsWithCollisionsTODO = {};
-const quickDirtyGetLastKeyOfDictTODO = (dict) => Object.values(dict)[Object.values(dict).length-1];
+const quickDirtyGetLastKeyOfDictTODO = (dict) => {
+    Object.values(dict)[Object.values(dict).length-1]
+};
 
 async function dbRef(path) {
     // TODO: untested
     let ref = db;
     for (let [key, val] of Object.entries(path)) {
-        console.log(`getting doc ${val} from collection ${key}`);
-
         ref = ref.collection(key);
         if (typeof val === 'string') // get doc
             ref = ref.doc(val);
@@ -44,23 +44,26 @@ async function dbGet(path) {
     // TODO: untested
     // NOTE: not awaited because this is an async function, should be awaited outside of it
     const finalKey = quickDirtyGetLastKeyOfDictTODO(path);              //  get the final key
+    console.log(typeof finalKey);
     if (typeof finalKey === 'string') {                                 //  it's (probably) a id
-        if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey)) {   //  and the cache has it
+            console.log('string aka doc');
+        if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey) || false /* TODO remove */) {   //  and the cache has it
             return quickDirtyCacheByIdsWithCollisionsTODO[path];        //  return from cache
         } else {                                                        //  doesn't exist in the cache yet
-            const snap = await dbRef(path).get();                       //  get snapshot from db
-            quickDirtyCacheByIdsWithCollisionsTODO[finalKey] = snap;    //  save snapshot to cache
-            return snap;                                                //  and return the new data
+            const ref = await dbRef(path).get();                        //  get snapshot from db
+            quickDirtyCacheByIdsWithCollisionsTODO[finalKey] = ref;     //  save snapshot to cache
+            console.log(ref);
+            return ref;                                                 //  and return the new data
         }
     } else {                                                            //  TODO: query, too hard to cache
-        return dbGet(path).get();                                       //  do a database hit
+        return (await dbRef(path)).get();                               //  do a database hit
     }
 }
 
 async function getTasks(userID) {
     // TODO: untested
     return dbGet({users: userID, tasks: undefined})
-    .then(snap => snap
+    .then(snap => snap.docs
         .map(doc => doc.id)
     )
     .catch(err => {
@@ -71,7 +74,7 @@ async function getTasks(userID) {
 async function getInboxTasks(userID) {
     // TODO: untested
     return dbGet({users: userID, tasks: ['project', '==', '']})
-    .then(snap => snap
+    .then(snap => snap.docs                   // TODO: snap.filter not a function, look at object proto and get the array
         .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
     ).catch(err => {
@@ -84,7 +87,7 @@ async function getDSTasks(userID) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
     return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
-    .then(snap => snap
+    .then(snap => snap.docs
         .filter(doc => !doc.isComplete)
     ).catch(console.error);
 }
@@ -107,7 +110,7 @@ async function getProjectsandTags(userID) {
     let projectIdByName = {};
     let projectNameById = {};
     await dbGet({users: userID, projects: undefined})
-        .then(snap => snap.forEach(projID => {
+        .then(snap => snap.docs.forEach(projID => {
             dbGet({users: userID, projects: projID})
                 .filter(proj => proj.exists)
                 .then(proj => {
@@ -120,9 +123,12 @@ async function getProjectsandTags(userID) {
     let tagIdByName = {};
     let tagNameById = {};
     await dbGet({users: userID, tags: undefined})
-        .then(snap => snap.forEach(tagID => {
+        .then(snap => snap.docs.forEach(tagID => {
+            console.log('tagid:', tagId);
+            dbGet({users: userID, tags: tagID}).then(console.log);
+
             dbGet({users: userID, tags: tagID})
-                .filter(tag => tag.exists)
+                .filter(tag => tag.exists) // TODO: filter not defined
                 .then(tag => {
                     tagNameById[tagID] = tag.data().name;
                     tagIdByName[tag.data().name] = tagID;
@@ -141,13 +147,13 @@ async function modifyTask(userID, taskID, updateQuery) {
                 throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
         });
 
-    await dbGet({users: userID, tasks: taskID})
+    await dbRef({users: userID, tasks: taskID}) // TODO: use dbUpdate when implemented
         .update(updateQuery)
         .catch(console.error);
 }
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await dbGet({users: userID, tasks: undefined}).add({
+    await dbRef({users: userID, tasks: undefined}).add({ // TODO: use dbAdd when implemented
         // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
