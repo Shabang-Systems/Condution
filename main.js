@@ -12,7 +12,9 @@ function createWindow () {
         'webPreferences': {
             'nodeIntegration': true
         },
-        'titleBarStyle': 'hiddenInset'
+        'titleBarStyle': 'hiddenInset',
+        'frame': false,
+        'transparent': true,
     })
     win.on('page-title-updated', function(e) {
         e.preventDefault()
