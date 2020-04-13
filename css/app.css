@@ -178,6 +178,14 @@ html, body {
     overflow-y: scroll;
 }
 
+.menu-label {
+    size: 17px;
+    color: #10141a;
+    font-weight: 600;
+    padding: 7px 0 0 0;
+}
+
+
 .menu-divider{
     margin: 1px 0 1px 0;    
     border: 0.3px #303949 solid !important;
