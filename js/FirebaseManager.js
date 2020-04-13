@@ -48,7 +48,7 @@ async function dbGet(path, debug=false) {
     if (debug) console.log(finalKey); // TODO: remove debug things
     if (typeof finalKey === 'string') {                                 //  it's (probably) a id
             console.log('string aka doc');
-        if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey) || false /* TODO remove */) {   //  and the cache has it
+        if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey)) {   //  and the cache has it
             return quickDirtyCacheByIdsWithCollisionsTODO[path];        //  return from cache
         } else {                                                        //  doesn't exist in the cache yet
             const ref = await dbRef(path).get();                        //  get snapshot from db
@@ -101,7 +101,8 @@ async function getInboxandDS(userID) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    // TODO: untested
+    // TODO: untested, gets passed broken stuff from app.js
+    console.assert(typeof taskID === 'string', 'but that doesn\'t make sense, jack!?!?');
     return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
@@ -168,9 +169,8 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
     });
 }
 
-// -------->8--------
-
 async function newTag(userID, tagName) {
+    // TODO: refactor
     let ntID = await db.collection("users").doc(userID).collection("tags").add({
         name: tagName,
     });
@@ -178,6 +178,7 @@ async function newTag(userID, tagName) {
 }
 
 async function completeTask(userID, taskID) {
+    // TODO: refactor
     await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
         if (doc.exists !== true) {
             throw "Document not found. Please don't try to set documents that don't exist.";
@@ -189,6 +190,7 @@ async function completeTask(userID, taskID) {
 }
 
 async function deleteTask(userID, taskID) {
+    // TODO: refactor
     db.collection("users").doc(userID).collection("tasks").doc(taskID).delete().then(function() {
         console.log("Task successfully deleted!");
     }).catch(function(error) {
@@ -197,6 +199,7 @@ async function deleteTask(userID, taskID) {
 }
 
 async function deleteProject(userID, projectID) {
+    // TODO: refactor
     db.collection("users").doc(userID).collection("projects").doc(projectID).delete().then(function() {
         console.log("Project successfully deleted!");
     }).catch(function(error) {
@@ -205,6 +208,7 @@ async function deleteProject(userID, projectID) {
 }
 
 async function deleteTag(userID, tagID) {
+    // TODO: refactor
     db.collection("users").doc(userID).collection("tag").doc(tagID).delete().then(function() {
         console.log("Tag successfully deleted!");
     }).catch(function(error) {
@@ -213,6 +217,7 @@ async function deleteTag(userID, tagID) {
 }
 
 async function getProjectStructure(userID, projectID) {
+    // TODO: refactor, untested
     let children = [];
 
     await dbGet({users:userID, projects:projectID, children:undefined}).then(snapshot => {
