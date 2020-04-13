@@ -108,13 +108,41 @@ async function getTaskInformation(userID, taskID) {
 async function getProjectsandTags(userID) {
     let projectIDs = [];
     let tagIDs = [];
-        await db.collection("users").doc(userID).collection("projects").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            projectIDs.push(doc.id);
+    let projectNames = {};
+    let projectNamesReverse = {};
+    let tagNames = {};
+    let tagNamesReverse = {};
+
+    await db
+        .collection("users") // TODO: good time to use DBRef
+        .doc(userID)
+        .collection("projects")
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                projectIDs.push(doc.id);
+                projectNames[doc.id] = doc.data().name;
+                projectNamesReverse[doc.data().name] = doc.id;
+            });
+        }).catch(err => {
+            console.error('Error getting documents', err);
         });
-    }).catch(err => {
-        console.error('Error getting documents', err);
-    });
+
+    await db
+        .collection("users") // TODO: good time to use DBRef
+        .doc(userID)
+        .collection("tags")
+        .get()
+        .then(snapshot => {
+            snapshot.forEach(doc => {
+                tagIDs.push(doc.id);
+                tagNames[doc.id] = doc.data().name;
+                tagNamesReverse[doc.data().name] = doc.id;
+            });
+        }).catch(err => {
+            console.error('Error getting documents', err);
+        });
+
     await db.collection("users").doc(userID).collection("tags").get().then(snapshot => {
         snapshot.forEach(doc => {
             tagIDs.push(doc.id);
@@ -122,55 +150,7 @@ async function getProjectsandTags(userID) {
     }).catch(err => {
         console.error('Error getting documents', err);
     });
-    //const projectIDs = db.collection("users").doc(userID).collection("projects").select();
-    //const tags = db.collection("usnpm ers").doc(userID).collection("tags").select();
 
-    let projectNames = {};
-    let projectNamesReverse = {};
-    for (let i=0; i<projectIDs.length; i++) {
-        let projectDocumentName = "errorThing";
-        await db.collection("users").doc(userID).collection("projects").doc(projectIDs[i]).get().then(function(doc) {
-            if (doc.exists === true) {
-                projectDocumentName = doc.data().name;
-            } else {
-                // doc.data() will be undefined in this case
-                console.error("No such document!");
-            }
-        }).catch(function(error) {
-            console.error("Error getting document:", error);
-        });
-        if (projectDocumentName !== "errorThing") {
-            //console.log(projectDocumentName);
-        } else {
-            console.error("error, thread was either skipped, or name was null within document", projectIDs[i]);
-        }
-        /*
-        projectIDs[i]
-
-         */
-        projectNames[projectIDs[i]]=projectDocumentName;
-        projectNamesReverse[projectDocumentName]=projectIDs[i];
-    }
-    let tagNames = [];
-    let tagNamesReverse = [];
-    for (let j=0; j<tagIDs.length; j++) {
-        let tagDocumentName = "errorThing";
-        await db.collection("users").doc(userID).collection("tags").doc(tagIDs[j]).get().then(function(doc) {
-            if (doc.exists === true) {
-                tagDocumentName = doc.data().name;
-            } else {
-                // doc.data() will be undefined in this case
-                console.error("No such document!");
-            }
-        }).catch(function(error) {
-            console.error("Error getting document:", error);
-        });
-        if (tagDocumentName === "errorThing") {
-            console.error("Thread was either skipped, or name was null within document", tagIDs[j]);
-        }
-        tagNames[tagIDs[j]] = tagDocumentName;
-        tagNamesReverse[tagDocumentName] = tagIDs[j];
-    }
     return [[projectNames, projectNamesReverse], [tagNames, tagNamesReverse]];
 }
 
