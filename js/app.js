@@ -1,10 +1,25 @@
 console.log("Initializing the galvanitizer!");
+const { remote } = require('electron')
 
 // Chapter 0: The Header.
+// TODO: UNCOMMENT THIS TO AVOID DOUBLE HEADERS
 if (process.platform === "win32") {
     $("#main-head-win32").show();
+    $("#left-menu").addClass("win32-windowing");
+    $("#content-area").addClass("win32-windowing");
+    $("#window-minimize").click(()=>remote.BrowserWindow.getFocusedWindow().minimize());
+    $("#window-maximize").click(function(e) {
+        if (remote.BrowserWindow.getFocusedWindow().isMaximized()) {
+            remote.BrowserWindow.getFocusedWindow().unmaximize();
+        } else {
+            remote.BrowserWindow.getFocusedWindow().maximize();
+        }
+    });
+    $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
 } else if (process.platform === "darwin") {
     $("#main-head-darwin").show();
+    $("#left-menu").addClass("darwin-windowing");
+    $("#content-area").addClass("darwin-windowing");
 }
 
 // Chapter 1: Utilities!

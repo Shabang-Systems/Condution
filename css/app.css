@@ -164,7 +164,19 @@ html, body {
 }
 
 .window-action {
-    padding: 8px 10px 0px 10px;
+    padding: 5.5px;
+    font-size: 12px;
+    /*Background animation*/
+    transition-property: color, background-color;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+    /*transform: translateY(-3px);*/
+}
+
+.window-action:hover {
+    font-size: 12px;
+    background-color: #434d5f;
+    /*transform: translateY(-3px);*/
 }
 
 #greeting{
@@ -189,10 +201,10 @@ html, body {
 }
 
 .menu-label {
-    size: 17px;
-    color: #10141a;
+    font-size: 14px;
+    color: #223249;
     font-weight: 600;
-    padding: 7px 0 0 0;
+    padding: 7px 0 0 5px;
 }
 
 
@@ -257,7 +269,7 @@ html, body {
 }
 
 .menuitem {
-    margin: 7px 5px 5px 10px;
+    margin: 2px 5px 5px 15px;
     color: #1a283d;
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
@@ -830,7 +842,6 @@ label:before {
 
 .main-head {
     -webkit-app-region: drag;
-    height: 34px;
     background-color: #2e3f54;
     width:100%;
     padding: 0;
@@ -838,6 +849,14 @@ label:before {
     position: fixed;
     z-index: 10000;
     display: none;
+}
+
+#main-head-win32 {
+    height: 23px;
+}
+
+#main-head-darwin {
+    height: 34px;
 }
 
 /* IDs */
@@ -858,7 +877,7 @@ label:before {
     grid-column-start: 1;
     grid-column-end: 1;
     background-color: #434d5f;
-    padding: 40px 10px 10px 10px;
+    padding: 0 10px 10px 10px;
     overflow: hidden;
 }
 
@@ -879,8 +898,16 @@ label:before {
 }
 
 #content-area{
-    padding: 40px 10px 0 10px;
+    padding: 0 10px 0 10px;
     overflow: scroll;
+}
+
+.darwin-windowing {
+    padding-top: 40px !important;
+}
+
+.win32-windowing {
+    padding-top: 30px !important;
 }
 
 /* Datepicker */

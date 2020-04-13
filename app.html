@@ -7,6 +7,7 @@
         <!--Fonts and Icons-->
         <!--<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">-->
         <script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
         <!--Other People Codes-->
         <script>window.$ = window.jQuery = require('jquery');</script>
@@ -43,14 +44,20 @@
     <body>
         <div class="main-head" id="main-head-win32">
             <div id="window-actions">
-                <i class="fas fa-window-minimize window-action"></i>
-                <i class="far fa-square window-action"></i>
-                <i class="fas fa-times window-action"></i>
+                <!--<i class="far fa-window-minimize window-action"></i>-->
+                <!--<i class="far fa-square window-action"></i>-->
+                <!--<i class="fas fa-times window-action"></i>-->
+                <!--Unfortunately it seems google's material icons are better for windowning--!>
+                <i id="window-minimize" class="material-icons window-action">minimize</i>
+                <i id="window-maximize" class="material-icons window-action">crop_square</i>
+                <i id="window-close" class="material-icons window-action">clear</i>
             </div>
         </div>
         <div class="main-head" id="main-head-darwin">
         </div>
         <div id="loading">
+
+            This should eventually be centered.
             App loading screen...
         </div>
         <div id="content-wrapper" style="display:none">
@@ -59,7 +66,7 @@
                     <div>
                         <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
                     </div>
-                    <t class="menu-label">Perspectives:</t>
+                    <t class="menu-label">Perspectives</t>
                     <div class="perspectives menu-portion">
                         <div id="perspective-03923" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Progress</t></div>
                         <div id="perspective-91210" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Executor</t></div>
@@ -67,7 +74,7 @@
                         <div id="perspective-80292" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Prep 'n Rev</t></div>
                     </div>
                     <hr class="menu-divider"/>
-                    <t class="menu-label">Projects:</t>
+                    <t class="menu-label">Projects</t>
                     <div class="projects menu-portion">
                         <div id="project-03280" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; height: 30px;">ENG101 (Master)</t></div>
                         <div id="project-02381" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px;">Personal</t></div>
