@@ -20,103 +20,88 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
+var quickDirtyCacheByIdsWithCollisionsTODO = {};
+const quickDirtyGetLastKeyOfDictTODO = (dict) => {
+    Object.values(dict)[Object.values(dict).length-1]
+};
 
-var taskCache = {}
-var projectCache = {}
-var projectCacheReverse = {}
-var tagCache = {}
-var tagCacheReverse = {}
-
-async function dbGet(path) {
+// NOTE: not async to remove the need to await/then it
+function dbRef(path) {
     // TODO: untested
     let ref = db;
-    for (let [key, val] of path.entries()) {
-        console.log(`getting doc ${val} from collection ${key}`);
+    for (let [key, val] of Object.entries(path)) {
         ref = ref.collection(key);
-        if (typeof val === "object") // use like {user: userID, project: undefined}
+        if (typeof val === 'string') // get doc
             ref = ref.doc(val);
+        else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
+            ref = ref.where(...val);
+        else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
+            break;
     }
-    return await ref.get();
+    return {    // NOTE: wrapped in promise.resolve
+        get: ref.get.bind(ref),
+        set: (data, options) => { cacheDump(); return ref.set.bind(ref)(data, options); },
+        add: (data) => { cacheDump(); return ref.add.bind(ref)(data); },
+        delete: () => { cacheDump(); return ref.delete.bind(ref)(); },
+        update: (data) => { cacheDump(); return ref.update.bind(ref)(data); }
+    };
 }
 
-async function sync(userID) {
-    let taskIDs = [];
-    await db.collection("users").doc(userID).collection("tasks").get().then(snapshot => {
-        snapshot.forEach(doc => {
-            taskIDs.push(doc.id);
-            taskCache[doc.id] = doc.data();
-        });
-    }).catch(err => {
-        console.log('Error getting tasks', err);
+async function dbGet(path, debug=false) {
+    // TODO: untested
+    // NOTE: not awaited because this is an async function, should be awaited outside of it
+    const finalKey = quickDirtyGetLastKeyOfDictTODO(path);              //  get the final key
+    if (debug) console.log(finalKey); // TODO: remove debug things
+    if (typeof finalKey === 'string') {                                 //  it's (probably) a id
+            console.log('string aka doc');
+        if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey)) {   //  and the cache has it
+            return quickDirtyCacheByIdsWithCollisionsTODO[path];        //  return from cache
+        } else {                                                        //  doesn't exist in the cache yet
+            const snap = await dbRef(path).get();                       //  get snapshot from db
+            quickDirtyCacheByIdsWithCollisionsTODO[finalKey] = snap;    //  save snapshot to cache
+            console.log(snap);
+            return snap;                                                //  and return the new data
+        }
+    } else {                                                            //  TODO: query, too hard to cache
+        return (await dbRef(path)).get();                               //  do a database hit
+    }
+}
+
+async function cacheDump() {
+    // TODO: implement actually good caching, write to the cache instead of dumping on write to database
+    quickDirtyCacheByIdsWithCollisionsTODO = {};
+}
+
+async function getTasks(userID) {
+    // TODO: untested
+    return dbGet({users: userID, tasks: undefined})
+    .then(snap => snap.docs
+        .map(doc => doc.id)
+    ).catch(err => {
+        console.error('Error getting documents', err);
     });
-
-    let projectIDs = [];
-    let tagIDs = [];
-    let projectNames = {};
-    let projectNamesReverse = {};
-    let tagNames = {};
-    let tagNamesReverse = {};
-
-    await db
-        .collection("users") // TODO: good time to use DBRef
-        .doc(userID)
-        .collection("projects")
-        .get()
-        .then(snapshot => {
-            snapshot.forEach(doc => {
-                projectIDs.push(doc.id);
-                projectNames[doc.id] = doc.data().name;
-                projectCache[doc.id] = doc.data().name;
-                projectNamesReverse[doc.data().name] = doc.id;
-                projectCacheReverse[doc.data().name] = doc.id;
-            });
-        }).catch(err => {
-            console.error('Error getting documents', err);
-        });
-
-    await db
-        .collection("users") // TODO: good time to use DBRef
-        .doc(userID)
-        .collection("tags")
-        .get()
-        .then(snapshot => {
-            snapshot.forEach(doc => {
-                tagIDs.push(doc.id);
-                tagNames[doc.id] = doc.data().name;
-                tagCache[doc.id] = doc.data().name;
-                tagNamesReverse[doc.data().name] = doc.id;
-                tagCacheReverse[doc.data().name] = doc.id;
-            });
-        }).catch(err => {
-            console.error('Error getting documents', err);
-        });
-    return taskIDs, projectIDs, tagIDs;
 }
 
 async function getInboxTasks(userID) {
-    let docIds = []
-    for (key in taskCache){
-        task = taskCache[key]
-        if ((!task.isComplete) && (task.project == "")) {
-            docIds.push(key)
-        }
-    }
-
-    return docIds;
+    // TODO: untested
+    return dbGet({users: userID, tasks: ['project', '==', '']})
+    .then(snap => snap.docs                   // TODO: snap.filter not a function, look at object proto and get the array
+        .filter(doc => !doc.isComplete)
+        .map(doc => doc.id)
+    ).catch(err => {
+        console.error('Error getting documents', err);
+    });
 }
 
 async function getDSTasks(userID) {
-    let docIds = [];
-    let dsTime = new Date();
+    // TODO: untested
+    let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    for (key in taskCache){
-        task = taskCache[key];
-        console.log(task.due, dsTime, task.due >= dsTime);
-        if ((!task.isComplete) && (new Date(task.due.seconds*1000) <= dsTime)) {
-            docIds.push(key);
-        }
-    }
-    return docIds;
+    return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
+    .then(snap => snap.docs
+        .filter(doc => !doc.isComplete)
+        .map(doc => doc.id)
+    ).catch(console.error);
 }
 
 async function getInboxandDS(userID) {
@@ -127,25 +112,60 @@ async function getInboxandDS(userID) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    //let taskDoc = await db.collection("users").doc(userID).collection("tasks").doc(taskID).get();
-    //return taskDoc.data();
-    return taskCache[taskID];
+    // TODO: untested, gets passed broken stuff from app.js
+    console.assert(typeof taskID === 'string', 'but that doesn\'t make sense, jack!?!?');
+    return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
 async function getProjectsandTags(userID) {
-    return [[projectCache, projectCacheReverse], [tagCache, tagCacheReverse]];
+    // TODO: untested
+    // NOTE: no longer console.error when  !project/tag.exists
+    let projectIdByName = {};
+    let projectNameById = {};
+    await dbGet({users: userID, projects: undefined})
+        .then(snap => snap.docs.forEach(proj => {
+            dbGet({users: userID, projects: proj.id})
+                .then(proj => {
+                    if (proj.exists) {
+                        projectNameById[proj.id] = proj.data().name;
+                        projectIdByName[proj.data().name] = proj.id;
+                    }
+                })
+        }))
+        .catch(console.error);
+
+    let tagIdByName = {};
+    let tagNameById = {};
+    await dbGet({users: userID, tags: undefined})
+        .then(snap => snap.docs.forEach(tag => {
+            dbGet({users: userID, tags: tag.id})
+                .then(tag => {
+                    if (tag.exists) {
+                        tagNameById[tag.id] = tag.data().name;
+                        tagIdByName[tag.data().name] = tag.id;
+                    }
+                })
+        }))
+        .catch(console.error);
+
+    return [[projectNameById, projectIdByName], [tagNameById, tagIdByName]];
 }
 
-async function modifyTask(userID, taskID, updateQuery){
-    let taskData = "error";
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).update(updateQuery);
-    for (key in updateQuery) {
-        taskCache[taskID][key] = updateQuery[key]
-    }
+async function modifyTask(userID, taskID, updateQuery) {
+    // TODO: untested
+    dbGet({users: userID, tasks: taskID})
+        .then((doc) => { // TODO: create a doc exists? wrapper
+            if (doc.exists !== true)
+                throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
+        });
+
+    (await dbRef({users: userID, tasks: taskID})) // TODO: use dbUpdate when implemented
+        .update(updateQuery) // TODO: why is update undefined?
+        .catch(console.error);
 }
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    let res = await db.collection("users").doc(userID).collection("tasks").add({
+    await dbRef({users: userID, tasks: undefined}).add({ // TODO: use dbAdd when implemented
         // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
@@ -158,77 +178,54 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
         timezone: tz,
         isComplete: false
     });
-    taskCache[res.id] = {
-        name:nameParam,
-        desc:descParam,
-        defer:deferParam,
-        due:dueParam,
-        isFlagged: isFlaggedParam,
-        isFloating: isFloatingParam,
-        project: projectParam,
-        tags: tagsParam,
-        timezone: tz,
-        isComplete: false
-    }
-    return res.id;
 }
 
 async function newTag(userID, tagName) {
-    let nt = await db.collection("users").doc(userID).collection("tags").add({
-        name: tagName,
-    });
-    return nt.id;
+    return (await dbRef({users: userID, tags: undefined}).add({name: tagName})).id
 }
 
 async function completeTask(userID, taskID) {
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).update({
-        isComplete: true
-    });
-    for (key in updateQuery) {
-        taskCache[taskID].isComplete = true;
-    }
+    await dbGet({users: userID, tasks: taskID})
+        .then(doc => {
+            if (doc.exists !== true) {
+                throw "Document not found. Please don't try to set documents that don't exist.";
+            }
+        });
+    await dbRef({users: userID, tasks: taskID}).update({
+            isComplete: true
+        });
 }
 
 async function deleteTask(userID, taskID) {
-    db.collection("users").doc(userID).collection("tasks").doc(taskID).delete().then(function() {
-        console.log("Task successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing task: ", error);
-    });
-    delete taskCache[taskID];
+    (await dbRef({users: userID, tasks: taskID})).delete()
+        .then(() => {console.log("Task successfully deleted!")})
+        .catch(console.error);
 }
 
 async function deleteProject(userID, projectID) {
-    db.collection("users").doc(userID).collection("projects").doc(projectID).delete().then(function() {
-        console.log("Project successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing project: ", error);
-    });
+    (await dbRef({users: userID, projects: projectID})).delete()
+        .then(() => {console.log("Project successfully deleted!")})
+        .catch(console.error);
 }
 
 async function deleteTag(userID, tagID) {
-    db.collection("users").doc(userID).collection("tag").doc(tagID).delete().then(function() {
-        console.log("Tag successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing tag: ", error);
-    });
+    (await dbRef({users: userID, tags: tagID})).delete()
+        .then(() => {console.log("Tag successfully deleted!")})
+        .catch(console.error);
 }
 
 async function getProjectStructure(userID, projectID) {
+    // TODO: refactor, untested
     let children = [];
 
-    await db                                            //  await for processing to finish
-    .collection("users").doc(userID)                    //  navigate to this user
-    .collection("projects").doc(projectID)              //  navigate to this project
-    .collection("children").get()                       //  get the ids of the children of this project
-    .then(snapshot => {
-        snapshot.forEach(async doc => {                 //  for each child
-            if (doc.data().type === "task") {             //      if the child is a task
-                let order = taskCache[doc.data().childrenID].order; //  get the order of the task
+    await dbGet({users:userID, projects:projectID, children:undefined}).then(snapshot => {
+        snapshot.docs.forEach(async doc => {                 //  for each child
+            if (doc.data().type === "task") { // TODO combine these if statements
+                let order = (await dbGet({users:userID, tasks:(doc.data().childrenID)}).map(snap => snap.order)); //  get the order of the task
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
-                let order = (await db.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of the task
+                let order = (await dbGet({users:userID, projects:(doc.data().childrenID)}).map(snap => snap.order));//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of the task
                 children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
             }
         });
