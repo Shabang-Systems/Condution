@@ -67,6 +67,11 @@ async function dbGet(path, debug=false) {
     }
 }
 
+function dump(data) {
+    console.log(data);
+    return Promise.resolve(data);
+}
+
 async function cacheDump() {
     // TODO: implement actually good caching, write to the cache instead of dumping on write to database
     quickDirtyCacheByIdsWithCollisionsTODO = {};
