@@ -1,18 +1,65 @@
 /* Globals */
-::root {
-    --content-subhead: #838384;
-}
-
 html, body {
     height: 100%;
     margin: 0;
     font-family: sans-serif;
     overflow: hidden;
-    -ms-overflow-style: -ms-autohiding-scrollbar; /* White Scrollbar Fix, MSE Runtime */
+    -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
+}
+
+/* Colours */
+.condutiontheme-default-light {
+    /* Background */
+    /* These two colors should lightly contrast 
+     * think: a hover over the background should
+     * be colored --background-feature */
+    --background: #f4f4f4;
+    --background-feature: #e5e7ea;
+
+    /* Content */
+    /* These are the mail colors. Make them mainly
+     * to be bold and clear. Also make them kind of related 
+     * to one main color */
+    --content-normal: #eaeaea;
+    --content-normal-alt: #434d5f;
+    --content-normal-accent: #1a283d;
+
+    /* Decorative */
+    --decorative-light: #cecece;
+    --decorative-light-alt: #838384;
+    --decorative-light-accent: #374559;
+
+    /* Menu colors */
+    /* These colors should all in different
+     * degrees contrast the --menu-background
+     * think: a selected item over the background */
+    --menu-background: #eaebed;
+    --menu-semiaccent-background: #e5e7ea;
+    --menu-accent-background: #e1e2e5;
+    --menu-text: #414c5e;
+    --menu-accent: #323c4f;
+
+    /* Task colors */
+    --task: #90939a;
+    --task-feature: #efefef;
+    --task-feature-alt: #dbdbdd;
+    --task-textbox: #434d5f;
+    --task-textbox-background: #e8e8e8;
+    --task-clickbox-background: #e8e8e8;
+    --task-clickbox-accent-background: #d1d1d1;
+    --task-clickbox: #2d2d2d;
+
+    /* Datepicker colors */
+    --task-datepicker-elems: grey;
+    --task-datepicker-background: #eeeeee;
+    --task-datepicker-background: #eeeeee;
+
+    /* Special accent */
+    --special: #dadeae;
 }
 
 *::-webkit-scrollbar { 
-    display: none;  /* White Scrollbar Fix, Chrome Runtime */
+    display: none;  /* Scrollbar Fix, Chrome Runtime */
 }
 
 *:focus {
@@ -32,7 +79,7 @@ html, body {
 }
 
 .perspective-title{
-    color: var(--content-subhead);
+    color: var(--decorative-light-alt);
     font-size: 12px;
     padding: 0;
 }
@@ -43,10 +90,10 @@ html, body {
 
 .perspective-divider{
     margin: 5px 0 5px 0;    
-    border: 0.5px #cecece solid !important;
+    border: 0.5px var(--decorative-light) solid !important;
 }
 .perspective-subhead{
-    color: #434d5f;
+    color: var(--content-normal-alt);
     font-weight: 500;
     padding-top: 2px;
     padding-bottom: 3px;
@@ -54,11 +101,11 @@ html, body {
 }
 
 .badge {
-    border: 1px #394454 solid;
+    border: 1px var(--content-normal-alt) solid;
     height: 16px;
     min-width: 16px;
     width: auto;
-    color: #394454;
+    color: var(--content-normal-alt);
     font-size: 10px;
     display: inline-flex;
     justify-content: center;
@@ -74,7 +121,7 @@ html, body {
     bottom: 0;
     width: 150px;
     margin-top: auto;
-    color: #1a283d;
+    color: var(--content-normal-accent);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -82,30 +129,30 @@ html, body {
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
     margin-top: 15px;
-    padding: 4px 0 4px 10px;
+    padding: 5px 0 4px 10px;
     transform: translateX(-1px);
     cursor: default;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    border: #374559 1px solid;
+    border: var(--content-normal-accent) 1px solid;
     float: right;
     transform: translateX(-90px);
 }
 
 #login:hover {
-    background-color: #374559;
+    background-color: var(--content-normal-accent);
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 4px 0 4px 10px;
-    color: #ededed;
+    padding: 5px 0 4px 10px;
+    color: var(--content-normal);
 }
 
 #auth-content-wrapper{
     margin: 0;
     height: 100%;
-    background-color: #f4f4f4;
+    background-color: var(--background);
     display: grid;
     /*grid-template-columns: 700px auto*/
 }
@@ -124,7 +171,7 @@ html, body {
     bottom: 0;
     width: 100%;
     margin-top: auto;
-    color: #eaeaea;
+    color: var(--content-normal);
     font-size: 9px;
     font-weight: 200;
 }
@@ -145,7 +192,7 @@ html, body {
 }
 
 #greeting-auth {
-    color: #434d5f;
+    color: var(--content-normal-alt);
     font-weight: 700;
     padding-right: 10px;
 }
@@ -158,13 +205,13 @@ html, body {
 
 #upcoming-header{
     font-size: 13px;
-    color: #434d5f;
+    color: var(--content-normal-alt);
 }
 
 #window-actions {
     float: right;
     padding: 0px 6px 0px 0px;
-    color: #434d5f;
+    color: var(--content-normal-alt);
 }
 
 .window-action {
@@ -179,7 +226,7 @@ html, body {
 
 .window-action:hover {
     font-size: 12px;
-    background-color: #e5e7ea;
+    background-color: var(--background-feature);
     /*transform: translateY(-3px);*/
 }
 
@@ -206,7 +253,7 @@ html, body {
 
 .menu-label {
     font-size: 14px;
-    color: #223249;
+    color: var(--content-normal-accent);
     font-weight: 600;
     padding: 7px 0 0 5px;
 }
@@ -214,22 +261,21 @@ html, body {
 
 .menu-divider{
     margin: 1px 0 1px 0;    
-    border: 0.3px #303949 solid !important;
+    border: 0.3px var(--content-normal-alt) solid !important;
 }
 
 .today-highlighted {
-    /*background-color: #4f5a6b !important;*/
-    background-color: #e1e2e5 !important;
+    background-color: var(--menu-accent-background) !important;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    color: #323c4f !important;
+    color: var(--menu-accent) !important;
     /*transform: translateX(-4px);*/
 }
 
 .today {
-    color: #414c5e;
+    color: var(--menu-text);
     padding: 4px 0 4px 10px;
     /*transform: translateX(-4px);*/
     cursor: default;
@@ -250,7 +296,7 @@ html, body {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    background-color: #e5e7ea;
+    background-color: var(--menu-semiaccent-background);
     /*transform: translateX(-4px);*/
 }
 
@@ -259,21 +305,20 @@ html, body {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    background-color: #e1e2e5 !important;
-    color: #323c4f !important;
+    background-color: var(--menu-accent-background) !important;
+    color: var(--menu-accent) !important;
 }
 
 .mihov:hover {
-    /*background-color: #d0d3d6;*/
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    background-color: #e5e7ea;
+    background-color: var(--menu-semiaccent-background);
 }
 
 .menuitem {
     margin: 2px 5px 5px 15px;
-    color: #414c5e;
+    color: var(--menu-text);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -305,14 +350,14 @@ html, body {
 }
 
 .task:hover {
-    background-color: #efefef !important;
+    background-color: var(--task-feature) !important;
 }
 
 .task-name {
     font-size: 12pt;
     font-weight:400;
     background-color:inherit;
-    color: #434d5f;
+    color: var(--content-normal-alt);
     padding: 10px 5px 10px 5px;
     border: 0px;
     display: inline-block;
@@ -337,8 +382,8 @@ html, body {
     width: 17px;
     height: 17px;
     border-radius: 3px;
-    border: 1px solid #dbdbdd;
-    color: #dbdbdd;
+    border: 1px solid var(--task-feature-alt);
+    color: var(--task-feature-alt);
     cursor: pointer;
     margin-right: 6px;
     -webkit-transition-property: all;
@@ -353,7 +398,7 @@ html, body {
     font-size: 12pt;
     font-weight:400;
     background-color:inherit;
-    color: #434d5f;
+    color: var(--content-normal-alt);
     padding: 10px 5px 10px 5px;
     border: 1px grey solid;
     display: inline-block;
@@ -378,24 +423,24 @@ html, body {
 
 
 .auth-upf:focus {
-    background-color: #eaeaea;
+    background-color: var(--content-normal);
 }
 
 .task-subicon:hover {
-    color: #5b5b5e;
-    background-color: #e2e2e2;
+    color: var(--decorative-light-alt);
+    background-color: var(--content-normal);
 }
 
 
 .task-name:focus {
-    background-color: #eaeaea;
+    background-color: var(--content-normal);
 }
 
 #logout {
     bottom: 0;
     width: 100%;
     margin-top: auto;
-    color: #1a283d;
+    color: var(--content-normal-accent);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -411,28 +456,23 @@ html, body {
 }
 
 #logout:hover {
-    background-color: #374559;
+    background-color: var(--background-feature);
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
     transform: translateX(-1px);
-    color: #ededed;
 }
 
-/*.task-desc:hover {*/
-    /*background-color: #eaeaea;*/
-/*}*/
-
 .task-desc:focus{
-    background-color: #eaeaea;
+    background-color: var(--content-normal);
 }
 
 .task-desc {
     font-size: 9pt;
     font-weight:300;
     background-color:inherit;
-    color: #777777;
+    color: var(--task-textbox);
     margin: 0 5px 0 0;
     padding: 2px 1px 0 5px;
     border: 0px;
@@ -452,14 +492,14 @@ html, body {
 }
 
 .task-desc::placeholder{
-    color: #bababa;
+    color: var(--decorative-light);
 }
  
 .textbox {
     font-size: 9pt;
     font-weight: 500;
-    background-color:#e8e8e8;
-    color: #434d5f;
+    background-color: var(--task-textbox-background);
+    color: var(--task-textbox);
     padding: 0px 2px 0 0;
     border: 0px;
     display: block;
@@ -472,7 +512,7 @@ html, body {
 }
 
 .es-input {
-    background-color: #e8e8e8 !important;
+    background-color: var(--task-textbox-background) !important;
     padding-left: 5px;
 }
 
@@ -486,28 +526,28 @@ html, body {
 }
 
 .task-flagged.active{
-    background-color: #dadeae;
+    background-color: var(--special);
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
 }
 
 .task-flagged {
-    background-color: #e8e8e8;
+    background-color: var(--task-textbox-background);
     height: 20px;
     width: 10%;
     font-size: 9px;
-    color: #2d2d2d;
+    color: var(--content-normal-accent);
 }
 
 .es-list {
-    background-color: #f4f4f5;
+    background-color: var(--background);
     font-size: 11px;
     transform: translateY(-3px);
     cursor: pointer;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    border: 0.5px solid #dedee0;
+    border: 0.5px solid  var(--background-feature);
     width: auto !important;
 }
 
@@ -518,7 +558,7 @@ html, body {
 }
 
 .es-visible:hover {
-    background-color: #e2e2e2 !important;
+    background-color: var(--background-feature) !important;
 }
 
 .editable-select {
@@ -526,18 +566,18 @@ html, body {
 }
 
 .task-floating.active{
-    background-color: #d1d1d1;
+    background-color: var(--task-clickbox-accent-background);
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
 }
 
 .task-floating {
-    background-color: #e8e8e8;
+    background-color: var(--task-clickbox-background);
     height: 20px;
     width: 10%;
     font-size: 9px;
-    color: #2d2d2d;
+    color: var(--task-clickbox);
 }
 
 
@@ -553,17 +593,17 @@ html, body {
 }
 
 .ui-datepicker-calendar {
-    color: grey;
+    color: var(--task-datepicker-elems);
 }
 
 .ui-state-default {
-    color: grey !important;
+    color: var(--task-datepicker-elems) !important;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
     background: 0 !important;
-    background-color: #eeeeee !important;
-    border-color: #eeeeee !important;
+    background-color: var(--task-datepicker-background) !important;
+    border-color: var(--task-datepicker-background) !important;
     vertical-align: middle;
     -webkit-transition-property: all;
     -webkit-transition-duration: 200ms;
@@ -755,17 +795,14 @@ html, body {
 
 /* hover style just for information */
 label:hover:before {
-   /*border: 2px solid #4778d9!important;*/
     background-color: #e0e0e0 !important;
 }
 
 label.ds:hover:before {
-   /*border: 2px solid #4778d9!important;*/
     background-color: #f4c09d !important;
 }
 
 label.od:hover:before {
-   /*border: 2px solid #4778d9!important;*/
     background-color: #ed938c !important;
 }
 
@@ -869,10 +906,10 @@ label:before {
     padding-left: 5px;
 }
 
-#content-wrapper{
+#content-wrapper {
     margin: 0;
     height: 100%;
-    background-color: #f4f4f4;
+    background-color: var(--background);
     display: grid;
     grid-template-columns: 200px auto
 }
@@ -880,7 +917,7 @@ label:before {
 #left-menu{
     grid-column-start: 1;
     grid-column-end: 1;
-    background-color: #eaebed;
+    background-color: var(--menu-background);
     padding: 0 10px 10px 10px;
     overflow: hidden;
 }
@@ -889,7 +926,7 @@ label:before {
     height: 100%;
     display: flex;
     /*grid-template-rows: 60px 30px auto auto;*/
-    color: #e6e7e8;
+    color: var(--menu-background);
     flex-direction: column;
 }
 

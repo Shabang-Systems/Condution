@@ -1,6 +1,8 @@
 console.log("Initializing the galvanitizer!");
 const { remote } = require('electron')
 
+// TODO: apply themes to colors
+
 // Chapter 0: The Header.
 if (process.platform === "win32") {
     $("#main-head-win32").show();
@@ -491,7 +493,7 @@ $(document).on("click", ".task", function(e) {
         let taskInfo = $(this).attr("id").split("-");
         let task = taskInfo[taskInfo.length - 1];
         activeTask = task;
-        $("#task-" + task).animate({"background-color": "#edeef2", "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+        $("#task-" + task).animate({"background-color": "#efefef", "padding": "10px", "margin": "15px 0 30px 0"}, 300);
         $("#task-edit-" + activeTask).slideDown(200);
         $("#task-trash-" + activeTask).css("display", "block");
         $("#task-repeat-" + activeTask).css("display", "block");
@@ -503,7 +505,7 @@ $(document).on("click", ".page, #left-menu div", function(e) {
     if (isTaskActive) {
         if ($(e.target).hasClass("task-pseudocheck")) {
             $("#task-check-"+activeTask).toggle();
-        } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name')) {
+        } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name') || $(e.target).hasClass('task-display')) {
             return false;
         }
         hideActiveTask();
