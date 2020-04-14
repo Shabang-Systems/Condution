@@ -40,13 +40,13 @@ const initFirebase = () => {
     // firebase.initializeApp(firebaseConfig);
 
     // return firebase.firestore();
-    return db;
+    return [db, firebase.firestore];
 }
 
 
 const { refGenerator } = (() => {
-    const firebaseDB = initFirebase();
-    const cache = new Map();
+    const [ firebaseDB, fsRef ] = initFirebase();
+    const cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
     const unsubscribeCallbacks = new Map();
 
     function convertPath(_path) {
@@ -68,42 +68,56 @@ const { refGenerator } = (() => {
          * @return  reference   The generated reference
          *
          * Examples of valid path arrays:
+         *  [`collection/${docName}`] => DocumentReference
          *  ["collection", "docName"] => DocumentReference
          *  ["collection", "docName", "collection"] => CollectionReference
          *  ["collection", ["query", "params"], ["more", "params"]] => Query
          *  ["collection", ["query", "params"], "docname"] => DocumentReference
          */
-        let ref = db;
-        for (let nav of path) {
+        let ref = firebaseDB;
+        // special handling for first collection from root
+        console.assert(typeof path[0] === 'string');
+        if (path[0].includes('/'))
+            ref = ref.collectionGroup(path[0]);
+        else
+            ref = ref.collection(path[0]);
+        // generic handling
+        for (let nav of path.slice(1)) {
             if (typeof nav === 'string') {
-                if (ref instanceof DocumentReference) {
+                if (ref instanceof fsRef.DocumentReference) {
                     ref = ref.collection(nav);
-                } else if (ref instanceof Query) {
+                } else if (ref instanceof fsRef.Query) {
                     ref = ref.doc(nav);
                 }
             } else if (Array.isArray(nav)) {                // query
-                console.assert(ref instanceof Query)
+                console.assert(ref instanceof fsRef.Query)
                 ref = ref.where(...nav);
             }
         }
+        console.log("database refereneced!!!");
         return ref;
     }
 
     const handlers = {
-        get: (path) => { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
+        get: async (path) => { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
+            console.log(cache)
             if (!cache.has(path)) {
                 const ref = getFirebaseRef(path);
-                // cache.set(path, (await ref.get()));   // TODO: needed?
+                cache.set(path, ref.get());   // TODO: needed?
                 unsubscribeCallbacks.set(path, ref.onSnapshot({
                     error: console.trace,
                     next: (snap) => {
-                        cache.set(path, snap);
+                        // cache.set(path, snap);
                     }
                 }));
             }
             return cache.get(path);
         }
     };
+
+    // const uid = "REDACTED" // TODO: remove
+    // for (let i=0; i<30; ++i)
+    //     handlers.get(["users", uid, "tasks"]).then(console.log);
 
     function cacheRef(path) {
         /* TODO
