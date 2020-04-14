@@ -41,6 +41,7 @@ html, body {
 
     /* Task colors */
     --task: #90939a;
+    --task-icon: #777777;
     --task-feature: #efefef;
     --task-feature-alt: #dbdbdd;
     --task-textbox: #434d5f;
@@ -48,10 +49,26 @@ html, body {
     --task-clickbox-background: #e8e8e8;
     --task-clickbox-accent-background: #d1d1d1;
     --task-clickbox: #2d2d2d;
+    --task-checkbox: #ccc;
+    --task-checkbox-feature: #e0e0e0;
+    --task-checkbox-ds: #f8974a;
+    --task-checkbox-ds-feature: #f5c09d;
+    --task-checkbox-ds-background: #f4eae4;
+    --task-checkbox-od: #c04f40;
+    --task-checkbox-od-feature: #ed938c;
+    --task-checkbox-od-background: #f7d7d5;
+    --task-checkmark: #2b3749;
+    --task-checkmark-ds: #f4721a;
+    --task-checkmark-od: #d32f19;
 
     /* Datepicker colors */
     --task-datepicker-elems: grey;
+    --task-datepicker-elem-feature #f4f4f5;
+    --task-datepicker-elem-feature-alt: #a3a3a3;
     --task-datepicker-background: #eeeeee;
+    --task-datepicker-selected: #e0e0e0;
+    --task-datepicker-feature: #434d5f;
+    --task-datepicker-action: #656e7a;
 
     /* Special accent */
     --special: #dadeae;
@@ -617,24 +634,24 @@ html, body {
 
 .ui-state-default:hover {
     background: 0 !important;
-    border-color: #a3a3a3 !important;
-    background-color: #f4f4f5 !important;
+    border-color: var(--task-datepicker-elem-feature) !important;
+    background-color: var(--task-datepicker-elem-feature) !important;
 }
 
 .ui-state-active {
-    background-color: #e0e0e0 !important;
+    background-color: var(--task-datepicker-selected) !important;
     color: black;
 }
 
 .ui-state-active:hover {
-    background-color: #e0e0e0 !important;
+    background-color:  var(--task-datepicker-selected) !important;
     border: 0;
 }
 
 .ui-priority-secondary {
-    border-color: #bebebf !important;
+    border-color: var(--task-datepicker-elem-feature-alt) !important;
     border-width: 0px !important;
-    color: #434d5f !important;
+    color: var(--task-datepicker-feature) !important;
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0) !important;
@@ -654,7 +671,7 @@ html, body {
 .ui-widget-header {
     background: 0;
     border: 0;
-    background-color: #434d5f;
+    background-color: var(--task-datepicker-feature);
 }
 
 .ui-datepicker-prev {
@@ -663,8 +680,8 @@ html, body {
 
 .ui-datepicker-prev-hover {
     background: 0 !important;
-    border-color: #656e7a !important;
-    background-color: #656e7a !important;
+    border-color: var(--task-datepicker-action) !important;
+    background-color: var(--task-datepicker-action) !important;
     transform: translate(1px, 2px);
 }
 .ui-datepicker-next {
@@ -673,8 +690,8 @@ html, body {
 
 .ui-datepicker-next-hover {
     background: 0 !important;
-    border-color: #656e7a !important;
-    background-color: #656e7a !important;
+    border-color: var(--task-datepicker-action) !important;
+    background-color: var(--task-datepicker-action) !important;
     transform: translate(0px, 2px);
 }
 
@@ -710,8 +727,7 @@ html, body {
   position: absolute;
   left: 6px; top: 4.4px;
   width: 1em; height: 1em;
-  border: 1px solid #ccc;
-  /*background: #fff;*/
+  border: 1px solid var(--task-checkbox);
   border-radius: 4px;
   /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
 }
@@ -722,8 +738,8 @@ html, body {
   position: absolute;
   left: 6px; top: 4.4px;
   width: 1em; height: 1em;
-  border: 1px solid #f8974a;
-  background: #f4eae4;
+  border: 1px solid var(--task-checkbox-ds);
+  background: var(--task-checkbox-ds-background);
   border-radius: 4px;
   /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
 }
@@ -734,8 +750,8 @@ html, body {
   position: absolute;
   left: 6px; top: 4.4px;
   width: 1em; height: 1em;
-  border: 1px solid #c04f40;
-  background: #f7d7d5;
+  border: 1px solid var(--task-checkbox-od);
+  background: var(--task-checkbox-od-background);
   border-radius: 4px;
   /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
 }
@@ -751,7 +767,7 @@ html, body {
   top .15em; left: .10em;
   font-size: 9px;
   line-height: 0.6;
-  color: #2b3749;
+  color: var(--task-checkmark);
   transition: all 100ms;
   transform: translate(8px, 9.5px) !important;
 }
@@ -766,7 +782,7 @@ html, body {
   top .15em; left: .10em;
   font-size: 9px;
   line-height: 0.6;
-  color: #f4721a;
+  color: var(--task-checkmark-ds);
   transition: all 100ms;
   transform: translate(8px, 9.5px) !important;
 }
@@ -781,7 +797,7 @@ html, body {
   top .15em; left: .10em;
   font-size: 9px;
   line-height: 0.6;
-  color: #d32f19;
+  color: var(--task-checkbox-od);
   transition: all 100ms;
   transform: translate(8px, 9.5px) !important;
 }
@@ -798,15 +814,15 @@ html, body {
 
 /* hover style just for information */
 label:hover:before {
-    background-color: #e0e0e0 !important;
+    background-color: var(--task-checkbox-feature) !important;
 }
 
 label.ds:hover:before {
-    background-color: #f4c09d !important;
+    background-color: var(--task-checkbox-ds-feature) !important;
 }
 
 label.od:hover:before {
-    background-color: #ed938c !important;
+    background-color: var(--task-checkbox-od-feature) !important;
 }
 
 label:before {
@@ -814,7 +830,7 @@ label:before {
 }
 
 .bootstrap-tagsinput {
-    background-color: #e8e8e8;
+    background-color: var(--task-textbox-background);
     height: auto !important;
     min-height: 20px;
     width:  63%;
@@ -824,7 +840,7 @@ label:before {
 
 .bootstrap-tagsinput > .label-info {
     position: relative;
-    background-color: #dadeae;
+    background-color: var(--special);
     display: inline-block;  /* <- ADD THIS */
     transform: translateY(-2px);
     font-size: 10px;
@@ -842,7 +858,6 @@ label:before {
     background-color: transparent;
     border: 0;
     border-bottom: 3px;
-    border-color: red;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -852,19 +867,19 @@ label:before {
     font-size: 9pt;
     text-overflow: ellipsis;
     font-weight: 500;
-    color: #434d5f;
+    color: var(--task-textbox);
     padding: 0px 2px 0 0;
     overflow: ellipsis;
 }
 
 .tt-menu {
-    background-color: #f4f4f5;
+    background-color: var(--background);
     font-size: 11px;
     transform: translateY(-3px);
     cursor: pointer;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    border: 0.5px solid #dedee0;
+    border: 0.5px solid var(--decorative-light);
     box-shadow: 0 2px 3px #ccc;
     transition: all 400ms;
 }
@@ -874,11 +889,11 @@ label:before {
 }
 
 .tt-suggestion:hover {
-    background-color: #e2e2e2;
+    background-color: var(--background-feature);
 }
 
 .tt-cursor {
-    background-color: #e2e2e2;
+    background-color: var(--background-feature);
 }
 
 /*-----*/
@@ -972,7 +987,7 @@ label:before {
 .label {
     font-weight: 300;
     font-size: 13px;
-    color: #777777;
+    color: var(--task-icon);
     margin-right: 10px;
     margin-left: 5px;
 }

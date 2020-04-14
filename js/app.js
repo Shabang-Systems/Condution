@@ -61,6 +61,9 @@ var numDaysBetween = function(d1, d2) {
     return diff / (1000 * 60 * 60 * 24);
 };
 
+
+var getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
+
 // Chapter 2: Functions to Show and Hide Things!
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
@@ -162,8 +165,8 @@ var hideActiveTask = function() {
     $("#task-edit-"+activeTask).slideUp(300);
     $("#task-trash-"+activeTask).css("display", "none");
     $("#task-repeat-"+activeTask).css("display", "none");
-    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "margin":"0"}, 200);
-    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+    $("#task-"+activeTask).animate({"background-color": getThemeColor("--background"), "padding": "0", "margin":"0"}, 200);
+    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
     isTaskActive = false;
     activeTask = null;
     if (activeTaskDeInboxed) {
@@ -276,6 +279,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
         defer_current = defer;
         due_current = due;
     }
+    let rightCarrotColor = getThemeColor("--decorative-light");
     // ---------------------------------------------------------------------------------
     // Light the fire, kick the Tires!
     $("#" + pageId).append(`
@@ -311,7 +315,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
 
                                 <div class="label"><i class="far fa-play-circle"></i></div>
                                 <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px">
-                                <i class="fas fa-caret-right" style="color:#cccece; font-size:13px; transform: translateY(3px); margin-right: 5px"></i>
+                                <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i>
                                 <div class="label"><i class="far fa-stop-circle"></i></div>
                                 <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px">
                             </div>
@@ -415,7 +419,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     // Action Behaviors
     $('#task-check-'+taskId).change(function(e) {
         if (this.checked) {
-            $('#task-name-' + taskId).css("color", "#ccccc");
+            $('#task-name-' + taskId).css("color", getThemeColor("--task-checkbox"));
             $('#task-name-' + taskId).css("text-decoration", "line-through");
             $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
             $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
@@ -545,11 +549,11 @@ $(document).on("click", ".task", function(e) {
         let taskInfo = $(this).attr("id").split("-");
         let task = taskInfo[taskInfo.length - 1];
         activeTask = task;
-        $("#task-" + task).animate({"background-color": "#efefef", "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+        $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
         $("#task-edit-" + activeTask).slideDown(200);
         $("#task-trash-" + activeTask).css("display", "block");
         $("#task-repeat-" + activeTask).css("display", "block");
-        $("#task-" + task).css({"border-bottom": "2px solid #e5e6e8", "border-right": "2px solid #e5e6e8"});
+        $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});
     }
 });
 
@@ -677,6 +681,7 @@ $("#quickadd").keydown(function(e) {
 
 // Chapter 4: Mainloop
 var lightTheFire = async function() {
+    $("body").addClass(currentTheme);
     await showPage("upcoming-page");
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
@@ -685,6 +690,7 @@ var lightTheFire = async function() {
 
 var uid;
 var displayName;
+var currentTheme;
 
 $(document).ready(function() {
     console.log("Authenticating the supergober!");
@@ -696,6 +702,8 @@ $(document).ready(function() {
                 // User is signed in. Do user related things.
                 displayName = user.displayName;
                 uid = user.uid;
+                // TODO: actually get the user's prefrences
+                currentTheme = "condutiontheme-default-light";
                 console.log("Presenting the cuber-uber!");
                 lightTheFire();
             }
