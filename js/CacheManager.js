@@ -138,23 +138,22 @@ function dbRef(path) {
         ref = ref.collection(key);
         if (typeof val === 'string') // get doc
             ref = ref.doc(val);
-        else if (Array.isArray(val)) {// where clause: use like {task: ['project', '==', '']}
-            // ref = val.reduce((ref, q) => ref.where(...q), ref); // TODO: this line untested
-            for (let q of val) {
-                ref = ref.query(...q);
+        else if (Array.isArray(val)){
+            for (let query of val) {
+                ref = ref.where(...query);
             }
-        }
+        } // where clause: use like {task: ['project', '==', '']}
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
     return {    // NOTE: wrapped in promise.resolve
         get: ref.get.bind(ref),
-        set: (data, options) => { _cacheDump(); return ref.set.bind(ref)(data, options); },
-        add: (data) => { _cacheDump(); return ref.add.bind(ref)(data); },
-        delete: () => { _cacheDump(); return ref.delete.bind(ref)(); },
-        update: (data) => { _cacheDump(); return ref.update.bind(ref)(data); }
+        set: (data, options) => { cacheDump(); return ref.set.bind(ref)(data, options); },
+        add: (data) => { cacheDump(); return ref.add.bind(ref)(data); },
+        delete: () => { cacheDump(); return ref.delete.bind(ref)(); },
+        update: (data) => { cacheDump(); return ref.update.bind(ref)(data); }
     };
-};
+}
 
 async function dbGet(path, debug=false) {
     // TODO: query caching
