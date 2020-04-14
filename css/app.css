@@ -900,7 +900,7 @@ label:before {
 
 .main-head {
     -webkit-app-region: drag;
-    width:100%;
+    width: 100%;
     padding: 0;
     margin: 0;
     position: fixed;
@@ -1002,7 +1002,7 @@ label:before {
 }
 
 .win32-windowing {
-    padding-top: 20px !important;
+    padding-top: 5px !important;
 }
 
 /* Datepicker */

@@ -8,18 +8,19 @@ function createWindow () {
         'minWidth': 950,
         'minHeight': 650,
         'fullscreen': false,
-        'title': "Conduction",
+        'title': "Condution",
         'webPreferences': {
             'nodeIntegration': true
         },
         'titleBarStyle': 'hiddenInset',
-        'frame': false,
-        'transparent': true,
+        //'frame': false,
+        //'transparent': true, TODO: MacOS fix
     })
     win.on('page-title-updated', function(e) {
         e.preventDefault()
     });
 
+    win.removeMenu();
     // and load the index.html of the app.
     win.loadFile('auth.html')
 }
