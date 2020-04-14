@@ -164,20 +164,9 @@ async function modifyTask(userID, taskID, updateQuery) {
         .catch(console.error);
 }
 
-async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await dbRef({users: userID, tasks: undefined}).add({
-        // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
-        name:nameParam,
-        desc:descParam,
-        defer:deferParam,
-        due:dueParam,
-        isFlagged: isFlaggedParam,
-        isFloating: isFloatingParam,
-        project: projectParam,
-        tags: tagsParam,
-        timezone: tz,
-        isComplete: false
-    });
+async function newTask(userID, taskObj) { //TODO: task order calculation
+//, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
+    return (await dbRef({users: userID, tasks: undefined}).add(taskObj)).id;
 }
 
 async function newTag(userID, tagName) {

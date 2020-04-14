@@ -179,8 +179,18 @@ var displayTask = async function(pageId, taskId, infoObj) {
     var name = taskObj.name;
     var desc = taskObj.desc;
     let timezone = taskObj.timezone;
-    let defer = new Date(taskObj.defer.seconds*1000);
-    let due = new Date(taskObj.due.seconds*1000);
+    let defer;
+    let due;
+    if (!taskObj.defer) {
+        defer = undefined;
+    } else {
+        defer = new Date(taskObj.defer.seconds*1000);
+    }
+    if (!taskObj.due) {
+        due = undefined;
+    } else {
+        due = new Date(taskObj.due.seconds*1000);
+    }
     let isFlagged = taskObj.isFlagged;
     let isFloating = taskObj.isFloating;
     let actualTags = taskObj.tags;
@@ -228,8 +238,16 @@ var displayTask = async function(pageId, taskId, infoObj) {
     let defer_current;
     let due_current;
     if(isFloating) {
-        defer_current = moment(defer).tz(timezone).local(true).toDate();
-        due_current = moment(due).tz(timezone).local(true).toDate();
+        if (defer) {
+            defer_current = moment(defer).tz(timezone).local(true).toDate();
+        } else {
+            defer_current = undefined;
+        }
+        if (due) {
+            due_current = moment(due).tz(timezone).local(true).toDate();
+        } else {
+            due_current = undefined;
+        }
     } else {
         defer_current = defer;
         due_current = due;
@@ -356,12 +374,14 @@ var displayTask = async function(pageId, taskId, infoObj) {
     });
     $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
-    if (new Date() > due_current) {
-        $('#task-pseudocheck-' + taskId).addClass("od");
-    } else if (numDaysBetween(new Date(), due_current) <= 1) {
-        $('#task-pseudocheck-' + taskId).addClass("ds");
-    } else if (new Date() < defer_current) {
-        $('#task-name-' + taskId).css("opacity", "0.3");
+    if (due_current) {
+        if (new Date() > due_current) {
+            $('#task-pseudocheck-' + taskId).addClass("od");
+        } else if (numDaysBetween(new Date(), due_current) <= 1) {
+            $('#task-pseudocheck-' + taskId).addClass("ds");
+        } else if (new Date() < defer_current) {
+            $('#task-name-' + taskId).css("opacity", "0.3");
+        }
     }
     // ---------------------------------------------------------------------------------
     // Action Behaviors
@@ -565,12 +585,48 @@ $("#quickadd").blur(function(e) {
 $("#quickadd").keydown(function(e) {
     if (e.keyCode == 13) {
         let newTaskUserRequest = chrono.parse($(this).val());
-        for (let request in newTaskUserRequest) {
-            // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
-            // Make that happen is the todo.
-            var start = newTaskUserRequest[request].start;
-            var end = newTaskUserRequest[request].end;
+        // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+        // Make that happen is the todo.
+        let startDate;
+        let endDate;
+        let text;
+        let tz = moment.tz.guess();
+        if (newTaskUserRequest.length != 0) {
+            let start = newTaskUserRequest[0].start;
+            let end = newTaskUserRequest[0].end;
+            if (start && end) {
+                startDate = start.date();
+                endDate = end.date();
+            } else if (end) {
+                endDate = end.date();
+            } else if (start) {
+                startDate = start.date();
+            }
+            text = $(this).val().replace(newTaskUserRequest[0].text)
+        } else {
+            text = $(this).val()
         }
+        newTask(uid, {
+            name: text,
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            defer: startDate,
+            due: endDate,
+            tags: [],
+            timezone: tz, 
+        }).then(function(ntID) {
+            getProjectsandTags(uid).then(function(pPandT){
+                let possibleProjects = pPandT[0][0];
+                let possibleTags = pPandT[1][0];
+                let possibleProjectsRev = pPandT[0][1];
+                let possibleTagsRev = pPandT[1][1];
+                displayTask("inbox", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])       
+            });
+            $(this).blur();
+        });
     }
 });
 
