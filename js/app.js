@@ -19,8 +19,8 @@ if (process.platform === "win32") {
     $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
 } else if (process.platform === "darwin") {
     $("#main-head-darwin").show();
-    $("#left-menu").addClass("darwin-windowing");
-    $("#content-area").addClass("darwin-windowing");
+    $("#left-menu").addClass("darwin-windowing-left");
+    $("#content-area").addClass("darwin-windowing-right");
 }
 
 // Chapter 1: Utilities!
@@ -675,15 +675,26 @@ $("#quickadd").keydown(function(e) {
                 $("#unsorted-badge").html(''+iC);
             });
         });
-
+    } else if (e.keyCode == 27) {
+        $(this).blur();
     }
 });
 
 
-// Chapter 4: Mainloop
+// Chapter 4: Interface Loader Functions
+var loadProjects = async function() {
+    let tlps = (await getTopLevelProjects(uid));
+    for (let projID in tlps[0]) {
+        let projName = tlps[0][projID];
+        $(".projects").append(`<div id="project-${projID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${projName}</t></div>`);
+    }
+}
+
+// Chapter 5: Mainloop
 var lightTheFire = async function() {
     $("body").addClass(currentTheme);
     await showPage("upcoming-page");
+    await loadProjects();
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
     console.log("Kick the Tires!");
