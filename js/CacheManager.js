@@ -99,6 +99,20 @@ const { refGenerator: dbRef } = (() => {
             const path = convertPath(_path);
 
         }
+
+    function cacheRef(path) {
+        /* TODO
+         * Get a reference wrapper that forces cache hits.
+         * This function will be exposed to the outside world.
+         *
+         * @param   path    A valid path array.
+         * @return  wrapper A wrapper object around the expected reference.
+         */
+    }
+
+    return {
+        dbRef: cacheRef
+    }
 })();
 
 var quickDirtyCacheByIdsWithCollisionsTODO = {};
