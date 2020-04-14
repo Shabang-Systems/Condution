@@ -379,25 +379,36 @@ var displayTask = async function(pageId, taskId, infoObj) {
             $('#task-pseudocheck-' + taskId).addClass("od");
         } else if (numDaysBetween(new Date(), due_current) <= 1) {
             $('#task-pseudocheck-' + taskId).addClass("ds");
-        } else if (new Date() < defer_current) {
+        } 
+    }
+    if (defer_current) {
+        if (new Date() < defer_current) {
             $('#task-name-' + taskId).css("opacity", "0.3");
         }
     }
+       
     // ---------------------------------------------------------------------------------
     // Action Behaviors
     $('#task-check-'+taskId).change(function(e) {
         if (this.checked) {
-            completeTask(uid, taskId);
-            // if (actualProject === "inbox") // TODO: do whatever this is?
-            //      (if is a task is in the inbox and was just completed:
-            //      drop the badge on the inbox)
-
             $('#task-name-' + taskId).css("color", "#ccccc");
             $('#task-name-' + taskId).css("text-decoration", "line-through");
             $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
             $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
             $('#task-' + taskId).slideUp(300);
-            if (actualProject === undefined) activeTaskDeInboxed = true;
+            completeTask(uid, taskId).then(function(e) {
+                if (actualProject === undefined) {
+                     getInboxTasks(uid).then(function(e){
+                        iC = e.length;
+                        if (iC === 0) {
+                            $("#inbox-subhead").slideUp(300);
+                            $("#inbox").slideUp(300);
+                        } else {
+                            $("#unsorted-badge").html(''+iC);
+                        }
+                    });           
+                }
+            });
         }
     });
     $('#task-project-' + taskId).change(function(e) {
@@ -415,7 +426,8 @@ var displayTask = async function(pageId, taskId, infoObj) {
         }
     });
     $("#task-trash-" + taskId).click(function(e) {
-        // Ask HuZah's code to delete the task
+        if (actualProject === undefined) activeTaskDeInboxed = true;
+        deleteTask(uid, taskId);
         hideActiveTask();
         $('#task-' + taskId).slideUp(150);
     });
@@ -589,44 +601,52 @@ $("#quickadd").keydown(function(e) {
         // Make that happen is the todo.
         let startDate;
         let endDate;
-        let text;
         let tz = moment.tz.guess();
+        let tb = $(this)
+        let ntObject = {
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: tz, 
+        };
         if (newTaskUserRequest.length != 0) {
             let start = newTaskUserRequest[0].start;
             let end = newTaskUserRequest[0].end;
             if (start && end) {
                 startDate = start.date();
                 endDate = end.date();
+                ntObject.defer = startDate;
+                ntObject.due = endDate;
             } else if (end) {
                 endDate = end.date();
+                ntObject.due = endDate;
             } else if (start) {
                 startDate = start.date();
+                ntObject.defer = startDate;
             }
-            text = $(this).val().replace(newTaskUserRequest[0].text)
+            ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
         } else {
-            text = $(this).val()
+            ntObject.name = tb.val()
         }
-        newTask(uid, {
-            name: text,
-            desc: "",
-            isFlagged: false,
-            isFloating: false,
-            isComplete: false,
-            project: "",
-            defer: startDate,
-            due: endDate,
-            tags: [],
-            timezone: tz, 
-        }).then(function(ntID) {
+        tb.val("");
+        tb.blur();
+        newTask(uid, ntObject).then(function(ntID) {
             getProjectsandTags(uid).then(function(pPandT){
                 let possibleProjects = pPandT[0][0];
                 let possibleTags = pPandT[1][0];
                 let possibleProjectsRev = pPandT[0][1];
                 let possibleTagsRev = pPandT[1][1];
-                displayTask("inbox", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])       
+                displayTask("inbox", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])
             });
-            $(this).blur();
+            getInboxTasks(uid).then(function(e){
+                iC = e.length;
+                $("#unsorted-badge").html(''+iC);
+            });
         });
+
     }
 });
 

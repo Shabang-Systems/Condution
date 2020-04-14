@@ -171,7 +171,8 @@ async function newTask(userID, taskObj) { //TODO: task order calculation
         let ibtL = (await getInboxTasks(userID)).length;
         taskObj.order = ibtL;
     } else {
-        let projL = (await getProjectStructure(userID, taskObj.project))
+        let projL = (await getProjectStructure(userID, taskObj.project)).children.length
+        taskObj.order = projL;
     }
     
     return (await dbRef({users: userID, tasks: undefined}).add(taskObj)).id;
