@@ -2,6 +2,7 @@
   "name": "condution",
   "version": "0.0.1",
   "description": "Tasks? Done. That was quick.",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
