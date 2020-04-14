@@ -1,20 +1,4 @@
 "use strict";
-// Firebase App (the core Firebase SDK) is always required and
-// must be listed before other Firebase SDKs
-//const firebase = require("firebase/app");
-
-require("firebase/auth");
-require("firebase/firestore");
-
-const firebaseConfig = {
-    apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
-    authDomain: "condution-7133f.firebaseapp.com",
-    databaseURL: "https://condution-7133f.firebaseio.com",
-    projectId: "condution-7133f",
-    storageBucket: "condution-7133f.appspot.com",
-    messagingSenderId: "544684450810",
-    appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
-};
 
 const initFirebase = () => {
     // Firebase App (the core Firebase SDK) is always required and
@@ -40,20 +24,23 @@ const initFirebase = () => {
     return firebase.firestore();
 }
 
-const db = firebase.firestore();
 
 const { refGenerator: dbRef } = (() => {
+    const firebaseDB = initFirebase();
     const cache = new Map();
 
-    function convertPath(path) {
-        if (path instanceof Map)
-            return path;
-        else if (typeof path === 'object')
+    function convertPath(_path) {
+        /*
+         * @deprecated
+         */
+
+        if (_path instanceof Map)
+            return _path;   // TODO: more validation
+        else if (typeof _path === 'object')
             return new Map(Array.from(path));
     }
 
-    function dbGet(path) { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
-        path = convertPath(path);
+    function getHandler(path) { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
         if (cache.has(path))
             return cache.get(path);
         else {
@@ -61,9 +48,41 @@ const { refGenerator: dbRef } = (() => {
         }
     }
 
+    function refGenerator(path) {
+        /*
+         * Get a database reference.
+         *
+         * @param   path        A valid path array, see below.
+         * @return  reference   The generated reference
+         *
+         * Examples of valid path arrays:
+         *  ["collection", "docName"] => DocumentReference
+         *  ["collection", "docName", "collection"] => CollectionReference
+         *  ["collection", ["query", "params"], ["more", "params"]] => Query
+         *  ["collection", ["query", "params"], "docname"] => DocumentReference
+         */
+        let ref = db;
+        let stringIsCollection = true;
+        for (let nav of path) {
+            if (typeof nav === 'string') {
+                if (ref instanceof DocumentReference) {
+                    ref = ref.collection(nav);
+                } else if (ref instanceof Query) {
+                    ref = ref.doc(nav);
+                }
+            } else if (Array.isArray(nav)) {                // query
+                console.assert(ref instanceof Query)
+                ref = ref.where(...nav);
+            }
+        }
+        return ref;
+    }
+
     return {
-        refGenerator: () => { /* TODO */ }
-    };
+        refGenerator: (_path) => {
+            const path = convertPath(_path);
+
+        }
 })();
 
 var quickDirtyCacheByIdsWithCollisionsTODO = {};
