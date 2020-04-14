@@ -179,50 +179,37 @@ async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFla
 }
 
 async function newTag(userID, tagName) {
-    // TODO: refactor
-    let ntID = await db.collection("users").doc(userID).collection("tags").add({
-        name: tagName,
-    });
-    return ntID.id;
+    return (await dbRef({users: userID, tags: undefined}).add({name: tagName})).id
 }
 
 async function completeTask(userID, taskID) {
-    // TODO: refactor
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).get().then(function(doc) {
-        if (doc.exists !== true) {
-            throw "Document not found. Please don't try to set documents that don't exist.";
-        }
-    });
-    await db.collection("users").doc(userID).collection("tasks").doc(taskID).update({
-        isComplete: true
-    });
+    await dbGet({users: userID, tasks: taskID})
+        .then(doc => {
+            if (doc.exists !== true) {
+                throw "Document not found. Please don't try to set documents that don't exist.";
+            }
+        });
+    await dbRef({users: userID, tasks: taskID}).update({
+            isComplete: true
+        });
 }
 
 async function deleteTask(userID, taskID) {
-    // TODO: refactor
-    db.collection("users").doc(userID).collection("tasks").doc(taskID).delete().then(function() {
-        console.log("Task successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing task: ", error);
-    });
+    (await dbRef({users: userID, tasks: taskID})).delete()
+        .then(() => {console.log("Task successfully deleted!")})
+        .catch(console.error);
 }
 
 async function deleteProject(userID, projectID) {
-    // TODO: refactor
-    db.collection("users").doc(userID).collection("projects").doc(projectID).delete().then(function() {
-        console.log("Project successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing project: ", error);
-    });
+    (await dbRef({users: userID, projects: projectID})).delete()
+        .then(() => {console.log("Project successfully deleted!")})
+        .catch(console.error);
 }
 
 async function deleteTag(userID, tagID) {
-    // TODO: refactor
-    db.collection("users").doc(userID).collection("tag").doc(tagID).delete().then(function() {
-        console.log("Tag successfully deleted!");
-    }).catch(function(error) {
-        console.error("Error removing tag: ", error);
-    });
+    (await dbRef({users: userID, tags: tagID})).delete()
+        .then(() => {console.log("Tag successfully deleted!")})
+        .catch(console.error);
 }
 
 async function getProjectStructure(userID, projectID) {
@@ -232,7 +219,7 @@ async function getProjectStructure(userID, projectID) {
     await dbGet({users:userID, projects:projectID, children:undefined}).then(snapshot => {
         snapshot.docs.forEach(async doc => {                 //  for each child
             if (doc.data().type === "task") { // TODO combine these if statements
-                let order = (await dbGet({users:userID, tasks:(doc.data().childrenID)}).map(snap => snap.order));//.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task
+                let order = (await dbGet({users:userID, tasks:(doc.data().childrenID)}).map(snap => snap.order)); //  get the order of the task
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
