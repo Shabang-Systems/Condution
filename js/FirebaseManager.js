@@ -119,19 +119,31 @@ async function getTaskInformation(userID, taskID) {
     return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
+async function getTopLevelProjects(userID) {
+    let projectIdByName = {};
+    let projectNameById = {};
+
+    await dbGet({users: userID, projects: [["top_level", "==", true]]})
+        .then(snap => snap.docs.forEach(proj => {
+            if (proj.exists) {
+                projectNameById[proj.id] = proj.data().name;
+                projectIdByName[proj.data().name] = proj.id;
+            }
+        }))
+        .catch(console.error);
+    return [projectNameById, projectIdByName];
+}
+
 async function getProjectsandTags(userID) {
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
     let projectNameById = {};
     await dbGet({users: userID, projects: undefined})
         .then(snap => snap.docs.forEach(proj => {
-            dbGet({users: userID, projects: proj.id})
-                .then(proj => {
-                    if (proj.exists) {
-                        projectNameById[proj.id] = proj.data().name;
-                        projectIdByName[proj.data().name] = proj.id;
-                    }
-                })
+            if (proj.exists) {
+                projectNameById[proj.id] = proj.data().name;
+                projectIdByName[proj.data().name] = proj.id;
+            }
         }))
         .catch(console.error);
 
@@ -139,13 +151,10 @@ async function getProjectsandTags(userID) {
     let tagNameById = {};
     await dbGet({users: userID, tags: undefined})
         .then(snap => snap.docs.forEach(tag => {
-            dbGet({users: userID, tags: tag.id})
-                .then(tag => {
-                    if (tag.exists) {
-                        tagNameById[tag.id] = tag.data().name;
-                        tagIdByName[tag.data().name] = tag.id;
-                    }
-                })
+            if (tag.exists) {
+                tagNameById[tag.id] = tag.data().name;
+                tagIdByName[tag.data().name] = tag.id;
+            }
         }))
         .catch(console.error);
 
