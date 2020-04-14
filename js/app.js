@@ -70,7 +70,7 @@ var showPage = async function(pageId) {
     });
     $("#page-loader").fadeIn(100);
     // TODO: ADD THIS BACK BEFORE COMMIT TO CAUSE SYNC
-    await sync(uid);
+    //await sync(uid);
     let pPandT = await getProjectsandTags(uid);
     let possibleProjects = pPandT[0][0];
     let possibleTags = pPandT[1][0];
@@ -367,7 +367,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     // Action Behaviors
     $('#task-check-'+taskId).change(function(e) {
         if (this.checked) {
-            completeTask(uid, taskId);
+            //completeTask(uid, taskId);
             // if (actualProject === "inbox") // TODO: do whatever this is?
             //      (if is a task is in the inbox and was just completed:
             //      drop the badge on the inbox)
@@ -376,7 +376,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
             $('#task-name-' + taskId).css("text-decoration", "line-through");
             $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
             $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
-            $('#task-' + taskId).slideUp(150);
+            $('#task-' + taskId).slideUp(300);
         }
     });
     $('#task-project-' + taskId).change(function(e) {

@@ -1,4 +1,8 @@
 /* Globals */
+::root {
+    --content-subhead: #838384;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -28,7 +32,7 @@ html, body {
 }
 
 .perspective-title{
-    color: #838384;
+    color: var(--content-subhead);
     font-size: 12px;
     padding: 0;
 }

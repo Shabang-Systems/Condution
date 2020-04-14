@@ -110,9 +110,10 @@ async function getDSTasks(userID) {
     let dsTime = new Date();
     dsTime.setHours(dsTime.getHours() + 24);
     for (key in taskCache){
-        task = taskCache[key]
-        if ((!task.isComplete) && (task.due <= dsTime)) {
-            docIds.push(key)
+        task = taskCache[key];
+        console.log(task.due, dsTime, task.due >= dsTime);
+        if ((!task.isComplete) && (new Date(task.due.seconds*1000) <= dsTime)) {
+            docIds.push(key);
         }
     }
     return docIds;
