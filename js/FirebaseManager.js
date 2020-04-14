@@ -38,7 +38,12 @@ function dbRef(path) {
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
-    return ref;
+    return Promise.resolve({    // NOTE: wrapped in promise.resolve
+        get: ref.get.bind(ref),
+        set: (data, options) => { cacheDump(); return ref.set.bind(ref)(data, options); },
+        delete: () => { cacheDump(); return ref.delete.bind(ref)(); },
+        update: (data) => { cacheDump(); return ref.update.bind(ref)(data); }
+    });
 }
 
 async function dbGet(path, debug=false) {
@@ -51,14 +56,19 @@ async function dbGet(path, debug=false) {
         if (quickDirtyCacheByIdsWithCollisionsTODO.hasOwnProperty(finalKey)) {   //  and the cache has it
             return quickDirtyCacheByIdsWithCollisionsTODO[path];        //  return from cache
         } else {                                                        //  doesn't exist in the cache yet
-            const ref = await dbRef(path).get();                        //  get snapshot from db
-            quickDirtyCacheByIdsWithCollisionsTODO[finalKey] = ref;     //  save snapshot to cache
-            console.log(ref);
-            return ref;                                                 //  and return the new data
+            const snap = await dbRef(path).get();                       //  get snapshot from db
+            quickDirtyCacheByIdsWithCollisionsTODO[finalKey] = snap;    //  save snapshot to cache
+            console.log(snap);
+            return snap;                                                //  and return the new data
         }
     } else {                                                            //  TODO: query, too hard to cache
         return (await dbRef(path)).get();                               //  do a database hit
     }
+}
+
+async function cacheDump() {
+    // TODO: implement actually good caching, write to the cache instead of dumping on write to database
+    quickDirtyCacheByIdsWithCollisionsTODO = {};
 }
 
 async function getTasks(userID) {
@@ -66,8 +76,7 @@ async function getTasks(userID) {
     return dbGet({users: userID, tasks: undefined})
     .then(snap => snap.docs
         .map(doc => doc.id)
-    )
-    .catch(err => {
+    ).catch(err => {
         console.error('Error getting documents', err);
     });
 }
@@ -148,7 +157,7 @@ async function modifyTask(userID, taskID, updateQuery) {
                 throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
         });
 
-    await dbRef({users: userID, tasks: taskID}) // TODO: use dbUpdate when implemented
+    (await dbRef({users: userID, tasks: taskID})) // TODO: use dbUpdate when implemented
         .update(updateQuery) // TODO: why is update undefined?
         .catch(console.error);
 }
