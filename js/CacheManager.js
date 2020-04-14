@@ -49,17 +49,6 @@ const { refGenerator } = (() => {
     const cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
     const unsubscribeCallbacks = new Map();
 
-    function convertPath(_path) {
-        /*
-         * @deprecated
-         */
-
-        if (_path instanceof Map)
-            return _path;   // TODO: more validation
-        else if (typeof _path === 'object')
-            return new Map(Array.from(path));
-    }
-
     function getFirebaseRef(path) {
         /*
          * Get a database reference.
@@ -94,30 +83,25 @@ const { refGenerator } = (() => {
                 ref = ref.where(...nav);
             }
         }
-        console.log("database refereneced!!!");
         return ref;
     }
 
     const handlers = {
         get: async (path) => { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
-            console.log(cache)
-            if (!cache.has(path)) {
+            const TODOstrung = JSON.stringify(path);
+            if (!cache.has(TODOstrung)) {
                 const ref = getFirebaseRef(path);
-                cache.set(path, ref.get());   // TODO: needed?
-                unsubscribeCallbacks.set(path, ref.onSnapshot({
+                cache.set(TODOstrung, ref.get());   // TODO: needed?
+                unsubscribeCallbacks.set(TODOstrung, ref.onSnapshot({
                     error: console.trace,
                     next: (snap) => {
-                        // cache.set(path, snap);
+                        cache.set(TODOstrung, snap);
                     }
                 }));
             }
-            return cache.get(path);
+            return cache.get(TODOstrung);
         }
     };
-
-    // const uid = "REDACTED" // TODO: remove
-    // for (let i=0; i<30; ++i)
-    //     handlers.get(["users", uid, "tasks"]).then(console.log);
 
     function cacheRef(path) {
         /* TODO
@@ -127,6 +111,13 @@ const { refGenerator } = (() => {
          * @param   path    A valid path array.
          * @return  wrapper A wrapper object around the expected reference.
          */
+        return {
+            get: () => handlers.get(path),
+            set: getFirebaseRef(path).set,
+            add: getFirebaseRef(path).add,
+            delete: getFirebaseRef(path).delete,
+            update: getFirebaseRef(path).update
+        };
     }
 
     return {
