@@ -13,8 +13,6 @@ function createWindow () {
             'nodeIntegration': true
         },
         'titleBarStyle': 'hiddenInset',
-        //'frame': false,
-        //'transparent': true, TODO: MacOS fix
     })
     win.on('page-title-updated', function(e) {
         e.preventDefault()
