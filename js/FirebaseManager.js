@@ -90,12 +90,13 @@ async function getTasks(userID) {
 }
 
 async function getInboxTasks(userID) {
-    return dbGet({users: userID, tasks: [['project', '==', ''], ['isComplete', "==", false]]})
-    .then(snap => snap.docs
-        .map(doc => doc.id)
+    let inboxDocs = await dbGet({users: userID, tasks: [['project', '==', ''], ['isComplete', "==", false]]})
+        .then(snap => snap.docs
     ).catch(err => {
         console.error('Error getting documents', err);
     });
+    inboxDocs.sort((a,b) => a.data().order - b.data().order);
+    return inboxDocs.map(doc => doc.id);
 }
 
 async function getDSTasks(userID) {
