@@ -44,9 +44,10 @@ const initFirebase = () => {
 }
 
 
-const { refGenerator: dbRef } = (() => {
+const { refGenerator } = (() => {
     const firebaseDB = initFirebase();
     const cache = new Map();
+    const unsubscribeCallbacks = new Map();
 
     function convertPath(_path) {
         /*
@@ -59,15 +60,7 @@ const { refGenerator: dbRef } = (() => {
             return new Map(Array.from(path));
     }
 
-    function getHandler(path) { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
-        if (cache.has(path))
-            return cache.get(path);
-        else {
-            cache.set(path, /* TODO: write dbGetReference, should do same as dbRef */ );
-        }
-    }
-
-    function refGenerator(path) {
+    function getFirebaseRef(path) {
         /*
          * Get a database reference.
          *
@@ -81,7 +74,6 @@ const { refGenerator: dbRef } = (() => {
          *  ["collection", ["query", "params"], "docname"] => DocumentReference
          */
         let ref = db;
-        let stringIsCollection = true;
         for (let nav of path) {
             if (typeof nav === 'string') {
                 if (ref instanceof DocumentReference) {
@@ -97,11 +89,21 @@ const { refGenerator: dbRef } = (() => {
         return ref;
     }
 
-    return {
-        refGenerator: (_path) => {
-            const path = convertPath(_path);
-
+    const handlers = {
+        get: (path) => { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
+            if (!cache.has(path)) {
+                const ref = getFirebaseRef(path);
+                // cache.set(path, (await ref.get()));   // TODO: needed?
+                unsubscribeCallbacks.set(path, ref.onSnapshot({
+                    error: console.trace,
+                    next: (snap) => {
+                        cache.set(path, snap);
+                    }
+                }));
+            }
+            return cache.get(path);
         }
+    };
 
     function cacheRef(path) {
         /* TODO
