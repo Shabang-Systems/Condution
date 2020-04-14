@@ -21,18 +21,29 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-const Cache = {
-    map: new Map(),
-    convertPath: (path) => {
+const { refGenerator: dbRef } = (() => {
+    const cache = new Map();
+
+    function convertPath(path) {
         if (path instanceof Map)
             return path;
         else if (typeof path === 'object')
             return new Map(Array.from(path));
-    },
-    logThis: () => { console.log(this); }
-}
+    }
 
-Cache.logThis();
+    function dbGet(path) { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
+        path = convertPath(path);
+        if (cache.has(path))
+            return cache.get(path);
+        else {
+            cache.set(path, /* TODO: write dbGetReference, should do same as dbRef */ );
+        }
+    }
+
+    return {
+        refGenerator: () => { /* TODO */ }
+    };
+})();
 
 var quickDirtyCacheByIdsWithCollisionsTODO = {};
 const quickDirtyGetLastKeyOfDictTODO = (dict) => {
@@ -53,7 +64,7 @@ function dbRef(path) {
         if (typeof val === 'string') // get doc
             ref = ref.doc(val);
         else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
-            ref = ref.where(...val);
+            ref = val.reduce((ref, q) => ref.where(...q), ref); // TODO: this line untested
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
