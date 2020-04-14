@@ -27,7 +27,7 @@ const quickDirtyGetLastKeyOfDictTODO = (dict) => {
 
 // NOTE: not async to remove the need to await/then it
 function dbRef(path) {
-    // TODO: untested
+    // TODO: refactor for query caching
     let ref = db;
     for (let [key, val] of Object.entries(path)) {
         ref = ref.collection(key);
@@ -48,7 +48,7 @@ function dbRef(path) {
 }
 
 async function dbGet(path, debug=false) {
-    // TODO: untested
+    // TODO: query caching
     // NOTE: not awaited because this is an async function, should be awaited outside of it
     const finalKey = quickDirtyGetLastKeyOfDictTODO(path);              //  get the final key
     if (debug) console.log(finalKey); // TODO: remove debug things
@@ -62,7 +62,7 @@ async function dbGet(path, debug=false) {
             console.log(snap);
             return snap;                                                //  and return the new data
         }
-    } else {                                                            //  TODO: query, too hard to cache
+    } else {                                                            //  TODO: query, too hard to cache, implement query caching
         return (await dbRef(path)).get();                               //  do a database hit
     }
 }
@@ -73,7 +73,6 @@ async function cacheDump() {
 }
 
 async function getTasks(userID) {
-    // TODO: untested
     return dbGet({users: userID, tasks: undefined})
     .then(snap => snap.docs
         .map(doc => doc.id)
@@ -83,9 +82,8 @@ async function getTasks(userID) {
 }
 
 async function getInboxTasks(userID) {
-    // TODO: untested
     return dbGet({users: userID, tasks: ['project', '==', '']})
-    .then(snap => snap.docs                   // TODO: snap.filter not a function, look at object proto and get the array
+    .then(snap => snap.docs
         .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
     ).catch(err => {
@@ -94,7 +92,6 @@ async function getInboxTasks(userID) {
 }
 
 async function getDSTasks(userID) {
-    // TODO: untested
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
     return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
@@ -112,13 +109,10 @@ async function getInboxandDS(userID) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    // TODO: untested, gets passed broken stuff from app.js
-    console.assert(typeof taskID === 'string', 'but that doesn\'t make sense, jack!?!?');
     return (await dbGet({users: userID, tasks: taskID})).data();
 }
 
 async function getProjectsandTags(userID) {
-    // TODO: untested
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
     let projectNameById = {};
@@ -159,13 +153,13 @@ async function modifyTask(userID, taskID, updateQuery) {
                 throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
         });
 
-    (await dbRef({users: userID, tasks: taskID})) // TODO: use dbUpdate when implemented
-        .update(updateQuery) // TODO: why is update undefined?
+    (await dbRef({users: userID, tasks: taskID}))
+        .update(updateQuery)
         .catch(console.error);
 }
 
 async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await dbRef({users: userID, tasks: undefined}).add({ // TODO: use dbAdd when implemented
+    await dbRef({users: userID, tasks: undefined}).add({
         // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
         name:nameParam,
         desc:descParam,
@@ -231,6 +225,6 @@ async function getProjectStructure(userID, projectID) {
         });
         //  NOTE: returns with `id` prop to preserve id of og project
     }).catch(console.error);
-    children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order
+    children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
     return { id: projectID, children: children };
 }
