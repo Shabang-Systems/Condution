@@ -213,7 +213,6 @@ async function deleteTag(userID, tagID) {
 }
 
 async function getProjectStructure(userID, projectID) {
-    // TODO: refactor, untested
     let children = [];
 
     await dbGet({users:userID, projects:projectID, children:undefined}).then(snapshot => {
