@@ -70,7 +70,7 @@ var showPage = async function(pageId) {
     });
     $("#page-loader").fadeIn(100);
     // TODO: ADD THIS BACK BEFORE COMMIT TO CAUSE SYNC
-    //await sync(uid);
+    await sync(uid);
     let pPandT = await getProjectsandTags(uid);
     let possibleProjects = pPandT[0][0];
     let possibleTags = pPandT[1][0];
