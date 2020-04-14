@@ -369,7 +369,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     // Action Behaviors
     $('#task-check-'+taskId).change(function(e) {
         if (this.checked) {
-            //completeTask(uid, taskId);
+            completeTask(uid, taskId);
             // if (actualProject === "inbox") // TODO: do whatever this is?
             //      (if is a task is in the inbox and was just completed:
             //      drop the badge on the inbox)
