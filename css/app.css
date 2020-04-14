@@ -691,8 +691,9 @@ html, body {
 /* Base for label styling */
 .task-check:not(:checked),
 .task-check:checked {
-  position: absolute;
-  left: -9999px;
+    position: absolute;
+  /*left: -9999px;*/
+    visibility: hidden;
 }
 
 .task-check:not(:checked) + label,

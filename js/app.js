@@ -114,6 +114,30 @@ var showPage = async function(pageId) {
                 } else {
                     $("#duesoon-badge").html('' + elems[1].length);
                 }
+
+                var inboxSort = new Sortable($("#inbox")[0], {
+                    animation: 200,
+                    onEnd: function(e) {
+                        let oi = e.oldIndex;
+                        let ni = e.newIndex;
+                        getInboxTasks(uid).then(function(originalIBT) {
+                            if (oi<ni) {
+                                // Handle task moved down
+                                for(let i=oi+1; i<=ni; i++) {
+                                    modifyTask(uid, originalIBT[i], {order: i-1});
+                                }
+                                modifyTask(uid, originalIBT[oi], {order: ni});
+                            } else if (oi>ni) {
+                                // Handle task moved up
+                                for(let i=oi-1; i>=ni; i--) {
+                                    modifyTask(uid, originalIBT[i], {order: i+1});
+                                }
+                                modifyTask(uid, originalIBT[oi], {order: ni});
+                            }
+
+                        });
+                    }
+                });
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
             });
