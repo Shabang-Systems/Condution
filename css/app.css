@@ -7,8 +7,6 @@ html, body {
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
 }
 
-/* TODO: Finish CSS Themeing Styles */
-
 /* Colours */
 .condutiontheme-default-light {
     /* Background */
@@ -930,6 +928,14 @@ label:before {
     /*grid-template-rows: 60px 30px auto auto;*/
     color: var(--menu-background);
     flex-direction: column;
+}
+
+.label {
+    font-weight: 300;
+    font-size: 13px;
+    color: #777777;
+    margin-right: 10px;
+    margin-left: 5px;
 }
 
 #content-area{
