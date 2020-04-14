@@ -16,8 +16,6 @@ const firebaseConfig = {
 // Initialize Firebase Application
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.firestore();
-
 const initFirebase = () => {
     // Firebase App (the core Firebase SDK) is always required and
     // must be listed before other Firebase SDKs
@@ -59,47 +57,64 @@ const { refGenerator: cRef } = (() => {
                     ref = ref.collection(nav);
                 } else if (ref instanceof fsRef.Query) {
                     ref = ref.doc(nav);
+                } else {
+                    throw new Error("Unknown reference", ref.toString());
                 }
             } else if (Array.isArray(nav)) {                // query
+                if (ref instanceof fsRef.Query) {
+                    ref = ref.where(...nav);
+                } else {
+                    throw new Error("Cannot query with", nav.toString());
+                }
                 console.assert(ref instanceof fsRef.Query)
-                ref = ref.where(...nav);
+            } else {
+                throw new Error("Cannot parse", nav.toString());
             }
         }
         return ref;
     }
 
-    const handlers = {
-        get: async (path) => { // TODO; mimic functionality for set, update, delete, add; remember to bind this!
-            const TODOstrung = JSON.stringify(path);
-            if (!cache.has(TODOstrung)) {
-                const ref = getFirebaseRef(path);
-                cache.set(TODOstrung, ref.get());   // TODO: needed?
-                unsubscribeCallbacks.set(TODOstrung, ref.onSnapshot({
+    async function cachedRead(path) {
+        /*
+         * Get a snapshot from the cache.
+         *
+         * @param   path    The valid path to the reference
+         * @return  any     The result of calling `.get()` on the database reference
+         *
+         * Logic:
+         *  If the path is cached, return from cache.
+         *  Else, register a snapshot listener to update the cache
+         *      and return the newly cached value.
+         */
+        const TODOstring = JSON.stringify(path);        //  strigify to hash array
+        if (!cache.has(TODOstring)) {                   //  if path string isn't cached
+            const ref = getFirebaseRef(path);           //  get the reference from the database
+            cache.set(TODOstring, (await ref.get()));   //  save result in cache
+            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this, someday
+                ref.onSnapshot({
                     error: console.trace,
                     next: (snap) => {
-                        cache.set(TODOstrung, snap);
+                        cache.set(TODOstring, snap);
                     }
-                }));
-            }
-            return cache.get(TODOstrung);
+                })
+            );
         }
-    };
+        return cache.get(TODOstring);
+    }
 
     function cacheRef(path) {
-        /* TODO
+        /*
          * Get a reference wrapper that forces cache hits.
          * This function will be exposed to the outside world.
          *
          * @param   path    A valid path array.
          * @return  wrapper A wrapper object around the expected reference.
          */
-        return {
-            get: () => handlers.get(path),
-            set: getFirebaseRef(path).set,
-            add: getFirebaseRef(path).add,
-            delete: getFirebaseRef(path).delete,
-            update: getFirebaseRef(path).update
-        };
+        return Object.assign(
+            getFirebaseRef(path),               //  default methods from firebase reference
+    // TODO:^^^^^^^^^^^^^^^^^^^^ does this need to be `.bind(getFirebaseRef(path))` ed?
+            { get: () => cachedRead(path) }     //  read on get, read from cache if available
+        );
     }
 
     return {
