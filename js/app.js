@@ -615,10 +615,11 @@ var projectSort = new Sortable($(".projects")[0], {
 });
 
 $("#quickadd").click(function(e) {
-    $(this).animate({"width": "400px"}, 500);
+    $(this).animate({"width": "350px"}, 500);
 });
 
 $("#quickadd").blur(function(e) {
+    $(this).val("");
     $(this).animate({"width": "250px"}, 500);
 });
 
