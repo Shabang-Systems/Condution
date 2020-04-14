@@ -33,8 +33,11 @@ function dbRef(path) {
         ref = ref.collection(key);
         if (typeof val === 'string') // get doc
             ref = ref.doc(val);
-        else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
-            ref = ref.where(...val);
+        else if (Array.isArray(val)){
+            for (let query of val) {
+                ref = ref.where(...query);
+            }
+        } // where clause: use like {task: ['project', '==', '']}
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
@@ -82,9 +85,8 @@ async function getTasks(userID) {
 }
 
 async function getInboxTasks(userID) {
-    return dbGet({users: userID, tasks: ['project', '==', '']})
+    return dbGet({users: userID, tasks: [['project', '==', ''], ['isComplete', "==", false]]})
     .then(snap => snap.docs
-        .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
     ).catch(err => {
         console.error('Error getting documents', err);
@@ -94,9 +96,8 @@ async function getInboxTasks(userID) {
 async function getDSTasks(userID) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
+    return dbGet({users: userID, tasks: [['due', '<=', dsTime], ['isComplete', "==", false]]})
     .then(snap => snap.docs
-        .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
     ).catch(console.error);
 }

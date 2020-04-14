@@ -163,7 +163,7 @@ var hideActiveTask = function() {
                 $("#duesoon-badge").html(''+iC);
             }
         });
-        activeTaskDeInboxed = false;
+        activeTaskDeDsed = false;
     }
 }
 
@@ -349,9 +349,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }).on('select.editable-select', function (e, li) {
         let projectSelected = li.text();
         let projId = possibleProjectsRev[projectSelected];
-        getTaskInformation(uid, taskId).then(function(e) {
-            if (e.project === "") activeTaskDeInboxed = true;
-        });
+        if (actualProject === undefined) activeTaskDeInboxed = true;
         modifyTask(uid, taskId, {project:projId});
         actualProjectID = projId;
         actualProject = this.value;
@@ -379,23 +377,21 @@ var displayTask = async function(pageId, taskId, infoObj) {
             $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
             $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
             $('#task-' + taskId).slideUp(300);
+            if (actualProject === undefined) activeTaskDeInboxed = true;
         }
     });
     $('#task-project-' + taskId).change(function(e) {
         if (this.value in possibleProjectsRev) {
             let projId = possibleProjectsRev[this.value];
-            getTaskInformation(uid, taskId).then(function(e) {
-                if (e.project === "") activeTaskDeInboxed = true;
-            });
+            if (actualProject === undefined) activeTaskDeInboxed = true;
             modifyTask(uid, taskId, {project:projId});
             actualProjectID = projId;
             actualProject = this.value;
         } else {
             modifyTask(uid, taskId, {project:""});
             this.value = "";
-            actualProject = "";
-            actualProjectID = "";
             actualProject = undefined;
+            actualProjectID = "";
         }
     });
     $("#task-trash-" + taskId).click(function(e) {
@@ -557,6 +553,27 @@ var projectSort = new Sortable($(".projects")[0], {
     }
 
 });
+
+$("#quickadd").click(function(e) {
+    $(this).animate({"width": "400px"}, 500);
+});
+
+$("#quickadd").blur(function(e) {
+    $(this).animate({"width": "250px"}, 500);
+});
+
+$("#quickadd").keydown(function(e) {
+    if (e.keyCode == 13) {
+        let newTaskUserRequest = chrono.parse($(this).val());
+        for (let request in newTaskUserRequest) {
+            // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+            // Make that happen is the todo.
+            var start = newTaskUserRequest[request].start;
+            var end = newTaskUserRequest[request].end;
+        }
+    }
+});
+
 
 // Chapter 4: Mainloop
 var lightTheFire = async function() {

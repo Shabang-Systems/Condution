@@ -52,10 +52,12 @@ html, body {
     /* Datepicker colors */
     --task-datepicker-elems: grey;
     --task-datepicker-background: #eeeeee;
-    --task-datepicker-background: #eeeeee;
 
     /* Special accent */
     --special: #dadeae;
+    --quickadd: #c04f40;
+    --quickadd-feature: #bf3b2a;
+    --quickadd-placeholder: #e2c0bc;
 }
 
 *::-webkit-scrollbar { 
@@ -928,6 +930,42 @@ label:before {
     /*grid-template-rows: 60px 30px auto auto;*/
     color: var(--menu-background);
     flex-direction: column;
+}
+
+#quickadd {
+    background-color: var(--quickadd);
+    margin: 20px;
+    width: 250px;
+    height: 30px;
+    z-index: 10;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: 0;
+    border-radius: 7px;
+    padding: 3px 1px 3px 10px;
+    box-shadow: 1px 1px 3px var(--decorative-light-alt);
+    font-size: 14px;
+    transition-property: color, background-color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    color: var(--content-normal);
+}
+
+#quickadd::placeholder{
+    color: var(--quickadd-placeholder);
+}
+
+#quickadd:hover {
+    background-color: var(--quickadd-feature);
+}
+
+#quickadd:focus {
+    background-color: var(--quickadd-feature);
+}
+
+#quickadd:active {
+    background-color: var(--quickadd-feature);
 }
 
 .label {
