@@ -229,7 +229,7 @@ html, body {
 
 #window-actions {
     float: right;
-    padding: 0px 6px 0px 0px;
+    padding: 16px 6px 0px 0px;
     color: var(--content-normal-alt);
 }
 
