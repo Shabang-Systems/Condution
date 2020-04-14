@@ -136,8 +136,12 @@ function dbRef(path) {
         ref = ref.collection(key);
         if (typeof val === 'string') // get doc
             ref = ref.doc(val);
-        else if (Array.isArray(val)) // where clause: use like {task: ['project', '==', '']}
-            ref = val.reduce((ref, q) => ref.where(...q), ref); // TODO: this line untested
+        else if (Array.isArray(val)) {// where clause: use like {task: ['project', '==', '']}
+            // ref = val.reduce((ref, q) => ref.where(...q), ref); // TODO: this line untested
+            for (let q of val) {
+                ref = ref.query(...q);
+            }
+        }
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
