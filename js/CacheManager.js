@@ -21,6 +21,19 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
+const Cache = {
+    map: new Map(),
+    convertPath: (path) => {
+        if (path instanceof Map)
+            return path;
+        else if (typeof path === 'object')
+            return new Map(Array.from(path));
+    },
+    logThis: () => { console.log(this); }
+}
+
+Cache.logThis();
+
 var quickDirtyCacheByIdsWithCollisionsTODO = {};
 const quickDirtyGetLastKeyOfDictTODO = (dict) => {
     Object.values(dict)[Object.values(dict).length-1]
