@@ -1,4 +1,3 @@
-// dbRef, dbGet from CacheManager.js via app.html
 
 async function getTasks(userID) {
     return dbGet({users: userID, tasks: undefined})
@@ -10,21 +9,20 @@ async function getTasks(userID) {
 }
 
 async function getInboxTasks(userID) {
-    return dbGet({users: userID, tasks: ['project', '==', '']})
-    .then(snap => snap.docs
-        .filter(doc => !doc.isComplete)
-        .map(doc => doc.id)
+    let inboxDocs = await dbGet({users: userID, tasks: [['project', '==', ''], ['isComplete', "==", false]]})
+        .then(snap => snap.docs
     ).catch(err => {
         console.error('Error getting documents', err);
     });
+    inboxDocs.sort((a,b) => a.data().order - b.data().order);
+    return inboxDocs.map(doc => doc.id);
 }
 
 async function getDSTasks(userID) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
+    return dbGet({users: userID, tasks: [['due', '<=', dsTime], ['isComplete', "==", false]]})
     .then(snap => snap.docs
-        .filter(doc => !doc.isComplete)
         .map(doc => doc.id)
     ).catch(console.error);
 }
@@ -86,20 +84,18 @@ async function modifyTask(userID, taskID, updateQuery) {
         .catch(console.error);
 }
 
-async function newTask(userID, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz) { //TODO: task order calculation
-    await dbRef({users: userID, tasks: undefined}).add({
-        // TODO: maybe accept a dictionary as a parameter instead of accepting everything as a parameter
-        name:nameParam,
-        desc:descParam,
-        defer:deferParam,
-        due:dueParam,
-        isFlagged: isFlaggedParam,
-        isFloating: isFloatingParam,
-        project: projectParam,
-        tags: tagsParam,
-        timezone: tz,
-        isComplete: false
-    });
+async function newTask(userID, taskObj) { //TODO: task order calculation
+//, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
+    // Set order param. Either return the latest item in index or
+    if (taskObj.project === "") {
+        let ibtL = (await getInboxTasks(userID)).length;
+        taskObj.order = ibtL;
+    } else {
+        let projL = (await getProjectStructure(userID, taskObj.project)).children.length
+        taskObj.order = projL;
+    }
+
+    return (await dbRef({users: userID, tasks: undefined}).add(taskObj)).id;
 }
 
 async function newTag(userID, tagName) {
@@ -137,17 +133,16 @@ async function deleteTag(userID, tagID) {
 }
 
 async function getProjectStructure(userID, projectID) {
-    // TODO: refactor, untested
     let children = [];
 
     await dbGet({users:userID, projects:projectID, children:undefined}).then(snapshot => {
         snapshot.docs.forEach(async doc => {                 //  for each child
             if (doc.data().type === "task") { // TODO combine these if statements
-                let order = (await dbGet({users:userID, tasks:(doc.data().childrenID)}).map(snap => snap.order)); //  get the order of the task
+                let order = (await dbGet({users:userID, tasks:(doc.data().childrenID)})).data().order;//.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
-                let order = (await dbGet({users:userID, projects:(doc.data().childrenID)}).map(snap => snap.order));//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of the task
+                let order = (await dbGet({users:userID, projects:(doc.data().childrenID)})).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject
                 children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
             }
         });

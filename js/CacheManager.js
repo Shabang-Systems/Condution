@@ -174,5 +174,5 @@ async function dbGet(path, debug=false) {
     } else {                                                            //  TODO: query, too hard to cache, implement query caching
         return (await dbRef(path)).get();                               //  do a database hit
     }
-};
+}
 
