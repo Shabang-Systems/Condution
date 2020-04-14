@@ -12,7 +12,7 @@ function createWindow () {
         'webPreferences': {
             'nodeIntegration': true
         },
-        'titleBarStyle': 'hiddenInsert',
+        'titleBarStyle': 'hiddenInset',
         'frame': false,
         'transparent': true,
     })
