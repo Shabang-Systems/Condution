@@ -16,7 +16,7 @@ if (process.platform === "win32") {
     });
     $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
 } else if (process.platform === "darwin") {
-    //$("#main-head-darwin").show();
+    $("#main-head-darwin").show();
     $("#left-menu").addClass("darwin-windowing");
     $("#content-area").addClass("darwin-windowing");
 }

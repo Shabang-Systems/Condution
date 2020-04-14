@@ -160,7 +160,7 @@ html, body {
 #window-actions {
     float: right;
     padding: 0px 6px 0px 0px;
-    color: whitesmoke;
+    color: #434d5f;
 }
 
 .window-action {
@@ -175,7 +175,7 @@ html, body {
 
 .window-action:hover {
     font-size: 12px;
-    background-color: #434d5f;
+    background-color: #e5e7ea;
     /*transform: translateY(-3px);*/
 }
 
@@ -841,7 +841,6 @@ label:before {
 
 .main-head {
     -webkit-app-region: drag;
-    background-color: #2e3f54;
     width:100%;
     padding: 0;
     margin: 0;
@@ -851,10 +850,12 @@ label:before {
 }
 
 #main-head-win32 {
+    background-color: transparent;
     height: 23px;
 }
 
 #main-head-darwin {
+    background-color: transparent;
     height: 34px;
 }
 
@@ -906,7 +907,7 @@ label:before {
 }
 
 .win32-windowing {
-    padding-top: 30px !important;
+    padding-top: 20px !important;
 }
 
 /* Datepicker */
