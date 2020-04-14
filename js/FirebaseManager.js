@@ -38,12 +38,13 @@ function dbRef(path) {
         else if (typeof val === 'undefined') // wildcard: use like {user: userID, project: undefined}
             break;
     }
-    return Promise.resolve({    // NOTE: wrapped in promise.resolve
+    return {    // NOTE: wrapped in promise.resolve
         get: ref.get.bind(ref),
         set: (data, options) => { cacheDump(); return ref.set.bind(ref)(data, options); },
+        add: (data) => { cacheDump(); return ref.add.bind(ref)(data); },
         delete: () => { cacheDump(); return ref.delete.bind(ref)(); },
         update: (data) => { cacheDump(); return ref.update.bind(ref)(data); }
-    });
+    };
 }
 
 async function dbGet(path, debug=false) {
@@ -99,6 +100,7 @@ async function getDSTasks(userID) {
     return dbGet({users: userID, tasks: ['due', '<=', dsTime]})
     .then(snap => snap.docs
         .filter(doc => !doc.isComplete)
+        .map(doc => doc.id)
     ).catch(console.error);
 }
 
@@ -146,7 +148,7 @@ async function getProjectsandTags(userID) {
         }))
         .catch(console.error);
 
-    return [[projectIdByName, projectNameById], [tagIdByName, tagNameById]];
+    return [[projectNameById, projectIdByName], [tagNameById, tagIdByName]];
 }
 
 async function modifyTask(userID, taskID, updateQuery) {
