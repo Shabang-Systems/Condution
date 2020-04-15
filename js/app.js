@@ -467,6 +467,16 @@ var displayTask = async function(pageId, taskId, infoObj) {
                             $("#unsorted-badge").html(''+iC);
                         }
                     });           
+                } else if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                    getInboxandDS(uid).then(function(e){
+                        dsC = e[1].length;
+                        if (dsC === 0) {
+                            $("#ds-subhead").slideUp(300);
+                            $("#due-soon").slideUp(300);
+                        } else {
+                            $("#duesoon-badge").html(''+dsC);
+                        }
+                    });
                 }
             });
         }
@@ -492,6 +502,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
     });
     $("#task-trash-" + taskId).click(function(e) {
         if (actualProject === undefined) activeTaskDeInboxed = true;
+        else if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) activeTaskDeDsed = true;
         deleteTask(uid, taskId).then(function() {
             hideActiveTask();
             $('#task-' + taskId).slideUp(150);
