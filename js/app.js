@@ -61,6 +61,9 @@ var numDaysBetween = function(d1, d2) {
     return diff / (1000 * 60 * 60 * 24);
 };
 
+
+var getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
+
 // Chapter 2: Functions to Show and Hide Things!
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
@@ -114,6 +117,30 @@ var showPage = async function(pageId) {
                 } else {
                     $("#duesoon-badge").html('' + elems[1].length);
                 }
+
+                var inboxSort = new Sortable($("#inbox")[0], {
+                    animation: 200,
+                    onEnd: function(e) {
+                        let oi = e.oldIndex;
+                        let ni = e.newIndex;
+                        getInboxTasks(uid).then(function(originalIBT) {
+                            if (oi<ni) {
+                                // Handle task moved down
+                                for(let i=oi+1; i<=ni; i++) {
+                                    modifyTask(uid, originalIBT[i], {order: i-1});
+                                }
+                                modifyTask(uid, originalIBT[oi], {order: ni});
+                            } else if (oi>ni) {
+                                // Handle task moved up
+                                for(let i=oi-1; i>=ni; i--) {
+                                    modifyTask(uid, originalIBT[i], {order: i+1});
+                                }
+                                modifyTask(uid, originalIBT[oi], {order: ni});
+                            }
+
+                        });
+                    }
+                });
                 $("#page-loader").fadeOut(100);
                 $("#"+pageId).fadeIn(200);
             });
@@ -138,8 +165,8 @@ var hideActiveTask = function() {
     $("#task-edit-"+activeTask).slideUp(300);
     $("#task-trash-"+activeTask).css("display", "none");
     $("#task-repeat-"+activeTask).css("display", "none");
-    $("#task-"+activeTask).animate({"background-color": "#f4f4f4", "padding": "0", "margin":"0"}, 200);
-    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+    $("#task-"+activeTask).animate({"background-color": getThemeColor("--background"), "padding": "0", "margin":"0"}, 200);
+    $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
     isTaskActive = false;
     activeTask = null;
     if (activeTaskDeInboxed) {
@@ -163,7 +190,7 @@ var hideActiveTask = function() {
                 $("#duesoon-badge").html(''+iC);
             }
         });
-        activeTaskDeInboxed = false;
+        activeTaskDeDsed = false;
     }
 }
 
@@ -179,8 +206,18 @@ var displayTask = async function(pageId, taskId, infoObj) {
     var name = taskObj.name;
     var desc = taskObj.desc;
     let timezone = taskObj.timezone;
-    let defer = new Date(taskObj.defer.seconds*1000);
-    let due = new Date(taskObj.due.seconds*1000);
+    let defer;
+    let due;
+    if (!taskObj.defer) {
+        defer = undefined;
+    } else {
+        defer = new Date(taskObj.defer.seconds*1000);
+    }
+    if (!taskObj.due) {
+        due = undefined;
+    } else {
+        due = new Date(taskObj.due.seconds*1000);
+    }
     let isFlagged = taskObj.isFlagged;
     let isFloating = taskObj.isFloating;
     let actualTags = taskObj.tags;
@@ -228,12 +265,21 @@ var displayTask = async function(pageId, taskId, infoObj) {
     let defer_current;
     let due_current;
     if(isFloating) {
-        defer_current = moment(defer).tz(timezone).local(true).toDate();
-        due_current = moment(due).tz(timezone).local(true).toDate();
+        if (defer) {
+            defer_current = moment(defer).tz(timezone).local(true).toDate();
+        } else {
+            defer_current = undefined;
+        }
+        if (due) {
+            due_current = moment(due).tz(timezone).local(true).toDate();
+        } else {
+            due_current = undefined;
+        }
     } else {
         defer_current = defer;
         due_current = due;
     }
+    let rightCarrotColor = getThemeColor("--decorative-light");
     // ---------------------------------------------------------------------------------
     // Light the fire, kick the Tires!
     $("#" + pageId).append(`
@@ -269,7 +315,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
 
                                 <div class="label"><i class="far fa-play-circle"></i></div>
                                 <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px">
-                                <i class="fas fa-caret-right" style="color:#cccece; font-size:13px; transform: translateY(3px); margin-right: 5px"></i>
+                                <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i>
                                 <div class="label"><i class="far fa-stop-circle"></i></div>
                                 <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px">
                             </div>
@@ -349,57 +395,67 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }).on('select.editable-select', function (e, li) {
         let projectSelected = li.text();
         let projId = possibleProjectsRev[projectSelected];
-        getTaskInformation(uid, taskId).then(function(e) {
-            if (e.project === "") activeTaskDeInboxed = true;
-        });
+        if (actualProject === undefined) activeTaskDeInboxed = true;
         modifyTask(uid, taskId, {project:projId});
         actualProjectID = projId;
         actualProject = this.value;
     });
     $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
-    if (new Date() > due_current) {
-        $('#task-pseudocheck-' + taskId).addClass("od");
-    } else if (numDaysBetween(new Date(), due_current) <= 1) {
-        $('#task-pseudocheck-' + taskId).addClass("ds");
-    } else if (new Date() < defer_current) {
-        $('#task-name-' + taskId).css("opacity", "0.3");
+    if (due_current) {
+        if (new Date() > due_current) {
+            $('#task-pseudocheck-' + taskId).addClass("od");
+        } else if (numDaysBetween(new Date(), due_current) <= 1) {
+            $('#task-pseudocheck-' + taskId).addClass("ds");
+        } 
     }
+    if (defer_current) {
+        if (new Date() < defer_current) {
+            $('#task-name-' + taskId).css("opacity", "0.3");
+        }
+    }
+       
     // ---------------------------------------------------------------------------------
     // Action Behaviors
     $('#task-check-'+taskId).change(function(e) {
         if (this.checked) {
-            //completeTask(uid, taskId);
-            // if (actualProject === "inbox") // TODO: do whatever this is?
-            //      (if is a task is in the inbox and was just completed:
-            //      drop the badge on the inbox)
-
-            $('#task-name-' + taskId).css("color", "#ccccc");
+            $('#task-name-' + taskId).css("color", getThemeColor("--task-checkbox"));
             $('#task-name-' + taskId).css("text-decoration", "line-through");
             $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
             $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
             $('#task-' + taskId).slideUp(300);
+            completeTask(uid, taskId).then(function(e) {
+                if (actualProject === undefined) {
+                     getInboxTasks(uid).then(function(e){
+                        iC = e.length;
+                        if (iC === 0) {
+                            $("#inbox-subhead").slideUp(300);
+                            $("#inbox").slideUp(300);
+                        } else {
+                            $("#unsorted-badge").html(''+iC);
+                        }
+                    });           
+                }
+            });
         }
     });
     $('#task-project-' + taskId).change(function(e) {
         if (this.value in possibleProjectsRev) {
             let projId = possibleProjectsRev[this.value];
-            getTaskInformation(uid, taskId).then(function(e) {
-                if (e.project === "") activeTaskDeInboxed = true;
-            });
+            if (actualProject === undefined) activeTaskDeInboxed = true;
             modifyTask(uid, taskId, {project:projId});
             actualProjectID = projId;
             actualProject = this.value;
         } else {
             modifyTask(uid, taskId, {project:""});
             this.value = "";
-            actualProject = "";
-            actualProjectID = "";
             actualProject = undefined;
+            actualProjectID = "";
         }
     });
     $("#task-trash-" + taskId).click(function(e) {
-        // Ask HuZah's code to delete the task
+        if (actualProject === undefined) activeTaskDeInboxed = true;
+        deleteTask(uid, taskId);
         hideActiveTask();
         $('#task-' + taskId).slideUp(150);
     });
@@ -493,11 +549,11 @@ $(document).on("click", ".task", function(e) {
         let taskInfo = $(this).attr("id").split("-");
         let task = taskInfo[taskInfo.length - 1];
         activeTask = task;
-        $("#task-" + task).animate({"background-color": "#efefef", "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+        $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
         $("#task-edit-" + activeTask).slideDown(200);
         $("#task-trash-" + activeTask).css("display", "block");
         $("#task-repeat-" + activeTask).css("display", "block");
-        $("#task-" + task).css({"border-bottom": "2px solid #e5e6e8", "border-right": "2px solid #e5e6e8"});
+        $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});
     }
 });
 
@@ -558,8 +614,75 @@ var projectSort = new Sortable($(".projects")[0], {
 
 });
 
+$("#quickadd").click(function(e) {
+    $(this).animate({"width": "350px"}, 500);
+});
+
+$("#quickadd").blur(function(e) {
+    $(this).val("");
+    $(this).animate({"width": "250px"}, 500);
+});
+
+$("#quickadd").keydown(function(e) {
+    if (e.keyCode == 13) {
+        let newTaskUserRequest = chrono.parse($(this).val());
+        // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+        // Make that happen is the todo.
+        let startDate;
+        let endDate;
+        let tz = moment.tz.guess();
+        let tb = $(this)
+        let ntObject = {
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: tz, 
+        };
+        if (newTaskUserRequest.length != 0) {
+            let start = newTaskUserRequest[0].start;
+            let end = newTaskUserRequest[0].end;
+            if (start && end) {
+                startDate = start.date();
+                endDate = end.date();
+                ntObject.defer = startDate;
+                ntObject.due = endDate;
+            } else if (end) {
+                endDate = end.date();
+                ntObject.due = endDate;
+            } else if (start) {
+                startDate = start.date();
+                ntObject.defer = startDate;
+            }
+            ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
+        } else {
+            ntObject.name = tb.val()
+        }
+        tb.val("");
+        tb.blur();
+        newTask(uid, ntObject).then(function(ntID) {
+            getProjectsandTags(uid).then(function(pPandT){
+                let possibleProjects = pPandT[0][0];
+                let possibleTags = pPandT[1][0];
+                let possibleProjectsRev = pPandT[0][1];
+                let possibleTagsRev = pPandT[1][1];
+                displayTask("inbox", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])
+            });
+            getInboxTasks(uid).then(function(e){
+                iC = e.length;
+                $("#unsorted-badge").html(''+iC);
+            });
+        });
+
+    }
+});
+
+
 // Chapter 4: Mainloop
 var lightTheFire = async function() {
+    $("body").addClass(currentTheme);
     await showPage("upcoming-page");
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
@@ -568,6 +691,7 @@ var lightTheFire = async function() {
 
 var uid;
 var displayName;
+var currentTheme;
 
 $(document).ready(function() {
     console.log("Authenticating the supergober!");
@@ -579,6 +703,8 @@ $(document).ready(function() {
                 // User is signed in. Do user related things.
                 displayName = user.displayName;
                 uid = user.uid;
+                // TODO: actually get the user's prefrences
+                currentTheme = "condutiontheme-default-light";
                 console.log("Presenting the cuber-uber!");
                 lightTheFire();
             }
