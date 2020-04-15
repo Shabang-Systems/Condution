@@ -102,7 +102,7 @@ const { refGenerator: cRef } = (() => {
         return cache.get(TODOstring);
     }
 
-    function cacheRef(path) {
+    function cacheRef(...path) {
         /*
          * Get a reference wrapper that forces cache hits.
          * This function will be exposed to the outside world.

@@ -27,7 +27,10 @@ async function getDSTasks(userID) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
     return cRef("users", userID,
-        "tasks", ['due', '<=', dsTime], ['isComplete', "==", false])
+        "tasks",
+            ['due', '<=', dsTime],
+            ['isComplete', "==", false])
+        .get()
     .then(snap => snap.docs
         .map(doc => doc.id)
     ).catch(console.error);
@@ -50,7 +53,7 @@ async function getProjectsandTags(userID) {
     let projectNameById = {};
     await cRef("users", userID, "projects").get()   // TODO: combine database hits
         .then(snap => snap.docs.forEach(proj => {
-            cRef("users", userID, "projects", proj.id)
+            cRef("users", userID, "projects", proj.id).get()
                 .then(proj => {
                     if (proj.exists) {
                         projectNameById[proj.id] = proj.data().name;
@@ -78,7 +81,6 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyTask(userID, taskID, updateQuery) {
-    // TODO: untested
     cRef("users", userID, "tasks", taskID).get()
         .then((doc) => { // TODO: create a doc exists? wrapper
             if (doc.exists !== true)
