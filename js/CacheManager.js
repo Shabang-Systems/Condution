@@ -88,6 +88,7 @@ const cRef = (() => {
          */
         const TODOstring = JSON.stringify(path);        //  strigify to hash array
         if (!cache.has(TODOstring)) {                   //  if path string isn't cached
+            console.log("Firebase was hit with tremendus shouts by query", TODOstring);
             const ref = getFirebaseRef(path);           //  get the reference from the database
             cache.set(TODOstring, (await ref.get()));   //  save result in cache
             unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this, someday
