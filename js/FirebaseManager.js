@@ -97,12 +97,6 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyTask(userID, taskID, updateQuery) {
-    cRef("users", userID, "tasks", taskID).get()
-        .then((doc) => { // TODO: create a doc exists? wrapper
-            if (doc.exists !== true)
-                throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
-        });
-
     //console.log(taskID, updateQuery);
     await cRef("users", userID, "tasks", taskID)
         .update(updateQuery)
