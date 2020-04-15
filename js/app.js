@@ -187,7 +187,6 @@ var activeTask = null; // TODO: shouldn't this be undefined?
 var activeTaskDeInboxed = false;
 var activeTaskDeDsed = false;
 var activeTaskInboxed = false;
-var activeTaskChangedProject = true;
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
@@ -241,6 +240,7 @@ var hideActiveTask = function() {
 
     activeTaskDeInboxed = false;
     activeTaskDeDsed = false;
+    activeTaskInboxed = false;
     isTaskActive = false;
     activeTask = null;
 
