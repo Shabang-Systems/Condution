@@ -11,29 +11,32 @@ async function getTasks(userID) {
 async function getInboxTasks(userID) {
     let inboxDocs = await cRef(
         "users", userID,
-        "tasks",
-            ['project', '==', ''],
-            ['isComplete', "==", false])
+        "tasks")
+        //['project', '==', ''],
+        //['isComplete', "==", false])
         .get()
-        .then(snap => snap.docs)
-        .catch(err => {
+        .then(snap => snap.docs
+            .filter(doc => (doc.data().project === '') && (doc.data().isComplete === false))
+            .sort((a,b) => a.data().order - b.data().order)
+        ).catch(err => {
             console.error('Error getting documents', err);
         });
-    inboxDocs.sort((a,b) => a.data().order - b.data().order);   // TODO: use firebase native ordering
     return inboxDocs.map(doc => doc.id);
 }
 
 async function getDSTasks(userID) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    return cRef("users", userID,
-        "tasks",
-            ['due', '<=', dsTime],
-            ['isComplete', "==", false])
+    let dsDocs = await cRef("users", userID,
+        "tasks")
+            //['due', '<=', dsTime],
+            //['isComplete', "==", false])
         .get()
-    .then(snap => snap.docs
-        .map(doc => doc.id)
+        .then(snap => snap.docs
+            .filter(doc => (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && (doc.data().isComplete === false))
+            .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);
+    return dsDocs.map(doc => doc.id);
 }
 
 async function getInboxandDS(userID) {
@@ -44,19 +47,21 @@ async function getInboxandDS(userID) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    return (await cRef("users", userID, "tasks", taskID).get()).data();
+    return (await cRef("users", userID, "tasks").get()
+        .then(snap => snap.docs
+            .filter(doc => doc.id === taskID))
+    )[0].data();
 }
 
 async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};
 
-    let snap = (await cRef('users', userID, "projects", 
-        ["top_level", "==", true])
+    let snap = (await cRef('users', userID, "projects")
         .get())
 
     snap.docs.forEach(proj => {
-        if (proj.exists) {
+        if (proj.exists && proj.data().top_level === true) {
             projectNameById[proj.id] = proj.data().name;
             projectIdByName[proj.data().name] = proj.id;
         }
