@@ -1,3 +1,63 @@
+const util = {
+    compare: (lhs, cmp, rhs) => {
+        switch (cmp) {
+            case "<":
+                return lhs < rhs;
+            case ">":
+                return lhs > rhs;
+            case "<=":
+                return lhs <= rhs;
+            case ">=":
+                return lhs >= rhs;
+            case "==":
+                return lhs == rhs;
+            case "!=":
+                return lhs != rhs;
+            case "has":
+                return lhs.hasOwnProperty(rhs);
+            case "!has":
+                return !lhs.hasOwnProperty(rhs);
+            default:
+                throw new TypeError("Unkown comparator " + cmp);
+        }
+    },
+    all: (requirements) => (doc) => {
+        const dat = doc.data();
+        for (let [lhs, cmp, rhs] of requirements)
+            if (!util.compare(dat[lhs], cmp, rhs))
+                return false;
+        return true;
+    },
+    any: (requirements) => (doc) => {
+        const dat = doc.data();
+        for (let [lhs, cmp, rhs] of requirements)
+            if (util.compare(dat[lhs], cmp, rhs))
+                return true;
+        return false;
+    },
+    atLeast: (requirements, threshold) => (doc) => {
+        const dat = doc.data();
+        let counter = 0;
+        for (let [lhs, cmp, rhs] of requirements)
+            if (util.compare(dat[lhs], cmp, rhs)) {
+                ++counter;
+                if (counter >= threshold)
+                    return true;
+            }
+        return false;
+    },
+    atMost: (requirements, threshold) => (doc) => {
+        const dat = doc.data();
+        let counter = 0;
+        for (let [lhs, cmp, rhs] of requirements)
+            if (util.compare(dat[lhs], cmp, rhs)) {
+                ++counter;
+                if (counter > threshold)
+                    return false;
+            }
+        return true;
+    }
+}
 
 async function getTasks(userID) {
     return cRef("users", userID, "tasks").get()
@@ -51,7 +111,7 @@ async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};
 
-    let snap = (await cRef('users', userID, "projects", 
+    let snap = (await cRef('users', userID, "projects",
         ["top_level", "==", true])
         .get())
 
@@ -104,7 +164,7 @@ async function modifyTask(userID, taskID, updateQuery) {
         .catch(console.error);
 }
 
-async function newTask(userID, taskObj) { 
+async function newTask(userID, taskObj) {
 //, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
     // Set order param. Either return the latest item in index or
     if (taskObj.project === "") {
