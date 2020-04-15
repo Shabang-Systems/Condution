@@ -422,10 +422,15 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }).on('select.editable-select', function (e, li) {
         let projectSelected = li.text();
         let projId = possibleProjectsRev[projectSelected];
-        if (actualProject === undefined) activeTaskDeInboxed = true;
+        if (actualProject === undefined) {
+            activeTaskDeInboxed = true;
+        } else {
+            dissociateTask(uid, taskId, actualProjectID);
+        }
         modifyTask(uid, taskId, {project:projId});
         actualProjectID = projId;
         actualProject = this.value;
+        associateTask(uid, taskId, projId);
     });
     $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
@@ -469,10 +474,15 @@ var displayTask = async function(pageId, taskId, infoObj) {
     $('#task-project-' + taskId).change(function(e) {
         if (this.value in possibleProjectsRev) {
             let projId = possibleProjectsRev[this.value];
-            if (actualProject === undefined) activeTaskDeInboxed = true;
+            if (actualProject === undefined){
+                activeTaskDeInboxed = true;
+            } else {
+                dissociateTask(uid, taskId, actualProjectID);
+            }
             modifyTask(uid, taskId, {project:projId});
             actualProjectID = projId;
             actualProject = this.value;
+            associateTask(uid, taskId, projId);
         } else {
             modifyTask(uid, taskId, {project:""});
             this.value = "";

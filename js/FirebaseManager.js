@@ -122,15 +122,29 @@ async function newTag(userID, tagName) {
 }
 
 async function completeTask(userID, taskID) {
-    await cRef("users", userID, "tasks", taskID).get()
-        .then(doc => {
-            if (doc.exists !== true) {
-                throw "Document not found. Please don't try to set documents that don't exist.";
-            }
-        });
     await cRef("users", userID, "tasks", taskID).update({
-            isComplete: true
-        });
+        isComplete: true
+    });
+}
+
+async function dissociateTask(userID, taskID, projectID) {
+    let originalChildren = await cRef("users", userID, "projects").get()
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0]
+        .data().children)
+
+    delete originalChildren[taskID];
+    await cRef("users", userID, "projects", projectID)
+        .update({children: originalChildren});
+}
+
+async function associateTask(userID, taskID, projectID) {
+    let originalChildren = await cRef("users", userID, "projects").get()
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0]
+        .data().children)
+
+    originalChildren[taskID] = "task";
+    await cRef("users", userID, "projects", projectID)
+        .update({children: originalChildren});
 }
 
 async function deleteTask(userID, taskID) {
@@ -161,7 +175,9 @@ async function getProjectStructure(userID, projectID) {
     for (let [itemID, type] of Object.entries(project.data().children)) {
         if (type === "task") {
             let task = await getTaskInformation(userID, itemID);
-            children.push({type: "task", content: itemID, sortOrder: task.order});
+            if (!task.isComplete) {
+                children.push({type: "task", content: itemID, sortOrder: task.order});
+            }
         } else if (type === "project") {
             let project = await getProjectStructure(userID, itemID);
             children.push({type: "project", content: project, sortOrder: project.order});
@@ -185,3 +201,4 @@ async function getProjectStructure(userID, projectID) {
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
     return { id: projectID, children: children, sortOrder: project.data().order};
 }
+
