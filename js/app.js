@@ -73,7 +73,6 @@ var showPage = async function(pageId) {
             item.css("display", "none")
         }
     });
-    $("#page-loader").fadeIn(100);
     $("#inbox").empty();
     $("#due-soon").empty();
     $("#project-content").empty();
@@ -140,8 +139,7 @@ var showPage = async function(pageId) {
                         });
                     }
                 });
-                $("#page-loader").fadeOut(100);
-                $("#"+pageId).fadeIn(200);
+                $("#"+pageId).show();
             });
         });
     } else if (pageId.includes("project")) {
@@ -162,16 +160,14 @@ var showPage = async function(pageId) {
                         // TODO: handle projects.
                     }
                 });
-                $("#page-loader").fadeOut(100);
-                $("#"+pageId).fadeIn(200);
+                $("#"+pageId).show();
             })
         });
     } else {
         console.log(pageId);
         console.log(pageId.includes);
         $("#"+pageId).empty();
-        $("#page-loader").fadeOut(100);
-        $("#"+pageId).fadeIn(200);
+        $("#"+pageId).show();
         // Sad normal perspective loads
         // TODO: implement query rules for perspectives
     }
