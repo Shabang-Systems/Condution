@@ -70,13 +70,10 @@ async function getProjectsandTags(userID) {
     let projectNameById = {};
     await cRef("users", userID, "projects").get()   // TODO: combine database hits
         .then(snap => snap.docs.forEach(proj => {
-            cRef("users", userID, "projects", proj.id).get()
-                .then(proj => {
-                    if (proj.exists) {
-                        projectNameById[proj.id] = proj.data().name;
-                        projectIdByName[proj.data().name] = proj.id;
-                    }
-                })
+            if (proj.exists) {
+                projectNameById[proj.id] = proj.data().name;
+                projectIdByName[proj.data().name] = proj.id;
+            }
         }))
         .catch(console.error);
 
@@ -84,13 +81,10 @@ async function getProjectsandTags(userID) {
     let tagNameById = {};
     await cRef("users", userID, "tags").get()
         .then(snap => snap.docs.forEach(tag => {
-            cRef("users", userID, "tags", tag.id).get()
-                .then(tag => {
-                    if (tag.exists) {
-                        tagNameById[tag.id] = tag.data().name;
-                        tagIdByName[tag.data().name] = tag.id;
-                    }
-                })
+            if (tag.exists) {
+                tagNameById[tag.id] = tag.data().name;
+                tagIdByName[tag.data().name] = tag.id;
+            }
         }))
         .catch(console.error);
 
