@@ -2,7 +2,7 @@ console.log("Initializing the galvanitizer!");
 const { remote } = require('electron')
 
 // TODO: apply themes to colors
-
+// TODO: make a kickstarter
 // Chapter 0: The Header.
 if (process.platform === "win32") {
     $("#main-head-win32").show();
