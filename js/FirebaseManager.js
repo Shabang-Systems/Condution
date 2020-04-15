@@ -47,6 +47,23 @@ async function getTaskInformation(userID, taskID) {
     return (await cRef("users", userID, "tasks", taskID).get()).data();
 }
 
+async function getTopLevelProjects(userID) {
+    let projectIdByName = {};
+    let projectNameById = {};
+
+    let snap = (await cRef('users', userID, "projects", 
+        ["top_level", "==", true])
+        .get())
+
+    snap.docs.forEach(proj => {
+        if (proj.exists) {
+            projectNameById[proj.id] = proj.data().name;
+            projectIdByName[proj.data().name] = proj.id;
+        }
+    });
+    return [projectNameById, projectIdByName];
+}
+
 async function getProjectsandTags(userID) {
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
@@ -81,12 +98,13 @@ async function modifyTask(userID, taskID, updateQuery) {
                 throw "excuse me wth, why are you getting me to modify something that does not exist???? *hacker noises*";
         });
 
+    //console.log(taskID, updateQuery);
     await cRef("users", userID, "tasks", taskID)
         .update(updateQuery)
         .catch(console.error);
 }
 
-async function newTask(userID, taskObj) { //TODO: task order calculation
+async function newTask(userID, taskObj) { 
 //, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
     // Set order param. Either return the latest item in index or
     if (taskObj.project === "") {
@@ -97,7 +115,7 @@ async function newTask(userID, taskObj) { //TODO: task order calculation
         taskObj.order = projL;
     }
 
-    return cRef("users", userID, "tasks").add(taskObj).id;
+    return (await cRef("users", userID, "tasks").add(taskObj)).id;
 }
 
 async function newTag(userID, tagName) {
@@ -145,7 +163,7 @@ async function getProjectStructure(userID, projectID) {
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
-                let order = (await cRef("users", userID, "projects", (doc.data().childrenID).get())).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject // TODO: replace with cRef.get()
+                let order = (await cRef("users", userID, "projects", (doc.data().childrenID)).get()).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject // TODO: replace with cRef.get()
                 children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
             }
         });

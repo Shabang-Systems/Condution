@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 
 require("firebase/auth");   // TODO: dunno where to put this so that app.js doesn't error
 require("firebase/firestore");
@@ -24,7 +24,7 @@ const initFirebase = () => {
     return [firebase.firestore(), firebase.firestore];
 }
 
-const { refGenerator: cRef } = (() => {
+const cRef = (() => {
     const [ firebaseDB, fsRef ] = initFirebase();
     const cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
     const unsubscribeCallbacks = new Map();
@@ -112,13 +112,10 @@ const { refGenerator: cRef } = (() => {
          */
         return Object.assign(
             getFirebaseRef(path),               //  default methods from firebase reference
-    // TODO:^^^^^^^^^^^^^^^^^^^^ does this need to be `.bind(getFirebaseRef(path))` ed?
             { get: () => cachedRead(path) }     //  read on get, read from cache if available
         );
     }
 
-    return {
-        refGenerator: cacheRef
-    }
+    return cacheRef; 
 })();
 
