@@ -1,3 +1,6 @@
+const util = {
+    dump: (arg) => { console.trace(arg); return arg; }
+};
 
 async function getTasks(userID) {
     return cRef("users", userID, "tasks").get()
@@ -110,7 +113,7 @@ async function newTask(userID, taskObj) {
         let ibtL = (await getInboxTasks(userID)).length;
         taskObj.order = ibtL;
     } else {
-        let projL = (await getProjectStructure(userID, taskObj.project)).children.length
+        let projL = (await getProjectStructure(userID, taskObj.project)).children.length;
         taskObj.order = projL;
     }
 
@@ -128,9 +131,8 @@ async function completeTask(userID, taskID) {
 }
 
 async function dissociateTask(userID, taskID, projectID) {
-    let originalChildren = await cRef("users", userID, "projects").get()
-        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0]
-        .data().children)
+    let originalChildren = await cRef("users", userID, "projects").get().then(util.dump)
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)).then(util.dump).then(t => t[0].data().children);
 
     delete originalChildren[taskID];
     await cRef("users", userID, "projects", projectID)
@@ -139,15 +141,21 @@ async function dissociateTask(userID, taskID, projectID) {
 
 async function associateTask(userID, taskID, projectID) {
     let originalChildren = await cRef("users", userID, "projects").get()
-        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0]
-        .data().children)
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0] //.filter(doc => doc.id === taskID)
+        .data().children);
 
     originalChildren[taskID] = "task";
     await cRef("users", userID, "projects", projectID)
         .update({children: originalChildren});
 }
 
-async function deleteTask(userID, taskID) {
+async function deleteTask(userID, taskID, willDissociateTask = true) {
+    let taskData = await cRef("users", userID, "tasks").get()
+        .then(snap => snap.docs.filter(doc => doc.id === taskID)[0].data()); // Fetch task data
+
+    if (taskData.project!== "" && willDissociateTask) {
+        await dissociateTask(userID, taskID, taskData.project);
+    }
     await cRef("users", userID, "tasks", taskID).delete()
         .then(() => {console.log("Task successfully deleted!")})
         .catch(console.error);
@@ -157,6 +165,7 @@ async function deleteProject(userID, projectID) {
     await cRef("users", userID, "projects", projectID).delete()
         .then(() => {console.log("Project successfully deleted!")})
         .catch(console.error);
+
 }
 
 async function deleteTag(userID, tagID) {
