@@ -517,10 +517,10 @@ var displayTask = async function(pageId, taskId, infoObj) {
             associateTask(uid, taskId, projId);
             activeTaskChangedProject = true;
         } else {
-            activeTaskInboxed = true;
             modifyTask(uid, taskId, {project:""});
             this.value = ""
             if (actualProject !== undefined) {
+                activeTaskInboxed = true;
                 dissociateTask(uid, taskId, actualProjectID);
             }
             actualProject = undefined;
