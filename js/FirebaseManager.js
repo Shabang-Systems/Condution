@@ -57,12 +57,11 @@ async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};
 
-    let snap = (await cRef('users', userID, "projects", 
-        ["top_level", "==", true])
+    let snap = (await cRef('users', userID, "projects")
         .get())
 
     snap.docs.forEach(proj => {
-        if (proj.exists) {
+        if (proj.exists && proj.data().top_level === true) {
             projectNameById[proj.id] = proj.data().name;
             projectIdByName[proj.data().name] = proj.id;
         }
