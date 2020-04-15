@@ -702,7 +702,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -717,7 +717,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark-ds);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -732,7 +732,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkbox-od);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -760,7 +760,7 @@ label.od:hover:before {
 }
 
 label:before {
-   transition: all 150ms linear;
+   /*transition: background-color 150ms linear;*/
 }
 
 .bootstrap-tagsinput {

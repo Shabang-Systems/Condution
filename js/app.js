@@ -64,7 +64,11 @@ var numDaysBetween = function(d1, d2) {
 
 var getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
+var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
+var greeting = greetings[Math.floor(Math.random() * greetings.length)]
+
 // Chapter 2: Functions to Show and Hide Things!
+var currentPage;
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
     $("#content-area").children().each(function() {
@@ -85,8 +89,7 @@ var showPage = async function(pageId) {
     if (pageId === "upcoming-page") {
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
-        var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
-        $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
+        $("#greeting").html(greeting);
         $("#greeting-name").html(displayName);
         await getInboxandDS(uid).then(async (elems) => {
             // hide the inbox if there are no unfinished tasks
@@ -107,12 +110,16 @@ var showPage = async function(pageId) {
                     $("#inbox-subhead").hide();
                     $("#inbox").hide();
                 } else {
+                    $("#inbox-subhead").show();
+                    $("#inbox").show();
                     $("#unsorted-badge").html('' + elems[0].length);
                 }
                 if (elems[1].length === 0) {
                     $("#ds-subhead").hide();
                     $("#due-soon").hide();
                 } else {
+                    $("#ds-subhead").show();
+                    $("#due-soon").show();
                     $("#duesoon-badge").html('' + elems[1].length);
                 }
 
@@ -172,12 +179,15 @@ var showPage = async function(pageId) {
         // TODO: implement query rules for perspectives
     }
 
+    currentPage = pageId;
 }
 
 var isTaskActive = false;
 var activeTask = null; // TODO: shouldn't this be undefined?
 var activeTaskDeInboxed = false;
 var activeTaskDeDsed = false;
+var activeTaskInboxed = false;
+var activeTaskChangedProject = true;
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
@@ -199,7 +209,6 @@ var hideActiveTask = function() {
                     $('#task-'+hTask).slideUp(200);
                 }
             }
-            activeTaskDeInboxed = false;
         });
     } else if (activeTaskDeDsed) {
         let hTask = activeTask;
@@ -210,15 +219,37 @@ var hideActiveTask = function() {
                 $("#due-soon").slideUp(300);
             } else {
                 $("#duesoon-badge").html(''+dsC);
-                if (active==="today") {
+                if (active==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
                     $('#task-'+hTask).slideUp(200);
                 }
             }
-            activeTaskDeDsed = false;
         });
     }
+
+    if (activeTaskInboxed) {
+        let hTask = activeTask;
+        getInboxandDS(uid).then(function(e){
+            iC = e[0].length;
+            dsC = e[1].length;
+            $("#unsorted-badge").html(''+iC);
+            $("#duesoon-badge").html(''+dsC);
+            if (active==="today") {
+                $('#task-'+hTask).appendTo("#inbox");
+            }
+        });
+    }
+
+    activeTaskDeInboxed = false;
+    activeTaskDeDsed = false;
     isTaskActive = false;
     activeTask = null;
+
+    // TODO: change reload the view after 5 secs to something
+    // that actually waits for the finishing of all animations...
+    // JANKY!
+    setTimeout(function() {
+        if (!isTaskActive) showPage(currentPage)
+    }, 500);
 }
 
 var displayTask = async function(pageId, taskId, infoObj) {
@@ -430,6 +461,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
         modifyTask(uid, taskId, {project:projId});
         actualProjectID = projId;
         actualProject = this.value;
+        activeTaskChangedProject = true;
         associateTask(uid, taskId, projId);
     });
     $('#task-project-' + taskId).val(actualProject);
@@ -467,16 +499,6 @@ var displayTask = async function(pageId, taskId, infoObj) {
                             $("#unsorted-badge").html(''+iC);
                         }
                     });           
-                } else if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
-                    getInboxandDS(uid).then(function(e){
-                        dsC = e[1].length;
-                        if (dsC === 0) {
-                            $("#ds-subhead").slideUp(300);
-                            $("#due-soon").slideUp(300);
-                        } else {
-                            $("#duesoon-badge").html(''+dsC);
-                        }
-                    });
                 }
             });
         }
@@ -493,16 +515,20 @@ var displayTask = async function(pageId, taskId, infoObj) {
             actualProjectID = projId;
             actualProject = this.value;
             associateTask(uid, taskId, projId);
+            activeTaskChangedProject = true;
         } else {
+            activeTaskInboxed = true;
             modifyTask(uid, taskId, {project:""});
-            this.value = "";
+            this.value = ""
+            if (actualProject !== undefined) {
+                dissociateTask(uid, taskId, actualProjectID);
+            }
             actualProject = undefined;
             actualProjectID = "";
         }
     });
     $("#task-trash-" + taskId).click(function(e) {
         if (actualProject === undefined) activeTaskDeInboxed = true;
-        else if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) activeTaskDeDsed = true;
         deleteTask(uid, taskId).then(function() {
             hideActiveTask();
             $('#task-' + taskId).slideUp(150);
