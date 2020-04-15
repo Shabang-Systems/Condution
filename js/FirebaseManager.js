@@ -165,7 +165,7 @@ async function getProjectStructure(userID, projectID) {
         .then(snapshot => {snapshot.docs
                 .forEach(async doc => {                 //  for each child
             if (doc.data().type === "task") { // TODO combine these if statements
-                let order = (await cRef("users", userID, "tasks", doc.data().childrenID).get()).data().order;//.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task // TODO: replace with cRef.get()
+                let order = await cRef("users", userID, "tasks").get().then(d=>d.docs.filter(td=>td.id===doc.data().childrenID)[0].data().order);//.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task // TODO: replace with cRef.get()
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
