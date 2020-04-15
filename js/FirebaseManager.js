@@ -160,20 +160,34 @@ async function deleteTag(userID, tagID) {
 async function getProjectStructure(userID, projectID) {
     let children = [];
 
-    await cRef("users", userID, "projects", projectID, "children").get()
-        .then(snapshot => {snapshot.docs
-                .forEach(async doc => {                 //  for each child
-            if (doc.data().type === "task") { // TODO combine these if statements
-                let order = await cRef("users", userID, "tasks").get().then(d=>d.docs.filter(td=>td.id===doc.data().childrenID)[0].data().order);//.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task // TODO: replace with cRef.get()
-                children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
-            } else if (doc.data().type === "project") {    //      if the child is a project
-                // push the children of this project---same structure as the return obj of this func
-                let order = (await cRef("users", userID, "projects", (doc.data().childrenID)).get()).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject // TODO: replace with cRef.get()
-                children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
-            }
-        });
-        //  NOTE: returns with `id` prop to preserve id of og project
-    }).catch(console.error);
+    // absurdly hitting the cache with a very broad query so that the
+    // cache will catch all projects and only hit the db once
+    
+    let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
+    for (let [itemID, type] of Object.entries(project.data().children)) {
+        if (type === "task") {
+            let task = await getTaskInformation(userID, itemID);
+            children.push({type: "task", content: itemID, sortOrder: task.order});
+        } else if (type === "project") {
+            let project = await getProjectStructure(userID, itemID);
+            children.push({type: "project", content: project, sortOrder: project.order});
+        }
+    }
+    
+    //await cRef("users", userID, "projects", projectID).get()
+        //.then(snapshot => {snapshot.docs
+                //.forEach(async doc => {                 //  for each child
+            //if (doc.data().type === "task") { // TODO combine these if statements
+                //let order = await cRef("users", userID, "tasks").get().then(d=>d.docs.filter(td=>td.id===doc.data().childrenID)[0].data().order);//.collection("users").doc(userID).collection("tasks").doc(doc.data().childrenID).get()).data().order; //  get the order of the task // TODO: replace with cRef.get()
+                //children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
+            //} else if (doc.data().type === "project") {    //      if the child is a project
+                //// push the children of this project---same structure as the return obj of this func
+                //let order = (await cRef("users", userID, "projects", (doc.data().childrenID)).get()).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject // TODO: replace with cRef.get()
+                //children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
+            //}
+        //});
+        ////  NOTE: returns with `id` prop to preserve id of og project
+    /*}).catch(console.error);*/
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
-    return { id: projectID, children: children };
+    return { id: projectID, children: children, sortOrder: project.data().order};
 }
