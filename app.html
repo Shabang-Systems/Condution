@@ -33,6 +33,7 @@
         <!--Our Codes-->
         <link rel="stylesheet" type="text/css" href="css/app.css" />
         <script type='text/javascript' src="js/FirebaseManager.js"></script>
+        <script type='text/javascript' src="js/CacheManager.js"></script>
 
         <!--Electron Crap-->
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval';" />
@@ -72,11 +73,7 @@
                         <div id="perspective-80292" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Prep 'n Rev</t></div>
                     </div>
                     <t class="menu-label">Projects</t>
-                    <div class="projects menu-portion">
-                        <!--<div id="project-03280" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; height: 30px;">ENG101 (Master)</t></div>-->
-                        <!--<div id="project-02381" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px;">Personal</t></div>-->
-                        <!--<div id="project-74926" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px;">Shuffle: Master</t></div>-->
-                    </div>
+                    <div class="projects menu-portion"></div>
                     <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
                 </div>
             </div>
@@ -104,8 +101,13 @@
                 <div id="perspective-page" class="page">
                     Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. Perspective. 
                 </div>
-                 <div id="random-page" class="page">
-                    Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. Water cooler. 
+                 <div id="project-page" class="page">
+                    <div class="perspective-title"><i class="fas fa-project-diagram"></i><t id="project-title" class="perspective-titleword"></t></div>
+                    <div style="padding: 0 0 7px 0">
+                        <hr class="perspective-divider"/>
+                    </div>
+                    <div id="project-content">
+                    </div>
                 </div>
             </div>
         </div>

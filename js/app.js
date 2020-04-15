@@ -145,7 +145,32 @@ var showPage = async function(pageId) {
                 $("#"+pageId).fadeIn(200);
             });
         });
+    } else if (pageId.includes("project")) {
+        getProjectsandTags(uid).then(function(pPandT) {
+            $("#project-content").clear();
+            let pid = active.split("-")[1];
+            let projectName = pPandT[0][0][pid];
+            $("#project-title").html(projectName);
+            let possibleProjects = pPandT[0];
+            let possibleTags = pPandT[1];
+            let possibleProjectsRev = pPandT[2];
+            let possibleTagsRev = pPandT[3];
+            getProjectStructure(uid, pid).then(function(struct) {
+                struct.children.forEach(function(item) {
+                    if (item.type === "task") {
+                        let taskId = item.content;
+                        displayTask("project-content", taskId, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]);
+                    } else if (item.type === "project") {
+                        // TODO: handle projects.
+                    }
+                });
+                $("#page-loader").fadeOut(100);
+                $("#"+pageId).fadeIn(200);
+            })
+        });
     } else {
+        console.log(pageId);
+        console.log(pageId.includes);
         $("#"+pageId).empty();
         $("#page-loader").fadeOut(100);
         $("#"+pageId).fadeIn(200);
@@ -167,9 +192,8 @@ var hideActiveTask = function() {
     $("#task-repeat-"+activeTask).css("display", "none");
     $("#task-"+activeTask).animate({"background-color": getThemeColor("--background"), "padding": "0", "margin":"0"}, 200);
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
-    isTaskActive = false;
-    activeTask = null;
     if (activeTaskDeInboxed) {
+        let hTask = activeTask;
         getInboxTasks(uid).then(function(e){
             iC = e.length;
             if (iC === 0) {
@@ -177,21 +201,30 @@ var hideActiveTask = function() {
                 $("#inbox").slideUp(300);
             } else {
                 $("#unsorted-badge").html(''+iC);
+                if (active==="today") {
+                    $('#task-'+hTask).slideUp(200);
+                }
             }
+            activeTaskDeInboxed = false;
         });
-        activeTaskDeInboxed = false;
     } else if (activeTaskDeDsed) {
+        let hTask = activeTask;
         getInboxandDS(uid).then(function(e){
             dsC = e[1].length;
             if (dsC === 0) {
                 $("#ds-subhead").slideUp(300);
                 $("#due-soon").slideUp(300);
             } else {
-                $("#duesoon-badge").html(''+iC);
+                $("#duesoon-badge").html(''+dsC);
+                if (active==="today") {
+                    $('#task-'+hTask).slideUp(200);
+                }
             }
+            activeTaskDeDsed = false;
         });
-        activeTaskDeDsed = false;
     }
+    isTaskActive = false;
+    activeTask = null;
 }
 
 var displayTask = async function(pageId, taskId, infoObj) {
@@ -455,9 +488,10 @@ var displayTask = async function(pageId, taskId, infoObj) {
     });
     $("#task-trash-" + taskId).click(function(e) {
         if (actualProject === undefined) activeTaskDeInboxed = true;
-        deleteTask(uid, taskId);
-        hideActiveTask();
-        $('#task-' + taskId).slideUp(150);
+        deleteTask(uid, taskId).then(function() {
+            hideActiveTask();
+            $('#task-' + taskId).slideUp(150);
+        });
     });
     $("#task-name-" + taskId).change(function(e) {
         modifyTask(uid, taskId, {name:this.value});
@@ -515,6 +549,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
 
 console.log("Watching the clicky-pager!");
 var active = "today";
+var activeName = "Upcoming";
 
 $(document).on('click', '.menuitem', function(e) {
     $("#"+active).removeClass('today-highlighted menuitem-selected');
@@ -523,7 +558,7 @@ $(document).on('click', '.menuitem', function(e) {
         showPage("perspective-page");
         $("#"+active).addClass("menuitem-selected");
     } else if (active.includes("project")) {
-        showPage("random-page");
+        showPage("project-page");
         $("#"+active).addClass("menuitem-selected");
     }
 });
@@ -673,6 +708,8 @@ $("#quickadd").keydown(function(e) {
             getInboxTasks(uid).then(function(e){
                 iC = e.length;
                 $("#unsorted-badge").html(''+iC);
+                $("#inbox-subhead").slideDown(300);
+                $("#inbox").slideDown(300);
             });
         });
     } else if (e.keyCode == 27) {
