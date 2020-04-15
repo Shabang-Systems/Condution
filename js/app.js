@@ -74,8 +74,10 @@ var showPage = async function(pageId) {
         }
     });
     $("#page-loader").fadeIn(100);
-    // TODO: ADD THIS BACK BEFORE COMMIT TO CAUSE SYNC
-    //await sync(uid);
+    $("#inbox").empty();
+    $("#due-soon").empty();
+    $("#project-content").empty();
+
     let pPandT = await getProjectsandTags(uid);
     let possibleProjects = pPandT[0][0];
     let possibleTags = pPandT[1][0];
@@ -87,9 +89,6 @@ var showPage = async function(pageId) {
         var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
         $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
         $("#greeting-name").html(displayName);
-        $("#inbox").empty();
-        $("#due-soon").empty();
-
         await getInboxandDS(uid).then(async (elems) => {
             // hide the inbox if there are no unfinished tasks
             // TODO: test this function
@@ -147,14 +146,13 @@ var showPage = async function(pageId) {
         });
     } else if (pageId.includes("project")) {
         getProjectsandTags(uid).then(function(pPandT) {
-            $("#project-content").clear();
             let pid = active.split("-")[1];
             let projectName = pPandT[0][0][pid];
             $("#project-title").html(projectName);
-            let possibleProjects = pPandT[0];
-            let possibleTags = pPandT[1];
-            let possibleProjectsRev = pPandT[2];
-            let possibleTagsRev = pPandT[3];
+            let possibleProjects = pPandT[0][0];
+            let possibleTags = pPandT[1][0];
+            let possibleProjectsRev = pPandT[0][1];
+            let possibleTagsRev = pPandT[1][1];
             getProjectStructure(uid, pid).then(function(struct) {
                 struct.children.forEach(function(item) {
                     if (item.type === "task") {

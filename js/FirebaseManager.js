@@ -169,7 +169,7 @@ async function getProjectStructure(userID, projectID) {
                 children.push({type: "task", content: doc.data().childrenID, sortOrder: order});   //  push its ID to the array
             } else if (doc.data().type === "project") {    //      if the child is a project
                 // push the children of this project---same structure as the return obj of this func
-                let order = (await cRef("users", userID, "projects", (doc.data().childrenID).get())).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject // TODO: replace with cRef.get()
+                let order = (await cRef("users", userID, "projects", (doc.data().childrenID)).get()).data().order;//.collection("users").doc(userID).collection("projects").doc(doc.data().childrenID).get()).data().order; //  get the order of theproject // TODO: replace with cRef.get()
                 children.push({type: "project", content: (await getProjectStructure(userID, doc.data().childrenID)), sortOrder: order});
             }
         });
