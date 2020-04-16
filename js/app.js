@@ -160,7 +160,6 @@ var showPage = async function(pageId) {
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
             let possibleTagsRev = pPandT[1][1];
-            console.log(projDir);
             if (projDir.length <= 1) {
                 $("#project-back").hide()
             } else {
@@ -181,12 +180,60 @@ var showPage = async function(pageId) {
                         $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="fas fa-project-diagram"></i><t style="padding-left:16px">${projName}</t></div>`);
                     }
                 }
+                var projectSort = new Sortable($("#project-content")[0], {
+                    animation: 200,
+                    onEnd: function(e) {
+                        let oi = e.oldIndex;
+                        let ni = e.newIndex;
+                        if (oi<ni) {
+                            // Handle task moved down
+                            for(let i=oi+1; i<=ni; i++) {
+                                let child = struct.children[i];
+                                if (child.type === "task") {
+                                    let id = child.content;
+                                    modifyTask(uid, id, {order: i-1});
+                                } else if (child.type === "project") {
+                                    let id = child.content.id;
+                                    modifyProject(uid, id, {order: i-1});
+                                }
+                            }
+                            let moved = struct.children[oi];
+                            if (moved.type === "task") {
+                                let id = moved.content;
+                                modifyTask(uid, id, {order: ni});
+                            } else if (moved.type === "project") {
+                                let id = moved.content.id;
+                                modifyProject(uid, id, {order: ni});
+                            }
+                        } else if (oi>ni) {
+                            // Handle task moved up
+                            for(let i=oi-1; i>=ni; i--) {
+                                let child = struct.children[i];
+                                if (child.type === "task") {
+                                    let id = child.content;
+                                    modifyTask(uid, id, {order: i+1});
+                                } else if (child.type === "project") {
+                                    let id = child.content.id;
+                                    modifyProject(uid, id, {order: i+1});
+                                }
+                            }
+                            let moved = struct.children[oi];
+                            if (moved.type === "task") {
+                                let id = moved.content;
+                                modifyTask(uid, id, {order: ni});
+                            } else if (moved.type === "project") {
+                                let id = moved.content.id;
+                                modifyProject(uid, id, {order: ni});
+                            }
+                            //modifyTask(uid, originalIBT[oi], {order: ni});
+                        }
+
+                    }
+                });
                 $("#"+pageId).show();
             });
         });
     } else {
-        console.log(pageId);
-        console.log(pageId.includes);
         //$("#"+pageId).empty();
         $("#"+pageId).show();
         // Sad normal perspective loads

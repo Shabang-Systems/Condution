@@ -168,6 +168,13 @@ async function getProjectsandTags(userID) {
     return [[projectNameById, projectIdByName], [tagNameById, tagIdByName]];
 }
 
+async function modifyProject(userID, projectID, updateQuery) {
+    //console.log(taskID, updateQuery);
+    await cRef("users", userID, "projects", projectID)
+        .update(updateQuery)
+        .catch(console.error);
+}
+
 async function modifyTask(userID, taskID, updateQuery) {
     //console.log(taskID, updateQuery);
     await cRef("users", userID, "tasks", taskID)
