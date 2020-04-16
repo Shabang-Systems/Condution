@@ -1,5 +1,6 @@
 console.log("Initializing the galvanitizer!");
-const { remote } = require('electron')
+const { remote } = require('electron');
+const { Menu, MenuItem } = remote;
 
 // TODO: apply themes to colors
 // TODO: make a kickstarter
@@ -19,8 +20,8 @@ if (process.platform === "win32") {
     $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
 } else if (process.platform === "darwin") {
     $("#main-head-darwin").show();
-    $("#left-menu").addClass("darwin-windowing");
-    $("#content-area").addClass("darwin-windowing");
+    $("#left-menu").addClass("darwin-windowing-left");
+    $("#content-area").addClass("darwin-windowing-right");
 }
 
 // Chapter 1: Utilities!
@@ -64,7 +65,12 @@ var numDaysBetween = function(d1, d2) {
 
 var getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
+var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
+var greeting = greetings[Math.floor(Math.random() * greetings.length)]
+
 // Chapter 2: Functions to Show and Hide Things!
+var currentPage = "upcoming-page";
+var projDir = [];
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
     $("#content-area").children().each(function() {
@@ -73,9 +79,10 @@ var showPage = async function(pageId) {
             item.css("display", "none")
         }
     });
-    $("#page-loader").fadeIn(100);
-    // TODO: ADD THIS BACK BEFORE COMMIT TO CAUSE SYNC
-    //await sync(uid);
+    $("#inbox").empty();
+    $("#due-soon").empty();
+    $("#project-content").empty();
+
     let pPandT = await getProjectsandTags(uid);
     let possibleProjects = pPandT[0][0];
     let possibleTags = pPandT[1][0];
@@ -84,12 +91,8 @@ var showPage = async function(pageId) {
     if (pageId === "upcoming-page") {
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
-        var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
-        $("#greeting").html(greetings[Math.floor(Math.random() * greetings.length)]);
+        $("#greeting").html(greeting);
         $("#greeting-name").html(displayName);
-        $("#inbox").empty();
-        $("#due-soon").empty();
-
         await getInboxandDS(uid).then(async (elems) => {
             // hide the inbox if there are no unfinished tasks
             // TODO: test this function
@@ -109,12 +112,16 @@ var showPage = async function(pageId) {
                     $("#inbox-subhead").hide();
                     $("#inbox").hide();
                 } else {
+                    $("#inbox-subhead").show();
+                    $("#inbox").show();
                     $("#unsorted-badge").html('' + elems[0].length);
                 }
                 if (elems[1].length === 0) {
                     $("#ds-subhead").hide();
                     $("#due-soon").hide();
                 } else {
+                    $("#ds-subhead").show();
+                    $("#due-soon").show();
                     $("#duesoon-badge").html('' + elems[1].length);
                 }
 
@@ -141,24 +148,58 @@ var showPage = async function(pageId) {
                         });
                     }
                 });
-                $("#page-loader").fadeOut(100);
-                $("#"+pageId).fadeIn(200);
+                $("#"+pageId).show();
+            });
+        });
+    } else if (pageId.includes("project")) {
+        getProjectsandTags(uid).then(function(pPandT) {
+            let pid = active.split("-")[1];
+            let projectName = pPandT[0][0][pid];
+            $("#project-title").html(projectName);
+            let possibleProjects = pPandT[0][0];
+            let possibleTags = pPandT[1][0];
+            let possibleProjectsRev = pPandT[0][1];
+            let possibleTagsRev = pPandT[1][1];
+            console.log(projDir);
+            if (projDir.length <= 1) {
+                $("#project-back").hide()
+            } else {
+                $("#project-back").show()
+
+            }
+
+            getProjectStructure(uid, pid).then(async function(struct) {
+                // Traditional for loop here INTENTIONAL
+                // So that the items will load in correct order
+                for (let item of struct.children) {
+                    if (item.type === "task") {
+                        let taskId = item.content;
+                        await displayTask("project-content", taskId, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]);
+                    } else if (item.type === "project") {
+                        let projID = item.content.id;
+                        let projName = possibleProjects[projID];
+                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="fas fa-project-diagram"></i><t style="padding-left:16px">${projName}</t></div>`);
+                    }
+                }
+                $("#"+pageId).show();
             });
         });
     } else {
-        $("#"+pageId).empty();
-        $("#page-loader").fadeOut(100);
-        $("#"+pageId).fadeIn(200);
+        console.log(pageId);
+        console.log(pageId.includes);
+        //$("#"+pageId).empty();
+        $("#"+pageId).show();
         // Sad normal perspective loads
         // TODO: implement query rules for perspectives
     }
-
+    currentPage = pageId;
 }
 
 var isTaskActive = false;
 var activeTask = null; // TODO: shouldn't this be undefined?
 var activeTaskDeInboxed = false;
 var activeTaskDeDsed = false;
+var activeTaskInboxed = false;
 
 var hideActiveTask = function() {
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
@@ -167,9 +208,8 @@ var hideActiveTask = function() {
     $("#task-repeat-"+activeTask).css("display", "none");
     $("#task-"+activeTask).animate({"background-color": getThemeColor("--background"), "padding": "0", "margin":"0"}, 200);
     $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
-    isTaskActive = false;
-    activeTask = null;
     if (activeTaskDeInboxed) {
+        let hTask = activeTask;
         getInboxTasks(uid).then(function(e){
             iC = e.length;
             if (iC === 0) {
@@ -177,21 +217,52 @@ var hideActiveTask = function() {
                 $("#inbox").slideUp(300);
             } else {
                 $("#unsorted-badge").html(''+iC);
+                if (active==="today") {
+                    $('#task-'+hTask).slideUp(200);
+                }
             }
         });
-        activeTaskDeInboxed = false;
     } else if (activeTaskDeDsed) {
+        let hTask = activeTask;
         getInboxandDS(uid).then(function(e){
             dsC = e[1].length;
             if (dsC === 0) {
                 $("#ds-subhead").slideUp(300);
                 $("#due-soon").slideUp(300);
             } else {
-                $("#duesoon-badge").html(''+iC);
+                $("#duesoon-badge").html(''+dsC);
+                if (active==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
+                    $('#task-'+hTask).slideUp(200);
+                }
             }
         });
-        activeTaskDeDsed = false;
     }
+
+    if (activeTaskInboxed) {
+        let hTask = activeTask;
+        getInboxandDS(uid).then(function(e){
+            iC = e[0].length;
+            dsC = e[1].length;
+            $("#unsorted-badge").html(''+iC);
+            $("#duesoon-badge").html(''+dsC);
+            if (active==="today") {
+                $('#task-'+hTask).appendTo("#inbox");
+            }
+        });
+    }
+
+    activeTaskDeInboxed = false;
+    activeTaskDeDsed = false;
+    activeTaskInboxed = false;
+    isTaskActive = false;
+    activeTask = null;
+
+    // TODO: change reload the view after 5 secs to something
+    // that actually waits for the finishing of all animations...
+    // JANKY!
+    setTimeout(function() {
+        if (!isTaskActive) showPage(currentPage)
+    }, 500);
 }
 
 var displayTask = async function(pageId, taskId, infoObj) {
@@ -395,10 +466,16 @@ var displayTask = async function(pageId, taskId, infoObj) {
     }).on('select.editable-select', function (e, li) {
         let projectSelected = li.text();
         let projId = possibleProjectsRev[projectSelected];
-        if (actualProject === undefined) activeTaskDeInboxed = true;
+        if (actualProject === undefined) {
+            activeTaskDeInboxed = true;
+        } else {
+            dissociateTask(uid, taskId, actualProjectID);
+        }
         modifyTask(uid, taskId, {project:projId});
         actualProjectID = projId;
         actualProject = this.value;
+        activeTaskChangedProject = true;
+        associateTask(uid, taskId, projId);
     });
     $('#task-project-' + taskId).val(actualProject);
     // Style'em Good!
@@ -442,22 +519,33 @@ var displayTask = async function(pageId, taskId, infoObj) {
     $('#task-project-' + taskId).change(function(e) {
         if (this.value in possibleProjectsRev) {
             let projId = possibleProjectsRev[this.value];
-            if (actualProject === undefined) activeTaskDeInboxed = true;
+            if (actualProject === undefined){
+                activeTaskDeInboxed = true;
+            } else {
+                dissociateTask(uid, taskId, actualProjectID);
+            }
             modifyTask(uid, taskId, {project:projId});
             actualProjectID = projId;
             actualProject = this.value;
+            associateTask(uid, taskId, projId);
+            activeTaskChangedProject = true;
         } else {
             modifyTask(uid, taskId, {project:""});
-            this.value = "";
+            this.value = ""
+            if (actualProject !== undefined) {
+                activeTaskInboxed = true;
+                dissociateTask(uid, taskId, actualProjectID);
+            }
             actualProject = undefined;
             actualProjectID = "";
         }
     });
     $("#task-trash-" + taskId).click(function(e) {
         if (actualProject === undefined) activeTaskDeInboxed = true;
-        deleteTask(uid, taskId);
-        hideActiveTask();
-        $('#task-' + taskId).slideUp(150);
+        deleteTask(uid, taskId).then(function() {
+            hideActiveTask();
+            $('#task-' + taskId).slideUp(150);
+        });
     });
     $("#task-name-" + taskId).change(function(e) {
         modifyTask(uid, taskId, {name:this.value});
@@ -515,6 +603,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
 
 console.log("Watching the clicky-pager!");
 var active = "today";
+var activeName = "Upcoming";
 
 $(document).on('click', '.menuitem', function(e) {
     $("#"+active).removeClass('today-highlighted menuitem-selected');
@@ -523,7 +612,11 @@ $(document).on('click', '.menuitem', function(e) {
         showPage("perspective-page");
         $("#"+active).addClass("menuitem-selected");
     } else if (active.includes("project")) {
-        showPage("random-page");
+        if (!$(this).hasClass("subproject")) {
+            projDir = [];
+        }
+        projDir.push(active);
+        showPage("project-page");
         $("#"+active).addClass("menuitem-selected");
     }
 });
@@ -570,6 +663,15 @@ $(document).on("click", ".page, #left-menu div", function(e) {
 
 $(document).on("click", "#logout", function(e) {
     firebase.auth().signOut().then(() => {}, console.error);
+});
+
+$(document).on("click", "#project-back", function() {
+    // THE POP OPERATION IS NOT DUPLICATED.
+    // On load, the current projDir will
+    // be pushed to the array
+    projDir.pop()
+    active = projDir[projDir.length-1]
+    showPage("project-page");
 });
 
 var perspectiveSort = new Sortable($(".perspectives")[0], {
@@ -673,17 +775,38 @@ $("#quickadd").keydown(function(e) {
             getInboxTasks(uid).then(function(e){
                 iC = e.length;
                 $("#unsorted-badge").html(''+iC);
+                $("#inbox-subhead").slideDown(300);
+                $("#inbox").slideDown(300);
             });
         });
-
+    } else if (e.keyCode == 27) {
+        $(this).blur();
     }
 });
 
 
-// Chapter 4: Mainloop
+// Chapter 4: Interface Loader Functions
+var loadProjects = async function() {
+    let tlps = (await getTopLevelProjects(uid));
+    for (let projID in tlps[0]) {
+        let projName = tlps[0][projID];
+        $(".projects").append(`<div id="project-${projID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${projName}</t></div>`);
+    }
+}
+
+// Chapter 5: Keyboard Shortcuts
+/*Mousetrap.bind(['command+r', 'ctrl+r'], function() {*/
+    //showPage(currentPage);
+    //return false;
+    //// TODO: bind command r to not actuall reload on production
+//});
+
+
+// Chapter 6: Mainloop
 var lightTheFire = async function() {
     $("body").addClass(currentTheme);
     await showPage("upcoming-page");
+    await loadProjects();
     $("#loading").hide();
     $("#content-wrapper").fadeIn();
     console.log("Kick the Tires!");

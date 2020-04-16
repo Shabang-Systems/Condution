@@ -1,0 +1,48 @@
+.condutiontheme-exr0n-aggresivedark {
+    /* Background */
+    /* These two colors should lightly contrast 
+     * think: a hover over the background should
+     * be colored --background-feature */
+    --background: #2f3237;
+    --background-feature: #2c2e34;
+
+    /* Content */
+    /* These are the main colors. Make them mainly
+     * to be bold and clear. Also make them kind of related 
+     * to one main color */
+    --content-normal: #cacaca;
+    --content-normal-alt: #c0cccc;
+    --content-normal-accent: #c0cccc;
+
+    /* Decorative */
+    --decorative-light: #326ccc;
+    --decorative-light-alt: #c0cccc;
+    --decorative-light-accent: #428cec;
+
+    /* Menu colors */
+    /* These colors should all in different
+     * degrees contrast the --menu-backgroud
+     * think: a selected item over the background */
+    --menu-background: #414c5e;
+    --menu-semiaccent-background: #3d4255;
+    --menu-accent-background: #323c4f;
+    --menu-text: #eaebed;
+    --menu-accent: #e1e2e5;
+
+    /* Task colors */
+    --task: #7c7c7c;
+    --task-feature: #4a4a4a;
+    --task-feature-alt: #505050;
+    --task-textbox: #cacaca;
+    --task-textbox-background: #515151;
+    --task-clickbox-background: #414141;
+    --task-clickbox-accent-background: #5e9e6e;
+    --task-clickbox: #3d3d3d;
+
+    /* Datepicker colors */
+    --task-datepicker-elems: grey;
+    --task-datepicker-background: #222222;
+
+    /* Special accent */
+    --special: #717cbc;
+};
