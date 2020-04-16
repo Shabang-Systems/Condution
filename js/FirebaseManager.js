@@ -22,36 +22,36 @@ const util = {
                     throw new TypeError("Unkown comparator " + cmp);
             }
         },
-        all: (requirements) => (doc) => {
+        all: (...requirements) => (doc) => {
             const dat = doc.data();
             for (let [lhs, cmp, rhs] of requirements)
-                if (!util.compare(dat[lhs], cmp, rhs))
+                if (!util.util.compare(dat[lhs], cmp, rhs))
                     return false;
             return true;
         },
-        any: (requirements) => (doc) => {
+        any: (...requirements) => (doc) => {
             const dat = doc.data();
             for (let [lhs, cmp, rhs] of requirements)
-                if (util.compare(dat[lhs], cmp, rhs))
+                if (util.util.compare(dat[lhs], cmp, rhs))
                     return true;
             return false;
         },
-        atLeast: (requirements, threshold) => (doc) => {
+        atLeast: (...requirements, threshold) => (doc) => {
             const dat = doc.data();
             let counter = 0;
             for (let [lhs, cmp, rhs] of requirements)
-                if (util.compare(dat[lhs], cmp, rhs)) {
+                if (util.util.compare(dat[lhs], cmp, rhs)) {
                     ++counter;
                     if (counter >= threshold)
                         return true;
                 }
             return false;
         },
-        atMost: (requirements, threshold) => (doc) => {
+        atMost: (...requirements, threshold) => (doc) => {
             const dat = doc.data();
             let counter = 0;
             for (let [lhs, cmp, rhs] of requirements)
-                if (util.compare(dat[lhs], cmp, rhs)) {
+                if (util.util.compare(dat[lhs], cmp, rhs)) {
                     ++counter;
                     if (counter > threshold)
                         return false;
@@ -88,7 +88,7 @@ async function getInboxTasks(userID) {
         //['isComplete', "==", false])
         .get()
         .then(snap => snap.docs
-            .filter(doc => (doc.data().project === '') && (doc.data().isComplete === false))
+            .filter(util.select.all(['project', '==', ''], ['isComplete', '==', false]))
             .sort((a,b) => a.data().order - b.data().order)
         ).catch(err => {
             console.error('Error getting documents', err);
@@ -105,7 +105,7 @@ async function getDSTasks(userID) {
             //['isComplete', "==", false])
         .get()
         .then(snap => snap.docs
-            .filter(doc => (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && (doc.data().isComplete === false))
+            .filter(doc => (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && (doc.data().isComplete === false)) // refactor to use util.select
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);
     return dsDocs.map(doc => doc.id);
