@@ -121,7 +121,7 @@ async function newTask(userID, taskObj) {
 }
 
 async function newTag(userID, tagName) {
-    return cRef("users", userID, "tags").add({name: tagName}).id;
+    return (await cRef("users", userID, "tags").add({name: tagName})).id;
 }
 
 async function completeTask(userID, taskID) {
@@ -189,7 +189,7 @@ async function getProjectStructure(userID, projectID) {
             }
         } else if (type === "project") {
             let project = await getProjectStructure(userID, itemID);
-            children.push({type: "project", content: project, sortOrder: project.order});
+            children.push({type: "project", content: project, sortOrder: project.sortOrder});
         }
     }
     

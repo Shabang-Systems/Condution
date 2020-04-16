@@ -69,7 +69,8 @@ var greetings = ["Hello there,", "Hey,", "G'day,", "What's up,", "Howdy,", "Welc
 var greeting = greetings[Math.floor(Math.random() * greetings.length)]
 
 // Chapter 2: Functions to Show and Hide Things!
-var currentPage;
+var currentPage = "upcoming-page";
+var prevPage;
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
     $("#content-area").children().each(function() {
@@ -159,15 +160,19 @@ var showPage = async function(pageId) {
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
             let possibleTagsRev = pPandT[1][1];
-            getProjectStructure(uid, pid).then(function(struct) {
-                struct.children.forEach(function(item) {
+            getProjectStructure(uid, pid).then(async function(struct) {
+                // Traditional for loop here INTENTIONAL
+                // So that the items will load in correct order
+                for (let item of struct.children) {
                     if (item.type === "task") {
                         let taskId = item.content;
-                        displayTask("project-content", taskId, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]);
+                        await displayTask("project-content", taskId, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]);
                     } else if (item.type === "project") {
-                        // TODO: handle projects.
+                        let projID = item.content.id;
+                        let projName = possibleProjects[projID];
+                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="fas fa-project-diagram"></i><t style="padding-left:16px">${projName}</t></div>`);
                     }
-                });
+                }
                 $("#"+pageId).show();
             })
         });
@@ -179,7 +184,7 @@ var showPage = async function(pageId) {
         // Sad normal perspective loads
         // TODO: implement query rules for perspectives
     }
-
+    prevPage = currentPage;
     currentPage = pageId;
 }
 
