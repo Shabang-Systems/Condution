@@ -105,7 +105,7 @@ async function getDSTasks(userID) {
             //['isComplete', "==", false])
         .get()
         .then(snap => snap.docs
-            .filter(doc => (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && (doc.data().isComplete === false)) // refactor to use util.select
+            .filter(doc => (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && (doc.data().isComplete === false))
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);
     return dsDocs.map(doc => doc.id);
