@@ -9,10 +9,11 @@ html, body {
     font-family: sans-serif;
     overflow: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
+    cursor: default !important;
 }
 
 *::-webkit-scrollbar { 
-    display: none;  /* Scrollbar Fix, Chrome Runtime */
+    display: none;  /* Scrollbar Fix, Chrome? and Apple Runtime */
 }
 
 *:focus {
@@ -68,6 +69,30 @@ html, body {
 
 .badge:first-child {
     transform: translateX(-2.5px);
+}
+
+.newbutton {
+    background-color: transparent;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 20px 5px 10px 7px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    height: 30px;
+}
+
+.newbutton:hover {
+    background-color: var(--task-feature) !important;
+}
+
+.newtext {
+    font-size: 13px;
+    color: var(--task);
+    transform: translateY(-6px);
 }
 
 #login {
@@ -295,8 +320,15 @@ html, body {
 
 .subproject {
     font-size: 16px !important;
-    padding: 4px 3px 5px 5px;
+    /*padding: 4px 3px 5px 5px;*/
+    padding-left: 6px;
+    padding-top: 3px;
     margin: 0;
+    height: 30px;
+}
+
+.subproject-icon {
+    color: var(--task-icon);
 }
 
 .sbpro:hover {
@@ -359,7 +391,7 @@ html, body {
     transition-timing-function: ease-in-out;
 }
 
-.project-back {
+.project-action {
     font-size: 10px;
     vertical-align: middle;
     text-align: center;
@@ -378,7 +410,7 @@ html, body {
     transition-timing-function: ease-in-out;
 }
 
-.project-back:hover {
+.project-action:hover {
     color: var(--decorative-light-alt);
     background-color: var(--content-normal);
 }
@@ -424,6 +456,10 @@ html, body {
 
 .task-name:focus {
     background-color: var(--content-normal);
+}
+
+.task-display {
+    height: 30px;
 }
 
 #logout {

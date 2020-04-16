@@ -177,9 +177,33 @@ var showPage = async function(pageId) {
                     } else if (item.type === "project") {
                         let projID = item.content.id;
                         let projName = possibleProjects[projID];
-                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="fas fa-project-diagram"></i><t style="padding-left:16px">${projName}</t></div>`);
+                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
                     }
                 }
+                let tz = moment.tz.guess();
+                $("#new-task").on("click", function() {
+                    let ntObject = {
+                        desc: "",
+                        isFlagged: false,
+                        isFloating: false,
+                        isComplete: false,
+                        project: pid,
+                        tags: [],
+                        timezone: tz, 
+                        name: "",
+                    };
+                    newTask(uid, ntObject).then(function(ntID) {
+                        associateTask(uid, ntID, pid);
+                        getProjectsandTags(uid).then(function(pPandT){
+                            let possibleProjects = pPandT[0][0];
+                            let possibleTags = pPandT[1][0];
+                            let possibleProjectsRev = pPandT[0][1];
+                            let possibleTagsRev = pPandT[1][1];
+                            displayTask("project-content", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])
+                        });
+                    })
+                });
+
                 var projectSort = new Sortable($("#project-content")[0], {
                     animation: 200,
                     onEnd: function(e) {
@@ -777,13 +801,16 @@ $("#quickadd").blur(function(e) {
 
 $("#quickadd").keydown(function(e) {
     if (e.keyCode == 13) {
+        let tb = $(this);
+        tb.animate({"background-color": getThemeColor("--quickadd-success"), "color": getThemeColor("--content-normal-alt")}, function() {
+            tb.animate({"background-color": getThemeColor("--quickadd"), "color": getThemeColor("--content-normal")})   
+        });
         let newTaskUserRequest = chrono.parse($(this).val());
         // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
         // Make that happen is the todo.
         let startDate;
         let endDate;
         let tz = moment.tz.guess();
-        let tb = $(this)
         let ntObject = {
             desc: "",
             isFlagged: false,
@@ -812,8 +839,7 @@ $("#quickadd").keydown(function(e) {
         } else {
             ntObject.name = tb.val()
         }
-        tb.val("");
-        tb.blur();
+
         newTask(uid, ntObject).then(function(ntID) {
             getProjectsandTags(uid).then(function(pPandT){
                 let possibleProjects = pPandT[0][0];
@@ -828,7 +854,9 @@ $("#quickadd").keydown(function(e) {
                 $("#inbox-subhead").slideDown(300);
                 $("#inbox").slideDown(300);
             });
-        });
+            tb.blur();
+            tb.val("");
+        })
     } else if (e.keyCode == 27) {
         $(this).blur();
     }
@@ -842,6 +870,11 @@ var loadProjects = async function() {
         let projName = tlps[0][projID];
         $(".projects").append(`<div id="project-${projID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${projName}</t></div>`);
     }
+    $(".projects").on("dragenter", function(e) {
+        console.log(e)
+        console.log($(this))
+        console.log(this)
+    });
 }
 
 // Chapter 5: Keyboard Shortcuts
