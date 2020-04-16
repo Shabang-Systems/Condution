@@ -1,5 +1,6 @@
 console.log("Initializing the galvanitizer!");
-const { remote } = require('electron')
+const { remote } = require('electron');
+const { Menu, MenuItem } = remote;
 
 // TODO: apply themes to colors
 
@@ -173,7 +174,7 @@ var showPage = async function(pageId) {
     } else {
         console.log(pageId);
         console.log(pageId.includes);
-        $("#"+pageId).empty();
+        //$("#"+pageId).empty();
         $("#"+pageId).show();
         // Sad normal perspective loads
         // TODO: implement query rules for perspectives
@@ -768,7 +769,14 @@ var loadProjects = async function() {
     }
 }
 
-// Chapter 5: Mainloop
+// Chapter 5: Keyboard Shortcuts
+Mousetrap.bind(['command+r', 'ctrl+r'], function() {
+    showPage(currentPage);
+    return false;
+});
+
+
+// Chapter 6: Mainloop
 var lightTheFire = async function() {
     $("body").addClass(currentTheme);
     await showPage("upcoming-page");

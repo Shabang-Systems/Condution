@@ -38,6 +38,7 @@
     "jquery-ui-timepicker-addon": "^1.6.3",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
+    "mousetrap": "^1.6.5",
     "popper.js": "^1.16.1",
     "select2": "^4.0.13",
     "sortablejs": "^1.10.2",
