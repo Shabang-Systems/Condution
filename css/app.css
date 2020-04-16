@@ -37,9 +37,28 @@ html, body {
     font-size: 12px;
     padding: 0;
 }
+
 .perspective-titleword{
-    padding-left:8px;
+    margin-left:4px;
+    padding-left:4px;
     font-weight: 600;
+    color: var(--decorative-light-alt);
+    font-size: 12px;
+    border: 0;
+    background-color: transparent;
+    border-radius: 3px;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    width: 75%;
+}
+
+.perspective-titleword:hover {
+    background-color: var(--background-feature);
+}
+
+.perspective-titleword:focus {
+    background-color: var(--background-feature);
 }
 
 .perspective-divider{
@@ -75,7 +94,7 @@ html, body {
     background-color: transparent;
     border-radius: 5px;
     margin-top: 5px;
-    padding: 20px 5px 10px 7px;
+    padding: 10px 5px 5px 7px;
     display: flex;
     align-items: center;
     justify-content: left;
@@ -282,8 +301,8 @@ html, body {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 4px 0 4px 10px;
     background-color: var(--menu-accent-background) !important;
+    padding: 4px 5px 4px 10px;
     color: var(--menu-accent) !important;
 }
 
@@ -295,7 +314,8 @@ html, body {
 }
 
 .menuitem {
-    margin: 2px 5px 5px 15px;
+    margin: 2px 7px 5px 15px;
+    padding: 4px 5px 4px 10px;
     color: var(--menu-text);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
@@ -314,8 +334,8 @@ html, body {
 }
 
 .project {
-    font-size: 13px;
-    padding: 2px 0 2px 10px;
+    font-size: 12px;
+    padding: 2px 4px 2px 10px;
 }
 
 .subproject {
@@ -325,6 +345,7 @@ html, body {
     padding-top: 3px;
     margin: 0;
     height: 30px;
+    text-overflow: ellipsis;
 }
 
 .subproject-icon {

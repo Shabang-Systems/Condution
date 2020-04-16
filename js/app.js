@@ -155,7 +155,7 @@ var showPage = async function(pageId) {
         getProjectsandTags(uid).then(function(pPandT) {
             let pid = active.split("-")[1];
             let projectName = pPandT[0][0][pid];
-            $("#project-title").html(projectName);
+            $("#project-title").val(projectName);
             let possibleProjects = pPandT[0][0];
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
@@ -181,6 +181,7 @@ var showPage = async function(pageId) {
                     }
                 }
                
+
 
                 var projectSort = new Sortable($("#project-content")[0], {
                     animation: 200,
@@ -759,6 +760,14 @@ $(document).on("click", "#new-task", function() {
         });
     });
 });
+
+$(document).on("change", "#project-title", function(e) {
+    let pid = (projDir[projDir.length-1]).split("-")[1]
+    let value = $(this).val();        
+    modifyProject(uid, pid, {name: value});
+    $("#"+active+" t").html(value);
+});
+
 var perspectiveSort = new Sortable($(".perspectives")[0], {
     animation: 200,
     onStart: function(e) {

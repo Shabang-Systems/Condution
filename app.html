@@ -66,10 +66,7 @@
                     </div>
                     <t class="menu-label">Perspectives</t>
                     <div class="perspectives menu-portion">
-                        <div id="perspective-03923" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Progress</t></div>
-                        <div id="perspective-91210" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Executor</t></div>
-                        <div id="perspective-32093" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Aftercare</t></div>
-                        <div id="perspective-80292" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Prep 'n Rev</t></div>
+                        <div id="perspective-03923" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">P. Placeholder</t></div>
                     </div>
                     <t class="menu-label">Projects</t>
                     <div class="projects menu-portion"></div>
@@ -95,11 +92,24 @@
                     <div id="due-soon" class="upcoming-section"> </div>
                 </div>
                 <div id="perspective-page" class="page">
-                    <div id="perspective-80292" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Prep 'n Rev</t></div>
+                    <pre>
+
+ __             _                         
+/   _ __  o __ (_|    _  _  _ __          
+\__(_)||| | | |__|   _> (_)(_)| | o  o  o 
+
+ _______  _____  _______ _____ __   _  ______      _______  _____   _____  __   _   /
+ |       |     | |  |  |   |   | \  | |  ____      |______ |     | |     | | \  |  / 
+ |_____  |_____| |  |  | __|__ |  \_| |_____|      ______| |_____| |_____| |  \_| .  
+
+                     What are you waiting for? Be patient!
+                     For gosh's sake, this is an (early) alpha.
+
+                    </pre>
                 </div>
                  <div id="project-page" class="page">
                     <div class="project-action" id="project-back" style="display: inline-block; float: left; margin-right: 10px"><i class="fas fa-chevron-left"></i></div>
-                    <div class="perspective-title"><i class="fas fa-project-diagram"></i><t id="project-title" class="perspective-titleword"></t>
+                    <div class="perspective-title"><i class="fas fa-project-diagram"></i><input id="project-title" class="perspective-titleword"></input>
                         <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
                         <div class="btn-group btn-group-toggle project-sequential-group" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px">
                             <label class="btn project-sequential active">
@@ -117,6 +127,9 @@
                     </div>
                     <div id="new-task" class="newbutton">
                         <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a task</div>
+                    </div>
+                    <div id="new-project" class="newbutton">
+                        <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
                     </div>
                 </div>
             </div>
