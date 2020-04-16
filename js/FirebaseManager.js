@@ -25,33 +25,33 @@ const util = {
         all: (...requirements) => (doc) => {
             const dat = doc.data();
             for (let [lhs, cmp, rhs] of requirements)
-                if (!util.util.compare(dat[lhs], cmp, rhs))
+                if (!util.select.compare(dat[lhs], cmp, rhs))
                     return false;
             return true;
         },
         any: (...requirements) => (doc) => {
             const dat = doc.data();
             for (let [lhs, cmp, rhs] of requirements)
-                if (util.util.compare(dat[lhs], cmp, rhs))
+                if (util.select.compare(dat[lhs], cmp, rhs))
                     return true;
             return false;
         },
-        atLeast: (...requirements, threshold) => (doc) => {
+        atLeast: (threshold, ...requirements) => (doc) => {
             const dat = doc.data();
             let counter = 0;
             for (let [lhs, cmp, rhs] of requirements)
-                if (util.util.compare(dat[lhs], cmp, rhs)) {
+                if (util.select.compare(dat[lhs], cmp, rhs)) {
                     ++counter;
                     if (counter >= threshold)
                         return true;
                 }
             return false;
         },
-        atMost: (...requirements, threshold) => (doc) => {
+        atMost: (threshold, ...requirements) => (doc) => {
             const dat = doc.data();
             let counter = 0;
             for (let [lhs, cmp, rhs] of requirements)
-                if (util.util.compare(dat[lhs], cmp, rhs)) {
+                if (util.select.compare(dat[lhs], cmp, rhs)) {
                     ++counter;
                     if (counter > threshold)
                         return false;
