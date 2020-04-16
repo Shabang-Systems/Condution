@@ -1,3 +1,7 @@
+/* Themes */
+@import "./themes/condutiontheme-default-light.css";
+@import "./themes/condutiontheme-exr0n-aggresivedark.css";
+
 /* Globals */
 html, body {
     height: 100%;
@@ -7,6 +11,7 @@ html, body {
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
 }
 
+<<<<<<< HEAD
 /* Colours */
 .condutiontheme-default-light {
     /* Background */
@@ -126,6 +131,8 @@ html, body {
     --special: #717cbc;
 }
 
+=======
+>>>>>>> 575d4fc858a522d4eca5ad2700f68ccfa741f16c
 *::-webkit-scrollbar { 
     display: none;  /* Scrollbar Fix, Chrome Runtime */
 }
@@ -817,7 +824,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -832,7 +839,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark-ds);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -847,7 +854,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkbox-od);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -875,7 +882,7 @@ label.od:hover:before {
 }
 
 label:before {
-   transition: all 150ms linear;
+   /*transition: background-color 150ms linear;*/
 }
 
 .bootstrap-tagsinput {
@@ -953,7 +960,7 @@ label:before {
     padding: 0;
     margin: 0;
     position: fixed;
-    z-index: 10000;
+    z-index: 100;
     display: none;
 }
 
@@ -971,6 +978,15 @@ label:before {
 #loading {
     margin-top: 35px;
     padding-left: 5px;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 100000;
 }
 
 #content-wrapper {
@@ -1046,8 +1062,12 @@ label:before {
     overflow: scroll;
 }
 
-.darwin-windowing {
+.darwin-windowing-left {
     padding-top: 40px !important;
+}
+
+.darwin-windowing-right {
+    padding-top: 45px !important;
 }
 
 .win32-windowing {
