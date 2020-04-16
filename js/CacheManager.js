@@ -118,6 +118,6 @@ const cRef = (() => {
         );
     }
 
-    return cacheRef; 
+    return cacheRef;
 })();
 
