@@ -180,29 +180,7 @@ var showPage = async function(pageId) {
                         $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
                     }
                 }
-                let tz = moment.tz.guess();
-                $("#new-task").on("click", function() {
-                    let ntObject = {
-                        desc: "",
-                        isFlagged: false,
-                        isFloating: false,
-                        isComplete: false,
-                        project: pid,
-                        tags: [],
-                        timezone: tz, 
-                        name: "",
-                    };
-                    newTask(uid, ntObject).then(function(ntID) {
-                        associateTask(uid, ntID, pid);
-                        getProjectsandTags(uid).then(function(pPandT){
-                            let possibleProjects = pPandT[0][0];
-                            let possibleTags = pPandT[1][0];
-                            let possibleProjectsRev = pPandT[0][1];
-                            let possibleTagsRev = pPandT[1][1];
-                            displayTask("project-content", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])
-                        });
-                    })
-                });
+               
 
                 var projectSort = new Sortable($("#project-content")[0], {
                     animation: 200,
@@ -748,6 +726,39 @@ $(document).on("click", "#project-back", function() {
     showPage("project-page");
 });
 
+$(document).on("click", "#new-task", function() {
+    let pid = (projDir[projDir.length-1]).split("-")[1]
+    let ntObject = {
+        desc: "",
+        isFlagged: false,
+        isFloating: false,
+        isComplete: false,
+        project: pid,
+        tags: [],
+        timezone: moment.tz.guess(), 
+        name: "",
+    };
+    newTask(uid, ntObject).then(function(ntID) {
+        associateTask(uid, ntID, pid);
+        getProjectsandTags(uid).then(function(pPandT){
+            let possibleProjects = pPandT[0][0];
+            let possibleTags = pPandT[1][0];
+            let possibleProjectsRev = pPandT[0][1];
+            let possibleTagsRev = pPandT[1][1];
+            displayTask("project-content", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then(function() {
+                isTaskActive = true;
+                let task = ntID;
+                activeTask = task;
+                $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-edit-" + activeTask).slideDown(200);
+                $("#task-trash-" + activeTask).css("display", "block");
+                $("#task-repeat-" + activeTask).css("display", "block");
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});  
+                $("#task-name-" + task).focus();
+            });
+        });
+    });
+});
 var perspectiveSort = new Sortable($(".perspectives")[0], {
     animation: 200,
     onStart: function(e) {
