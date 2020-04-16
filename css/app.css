@@ -1,3 +1,7 @@
+/* Themes */
+@import "./themes/condutiontheme-default-light.css";
+@import "./themes/condutiontheme-exr0n-aggresivedark.css";
+
 /* Globals */
 html, body {
     height: 100%;
@@ -5,125 +9,6 @@ html, body {
     font-family: sans-serif;
     overflow: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
-}
-
-/* Colours */
-.condutiontheme-default-light {
-    /* Background */
-    /* These two colors should lightly contrast 
-     * think: a hover over the background should
-     * be colored --background-feature */
-    --background: #f4f4f4;
-    --background-feature: #e5e7ea;
-
-    /* Content */
-    /* These are the main colors. Make them mainly
-     * to be bold and clear. Also make them kind of related 
-     * to one main color */
-    --content-normal: #eaeaea;
-    --content-normal-alt: #434d5f;
-    --content-normal-accent: #1a283d;
-
-    /* Decorative */
-    --decorative-light: #cecece;
-    --decorative-light-alt: #838384;
-    --decorative-light-accent: #374559;
-
-    /* Menu colors */
-    /* These colors should all in different
-     * degrees contrast the --menu-background
-     * think: a selected item over the background */
-    --menu-background: #eaebed;
-    --menu-semiaccent-background: #e5e7ea;
-    --menu-accent-background: #e1e2e5;
-    --menu-text: #414c5e;
-    --menu-accent: #323c4f;
-
-    /* Task colors */
-    --task: #90939a;
-    --task-icon: #777777;
-    --task-feature: #efefef;
-    --task-feature-alt: #dbdbdd;
-    --task-textbox: #434d5f;
-    --task-textbox-background: #e8e8e8;
-    --task-clickbox-background: #e8e8e8;
-    --task-clickbox-accent-background: #d1d1d1;
-    --task-clickbox: #2d2d2d;
-    --task-checkbox: #ccc;
-    --task-checkbox-feature: #e0e0e0;
-    --task-checkbox-ds: #f8974a;
-    --task-checkbox-ds-feature: #f5c09d;
-    --task-checkbox-ds-background: #f4eae4;
-    --task-checkbox-od: #c04f40;
-    --task-checkbox-od-feature: #ed938c;
-    --task-checkbox-od-background: #f7d7d5;
-    --task-checkmark: #2b3749;
-    --task-checkmark-ds: #f4721a;
-    --task-checkmark-od: #d32f19;
-
-    /* Datepicker colors */
-    --task-datepicker-elems: grey;
-    --task-datepicker-elem-feature #f4f4f5;
-    --task-datepicker-elem-feature-alt: #a3a3a3;
-    --task-datepicker-background: #eeeeee;
-    --task-datepicker-selected: #e0e0e0;
-    --task-datepicker-feature: #434d5f;
-    --task-datepicker-action: #656e7a;
-
-    /* Special accent */
-    --special: #dadeae;
-    --quickadd: #c04f40;
-    --quickadd-feature: #bf3b2a;
-    --quickadd-placeholder: #e2c0bc;
-}
-
-.condutiontheme-aggresive-dark {
-    /* Background */
-    /* These two colors should lightly contrast 
-     * think: a hover over the background should
-     * be colored --background-feature */
-    --background: #2f3237;
-    --background-feature: #2c2e34;
-
-    /* Content */
-    /* These are the main colors. Make them mainly
-     * to be bold and clear. Also make them kind of related 
-     * to one main color */
-    --content-normal: #292b2f;
-    --content-normal-alt: #c0cccc;
-    --content-normal-accent: #c0cccc;
-
-    /* Decorative */
-    --decorative-light: #326ccc;
-    --decorative-light-alt: #c0cccc;
-    --decorative-light-accent: #428cec;
-
-    /* Menu colors */
-    /* These colors should all in different
-     * degrees contrast the --menu-background
-     * think: a selected item over the background */
-    --menu-background: #414c5e;
-    --menu-semiaccent-background: #3d4255;
-    --menu-accent-background: #323c4f;
-    --menu-text: #eaebed;
-    --menu-accent: #e1e2e5;
-
-    /* Task colors */
-    --task: #7c7c7c;
-    --task-feature: #4a4a4a;
-    --task-feature-alt: #505050;
-    --task-textbox: #cacaca;
-    --task-textbox-background: #515151;
-    --task-clickbox-background: #414141;
-    --task-clickbox-accent-background: #5e9e6e;
-    --task-clickbox: #3d3d3d;
-
-    /* Datepicker colors */
-    --task-datepicker-elems: grey;
-    --task-datepicker-background: #222222;
-
-    /* Special accent */
-    --special: #717cbc;
 }
 
 *::-webkit-scrollbar { 
@@ -408,6 +293,18 @@ html, body {
     padding: 2px 0 2px 10px;
 }
 
+.subproject {
+    font-size: 16px !important;
+    padding: 4px 3px 5px 5px;
+    margin: 0;
+}
+
+.sbpro:hover {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: var(--task-feature);
+}
 
 .task {
     -webkit-border-radius: 3px;
@@ -461,6 +358,31 @@ html, body {
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
 }
+
+.project-back {
+    font-size: 10px;
+    vertical-align: middle;
+    text-align: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 3px;
+    color: var(--task-icon);
+    cursor: pointer;
+    margin-right: 6px;
+    transform: translateY(1px);
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.project-back:hover {
+    color: var(--decorative-light-alt);
+    background-color: var(--content-normal);
+}
+
 
 .auth-upf {
     font-size: 12pt;
@@ -591,6 +513,41 @@ html, body {
   height: 0;
   pointer-events: none;
   user-select: none;
+}
+
+.project-sequential-group {
+    float: right;
+    transform: translateY(1px);
+}
+
+.project-sequential.active {
+    background-color: var(--special);
+    box-shadow: 0;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    box-shadow: 0 5px 15px rgba(0,0,0,0);
+}
+
+.project-sequential {
+    background-color: var(--task-textbox-background);
+    height: 10px;
+    width: 10%;
+    font-size: 9px;
+    color: var(--content-normal-accent);
+}
+
+.task-flagged.active{
+    background-color: var(--special);
+    box-shadow: 0;
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    box-shadow: 0 5px 15px rgba(0,0,0,0);
+}
+
+.task-flagged {
+    background-color: var(--task-textbox-background);
+    height: 20px;
+    width: 10%;
+    font-size: 9px;
+    color: var(--content-normal-accent);
 }
 
 .task-flagged.active{
@@ -817,7 +774,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -832,7 +789,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark-ds);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -847,7 +804,7 @@ html, body {
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkbox-od);
-  transition: all 100ms;
+  transition: transform 100ms;
   transform: translate(8px, 9.5px) !important;
 }
 
@@ -875,7 +832,7 @@ label.od:hover:before {
 }
 
 label:before {
-   transition: all 150ms linear;
+   /*transition: background-color 150ms linear;*/
 }
 
 .bootstrap-tagsinput {
@@ -953,7 +910,7 @@ label:before {
     padding: 0;
     margin: 0;
     position: fixed;
-    z-index: 10000;
+    z-index: 100;
     display: none;
 }
 
@@ -971,6 +928,15 @@ label:before {
 #loading {
     margin-top: 35px;
     padding-left: 5px;
+    background-color: white;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 100000;
 }
 
 #content-wrapper {
@@ -1046,8 +1012,12 @@ label:before {
     overflow: scroll;
 }
 
-.darwin-windowing {
+.darwin-windowing-left {
     padding-top: 40px !important;
+}
+
+.darwin-windowing-right {
+    padding-top: 45px !important;
 }
 
 .win32-windowing {
