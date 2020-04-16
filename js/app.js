@@ -185,49 +185,52 @@ var showPage = async function(pageId) {
                     onEnd: function(e) {
                         let oi = e.oldIndex;
                         let ni = e.newIndex;
-                        if (oi<ni) {
-                            // Handle task moved down
-                            for(let i=oi+1; i<=ni; i++) {
-                                let child = struct.children[i];
-                                if (child.type === "task") {
-                                    let id = child.content;
-                                    modifyTask(uid, id, {order: i-1});
-                                } else if (child.type === "project") {
-                                    let id = child.content.id;
-                                    modifyProject(uid, id, {order: i-1});
-                                }
-                            }
-                            let moved = struct.children[oi];
-                            if (moved.type === "task") {
-                                let id = moved.content;
-                                modifyTask(uid, id, {order: ni});
-                            } else if (moved.type === "project") {
-                                let id = moved.content.id;
-                                modifyProject(uid, id, {order: ni});
-                            }
-                        } else if (oi>ni) {
-                            // Handle task moved up
-                            for(let i=oi-1; i>=ni; i--) {
-                                let child = struct.children[i];
-                                if (child.type === "task") {
-                                    let id = child.content;
-                                    modifyTask(uid, id, {order: i+1});
-                                } else if (child.type === "project") {
-                                    let id = child.content.id;
-                                    modifyProject(uid, id, {order: i+1});
-                                }
-                            }
-                            let moved = struct.children[oi];
-                            if (moved.type === "task") {
-                                let id = moved.content;
-                                modifyTask(uid, id, {order: ni});
-                            } else if (moved.type === "project") {
-                                let id = moved.content.id;
-                                modifyProject(uid, id, {order: ni});
-                            }
-                            //modifyTask(uid, originalIBT[oi], {order: ni});
-                        }
+                        let pid = active.split("-")[1];
 
+                        getProjectStructure(uid, pid).then(async function(nstruct) {
+                            if (oi<ni) {
+                                // Handle task moved down
+                                for(let i=oi+1; i<=ni; i++) {
+                                    let child = nstruct.children[i];
+                                    if (child.type === "task") {
+                                        let id = child.content;
+                                        modifyTask(uid, id, {order: i-1});
+                                    } else if (child.type === "project") {
+                                        let id = child.content.id;
+                                        modifyProject(uid, id, {order: i-1});
+                                    }
+                                }
+                                let moved = nstruct.children[oi];
+                                if (moved.type === "task") {
+                                    let id = moved.content;
+                                    modifyTask(uid, id, {order: ni});
+                                } else if (moved.type === "project") {
+                                    let id = moved.content.id;
+                                    modifyProject(uid, id, {order: ni});
+                                }
+                            } else if (oi>ni) {
+                                // Handle task moved up
+                                for(let i=oi-1; i>=ni; i--) {
+                                    let child = nstruct.children[i];
+                                    if (child.type === "task") {
+                                        let id = child.content;
+                                        modifyTask(uid, id, {order: i+1});
+                                    } else if (child.type === "project") {
+                                        let id = child.content.id;
+                                        modifyProject(uid, id, {order: i+1});
+                                    }
+                                }
+                                let moved = nstruct.children[oi];
+                                if (moved.type === "task") {
+                                    let id = moved.content;
+                                    modifyTask(uid, id, {order: ni});
+                                } else if (moved.type === "project") {
+                                    let id = moved.content.id;
+                                    modifyProject(uid, id, {order: ni});
+                                }
+                                //modifyTask(uid, originalIBT[oi], {order: ni});
+                            }
+                        });
                     }
                 });
                 $("#"+pageId).show();
