@@ -70,7 +70,7 @@ var greeting = greetings[Math.floor(Math.random() * greetings.length)]
 
 // Chapter 2: Functions to Show and Hide Things!
 var currentPage = "upcoming-page";
-var prevPage;
+var projDir = [];
 console.log("Defining the Dilly-Daller!");
 var showPage = async function(pageId) {
     $("#content-area").children().each(function() {
@@ -160,6 +160,14 @@ var showPage = async function(pageId) {
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
             let possibleTagsRev = pPandT[1][1];
+            console.log(projDir);
+            if (projDir.length <= 1) {
+                $("#project-back").hide()
+            } else {
+                $("#project-back").show()
+
+            }
+
             getProjectStructure(uid, pid).then(async function(struct) {
                 // Traditional for loop here INTENTIONAL
                 // So that the items will load in correct order
@@ -174,7 +182,7 @@ var showPage = async function(pageId) {
                     }
                 }
                 $("#"+pageId).show();
-            })
+            });
         });
     } else {
         console.log(pageId);
@@ -184,7 +192,6 @@ var showPage = async function(pageId) {
         // Sad normal perspective loads
         // TODO: implement query rules for perspectives
     }
-    prevPage = currentPage;
     currentPage = pageId;
 }
 
@@ -605,6 +612,10 @@ $(document).on('click', '.menuitem', function(e) {
         showPage("perspective-page");
         $("#"+active).addClass("menuitem-selected");
     } else if (active.includes("project")) {
+        if (!$(this).hasClass("subproject")) {
+            projDir = [];
+        }
+        projDir.push(active);
         showPage("project-page");
         $("#"+active).addClass("menuitem-selected");
     }
@@ -652,6 +663,15 @@ $(document).on("click", ".page, #left-menu div", function(e) {
 
 $(document).on("click", "#logout", function(e) {
     firebase.auth().signOut().then(() => {}, console.error);
+});
+
+$(document).on("click", "#project-back", function() {
+    // THE POP OPERATION IS NOT DUPLICATED.
+    // On load, the current projDir will
+    // be pushed to the array
+    projDir.pop()
+    active = projDir[projDir.length-1]
+    showPage("project-page");
 });
 
 var perspectiveSort = new Sortable($(".perspectives")[0], {
@@ -775,10 +795,11 @@ var loadProjects = async function() {
 }
 
 // Chapter 5: Keyboard Shortcuts
-Mousetrap.bind(['command+r', 'ctrl+r'], function() {
-    showPage(currentPage);
-    return false;
-});
+/*Mousetrap.bind(['command+r', 'ctrl+r'], function() {*/
+    //showPage(currentPage);
+    //return false;
+    //// TODO: bind command r to not actuall reload on production
+//});
 
 
 // Chapter 6: Mainloop
