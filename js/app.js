@@ -755,15 +755,11 @@ $(document).on("click", "#project-add-toplevel", function() {
         projDir = [active];
         $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
         showPage("project-page").then(function(){
-            console.log("Focusing!")
-            //$("#project-title")[0].focus();
-            //$("#project-title")[0].select();
             // Delay because of HTML bug
             setTimeout(function() {
                 $("#project-title").focus();
                 $("#project-title").select();
-            }, 300);
-            console.log("Done!")
+            }, 100);
         });
         $("#"+active).addClass("menuitem-selected");
     });
@@ -852,7 +848,7 @@ var perspectiveSort = new Sortable($(".perspectives")[0], {
 
 });
 
-var projectSort = new Sortable($(".projects")[0], {
+var topLevelProjectSort = new Sortable($(".projects")[0], {
     animation: 200,
     onStart: function(e) {
         // Make sure that elements don't think that they are being hovered
@@ -864,13 +860,27 @@ var projectSort = new Sortable($(".projects")[0], {
             }
         })
 	},
-    onEnd: function(e) {
-        $('.projects').children().each(function() {
-            // Aaand make elements hoverable after they've been dragged over
-            $(this).addClass("mihov")
-        })
-    }
+     onEnd: function(e) {
+        let oi = e.oldIndex;
+        let ni = e.newIndex;
+        getTopLevelProjects(uid).then(function(topLevelItems) {
+            let originalIBT = topLevelItems[2].map(i => i.id);
+            if (oi<ni) {
+                // Handle task moved down
+                for(let i=oi+1; i<=ni; i++) {
+                    modifyProject(uid, originalIBT[i], {order: i-1});
+                }
+                modifyProject(uid, originalIBT[oi], {order: ni});
+            } else if (oi>ni) {
+                // Handle task moved up
+                for(let i=oi-1; i>=ni; i--) {
+                    modifyProject(uid, originalIBT[i], {order: i+1});
+                }
+                modifyProject(uid, originalIBT[oi], {order: ni});
+            }
 
+        });
+    }
 });
 
 $("#quickadd").click(function(e) {
@@ -949,9 +959,9 @@ $("#quickadd").keydown(function(e) {
 // Chapter 4: Interface Loader Functions
 var loadProjects = async function() {
     let tlps = (await getTopLevelProjects(uid));
-    for (let projID in tlps[0]) {
-        let projName = tlps[0][projID];
-        $(".projects").append(`<div id="project-${projID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${projName}</t></div>`);
+    let pPandT = (await getProjectsandTags(uid));
+    for (let proj of tlps[2]) {
+        $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
     }
 }
 

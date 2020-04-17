@@ -132,6 +132,7 @@ async function getTaskInformation(userID, taskID) {
 async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};
+    let projectsSorted = []; 
 
     let snap = (await cRef('users', userID, "projects")
         .get())
@@ -140,9 +141,16 @@ async function getTopLevelProjects(userID) {
         if (proj.exists && proj.data().top_level === true) {
             projectNameById[proj.id] = proj.data().name;
             projectIdByName[proj.data().name] = proj.id;
+            let projElem = {};
+            projElem.id = proj.id;
+            projElem.name = proj.data().name;
+            projElem.sortOrder = proj.data().order;
+            projectsSorted.push(projElem);
         }
     });
-    return [projectNameById, projectIdByName];
+
+    projectsSorted.sort((a,b) => a.sortOrder-b.sortOrder);
+    return [projectNameById, projectIdByName, projectsSorted];
 }
 
 async function getProjectsandTags(userID) {
@@ -173,14 +181,12 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyProject(userID, projectID, updateQuery) {
-    //console.log(taskID, updateQuery);
     await cRef("users", userID, "projects", projectID)
         .update(updateQuery)
         .catch(console.error);
 }
 
 async function modifyTask(userID, taskID, updateQuery) {
-    //console.log(taskID, updateQuery);
     await cRef("users", userID, "tasks", taskID)
         .update(updateQuery)
         .catch(console.error);
@@ -204,11 +210,20 @@ async function newProject(userID, projObj, parentProj) {
 //, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
     // Set order param. Either return the latest item in index or
     let projL;
+    // Util func to get size of ob
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+
     if (parentProj) {
         projL = (await getProjectStructure(userID, parentProj)).children.length;
         projObj.parent = parentProj;
     } else {
-        projL = 0; 
+        projL = Object.size((await getTopLevelProjects(userID))[0]);
         projObj.parent = "";
     }
     projObj.order = projL;
@@ -257,7 +272,6 @@ async function associateProject(userID, assosProjID, projectID) {
 }
 
 async function dissociateProject(userID, assosProjID, projectID) {
-    console.log(assosProjID, projectID);
     let originalChildren = await cRef("users", userID, "projects").get().then(util.dump)
         .then(snapshot => snapshot.docs.filter(x => x.id === projectID)).then(util.dump).then(t => t[0].data().children);
 
@@ -274,7 +288,6 @@ async function deleteTask(userID, taskID, willDissociateTask = true) {
         await dissociateTask(userID, taskID, taskData.project);
     }
     await cRef("users", userID, "tasks", taskID).delete()
-        .then(() => {console.log("Task successfully deleted!")})
         .catch(console.error);
 }
 
@@ -285,14 +298,12 @@ async function deleteProject(userID, projectID) {
             else modifyTask(userID, i.content, {project:""});
         }
         await cRef("users", userID, "projects", projectID).delete()
-            .then(() => {console.log("Project successfully deleted!")})
             .catch(console.error);
     });
 }
 
 async function deleteTag(userID, tagID) {
     await cRef("users", userID, "tags", tagID).delete()
-        .then(() => {console.log("Tag successfully deleted!")})
         .catch(console.error);
 }
 
