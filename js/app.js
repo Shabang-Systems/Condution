@@ -88,6 +88,8 @@ var showPage = async function(pageId) {
     let possibleTags = pPandT[1][0];
     let possibleProjectsRev = pPandT[0][1];
     let possibleTagsRev = pPandT[1][1];
+    let avalibility = await getItemAvailability(uid);
+
     if (pageId === "upcoming-page") {
         // Special home page loads
         $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
@@ -100,12 +102,12 @@ var showPage = async function(pageId) {
                 elems[0].map(element => displayTask(                    // get displayTask promise form each event
                     "inbox",
                     element,
-                    [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
+                    [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
                 )),
                 elems[1].map(element => displayTask(                    // get displayTask promise form each event
                     "due-soon",
                     element,
-                    [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
+                    [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]
                 )),
             ).then(() => {
                 if (elems[0].length === 0) {
@@ -146,13 +148,16 @@ var showPage = async function(pageId) {
                             }
 
                         });
+                        setTimeout(function() {
+                            if (!isTaskActive) showPage(currentPage)
+                        }, 100);
                     }
                 });
                 $("#"+pageId).show();
             });
         });
     } else if (pageId.includes("project")) {
-        getProjectsandTags(uid).then(function(pPandT) {
+        Promise.all([getProjectsandTags(uid), getItemAvailability(uid)]).then(function([pPandT, avalibility]){
             let pid = active.split("-")[1];
             let projectName = pPandT[0][0][pid];
             $("#project-title").val(projectName);
@@ -167,17 +172,21 @@ var showPage = async function(pageId) {
 
             }
 
+
             getProjectStructure(uid, pid).then(async function(struct) {
                 // Traditional for loop here INTENTIONAL
                 // So that the items will load in correct order
                 for (let item of struct.children) {
                     if (item.type === "task") {
                         let taskId = item.content;
-                        await displayTask("project-content", taskId, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]);
+                        await displayTask("project-content", taskId, [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]);
                     } else if (item.type === "project") {
                         let projID = item.content.id;
                         let projName = possibleProjects[projID];
                         $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
+                        if (!avalibility[projID]) {
+                            $("#project-"+projID).css("opacity", "0.3");
+                        }
                     }
                 }
                
@@ -234,6 +243,9 @@ var showPage = async function(pageId) {
                                 //modifyTask(uid, originalIBT[oi], {order: ni});
                             }
                         });
+                        setTimeout(function() {
+                            if (!isTaskActive) showPage(currentPage)
+                        }, 100);
                     }
                 });
                 $("#"+pageId).show();
@@ -321,7 +333,7 @@ var hideActiveTask = function() {
 var displayTask = async function(pageId, taskId, infoObj) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let taskObj = await getTaskInformation(uid, taskId);
-    let pPandP = infoObj[0];
+    let avalibility = infoObj[0];
     let possibleProjects = infoObj[1];
     let possibleTags = infoObj[2];
     let possibleProjectsRev = infoObj[3];
@@ -544,7 +556,9 @@ var displayTask = async function(pageId, taskId, infoObj) {
             $('#task-name-' + taskId).css("opacity", "0.3");
         }
     }
-       
+    if (!avalibility[taskId]) {
+        $('#task-name-' + taskId).css("opacity", "0.3");
+    }
     // ---------------------------------------------------------------------------------
     // Action Behaviors
     $('#task-check-'+taskId).change(function(e) {
@@ -800,12 +814,12 @@ $(document).on("click", "#new-task", function() {
     };
     newTask(uid, ntObject).then(function(ntID) {
         associateTask(uid, ntID, pid);
-        getProjectsandTags(uid).then(function(pPandT){
+        Promise.all([getProjectsandTags(uid), getItemAvailability(uid)]).then(function([pPandT, avalibility]){
             let possibleProjects = pPandT[0][0];
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
             let possibleTagsRev = pPandT[1][1];
-            displayTask("project-content", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then(function() {
+            displayTask("project-content", ntID, [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then(function() {
                 isTaskActive = true;
                 let task = ntID;
                 activeTask = task;
@@ -879,6 +893,7 @@ var topLevelProjectSort = new Sortable($(".projects")[0], {
                 modifyProject(uid, originalIBT[oi], {order: ni});
             }
 
+
         });
     }
 });
@@ -934,12 +949,12 @@ $("#quickadd").keydown(function(e) {
         }
 
         newTask(uid, ntObject).then(function(ntID) {
-            getProjectsandTags(uid).then(function(pPandT){
+            Promise.all([getProjectsandTags(uid), getItemAvailability(uid)]).then(function([pPandT, avalibility]){
                 let possibleProjects = pPandT[0][0];
                 let possibleTags = pPandT[1][0];
                 let possibleProjectsRev = pPandT[0][1];
                 let possibleTagsRev = pPandT[1][1];
-                displayTask("inbox", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])
+                displayTask("inbox", ntID, [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev])
             });
             getInboxTasks(uid).then(function(e){
                 iC = e.length;

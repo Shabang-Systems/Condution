@@ -329,3 +329,41 @@ async function getProjectStructure(userID, projectID) {
     return { id: projectID, children: children, sortOrder: project.data().order};
 }
 
+async function getItemAvailability(userID) {
+    let tlps = (await getTopLevelProjects(uid))[2];
+    let blockstatus = {}
+    async function recursivelyGetBlocks(userID, projectID) {
+        let bstat = {};
+        let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
+        let projStruct = (await getProjectStructure(userID, projectID));
+        if (project.data().is_sequential) {
+            let child = projStruct.children[0];
+            if (child.type === "project") {
+                await Object.assign(bstat, recursivelyGetBlocks(uid, child.content.id))
+                bstat[child.content.id] = true;
+            } else if (child.type === "task") {
+                bstat[child.content] = true;
+            }
+        } else {
+            let children = projStruct.children;
+            children.forEach(async function(child) {
+                if (child.type === "project") {
+                    await Object.assign(bstat, recursivelyGetBlocks(uid, child.content.id))
+                    bstat[child.content.id] = true;
+                } else if (child.type === "task") {
+                    bstat[child.content] = true;
+                }
+            });
+        }
+        return bstat;
+    };
+    await Promise.all(tlps.map(function(p) {
+        blockstatus[p.id] = true;
+        return recursivelyGetBlocks(uid, p.id);
+    }).map(async function(item) {
+        Object.assign(blockstatus, await item);
+    }));
+    await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
+    return blockstatus;
+}
+
