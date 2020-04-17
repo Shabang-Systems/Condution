@@ -155,7 +155,7 @@ var showPage = async function(pageId) {
         getProjectsandTags(uid).then(function(pPandT) {
             let pid = active.split("-")[1];
             let projectName = pPandT[0][0][pid];
-            $("#project-title").html(projectName);
+            $("#project-title").val(projectName);
             let possibleProjects = pPandT[0][0];
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
@@ -177,9 +177,12 @@ var showPage = async function(pageId) {
                     } else if (item.type === "project") {
                         let projID = item.content.id;
                         let projName = possibleProjects[projID];
-                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="fas fa-project-diagram"></i><t style="padding-left:16px">${projName}</t></div>`);
+                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
                     }
                 }
+               
+
+
                 var projectSort = new Sortable($("#project-content")[0], {
                     animation: 200,
                     onEnd: function(e) {
@@ -724,6 +727,106 @@ $(document).on("click", "#project-back", function() {
     showPage("project-page");
 });
 
+$(document).on("click", "#new-project", function() {
+    let pid = (projDir[projDir.length-1]).split("-")[1];
+    let projObj = {
+        top_level: false,
+        is_sequential: false,
+    }
+    newProject(uid, projObj, pid).then(function(npID) {
+        associateProject(uid, npID, pid);
+        $("#"+active).removeClass('today-highlighted menuitem-selected');
+        active = "project-"+npID;
+        projDir.push(active);
+        showPage("project-page").then(() => $("#project-title").focus());
+        $("#"+active).addClass("menuitem-selected");
+    });
+});
+
+$(document).on("click", "#project-add-toplevel", function() {
+    let projObj = {
+        name: "New Project",
+        top_level: true,
+        is_sequential: false,
+    }
+    newProject(uid, projObj).then(function(npID) {
+        $("#"+active).removeClass('today-highlighted menuitem-selected');
+        active = "project-"+npID;
+        projDir = [active];
+        $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
+        showPage("project-page").then(function(){
+            // Delay because of HTML bug
+            setTimeout(function() {
+                $("#project-title").focus();
+                $("#project-title").select();
+            }, 100);
+        });
+        $("#"+active).addClass("menuitem-selected");
+    });
+});
+
+$(document).on("click", "#project-trash", function() {
+    let pid = (projDir[projDir.length-1]).split("-")[1];
+    let isTopLevel = projDir.length === 1 ? true : false;
+    deleteProject(uid, pid).then(function() {
+        projDir.pop()
+        if (projDir.length > 0) {
+            dissociateProject(uid, pid, (projDir[projDir.length-1]).split("-")[1]).then(function() {
+            active = projDir[projDir.length-1];
+            showPage("project-page");
+            });
+        } else {
+            active = "today";
+            $("#today").addClass("menuitem-selected");
+            showPage("upcoming-page");
+            $("#project-"+pid).remove();
+        }
+
+    });
+});
+
+
+$(document).on("click", "#new-task", function() {
+    let pid = (projDir[projDir.length-1]).split("-")[1]
+    let ntObject = {
+        desc: "",
+        isFlagged: false,
+        isFloating: false,
+        isComplete: false,
+        project: pid,
+        tags: [],
+        timezone: moment.tz.guess(), 
+        name: "",
+    };
+    newTask(uid, ntObject).then(function(ntID) {
+        associateTask(uid, ntID, pid);
+        getProjectsandTags(uid).then(function(pPandT){
+            let possibleProjects = pPandT[0][0];
+            let possibleTags = pPandT[1][0];
+            let possibleProjectsRev = pPandT[0][1];
+            let possibleTagsRev = pPandT[1][1];
+            displayTask("project-content", ntID, [pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then(function() {
+                isTaskActive = true;
+                let task = ntID;
+                activeTask = task;
+                $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-edit-" + activeTask).slideDown(200);
+                $("#task-trash-" + activeTask).css("display", "block");
+                $("#task-repeat-" + activeTask).css("display", "block");
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});  
+                $("#task-name-" + task).focus();
+            });
+        });
+    });
+});
+
+$(document).on("change", "#project-title", function(e) {
+    let pid = (projDir[projDir.length-1]).split("-")[1]
+    let value = $(this).val();        
+    modifyProject(uid, pid, {name: value});
+    $("#"+active+" t").html(value);
+});
+
 var perspectiveSort = new Sortable($(".perspectives")[0], {
     animation: 200,
     onStart: function(e) {
@@ -745,7 +848,7 @@ var perspectiveSort = new Sortable($(".perspectives")[0], {
 
 });
 
-var projectSort = new Sortable($(".projects")[0], {
+var topLevelProjectSort = new Sortable($(".projects")[0], {
     animation: 200,
     onStart: function(e) {
         // Make sure that elements don't think that they are being hovered
@@ -757,13 +860,27 @@ var projectSort = new Sortable($(".projects")[0], {
             }
         })
 	},
-    onEnd: function(e) {
-        $('.projects').children().each(function() {
-            // Aaand make elements hoverable after they've been dragged over
-            $(this).addClass("mihov")
-        })
-    }
+     onEnd: function(e) {
+        let oi = e.oldIndex;
+        let ni = e.newIndex;
+        getTopLevelProjects(uid).then(function(topLevelItems) {
+            let originalIBT = topLevelItems[2].map(i => i.id);
+            if (oi<ni) {
+                // Handle task moved down
+                for(let i=oi+1; i<=ni; i++) {
+                    modifyProject(uid, originalIBT[i], {order: i-1});
+                }
+                modifyProject(uid, originalIBT[oi], {order: ni});
+            } else if (oi>ni) {
+                // Handle task moved up
+                for(let i=oi-1; i>=ni; i--) {
+                    modifyProject(uid, originalIBT[i], {order: i+1});
+                }
+                modifyProject(uid, originalIBT[oi], {order: ni});
+            }
 
+        });
+    }
 });
 
 $("#quickadd").click(function(e) {
@@ -777,13 +894,16 @@ $("#quickadd").blur(function(e) {
 
 $("#quickadd").keydown(function(e) {
     if (e.keyCode == 13) {
+        let tb = $(this);
+        tb.animate({"background-color": getThemeColor("--quickadd-success"), "color": getThemeColor("--content-normal-alt")}, function() {
+            tb.animate({"background-color": getThemeColor("--quickadd"), "color": getThemeColor("--content-normal")})   
+        });
         let newTaskUserRequest = chrono.parse($(this).val());
         // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
         // Make that happen is the todo.
         let startDate;
         let endDate;
         let tz = moment.tz.guess();
-        let tb = $(this)
         let ntObject = {
             desc: "",
             isFlagged: false,
@@ -812,8 +932,7 @@ $("#quickadd").keydown(function(e) {
         } else {
             ntObject.name = tb.val()
         }
-        tb.val("");
-        tb.blur();
+
         newTask(uid, ntObject).then(function(ntID) {
             getProjectsandTags(uid).then(function(pPandT){
                 let possibleProjects = pPandT[0][0];
@@ -828,7 +947,9 @@ $("#quickadd").keydown(function(e) {
                 $("#inbox-subhead").slideDown(300);
                 $("#inbox").slideDown(300);
             });
-        });
+            tb.blur();
+            tb.val("");
+        })
     } else if (e.keyCode == 27) {
         $(this).blur();
     }
@@ -838,9 +959,9 @@ $("#quickadd").keydown(function(e) {
 // Chapter 4: Interface Loader Functions
 var loadProjects = async function() {
     let tlps = (await getTopLevelProjects(uid));
-    for (let projID in tlps[0]) {
-        let projName = tlps[0][projID];
-        $(".projects").append(`<div id="project-${projID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${projName}</t></div>`);
+    let pPandT = (await getProjectsandTags(uid));
+    for (let proj of tlps[2]) {
+        $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
     }
 }
 

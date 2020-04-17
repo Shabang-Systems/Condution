@@ -9,10 +9,11 @@ html, body {
     font-family: sans-serif;
     overflow: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
+    cursor: default !important;
 }
 
 *::-webkit-scrollbar { 
-    display: none;  /* Scrollbar Fix, Chrome Runtime */
+    display: none;  /* Scrollbar Fix, Chrome? and Apple Runtime */
 }
 
 *:focus {
@@ -36,15 +37,35 @@ html, body {
     font-size: 12px;
     padding: 0;
 }
+
 .perspective-titleword{
-    padding-left:8px;
+    margin-left:4px;
+    padding-left:4px;
     font-weight: 600;
+    color: var(--decorative-light-alt);
+    font-size: 12px;
+    border: 0;
+    background-color: transparent;
+    border-radius: 3px;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    width: 75%;
+}
+
+.perspective-titleword:hover {
+    background-color: var(--background-feature);
+}
+
+.perspective-titleword:focus {
+    background-color: var(--background-feature);
 }
 
 .perspective-divider{
     margin: 5px 0 5px 0;    
     border: 0.5px var(--decorative-light) solid !important;
 }
+
 .perspective-subhead{
     color: var(--content-normal-alt);
     font-weight: 500;
@@ -60,14 +81,40 @@ html, body {
     width: auto;
     color: var(--content-normal-alt);
     font-size: 10px;
+    text-align: center;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 0 2px 0 2px;
+    padding: 0 3px 0 2px;
 }
 
 .badge:first-child {
     transform: translateX(-2.5px);
+}
+
+.newbutton {
+    background-color: transparent;
+    border-radius: 5px;
+    margin-top: 5px;
+    padding: 5px 5px 5px 7px;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    height: 30px;
+    position: relative;
+}
+
+.newbutton:hover {
+    background-color: var(--task-feature) !important;
+}
+
+.newtext {
+    font-size: 13px;
+    color: var(--task);
+    transform: translateY(-6px);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #login {
@@ -209,6 +256,7 @@ html, body {
     color: var(--content-normal-accent);
     font-weight: 600;
     padding: 7px 0 0 5px;
+    display: inline-block;
 }
 
 
@@ -257,8 +305,8 @@ html, body {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 4px 0 4px 10px;
     background-color: var(--menu-accent-background) !important;
+    padding: 4px 5px 4px 10px;
     color: var(--menu-accent) !important;
 }
 
@@ -270,7 +318,8 @@ html, body {
 }
 
 .menuitem {
-    margin: 2px 5px 5px 15px;
+    margin: 2px 7px 5px 15px;
+    padding: 4px 5px 4px 10px;
     color: var(--menu-text);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
@@ -289,14 +338,22 @@ html, body {
 }
 
 .project {
-    font-size: 13px;
-    padding: 2px 0 2px 10px;
+    font-size: 12px;
+    padding: 2px 4px 2px 10px;
 }
 
 .subproject {
     font-size: 16px !important;
-    padding: 4px 3px 5px 5px;
+    /*padding: 4px 3px 5px 5px;*/
+    padding-left: 6px;
+    padding-top: 3px;
     margin: 0;
+    height: 30px;
+    text-overflow: ellipsis;
+}
+
+.subproject-icon {
+    color: var(--task-icon);
 }
 
 .sbpro:hover {
@@ -331,13 +388,13 @@ html, body {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 200ms;
-    -webkit-transition-timing-function: ease-in-out;
-    transition-property: all;
-    transition-duration: 200ms;
-    transition-timing-function: ease-in-out;
-    text-overflow: ellipsis;
+/*    -webkit-transition-property: all;*/
+    /*-webkit-transition-duration: 200ms;*/
+    /*-webkit-transition-timing-function: ease-in-out;*/
+    /*transition-property: all;*/
+    /*transition-duration: 200ms;*/
+    /*transition-timing-function: ease-in-out;*/
+    /*text-overflow: ellipsis;*/
 }
 
 .task-subicon {
@@ -359,7 +416,7 @@ html, body {
     transition-timing-function: ease-in-out;
 }
 
-.project-back {
+.project-action {
     font-size: 10px;
     vertical-align: middle;
     text-align: center;
@@ -378,7 +435,7 @@ html, body {
     transition-timing-function: ease-in-out;
 }
 
-.project-back:hover {
+.project-action:hover {
     color: var(--decorative-light-alt);
     background-color: var(--content-normal);
 }
@@ -424,6 +481,10 @@ html, body {
 
 .task-name:focus {
     background-color: var(--content-normal);
+}
+
+.task-display {
+    height: 30px;
 }
 
 #logout {

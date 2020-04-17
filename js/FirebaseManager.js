@@ -105,7 +105,11 @@ async function getDSTasks(userID) {
             //['isComplete', "==", false])
         .get()
         .then(snap => snap.docs
-            .filter(doc => (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && (doc.data().isComplete === false))
+            .filter(doc =>
+                (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && // has a due date and is ds
+                (doc.data().defer ? (doc.data().defer.seconds < ((new Date()).getTime())/1000) : true) && // has a defer and is not defered or has no defer date
+                (doc.data().isComplete === false) // is not completed
+            )
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);
     return dsDocs.map(doc => doc.id);
@@ -128,6 +132,7 @@ async function getTaskInformation(userID, taskID) {
 async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};
+    let projectsSorted = []; 
 
     let snap = (await cRef('users', userID, "projects")
         .get())
@@ -136,9 +141,16 @@ async function getTopLevelProjects(userID) {
         if (proj.exists && proj.data().top_level === true) {
             projectNameById[proj.id] = proj.data().name;
             projectIdByName[proj.data().name] = proj.id;
+            let projElem = {};
+            projElem.id = proj.id;
+            projElem.name = proj.data().name;
+            projElem.sortOrder = proj.data().order;
+            projectsSorted.push(projElem);
         }
     });
-    return [projectNameById, projectIdByName];
+
+    projectsSorted.sort((a,b) => a.sortOrder-b.sortOrder);
+    return [projectNameById, projectIdByName, projectsSorted];
 }
 
 async function getProjectsandTags(userID) {
@@ -169,14 +181,12 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyProject(userID, projectID, updateQuery) {
-    //console.log(taskID, updateQuery);
     await cRef("users", userID, "projects", projectID)
         .update(updateQuery)
         .catch(console.error);
 }
 
 async function modifyTask(userID, taskID, updateQuery) {
-    //console.log(taskID, updateQuery);
     await cRef("users", userID, "tasks", taskID)
         .update(updateQuery)
         .catch(console.error);
@@ -194,6 +204,32 @@ async function newTask(userID, taskObj) {
     }
 
     return (await cRef("users", userID, "tasks").add(taskObj)).id;
+}
+
+async function newProject(userID, projObj, parentProj) {
+//, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
+    // Set order param. Either return the latest item in index or
+    let projL;
+    // Util func to get size of ob
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+
+    if (parentProj) {
+        projL = (await getProjectStructure(userID, parentProj)).children.length;
+        projObj.parent = parentProj;
+    } else {
+        projL = Object.size((await getTopLevelProjects(userID))[0]);
+        projObj.parent = "";
+    }
+    projObj.order = projL;
+    projObj.children = {};
+
+    return (await cRef("users", userID, "projects").add(projObj)).id;
 }
 
 async function newTag(userID, tagName) {
@@ -225,6 +261,25 @@ async function associateTask(userID, taskID, projectID) {
         .update({children: originalChildren});
 }
 
+async function associateProject(userID, assosProjID, projectID) {
+    let originalChildren = await cRef("users", userID, "projects").get()
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0] //.filter(doc => doc.id === taskID)
+        .data().children);
+
+    originalChildren[assosProjID] = "project";
+    await cRef("users", userID, "projects", projectID)
+        .update({children: originalChildren});
+}
+
+async function dissociateProject(userID, assosProjID, projectID) {
+    let originalChildren = await cRef("users", userID, "projects").get().then(util.dump)
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)).then(util.dump).then(t => t[0].data().children);
+
+    delete originalChildren[assosProjID];
+    await cRef("users", userID, "projects", projectID)
+        .update({children: originalChildren});
+}
+
 async function deleteTask(userID, taskID, willDissociateTask = true) {
     let taskData = await cRef("users", userID, "tasks").get()
         .then(snap => snap.docs.filter(doc => doc.id === taskID)[0].data()); // Fetch task data
@@ -233,20 +288,22 @@ async function deleteTask(userID, taskID, willDissociateTask = true) {
         await dissociateTask(userID, taskID, taskData.project);
     }
     await cRef("users", userID, "tasks", taskID).delete()
-        .then(() => {console.log("Task successfully deleted!")})
         .catch(console.error);
 }
 
 async function deleteProject(userID, projectID) {
-    await cRef("users", userID, "projects", projectID).delete()
-        .then(() => {console.log("Project successfully deleted!")})
-        .catch(console.error);
-
+    getProjectStructure(userID, projectID).then(async function(struct) {
+        for (let i of struct.children) {
+            if (i.type === "project") deleteProject(userID, i.content.id)
+            else modifyTask(userID, i.content, {project:""});
+        }
+        await cRef("users", userID, "projects", projectID).delete()
+            .catch(console.error);
+    });
 }
 
 async function deleteTag(userID, tagID) {
     await cRef("users", userID, "tags", tagID).delete()
-        .then(() => {console.log("Tag successfully deleted!")})
         .catch(console.error);
 }
 
