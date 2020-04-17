@@ -99,6 +99,7 @@ async function getInboxTasks(userID) {
 async function getDSTasks(userID) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
+    let available = await getItemAvailability(userID);
     let dsDocs = await cRef("users", userID,
         "tasks")
             //['due', '<=', dsTime],
@@ -108,7 +109,8 @@ async function getDSTasks(userID) {
             .filter(doc =>
                 (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && // has a due date and is ds
                 (doc.data().defer ? (doc.data().defer.seconds < ((new Date()).getTime())/1000) : true) && // has a defer and is not defered or has no defer date
-                (doc.data().isComplete === false) // is not completed
+                (doc.data().isComplete === false) && // is not completed
+                (available[doc.id]) // aaaand is available
             )
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);

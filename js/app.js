@@ -851,14 +851,18 @@ $(document).on("change", "#project-title", function(e) {
 $(document).on("click", "#project-sequential-yes", function(e) {
     let pid = (projDir[projDir.length-1]).split("-")[1]
     modifyProject(uid, pid, {is_sequential: true}).then(function() {
-        if (!isTaskActive) showPage(currentPage);
+        setTimeout(function() {
+            if (!isTaskActive) showPage(currentPage)
+        }, 100);
     });
 });
 
 $(document).on("click", "#project-sequential-no", function(e) {
     let pid = (projDir[projDir.length-1]).split("-")[1]
     modifyProject(uid, pid, {is_sequential: false}).then(function() {
-        if (!isTaskActive) showPage(currentPage);
+        setTimeout(function() {
+            if (!isTaskActive) showPage(currentPage)
+        }, 100);
     });
 });
 
