@@ -29,7 +29,6 @@
     "chrono-node": "^1.4.4",
     "firebase": "^7.13.2",
     "firebaseui": "^4.5.0",
-    "fuse": "^0.4.0",
     "fuse.js": "^5.1.0",
     "jquery": "^3.4.1",
     "jquery-editable-select": "^2.2.5",
