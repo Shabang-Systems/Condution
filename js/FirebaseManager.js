@@ -107,7 +107,7 @@ async function getDSTasks(userID) {
         .then(snap => snap.docs
             .filter(doc =>
                 (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && // has a due date and is ds
-                (doc.data().defer ? (doc.data().defer.seconds > (dsTime.getTime()/1000)) : true) && // has a defer and is not defered or has no defer date
+                (doc.data().defer ? (doc.data().defer.seconds < ((new Date()).getTime())/1000) : true) && // has a defer and is not defered or has no defer date
                 (doc.data().isComplete === false) // is not completed
             )
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
