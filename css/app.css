@@ -65,6 +65,7 @@ html, body {
     margin: 5px 0 5px 0;    
     border: 0.5px var(--decorative-light) solid !important;
 }
+
 .perspective-subhead{
     color: var(--content-normal-alt);
     font-weight: 500;
@@ -94,14 +95,12 @@ html, body {
     background-color: transparent;
     border-radius: 5px;
     margin-top: 5px;
-    padding: 10px 5px 5px 7px;
-    display: flex;
-    align-items: center;
-    justify-content: left;
+    padding: 5px 5px 5px 7px;
     transition-property: all;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
     height: 30px;
+    position: relative;
 }
 
 .newbutton:hover {
@@ -112,6 +111,9 @@ html, body {
     font-size: 13px;
     color: var(--task);
     transform: translateY(-6px);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #login {

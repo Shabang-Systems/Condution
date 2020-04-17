@@ -727,6 +727,22 @@ $(document).on("click", "#project-back", function() {
     showPage("project-page");
 });
 
+$(document).on("click", "#new-project", function() {
+    let pid = (projDir[projDir.length-1]).split("-")[1];
+    let projObj = {
+        top_level: false,
+        is_sequential: false,
+    }
+    newProject(uid, projObj, pid).then(function(npID) {
+        associateProject(uid, npID, pid);
+        $("#"+active).removeClass('today-highlighted menuitem-selected');
+        active = "project-"+npID;
+        projDir.push(active);
+        showPage("project-page").then(() => $("#project-title").focus());
+        $("#"+active).addClass("menuitem-selected");
+    });
+});
+
 $(document).on("click", "#new-task", function() {
     let pid = (projDir[projDir.length-1]).split("-")[1]
     let ntObject = {

@@ -200,6 +200,21 @@ async function newTask(userID, taskObj) {
     return (await cRef("users", userID, "tasks").add(taskObj)).id;
 }
 
+async function newProject(userID, projObj, parentProj) {
+//, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
+    // Set order param. Either return the latest item in index or
+    let projL;
+    if (parentProj) {
+        projL = (await getProjectStructure(userID, parentProj)).children.length;
+    } else {
+        projL = 0; 
+    }
+    projObj.order = projL;
+    projObj.children = {};
+
+    return (await cRef("users", userID, "projects").add(projObj)).id;
+}
+
 async function newTag(userID, tagName) {
     return (await cRef("users", userID, "tags").add({name: tagName})).id;
 }
@@ -225,6 +240,16 @@ async function associateTask(userID, taskID, projectID) {
         .data().children);
 
     originalChildren[taskID] = "task";
+    await cRef("users", userID, "projects", projectID)
+        .update({children: originalChildren});
+}
+
+async function associateProject(userID, assosProjID, projectID) {
+    let originalChildren = await cRef("users", userID, "projects").get()
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0] //.filter(doc => doc.id === taskID)
+        .data().children);
+
+    originalChildren[assosProjID] = "project";
     await cRef("users", userID, "projects", projectID)
         .update({children: originalChildren});
 }
