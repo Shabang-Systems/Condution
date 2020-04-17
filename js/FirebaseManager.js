@@ -326,7 +326,7 @@ async function getProjectStructure(userID, projectID) {
         }
     }
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
-    return { id: projectID, children: children, sortOrder: project.data().order};
+    return { id: projectID, children: children, is_sequential: project.data().is_sequential, sortOrder: project.data().order};
 }
 
 async function getItemAvailability(userID) {

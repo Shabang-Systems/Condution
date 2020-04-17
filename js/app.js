@@ -190,8 +190,6 @@ var showPage = async function(pageId) {
                     }
                 }
                
-
-
                 var projectSort = new Sortable($("#project-content")[0], {
                     animation: 200,
                     onEnd: function(e) {
@@ -248,6 +246,15 @@ var showPage = async function(pageId) {
                         }, 100);
                     }
                 });
+
+                if (struct.is_sequential) {
+                    $("#project-sequential-yes").button("toggle")
+                } else {
+                    $("#project-sequential-no").button("toggle")
+                }
+
+
+
                 $("#"+pageId).show();
             });
         });
@@ -330,7 +337,7 @@ var hideActiveTask = function() {
     }, 500);
 }
 
-var displayTask = async function(pageId, taskId, infoObj) {
+var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
     // At this point, we shall pretend that we are querying the task from HuxZah's code
     let taskObj = await getTaskInformation(uid, taskId);
     let avalibility = infoObj[0];
@@ -556,7 +563,7 @@ var displayTask = async function(pageId, taskId, infoObj) {
             $('#task-name-' + taskId).css("opacity", "0.3");
         }
     }
-    if (!avalibility[taskId]) {
+    if (!avalibility[taskId] && !sequentialOverride) {
         $('#task-name-' + taskId).css("opacity", "0.3");
     }
     // ---------------------------------------------------------------------------------
@@ -752,7 +759,7 @@ $(document).on("click", "#new-project", function() {
         $("#"+active).removeClass('today-highlighted menuitem-selected');
         active = "project-"+npID;
         projDir.push(active);
-        showPage("project-page").then(() => $("#project-title").focus());
+        showPage("project-page").then(() => setTimeout(function() {$("#project-title").focus(); $("#project-title").select()}, 100));
         $("#"+active).addClass("menuitem-selected");
     });
 });
@@ -819,7 +826,7 @@ $(document).on("click", "#new-task", function() {
             let possibleTags = pPandT[1][0];
             let possibleProjectsRev = pPandT[0][1];
             let possibleTagsRev = pPandT[1][1];
-            displayTask("project-content", ntID, [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev]).then(function() {
+            displayTask("project-content", ntID, [avalibility, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev], true).then(function() {
                 isTaskActive = true;
                 let task = ntID;
                 activeTask = task;
@@ -839,6 +846,20 @@ $(document).on("change", "#project-title", function(e) {
     let value = $(this).val();        
     modifyProject(uid, pid, {name: value});
     $("#"+active+" t").html(value);
+});
+
+$(document).on("click", "#project-sequential-yes", function(e) {
+    let pid = (projDir[projDir.length-1]).split("-")[1]
+    modifyProject(uid, pid, {is_sequential: true}).then(function() {
+        if (!isTaskActive) showPage(currentPage);
+    });
+});
+
+$(document).on("click", "#project-sequential-no", function(e) {
+    let pid = (projDir[projDir.length-1]).split("-")[1]
+    modifyProject(uid, pid, {is_sequential: false}).then(function() {
+        if (!isTaskActive) showPage(currentPage);
+    });
 });
 
 var perspectiveSort = new Sortable($(".perspectives")[0], {
