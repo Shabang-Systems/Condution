@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Condution Desktop Client</title>
+
+        <!--Fonts and Icons-->
+        <!--<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">-->
+        <script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+        <!--Other People Codes-->
+        <script>window.$ = window.jQuery = require('jquery');</script>
+        <script>var chrono = require('chrono-node');</script>
+        <script type='text/javascript' src="js/jquery-ui.min.js"></script>
+        <script>var firebase = require("firebase/app");</script>
+        <script>require('popper.js');</script>
+        <script>var moment = require('moment-timezone');</script>
+        <script>require('bootstrap');</script>
+        <script>require('fuse.js');</script>
+        <script>require('typeahead.js');</script>
+        <script>require('mousetrap');</script>
+        <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script type='text/javascript' src="js/jquery-ui-timepicker-addon.js"></script>
+        <script>require('jquery-editable-select');</script>
+        <script>require('bootstrap-tagsinput');</script>
+        <link href="https://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+        <!--Our Codes-->
+        <link rel="stylesheet" type="text/css" href="css/app.css" />
+        <script type='text/javascript' src="js/FirebaseManager.js"></script>
+        <script type='text/javascript' src="js/CacheManager.js"></script>
+
+        <!--Electron Crap-->
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval';" />
+
+        <!--Unicode-->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+
+    <body>
+        <div class="main-head" id="main-head-win32">
+            <div id="window-actions">
+                <!--<i class="far fa-window-minimize window-action"></i>-->
+                <!--<i class="far fa-square window-action"></i>-->
+                <!--<i class="fas fa-times window-action"></i>-->
+                <!--Unfortunately it seems google's material icons are better for windowning-->
+                <!--<i id="window-minimize" class="material-icons window-action">minimize</i>
+                <i id="window-maximize" class="material-icons window-action">crop_square</i>
+                <i id="window-close" class="material-icons window-action">clear</i>-->
+            </div>
+        </div>
+        <div class="main-head" id="main-head-darwin">
+        </div>
+        <div id="loading">
+            A Very Much Centered App loading screen...
+        </div>
+        <div id="content-wrapper" style="display:none">
+            <div id="left-menu">
+                <div id="menu-area">
+                    <div>
+                        <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
+                    </div>
+                    <t class="menu-label">Perspectives</t>
+                    <div class="perspectives menu-portion">
+                        <div id="perspective-03923" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">Perspective</t></div>
+                    </div>
+                    <t class="menu-label">
+                        Projects <div class="task-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                    </t>
+                    <div class="projects menu-portion"></div>
+                    <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
+                </div>
+            </div>
+            <input id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
+            <div id="content-area">
+                <div id="upcoming-page" class="page">
+                    <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Upcoming</t></div>
+                    <div style="padding: 0 0 7px 0">
+                        <hr class="perspective-divider"/>
+                        <div id="upcoming-header"><t id="greeting"></t><t id="greeting-name"></t>&middot;<t id="greeting-date"></t></div>
+                        <hr class="perspective-divider"/>
+                    </div>
+                    <div id="inbox-subhead" class="perspective-subhead">
+                        Unsorted <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)"></div>
+                    </div>
+                    <div id="inbox" class="upcoming-section"> </div>
+                    <div id="ds-subhead" class="perspective-subhead">
+                        Due Soon <div id="duesoon-badge" class="badge" style="transform: translate(3px, -2px)"></div>
+                    </div>
+                    <div id="due-soon" class="upcoming-section"> </div>
+                </div>
+                <div id="perspective-page" class="page">
+                    <pre>
+
+ __             _                         
+/   _ __  o __ (_|    _  _  _ __          
+\__(_)||| | | |__|   _> (_)(_)| | o  o  o 
+
+ _______  _____  _______ _____ __   _  ______      _______  _____   _____  __   _   /
+ |       |     | |  |  |   |   | \  | |  ____      |______ |     | |     | | \  |  / 
+ |_____  |_____| |  |  | __|__ |  \_| |_____|      ______| |_____| |_____| |  \_| .  
+
+                     What are you waiting for? Be patient!
+                     For gosh's sake, this is an (early) alpha.
+
+                    </pre>
+                </div>
+                 <div id="project-page" class="page">
+                    <div class="project-action" id="project-back" style="display: inline-block; float: left; margin-right: 10px"><i class="fas fa-chevron-left"></i></div>
+                    <div class="perspective-title"><i class="fas fa-project-diagram"></i><input id="project-title" class="perspective-titleword" type="text"></input>
+                        <div class="task-subicon" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                        <div class="btn-group btn-group-toggle project-sequential-group" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px">
+                            <label class="btn project-sequential active">
+                                <input type="radio" name="task-flagged" class="task-flagged-no" id="task-flagged-no-${taskId}" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
+                            </label>
+                            <label class="btn project-sequential">
+                                <input type="radio" name="task-flagged" class="task-flagged-yes" id="task-flagged-yes-${taskId}"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="padding: 0 0 7px 0">
+                        <hr class="perspective-divider"/>
+                    </div>
+                    <div id="project-content">
+                    </div>
+                    <div id="new-task" class="newbutton">
+                        <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a task</div>
+                    </div>
+                    <div id="new-project" class="newbutton" style="transform: translateY(-8px)">
+                        <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript' type="module" src="js/app.js"></script>
+  </body>
+</html>
+ 
