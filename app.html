@@ -113,12 +113,12 @@
                     <div class="project-action" id="project-back" style="display: inline-block; float: left; margin-right: 10px"><i class="fas fa-chevron-left"></i></div>
                     <div class="perspective-title"><i class="fas fa-project-diagram"></i><input id="project-title" class="perspective-titleword" type="text"></input>
                         <div class="task-subicon" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
-                        <div class="btn-group btn-group-toggle project-sequential-group" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px">
-                            <label class="btn project-sequential active">
-                                <input type="radio" name="task-flagged" class="task-flagged-no" id="task-flagged-no-${taskId}" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
+                        <div class="btn-group btn-group-toggle project-sequential-group" id="project-sequential" data-toggle="buttons" style="margin-right: 20px">
+                            <label class="btn project-sequential active" id="project-sequential-no">
+                                <input type="radio" name="task-sequential" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
                             </label>
-                            <label class="btn project-sequential">
-                                <input type="radio" name="task-flagged" class="task-flagged-yes" id="task-flagged-yes-${taskId}"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
+                            <label class="btn project-sequential" id="project-sequential-yes">
+                                <input type="radio" name="task-sequential"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
                             </label>
                         </div>
                     </div>
