@@ -362,7 +362,7 @@ async function getItemAvailability(userID) {
         let blocks = await recursivelyGetBlocks(uid, p.id);
         Object.assign(blockstatus, blocks);
     }));
-    //await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
+    await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
 
     return blockstatus;
 }
