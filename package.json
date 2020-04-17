@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions",
     "start": "electron ."
   },
   "repository": {
@@ -29,7 +30,6 @@
     "chrono-node": "^1.4.4",
     "firebase": "^7.13.2",
     "firebaseui": "^4.5.0",
-    "fuse": "^0.4.0",
     "fuse.js": "^5.1.0",
     "jquery": "^3.4.1",
     "jquery-editable-select": "^2.2.5",
@@ -39,9 +39,15 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "mousetrap": "^1.6.5",
+    "npm-force-resolutions": "0.0.3",
     "popper.js": "^1.16.1",
     "select2": "^4.0.13",
     "sortablejs": "^1.10.2",
     "typeahead.js": "^0.11.1"
+  },
+  "resolutions": {
+    "minimist": ">=0.2.1",
+    "minimatch": ">=3.0.2",
+    "cli": ">=1.0.0"
   }
 }
