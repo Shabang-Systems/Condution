@@ -81,10 +81,11 @@ html, body {
     width: auto;
     color: var(--content-normal-alt);
     font-size: 10px;
+    text-align: center;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    padding: 0 2px 0 2px;
+    padding: 0 3px 0 2px;
 }
 
 .badge:first-child {
@@ -255,6 +256,7 @@ html, body {
     color: var(--content-normal-accent);
     font-weight: 600;
     padding: 7px 0 0 5px;
+    display: inline-block;
 }
 
 

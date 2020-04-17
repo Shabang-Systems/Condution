@@ -743,6 +743,32 @@ $(document).on("click", "#new-project", function() {
     });
 });
 
+$(document).on("click", "#project-add-toplevel", function() {
+    let projObj = {
+        name: "New Project",
+        top_level: true,
+        is_sequential: false,
+    }
+    newProject(uid, projObj).then(function(npID) {
+        $("#"+active).removeClass('today-highlighted menuitem-selected');
+        active = "project-"+npID;
+        projDir = [active];
+        $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
+        showPage("project-page").then(function(){
+            console.log("Focusing!")
+            //$("#project-title")[0].focus();
+            //$("#project-title")[0].select();
+            // Delay because of HTML bug
+            setTimeout(function() {
+                $("#project-title").focus();
+                $("#project-title").select();
+            }, 300);
+            console.log("Done!")
+        });
+        $("#"+active).addClass("menuitem-selected");
+    });
+});
+
 $(document).on("click", "#project-trash", function() {
     let pid = (projDir[projDir.length-1]).split("-")[1];
     let isTopLevel = projDir.length === 1 ? true : false;
@@ -755,11 +781,14 @@ $(document).on("click", "#project-trash", function() {
             });
         } else {
             active = "today";
+            $("#today").addClass("menuitem-selected");
             showPage("upcoming-page");
+            $("#project-"+pid).remove();
         }
 
     });
 });
+
 
 $(document).on("click", "#new-task", function() {
     let pid = (projDir[projDir.length-1]).split("-")[1]
@@ -924,11 +953,6 @@ var loadProjects = async function() {
         let projName = tlps[0][projID];
         $(".projects").append(`<div id="project-${projID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${projName}</t></div>`);
     }
-    $(".projects").on("dragenter", function(e) {
-        console.log(e)
-        console.log($(this))
-        console.log(this)
-    });
 }
 
 // Chapter 5: Keyboard Shortcuts
