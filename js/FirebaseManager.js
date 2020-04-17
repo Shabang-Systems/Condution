@@ -206,8 +206,10 @@ async function newProject(userID, projObj, parentProj) {
     let projL;
     if (parentProj) {
         projL = (await getProjectStructure(userID, parentProj)).children.length;
+        projObj.parent = parentProj;
     } else {
         projL = 0; 
+        projObj.parent = "";
     }
     projObj.order = projL;
     projObj.children = {};
@@ -254,6 +256,16 @@ async function associateProject(userID, assosProjID, projectID) {
         .update({children: originalChildren});
 }
 
+async function dissociateProject(userID, assosProjID, projectID) {
+    console.log(assosProjID, projectID);
+    let originalChildren = await cRef("users", userID, "projects").get().then(util.dump)
+        .then(snapshot => snapshot.docs.filter(x => x.id === projectID)).then(util.dump).then(t => t[0].data().children);
+
+    delete originalChildren[assosProjID];
+    await cRef("users", userID, "projects", projectID)
+        .update({children: originalChildren});
+}
+
 async function deleteTask(userID, taskID, willDissociateTask = true) {
     let taskData = await cRef("users", userID, "tasks").get()
         .then(snap => snap.docs.filter(doc => doc.id === taskID)[0].data()); // Fetch task data
@@ -267,10 +279,15 @@ async function deleteTask(userID, taskID, willDissociateTask = true) {
 }
 
 async function deleteProject(userID, projectID) {
-    await cRef("users", userID, "projects", projectID).delete()
-        .then(() => {console.log("Project successfully deleted!")})
-        .catch(console.error);
-
+    getProjectStructure(userID, projectID).then(async function(struct) {
+        for (let i of struct.children) {
+            if (i.type === "project") deleteProject(userID, i.content.id)
+            else modifyTask(userID, i.content, {project:""});
+        }
+        await cRef("users", userID, "projects", projectID).delete()
+            .then(() => {console.log("Project successfully deleted!")})
+            .catch(console.error);
+    });
 }
 
 async function deleteTag(userID, tagID) {

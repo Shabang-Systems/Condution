@@ -743,6 +743,24 @@ $(document).on("click", "#new-project", function() {
     });
 });
 
+$(document).on("click", "#project-trash", function() {
+    let pid = (projDir[projDir.length-1]).split("-")[1];
+    let isTopLevel = projDir.length === 1 ? true : false;
+    deleteProject(uid, pid).then(function() {
+        projDir.pop()
+        if (projDir.length > 0) {
+            dissociateProject(uid, pid, (projDir[projDir.length-1]).split("-")[1]).then(function() {
+            active = projDir[projDir.length-1];
+            showPage("project-page");
+            });
+        } else {
+            active = "today";
+            showPage("upcoming-page");
+        }
+
+    });
+});
+
 $(document).on("click", "#new-task", function() {
     let pid = (projDir[projDir.length-1]).split("-")[1]
     let ntObject = {
