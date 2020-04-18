@@ -679,6 +679,8 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
 var showRepeat;
 (function() {
 
+    let tid;
+
     // Setup repeat things!
     $("#repeat-back").on("click", function(e) {
         $(".repeat-subunit").slideUp();
@@ -702,12 +704,14 @@ var showRepeat;
         $(".repeat-subunit").slideUp();
         $("#repeat-toggle-group").slideDown();
         $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+        modifyTask(uid, tid, {repeat: {rule: "none"}});
     });
 
     $("#repeat-perday").on("click", function(e) {
         $("#repeat-toggle-group").slideUp();
         $("#repeat-type").html("every day.");
         $("#repeat-type").fadeIn();
+        modifyTask(uid, tid, {repeat: {rule: "daily"}});
     });
 
     $("#repeat-perweek").on("click", function(e) {
@@ -728,6 +732,7 @@ var showRepeat;
         $("#repeat-toggle-group").slideUp();
         $("#repeat-type").html("every year.");
         $("#repeat-type").fadeIn();
+        modifyTask(uid, tid, {repeat: {rule: "yearly"}});
     });
 
     // Actions
@@ -736,9 +741,11 @@ var showRepeat;
         if (repeatWeekDays.includes($(this).html())) {
             $(this).animate({"background-color": getThemeColor("--background-feature")});
             repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
         } else {
             $(this).animate({"background-color": getThemeColor("--decorative-light")});
             repeatWeekDays.push($(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
         }
     });
 
@@ -747,9 +754,11 @@ var showRepeat;
         if (repeatMonthDays.includes($(this).html())) {
             $(this).animate({"background-color": getThemeColor("--background")});
             repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
         } else {
             $(this).animate({"background-color": getThemeColor("--background-feature")});
             repeatMonthDays.push($(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
         }
     });
 
@@ -758,6 +767,7 @@ var showRepeat;
         $("#repeat-unit").fadeIn(200);
         let ti = await getTaskInformation(uid, taskId);
         $("#repeat-task-name").html(ti.name);
+        tid = taskId;
     }
     
 }());
