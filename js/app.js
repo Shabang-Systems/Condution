@@ -104,6 +104,13 @@ var ui = function() {
         inboxandDS = await getInboxandDS(uid);
     }
 
+    // the outside world's refresh function
+    let reloadPage = async function() {
+        setTimeout(function() {
+            if (!activeTask) (loadView(pageIndex.currentView));
+        }, 100);
+    }
+
     // repeat view
     var showRepeat = function() {
 
@@ -190,7 +197,7 @@ var ui = function() {
             }
         });
 
-        showRepeat = async function(taskId) {
+        let cr = async function(taskId) {
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
             let ti = await getTaskInformation(uid, taskId);
@@ -232,7 +239,7 @@ var ui = function() {
             }
         }
         
-        return showRepeat;
+        return cr;
     }();
 
         // the pubilc refresh function
@@ -302,7 +309,7 @@ var ui = function() {
          /*   setTimeout(function() {*/
                 //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
-            // TODO: refresh page!!
+            reloadPage();
         }
 
 
@@ -611,7 +618,7 @@ var ui = function() {
                             
                         } 
                     }
-                    // TODO: refresh page!!!
+                    reloadPage();
                 }
             });
 
@@ -754,7 +761,7 @@ var ui = function() {
                     }
 
                 });
-                // TODO: refresh page!!
+                reloadPage();
             }
         });
 
@@ -812,7 +819,7 @@ var ui = function() {
                         }
                     }
                 });
-                // TODO: refresh page!!
+                reloadPage();
             }
         });
 
@@ -1157,14 +1164,14 @@ var ui = function() {
     $(document).on("click", "#project-sequential-yes", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
         modifyProject(uid, pid, {is_sequential: true}).then(function() {
-            // TODO: REFRESH!
+            reloadPage();
         });
     });
 
     $(document).on("click", "#project-sequential-no", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
         modifyProject(uid, pid, {is_sequential: false}).then(function() {
-            // TODO: REFRESH!
+            reloadPage();
         });
     });
 
@@ -1185,8 +1192,8 @@ var ui = function() {
     $("#quickadd").keydown(function(e) {
         if (e.keyCode == 13) {
             let tb = $(this);
-            tb.animate({"background-color": getThemeColor("--quickadd-success"), "color": getThemeColor("--content-normal-alt")}, function() {
-                tb.animate({"background-color": getThemeColor("--quickadd"), "color": getThemeColor("--content-normal")})   
+            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, function() {
+                tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})   
             });
             let newTaskUserRequest = chrono.parse($(this).val());
             // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
@@ -1224,7 +1231,7 @@ var ui = function() {
             }
 
             newTask(uid, ntObject).then(function(ntID) {
-                refresh.then(function(){
+                refresh().then(function(){
                     taskManager.generateTaskInterface("inbox", ntID)
                 });
                 getInboxTasks(uid).then(function(e){
@@ -1262,7 +1269,7 @@ var ui = function() {
         user = usr;
     }
 
-    return {user:{set: setUser, get: ()=>user}, load: loadView, constructSidebar: constructSidebar};
+    return {user:{set: setUser, get: ()=>user}, load: loadView, refresh: reloadPage, constructSidebar: constructSidebar};
 }();
 
 
