@@ -88,11 +88,11 @@ const cRef = (() => {
          */
         const TODOstring = JSON.stringify(path);        //  strigify to hash array
         if (!cache.has(TODOstring)) {                   //  if path string isn't cached
-            // TODO: comment this out someday
+            // TODO: comment this out someday \/
             console.log("Firebase was hit with tremendus shouts by query", TODOstring);
             const ref = getFirebaseRef(path);           //  get the reference from the database
-            cache.set(TODOstring, (await ref.get()));   //  save result in cache
-            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this, someday
+            cache.set(TODOstring, ref.get());           //  save result in cache
+            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
                 ref.onSnapshot({
                     error: console.trace,
                     next: (snap) => {
@@ -101,7 +101,7 @@ const cRef = (() => {
                 })
             );
         }
-        return cache.get(TODOstring);
+        return await cache.get(TODOstring);
     }
 
     function cacheRef(...path) {
