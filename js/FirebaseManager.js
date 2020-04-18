@@ -333,7 +333,7 @@ async function getProjectStructure(userID, projectID) {
 
 async function getItemAvailability(userID) {
     let tlps = (await getTopLevelProjects(userID))[2];
-    let blockstatus = {}
+    let blockstatus = {};
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
         let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
@@ -341,7 +341,7 @@ async function getItemAvailability(userID) {
         if (project.data().is_sequential) {
             let child = projStruct.children[0];
             if (child.type === "project") {
-                Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)))
+                Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)));
                 bstat[child.content.id] = true;
             } else if (child.type === "task") {
                 bstat[child.content] = true;
@@ -350,7 +350,7 @@ async function getItemAvailability(userID) {
             let children = projStruct.children;
             await Promise.all(children.map(async function(child) {
                 if (child.type === "project") {
-                    Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)))
+                    Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)));
                     bstat[child.content.id] = true;
                 } else if (child.type === "task") {
                     bstat[child.content] = true;
