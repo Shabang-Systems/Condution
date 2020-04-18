@@ -28,6 +28,8 @@ if (process.platform === "win32") {
 var interfaceUtil = function() {
     let Sortable = require('sortablejs')
 
+    let interfaceUtil.gtc = (colorName) => $("."+currentTheme).css(colorName);
+
     let substringMatcher = function(strings) {
         return function findMatches(q, cb) {
             let matches, substrRegex;
@@ -70,7 +72,7 @@ var interfaceUtil = function() {
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     }
 
-    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML}
+    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
 }();
 
 var ui = function() {
@@ -176,7 +178,7 @@ var ui = function() {
                 due_current = due;
             }
             // The color of the carrot
-            let rightCarrotColor = getThemeColor("--decorative-light");
+            let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
             // ---------------------------------------------------------------------------------
             // Part 2: the task!
             $("#" + pageId).append(interfaceUtil.taskHTML(taskId, nam, desc, projectSelects, rightCarrotColor));
@@ -271,11 +273,157 @@ var ui = function() {
                     $('#task-name-' + taskId).css("opacity", "0.3");
                 }
             }
+            // Set avaliable Style
             if (!avalibility[taskId] && !sequentialOverride) {
                 $('#task-name-' + taskId).css("opacity", "0.3");
             }
+            // Set flagged style
+            if (isFlagged) {
+                $("#task-flagged-yes-"+taskId).button("toggle")
+            } else {
+                $("#task-flagged-no-"+taskId).button("toggle")
+            }
+            // Set floating style
+            if (isFloating) {
+                $("#task-floating-yes-"+taskId).button("toggle")
+            } else {
+                $("#task-floating-no-"+taskId).button("toggle")
+            }
             // ---------------------------------------------------------------------------------
-            
+            $('#task-check-'+taskId).change(function(e) {
+                if (this.checked) {
+                    $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
+                    $('#task-name-' + taskId).css("text-decoration", "line-through");
+                    $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
+                    $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
+                    $('#task-' + taskId).slideUp(300);
+                    completeTask(uid, taskId).then(function(e) {
+                        if (project === undefined) {
+                             getInboxTasks(uid).then(function(e){
+                                iC = e.length;
+                                if (iC === 0) {
+                                    $("#inbox-subhead").slideUp(300);
+                                    $("#inbox").slideUp(300);
+                                } else {
+                                    $("#unsorted-badge").html(''+iC);
+                                }
+                            });           
+                        }
+                    });
+                    if (repeat.rule !== "none" && due) {
+                        let rRule = repeat.rule;
+                        if (rRule === "daily") {
+                            if (defer) {
+                                let defDistance = due-defer;
+                                due.setDate(due.getDate() + 1);
+                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                            } else {
+                                due.setDate(due.getDate() + 1);
+                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                            }
+                            
+                        } else if (rRule === "weekly") {
+                            if (defer) {
+                                let rOn = repeat.on;
+                                let current = "";
+                                let defDistance = due-defer;
+                                while (!rOn.includes(current)) {
+                                    due.setDate(due.getDate() + 1);
+                                    let dow = due.getDay();
+                                    switch (dow) {
+                                        case 1:
+                                            current = "M";
+                                            break;
+                                        case 2:
+                                            current = "Tu";
+                                            break;
+                                        case 3:
+                                            current = "W";
+                                            break;
+                                        case 4:
+                                            current = "Th";
+                                            break;
+                                        case 5:
+                                            current = "F";
+                                            break;
+                                        case 6:
+                                            current = "Sa";
+                                            break;
+                                        case 7:
+                                            current = "Su";
+                                            break;
+                                    }
+                                }
+                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                            } else {
+                                let rOn = repeat.on;
+                                let current = "";
+                                while (!rOn.includes(current)) {
+                                    due.setDate(due.getDate() + 1);
+                                    let dow = due.getDay();
+                                    switch (dow) {
+                                        case 1:
+                                            current = "M";
+                                            break;
+                                        case 2:
+                                            current = "Tu";
+                                            break;
+                                        case 3:
+                                            current = "W";
+                                            break;
+                                        case 4:
+                                            current = "Th";
+                                            break;
+                                        case 5:
+                                            current = "F";
+                                            break;
+                                        case 6:
+                                            current = "Sa";
+                                            break;
+                                        case 7:
+                                            current = "Su";
+                                            break;
+                                    }
+                                }
+                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                            }
+                        } else if (rRule === "monthly") {
+                            if (defer) {
+                                let rOn = repeat.on;
+                                let dow = due.getDate();
+                                let defDistance = due-defer;
+                                while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 30 || dow == 30))) {
+                                    due.setDate(due.getDate() + 1);
+                                    dow = due.getDate();
+                                }
+                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                            } else {
+                                let rOn = repeat.on;
+                                let dow = due.getDate();
+                                while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 31 || dow == 30))) {
+                                    due.setDate(due.getDate() + 1);
+                                    dow = due.getDate();
+                                }
+                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                            }
+                        } else if (rRule === "yearly") {
+                            if (defer) {
+                                let defDistance = due-defer;
+                                due.setFullYear(due.getFullYear() + 1);
+                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                            } else {
+                                due.setFullYear(due.getFullYear() + 1);
+                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                            }
+                            
+                        } 
+                    }
+                    setTimeout(function() {
+                        if (!isTaskActive) showPage(currentPage)
+                    }, 100);
+                }
+            });
+
             
             // TODO!!!!!! Set floating and flagged appearance
             
