@@ -334,6 +334,8 @@ async function getProjectStructure(userID, projectID) {
 async function getItemAvailability(userID) {
     let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {};
+    console.log("Get ready for getItemAvailability!!!!")
+    let timea = new Date();
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
         let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];

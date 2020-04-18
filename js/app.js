@@ -1137,6 +1137,7 @@ var ui = function() {
             project: pid,
             tags: [],
             timezone: moment.tz.guess(),
+            repeat: {rule: "none"},
             name: "",
         };
         newTask(uid, ntObject).then(function(ntID) {
@@ -1209,6 +1210,7 @@ var ui = function() {
                 project: "",
                 tags: [],
                 timezone: tz,
+                repeat: {rule: "none"},
             };
             if (newTaskUserRequest.length != 0) {
                 let start = newTaskUserRequest[0].start;
