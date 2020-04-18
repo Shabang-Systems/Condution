@@ -238,16 +238,16 @@ var ui = function() {
     }();
 
         // the pubilc refresh function
-    
+
+    let activeTask = null; // TODO: shouldn't this be undefined?
+    let activeTaskDeInboxed = false;
+    let activeTaskDeDsed = false;
+    let activeTaskInboxed = false;
+
+
     // task methods!
     let taskManager = async function() {
         //displayTask("inbox", task)
-
-        //var isTaskActive = false;
-        let activeTask = null; // TODO: shouldn't this be undefined?
-        let activeTaskDeInboxed = false;
-        let activeTaskDeDsed = false;
-        let activeTaskInboxed = false;
 
         let hideActiveTask = async function() {
             await refresh();
@@ -1035,6 +1035,60 @@ var ui = function() {
             });
             $("#"+activeMenu).addClass("menuitem-selected");
         });
+    });
+
+    $(document).on("click", "#project-trash", function() {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+        let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
+        deleteProject(uid, pid).then(function() {
+            pageIndex.projectDir.pop()
+            if (pageIndex.projectDir.length > 0) {
+                dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
+                activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
+                showPage("project-page", (pageIndex.projectDir.length-1).split("-")[1]);
+                });
+            } else {
+                activeMenu = "today";
+                $("#today").addClass("menuitem-selected");
+                showPage("upcoming-page");
+                $("#project-"+pid).remove();
+            }
+
+        });
+    });
+
+    $(document).on("click", "#new-task", function() {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+        let ntObject = {
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: pid,
+            tags: [],
+            timezone: moment.tz.guess(), 
+            name: "",
+        };
+        newTask(uid, ntObject).then(function(ntID) {
+            associateTask(uid, ntID, pid);
+            taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
+                let task = ntID;
+                activeTask = task;
+                $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-edit-" + activeTask).slideDown(200);
+                $("#task-trash-" + activeTask).css("display", "block");
+                $("#task-repeat-" + activeTask).css("display", "block");
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});  
+                $("#task-name-" + task).focus();
+            });
+        });
+    });
+
+    $(document).on("change", "#project-title", function(e) {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+        let value = $(this).val();        
+        modifyProject(uid, pid, {name: value});
+        $("#"+activeMenu+" t").html(value);
     });
 
     $(document).on("click", "#logout", function(e) {
