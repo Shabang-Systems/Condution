@@ -880,6 +880,40 @@ var showRepeat;
         let ti = await getTaskInformation(uid, taskId);
         $("#repeat-task-name").html(ti.name);
         tid = taskId;
+        if (ti.repeat.rule !== "none") {
+            if (ti.repeat.rule === "daily") {
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every day.");
+                $("#repeat-type").show();
+            } else if (ti.repeat.rule === "weekly") {
+                $("#repeat-daterow").children().each(function(e) {
+                    if (ti.repeat.on.includes($(this).html)) {
+                        $(this).animate({"background-color": getThemeColor("--decorative-light")});
+                        repeatMonthDays.push($(this).html());
+                    }
+                });
+                let repeatWeekDays = ti.repeat.on;
+                $("#repeat-weekly-unit").show();
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every week.");
+                $("#repeat-type").show();
+            } else if (ti.repeat.rule === "monthly") {
+                $("#repeat-monthgrid").children().each(function(e) {
+                    if (ti.repeat.on.includes($(this).html)) {
+                        $(this).animate({"background-color": getThemeColor("--background-feature")});
+                    }
+                });
+                let repeatMonthDays = ti.repeat.on;
+                $("#repeat-monthly-unit").show();
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every month.");
+                $("#repeat-type").show();
+            } else if (ti.repeat.rule === "yearly") {
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every year.");
+                $("#repeat-type").show();
+            }
+        }
     }
     
 }());
