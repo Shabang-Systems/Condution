@@ -25,7 +25,6 @@ if (process.platform === "win32") {
 }
 
 // Chapter 1: Utilities!
-//import Sortable from 'sortablejs';
 var interfaceUtil = function() {
     let Sortable = require('sortablejs')
 
@@ -66,7 +65,12 @@ var interfaceUtil = function() {
 
     let getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
-    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween}
+    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
+        return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px"> <label class="btn task-flagged"> <input type="radio" name="task-flagged" class="task-flagged-no" id="task-flagged-no-${taskId}"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged"> <input type="radio" name="task-flagged" class="task-flagged-yes" id="task-flagged-yes-${taskId}"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px"> <label class="btn task-floating"> <input type="radio" name="task-floating" id="task-floating-no-${taskId}"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating"> <input type="radio" name="task-floating" id="task-floating-yes-${taskId}"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
+<input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
+    }
+
+    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML}
 }();
 
 var ui = function() {
@@ -100,6 +104,185 @@ var ui = function() {
 
     // the pubilc refresh function
     
+    // task methods!
+    let taskManager = async function() {
+        //displayTask("inbox", task)
+
+        //var isTaskActive = false;
+        var activeTask = null; // TODO: shouldn't this be undefined?
+        var activeTaskDeInboxed = false;
+        var activeTaskDeDsed = false;
+        var activeTaskInboxed = false;
+
+        let displayTask = async function(pageId, taskId, sequentialOverride) {
+            // Part 0: data gathering!
+            // Get the task
+            let taskObj = await getTaskInformation(uid, taskId);
+
+            // Get info about the task
+            let projectID = taskObj.project;
+            let tagIDs = taskObj.tags;
+            let isFlagged = taskObj.isFlagged;
+            let isFloating = taskObj.isFloating;
+            var name = taskObj.name;
+            var desc = taskObj.desc;
+            let timezone = taskObj.timezone;
+            let defer;
+            let due;
+            if (taskObj.defer) {
+                defer = new Date(taskObj.defer.seconds*1000);
+            } 
+            if (taskObj.due) {
+                due = new Date(taskObj.due.seconds*1000);
+            }
+            // ---------------------------------------------------------------------------------
+            // Part 1: data parsing!
+            // The Project
+            let project = possibleProjects[projectID];
+            // Project select options
+            let projectSelects = " ";
+            for (let i in possibleProjects) {
+                projectSelects = projectSelects + "<option>" + possibleProjects[i] + "</option> ";
+            }
+            // Tag select options
+            let possibleTagNames = function() {
+                let res = [];
+                for (let key in possibleTags) {
+                    res.push(possibleTags[key]);
+                }
+                return res;
+            }();
+            // Actual tag string
+            let tagString = "";
+            for (let i in tagIDs) {
+                tagString = tagString + possibleTags[tagIDs[i]] + ",";
+            }
+            // Calculate due date
+            let defer_current;
+            let due_current;
+            if(isFloating) {
+                if (defer) {
+                    defer_current = moment(defer).tz(timezone).local(true).toDate();
+                } else {
+                    defer_current = undefined;
+                }
+                if (due) {
+                    due_current = moment(due).tz(timezone).local(true).toDate();
+                } else {
+                    due_current = undefined;
+                }
+            } else {
+                defer_current = defer;
+                due_current = due;
+            }
+            // The color of the carrot
+            let rightCarrotColor = getThemeColor("--decorative-light");
+            // ---------------------------------------------------------------------------------
+            // Part 2: the task!
+            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, nam, desc, projectSelects, rightCarrotColor));
+            // ---------------------------------------------------------------------------------
+            // Part 3: customize the task!
+            // Set the dates, aaaand set the date change trigger
+            $("#task-defer-" + taskId).datetimepicker({
+                timeInput: true,
+                timeFormat: "hh:mm tt",
+                showHour: false,
+                showMinute: false,
+                onSelect: function(e) {
+                    let defer_set = $(this).datetimepicker('getDate');
+                    let tz = moment.tz.guess();
+                    if (new Date() < defer_set) {
+                        $('#task-name-' + taskId).css("opacity", "0.3");
+                    } else {
+                        $('#task-name-' + taskId).css("opacity", "1");
+                    }
+                    modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+                    defer = defer_set;
+                }
+            });
+            $("#task-due-" + taskId).datetimepicker({
+                timeInput: true,
+                timeFormat: "hh:mm tt",
+                showHour: false,
+                showMinute: false,
+                onSelect: function(e) {
+                    let due_set = $(this).datetimepicker('getDate');
+                    let tz = moment.tz.guess();
+                    if (new Date() > due_set) {
+                        $('#task-pseudocheck-' + taskId).addClass("od");
+                        $('#task-pseudocheck-' + taskId).removeClass("ds");
+                    } else if (numDaysBetween(new Date(), due_set) <= 1) {
+                        $('#task-pseudocheck-' + taskId).addClass("ds");
+                        $('#task-pseudocheck-' + taskId).removeClass("od");
+                    } else {
+                        if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                            activeTaskDeDsed = true;
+                        }
+                        $('#task-pseudocheck-' + taskId).removeClass("od");
+                        $('#task-pseudocheck-' + taskId).removeClass("ds");
+                    }
+                    modifyTask(uid, taskId, {due:due_set, timezone:tz});
+                    due = due_set;
+                }
+            });
+            // So apparently setting dates is hard for this guy, so we run this async
+            let setDates = async () => {
+                $("#task-defer-" + taskId).datetimepicker('setDate', (defer_current));
+                $("#task-due-" + taskId).datetimepicker('setDate', (due_current));
+            };
+            setDates();
+            // Set tags!
+            $('#task-tag-' + taskId).val(tagString);
+            $('#task-tag-' + taskId).tagsinput({
+                typeaheadjs: {
+                    name: 'tags',
+                    source: interfaceUtil.sMatch(possibleTagNames)
+                }
+            });
+            // Set project!
+            $('#task-project-' + taskId).editableSelect({
+                effects: 'fade',
+                duration: 200,
+                appendTo: 'body',
+            }).on('select.editable-select', function (e, li) {
+                let projectSelected = li.text();
+                let projId = possibleProjectsRev[projectSelected];
+                if (project === undefined) {
+                    activeTaskDeInboxed = true;
+                } else {
+                    dissociateTask(uid, taskId, projectID);
+                }
+                modifyTask(uid, taskId, {project:projId});
+                projectID = projId;
+                project = this.value;
+                associateTask(uid, taskId, projId);
+            });
+            $('#task-project-' + taskId).val(project);
+            // Set overdue style!
+            if (due_current) {
+                if (new Date() > due_current) {
+                    $('#task-pseudocheck-' + taskId).addClass("od");
+                } else if (numDaysBetween(new Date(), due_current) <= 1) {
+                    $('#task-pseudocheck-' + taskId).addClass("ds");
+                } 
+            }
+            if (defer_current) {
+                if (new Date() < defer_current) {
+                    $('#task-name-' + taskId).css("opacity", "0.3");
+                }
+            }
+            if (!avalibility[taskId] && !sequentialOverride) {
+                $('#task-name-' + taskId).css("opacity", "0.3");
+            }
+            // ---------------------------------------------------------------------------------
+            
+            
+            // TODO!!!!!! Set floating and flagged appearance
+            
+        }
+
+        return {generateTaskInterface: displayTask};
+    }();
 
     // sorters
     let sorters = function() {
@@ -109,7 +292,7 @@ var ui = function() {
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
-                __refresh().then(function() {
+                refresh().then(function() {
                     if (oi<ni) {
                         // handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
