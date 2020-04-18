@@ -80,8 +80,15 @@ var ui = function() {
     let inboxandDS;
     let avalibility;
 
+    // current location
+    let pageIndex = {
+        currentView: "upcoming-page",
+        projectDir: [],
+        projectID: undefined
+    }
+
     // refresh data 
-    let __refresh = async function(){
+    let refresh = async function(){
         pPandT = await getProjectsandTags(uid);
         possibleProjects = pPandT[0][0];
         possibleTags = pPandT[1][0];
@@ -104,7 +111,7 @@ var ui = function() {
                 let ni = e.newIndex;
                 __refresh().then(function() {
                     if (oi<ni) {
-                        // Handle task moved down
+                        // handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
                             // move each task down in order
                             modifyTask(uid, inboxandDS[0][i], {order: i-1});
@@ -112,7 +119,7 @@ var ui = function() {
                         // change the order of the moved task
                         modifyTask(uid, inboxandDS[0][oi], {order: ni});
                     } else if (oi>ni) {
-                        // Handle task moved up
+                        // handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
                             // move each task up in order
                             modifyTask(uid, inboxandDS[0][i], {order: i+1});
@@ -123,16 +130,74 @@ var ui = function() {
 
                 });
                 // TODO: refresh page!!
-/*                setTimeout(function() {*/
-                    //if (!isTaskActive) showPage(currentPage)
-                /*}, 100);*/
             }
         });
-        return {inbox: inboxSort};
+        // project sorter
+        var projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
+            animation: 200,
+            onEnd: function(e) {
+                let oi = e.oldIndex;
+                let ni = e.newIndex;
+
+                getProjectStructure(uid, pid).then(async function(nstruct) {
+                    if (oi<ni) {
+                        // handle item moved down
+                        for(let i=oi+1; i<=ni; i++) {
+                            let child = nstruct.children[i];
+                            // move the item down
+                            if (child.type === "task") {
+                                let id = child.content;
+                                modifyTask(uid, id, {order: i-1});
+                            } else if (child.type === "project") {
+                                let id = child.content.id;
+                                modifyProject(uid, id, {order: i-1});
+                            }
+                        }
+                        // change the order of the moved item
+                        let moved = nstruct.children[oi];
+                        if (moved.type === "task") {
+                            let id = moved.content;
+                            modifyTask(uid, id, {order: ni});
+                        } else if (moved.type === "project") {
+                            let id = moved.content.id;
+                            modifyProject(uid, id, {order: ni});
+                        }
+                    } else if (oi>ni) {
+                        // handle item moved up
+                        for(let i=oi-1; i>=ni; i--) {
+                            let child = nstruct.children[i];
+                            // move the item up
+                            if (child.type === "task") {
+                                let id = child.content;
+                                modifyTask(uid, id, {order: i+1});
+                            } else if (child.type === "project") {
+                                let id = child.content.id;
+                                modifyProject(uid, id, {order: i+1});
+                            }
+                        }
+                        // change the order of the moved item
+                        let moved = nstruct.children[oi];
+                        if (moved.type === "task") {
+                            let id = moved.content;
+                            modifyTask(uid, id, {order: ni});
+                        } else if (moved.type === "project") {
+                            let id = moved.content.id;
+                            modifyProject(uid, id, {order: ni});
+                        }
+                    }
+                });
+                // TODO: refresh page!!
+            }
+        });
+
+        return {inbox: inboxSort, project: projectSort};
     }();
     
     // various sub-page loaders
-    let __viewLoader = function() {
+    let viewLoader = function() {
+        // this private function populates the view requested
+        
+        // upcoming view loader
         let upcoming = async function() {
             Promise.all(
                 // load inbox tasks
@@ -159,10 +224,57 @@ var ui = function() {
                 }
             });
         }
-        return {upcoming: upcoming};
+
+        // project view loader
+        let project = async function(pid) {
+            // update pid
+            pageIndex.projectID = pid;
+            // get the datum
+            let projectName = pPandT[0][0][pid];
+            // update the titlefield
+            $("#project-title").val(projectName);
+            if (projDir.length <= 1) {
+                $("#project-back").hide()
+            } else {
+                $("#project-back").show()
+            }
+            // get the project structure, and load the content
+            getProjectStructure(uid, pid).then(async function(struct) {
+                for (let item of struct.children) {
+                    if (item.type === "task") {
+                        // get and load the task
+                        let taskId = item.content;
+                        await displayTask("project-content", taskId);
+                    } else if (item.type === "project") {
+                        // get and load a project
+                        let projID = item.content.id;
+                        let projName = possibleProjects[projID];
+                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
+                        if (!avalibility[projID]) {
+                            $("#project-"+projID).css("opacity", "0.3");
+                        }
+                    }
+                }
+                if (struct.is_sequential) {
+                    $("#project-sequential-yes").button("toggle")
+                } else {
+                    $("#project-sequential-no").button("toggle")
+                }
+            });
+        }
+
+        return {upcoming: upcoming, project: project};
     }();
 
-    let loadView = async function(viewName) {
+    /**
+     * async function load
+     * load a view!
+     *
+     * @param viewName: well, which view?
+     * @param itemID: if project/perspective, supply str ID
+     * @returns {undefined}
+     */
+    let loadView = async function(viewName, itemID) {
         // hide other views
         $("#content-area").children().each(function() {
             if ($(this).attr("id") != pageId){
@@ -176,9 +288,23 @@ var ui = function() {
         $("#project-content").empty();
 
         // refresh data
-        await __refresh();
+        await refresh();
 
-        // load each view
+        // load the dang view
+        switch(viewName) {
+            case 'upcoming-page':
+                await viewLoader.upcoming();
+                break;
+            case 'upcoming-page':
+                await viewLoader.project(itemID);
+                break;
+        }
+        
+        // bring it!
+        $("#"+pageId).show();
+
+        // tell everyone to bring it!
+        pageIndex.currentView = viewName;
     }
 
     return {load: loadView};
