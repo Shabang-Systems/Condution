@@ -65,8 +65,6 @@ var interfaceUtil = function() {
     };
 
 
-    let getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
-
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
         return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px"> <label class="btn task-flagged"> <input type="radio" name="task-flagged" class="task-flagged-no" id="task-flagged-no-${taskId}"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged"> <input type="radio" name="task-flagged" class="task-flagged-yes" id="task-flagged-yes-${taskId}"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px"> <label class="btn task-floating"> <input type="radio" name="task-floating" id="task-floating-no-${taskId}"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating"> <input type="radio" name="task-floating" id="task-floating-yes-${taskId}"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
@@ -246,7 +244,7 @@ var ui = function() {
 
 
     // task methods!
-    let taskManager = async function() {
+    let taskManager = function() {
         //displayTask("inbox", task)
 
         let hideActiveTask = async function() {
@@ -255,7 +253,7 @@ var ui = function() {
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
-            $("#task-"+activeTask).animate({"background-color": getThemeColor("--background"), "padding": "0", "margin":"0"}, 200);
+            $("#task-"+activeTask).animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 200);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
             if (activeTaskDeInboxed) {
                 let hTask = activeTask;
@@ -373,7 +371,7 @@ var ui = function() {
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
             // ---------------------------------------------------------------------------------
             // Part 2: the task!
-            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, nam, desc, projectSelects, rightCarrotColor));
+            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor));
             // ---------------------------------------------------------------------------------
             // Part 3: customize the task!
             // Set the dates, aaaand set the date change trigger
@@ -456,7 +454,7 @@ var ui = function() {
             if (due_current) {
                 if (new Date() > due_current) {
                     $('#task-pseudocheck-' + taskId).addClass("od");
-                } else if (numDaysBetween(new Date(), due_current) <= 1) {
+                } else if (interfaceUtil.daysBetween(new Date(), due_current) <= 1) {
                     $('#task-pseudocheck-' + taskId).addClass("ds");
                 } 
             }
@@ -886,6 +884,10 @@ var ui = function() {
         
         // upcoming view loader
         let upcoming = async function() {
+            $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
+            $("#greeting").html(greeting);
+            $("#greeting-name").html(displayName);
+
             Promise.all(
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
@@ -964,7 +966,7 @@ var ui = function() {
     let loadView = async function(viewName, itemID) {
         // hide other views
         $("#content-area").children().each(function() {
-            if ($(this).attr("id") != pageId){
+            if ($(this).attr("id") != viewName){
                 $(this).css("display", "none");
             }
         });
@@ -982,13 +984,13 @@ var ui = function() {
             case 'upcoming-page':
                 await viewLoader.upcoming();
                 break;
-            case 'upcoming-page':
+            case 'project-page':
                 await viewLoader.project(itemID);
                 break;
         }
         
         // bring it!
-        $("#"+pageId).show();
+        $("#"+viewName).show();
 
         // tell everyone to bring it!
         pageIndex.currentView = viewName;
@@ -1018,12 +1020,12 @@ var ui = function() {
         $("#"+activeMenu).addClass("today-highlighted");
     });
 
-    $(document).on("click", ".task", function(e) {
+    $(document).on("click", ".task", async function(e) {
         if ($(this).attr('id') === "task-" + activeTask) {
             e.stopImmediatePropagation();
             return;
         }
-        if (activeTask) hideActiveTask();
+        if (activeTask) await taskManager.hideActiveTask();
         if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
             e.stopImmediatePropagation();
             return;
@@ -1031,11 +1033,11 @@ var ui = function() {
             let taskInfo = $(this).attr("id").split("-");
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
-            $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+            $("#task-" + task).animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#task-edit-" + activeTask).slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
-            $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});
+            $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
         }
     });
 
@@ -1046,7 +1048,7 @@ var ui = function() {
             } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name') || $(e.target).hasClass('task-display')) {
                 return false;
             }
-            hideActiveTask();
+            taskManager.hideActiveTask();
         }
     });
 
@@ -1152,14 +1154,14 @@ var ui = function() {
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
-        let pid = (projDir[projDir.length-1]).split("-")[1]
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
         modifyProject(uid, pid, {is_sequential: true}).then(function() {
             // TODO: REFRESH!
         });
     });
 
     $(document).on("click", "#project-sequential-no", function(e) {
-        let pid = (projDir[projDir.length-1]).split("-")[1]
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
         modifyProject(uid, pid, {is_sequential: false}).then(function() {
             // TODO: REFRESH!
         });
@@ -1238,6 +1240,12 @@ var ui = function() {
         }
     });
 
+    let user;
+    let uid;
+    let displayName;
+    // TODO: actually set theme
+    let currentTheme = "condutiontheme-default-light";
+
     let constructSidebar = async function() {
         let tlps = (await getTopLevelProjects(uid));
         let pPandT = (await getProjectsandTags(uid));
@@ -1246,35 +1254,35 @@ var ui = function() {
         }
     } 
 
-    // Theming and uid
-    let uid;
-    let displayName;
-    let currentTheme;
+    let setUser = function(usr) {
+        user = usr;
+        uid = usr.uid;
+        displayName = usr.displayName;
+        user = usr;
+    }
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    return {user:{set: setUser, get: ()=>user}, load: loadView, constructSidebar: constructSidebar};
+}();
+
+
+$(document).ready(async function() {
+    firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             if (user.emailVerified) {
                 // User is signed in. Do user related things.
-                displayName = user.displayName;
-                uid = user.uid;
-                // TODO: actually get the user's prefrences
                 currentTheme = "condutiontheme-default-light";
                 $("body").addClass(currentTheme);
+                ui.user.set(user);
+                await ui.constructSidebar();
+                await ui.load("upcoming-page");
+                $("#loading").fadeOut();
+                $("#content-wrapper").fadeIn();
+
             }
         } else {
             window.location.replace("auth.html");
         }
     });
-
-    return {load: loadView, constructSidebar: constructSidebar};
-}();
-
-
-$(document).ready(async function() {
-    await ui.constructSidebar();
-    await ui.load("upcoming-page");
-    $("#loading").hide();
-    $("#content-wrapper").fadeIn();
 });
 
 

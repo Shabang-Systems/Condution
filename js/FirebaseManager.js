@@ -332,7 +332,7 @@ async function getProjectStructure(userID, projectID) {
 }
 
 async function getItemAvailability(userID) {
-    let tlps = (await getTopLevelProjects(uid))[2];
+    let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {}
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
@@ -350,7 +350,7 @@ async function getItemAvailability(userID) {
             let children = projStruct.children;
             await Promise.all(children.map(async function(child) {
                 if (child.type === "project") {
-                    Object.assign(bstat, (await recursivelyGetBlocks(uid, child.content.id)))
+                    Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)))
                     bstat[child.content.id] = true;
                 } else if (child.type === "task") {
                     bstat[child.content] = true;
@@ -361,7 +361,7 @@ async function getItemAvailability(userID) {
     };
     await Promise.all(tlps.map(async function(p) {
         blockstatus[p.id] = true;
-        let blocks = await recursivelyGetBlocks(uid, p.id);
+        let blocks = await recursivelyGetBlocks(userID, p.id);
         Object.assign(blockstatus, blocks);
     }));
     await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
