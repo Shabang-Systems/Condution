@@ -28,7 +28,7 @@ if (process.platform === "win32") {
 var interfaceUtil = function() {
     let Sortable = require('sortablejs')
 
-    let interfaceUtil.gtc = (colorName) => $("."+currentTheme).css(colorName);
+    let getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
     let substringMatcher = function(strings) {
         return function findMatches(q, cb) {
@@ -111,10 +111,69 @@ var ui = function() {
         //displayTask("inbox", task)
 
         //var isTaskActive = false;
-        var activeTask = null; // TODO: shouldn't this be undefined?
-        var activeTaskDeInboxed = false;
-        var activeTaskDeDsed = false;
-        var activeTaskInboxed = false;
+        let activeTask = null; // TODO: shouldn't this be undefined?
+        let activeTaskDeInboxed = false;
+        let activeTaskDeDsed = false;
+        let activeTaskInboxed = false;
+
+        let hideActiveTask = async function() {
+            await refresh();
+            $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+            $("#task-edit-"+activeTask).slideUp(300);
+            $("#task-trash-"+activeTask).css("display", "none");
+            $("#task-repeat-"+activeTask).css("display", "none");
+            $("#task-"+activeTask).animate({"background-color": getThemeColor("--background"), "padding": "0", "margin":"0"}, 200);
+            $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
+            if (activeTaskDeInboxed) {
+                let hTask = activeTask;
+                iC = inboxandDS[0].length;
+                if (iC === 0) {
+                    $("#inbox-subhead").slideUp(300);
+                    $("#inbox").slideUp(300);
+                } else {
+                    $("#unsorted-badge").html(''+iC);
+                    if (active==="today") {
+                        $('#task-'+hTask).slideUp(200);
+                    }
+                }
+            } else if (activeTaskDeDsed) {
+                let hTask = activeTask;
+                dsC = inboxandDS[1].length;
+                if (dsC === 0) {
+                    $("#ds-subhead").slideUp(300);
+                    $("#due-soon").slideUp(300);
+                } else {
+                    $("#duesoon-badge").html(''+dsC);
+                    if (active==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
+                        $('#task-'+hTask).slideUp(200);
+                    }
+                }
+            }
+
+            if (activeTaskInboxed) {
+                let hTask = activeTask;
+                iC = inboxandDS[0].length;
+                dsC = inboxandDS[1].length;
+                $("#unsorted-badge").html(''+iC);
+                $("#duesoon-badge").html(''+dsC);
+                if (active==="today") {
+                    $('#task-'+hTask).appendTo("#inbox");
+                }
+            }
+
+            activeTaskDeInboxed = false;
+            activeTaskDeDsed = false;
+            activeTaskInboxed = false;
+            activeTask = null;
+
+            // that actually waits for the finishing of all animations...
+            // JANKY!
+         /*   setTimeout(function() {*/
+                //if (!isTaskActive) showPage(currentPage)
+            /*}, 500);*/
+            // TODO: refresh page!!
+        }
+
 
         let displayTask = async function(pageId, taskId, sequentialOverride) {
             // Part 0: data gathering!
@@ -126,8 +185,8 @@ var ui = function() {
             let tagIDs = taskObj.tags;
             let isFlagged = taskObj.isFlagged;
             let isFloating = taskObj.isFloating;
-            var name = taskObj.name;
-            var desc = taskObj.desc;
+            let name = taskObj.name;
+            let desc = taskObj.desc;
             let timezone = taskObj.timezone;
             let defer;
             let due;
@@ -531,7 +590,7 @@ var ui = function() {
 
         }
 
-        return {generateTaskInterface: displayTask};
+        return {generateTaskInterface: displayTask, hideActiveTask: hideActiveTask};
     }();
 
     // sorters
