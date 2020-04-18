@@ -1278,7 +1278,7 @@ $(document).ready(async function() {
                 const startTime = Date.now();
                 console.log(`${(Date.now()-startTime) / 1000}: Email verified, preparing ui`);
                 // User is signed in. Do user related things.
-                currentTheme = "condutiontheme-exr0n-agressivedark";
+                currentTheme = "condutiontheme-default-light";
                 $("body").addClass(currentTheme);
                 ui.user.set(user);
                 console.log(`t+${(Date.now()-startTime) / 1000}: User set`);
