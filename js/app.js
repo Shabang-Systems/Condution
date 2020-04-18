@@ -290,6 +290,8 @@ var ui = function() {
                 $("#task-floating-no-"+taskId).button("toggle")
             }
             // ---------------------------------------------------------------------------------
+            // Part 4: task action behaviors!
+            // Task complete
             $('#task-check-'+taskId).change(function(e) {
                 if (this.checked) {
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
@@ -418,15 +420,115 @@ var ui = function() {
                             
                         } 
                     }
-                    setTimeout(function() {
-                        if (!isTaskActive) showPage(currentPage)
-                    }, 100);
+                    // TODO: refresh page!!!
                 }
             });
 
+            // Task project change
+             $('#task-project-' + taskId).change(function(e) {
+                if (this.value in possibleProjectsRev) {
+                    let projId = possibleProjectsRev[this.value];
+                    if (project === undefined){
+                        activeTaskDeInboxed = true;
+                    } else {
+                        dissociateTask(uid, taskId, projectID);
+                    }
+                    modifyTask(uid, taskId, {project:projId});
+                    projectID = projId;
+                    project = this.value;
+                    associateTask(uid, taskId, projId);
+                } else {
+                    modifyTask(uid, taskId, {project:""});
+                    this.value = ""
+                    if (project !== undefined) {
+                        activeTaskInboxed = true;
+                        dissociateTask(uid, taskId, projectID);
+                    }
+                    project = undefined;
+                    projectID = "";
+                }
+            });
             
-            // TODO!!!!!! Set floating and flagged appearance
-            
+            // Trashing a task
+            $("#task-trash-" + taskId).click(function(e) {
+                if (project === undefined) activeTaskDeInboxed = true;
+                deleteTask(uid, taskId).then(function() {
+                    hideActiveTask();
+                    $('#task-' + taskId).slideUp(150);
+                });
+            });
+
+            // Repeat popover
+            $("#task-repeat-" + taskId).click(function(e) {
+                showRepeat(taskId);
+            });
+
+            // Task name change
+            $("#task-name-" + taskId).change(function(e) {
+                modifyTask(uid, taskId, {name:this.value});
+            });
+
+            // Task discription change
+            $("#task-desc-" + taskId).change(function(e) {
+                modifyTask(uid, taskId, {desc:this.value});
+            });
+
+            // Task tag remove
+            $('#task-tag-' + taskId).on('itemRemoved', function(e) {
+                let removedTag = possibleTagsRev[e.item];
+                tagIDs = tagIDs.filter(item => item !== removedTag);
+                modifyTask(uid, taskId, {tags:tagIDs});
+            });
+
+            // Task tag add
+            $('#task-tag-' + taskId).on('itemAdded', function(e) {
+                let addedTag = possibleTagsRev[e.item];
+                if (!addedTag){
+                    newTag(uid, e.item).then(function(addedTag) {
+                        tagIDs.push(addedTag);
+                        possibleTags[addedTag] = e.item;
+                        possibleTags[e.item] = addedTag;
+                        modifyTask(uid, taskId, {tags:tagIDs});         
+                    });
+                } else if (!(addedTag in tagIDs)){
+                    tagIDs.push(addedTag);
+                    modifyTask(uid, taskId, {tags:tagIDs});
+                }       
+            });
+
+            // Remove flagged parametre
+            $("#task-flagged-no-" + taskId).change(function(e) {
+                isFlagged = false;
+                modifyTask(uid, taskId, {isFlagged: false});
+               // TODO: Unflagged Style? So far flagged is
+               // just another filter for perspective selection
+            });
+
+            // Add flagged parametre
+            $("#task-flagged-yes-" + taskId).change(function(e) {
+                isFlagged = true;
+                modifyTask(uid, taskId, {isFlagged: true});
+               // TODO: Flagged Style?
+            });
+
+            // Remove floating parametre and calculate dates
+            $("#task-floating-no-" + taskId).change(function(e) {
+                isFloating = false;
+                modifyTask(uid, taskId, {isFloating: false});
+                defer_current = defer;
+                due_current = due;
+                setDates();
+            });
+
+            // Add floating parametre and calculate dates
+            $("#task-floating-yes-" + taskId).change(function(e) {
+                isFloating = true;
+                modifyTask(uid, taskId, {isFloating: true});
+                defer_current = moment(defer).tz(timezone).local(true).toDate();
+                due_current = moment(due).tz(timezone).local(true).toDate();
+                setDates();
+            });
+
         }
 
         return {generateTaskInterface: displayTask};
@@ -434,6 +536,7 @@ var ui = function() {
 
     // sorters
     let sorters = function() {
+        
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
@@ -463,6 +566,7 @@ var ui = function() {
                 // TODO: refresh page!!
             }
         });
+
         // project sorter
         var projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
@@ -532,9 +636,9 @@ var ui = function() {
         let upcoming = async function() {
             Promise.all(
                 // load inbox tasks
-                inboxandDS[0].map(task => displayTask("inbox", task)),
+                inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
                 // load due soon tasks
-                inboxandDS[1].map(task => displayTask("due-soon", task)),
+                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task)),
             ).then(function() {
                 // update upcoming view headers
                 if (inboxandDS[0].length === 0) {
@@ -575,7 +679,7 @@ var ui = function() {
                     if (item.type === "task") {
                         // get and load the task
                         let taskId = item.content;
-                        await displayTask("project-content", taskId);
+                        await taskManager.generateTaskInterface("project-content", taskId);
                     } else if (item.type === "project") {
                         // get and load a project
                         let projID = item.content.id;
