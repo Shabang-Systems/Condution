@@ -364,6 +364,7 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
     let isFlagged = taskObj.isFlagged;
     let isFloating = taskObj.isFloating;
     let actualTags = taskObj.tags;
+    let repeat = taskObj.repeat;
     // ---------------------------------------------------------------------------------
     // Parse and pre-write some DOMs
     let projectSelects = " ";
@@ -588,6 +589,117 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
                     });           
                 }
             });
+            if (repeat.rule !== "none" && due) {
+                let rRule = repeat.rule;
+                if (rRule === "daily") {
+                    if (defer) {
+                        let defDistance = due-defer;
+                        due.setDate(due.getDate() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        due.setDate(due.getDate() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                    
+                } else if (rRule === "weekly") {
+                    if (defer) {
+                        let rOn = repeat.on;
+                        let current = "";
+                        let defDistance = due-defer;
+                        while (!rOn.includes(current)) {
+                            due.setDate(due.getDate() + 1);
+                            let dow = due.getDay();
+                            switch (dow) {
+                                case 1:
+                                    current = "M";
+                                    break;
+                                case 2:
+                                    current = "Tu";
+                                    break;
+                                case 3:
+                                    current = "W";
+                                    break;
+                                case 4:
+                                    current = "Th";
+                                    break;
+                                case 5:
+                                    current = "F";
+                                    break;
+                                case 6:
+                                    current = "Sa";
+                                    break;
+                                case 7:
+                                    current = "Su";
+                                    break;
+                            }
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        let rOn = repeat.on;
+                        let current = "";
+                        while (!rOn.includes(current)) {
+                            due.setDate(due.getDate() + 1);
+                            let dow = due.getDay();
+                            switch (dow) {
+                                case 1:
+                                    current = "M";
+                                    break;
+                                case 2:
+                                    current = "Tu";
+                                    break;
+                                case 3:
+                                    current = "W";
+                                    break;
+                                case 4:
+                                    current = "Th";
+                                    break;
+                                case 5:
+                                    current = "F";
+                                    break;
+                                case 6:
+                                    current = "Sa";
+                                    break;
+                                case 7:
+                                    current = "Su";
+                                    break;
+                            }
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                } else if (rRule === "monthly") {
+                    if (defer) {
+                        let rOn = repeat.on;
+                        let dow = due.getDate();
+                        let defDistance = due-defer;
+                        while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 30 || dow == 30))) {
+                            due.setDate(due.getDate() + 1);
+                            dow = due.getDate();
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        let rOn = repeat.on;
+                        let dow = due.getDate();
+                        while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 31 || dow == 30))) {
+                            due.setDate(due.getDate() + 1);
+                            dow = due.getDate();
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                } else if (rRule === "yearly") {
+                    if (defer) {
+                        let defDistance = due-defer;
+                        due.setFullYear(due.getFullYear() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        due.setFullYear(due.getFullYear() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                    
+                } 
+            }
+            setTimeout(function() {
+                if (!isTaskActive) showPage(currentPage)
+            }, 100);
         }
     });
     $('#task-project-' + taskId).change(function(e) {
