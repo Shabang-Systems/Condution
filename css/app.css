@@ -213,6 +213,7 @@ a {
 }
 
 #repeat-unit {
+    display: none;
     /*height: 75px;*/
     /*height: 105px;*/
 }
@@ -224,9 +225,9 @@ a {
     height: 100%;
     background-color: var(--background-feature-overlay);
     z-index: 1000;
-    display: flex;
     justify-content: center;
     align-items: center; 
+    display: none;
 }
 
 #login {

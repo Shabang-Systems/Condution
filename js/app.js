@@ -673,8 +673,15 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
    });
 }
 
-var showRepeat = async function(taskId) {
+var showRepeat;
+(function() {
+
     // Setup repeat things!
+    $("#repeat-back").on("click", function(e) {
+        $("#repeat-unit").fadeOut(200);
+        $("#overlay").fadeOut(200);
+    });
+
     $("#repeat-type").on("click", function(e) {
         $(".repeat-subunit").slideUp();
         $("#repeat-toggle-group").slideDown();
@@ -729,7 +736,13 @@ var showRepeat = async function(taskId) {
             repeatMonthDays.push($(this).html());
         }
     });
-}
+
+    showRepeat = function(taskId) {
+        $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+        $("#repeat-unit").fadeIn(200);
+    }
+    
+}());
 
 // Chapter 3: Animation Listeners!!
 
