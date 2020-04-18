@@ -364,6 +364,7 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
     let isFlagged = taskObj.isFlagged;
     let isFloating = taskObj.isFloating;
     let actualTags = taskObj.tags;
+    let repeat = taskObj.repeat;
     // ---------------------------------------------------------------------------------
     // Parse and pre-write some DOMs
     let projectSelects = " ";
@@ -588,6 +589,117 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
                     });           
                 }
             });
+            if (repeat.rule !== "none" && due) {
+                let rRule = repeat.rule;
+                if (rRule === "daily") {
+                    if (defer) {
+                        let defDistance = due-defer;
+                        due.setDate(due.getDate() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        due.setDate(due.getDate() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                    
+                } else if (rRule === "weekly") {
+                    if (defer) {
+                        let rOn = repeat.on;
+                        let current = "";
+                        let defDistance = due-defer;
+                        while (!rOn.includes(current)) {
+                            due.setDate(due.getDate() + 1);
+                            let dow = due.getDay();
+                            switch (dow) {
+                                case 1:
+                                    current = "M";
+                                    break;
+                                case 2:
+                                    current = "Tu";
+                                    break;
+                                case 3:
+                                    current = "W";
+                                    break;
+                                case 4:
+                                    current = "Th";
+                                    break;
+                                case 5:
+                                    current = "F";
+                                    break;
+                                case 6:
+                                    current = "Sa";
+                                    break;
+                                case 7:
+                                    current = "Su";
+                                    break;
+                            }
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        let rOn = repeat.on;
+                        let current = "";
+                        while (!rOn.includes(current)) {
+                            due.setDate(due.getDate() + 1);
+                            let dow = due.getDay();
+                            switch (dow) {
+                                case 1:
+                                    current = "M";
+                                    break;
+                                case 2:
+                                    current = "Tu";
+                                    break;
+                                case 3:
+                                    current = "W";
+                                    break;
+                                case 4:
+                                    current = "Th";
+                                    break;
+                                case 5:
+                                    current = "F";
+                                    break;
+                                case 6:
+                                    current = "Sa";
+                                    break;
+                                case 7:
+                                    current = "Su";
+                                    break;
+                            }
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                } else if (rRule === "monthly") {
+                    if (defer) {
+                        let rOn = repeat.on;
+                        let dow = due.getDate();
+                        let defDistance = due-defer;
+                        while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 30 || dow == 30))) {
+                            due.setDate(due.getDate() + 1);
+                            dow = due.getDate();
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        let rOn = repeat.on;
+                        let dow = due.getDate();
+                        while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 31 || dow == 30))) {
+                            due.setDate(due.getDate() + 1);
+                            dow = due.getDate();
+                        }
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                } else if (rRule === "yearly") {
+                    if (defer) {
+                        let defDistance = due-defer;
+                        due.setFullYear(due.getFullYear() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                    } else {
+                        due.setFullYear(due.getFullYear() + 1);
+                        modifyTask(uid, taskId, {isComplete: false, due:due});
+                    }
+                    
+                } 
+            }
+            setTimeout(function() {
+                if (!isTaskActive) showPage(currentPage)
+            }, 100);
         }
     });
     $('#task-project-' + taskId).change(function(e) {
@@ -620,6 +732,9 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
             hideActiveTask();
             $('#task-' + taskId).slideUp(150);
         });
+    });
+    $("#task-repeat-" + taskId).click(function(e) {
+        showRepeat(taskId);
     });
     $("#task-name-" + taskId).change(function(e) {
         modifyTask(uid, taskId, {name:this.value});
@@ -672,6 +787,136 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
         setDates();
    });
 }
+
+var showRepeat;
+(function() {
+
+    let tid;
+
+    // Setup repeat things!
+    $("#repeat-back").on("click", function(e) {
+        $(".repeat-subunit").slideUp();
+        $("#repeat-toggle-group").slideDown();
+        $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+        $("#repeat-unit").fadeOut(200);
+        $("#overlay").fadeOut(200);
+    });
+
+    $("#overlay").on("click", function(e) {
+        if (e.target === this) {
+            $(".repeat-subunit").slideUp();
+            $("#repeat-toggle-group").slideDown();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-unit").fadeOut(200);
+            $("#overlay").fadeOut(200);
+        }
+    });
+
+    $("#repeat-type").on("click", function(e) {
+        $(".repeat-subunit").slideUp();
+        $("#repeat-toggle-group").slideDown();
+        $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+        modifyTask(uid, tid, {repeat: {rule: "none"}});
+    });
+
+    $("#repeat-perday").on("click", function(e) {
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every day.");
+        $("#repeat-type").fadeIn();
+        modifyTask(uid, tid, {repeat: {rule: "daily"}});
+    });
+
+    $("#repeat-perweek").on("click", function(e) {
+        $("#repeat-weekly-unit").slideDown();
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every week.");
+        $("#repeat-type").fadeIn();
+    });
+
+    $("#repeat-permonth").on("click", function(e) {
+        $("#repeat-monthly-unit").slideDown();
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every month.");
+        $("#repeat-type").fadeIn();
+    });
+
+    $("#repeat-peryear").on("click", function(e) {
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every year.");
+        $("#repeat-type").fadeIn();
+        modifyTask(uid, tid, {repeat: {rule: "yearly"}});
+    });
+
+    // Actions
+    let repeatWeekDays = [];
+    $(".repeat-daterow-weekname").on("click", function(e) {
+        if (repeatWeekDays.includes($(this).html())) {
+            $(this).animate({"background-color": getThemeColor("--background-feature")});
+            repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+        } else {
+            $(this).animate({"background-color": getThemeColor("--decorative-light")});
+            repeatWeekDays.push($(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+        }
+    });
+
+    let repeatMonthDays = [];
+    $(".repeat-monthgrid-day").on("click", function(e) {
+        if (repeatMonthDays.includes($(this).html())) {
+            $(this).animate({"background-color": getThemeColor("--background")});
+            repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+        } else {
+            $(this).animate({"background-color": getThemeColor("--background-feature")});
+            repeatMonthDays.push($(this).html());
+            modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+        }
+    });
+
+    showRepeat = async function(taskId) {
+        $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+        $("#repeat-unit").fadeIn(200);
+        let ti = await getTaskInformation(uid, taskId);
+        $("#repeat-task-name").html(ti.name);
+        tid = taskId;
+        if (ti.repeat.rule !== "none") {
+            if (ti.repeat.rule === "daily") {
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every day.");
+                $("#repeat-type").show();
+            } else if (ti.repeat.rule === "weekly") {
+                $("#repeat-daterow").children().each(function(e) {
+                    if (ti.repeat.on.includes($(this).html)) {
+                        $(this).animate({"background-color": getThemeColor("--decorative-light")});
+                        repeatMonthDays.push($(this).html());
+                    }
+                });
+                let repeatWeekDays = ti.repeat.on;
+                $("#repeat-weekly-unit").show();
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every week.");
+                $("#repeat-type").show();
+            } else if (ti.repeat.rule === "monthly") {
+                $("#repeat-monthgrid").children().each(function(e) {
+                    if (ti.repeat.on.includes($(this).html)) {
+                        $(this).animate({"background-color": getThemeColor("--background-feature")});
+                    }
+                });
+                let repeatMonthDays = ti.repeat.on;
+                $("#repeat-monthly-unit").show();
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every month.");
+                $("#repeat-type").show();
+            } else if (ti.repeat.rule === "yearly") {
+                $("#repeat-toggle-group").hide();
+                $("#repeat-type").html("every year.");
+                $("#repeat-type").show();
+            }
+        }
+    }
+    
+}());
 
 // Chapter 3: Animation Listeners!!
 
