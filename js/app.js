@@ -93,6 +93,8 @@ var ui = function() {
         projectID: undefined
     }
 
+    activeMenu = "today";
+
     // refresh data 
     let refresh = async function(){
         pPandT = await getProjectsandTags(uid);
@@ -104,7 +106,138 @@ var ui = function() {
         inboxandDS = await getInboxandDS(uid);
     }
 
-    // the pubilc refresh function
+    // repeat view
+    var showRepeat = function() {
+
+        let tid;
+
+        // Setup repeat things!
+        $("#repeat-back").on("click", function(e) {
+            $(".repeat-subunit").slideUp();
+            $("#repeat-toggle-group").slideDown();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-unit").fadeOut(200);
+            $("#overlay").fadeOut(200);
+        });
+
+        $("#overlay").on("click", function(e) {
+            if (e.target === this) {
+                $(".repeat-subunit").slideUp();
+                $("#repeat-toggle-group").slideDown();
+                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+                $("#repeat-unit").fadeOut(200);
+                $("#overlay").fadeOut(200);
+            }
+        });
+
+        $("#repeat-type").on("click", function(e) {
+            $(".repeat-subunit").slideUp();
+            $("#repeat-toggle-group").slideDown();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            modifyTask(uid, tid, {repeat: {rule: "none"}});
+        });
+
+        $("#repeat-perday").on("click", function(e) {
+            $("#repeat-toggle-group").slideUp();
+            $("#repeat-type").html("every day.");
+            $("#repeat-type").fadeIn();
+            modifyTask(uid, tid, {repeat: {rule: "daily"}});
+        });
+
+        $("#repeat-perweek").on("click", function(e) {
+            $("#repeat-weekly-unit").slideDown();
+            $("#repeat-toggle-group").slideUp();
+            $("#repeat-type").html("every week.");
+            $("#repeat-type").fadeIn();
+        });
+
+        $("#repeat-permonth").on("click", function(e) {
+            $("#repeat-monthly-unit").slideDown();
+            $("#repeat-toggle-group").slideUp();
+            $("#repeat-type").html("every month.");
+            $("#repeat-type").fadeIn();
+        });
+
+        $("#repeat-peryear").on("click", function(e) {
+            $("#repeat-toggle-group").slideUp();
+            $("#repeat-type").html("every year.");
+            $("#repeat-type").fadeIn();
+            modifyTask(uid, tid, {repeat: {rule: "yearly"}});
+        });
+
+        // Actions
+        let repeatWeekDays = [];
+        $(".repeat-daterow-weekname").on("click", function(e) {
+            if (repeatWeekDays.includes($(this).html())) {
+                $(this).animate({"background-color": getThemeColor("--background-feature")});
+                repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
+                modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+            } else {
+                $(this).animate({"background-color": getThemeColor("--decorative-light")});
+                repeatWeekDays.push($(this).html());
+                modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+            }
+        });
+
+        let repeatMonthDays = [];
+        $(".repeat-monthgrid-day").on("click", function(e) {
+            if (repeatMonthDays.includes($(this).html())) {
+                $(this).animate({"background-color": getThemeColor("--background")});
+                repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
+                modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+            } else {
+                $(this).animate({"background-color": getThemeColor("--background-feature")});
+                repeatMonthDays.push($(this).html());
+                modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+            }
+        });
+
+        showRepeat = async function(taskId) {
+            $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+            $("#repeat-unit").fadeIn(200);
+            let ti = await getTaskInformation(uid, taskId);
+            $("#repeat-task-name").html(ti.name);
+            tid = taskId;
+            if (ti.repeat.rule !== "none") {
+                if (ti.repeat.rule === "daily") {
+                    $("#repeat-toggle-group").hide();
+                    $("#repeat-type").html("every day.");
+                    $("#repeat-type").show();
+                } else if (ti.repeat.rule === "weekly") {
+                    $("#repeat-daterow").children().each(function(e) {
+                        if (ti.repeat.on.includes($(this).html)) {
+                            $(this).animate({"background-color": getThemeColor("--decorative-light")});
+                            repeatMonthDays.push($(this).html());
+                        }
+                    });
+                    let repeatWeekDays = ti.repeat.on;
+                    $("#repeat-weekly-unit").show();
+                    $("#repeat-toggle-group").hide();
+                    $("#repeat-type").html("every week.");
+                    $("#repeat-type").show();
+                } else if (ti.repeat.rule === "monthly") {
+                    $("#repeat-monthgrid").children().each(function(e) {
+                        if (ti.repeat.on.includes($(this).html)) {
+                            $(this).animate({"background-color": getThemeColor("--background-feature")});
+                        }
+                    });
+                    let repeatMonthDays = ti.repeat.on;
+                    $("#repeat-monthly-unit").show();
+                    $("#repeat-toggle-group").hide();
+                    $("#repeat-type").html("every month.");
+                    $("#repeat-type").show();
+                } else if (ti.repeat.rule === "yearly") {
+                    $("#repeat-toggle-group").hide();
+                    $("#repeat-type").html("every year.");
+                    $("#repeat-type").show();
+                }
+            }
+        }
+        
+        return showRepeat;
+    }();
+
+        // the pubilc refresh function
     
     // task methods!
     let taskManager = async function() {
@@ -132,7 +265,7 @@ var ui = function() {
                     $("#inbox").slideUp(300);
                 } else {
                     $("#unsorted-badge").html(''+iC);
-                    if (active==="today") {
+                    if (activeMenu==="today") {
                         $('#task-'+hTask).slideUp(200);
                     }
                 }
@@ -144,7 +277,7 @@ var ui = function() {
                     $("#due-soon").slideUp(300);
                 } else {
                     $("#duesoon-badge").html(''+dsC);
-                    if (active==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
+                    if (activeMenu==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
                         $('#task-'+hTask).slideUp(200);
                     }
                 }
@@ -156,7 +289,7 @@ var ui = function() {
                 dsC = inboxandDS[1].length;
                 $("#unsorted-badge").html(''+iC);
                 $("#duesoon-badge").html(''+dsC);
-                if (active==="today") {
+                if (activeMenu==="today") {
                     $('#task-'+hTask).appendTo("#inbox");
                 }
             }
@@ -169,7 +302,7 @@ var ui = function() {
             // that actually waits for the finishing of all animations...
             // JANKY!
          /*   setTimeout(function() {*/
-                //if (!isTaskActive) showPage(currentPage)
+                //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
             // TODO: refresh page!!
         }
@@ -727,7 +860,7 @@ var ui = function() {
             let projectName = pPandT[0][0][pid];
             // update the titlefield
             $("#project-title").val(projectName);
-            if (projDir.length <= 1) {
+            if (pageIndex.projectDir.length <= 1) {
                 $("#project-back").hide()
             } else {
                 $("#project-back").show()
@@ -800,6 +933,113 @@ var ui = function() {
         // tell everyone to bring it!
         pageIndex.currentView = viewName;
     }
+
+    // document action listeners!!
+    $(document).on('click', '.menuitem', function(e) {
+        $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+        activeMenu = $(this).attr('id');
+        if (activeMenu.includes("perspective")) {
+            loadView("perspective-page");
+            $("#"+activeMenu).addClass("menuitem-selected");
+        } else if (activeMenu.includes("project")) {
+            if (!$(this).hasClass("subproject")) {
+                pageIndex.projectDir = [];
+            }
+            pageIndex.projectDir.push(activeMenu);
+            loadView("project-page", activeMenu.split("-")[1]);
+            $("#"+activeMenu).addClass("menuitem-selected");
+        }
+    });
+
+    $(document).on('click', '.today', function(e) {
+        $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+        loadView("upcoming-page");
+        activeMenu = $(this).attr('id');
+        $("#"+activeMenu).addClass("today-highlighted");
+    });
+
+    $(document).on("click", ".task", function(e) {
+        if ($(this).attr('id') === "task-" + activeTask) {
+            e.stopImmediatePropagation();
+            return;
+        }
+        if (activeTask) hideActiveTask();
+        if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
+            e.stopImmediatePropagation();
+            return;
+        } else {
+            let taskInfo = $(this).attr("id").split("-");
+            let task = taskInfo[taskInfo.length - 1];
+            activeTask = task;
+            $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+            $("#task-edit-" + activeTask).slideDown(200);
+            $("#task-trash-" + activeTask).css("display", "block");
+            $("#task-repeat-" + activeTask).css("display", "block");
+            $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});
+        }
+    });
+
+    $(document).on("click", ".page, #left-menu div", function(e) {
+        if (activeTask) {
+            if ($(e.target).hasClass("task-pseudocheck")) {
+                $("#task-check-"+activeTask).toggle();
+            } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name') || $(e.target).hasClass('task-display')) {
+                return false;
+            }
+            hideActiveTask();
+        }
+    });
+
+    $(document).on("click", "#project-back", function() {
+        // THE POP OPERATION IS NOT DUPLICATED.
+        // On load, the current projDir will
+        // be pushed to the array
+        pageIndex.projectDir.pop()
+        activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1]
+        loadView("project-page", activeMenu.split("-")[1]);
+    });
+
+    $(document).on("click", "#new-project", function() {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+        let projObj = {
+            top_level: false,
+            is_sequential: false,
+        }
+        newProject(uid, projObj, pid).then(function(npID) {
+            associateProject(uid, npID, pid);
+            $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+            activeMenu = "project-"+npID;
+            pageIndex.projectDir.push(activeMenu);
+            loadView("project-page", npID).then(() => setTimeout(function() {$("#project-title").focus(); $("#project-title").select()}, 100));
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
+
+    $(document).on("click", "#project-add-toplevel", function() {
+        let projObj = {
+            name: "New Project",
+            top_level: true,
+            is_sequential: false,
+        }
+        newProject(uid, projObj).then(function(npID) {
+            $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+            activeMenu = "project-"+npID;
+            pageIndex.projectDir = [activeMenu];
+            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
+            loadView("project-page", npID).then(function(){
+                // Delay because of HTML bug
+                setTimeout(function() {
+                    $("#project-title").focus();
+                    $("#project-title").select();
+                }, 100);
+            });
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
+
+    $(document).on("click", "#logout", function(e) {
+        firebase.auth().signOut().then(() => {}, console.error);
+    });
 
     return {load: loadView};
 }();
