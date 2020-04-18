@@ -108,7 +108,7 @@ var ui = function() {
     let reloadPage = async function() {
         setTimeout(function() {
             if (!activeTask) (loadView(pageIndex.currentView, pageIndex.projectID));
-        }, 100);
+        }, 300);
     }
 
     // repeat view
@@ -215,7 +215,7 @@ var ui = function() {
                             repeatMonthDays.push($(this).html());
                         }
                     });
-                    let repeatWeekDays = ti.repeat.on;
+                    repeatWeekDays = ti.repeat.on;
                     $("#repeat-weekly-unit").show();
                     $("#repeat-toggle-group").hide();
                     $("#repeat-type").html("every week.");
@@ -226,7 +226,7 @@ var ui = function() {
                             $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                         }
                     });
-                    let repeatMonthDays = ti.repeat.on;
+                    repeatMonthDays = ti.repeat.on;
                     $("#repeat-monthly-unit").show();
                     $("#repeat-toggle-group").hide();
                     $("#repeat-type").html("every month.");
@@ -254,13 +254,13 @@ var ui = function() {
         //displayTask("inbox", task)
 
         let hideActiveTask = async function() {
-            await refresh();
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
-            $("#task-"+activeTask).animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 200);
+            $("#task-"+activeTask).animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
+            await refresh();
             if (activeTaskDeInboxed) {
                 let hTask = activeTask;
                 iC = inboxandDS[0].length;
@@ -1114,12 +1114,13 @@ var ui = function() {
             if (pageIndex.projectDir.length > 0) {
                 dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
                 activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
-                showPage("project-page", (pageIndex.projectDir.length-1).split("-")[1]);
+                console.log(pageIndex);
+                loadView("project-page", pageIndex.projectDir[pageIndex.projectDir.length-1].split("-")[1]);
                 });
             } else {
                 activeMenu = "today";
                 $("#today").addClass("menuitem-selected");
-                showPage("upcoming-page");
+                loadView("upcoming-page");
                 $("#project-"+pid).remove();
             }
 
