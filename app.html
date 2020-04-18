@@ -61,16 +61,17 @@
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
                 <div class="overlay-unit" id="repeat-unit">
-                    <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;">Bontehu Bontehu I love Bontehu</t> <t id="repeat-type" style="padding-left: 2px;">every dmonyer.</t></h1>
+                    <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
+                    <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;">Bontehu Bontehu I love Bontehu</t> <t id="repeat-type" style="padding-left: 2px; width: 100%">every dmonyer.</t></h1>
                     <div class="dropdown">
-                     <!--  <button id="repeat-type-toggle" class="dropdown-toggle" type="button" data-toggle="dropdown">Every...<span class="caret"></span></button>-->
-                       <!--<ul class="dropdown-menu repeat-dropdown">-->
-                           <!--<li class="repeat-option"><a>Day</a></li>-->
-                           <!--<li class="repeat-option"><a>Week</a></li>-->
-                           <!--<li class="repeat-option"><a>Month</a></li>-->
-                           <!--<li class="repeat-option"><a>Year</a></li>-->
-                       <!--</ul>-->
-                        <div id="repeat-weekly-unit">
+                       <button id="repeat-type-toggle" class="dropdown-toggle" type="button" data-toggle="dropdown">Every...<span class="caret"></span></button>
+                       <ul class="dropdown-menu repeat-dropdown" style="display:none">
+                           <li class="repeat-option"><a>Day</a></li>
+                           <li class="repeat-option"><a>Week</a></li>
+                           <li class="repeat-option"><a>Month</a></li>
+                           <li class="repeat-option"><a>Year</a></li>
+                       </ul>
+                        <div id="repeat-weekly-unit" style="display:none">
                             <div id="repeat-daterow">
                                 <div class="repeat-daterow-weekname">M</div>
                                 <div class="repeat-daterow-weekname">Tu</div>
@@ -79,6 +80,11 @@
                                 <div class="repeat-daterow-weekname">F</div>
                                 <div class="repeat-daterow-weekname">Sa</div>
                                 <div class="repeat-daterow-weekname">Su</div>
+                            </div>
+                        </div>
+                        <div id="repeat-monthly-unit" style="display:none">
+                            <div id="repeat-monthgrid">
+                                <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day">Last</div>
                             </div>
                         </div>
                     </div>

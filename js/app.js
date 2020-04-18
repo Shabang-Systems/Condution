@@ -673,6 +673,10 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
    });
 }
 
+var showRepeat = function(taskId) {
+
+}
+
 // Chapter 3: Animation Listeners!!
 
 console.log("Watching the clicky-pager!");

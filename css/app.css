@@ -159,10 +159,52 @@ a {
     background-color: var(--decorative-light);
 }
 
+.repeat-monthgrid-day {
+    text-align: center;
+    /*background-color: var(--background-feature);*/
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    font-size: 13px;
+    margin: 3px;
+    padding: 2px;
+    font-weight: 500;
+    color: var(--content-normal-alt);
+    border-radius: 3px;
+}
+
+.repeat-monthgrid-day:hover {
+    background-color: var(--background-feature);
+}
+
 #repeat-callout {
     color: var(--task);
     font-weight: 600;
     font-size: 15px;
+}
+
+#repeat-back {
+    display: inline-block;
+    position: absolute;
+    margin-right: 10px;
+    transform: translate(420px, -8px);
+}
+
+#repeat-monthly-unit{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#repeat-monthgrid {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: repeat(5, 60px);
+    border: 0.5px solid var(--content-normal-accent);
+    border-radius: 5px;
+    width: 95%;
+    /*background-color: var(--background-feature);*/
+    margin: 4px;
 }
 
 
