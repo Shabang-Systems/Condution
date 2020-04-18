@@ -760,7 +760,7 @@ var ui = function() {
         });
 
         // project sorter
-        var projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
+        let projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
             onEnd: function(e) {
                 let oi = e.oldIndex;
@@ -817,7 +817,67 @@ var ui = function() {
             }
         });
 
-        return {inbox: inboxSort, project: projectSort};
+        
+        // NW: perspective sorter
+        var perspectiveSort = new interfaceUtil.Sortable($(".perspectives")[0], {
+            animation: 200,
+            onStart: function(e) {
+                // Make sure that elements don't think that they are being hovered
+                // when they are being dragged over
+                let itemEl = $(e.item);
+                $('.perspectives').children().each(function() {
+                    if ($(this) !== itemEl) {
+                        $(this).removeClass("mihov")
+                    }
+                })
+            },
+            onEnd: function(e) {
+                $('.perspectives').children().each(function() {
+                    // Aaand make elements hoverable after they've been dragged over
+                    $(this).addClass("mihov")
+                })
+            }
+
+        });
+
+        // NW: top level project sorter
+        let topLevelProjectSort = new interfaceUtil.Sortable($(".projects")[0], {
+            animation: 200,
+            onStart: function(e) {
+                // Make sure that elements don't think that they are being hovered
+                // when they are being dragged over
+                let itemEl = $(e.item);
+                $('.projects').children().each(function() {
+                    if ($(this) !== itemEl) {
+                        $(this).removeClass("mihov")
+                    }
+                })
+            },
+             onEnd: function(e) {
+                let oi = e.oldIndex;
+                let ni = e.newIndex;
+                getTopLevelProjects(uid).then(function(topLevelItems) {
+                    let originalIBT = topLevelItems[2].map(i => i.id);
+                    if (oi<ni) {
+                        // Handle task moved down
+                        for(let i=oi+1; i<=ni; i++) {
+                            modifyProject(uid, originalIBT[i], {order: i-1});
+                        }
+                        modifyProject(uid, originalIBT[oi], {order: ni});
+                    } else if (oi>ni) {
+                        // Handle task moved up
+                        for(let i=oi-1; i>=ni; i--) {
+                            modifyProject(uid, originalIBT[i], {order: i+1});
+                        }
+                        modifyProject(uid, originalIBT[oi], {order: ni});
+                    }
+
+
+                });
+            }
+        });
+        
+        return {inbox: inboxSort, project: projectSort, menuProject: topLevelProjectSort};
     }();
     
     // various sub-page loaders
@@ -1091,11 +1151,131 @@ var ui = function() {
         $("#"+activeMenu+" t").html(value);
     });
 
+    $(document).on("click", "#project-sequential-yes", function(e) {
+        let pid = (projDir[projDir.length-1]).split("-")[1]
+        modifyProject(uid, pid, {is_sequential: true}).then(function() {
+            // TODO: REFRESH!
+        });
+    });
+
+    $(document).on("click", "#project-sequential-no", function(e) {
+        let pid = (projDir[projDir.length-1]).split("-")[1]
+        modifyProject(uid, pid, {is_sequential: false}).then(function() {
+            // TODO: REFRESH!
+        });
+    });
+
     $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
     });
 
-    return {load: loadView};
+    $("#quickadd").click(function(e) {
+        $(this).animate({"width": "350px"}, 500);
+    });
+
+    $("#quickadd").blur(function(e) {
+        $(this).val("");
+        $(this).animate({"width": "250px"}, 500);
+    });
+
+
+    $("#quickadd").keydown(function(e) {
+        if (e.keyCode == 13) {
+            let tb = $(this);
+            tb.animate({"background-color": getThemeColor("--quickadd-success"), "color": getThemeColor("--content-normal-alt")}, function() {
+                tb.animate({"background-color": getThemeColor("--quickadd"), "color": getThemeColor("--content-normal")})   
+            });
+            let newTaskUserRequest = chrono.parse($(this).val());
+            // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+            // Make that happen is the todo.
+            let startDate;
+            let endDate;
+            let tz = moment.tz.guess();
+            let ntObject = {
+                desc: "",
+                isFlagged: false,
+                isFloating: false,
+                isComplete: false,
+                project: "",
+                tags: [],
+                timezone: tz, 
+            };
+            if (newTaskUserRequest.length != 0) {
+                let start = newTaskUserRequest[0].start;
+                let end = newTaskUserRequest[0].end;
+                if (start && end) {
+                    startDate = start.date();
+                    endDate = end.date();
+                    ntObject.defer = startDate;
+                    ntObject.due = endDate;
+                } else if (end) {
+                    endDate = end.date();
+                    ntObject.due = endDate;
+                } else if (start) {
+                    startDate = start.date();
+                    ntObject.defer = startDate;
+                }
+                ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
+            } else {
+                ntObject.name = tb.val()
+            }
+
+            newTask(uid, ntObject).then(function(ntID) {
+                refresh.then(function(){
+                    displayTask("inbox", ntID)
+                });
+                getInboxTasks(uid).then(function(e){
+                    iC = e.length;
+                    $("#unsorted-badge").html(''+iC);
+                    $("#inbox-subhead").slideDown(300);
+                    $("#inbox").slideDown(300);
+                });
+                tb.blur();
+                tb.val("");
+            })
+        } else if (e.keyCode == 27) {
+            $(this).blur();
+        }
+    });
+
+    let constructSidebar = async function() {
+        let tlps = (await getTopLevelProjects(uid));
+        let pPandT = (await getProjectsandTags(uid));
+        for (let proj of tlps[2]) {
+            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
+        }
+    } 
+
+    // Theming and uid
+    let uid;
+    let displayName;
+    let currentTheme;
+
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            if (user.emailVerified) {
+                // User is signed in. Do user related things.
+                displayName = user.displayName;
+                uid = user.uid;
+                // TODO: actually get the user's prefrences
+                currentTheme = "condutiontheme-default-light";
+                $("body").addClass(currentTheme);
+            }
+        } else {
+            window.location.replace("auth.html");
+        }
+    });
+
+    return {load: loadView, constructSidebar: constructSidebar};
 }();
+
+
+$(document).ready(async function() {
+    await ui.constructSidebar();
+    await ui.load("upcoming-page");
+    $("#loading").hide();
+    $("#content-wrapper").fadeIn();
+});
+
 
 
