@@ -142,28 +142,22 @@ a {
     width: 100%;
     background-color: var(--background-feature);
     transition-property: all;
-    transition-duration: 200ms;
+    transition-duration: 100ms;
     transition-timing-function: ease-in-out;
 
 }
 
-.repeat-daterow-weekname:hover {
-    text-align: center;
-    width: 100%;
-    background-color: var(--decorative-light);
-}
-
-.repeat-daterow-weekname:hover {
-    text-align: center;
-    width: 100%;
-    background-color: var(--decorative-light);
-}
+/*.repeat-daterow-weekname:hover {*/
+    /*text-align: center;*/
+    /*width: 100%;*/
+    /*background-color: var(--content-normal);*/
+/*}*/
 
 .repeat-monthgrid-day {
     text-align: center;
     /*background-color: var(--background-feature);*/
     transition-property: all;
-    transition-duration: 200ms;
+    transition-duration: 100ms;
     transition-timing-function: ease-in-out;
     font-size: 13px;
     margin: 3px;
@@ -173,14 +167,16 @@ a {
     border-radius: 3px;
 }
 
-.repeat-monthgrid-day:hover {
-    background-color: var(--background-feature);
-}
+/*.repeat-monthgrid-day:hover {*/
+    /*background-color: var(--background-feature);*/
+/*}*/
 
 #repeat-callout {
     color: var(--task);
     font-weight: 600;
     font-size: 15px;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 #repeat-back {
@@ -328,6 +324,20 @@ a {
     float: right;
     padding: 16px 6px 0px 0px;
     color: var(--content-normal-alt);
+}
+
+#repeat-type {
+    width: 100%;
+    padding: 2px;
+    border-radius: 3px;
+    display:none;
+    transition-property: color, background-color;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+}
+
+#repeat-type:hover {
+    background-color: var(--background-feature);
 }
 
 #repeat-type-toggle {

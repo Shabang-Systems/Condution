@@ -673,8 +673,62 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
    });
 }
 
-var showRepeat = function(taskId) {
+var showRepeat = async function(taskId) {
+    // Setup repeat things!
+    $("#repeat-type").on("click", function(e) {
+        $(".repeat-subunit").slideUp();
+        $("#repeat-toggle-group").slideDown();
+        $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+    });
 
+    $("#repeat-perday").on("click", function(e) {
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every day.");
+        $("#repeat-type").fadeIn();
+    });
+
+    $("#repeat-perweek").on("click", function(e) {
+        $("#repeat-weekly-unit").slideDown();
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every week.");
+        $("#repeat-type").fadeIn();
+    });
+
+    $("#repeat-permonth").on("click", function(e) {
+        $("#repeat-monthly-unit").slideDown();
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every month.");
+        $("#repeat-type").fadeIn();
+    });
+
+    $("#repeat-peryear").on("click", function(e) {
+        $("#repeat-toggle-group").slideUp();
+        $("#repeat-type").html("every year.");
+        $("#repeat-type").fadeIn();
+    });
+
+    // Actions
+    let repeatWeekDays = [];
+    $(".repeat-daterow-weekname").on("click", function(e) {
+        if (repeatWeekDays.includes($(this).html())) {
+            $(this).animate({"background-color": getThemeColor("--background-feature")});
+            repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
+        } else {
+            $(this).animate({"background-color": getThemeColor("--decorative-light")});
+            repeatWeekDays.push($(this).html());
+        }
+    });
+
+    let repeatMonthDays = [];
+    $(".repeat-monthgrid-day").on("click", function(e) {
+        if (repeatMonthDays.includes($(this).html())) {
+            $(this).animate({"background-color": getThemeColor("--background")});
+            repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
+        } else {
+            $(this).animate({"background-color": getThemeColor("--background-feature")});
+            repeatMonthDays.push($(this).html());
+        }
+    });
 }
 
 // Chapter 3: Animation Listeners!!
