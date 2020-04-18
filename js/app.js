@@ -107,7 +107,7 @@ var ui = function() {
     // the outside world's refresh function
     let reloadPage = async function() {
         setTimeout(function() {
-            if (!activeTask) (loadView(pageIndex.currentView));
+            if (!activeTask) (loadView(pageIndex.currentView, pageIndex.projectID));
         }, 100);
     }
 
@@ -410,7 +410,7 @@ var ui = function() {
                     if (new Date() > due_set) {
                         $('#task-pseudocheck-' + taskId).addClass("od");
                         $('#task-pseudocheck-' + taskId).removeClass("ds");
-                    } else if (numDaysBetween(new Date(), due_set) <= 1) {
+                    } else if (interfaceUtil.daysBetween(new Date(), due_set) <= 1) {
                         $('#task-pseudocheck-' + taskId).addClass("ds");
                         $('#task-pseudocheck-' + taskId).removeClass("od");
                     } else {
@@ -771,7 +771,7 @@ var ui = function() {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
 
-                getProjectStructure(uid, pid).then(async function(nstruct) {
+                getProjectStructure(uid, pageIndex.projectID).then(async function(nstruct) {
                     if (oi<ni) {
                         // handle item moved down
                         for(let i=oi+1; i<=ni; i++) {

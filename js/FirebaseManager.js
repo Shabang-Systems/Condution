@@ -341,7 +341,7 @@ async function getItemAvailability(userID) {
         if (project.data().is_sequential) {
             let child = projStruct.children[0];
             if (child.type === "project") {
-                Object.assign(bstat, (await recursivelyGetBlocks(uid, child.content.id)))
+                Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)))
                 bstat[child.content.id] = true;
             } else if (child.type === "task") {
                 bstat[child.content] = true;
