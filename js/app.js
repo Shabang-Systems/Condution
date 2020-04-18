@@ -621,6 +621,9 @@ var displayTask = async function(pageId, taskId, infoObj, sequentialOverride) {
             $('#task-' + taskId).slideUp(150);
         });
     });
+    $("#task-repeat-" + taskId).click(function(e) {
+        showRepeat(taskId);
+    });
     $("#task-name-" + taskId).change(function(e) {
         modifyTask(uid, taskId, {name:this.value});
     });
@@ -678,8 +681,21 @@ var showRepeat;
 
     // Setup repeat things!
     $("#repeat-back").on("click", function(e) {
+        $(".repeat-subunit").slideUp();
+        $("#repeat-toggle-group").slideDown();
+        $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
         $("#repeat-unit").fadeOut(200);
         $("#overlay").fadeOut(200);
+    });
+
+    $("#overlay").on("click", function(e) {
+        if (e.target === this) {
+            $(".repeat-subunit").slideUp();
+            $("#repeat-toggle-group").slideDown();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-unit").fadeOut(200);
+            $("#overlay").fadeOut(200);
+        }
     });
 
     $("#repeat-type").on("click", function(e) {
@@ -737,9 +753,11 @@ var showRepeat;
         }
     });
 
-    showRepeat = function(taskId) {
+    showRepeat = async function(taskId) {
         $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
         $("#repeat-unit").fadeIn(200);
+        let ti = await getTaskInformation(uid, taskId);
+        $("#repeat-task-name").html(ti.name);
     }
     
 }());
