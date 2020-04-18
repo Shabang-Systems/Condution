@@ -93,7 +93,7 @@ var ui = function() {
 
     activeMenu = "today";
 
-    // refresh data 
+    // refresh data
     let refresh = async function(){
         pPandT = await getProjectsandTags(uid);
         possibleProjects = pPandT[0][0];
@@ -238,7 +238,6 @@ var ui = function() {
                 }
             }
         }
-        
         return cr;
     }();
 
@@ -331,7 +330,7 @@ var ui = function() {
             let due;
             if (taskObj.defer) {
                 defer = new Date(taskObj.defer.seconds*1000);
-            } 
+            }
             if (taskObj.due) {
                 due = new Date(taskObj.due.seconds*1000);
             }
@@ -464,7 +463,7 @@ var ui = function() {
                     $('#task-pseudocheck-' + taskId).addClass("od");
                 } else if (interfaceUtil.daysBetween(new Date(), due_current) <= 1) {
                     $('#task-pseudocheck-' + taskId).addClass("ds");
-                } 
+                }
             }
             if (defer_current) {
                 if (new Date() < defer_current) {
@@ -507,7 +506,7 @@ var ui = function() {
                                 } else {
                                     $("#unsorted-badge").html(''+iC);
                                 }
-                            });           
+                            });
                         }
                     });
                     if (repeat.rule !== "none" && due) {
@@ -521,7 +520,7 @@ var ui = function() {
                                 due.setDate(due.getDate() + 1);
                                 modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
-                            
+
                         } else if (rRule === "weekly") {
                             if (defer) {
                                 let rOn = repeat.on;
@@ -615,8 +614,8 @@ var ui = function() {
                                 due.setFullYear(due.getFullYear() + 1);
                                 modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
-                            
-                        } 
+
+                        }
                     }
                     reloadPage();
                 }
@@ -646,7 +645,7 @@ var ui = function() {
                     projectID = "";
                 }
             });
-            
+
             // Trashing a task
             $("#task-trash-" + taskId).click(function(e) {
                 if (project === undefined) activeTaskDeInboxed = true;
@@ -686,12 +685,12 @@ var ui = function() {
                         tagIDs.push(addedTag);
                         possibleTags[addedTag] = e.item;
                         possibleTags[e.item] = addedTag;
-                        modifyTask(uid, taskId, {tags:tagIDs});         
+                        modifyTask(uid, taskId, {tags:tagIDs});
                     });
                 } else if (!(addedTag in tagIDs)){
                     tagIDs.push(addedTag);
                     modifyTask(uid, taskId, {tags:tagIDs});
-                }       
+                }
             });
 
             // Remove flagged parametre
@@ -734,7 +733,7 @@ var ui = function() {
 
     // sorters
     let sorters = function() {
-        
+
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
@@ -823,7 +822,7 @@ var ui = function() {
             }
         });
 
-        
+
         // NW: perspective sorter
         var perspectiveSort = new interfaceUtil.Sortable($(".perspectives")[0], {
             animation: 200,
@@ -882,14 +881,14 @@ var ui = function() {
                 });
             }
         });
-        
+
         return {inbox: inboxSort, project: projectSort, menuProject: topLevelProjectSort};
     }();
-    
+
     // various sub-page loaders
     let viewLoader = function() {
         // this private function populates the view requested
-        
+
         // upcoming view loader
         let upcoming = async function() {
             $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
@@ -978,7 +977,7 @@ var ui = function() {
                 $(this).css("display", "none");
             }
         });
-        
+
         // clear all contentboxes
         $("#inbox").empty();
         $("#due-soon").empty();
@@ -996,7 +995,7 @@ var ui = function() {
                 await viewLoader.project(itemID);
                 break;
         }
-        
+
         // bring it!
         $("#"+viewName).show();
 
@@ -1136,7 +1135,7 @@ var ui = function() {
             isComplete: false,
             project: pid,
             tags: [],
-            timezone: moment.tz.guess(), 
+            timezone: moment.tz.guess(),
             name: "",
         };
         newTask(uid, ntObject).then(function(ntID) {
@@ -1148,7 +1147,7 @@ var ui = function() {
                 $("#task-edit-" + activeTask).slideDown(200);
                 $("#task-trash-" + activeTask).css("display", "block");
                 $("#task-repeat-" + activeTask).css("display", "block");
-                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});  
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
                 $("#task-name-" + task).focus();
             });
         });
@@ -1156,7 +1155,7 @@ var ui = function() {
 
     $(document).on("change", "#project-title", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
-        let value = $(this).val();        
+        let value = $(this).val();
         modifyProject(uid, pid, {name: value});
         $("#"+activeMenu+" t").html(value);
     });
@@ -1193,7 +1192,7 @@ var ui = function() {
         if (e.keyCode == 13) {
             let tb = $(this);
             tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, function() {
-                tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})   
+                tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})
             });
             let newTaskUserRequest = chrono.parse($(this).val());
             // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
@@ -1208,7 +1207,7 @@ var ui = function() {
                 isComplete: false,
                 project: "",
                 tags: [],
-                timezone: tz, 
+                timezone: tz,
             };
             if (newTaskUserRequest.length != 0) {
                 let start = newTaskUserRequest[0].start;
@@ -1260,7 +1259,7 @@ var ui = function() {
         for (let proj of tlps[2]) {
             $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
         }
-    } 
+    }
 
     let setUser = function(usr) {
         user = usr;
@@ -1272,26 +1271,28 @@ var ui = function() {
     return {user:{set: setUser, get: ()=>user}, load: loadView, refresh: reloadPage, constructSidebar: constructSidebar};
 }();
 
-
 $(document).ready(async function() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             if (user.emailVerified) {
+                const startTime = Date.now();
+                console.log(`${(Date.now()-startTime) / 1000}: Email verified, preparing ui`);
                 // User is signed in. Do user related things.
-                currentTheme = "condutiontheme-default-light";
+                currentTheme = "condutiontheme-exr0n-agressivedark";
                 $("body").addClass(currentTheme);
                 ui.user.set(user);
+                console.log(`t+${(Date.now()-startTime) / 1000}: User set`);
                 await ui.constructSidebar();
+                console.log(`t+${(Date.now()-startTime) / 1000}: Sidebar constructed`);
                 await ui.load("upcoming-page");
+                console.log(`t+${(Date.now()-startTime) / 1000}: "Upcoming" loaded`);
                 $("#loading").fadeOut();
                 $("#content-wrapper").fadeIn();
-
+                console.log(`t+${(Date.now()-startTime) / 1000}: Launched!`);
             }
         } else {
             window.location.replace("auth.html");
         }
     });
 });
-
-
 
