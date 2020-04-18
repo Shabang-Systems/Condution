@@ -66,7 +66,7 @@ var interfaceUtil = function() {
 
 
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
-        return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px"> <label class="btn task-flagged"> <input type="radio" name="task-flagged" class="task-flagged-no" id="task-flagged-no-${taskId}"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged"> <input type="radio" name="task-flagged" class="task-flagged-yes" id="task-flagged-yes-${taskId}"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px"> <label class="btn task-floating"> <input type="radio" name="task-floating" id="task-floating-no-${taskId}"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating"> <input type="radio" name="task-floating" id="task-floating-yes-${taskId}"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
+        return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     }
 
@@ -167,11 +167,11 @@ var ui = function() {
         let repeatWeekDays = [];
         $(".repeat-daterow-weekname").on("click", function(e) {
             if (repeatWeekDays.includes($(this).html())) {
-                $(this).animate({"background-color": getThemeColor("--background-feature")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                 repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
                 modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             } else {
-                $(this).animate({"background-color": getThemeColor("--decorative-light")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                 repeatWeekDays.push($(this).html());
                 modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             }
@@ -180,11 +180,11 @@ var ui = function() {
         let repeatMonthDays = [];
         $(".repeat-monthgrid-day").on("click", function(e) {
             if (repeatMonthDays.includes($(this).html())) {
-                $(this).animate({"background-color": getThemeColor("--background")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background")});
                 repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
                 modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             } else {
-                $(this).animate({"background-color": getThemeColor("--background-feature")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                 repeatMonthDays.push($(this).html());
                 modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             }
@@ -204,7 +204,7 @@ var ui = function() {
                 } else if (ti.repeat.rule === "weekly") {
                     $("#repeat-daterow").children().each(function(e) {
                         if (ti.repeat.on.includes($(this).html)) {
-                            $(this).animate({"background-color": getThemeColor("--decorative-light")});
+                            $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                             repeatMonthDays.push($(this).html());
                         }
                     });
@@ -216,7 +216,7 @@ var ui = function() {
                 } else if (ti.repeat.rule === "monthly") {
                     $("#repeat-monthgrid").children().each(function(e) {
                         if (ti.repeat.on.includes($(this).html)) {
-                            $(this).animate({"background-color": getThemeColor("--background-feature")});
+                            $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                         }
                     });
                     let repeatMonthDays = ti.repeat.on;
@@ -319,6 +319,7 @@ var ui = function() {
             let name = taskObj.name;
             let desc = taskObj.desc;
             let timezone = taskObj.timezone;
+            let repeat = taskObj.repeat;
             let defer;
             let due;
             if (taskObj.defer) {
@@ -1136,11 +1137,11 @@ var ui = function() {
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
-                $("#task-" + task).animate({"background-color": getThemeColor("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-" + task).animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
                 $("#task-edit-" + activeTask).slideDown(200);
                 $("#task-trash-" + activeTask).css("display", "block");
                 $("#task-repeat-" + activeTask).css("display", "block");
-                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+getThemeColor("--background-feature")});  
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});  
                 $("#task-name-" + task).focus();
             });
         });
@@ -1224,7 +1225,7 @@ var ui = function() {
 
             newTask(uid, ntObject).then(function(ntID) {
                 refresh.then(function(){
-                    displayTask("inbox", ntID)
+                    taskManager.generateTaskInterface("inbox", ntID)
                 });
                 getInboxTasks(uid).then(function(e){
                     iC = e.length;
