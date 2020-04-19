@@ -58,12 +58,14 @@
     $("#newuser").click(function(e) {
         if (isNA) {
             $("#name-tray").slideUp(300);
-            $(this).html("Make an account.")
+            $(this).html("Make an account.");
+            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
             isNA = false;
         } else {
             $("#name-tray").slideDown(300);
-            $(this).html("Sign in.")
+            $(this).html("Sign in.");
             isNA = true;
+            $("#greeting-auth-normal").html("Wow, a new user?!? Welcome!");
         }
     });
 
