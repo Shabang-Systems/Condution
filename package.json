@@ -5,8 +5,12 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "npx npm-force-resolutions",
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "postinstall": {
+    "postinstall": "electron-builder install-app-deps"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,7 @@
   "homepage": "https://github.com/Shabang-Systems/Condution#readme",
   "devDependencies": {
     "electron": "^8.1.1",
+    "electron-builder": "^22.5.1",
     "electron-rebuild": "^1.10.1",
     "jquery-sortablejs": "^1.0.1"
   },
@@ -49,5 +54,13 @@
     "minimist": ">=0.2.1",
     "minimatch": ">=3.0.2",
     "cli": ">=1.0.0"
+  },
+  "build": {
+    "appId": "cf.shabang.condution",
+    "productName": "Condution",
+    "copyright": "Copyright © Shabang Systems, LLC and the Condution Authors",
+    "mac": {
+      "category": "public.app-category.productivity"
+    }
   }
 }
