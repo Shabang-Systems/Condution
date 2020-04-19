@@ -336,9 +336,12 @@ async function getProjectStructure(userID, projectID, recursive=false) {
 }
 
 async function getItemAvailability(userID) {
+    let t = new Date();
+    console.log(`T+${(new Date()-t)/1000} secs`)
     let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {};
     let timea = new Date();
+    console.log(`T+${(new Date()-t)/1000} secs`)
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
         let project = (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
@@ -364,12 +367,14 @@ async function getItemAvailability(userID) {
         }
         return bstat;
     };
+    console.log(`T+${(new Date()-t)/1000} secs`)
     await Promise.all(tlps.map(async function(p) {
         blockstatus[p.id] = true;
         let blocks = await recursivelyGetBlocks(userID, p.id);
         Object.assign(blockstatus, blocks);
     }));
     await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
+    console.log(`T+${(new Date()-t)/1000} secs`)
     return blockstatus;
 }
 

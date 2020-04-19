@@ -1,7 +1,7 @@
 //"use strict";
 
-require("firebase/auth");   // TODO: dunno where to put this so that app.js doesn't error
-require("firebase/firestore");
+//require("firebase/auth");   // TODO: dunno where to put this so that app.js doesn't error
+//require("firebase/firestore");
 
 const firebaseConfig = {
     apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",

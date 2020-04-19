@@ -1197,6 +1197,7 @@ var ui = function() {
 
 
     $("#quickadd").keydown(function(e) {
+        // TODO: make the user unable to spam
         if (e.keyCode == 13) {
             let tb = $(this);
             tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, 100, function() {
