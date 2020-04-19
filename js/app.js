@@ -108,7 +108,7 @@ var ui = function() {
     let reloadPage = async function() {
         setTimeout(function() {
             if (!activeTask) (loadView(pageIndex.currentView, pageIndex.projectID));
-        }, 300);
+        }, 500);
     }
 
     // repeat view
@@ -443,7 +443,6 @@ var ui = function() {
                 }
             });
             // Set project!
-            x = new Date();
             $('#task-project-' + taskId).editableSelect({
                 effects: 'fade',
                 duration: 200,
@@ -822,8 +821,8 @@ var ui = function() {
                             modifyProject(uid, id, {order: ni});
                         }
                     }
+                    reloadPage();
                 });
-                reloadPage();
             }
         });
 
@@ -945,13 +944,12 @@ var ui = function() {
                     if (item.type === "task") {
                         // get and load the task
                         let taskId = item.content;
-                        let t = new Date();
-                        taskManager.generateTaskInterface("project-content", taskId);
+                        await taskManager.generateTaskInterface("project-content", taskId);
                     } else if (item.type === "project") {
                         // get and load a project
                         let projID = item.content.id;
                         let projName = possibleProjects[projID];
-                        $("#project-content").append(`<div id="project-${projID}" class=menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
+                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
                         if (!avalibility[projID]) {
                             $("#project-"+projID).css("opacity", "0.3");
                         }
@@ -1279,7 +1277,7 @@ var ui = function() {
         user = usr;
     }
 
-    return {user:{set: setUser, get: ()=>user}, load: loadView, refresh: reloadPage, constructSidebar: constructSidebar};
+    return {user:{set: setUser, get: ()=>user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
 }();
 
 $(document).ready(async function() {
@@ -1287,19 +1285,15 @@ $(document).ready(async function() {
         if (user) {
             if (user.emailVerified) {
                 const startTime = Date.now();
-                console.log(`${(Date.now()-startTime) / 1000}: Email verified, preparing ui`);
                 // User is signed in. Do user related things.
                 currentTheme = "condutiontheme-default-light";
                 $("body").addClass(currentTheme);
                 ui.user.set(user);
-                console.log(`t+${(Date.now()-startTime) / 1000}: User set`);
                 await ui.constructSidebar();
-                console.log(`t+${(Date.now()-startTime) / 1000}: Sidebar constructed`);
                 await ui.load("upcoming-page");
-                console.log(`t+${(Date.now()-startTime) / 1000}: "Upcoming" loaded`);
                 $("#loading").fadeOut();
                 $("#content-wrapper").fadeIn();
-                console.log(`t+${(Date.now()-startTime) / 1000}: Launched!`);
+                setInterval(()=>ui.update(), 15 * 60 * 1000);
             }
         } else {
             window.location.replace("auth.html");

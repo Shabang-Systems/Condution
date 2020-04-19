@@ -183,6 +183,7 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyProject(userID, projectID, updateQuery) {
+    console.log(updateQuery);
     await cRef("users", userID, "projects", projectID)
         .update(updateQuery)
         .catch(console.error);
@@ -325,9 +326,10 @@ async function getProjectStructure(userID, projectID, recursive=false) {
         } else if (type === "project") {
             if (recursive) {
                 let project = await getProjectStructure(userID, itemID);
-                children.push({type: "project", content: project, sortOrder: project.sortOrder}); 
+                children.push({type: "project", content: project, is_sequential: project.data().is_sequential, sortOrder: project.sortOrder}); 
             } else {
-                children.push({type: "project", content: {id: itemID}, sortOrder: project.sortOrder}); 
+                let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === itemID)[0];
+                children.push({type: "project", content: {id: itemID}, is_sequential: project.data().is_sequential, sortOrder: project.data().order}); 
             }
         }
     }
@@ -337,11 +339,9 @@ async function getProjectStructure(userID, projectID, recursive=false) {
 
 async function getItemAvailability(userID) {
     let t = new Date();
-    console.log(`T+${(new Date()-t)/1000} secs`)
     let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {};
     let timea = new Date();
-    console.log(`T+${(new Date()-t)/1000} secs`)
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
         let project = (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
@@ -367,14 +367,12 @@ async function getItemAvailability(userID) {
         }
         return bstat;
     };
-    console.log(`T+${(new Date()-t)/1000} secs`)
     await Promise.all(tlps.map(async function(p) {
         blockstatus[p.id] = true;
         let blocks = await recursivelyGetBlocks(userID, p.id);
         Object.assign(blockstatus, blocks);
     }));
     await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
-    console.log(`T+${(new Date()-t)/1000} secs`)
     return blockstatus;
 }
 
