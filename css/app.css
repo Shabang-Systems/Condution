@@ -17,7 +17,12 @@ html, body {
 }
 
 *:focus {
-    outline: none;
+    outline: none !important;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
 }
 
 /* Class */
@@ -28,17 +33,32 @@ html, body {
     margin: 1px;
 }
 
-.upcoming-section{
+.upcoming-section {
     padding-bottom:9px;
 }
 
-.perspective-title{
+.repeat-option {
+    color: var(--content-normal-alt);
+    padding: 3px 1px 3px 8px;
+    margin: 0 3px 0 3px;
+    border-radius: 3px;
+    font-size: 13px;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.repeat-option:hover {
+    background-color: var(--background-feature);
+}
+
+.perspective-title {
     color: var(--decorative-light-alt);
     font-size: 12px;
     padding: 0;
 }
 
-.perspective-titleword{
+.perspective-titleword {
     margin-left:4px;
     padding-left:4px;
     font-weight: 600;
@@ -115,6 +135,99 @@ html, body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.repeat-daterow-weekname {
+    text-align: center;
+    width: 100%;
+    background-color: var(--background-feature);
+    transition-property: all;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+
+}
+
+/*.repeat-daterow-weekname:hover {*/
+    /*text-align: center;*/
+    /*width: 100%;*/
+    /*background-color: var(--content-normal);*/
+/*}*/
+
+.repeat-monthgrid-day {
+    text-align: center;
+    /*background-color: var(--background-feature);*/
+    transition-property: all;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+    font-size: 13px;
+    margin: 3px;
+    padding: 2px;
+    font-weight: 500;
+    color: var(--content-normal-alt);
+    border-radius: 3px;
+}
+
+/*.repeat-monthgrid-day:hover {*/
+    /*background-color: var(--background-feature);*/
+/*}*/
+
+#repeat-callout {
+    color: var(--task);
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+#repeat-back {
+    display: inline-block;
+    position: absolute;
+    margin-right: 10px;
+    transform: translate(420px, -8px);
+}
+
+#repeat-monthly-unit{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#repeat-monthgrid {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: repeat(5, 60px);
+    border: 0.5px solid var(--content-normal-accent);
+    border-radius: 5px;
+    width: 95%;
+    /*background-color: var(--background-feature);*/
+    margin: 4px;
+}
+
+
+#repeat-daterow{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+#repeat-unit {
+    display: none;
+    /*height: 75px;*/
+    /*height: 105px;*/
+}
+
+
+#overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-feature-overlay);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center; 
+    display: none;
 }
 
 #login {
@@ -212,6 +325,47 @@ html, body {
     float: right;
     padding: 16px 6px 0px 0px;
     color: var(--content-normal-alt);
+}
+
+#repeat-type {
+    width: 100%;
+    padding: 2px;
+    border-radius: 3px;
+    display:none;
+    transition-property: color, background-color;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+}
+
+#repeat-type:hover {
+    background-color: var(--background-feature);
+}
+
+#repeat-type-toggle {
+    border-radius: 3px;
+    background-color: var(--background-feature);
+    border: 0;
+    box-shadow: 0 !important;
+    font-size: 13px;
+    color: var(--content-normal-alt);
+    transition-property: color, background-color;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in-out;
+}
+
+#repeat-type-toggle:hover {
+    background-color: var(--task-feature-alt);
+}
+
+#repeat-type-toggle:focus {
+    background-color: var(--task-feature-alt);
+}
+
+.overlay-unit {
+    background-color: var(--background);
+    border-radius: 5px;
+    width: 450px; 
+    padding: 10px;
 }
 
 .window-action {

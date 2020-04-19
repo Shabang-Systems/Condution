@@ -13,7 +13,11 @@
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script>var chrono = require('chrono-node');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
-        <script>var firebase = require("firebase/app");</script>
+        <!--Firebase loading this way so that it well recognize the chrome runtime-->
+        <script src="./node_modules/firebase/firebase-app.js"></script>
+        <script src="./node_modules/firebase/firebase-auth.js"></script>
+        <script src="./node_modules/firebase/firebase-storage.js"></script>
+        <script src="./node_modules/firebase/firebase-firestore.js"></script>
         <script>require('popper.js');</script>
         <script>var moment = require('moment-timezone');</script>
         <script>require('bootstrap');</script>
@@ -35,7 +39,7 @@
         <script type='text/javascript' src="js/CacheManager.js"></script>
 
         <!--Electron Crap-->
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval';" />
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
 
         <!--Unicode-->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -56,9 +60,52 @@
         <div class="main-head" id="main-head-darwin">
         </div>
         <div id="loading">
-            A Very Much Centered App loading screen...
+            Condution is Loading...
+
+            Hopefully quickly.
+
+            <pre>
+            This is alpha~04182020.v0.0.1-nightly.
+            INTERNAL USE ONLY.
+
+            (c) 2020 Shabang Systems, LLC and the programme authors.
+            All rights reserved unless otherwise noted.
+            </pre>
         </div>
         <div id="content-wrapper" style="display:none">
+            <div id="overlay">
+                <div class="overlay-unit" id="repeat-unit">
+                    <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
+                    <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
+                    <div class="dropdown">
+                        <div id="repeat-toggle-group">
+                            <button id="repeat-type-toggle" class="dropdown-toggle" type="button" data-toggle="dropdown">Every...<span class="caret"></span></button>
+                            <ul class="dropdown-menu repeat-dropdown">
+                                <li class="repeat-option" id="repeat-perday"><a>Day</a></li>
+                                <li class="repeat-option" id="repeat-perweek"><a>Week</a></li>
+                                <li class="repeat-option" id="repeat-permonth"><a>Month</a></li>
+                                <li class="repeat-option" id="repeat-peryear"><a>Year</a></li>
+                            </ul>
+                        </div>
+                        <div id="repeat-weekly-unit" class="repeat-subunit" style="display:none" style="display:none">
+                            <div id="repeat-daterow">
+                                <div class="repeat-daterow-weekname">M</div>
+                                <div class="repeat-daterow-weekname">Tu</div>
+                                <div class="repeat-daterow-weekname">W</div>
+                                <div class="repeat-daterow-weekname">Th</div>
+                                <div class="repeat-daterow-weekname">F</div>
+                                <div class="repeat-daterow-weekname">Sa</div>
+                                <div class="repeat-daterow-weekname">Su</div>
+                            </div>
+                        </div>
+                        <div id="repeat-monthly-unit" class="repeat-subunit" style="display:none">
+                            <div id="repeat-monthgrid">
+                                <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day">Last</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="left-menu">
                 <div id="menu-area">
                     <div>
@@ -113,12 +160,12 @@
                     <div class="project-action" id="project-back" style="display: inline-block; float: left; margin-right: 10px"><i class="fas fa-chevron-left"></i></div>
                     <div class="perspective-title"><i class="fas fa-project-diagram"></i><input id="project-title" class="perspective-titleword" type="text"></input>
                         <div class="task-subicon" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
-                        <div class="btn-group btn-group-toggle project-sequential-group" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px">
-                            <label class="btn project-sequential active">
-                                <input type="radio" name="task-flagged" class="task-flagged-no" id="task-flagged-no-${taskId}" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
+                        <div class="btn-group btn-group-toggle project-sequential-group" id="project-sequential" data-toggle="buttons" style="margin-right: 20px">
+                            <label class="btn project-sequential active" id="project-sequential-no">
+                                <input type="radio" name="task-sequential" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
                             </label>
-                            <label class="btn project-sequential">
-                                <input type="radio" name="task-flagged" class="task-flagged-yes" id="task-flagged-yes-${taskId}"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
+                            <label class="btn project-sequential" id="project-sequential-yes">
+                                <input type="radio" name="task-sequential"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
                             </label>
                         </div>
                     </div>

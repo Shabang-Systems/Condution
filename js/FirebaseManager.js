@@ -96,9 +96,10 @@ async function getInboxTasks(userID) {
     return inboxDocs.map(doc => doc.id);
 }
 
-async function getDSTasks(userID) {
+async function getDSTasks(userID, available) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
+    //let available = await getItemAvailability(userID);
     let dsDocs = await cRef("users", userID,
         "tasks")
             //['due', '<=', dsTime],
@@ -108,16 +109,17 @@ async function getDSTasks(userID) {
             .filter(doc =>
                 (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && // has a due date and is ds
                 (doc.data().defer ? (doc.data().defer.seconds < ((new Date()).getTime())/1000) : true) && // has a defer and is not defered or has no defer date
-                (doc.data().isComplete === false) // is not completed
+                (doc.data().isComplete === false) && // is not completed
+                (available[doc.id]) // aaaand is available
             )
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);
     return dsDocs.map(doc => doc.id);
 }
 
-async function getInboxandDS(userID) {
+async function getInboxandDS(userID, avalibility) {
     let ibt = await getInboxTasks(userID);
-    let dst = await getDSTasks(userID);
+    let dst = await getDSTasks(userID, avalibility);
     let dstWithoutIbt = dst.filter(x => ibt.indexOf(x) < 0);
     return [ibt, dstWithoutIbt]
 }
@@ -181,6 +183,7 @@ async function getProjectsandTags(userID) {
 }
 
 async function modifyProject(userID, projectID, updateQuery) {
+    console.log(updateQuery);
     await cRef("users", userID, "projects", projectID)
         .update(updateQuery)
         .catch(console.error);
@@ -307,7 +310,7 @@ async function deleteTag(userID, tagID) {
         .catch(console.error);
 }
 
-async function getProjectStructure(userID, projectID) {
+async function getProjectStructure(userID, projectID, recursive=false) {
     let children = [];
 
     // absurdly hitting the cache with a very broad query so that the
@@ -321,11 +324,55 @@ async function getProjectStructure(userID, projectID) {
                 children.push({type: "task", content: itemID, sortOrder: task.order});
             }
         } else if (type === "project") {
-            let project = await getProjectStructure(userID, itemID);
-            children.push({type: "project", content: project, sortOrder: project.sortOrder});
+            if (recursive) {
+                let project = await getProjectStructure(userID, itemID);
+                children.push({type: "project", content: project, is_sequential: project.data().is_sequential, sortOrder: project.sortOrder}); 
+            } else {
+                let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === itemID)[0];
+                children.push({type: "project", content: {id: itemID}, is_sequential: project.data().is_sequential, sortOrder: project.data().order}); 
+            }
         }
     }
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
-    return { id: projectID, children: children, sortOrder: project.data().order};
+    return { id: projectID, children: children, is_sequential: project.data().is_sequential, sortOrder: project.data().order};
+}
+
+async function getItemAvailability(userID) {
+    let t = new Date();
+    let tlps = (await getTopLevelProjects(userID))[2];
+    let blockstatus = {};
+    let timea = new Date();
+    async function recursivelyGetBlocks(userID, projectID) {
+        let bstat = {};
+        let project = (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
+        let projStruct = (await getProjectStructure(userID, projectID));
+        if (project.data().is_sequential) {
+            let child = projStruct.children[0];
+            if (child.type === "project") {
+                Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)));
+                bstat[child.content.id] = true;
+            } else if (child.type === "task") {
+                bstat[child.content] = true;
+            }
+        } else {
+            let children = projStruct.children;
+            await Promise.all(children.map(async function(child) {
+                if (child.type === "project") {
+                    Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)));
+                    bstat[child.content.id] = true;
+                } else if (child.type === "task") {
+                    bstat[child.content] = true;
+                }
+            }));
+        }
+        return bstat;
+    };
+    await Promise.all(tlps.map(async function(p) {
+        blockstatus[p.id] = true;
+        let blocks = await recursivelyGetBlocks(userID, p.id);
+        Object.assign(blockstatus, blocks);
+    }));
+    await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
+    return blockstatus;
 }
 

@@ -6,6 +6,7 @@
      * be colored --background-feature */
     --background: #f4f4f4;
     --background-feature: #e5e7ea;
+    --background-feature-overlay: rgba(229,231,234,0.7);
 
     /* Content */
     /* These are the mail colors. Make them mainly
