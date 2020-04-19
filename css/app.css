@@ -167,6 +167,12 @@ a {
     border-radius: 3px;
 }
 
+.greeting-auth-subtitle {
+    font-weight: 700;
+    font-size: 16px;
+    padding-top: 10px;
+}
+
 /*.repeat-monthgrid-day:hover {*/
     /*background-color: var(--background-feature);*/
 /*}*/
@@ -230,10 +236,30 @@ a {
     display: none;
 }
 
+#newuser {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--content-normal-alt);
+    font-weight: 500;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    border: 1px solid transparent;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 3px;
+    transform: translateX(-6px);
+    border: 0.5px solid transparent;
+}
+
+#newuser:hover {
+    border: 0.5px solid var(--content-normal-accent);
+}
+
 #login {
     bottom: 0;
     width: 150px;
-    margin-top: auto;
     color: var(--content-normal-accent);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
@@ -242,7 +268,7 @@ a {
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
     margin-top: 15px;
-    padding: 5px 0 4px 10px;
+    padding: 5px 2px 4px 0;
     transform: translateX(-1px);
     cursor: default;
     -moz-border-radius: 5px;
@@ -251,6 +277,8 @@ a {
     border: var(--content-normal-accent) 1px solid;
     float: right;
     transform: translateX(-90px);
+    display: inline-block;
+    text-align: center;
 }
 
 #login:hover {
@@ -258,7 +286,7 @@ a {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 5px 0 4px 10px;
+    padding: 5px 2px 4px 0;
     color: var(--content-normal);
 }
 
@@ -276,7 +304,7 @@ a {
     width: 250px;
     padding: 40px 10px 10px 10px;
     overflow: hidden;
-    background: url(https://source.unsplash.com/HzSLh5zV42s/1600x900);
+    background: url(./../static/auth-background.jpg);
     background-size: cover;
 }
 
@@ -310,11 +338,6 @@ a {
     padding-right: 10px;
 }
 
-#greeting-auth-subtitle {
-    font-weight: 700;
-    font-size: 16px;
-    padding-top: 10px;
-}
 
 #upcoming-header{
     font-size: 13px;
