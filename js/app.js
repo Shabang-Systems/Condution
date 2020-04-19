@@ -1294,8 +1294,11 @@ $(document).ready(async function() {
                 $("#loading").fadeOut();
                 $("#content-wrapper").fadeIn();
                 setInterval(()=>ui.update(), 15 * 60 * 1000);
+            } else {
+                window.location.replace("auth.html");
             }
         } else {
+            firebase.auth().signOut();
             window.location.replace("auth.html");
         }
     });

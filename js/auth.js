@@ -1,14 +1,11 @@
 // Chapter 0: Fire! Base!
-const firebaseConfig = {
-    apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
-    authDomain: "condution-7133f.firebaseapp.com",
-    databaseURL: "https://condution-7133f.firebaseio.com",
-    projectId: "condution-7133f",
-    storageBucket: "condution-7133f.appspot.com",
-    messagingSenderId: "544684450810",
-    appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
-};
-firebase.initializeApp(firebaseConfig);
+const obj = require("./secrets")
+
+
+// Initialize Firebase Application
+// TODO TODO TODO !!!! Change this on deploy
+firebase.initializeApp(obj.dbkeys.deploy);
+
 
 let auth = function() {
     firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
