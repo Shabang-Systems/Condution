@@ -1,20 +1,14 @@
 //"use strict";
 
-require("firebase/auth");   // TODO: dunno where to put this so that app.js doesn't error
-require("firebase/firestore");
+//require("firebase/auth");   // TODO: dunno where to put this so that app.js doesn't error
+//require("firebase/firestore");
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDFv40o-MFNy4eVfQzLtPG-ATkBUOHPaSI",
-    authDomain: "condution-7133f.firebaseapp.com",
-    databaseURL: "https://condution-7133f.firebaseio.com",
-    projectId: "condution-7133f",
-    storageBucket: "condution-7133f.appspot.com",
-    messagingSenderId: "544684450810",
-    appId: "1:544684450810:web:9b1caf7ed9285890fa3a43"
-};
+const obj = require("./secrets")
+
 
 // Initialize Firebase Application
-firebase.initializeApp(firebaseConfig);
+// TODO TODO TODO !!!! Change this on deploy
+firebase.initializeApp(obj.dbkeys.deploy);
 
 const initFirebase = () => {
     // Firebase App (the core Firebase SDK) is always required and
@@ -88,11 +82,11 @@ const cRef = (() => {
          */
         const TODOstring = JSON.stringify(path);        //  strigify to hash array
         if (!cache.has(TODOstring)) {                   //  if path string isn't cached
-            // TODO: comment this out someday
+            // TODO: comment this out someday \/
             console.log("Firebase was hit with tremendus shouts by query", TODOstring);
             const ref = getFirebaseRef(path);           //  get the reference from the database
-            cache.set(TODOstring, (await ref.get()));   //  save result in cache
-            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this, someday
+            cache.set(TODOstring, ref.get());           //  save result in cache
+            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
                 ref.onSnapshot({
                     error: console.trace,
                     next: (snap) => {
@@ -101,7 +95,7 @@ const cRef = (() => {
                 })
             );
         }
-        return cache.get(TODOstring);
+        return await cache.get(TODOstring);
     }
 
     function cacheRef(...path) {

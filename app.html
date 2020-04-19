@@ -13,7 +13,11 @@
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script>var chrono = require('chrono-node');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
-        <script>var firebase = require("firebase/app");</script>
+        <!--Firebase loading this way so that it well recognize the chrome runtime-->
+        <script src="./node_modules/firebase/firebase-app.js"></script>
+        <script src="./node_modules/firebase/firebase-auth.js"></script>
+        <script src="./node_modules/firebase/firebase-storage.js"></script>
+        <script src="./node_modules/firebase/firebase-firestore.js"></script>
         <script>require('popper.js');</script>
         <script>var moment = require('moment-timezone');</script>
         <script>require('bootstrap');</script>
@@ -35,7 +39,7 @@
         <script type='text/javascript' src="js/CacheManager.js"></script>
 
         <!--Electron Crap-->
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval';" />
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
 
         <!--Unicode-->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -56,7 +60,17 @@
         <div class="main-head" id="main-head-darwin">
         </div>
         <div id="loading">
-            A Very Much Centered App loading screen...
+            Condution is Loading...
+
+            Hopefully quickly.
+
+            <pre>
+            This is alpha~04182020.v0.0.1-nightly.
+            INTERNAL USE ONLY.
+
+            (c) 2020 Shabang Systems, LLC and the programme authors.
+            All rights reserved unless otherwise noted.
+            </pre>
         </div>
         <div id="content-wrapper" style="display:none">
             <div id="overlay">

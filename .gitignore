@@ -109,3 +109,7 @@ dist
 # zach's misc IDE files
 ../.idea
 .idea
+
+# Secrets
+secrets.json
+
