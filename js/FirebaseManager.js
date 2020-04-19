@@ -96,10 +96,10 @@ async function getInboxTasks(userID) {
     return inboxDocs.map(doc => doc.id);
 }
 
-async function getDSTasks(userID) {
+async function getDSTasks(userID, available) {
     let dsTime = new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
-    let available = await getItemAvailability(userID);
+    //let available = await getItemAvailability(userID);
     let dsDocs = await cRef("users", userID,
         "tasks")
             //['due', '<=', dsTime],
@@ -117,9 +117,9 @@ async function getDSTasks(userID) {
     return dsDocs.map(doc => doc.id);
 }
 
-async function getInboxandDS(userID) {
+async function getInboxandDS(userID, avalibility) {
     let ibt = await getInboxTasks(userID);
-    let dst = await getDSTasks(userID);
+    let dst = await getDSTasks(userID, avalibility);
     let dstWithoutIbt = dst.filter(x => ibt.indexOf(x) < 0);
     return [ibt, dstWithoutIbt]
 }
@@ -309,7 +309,7 @@ async function deleteTag(userID, tagID) {
         .catch(console.error);
 }
 
-async function getProjectStructure(userID, projectID) {
+async function getProjectStructure(userID, projectID, recursive=false) {
     let children = [];
 
     // absurdly hitting the cache with a very broad query so that the
@@ -323,8 +323,12 @@ async function getProjectStructure(userID, projectID) {
                 children.push({type: "task", content: itemID, sortOrder: task.order});
             }
         } else if (type === "project") {
-            let project = await getProjectStructure(userID, itemID);
-            children.push({type: "project", content: project, sortOrder: project.sortOrder});
+            if (recursive) {
+                let project = await getProjectStructure(userID, itemID);
+                children.push({type: "project", content: project, sortOrder: project.sortOrder}); 
+            } else {
+                children.push({type: "project", content: {id: itemID}, sortOrder: project.sortOrder}); 
+            }
         }
     }
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
@@ -334,11 +338,10 @@ async function getProjectStructure(userID, projectID) {
 async function getItemAvailability(userID) {
     let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {};
-    console.log("Get ready for getItemAvailability!!!!")
     let timea = new Date();
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
-        let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
+        let project = (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
         let projStruct = (await getProjectStructure(userID, projectID));
         if (project.data().is_sequential) {
             let child = projStruct.children[0];
@@ -367,7 +370,6 @@ async function getItemAvailability(userID) {
         Object.assign(blockstatus, blocks);
     }));
     await (await getInboxTasks(userID)).forEach((id) => blockstatus[id] = true);
-
     return blockstatus;
 }
 

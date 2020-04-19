@@ -101,7 +101,7 @@ var ui = function() {
         possibleProjectsRev = pPandT[0][1];
         possibleTagsRev = pPandT[1][1];
         avalibility = await getItemAvailability(uid);
-        inboxandDS = await getInboxandDS(uid);
+        inboxandDS = await getInboxandDS(uid, avalibility);
     }
 
     // the outside world's refresh function
@@ -426,8 +426,12 @@ var ui = function() {
             });
             // So apparently setting dates is hard for this guy, so we run this async
             let setDates = async () => {
-                $("#task-defer-" + taskId).datetimepicker('setDate', (defer_current));
-                $("#task-due-" + taskId).datetimepicker('setDate', (due_current));
+                if (defer_current) {
+                    $("#task-defer-" + taskId).datetimepicker('setDate', (defer_current));
+                }
+                if (due_current) {
+                    $("#task-due-" + taskId).datetimepicker('setDate', (due_current));
+                }
             };
             setDates();
             // Set tags!
@@ -439,6 +443,7 @@ var ui = function() {
                 }
             });
             // Set project!
+            x = new Date();
             $('#task-project-' + taskId).editableSelect({
                 effects: 'fade',
                 duration: 200,
@@ -940,12 +945,13 @@ var ui = function() {
                     if (item.type === "task") {
                         // get and load the task
                         let taskId = item.content;
-                        await taskManager.generateTaskInterface("project-content", taskId);
+                        let t = new Date();
+                        taskManager.generateTaskInterface("project-content", taskId);
                     } else if (item.type === "project") {
                         // get and load a project
                         let projID = item.content.id;
                         let projName = possibleProjects[projID];
-                        $("#project-content").append(`<div id="project-${projID}" class="menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
+                        $("#project-content").append(`<div id="project-${projID}" class=menuitem project subproject sbpro"><i class="far fa-arrow-alt-circle-right subproject-icon"></i><t style="padding-left:18px">${projName}</t></div>`);
                         if (!avalibility[projID]) {
                             $("#project-"+projID).css("opacity", "0.3");
                         }
@@ -985,14 +991,13 @@ var ui = function() {
 
         // refresh data
         await refresh();
-
         // load the dang view
         switch(viewName) {
             case 'upcoming-page':
-                await viewLoader.upcoming();
+                viewLoader.upcoming();
                 break;
             case 'project-page':
-                await viewLoader.project(itemID);
+                viewLoader.project(itemID);
                 break;
         }
 
@@ -1001,6 +1006,7 @@ var ui = function() {
 
         // tell everyone to bring it!
         pageIndex.currentView = viewName;
+
     }
 
     // document action listeners!!
@@ -1014,9 +1020,9 @@ var ui = function() {
             if (!$(this).hasClass("subproject")) {
                 pageIndex.projectDir = [];
             }
+            $("#"+activeMenu).addClass("menuitem-selected");
             pageIndex.projectDir.push(activeMenu);
             loadView("project-page", activeMenu.split("-")[1]);
-            $("#"+activeMenu).addClass("menuitem-selected");
         }
     });
 
@@ -1193,58 +1199,59 @@ var ui = function() {
     $("#quickadd").keydown(function(e) {
         if (e.keyCode == 13) {
             let tb = $(this);
-            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, function() {
-                tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})
-            });
-            let newTaskUserRequest = chrono.parse($(this).val());
-            // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
-            // Make that happen is the todo.
-            let startDate;
-            let endDate;
-            let tz = moment.tz.guess();
-            let ntObject = {
-                desc: "",
-                isFlagged: false,
-                isFloating: false,
-                isComplete: false,
-                project: "",
-                tags: [],
-                timezone: tz,
-                repeat: {rule: "none"},
-            };
-            if (newTaskUserRequest.length != 0) {
-                let start = newTaskUserRequest[0].start;
-                let end = newTaskUserRequest[0].end;
-                if (start && end) {
-                    startDate = start.date();
-                    endDate = end.date();
-                    ntObject.defer = startDate;
-                    ntObject.due = endDate;
-                } else if (end) {
-                    endDate = end.date();
-                    ntObject.due = endDate;
-                } else if (start) {
-                    startDate = start.date();
-                    ntObject.defer = startDate;
+            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, 100, function() {
+                let newTaskUserRequest = chrono.parse($(this).val());
+                // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+                // Make that happen is the todo.
+                let startDate;
+                let endDate;
+                let tz = moment.tz.guess();
+                let ntObject = {
+                    desc: "",
+                    isFlagged: false,
+                    isFloating: false,
+                    isComplete: false,
+                    project: "",
+                    tags: [],
+                    timezone: tz,
+                    repeat: {rule: "none"},
+                };
+                if (newTaskUserRequest.length != 0) {
+                    let start = newTaskUserRequest[0].start;
+                    let end = newTaskUserRequest[0].end;
+                    if (start && end) {
+                        startDate = start.date();
+                        endDate = end.date();
+                        ntObject.defer = startDate;
+                        ntObject.due = endDate;
+                    } else if (end) {
+                        endDate = end.date();
+                        ntObject.due = endDate;
+                    } else if (start) {
+                        startDate = start.date();
+                        ntObject.defer = startDate;
+                    }
+                    ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
+                } else {
+                    ntObject.name = tb.val()
                 }
-                ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
-            } else {
-                ntObject.name = tb.val()
-            }
 
-            newTask(uid, ntObject).then(function(ntID) {
-                refresh().then(function(){
-                    taskManager.generateTaskInterface("inbox", ntID)
+                newTask(uid, ntObject).then(function(ntID) {
+                    refresh().then(function(){
+                        taskManager.generateTaskInterface("inbox", ntID)
+                    });
+                    getInboxTasks(uid).then(function(e){
+                        iC = e.length;
+                        $("#unsorted-badge").html(''+iC);
+                        $("#inbox-subhead").slideDown(300);
+                        $("#inbox").slideDown(300);
+                    });
+                    tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})
+                    tb.blur();
+                    tb.val("");
                 });
-                getInboxTasks(uid).then(function(e){
-                    iC = e.length;
-                    $("#unsorted-badge").html(''+iC);
-                    $("#inbox-subhead").slideDown(300);
-                    $("#inbox").slideDown(300);
-                });
-                tb.blur();
-                tb.val("");
-            })
+            });
+            
         } else if (e.keyCode == 27) {
             $(this).blur();
         }
