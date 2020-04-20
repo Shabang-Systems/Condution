@@ -193,6 +193,21 @@ async function getProjectsandTags(userID) {
     return [[projectNameById, projectIdByName], [tagNameById, tagIdByName]];
 }
 
+async function getPerspectives(userID) {
+    let pInfobyName = {};
+    let pInfobyID = {}
+    await cRef("users", userID, "perspectives").get()   // TODO: combine database hits
+        .then(snap => snap.docs.forEach(pstp => {
+            if (pstp.exists) {
+                pInfobyID[pstp.id] = {name: pstp.data().name, query: ptsp.data().query};
+                pInfobyName[pstp.name] = {id: pstp.id, query: ptsp.data().query};
+            }
+        }))
+        .catch(console.error);
+
+    return [pInfobyID, pInfobyName];
+}
+
 async function modifyProject(userID, projectID, updateQuery) {
     console.log(updateQuery);
     await cRef("users", userID, "projects", projectID)

@@ -81,6 +81,7 @@ var ui = function() {
 
     // generic data containers used by refresh and others
     let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev;
+    let possiblePerspectives;
     let inboxandDS;
     let avalibility;
 
@@ -100,6 +101,7 @@ var ui = function() {
         possibleTags = pPandT[1][0];
         possibleProjectsRev = pPandT[0][1];
         possibleTagsRev = pPandT[1][1];
+        possiblePerspectives = await getPerspectives(uid);
         avalibility = await getItemAvailability(uid);
         inboxandDS = await getInboxandDS(uid, avalibility);
     }
@@ -925,6 +927,22 @@ var ui = function() {
             });
         }
 
+        // perspective view loader
+        let perspective = async function(pid) {
+            // get name
+            let perspectiveObject = possiblePerspectives[0][pid];
+            // set value
+            $("perspective-title").val(perspectiveObject.name);
+            // calculate perspective
+            perspectiveHandler.calc(perspectiveObject.query).then(async function(tids) {
+                for (let taskId of tids) {
+                    // Nononono don't even think about foreach 
+                    // othewise the order will be messed up
+                    await taskManager.generateTaskInterface("perspective-content", taskId);
+                }
+            });
+        }
+
         // project view loader
         let project = async function(pid) {
             // update pid
@@ -986,6 +1004,7 @@ var ui = function() {
         $("#inbox").empty();
         $("#due-soon").empty();
         $("#project-content").empty();
+        $("#perspective-content").empty();
 
         // refresh data
         await refresh();
@@ -993,6 +1012,9 @@ var ui = function() {
         switch(viewName) {
             case 'upcoming-page':
                 viewLoader.upcoming();
+                break;
+            case 'perspective-page':
+                viewLoader.perspective(itemID);
                 break;
             case 'project-page':
                 viewLoader.project(itemID);
