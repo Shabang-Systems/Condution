@@ -32,7 +32,7 @@ const perspective = function(){
         return await getTasksWithQuery(uid, util.select.all(queries))
     }
 
-    let compileLogicCapGroup = async function(uid, tasks, cmp, value, ltr=true) {
+    let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
         let taskInfo = tasks[0].map(t=>await getTaskInformation(uid, t));
         let taskCompValues;
         // TODO: add more?
@@ -69,6 +69,7 @@ const perspective = function(){
     let getPerspectiveFromString = async function(uid, pStr) {
         let logicParsedGroups = []
         let pPaT = await getProjectsandTags(uid);
+        let tasks = [];
         getCaptureGroups(pStr).forEach(function(i) {
             let logicSort = cgs.logicCaptureGroup.exec(i);
             if(logicSort) {
@@ -79,27 +80,18 @@ const perspective = function(){
                 if (lhs.test(taskCaptureGroup)) {
                     lhs = [await compileTask(uid, lhs[0], pPaT), lhs[1]];
                     rhs = parseSpecialVariables(rhs[1]);
+                    tasks = [...tasks, ...(await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true))]; // true (that is, left to right order)
                 } else {
                     rhs = [await compileTask(uid, rhs[0], pPaT), rhs[1]];
                     lhs = parseSpecialVariables(lhs[1]);
+                    tasks = [...tasks, ...(await compileLogicCaptureGroup(uid, rhs, cmp, lhs, false))]; // false (that is, right to left order)
                 }
             } else {
                 // handle standard group
-
+                tasks = [...tasks, ...(await compileTask(uid, i, pPaT))];
             }
         });
-/*        let matchedTasks = pStr.match(filters.task);*/
-        //let matchTaskFilters = {};
-        //let tasksIndex = {};
-        //let index = 0;
-        //matchedTasks.forEach(function(i){
-            //matchTaskFilters[i] = (i.substring(1,i.length-1).match(filters.taskFilter));
-            //tasksIndex[i] = "{{"+index+"}}";
-            //index++;
-        //});
-        //matchedTasks.forEach((i)=>pStr=pStr.replace(i, tasksIndex[i]));
-        //let taskParsedPStr = pStr.split(" ").map((i)=>i.split("$"));
-        /*return [pStr, tasksIndex, taskParsedPStr];*/
+        // TODO: sorting thing?
     }
 
     return {calc: getPerspectiveFromString};
