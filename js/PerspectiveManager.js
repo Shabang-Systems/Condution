@@ -36,6 +36,7 @@ const perspective = function(){
                 e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
             }
         });
+        console.log(queries);
         return await getTasksWithQuery(uid, util.select.all(...queries))
     }
 
@@ -76,13 +77,12 @@ const perspective = function(){
     }
 
     let getPerspectiveFromString = async function(uid, pStr) {
-        cgs.clear();
         let logicParsedGroups = []
         let pPaT = await getProjectsandTags(uid);
-        let tasks = [];
-        await Promise.all(getCaptureGroups(pStr).map(async function(i) {
+        let tasks = await Promise.all(getCaptureGroups(pStr).map(async function(i) {
+            cgs.clear();
             let logicSort = cgs.logicCaptureGroup.exec(i);
-            console.log(logicSort);
+            console.log(i);
             if(logicSort) {
                 // handle logic group
                 let [, lhs, cmp, rhs] = logicSort;
@@ -90,15 +90,15 @@ const perspective = function(){
                 if (cgs.taskCaptureGroup.test(lhs)) {
                     lhs = [await compileTask(uid, lhs[0], pPaT), lhs[1]];
                     rhs = parseSpecialVariables(rhs[1]);
-                    tasks = [...tasks, ...(await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true))]; // true (that is, left to right order)
+                    return (await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true)); // true (that is, left to right order)
                 } else {
                     rhs = [await compileTask(uid, rhs[0], pPaT), rhs[1]];
                     lhs = parseSpecialVariables(lhs[1]);
-                    tasks = [...tasks, ...(await compileLogicCaptureGroup(uid, rhs, cmp, lhs, false))]; // false (that is, right to left order)
+                    return (await compileLogicCaptureGroup(uid, rhs, cmp, lhs, false)); // false (that is, right to left order)
                 }
             } else {
                 // handle standard group
-                tasks = [...tasks, ...(await compileTask(uid, i, pPaT))];
+            return (await compileTask(uid, i, pPaT));
             }
         }));
         return tasks;
