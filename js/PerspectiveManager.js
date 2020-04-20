@@ -1,9 +1,9 @@
 const perspective = function(){
     let cgs = {
-        taskFilter = /([^\w\d\s\[]{1,2}\w+)/gi,
-        taskCaptureGroup = /\[(([^\w\d\s]{1,2}\w+) *)*?\]/gi,
-        logicCaptureGroup = /(.*) *([<=>]) *(.*)/gi,
-        globalCaptureGroup = /\[(([^\w\d\s]{1,2}\w+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
+        taskFilter: /([^\w\d\s\[]{1,2}\w+)/gi,
+        taskCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\]/gi,
+        logicCaptureGroup: /(.*) *([<=>]) *(.*)/gi,
+        globalCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
     }
 
     let getCaptureGroups = (str) => str.match(cgs.globalCaptureGroup);
@@ -29,11 +29,11 @@ const perspective = function(){
                 e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
             }
         });
-        return await getTasksWithQuery(uid, util.select.all(queries))
+        return await getTasksWithQuery(uid, util.select.all(...queries))
     }
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
-        let taskInfo = tasks[0].map(t=>await getTaskInformation(uid, t));
+        let taskInfo = await Promise.all(tasks[0].map(t=>(getTaskInformation(uid, t))));
         let taskCompValues;
         // TODO: add more?
         if (tasks[1].includes("due")) {
@@ -70,7 +70,7 @@ const perspective = function(){
         let logicParsedGroups = []
         let pPaT = await getProjectsandTags(uid);
         let tasks = [];
-        getCaptureGroups(pStr).forEach(function(i) {
+        await Promise.all(getCaptureGroups(pStr).map(async function(i) {
             let logicSort = cgs.logicCaptureGroup.exec(i);
             if(logicSort) {
                 // handle logic group
@@ -90,7 +90,8 @@ const perspective = function(){
                 // handle standard group
                 tasks = [...tasks, ...(await compileTask(uid, i, pPaT))];
             }
-        });
+        }));
+        return tasks;
         // TODO: sorting thing?
     }
 

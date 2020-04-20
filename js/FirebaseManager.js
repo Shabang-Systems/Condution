@@ -15,9 +15,9 @@ const util = {
                 case "!=":
                     return lhs != rhs;
                 case "has":
-                    return lhs.hasOwnProperty(rhs);
+                    return lhs.includes(rhs);
                 case "!has":
-                    return !lhs.hasOwnProperty(rhs);
+                    return !lhs.includes(rhs);
                 default:
                     throw new TypeError("Unkown comparator " + cmp);
             }
@@ -81,7 +81,7 @@ async function getTasks(userID) {
 }
 
 async function getTasksWithQuery(userID, query) {
-    let taskDocs = cRef("users", userID, "tasks")
+    let taskDocs = await cRef("users", userID, "tasks")
         .get()
         .then(snap => snap.docs
             .filter(query)
