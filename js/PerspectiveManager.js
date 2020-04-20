@@ -28,7 +28,6 @@ const perspective = function(){
 
     let compileTask = async function(uid, str, pPaT) {
         let queries = []
-        console.log(str);
         str.match(cgs.taskFilter).forEach(function(e) {
             if (e[0] == "!") {
                 e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(1, e.length)]]);
@@ -49,7 +48,6 @@ const perspective = function(){
             taskCompValues = taskInfo.map(t=>[t[1], (t[0].due ? new Date((t[0].due.seconds)*1000) : undefined)]);
         } else if (tasks[1].includes("defer")) {
             taskCompValues = taskInfo.map(t=>[t[1], (t[0].defer ? new Date((t[0].defer.seconds)*1000) : undefined)]);
-            console.log(taskCompValues, taskInfo[0][0].defer);
         }
         let filteredResults;
         let util_datesequal = function(dateA, dateB) {
