@@ -4,7 +4,6 @@ const perspective = function(){
         taskCaptureGroup: /\[(([^\w\d\s]{1,2}[\w\s]+) *)*?\]/gi,
         logicCaptureGroup: /(.*) *([<=>]) *(.*)/gi,
         globalCaptureGroup: /\[(([^\w\d\s]{1,2}[\w\s]+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
-        //globalCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
         clear: function() {
             this.taskFilter.lastIndex = 0;
             this.taskCaptureGroup.lastIndex = 0;
