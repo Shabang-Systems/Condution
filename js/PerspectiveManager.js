@@ -46,9 +46,10 @@ const perspective = function(){
         let taskCompValues;
         // TODO: add more?
         if (tasks[1].includes("due")) {
-            taskCompValues = taskInfo.map(t=>[t[1], new Date((t[0].due)*1000)]);
+            taskCompValues = taskInfo.map(t=>[t[1], (t[0].due ? new Date((t[0].due.seconds)*1000) : undefined)]);
         } else if (tasks[1].includes("defer")) {
-            taskCompValues = taskInfo.map(t=>[t[1], new Date((t[0].defer)*1000)]);
+            taskCompValues = taskInfo.map(t=>[t[1], (t[0].defer ? new Date((t[0].defer.seconds)*1000) : undefined)]);
+            console.log(taskCompValues, taskInfo[0][0].defer);
         }
         let filteredResults;
         let util_datesequal = function(dateA, dateB) {
