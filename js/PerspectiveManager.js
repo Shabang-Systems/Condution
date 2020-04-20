@@ -10,31 +10,45 @@ const perspective = function(){
 
     let parseTaskCaptureGroup = (str) => str.split("$");
 
-    let parseTask = function(str) {
+    let compileTask = function(str, pPaT) {
         let queries = []
         str.match(cgs.taskFilter).forEach(function(e) {
-            if (e[0] === ".") {
-                queries.push([e.slice])
+            if (e[0] == "!") {
+                e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(1, e.length)]]);
+            } else {
+                e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
             }
         });
-        getTasksWithQuery(uid, util.select.all())
+        return getTasksWithQuery(uid, util.select.all(queries))
     }
 
-    let getPerspectiveFromString = function(uid, pStr) {
+    let parseSpecialVariables = function(...val) {
+        let vr;
+        switch(val[0]) {
+           case "today":
+               vr = new Date();
+               break;
+        }
+        return vr;
+    }
+
+
+    let getPerspectiveFromString = async function(uid, pStr) {
         let logicParsedGroups = []
+        let pPaT = await getProjectsandTags(uid);
         getCaptureGroups(pStr).forEach(function(i) {
             let logicSort = cgs.logicCaptureGroup.exec(i);
             if(logicSort) {
                 // handle logic group
                 lhs, cmp, rhs = logicSort;
                 lhs, rhs = [parseTaskCaptureGroup(lhs), parseTaskCaptureGroup(rhs)];
+
                 if (lhs.test(taskCaptureGroup)) {
-                    switch (rhs[1]) {
-                        case "today":
-                            rhs = new Date();
-                            break;
-                    }
-                    lhs[0] = parseTask(lhs[0]);
+                    lhs = [await compileTask(lhs[0], pPaT), lhs[1]];
+                    rhs = parseSpecialVariables(rhs[1]);
+                } else {
+                    rhs = [await compileTask(rhs[0], pPaT), rhs[1]];
+                    lhs = parseSpecialVariables(lhs[1]);
                 }
             } else {
                 // handle standard group
