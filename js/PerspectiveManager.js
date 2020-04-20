@@ -4,11 +4,17 @@ const perspective = function(){
         taskCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\]/gi,
         logicCaptureGroup: /(.*) *([<=>]) *(.*)/gi,
         globalCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
+        clear: function() {
+            this.taskFilter.lastIndex = 0;
+            this.taskCaptureGroup.lastIndex = 0;
+            this.logicCaptureGroup.lastIndex = 0;
+            this.globalCaptureGroup.lastIndex = 0;
+        }
     }
 
     let getCaptureGroups = (str) => str.match(cgs.globalCaptureGroup);
 
-    let parseTaskCaptureGroup = (str) => str.split("$");
+    let parseTaskCaptureGroup = (str) => (str.split("$").map(i=>i.trim()));
 
     let parseSpecialVariables = function(...val) {
         let vr;
@@ -22,6 +28,7 @@ const perspective = function(){
 
     let compileTask = async function(uid, str, pPaT) {
         let queries = []
+        console.log(str);
         str.match(cgs.taskFilter).forEach(function(e) {
             if (e[0] == "!") {
                 e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(1, e.length)]]);
@@ -33,13 +40,15 @@ const perspective = function(){
     }
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
-        let taskInfo = await Promise.all(tasks[0].map(t=>(getTaskInformation(uid, t))));
+        let taskInfo = await Promise.all(tasks[0].map(async function(t){
+            return [await getTaskInformation(uid, t), t];
+        }));
         let taskCompValues;
         // TODO: add more?
         if (tasks[1].includes("due")) {
-            taskCompValues = taskInfo.map(t=>[t, t.due]);
+            taskCompValues = taskInfo.map(t=>[t[1], new Date((t[0].due)*1000)]);
         } else if (tasks[1].includes("defer")) {
-            taskCompValues = taskInfo.map(t=>[t, t.defer]);
+            taskCompValues = taskInfo.map(t=>[t[1], new Date((t[0].defer)*1000)]);
         }
         let filteredResults;
         let util_datesequal = function(dateA, dateB) {
@@ -63,21 +72,22 @@ const perspective = function(){
                 break;
 
         }
-        return taskCompValues.map(t=>t[0]);
+        return (taskCompValues.map(t=>t[0]));
     }
 
     let getPerspectiveFromString = async function(uid, pStr) {
+        cgs.clear();
         let logicParsedGroups = []
         let pPaT = await getProjectsandTags(uid);
         let tasks = [];
         await Promise.all(getCaptureGroups(pStr).map(async function(i) {
             let logicSort = cgs.logicCaptureGroup.exec(i);
+            console.log(logicSort);
             if(logicSort) {
                 // handle logic group
-                lhs, cmp, rhs = logicSort;
-                lhs, rhs = [parseTaskCaptureGroup(lhs), parseTaskCaptureGroup(rhs)];
-
-                if (lhs.test(taskCaptureGroup)) {
+                let [, lhs, cmp, rhs] = logicSort;
+                [lhs, rhs] = [parseTaskCaptureGroup(lhs), parseTaskCaptureGroup(rhs)];
+                if (cgs.taskCaptureGroup.test(lhs)) {
                     lhs = [await compileTask(uid, lhs[0], pPaT), lhs[1]];
                     rhs = parseSpecialVariables(rhs[1]);
                     tasks = [...tasks, ...(await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true))]; // true (that is, left to right order)
