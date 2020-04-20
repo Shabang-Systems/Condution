@@ -80,6 +80,17 @@ async function getTasks(userID) {
     });
 }
 
+async function getTasksWithQuery(userID, query) {
+    let taskDocs = cRef("users", userID, "tasks")
+        .get()
+        .then(snap => snap.docs
+            .filter(query)
+        ).catch(err => {
+            console.error('Error getting documents', err);
+        });
+    return taskDocs.map(doc => doc.id);
+}
+
 async function getInboxTasks(userID) {
     let inboxDocs = await cRef(
         "users", userID,
