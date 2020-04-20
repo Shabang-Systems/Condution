@@ -1,9 +1,10 @@
 const perspective = function(){
     let cgs = {
-        taskFilter: /([^\w\d\s\[]{1,2}\w+)/gi,
-        taskCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\]/gi,
+        taskFilter: /([^\w\d\s\[]{1,2}[\w\s]+)/gi,
+        taskCaptureGroup: /\[(([^\w\d\s]{1,2}[\w\s]+) *)*?\]/gi,
         logicCaptureGroup: /(.*) *([<=>]) *(.*)/gi,
-        globalCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
+        globalCaptureGroup: /\[(([^\w\d\s]{1,2}[\w\s]+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
+        //globalCaptureGroup: /\[(([^\w\d\s]{1,2}\w+) *)*?\](\$\w+)* *[<=>]* * *(\$\w+)*/gi,
         clear: function() {
             this.taskFilter.lastIndex = 0;
             this.taskCaptureGroup.lastIndex = 0;
@@ -29,6 +30,7 @@ const perspective = function(){
     let compileTask = async function(uid, str, pPaT) {
         let queries = []
         str.match(cgs.taskFilter).forEach(function(e) {
+            e = e.trim();
             if (e[0] == "!") {
                 e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(1, e.length)]]);
             } else {
