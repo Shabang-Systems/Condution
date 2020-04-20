@@ -1098,7 +1098,7 @@ var ui = function() {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
             pageIndex.projectDir = [activeMenu];
-            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
+            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">New Project</t></div>`);
             loadView("project-page", npID).then(function(){
                 // Delay because of HTML bug
                 setTimeout(function() {
@@ -1266,7 +1266,7 @@ var ui = function() {
         let tlps = (await getTopLevelProjects(uid));
         let pPandT = (await getProjectsandTags(uid));
         for (let proj of tlps[2]) {
-            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
+            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
         }
     }
 

@@ -494,6 +494,9 @@ a {
 .project {
     font-size: 12px;
     padding: 2px 4px 2px 10px;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .subproject {
