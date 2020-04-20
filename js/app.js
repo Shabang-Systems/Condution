@@ -934,7 +934,7 @@ var ui = function() {
             // set value
             $("perspective-title").val(perspectiveObject.name);
             // calculate perspective
-            perspectiveHandler.calc(perspectiveObject.query).then(async function(tids) {
+            perspectiveHandler.calc(uid, perspectiveObject.query).then(async function(tids) {
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
@@ -981,7 +981,7 @@ var ui = function() {
             });
         }
 
-        return {upcoming: upcoming, project: project};
+        return {upcoming: upcoming, project: project, perspective: perspective};
     }();
 
     /**
@@ -1034,8 +1034,11 @@ var ui = function() {
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         activeMenu = $(this).attr('id');
         if (activeMenu.includes("perspective")) {
-            loadView("perspective-page");
+            loadView("perspective-page", activeMenu.split("-")[1]);
             $("#"+activeMenu).addClass("menuitem-selected");
+        } else if (activeMenu.includes("perspective")) {
+            $("#"+activeMenu).addClass("menuitem-selected");
+            loadView("perspective-page", activeMenu.split("-")[1]);
         } else if (activeMenu.includes("project")) {
             if (!$(this).hasClass("subproject")) {
                 pageIndex.projectDir = [];
@@ -1289,6 +1292,10 @@ var ui = function() {
         let pPandT = (await getProjectsandTags(uid));
         for (let proj of tlps[2]) {
             $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
+        }
+        let psps = (await getPerspectives(uid));
+        for (let psp in psps[0]) {
+            $(".perspectives").append(`<div id="perspective-${psp}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psps[0][psp].name}</t></div>`)
         }
     }
 
