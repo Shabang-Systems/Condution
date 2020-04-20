@@ -4,7 +4,7 @@ const obj = require("./secrets")
 
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
-firebase.initializeApp(obj.dbkeys.deploy);
+firebase.initializeApp(obj.dbkeys.debug);
 
 
 let auth = function() {
