@@ -77,7 +77,11 @@ const perspectiveHandler = function(){
 
     let getPerspectiveFromString = async function(uid, pStr) {
         let pPaT = await getProjectsandTags(uid);
-        let tasks = await Promise.all(getCaptureGroups(pStr).map(async function(i) {
+        let pRes = await getCaptureGroups(pStr);
+        if (!pRes) {
+            return [];
+        }
+        let tasks = await Promise.all(pRes.map(async function(i) {
             cgs.clear();
             let logicSort = cgs.logicCaptureGroup.exec(i);
             let t;

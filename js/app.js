@@ -875,10 +875,24 @@ var ui = function() {
                 })
             },
             onEnd: function(e) {
-                $('.perspectives').children().each(function() {
-                    // Aaand make elements hoverable after they've been dragged over
-                    $(this).addClass("mihov")
-                })
+                let oi = e.oldIndex;
+                let ni = e.newIndex;
+                getPerspectives(uid).then(function(topLevelItems) {
+                    let originalIBT = topLevelItems[2].map(i => i.id);
+                    if (oi<ni) {
+                        // Handle task moved down
+                        for(let i=oi+1; i<=ni; i++) {
+                            modifyPerspective(uid, originalIBT[i], {order: i-1});
+                        }
+                        modifyPerspective(uid, originalIBT[oi], {order: ni});
+                    } else if (oi>ni) {
+                        // Handle task moved up
+                        for(let i=oi-1; i>=ni; i--) {
+                            modifyPerspective(uid, originalIBT[i], {order: i+1});
+                        }
+                        modifyPerspective(uid, originalIBT[oi], {order: ni});
+                    }
+                });
             }
 
         });
@@ -1147,7 +1161,26 @@ var ui = function() {
     });
 
     $(document).on("click", "#perspective-add", function() {
-    }
+        let perspectiveObj = {
+            name: "",
+            query: "",
+        }
+        newPerspective(uid, perspectiveObj).then(function(npID) {
+            $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+            activeMenu = "perspective-"+npID;
+            $(".perspectives").append(`<div id="perspective-${npID}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px"></t></div>`)
+            loadView("perspective-page", npID).then(async function(){
+                // Delay because of HTML bug
+                await refresh();
+                showPerspectiveEdit(npID);
+                setTimeout(function() {
+                    $("#perspective-edit-name").focus();
+                    $("#perspective-edit-name").select();
+                }, 100);
+            });
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
 
     $(document).on("click", "#project-add-toplevel", function() {
         let projObj = {
@@ -1168,6 +1201,16 @@ var ui = function() {
                 }, 100);
             });
             $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
+
+    $(document).on("click", "#perspective-trash", function() {
+        let pid = pageIndex.pageContentID;
+        deletePerspective(uid, pid).then(function() {
+            reloadPage();
+            activeMenu = "today";
+            $("#today").addClass("menuitem-selected");
+            loadView("upcoming-page");
         });
     });
 
@@ -1343,8 +1386,8 @@ var ui = function() {
             $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
         }
         let psps = (await getPerspectives(uid));
-        for (let psp in psps[0]) {
-            $(".perspectives").append(`<div id="perspective-${psp}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psps[0][psp].name}</t></div>`)
+        for (let psp of psps[2]) {
+            $(".perspectives").append(`<div id="perspective-${psp.id}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psp.name}</t></div>`)
         }
     }
 

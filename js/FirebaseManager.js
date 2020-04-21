@@ -196,16 +196,20 @@ async function getProjectsandTags(userID) {
 async function getPerspectives(userID) {
     let pInfobyName = {};
     let pInfobyID = {}
+    let ps = [];
     await cRef("users", userID, "perspectives").get()   // TODO: combine database hits
         .then(snap => snap.docs.forEach(pstp => {
             if (pstp.exists) {
                 pInfobyID[pstp.id] = {name: pstp.data().name, query: pstp.data().query};
-                pInfobyName[pstp.name] = {id: pstp.id, query: pstp.data().query};
+                pInfobyName[pstp.data().name] = {id: pstp.id, query: pstp.data().query};
+                ps.push({id: pstp.id, ...pstp.data()});
             }
         }))
         .catch(console.error);
 
-    return [pInfobyID, pInfobyName];
+    ps.sort((a,b) => a.order-b.order);
+
+    return [pInfobyID, pInfobyName, ps];
 }
 
 async function modifyProject(userID, projectID, updateQuery) {
@@ -267,6 +271,10 @@ async function newProject(userID, projObj, parentProj) {
     return (await cRef("users", userID, "projects").add(projObj)).id;
 }
 
+async function newPerspective(userID, pstObj) {
+    return (await cRef("users", userID, "perspectives").add({order: (await getPerspectives(userID))[2].length, ...pstObj})).id;
+}
+
 async function newTag(userID, tagName) {
     return (await cRef("users", userID, "tags").add({name: tagName})).id;
 }
@@ -324,6 +332,11 @@ async function deleteTask(userID, taskID, willDissociateTask = true) {
     }
     await cRef("users", userID, "tasks", taskID).delete()
         .catch(console.error);
+}
+
+
+async function deletePerspective(userID, perspectiveID) {
+    await cRef("users", userID, "perspectives", perspectiveID).delete();
 }
 
 async function deleteProject(userID, projectID) {
