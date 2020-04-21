@@ -35,6 +35,7 @@ const perspectiveHandler = function(){
             } else {
                 e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
             }
+            queries.push(['isComplete', '==', false]);
         });
         return await getTasksWithQuery(uid, util.select.all(...queries))
     }

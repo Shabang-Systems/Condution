@@ -146,6 +146,7 @@ var ui = function() {
         });
 
         let edit = function(pspID) {
+            $("#repeat-unit").hide();
             currentP = pspID;
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#perspective-unit").fadeIn(200);
@@ -236,6 +237,7 @@ var ui = function() {
         });
 
         let cr = async function(taskId) {
+            $("#perspective-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
             let ti = await getTaskInformation(uid, taskId);
@@ -346,7 +348,7 @@ var ui = function() {
          /*   setTimeout(function() {*/
                 //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
-            reloadPage();
+            await reloadPage();
         }
 
 
