@@ -108,10 +108,11 @@ var ui = function() {
 
     // the outside world's refresh function
     let reloadPage = async function() {
-        setTimeout(function() {
+        setTimeout(async function() {
             if (!activeTask) {
                 (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                constructSidebar();
+                await constructSidebar();
+                await $("#"+activeMenu).addClass("menuitem-selected");
             }
         }, 500);
     }
@@ -123,6 +124,7 @@ var ui = function() {
             $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200, ()=>reloadPage());
+            $("#"+activeMenu).addClass("menuitem-selected");
         }
     });
 
@@ -130,6 +132,7 @@ var ui = function() {
         $("#perspective-back").on("click", function(e) {
             $("#perspective-unit").fadeOut(200);
             $("#overlay").fadeOut(200, ()=>reloadPage());
+            $("#"+activeMenu).addClass("menuitem-selected");
         });
 
         let currentP;
@@ -167,6 +170,7 @@ var ui = function() {
             $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
+            $("#"+activeMenu).addClass("menuitem-selected");
         });
 
         $("#repeat-type").on("click", function(e) {
@@ -1142,6 +1146,7 @@ var ui = function() {
         pageIndex.projectDir.pop()
         activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1]
         loadView("project-page", activeMenu.split("-")[1]);
+        $("#"+activeMenu).addClass("menuitem-selected");
     });
 
     $(document).on("click", "#new-project", function() {
@@ -1207,10 +1212,11 @@ var ui = function() {
     $(document).on("click", "#perspective-trash", function() {
         let pid = pageIndex.pageContentID;
         deletePerspective(uid, pid).then(function() {
-            reloadPage();
+            $("#"+activeMenu).removeClass("menuitem-selected");
+            loadView("upcoming-page");
             activeMenu = "today";
             $("#today").addClass("menuitem-selected");
-            loadView("upcoming-page");
+            reloadPage();
         });
     });
 
