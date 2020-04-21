@@ -299,7 +299,7 @@ a {
 	left: 0;
 	right: 0;
 	margin: auto;
-    vertical-align: center;
+    /*vertical-align: center;*/
     padding-left: 50px;
     transform: translate(120px, -30px);
 }
@@ -988,7 +988,8 @@ a {
   text-transform: text;           /* proposed */
   content: '\f00c';
   position: absolute;
-  top .15em; left: .10em;
+  top: .15em; 
+  left: .10em;
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark);
@@ -1003,7 +1004,8 @@ a {
   text-transform: text;           /* proposed */
   content: '\f00c';
   position: absolute;
-  top .15em; left: .10em;
+  top: .15em;
+  left: .10em;
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark-ds);
@@ -1018,7 +1020,8 @@ a {
   text-transform: text;           /* proposed */
   content: '\f00c';
   position: absolute;
-  top .15em; left: .10em;
+  top: .15em; 
+  left: .10em;
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkbox-od);
@@ -1047,10 +1050,6 @@ label.ds:hover:before {
 
 label.od:hover:before {
     background-color: var(--task-checkbox-od-feature) !important;
-}
-
-label:before {
-   /*transition: background-color 150ms linear;*/
 }
 
 .bootstrap-tagsinput {

@@ -89,7 +89,7 @@ var ui = function() {
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
-        projectID: undefined
+        pageContentID: undefined
     }
 
     activeMenu = "today";
@@ -109,7 +109,7 @@ var ui = function() {
     // the outside world's refresh function
     let reloadPage = async function() {
         setTimeout(function() {
-            if (!activeTask) (loadView(pageIndex.currentView, pageIndex.projectID));
+            if (!activeTask) (loadView(pageIndex.currentView, pageIndex.pageContentID));
         }, 500);
     }
 
@@ -336,7 +336,7 @@ var ui = function() {
             if (taskObj.due) {
                 due = new Date(taskObj.due.seconds*1000);
             }
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 1: data parsing!
             // The Project
             let project = possibleProjects[projectID];
@@ -378,10 +378,10 @@ var ui = function() {
             }
             // The color of the carrot
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 2: the task!
             $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor));
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 3: customize the task!
             // Set the dates, aaaand set the date change trigger
             $("#task-defer-" + taskId).datetimepicker({
@@ -777,7 +777,7 @@ var ui = function() {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
 
-                getProjectStructure(uid, pageIndex.projectID).then(async function(nstruct) {
+                getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
                     if (oi<ni) {
                         // handle item moved down
                         for(let i=oi+1; i<=ni; i++) {
@@ -905,7 +905,7 @@ var ui = function() {
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
                 // load due soon tasks
-                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task)),
+                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task))
             ).then(function() {
                 // update upcoming view headers
                 if (inboxandDS[0].length === 0) {
@@ -929,10 +929,11 @@ var ui = function() {
 
         // perspective view loader
         let perspective = async function(pid) {
+            pageIndex.pageContentID = pid;
             // get name
             let perspectiveObject = possiblePerspectives[0][pid];
             // set value
-            $("perspective-title").val(perspectiveObject.name);
+            $("#perspective-title").val(perspectiveObject.name);
             // calculate perspective
             perspectiveHandler.calc(uid, perspectiveObject.query).then(async function(tids) {
                 for (let taskId of tids) {
@@ -946,7 +947,7 @@ var ui = function() {
         // project view loader
         let project = async function(pid) {
             // update pid
-            pageIndex.projectID = pid;
+            pageIndex.pageContentID = pid;
             // get the datum
             let projectName = pPandT[0][0][pid];
             // update the titlefield
