@@ -237,6 +237,9 @@ var ui = function() {
         });
 
         let cr = async function(taskId) {
+            $(".repeat-subunit").hide();
+            $("#repeat-toggle-group").show();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             $("#perspective-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
@@ -634,16 +637,17 @@ var ui = function() {
                             if (defer) {
                                 let rOn = repeat.on;
                                 let dow = due.getDate();
+                                let oDow = due.getDate();
                                 let defDistance = due-defer;
-                                while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 30 || dow == 30))) {
+                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
                                     due.setDate(due.getDate() + 1);
                                     dow = due.getDate();
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 let rOn = repeat.on;
                                 let dow = due.getDate();
-                                while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 31 || dow == 30))) {
+                                let oDow = due.getDate();
+                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
                                     due.setDate(due.getDate() + 1);
                                     dow = due.getDate();
                                 }
