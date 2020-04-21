@@ -117,22 +117,29 @@ var ui = function() {
         }, 500);
     }
 
-    $(document).on("click", "#overlay", function(e) {
-        if (e.target === this) {
-            $(".repeat-subunit").slideUp();
-            $("#repeat-toggle-group").slideDown();
-            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
-            $("#repeat-unit").fadeOut(200);
-            $("#overlay").fadeOut(200, ()=>reloadPage());
-            $("#"+activeMenu).addClass("menuitem-selected");
-        }
-    });
 
     var showPerspectiveEdit = function() {
         $("#perspective-back").on("click", function(e) {
             $("#perspective-unit").fadeOut(200);
             $("#overlay").fadeOut(200, ()=>reloadPage());
             $("#"+activeMenu).addClass("menuitem-selected");
+        });
+
+        $(document).on("click", "#overlay", function(e) {
+            if (e.target === this) {
+                $(".repeat-subunit").slideUp();
+                $("#repeat-toggle-group").slideDown();
+                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+                $("#repeat-unit").fadeOut(200);
+                $("#overlay").fadeOut(200, ()=>reloadPage());
+                $("#"+activeMenu).addClass("menuitem-selected");
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+            }
         });
 
         let currentP;
@@ -163,15 +170,45 @@ var ui = function() {
     var showRepeat = function() {
 
         let tid;
+        let repeatWeekDays = [];
+        let repeatMonthDays = [];
 
         // Setup repeat things!
         $("#repeat-back").on("click", function(e) {
             $(".repeat-subunit").slideUp();
+            $("#repeat-daterow").children().each(function(e) {
+                $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+            });
+            $("#repeat-monthgrid").children().each(function(e) {
+                $(this).css({"background-color": interfaceUtil.gtc("--background")});
+            });
             $("#repeat-toggle-group").slideDown();
             $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
             $("#"+activeMenu).addClass("menuitem-selected");
+            let repeatWeekDays = [];
+            let repeatMonthDays = [];
+        });
+
+
+        $(document).on("click", "#overlay", function(e) {
+            if (e.target === this) {
+                $(".repeat-subunit").slideUp();
+                $("#repeat-toggle-group").slideDown();
+                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+                $("#repeat-unit").fadeOut(200);
+                $("#overlay").fadeOut(200, ()=>reloadPage());
+                $("#"+activeMenu).addClass("menuitem-selected");
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+                let repeatWeekDays = [];
+                let repeatMonthDays = [];
+            }
         });
 
         $("#repeat-type").on("click", function(e) {
@@ -210,7 +247,6 @@ var ui = function() {
         });
 
         // Actions
-        let repeatWeekDays = [];
         $(".repeat-daterow-weekname").on("click", function(e) {
             if (repeatWeekDays.includes($(this).html())) {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
@@ -223,14 +259,14 @@ var ui = function() {
             }
         });
 
-        let repeatMonthDays = [];
+        
         $(".repeat-monthgrid-day").on("click", function(e) {
             if (repeatMonthDays.includes($(this).html())) {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background")}, 100);
                 repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
                 modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             } else {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")}, 100);
                 repeatMonthDays.push($(this).html());
                 modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             }
@@ -253,9 +289,8 @@ var ui = function() {
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
                     $("#repeat-daterow").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html)) {
+                        if (ti.repeat.on.includes($(this).html())) {
                             $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
-                            repeatMonthDays.push($(this).html());
                         }
                     });
                     repeatWeekDays = ti.repeat.on;
@@ -265,7 +300,7 @@ var ui = function() {
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
                     $("#repeat-monthgrid").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html)) {
+                        if (ti.repeat.on.includes($(this).html())) {
                             $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                         }
                     });
@@ -538,6 +573,7 @@ var ui = function() {
             // Task complete
             $('#task-check-'+taskId).change(function(e) {
                 if (this.checked) {
+                    taskManager.hideActiveTask();
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
                     $('#task-name-' + taskId).css("text-decoration", "line-through");
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
