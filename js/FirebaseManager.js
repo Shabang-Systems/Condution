@@ -213,7 +213,6 @@ async function getPerspectives(userID) {
 }
 
 async function modifyProject(userID, projectID, updateQuery) {
-    console.log(updateQuery);
     await cRef("users", userID, "projects", projectID)
         .update(updateQuery)
         .catch(console.error);
