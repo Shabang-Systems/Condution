@@ -81,6 +81,7 @@ var ui = function() {
 
     // generic data containers used by refresh and others
     let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev;
+    let possiblePerspectives;
     let inboxandDS;
     let avalibility;
 
@@ -88,7 +89,7 @@ var ui = function() {
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
-        projectID: undefined
+        pageContentID: undefined
     }
 
     activeMenu = "today";
@@ -100,16 +101,62 @@ var ui = function() {
         possibleTags = pPandT[1][0];
         possibleProjectsRev = pPandT[0][1];
         possibleTagsRev = pPandT[1][1];
+        possiblePerspectives = await getPerspectives(uid);
         avalibility = await getItemAvailability(uid);
         inboxandDS = await getInboxandDS(uid, avalibility);
     }
 
     // the outside world's refresh function
     let reloadPage = async function() {
-        setTimeout(function() {
-            if (!activeTask) (loadView(pageIndex.currentView, pageIndex.projectID));
+        setTimeout(async function() {
+            if (!activeTask) {
+                (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                await constructSidebar();
+                await $("#"+activeMenu).addClass("menuitem-selected");
+            }
         }, 500);
     }
+
+    $(document).on("click", "#overlay", function(e) {
+        if (e.target === this) {
+            $(".repeat-subunit").slideUp();
+            $("#repeat-toggle-group").slideDown();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, ()=>reloadPage());
+            $("#"+activeMenu).addClass("menuitem-selected");
+        }
+    });
+
+    var showPerspectiveEdit = function() {
+        $("#perspective-back").on("click", function(e) {
+            $("#perspective-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, ()=>reloadPage());
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+
+        let currentP;
+
+        $("#pquery").change(function(e) {
+            modifyPerspective(uid, currentP, {query: $(this).val()});
+        });
+
+        $("#perspective-edit-name").change(function(e) {
+            modifyPerspective(uid, currentP, {name: $(this).val()});
+        });
+
+        let edit = function(pspID) {
+            currentP = pspID;
+            $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+            $("#perspective-unit").fadeIn(200);
+            $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
+            $("#pquery").val(possiblePerspectives[0][pspID].query)
+            // fix weird focus-select bug
+            setTimeout(function() {$("#pquery").focus()}, 100);
+        }
+
+        return edit;
+    }()
 
     // repeat view
     var showRepeat = function() {
@@ -123,16 +170,7 @@ var ui = function() {
             $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
-        });
-
-        $("#overlay").on("click", function(e) {
-            if (e.target === this) {
-                $(".repeat-subunit").slideUp();
-                $("#repeat-toggle-group").slideDown();
-                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
-                $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200);
-            }
+            $("#"+activeMenu).addClass("menuitem-selected");
         });
 
         $("#repeat-type").on("click", function(e) {
@@ -334,7 +372,7 @@ var ui = function() {
             if (taskObj.due) {
                 due = new Date(taskObj.due.seconds*1000);
             }
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 1: data parsing!
             // The Project
             let project = possibleProjects[projectID];
@@ -376,10 +414,10 @@ var ui = function() {
             }
             // The color of the carrot
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 2: the task!
             $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor));
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 3: customize the task!
             // Set the dates, aaaand set the date change trigger
             $("#task-defer-" + taskId).datetimepicker({
@@ -490,7 +528,7 @@ var ui = function() {
             } else {
                 $("#task-floating-no-"+taskId).button("toggle")
             }
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 4: task action behaviors!
             // Task complete
             $('#task-check-'+taskId).change(function(e) {
@@ -775,7 +813,7 @@ var ui = function() {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
 
-                getProjectStructure(uid, pageIndex.projectID).then(async function(nstruct) {
+                getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
                     if (oi<ni) {
                         // handle item moved down
                         for(let i=oi+1; i<=ni; i++) {
@@ -841,10 +879,24 @@ var ui = function() {
                 })
             },
             onEnd: function(e) {
-                $('.perspectives').children().each(function() {
-                    // Aaand make elements hoverable after they've been dragged over
-                    $(this).addClass("mihov")
-                })
+                let oi = e.oldIndex;
+                let ni = e.newIndex;
+                getPerspectives(uid).then(function(topLevelItems) {
+                    let originalIBT = topLevelItems[2].map(i => i.id);
+                    if (oi<ni) {
+                        // Handle task moved down
+                        for(let i=oi+1; i<=ni; i++) {
+                            modifyPerspective(uid, originalIBT[i], {order: i-1});
+                        }
+                        modifyPerspective(uid, originalIBT[oi], {order: ni});
+                    } else if (oi>ni) {
+                        // Handle task moved up
+                        for(let i=oi-1; i>=ni; i--) {
+                            modifyPerspective(uid, originalIBT[i], {order: i+1});
+                        }
+                        modifyPerspective(uid, originalIBT[oi], {order: ni});
+                    }
+                });
             }
 
         });
@@ -903,7 +955,7 @@ var ui = function() {
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
                 // load due soon tasks
-                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task)),
+                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task))
             ).then(function() {
                 // update upcoming view headers
                 if (inboxandDS[0].length === 0) {
@@ -925,10 +977,27 @@ var ui = function() {
             });
         }
 
+        // perspective view loader
+        let perspective = async function(pid) {
+            pageIndex.pageContentID = pid;
+            // get name
+            let perspectiveObject = possiblePerspectives[0][pid];
+            // set value
+            $("#perspective-title").val(perspectiveObject.name);
+            // calculate perspective
+            perspectiveHandler.calc(uid, perspectiveObject.query).then(async function(tids) {
+                for (let taskId of tids) {
+                    // Nononono don't even think about foreach 
+                    // othewise the order will be messed up
+                    await taskManager.generateTaskInterface("perspective-content", taskId);
+                }
+            });
+        }
+
         // project view loader
         let project = async function(pid) {
             // update pid
-            pageIndex.projectID = pid;
+            pageIndex.pageContentID = pid;
             // get the datum
             let projectName = pPandT[0][0][pid];
             // update the titlefield
@@ -963,7 +1032,7 @@ var ui = function() {
             });
         }
 
-        return {upcoming: upcoming, project: project};
+        return {upcoming: upcoming, project: project, perspective: perspective};
     }();
 
     /**
@@ -986,6 +1055,7 @@ var ui = function() {
         $("#inbox").empty();
         $("#due-soon").empty();
         $("#project-content").empty();
+        $("#perspective-content").empty();
 
         // refresh data
         await refresh();
@@ -993,6 +1063,9 @@ var ui = function() {
         switch(viewName) {
             case 'upcoming-page':
                 viewLoader.upcoming();
+                break;
+            case 'perspective-page':
+                viewLoader.perspective(itemID);
                 break;
             case 'project-page':
                 viewLoader.project(itemID);
@@ -1012,8 +1085,11 @@ var ui = function() {
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         activeMenu = $(this).attr('id');
         if (activeMenu.includes("perspective")) {
-            loadView("perspective-page");
+            loadView("perspective-page", activeMenu.split("-")[1]);
             $("#"+activeMenu).addClass("menuitem-selected");
+        } else if (activeMenu.includes("perspective")) {
+            $("#"+activeMenu).addClass("menuitem-selected");
+            loadView("perspective-page", activeMenu.split("-")[1]);
         } else if (activeMenu.includes("project")) {
             if (!$(this).hasClass("subproject")) {
                 pageIndex.projectDir = [];
@@ -1070,6 +1146,7 @@ var ui = function() {
         pageIndex.projectDir.pop()
         activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1]
         loadView("project-page", activeMenu.split("-")[1]);
+        $("#"+activeMenu).addClass("menuitem-selected");
     });
 
     $(document).on("click", "#new-project", function() {
@@ -1088,6 +1165,28 @@ var ui = function() {
         });
     });
 
+    $(document).on("click", "#perspective-add", function() {
+        let perspectiveObj = {
+            name: "",
+            query: "",
+        }
+        newPerspective(uid, perspectiveObj).then(function(npID) {
+            $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+            activeMenu = "perspective-"+npID;
+            $(".perspectives").append(`<div id="perspective-${npID}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px"></t></div>`)
+            loadView("perspective-page", npID).then(async function(){
+                // Delay because of HTML bug
+                await refresh();
+                showPerspectiveEdit(npID);
+                setTimeout(function() {
+                    $("#perspective-edit-name").focus();
+                    $("#perspective-edit-name").select();
+                }, 100);
+            });
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
+
     $(document).on("click", "#project-add-toplevel", function() {
         let projObj = {
             name: "New Project",
@@ -1098,7 +1197,7 @@ var ui = function() {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
             pageIndex.projectDir = [activeMenu];
-            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
+            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">New Project</t></div>`);
             loadView("project-page", npID).then(function(){
                 // Delay because of HTML bug
                 setTimeout(function() {
@@ -1107,6 +1206,17 @@ var ui = function() {
                 }, 100);
             });
             $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
+
+    $(document).on("click", "#perspective-trash", function() {
+        let pid = pageIndex.pageContentID;
+        deletePerspective(uid, pid).then(function() {
+            $("#"+activeMenu).removeClass("menuitem-selected");
+            loadView("upcoming-page");
+            activeMenu = "today";
+            $("#today").addClass("menuitem-selected");
+            reloadPage();
         });
     });
 
@@ -1163,7 +1273,14 @@ var ui = function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
         let value = $(this).val();
         modifyProject(uid, pid, {name: value});
-        $("#"+activeMenu+" t").html(value);
+        reloadPage();
+    });
+
+    $(document).on("change", "#perspective-title", function(e) {
+        let pstID = pageIndex.pageContentID;
+        let value = $(this).val();
+        modifyPerspective(uid, pstID, {name: value});
+        reloadPage();
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
@@ -1182,6 +1299,10 @@ var ui = function() {
 
     $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
+    });
+
+    $(document).on("click", "#perspective-edit", function(e) {
+        showPerspectiveEdit(pageIndex.pageContentID);
     });
 
     $("#quickadd").click(function(e) {
@@ -1265,8 +1386,14 @@ var ui = function() {
     let constructSidebar = async function() {
         let tlps = (await getTopLevelProjects(uid));
         let pPandT = (await getProjectsandTags(uid));
+        $(".projects").empty();
+        $(".perspectives").empty();
         for (let proj of tlps[2]) {
-            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
+            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
+        }
+        let psps = (await getPerspectives(uid));
+        for (let psp of psps[2]) {
+            $(".perspectives").append(`<div id="perspective-${psp.id}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psp.name}</t></div>`)
         }
     }
 
