@@ -65,6 +65,14 @@
         </div>
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
+                <div class="overlay-unit" id="perspective-unit">
+                    <div class="project-action" id="perspective-back"><i class="far fa-times-circle"></i></div>
+                    <h1 id="perspective-callout">Let's build <input id="perspective-edit-name"></input></h1>
+                    <input id="pquery" type="text" autocomplete="off" value="" placeholder="try [#bontehu]...">
+                    <br />
+                    <a href="https://bontehu.shabang.cf" style="color: var(--task); font-weight: 600; font-size: 9px">Don't click me.</a>
+                    <!--Actually make the above the documentation-->
+                </div>
                 <div class="overlay-unit" id="repeat-unit">
                     <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
                     <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
@@ -102,7 +110,9 @@
                     <div>
                         <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
                     </div>
-                    <t class="menu-label">Perspectives</t>
+                    <t class="menu-label">
+                        Perspectives <div class="task-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i>
+                    </t>
                     <div class="perspectives menu-portion"></div>
                     <t class="menu-label">
                         Projects <div class="task-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
@@ -131,8 +141,8 @@
                 </div>
                 <div id="perspective-page" class="page">
                     <div class="perspective-title"><i class="fa fa-layer-group"></i><input id="perspective-title" class="perspective-titleword" type="text"></input>
-                        <div class="task-subicon" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
-                        <div class="task-subicon" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
+                        <div class="task-subicon" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                        <div class="task-subicon" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
                     </div>
                     <div style="padding: 0 0 7px 0">
                         <hr class="perspective-divider"/>

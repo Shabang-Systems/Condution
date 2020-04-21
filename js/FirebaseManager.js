@@ -221,6 +221,12 @@ async function modifyTask(userID, taskID, updateQuery) {
         .catch(console.error);
 }
 
+async function modifyPerspective(userID, taskID, updateQuery) {
+    await cRef("users", userID, "perspectives", taskID)
+        .update(updateQuery)
+        .catch(console.error);
+}
+
 async function newTask(userID, taskObj) {
 //, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
     // Set order param. Either return the latest item in index or

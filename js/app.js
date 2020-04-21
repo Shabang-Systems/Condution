@@ -109,9 +109,51 @@ var ui = function() {
     // the outside world's refresh function
     let reloadPage = async function() {
         setTimeout(function() {
-            if (!activeTask) (loadView(pageIndex.currentView, pageIndex.pageContentID));
+            if (!activeTask) {
+                (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                constructSidebar();
+            }
         }, 500);
     }
+
+    $(document).on("click", "#overlay", function(e) {
+        if (e.target === this) {
+            $(".repeat-subunit").slideUp();
+            $("#repeat-toggle-group").slideDown();
+            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, ()=>reloadPage());
+        }
+    });
+
+    var showPerspectiveEdit = function() {
+        $("#perspective-back").on("click", function(e) {
+            $("#perspective-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, ()=>reloadPage());
+        });
+
+        let currentP;
+
+        $("#pquery").change(function(e) {
+            modifyPerspective(uid, currentP, {query: $(this).val()});
+        });
+
+        $("#perspective-edit-name").change(function(e) {
+            modifyPerspective(uid, currentP, {name: $(this).val()});
+        });
+
+        let edit = function(pspID) {
+            currentP = pspID;
+            $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+            $("#perspective-unit").fadeIn(200);
+            $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
+            $("#pquery").val(possiblePerspectives[0][pspID].query)
+            // fix weird focus-select bug
+            setTimeout(function() {$("#pquery").focus()}, 100);
+        }
+
+        return edit;
+    }()
 
     // repeat view
     var showRepeat = function() {
@@ -125,16 +167,6 @@ var ui = function() {
             $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
-        });
-
-        $("#overlay").on("click", function(e) {
-            if (e.target === this) {
-                $(".repeat-subunit").slideUp();
-                $("#repeat-toggle-group").slideDown();
-                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
-                $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200);
-            }
         });
 
         $("#repeat-type").on("click", function(e) {
@@ -492,7 +524,7 @@ var ui = function() {
             } else {
                 $("#task-floating-no-"+taskId).button("toggle")
             }
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 4: task action behaviors!
             // Task complete
             $('#task-check-'+taskId).change(function(e) {
@@ -1114,6 +1146,9 @@ var ui = function() {
         });
     });
 
+    $(document).on("click", "#perspective-add", function() {
+    }
+
     $(document).on("click", "#project-add-toplevel", function() {
         let projObj = {
             name: "New Project",
@@ -1189,7 +1224,14 @@ var ui = function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
         let value = $(this).val();
         modifyProject(uid, pid, {name: value});
-        $("#"+activeMenu+" t").html(value);
+        reloadPage();
+    });
+
+    $(document).on("change", "#perspective-title", function(e) {
+        let pstID = pageIndex.pageContentID;
+        let value = $(this).val();
+        modifyPerspective(uid, pstID, {name: value});
+        reloadPage();
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
@@ -1208,6 +1250,10 @@ var ui = function() {
 
     $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
+    });
+
+    $(document).on("click", "#perspective-edit", function(e) {
+        showPerspectiveEdit(pageIndex.pageContentID);
     });
 
     $("#quickadd").click(function(e) {
@@ -1291,6 +1337,8 @@ var ui = function() {
     let constructSidebar = async function() {
         let tlps = (await getTopLevelProjects(uid));
         let pPandT = (await getProjectsandTags(uid));
+        $(".projects").empty();
+        $(".perspectives").empty();
         for (let proj of tlps[2]) {
             $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
         }

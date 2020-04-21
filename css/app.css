@@ -37,6 +37,26 @@ a {
     padding-bottom:9px;
 }
 
+#perspective-edit-name {
+    color: var(--content-normal-accent);
+    padding-left: 4px;
+    background: inherit;
+    border: 0;
+    font-weight: 600;
+    border-radius: 3px;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+#perspective-edit-name:hover {
+    background-color: var(--background-feature);
+}
+
+#perspective-edit-name:focus {
+    background-color: var(--background-feature);
+}
+
 .repeat-option {
     color: var(--content-normal-alt);
     padding: 3px 1px 3px 8px;
@@ -171,6 +191,14 @@ a {
     /*background-color: var(--background-feature);*/
 /*}*/
 
+#perspective-callout {
+    color: var(--task);
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 #repeat-callout {
     color: var(--task);
     font-weight: 600;
@@ -180,6 +208,13 @@ a {
 }
 
 #repeat-back {
+    display: inline-block;
+    position: absolute;
+    margin-right: 10px;
+    transform: translate(420px, -8px);
+}
+
+#perspective-back {
     display: inline-block;
     position: absolute;
     margin-right: 10px;
@@ -216,6 +251,9 @@ a {
     display: none;
     /*height: 75px;*/
     /*height: 105px;*/
+}
+
+#perspective-unit {
 }
 
 
@@ -597,6 +635,41 @@ a {
     background-color: var(--content-normal);
 }
 
+#pquery {
+    font-size: 12pt;
+    font-weight:400;
+    background-color:inherit;
+    padding: 10px 5px 10px 5px;
+    border: 1px grey solid;
+    display: inline-block;
+    height: 30px;
+    width: 85%;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+    color: var(--content-normal-accent);
+}
+
+#pquery:focus {
+    background-color: var(--content-normal);
+}
+
+#pquery:hover {
+    background-color: var(--content-normal);
+}
+
+#pquery::placeholder {
+    color: var(--decorative-light);
+    font-size: 14px;
+}
 
 .auth-upf {
     font-size: 12pt;
@@ -621,14 +694,15 @@ a {
     margin-bottom: 5px;
 }
 
+.auth-upf:focus {
+    background-color: var(--content-normal);
+}
+
 .auth-upf.wrong {
     border-color: red;
 }
 
 
-.auth-upf:focus {
-    background-color: var(--content-normal);
-}
 
 .task-subicon:hover {
     color: var(--decorative-light-alt);
