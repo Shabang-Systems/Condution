@@ -63,7 +63,7 @@
             $("#name-tray").slideDown(300);
             $(this).html("Sign in.");
             isNA = true;
-            $("#greeting-auth-normal").html("Wow, a new user?!? Welcome!");
+            $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
         }
     });
 
