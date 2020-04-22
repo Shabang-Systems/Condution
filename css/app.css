@@ -6,7 +6,7 @@ html, body {
     overflow: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
     cursor: default !important;
-    background-color: var(--background);
+    background-color: var(--background) !important;
 }
 
 *::-webkit-scrollbar { 
@@ -883,6 +883,8 @@ a {
     width: 10%;
     font-size: 9px;
     color: var(--content-normal-accent);
+    margin: 0px !important;
+    border-radius: 3px;
 }
 
 .task-flagged.active{
@@ -890,14 +892,6 @@ a {
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
-}
-
-.task-flagged {
-    background-color: var(--task-textbox-background);
-    height: 20px;
-    width: 10%;
-    font-size: 9px;
-    color: var(--content-normal-accent);
 }
 
 .es-list {
@@ -909,6 +903,10 @@ a {
     border-radius: 3px;
     border: 0.5px solid  var(--background-feature);
     width: auto !important;
+    color: var(--content-normal);
+}
+
+.es-list {
 }
 
 .es-visible {
@@ -938,8 +936,18 @@ a {
     width: 10%;
     font-size: 9px;
     color: var(--task-clickbox);
+    margin: 0px !important;
+    border-radius: 3px;
 }
 
+
+.task-floating:hover {
+    color: var(--task-clickbox-accent);
+}
+
+.task-flagged:hover {
+    color: var(--task-clickbox-accent);
+}
 
 .task-tools {
     display: flex;
@@ -1185,6 +1193,7 @@ label.od:hover:before {
     transform: translateY(-2px);
     font-size: 10px;
     padding: 1px 4px 1px 4px;
+    color: var(--decorative-light-accent);
     border-radius: 2px;
 }
 
@@ -1226,6 +1235,7 @@ label.od:hover:before {
 
 .tt-suggestion {
     padding: 2px 10px 2px 10px;
+    color: var(--content-normal-alt);
 }
 
 .tt-suggestion:hover {
@@ -1271,6 +1281,7 @@ label.od:hover:before {
     height: 100%;
     position: absolute;
     z-index: 100000;
+    display: none;
 }
 
 #content-wrapper {
