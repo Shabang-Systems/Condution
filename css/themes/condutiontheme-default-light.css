@@ -30,6 +30,8 @@
     --menu-accent-background: #e1e2e5;
     --menu-text: #414c5e;
     --menu-accent: #323c4f;
+    --menu-label: #1a283d;
+    --menu-action: #90939a;
 
     /* Task colors */
     --task: #90939a;

@@ -1,4 +1,17 @@
 console.log("Initializing the galvanitizer!");
+/* Query the system dark theme, and load the appropriate theme */
+
+
+let currentTheme;
+if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").addClass(currentTheme);
+}
+else {
+    currentTheme = "condutiontheme-default-light";
+    $("body").addClass(currentTheme);
+}
+
 const { remote } = require('electron');
 const { Menu, MenuItem } = remote;
 
@@ -1423,7 +1436,7 @@ var ui = function() {
     let uid;
     let displayName;
     // TODO: actually set theme
-    let currentTheme = "condutiontheme-default-light";
+    //let currentTheme = "condutiontheme-default";
 
     let constructSidebar = async function() {
         let tlps = (await getTopLevelProjects(uid));
@@ -1455,12 +1468,14 @@ $(document).ready(async function() {
             if (user.emailVerified) {
                 const startTime = Date.now();
                 // User is signed in. Do user related things.
-                currentTheme = "condutiontheme-default-light";
-                $("body").addClass(currentTheme);
+                // Check user's theme
                 ui.user.set(user);
                 await ui.constructSidebar();
                 await ui.load("upcoming-page");
                 $("#loading").fadeOut();
+                currentTheme = "condutiontheme-exr0n-aggresivedark";
+                $("body").removeClass();
+                $("body").addClass(currentTheme);
                 $("#content-wrapper").fadeIn();
                 setInterval(()=>ui.update(), 15 * 60 * 1000);
             } else {
