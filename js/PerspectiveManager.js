@@ -10,7 +10,7 @@ const perspectiveHandler = function(){
             this.logicCaptureGroup.lastIndex = 0;
             this.globalCaptureGroup.lastIndex = 0;
         }
-    }
+    };
 
     let getCaptureGroups = (str) => str.match(cgs.globalCaptureGroup);
 
@@ -24,7 +24,7 @@ const perspectiveHandler = function(){
                break;
         }
         return vr;
-    }
+    };
 
     let compileTask = async function(uid, str, pPaT) {
         let queries = []
@@ -38,7 +38,7 @@ const perspectiveHandler = function(){
             queries.push(['isComplete', '==', false]);
         });
         return await getTasksWithQuery(uid, util.select.all(...queries))
-    }
+    };
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
         let taskInfo = await Promise.all(tasks[0].map(async function(t){
@@ -47,14 +47,14 @@ const perspectiveHandler = function(){
         let taskCompValues;
         // TODO: add more?
         if (tasks[1].includes("due")) {
-            taskCompValues = taskInfo.map(t=>[t[1], (t[0].due ? new Date((t[0].due.seconds)*1000) : undefined)]);
+            taskCompValues = taskInfo.map(t => [t[1], (t[0].due ? new Date((t[0].due.seconds)*1000) : undefined)]);
         } else if (tasks[1].includes("defer")) {
-            taskCompValues = taskInfo.map(t=>[t[1], (t[0].defer ? new Date((t[0].defer.seconds)*1000) : undefined)]);
+            taskCompValues = taskInfo.map(t => [t[1], (t[0].defer ? new Date((t[0].defer.seconds)*1000) : undefined)]);
         }
         let filteredResults;
         let util_datesequal = function(dateA, dateB) {
             return dateA.getFullYear() === dateB.getFullYear() && dateA.getMonth() === dateB.getMonth() && dateA.getDate() === dateB.getDate();
-        }
+        };
         switch (cmp) {
             case "=":
                 taskCompValues = taskCompValues.filter(t=>util_datesequal(t[1], value));
@@ -73,8 +73,8 @@ const perspectiveHandler = function(){
                 break;
 
         }
-        return (taskCompValues.map(t=>t[0]));
-    }
+        return (taskCompValues.map(t => t[0]));
+    };
 
     let getPerspectiveFromString = async function(uid, pStr) {
         let pPaT = await getProjectsandTags(uid);
@@ -108,7 +108,7 @@ const perspectiveHandler = function(){
         tasks = [...new Set(tasks.flat(1))];
         // TODO: Sort?
         return tasks;
-    }
+    };
 
     return {calc: getPerspectiveFromString};
 }();
