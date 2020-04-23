@@ -3,11 +3,13 @@
 (function() {
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
     $("body").addClass(currentTheme);
     $("#loading").hide().css("display", "flex").fadeIn();
 }
 else {
-    currentTheme = "condutiontheme-default-dark";
+    currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
     $("body").addClass(currentTheme);
     $("#loading").hide().css("display", "flex").fadeIn();
 }

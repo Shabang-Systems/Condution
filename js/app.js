@@ -3,11 +3,13 @@ console.log("Initializing the galvanitizer!");
 
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
     $("body").addClass(currentTheme);
     $("#loading").hide().css("display", "flex").fadeIn();
 }
 else {
     currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
     $("body").addClass(currentTheme);
     $("#loading").hide().css("display", "flex").fadeIn();
 }
