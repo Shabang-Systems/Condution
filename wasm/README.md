@@ -21,6 +21,7 @@
     - [ ] OR: this has gotta be a common problem
         - [ ] see [technical details](https://rustwasm.github.io/docs/book/reference/js-ffi.html)
         - [ ] does `wasm-pack` do this for you?
+- [ ] Figure out also if React Native supports WASM, otherwise create a way that we could efficiently maintain both the potential new API and WASM with feature parity as JS script
 ### Stage 2: Rewrite CacheManager.js
 - [ ] Write (efficient) query parser in rust
 - [ ] Write (efficient) caching system
