@@ -121,7 +121,7 @@ let ui = function() {
     const showPerspectiveEdit = function() {
         $("#perspective-back").on("click", function(err) {
             $("#perspective-unit").fadeOut(200);
-            $("#overlay").fadeOut(200, ()=>reloadPage());
+            $("#overlay").fadeOut(200, () => reloadPage());
             $("#"+activeMenu).addClass("menuitem-selected");
         });
 
@@ -129,9 +129,9 @@ let ui = function() {
             if (e.target === this) {
                 $(".repeat-subunit").slideUp();
                 $("#repeat-toggle-group").slideDown();
-                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+                $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
                 $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200, ()=>reloadPage());
+                $("#overlay").fadeOut(200, () => reloadPage());
                 $("#"+activeMenu).addClass("menuitem-selected");
                 $("#repeat-daterow").children().each(function(err) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
@@ -183,7 +183,7 @@ let ui = function() {
                 $(this).css({"background-color": interfaceUtil.gtc("--background")});
             });
             $("#repeat-toggle-group").slideDown();
-            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-type").fadeOut(() = >$("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
             $("#"+activeMenu).addClass("menuitem-selected");
@@ -196,9 +196,9 @@ let ui = function() {
             if (err.target === this) {
                 $(".repeat-subunit").slideUp();
                 $("#repeat-toggle-group").slideDown();
-                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+                $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
                 $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200, ()=>reloadPage());
+                $("#overlay").fadeOut(200, () => reloadPage());
                 $("#"+activeMenu).addClass("menuitem-selected");
                 $("#repeat-daterow").children().each(function(err) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
@@ -214,7 +214,7 @@ let ui = function() {
         $("#repeat-type").on("click", function(err) {
             $(".repeat-subunit").slideUp();
             $("#repeat-toggle-group").slideDown();
-            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
             modifyTask(uid, tid, {repeat: {rule: "none"}});
         });
 
@@ -275,7 +275,7 @@ let ui = function() {
         let cr = async function(taskId) {
             $(".repeat-subunit").hide();
             $("#repeat-toggle-group").show();
-            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
             $("#perspective-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
@@ -1455,7 +1455,7 @@ let ui = function() {
         user = usr;
     };
 
-    return {user:{set: setUser, get: ()=>user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
+    return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
 }();
 
 $(document).ready(async function() {
@@ -1471,7 +1471,7 @@ $(document).ready(async function() {
                 await ui.load("upcoming-page");
                 $("#loading").fadeOut();
                 $("#content-wrapper").fadeIn();
-                setInterval(()=>ui.update(), 15 * 60 * 1000);
+                setInterval(() => ui.update(), 15 * 60 * 1000);
             } else {
                 window.location.replace("auth.html");
             }
