@@ -4,6 +4,12 @@
         <meta charset="UTF-8">
         <title>Condution Desktop Client</title>
 
+        <!--LOADMEFIRST: Themes-->
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default.css" />
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default-light.css" />
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default-dark.css" />
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-exr0n-aggresivedark.css" />
+
         <!--Fonts and Icons-->
         <!--<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">-->
         <script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>
@@ -46,7 +52,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
 
-    <body>
+    <body style="background-color: transparent">
         
         <div class="main-head" id="main-head-darwin">
         </div>
@@ -55,8 +61,8 @@
 
             Hopefully quickly.
 
-            <pre>
-            This is alpha~APR2020.v0.1.0-nightly.
+            <pre style="color: var(--content-normal-alt)">
+            This is alpha~MAY2020.v0.1.1-nightly.
             INTERNAL USE ONLY.
 
             (c) 2020 Shabang Systems, LLC and the program authors.
@@ -111,11 +117,11 @@
                         <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
                     </div>
                     <t class="menu-label">
-                        Perspectives <div class="task-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                        Perspectives <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
                     </t>
                     <div class="perspectives menu-portion"></div>
                     <t class="menu-label">
-                        Projects <div class="task-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                        Projects <div class="menu-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
                     </t>
                     <div class="projects menu-portion"></div>
                     <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>

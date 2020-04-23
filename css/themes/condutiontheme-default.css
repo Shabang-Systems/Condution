@@ -1,5 +1,5 @@
 /* Colours */
-.condutiontheme-default-light {
+.condutiontheme-default {
     /* Background */
     /* These two colors should lightly contrast 
      * think: a hover over the background should
@@ -25,13 +25,13 @@
     /* These colors should all in different
      * degrees contrast the --menu-background
      * think: a selected item over the background */
-    --menu-background: #eaebed;
-    --menu-semiaccent-background: #e5e7ea;
-    --menu-accent-background: #e1e2e5;
-    --menu-text: #414c5e;
-    --menu-accent: #323c4f;
-    --menu-label: #1a283d;
-    --menu-action: #90939a;
+    --menu-background: #434D5F;
+    --menu-semiaccent-background: #303d4f;
+    --menu-accent-background: #212c3d;
+    --menu-text: #CACED8;
+    --menu-accent: #BCC0C9;
+    --menu-label: #BCC0C9;
+    --menu-action: #9097a3;
 
     /* Task colors */
     --task: #90939a;
@@ -45,7 +45,6 @@
     --task-clickbox: #2d2d2d;
     --task-checkbox: #ccc;
     --task-checkbox-feature: #e0e0e0;
-    --task-checkbox-feature-alt: #c5d0ef;
     --task-checkbox-ds: #f8974a;
     --task-checkbox-ds-feature: #f5c09d;
     --task-checkbox-ds-background: #f4eae4;
@@ -53,6 +52,7 @@
     --task-checkbox-od-feature: #ed938c;
     --task-checkbox-od-background: #f7d7d5;
     --task-checkmark: #2b3749;
+    --task-checkbox-feature-alt: #c5d0ef;
     --task-checkmark-ds: #f4721a;
     --task-checkmark-od: #d32f19;
 

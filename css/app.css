@@ -1,7 +1,3 @@
-/* Themes */
-@import "./themes/condutiontheme-default-light.css";
-@import "./themes/condutiontheme-exr0n-aggresivedark.css";
-
 /* Globals */
 html, body {
     height: 100%;
@@ -10,6 +6,7 @@ html, body {
     overflow: hidden;
     -ms-overflow-style: -ms-autohiding-scrollbar; /* Scrollbar Fix, MSE Runtime */
     cursor: default !important;
+    background-color: var(--background) !important;
 }
 
 *::-webkit-scrollbar { 
@@ -57,6 +54,10 @@ a {
     background-color: var(--background-feature);
 }
 
+.repeat-dropdown {
+    background: var(--background);
+}
+
 .repeat-option {
     color: var(--content-normal-alt);
     padding: 3px 1px 3px 8px;
@@ -66,6 +67,7 @@ a {
     transition-property: all;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
+    background: var(--background);
 }
 
 .repeat-option:hover {
@@ -164,6 +166,7 @@ a {
     transition-property: all;
     transition-duration: 100ms;
     transition-timing-function: ease-in-out;
+    color: var(--content-normal-alt);
 
 }
 
@@ -183,7 +186,7 @@ a {
     margin: 3px;
     padding: 2px;
     font-weight: 500;
-    color: var(--content-normal-alt);
+    color: var(--content-normal-accent);
     border-radius: 3px;
 }
 
@@ -191,6 +194,7 @@ a {
     font-weight: 700;
     font-size: 16px;
     padding-top: 10px;
+    color: var(--content-normal-alt);
 }
 
 /*.repeat-monthgrid-day:hover {*/
@@ -292,7 +296,7 @@ a {
 }
 
 #newuser:hover {
-    border: 0.5px solid var(--content-normal-accent);
+    border: 0.5px solid var(--content-normal-alt);
 }
 
 #login {
@@ -342,8 +346,9 @@ a {
     width: 250px;
     padding: 40px 10px 10px 10px;
     overflow: hidden;
-    background: url(./../static/auth-background.jpg);
+    background: var(--auth-background);
     background-size: cover;
+    display: none;
 }
 
 #auth-image-credit{
@@ -371,7 +376,7 @@ a {
 }
 
 #greeting-auth {
-    color: var(--content-normal-alt);
+    color: var(--content-normal-accent);
     font-weight: 700;
     padding-right: 10px;
 }
@@ -468,7 +473,7 @@ a {
 
 .menu-label {
     font-size: 14px;
-    color: var(--content-normal-accent);
+    color: var(--menu-label);
     font-weight: 600;
     padding: 7px 0 0 5px;
     display: inline-block;
@@ -726,6 +731,29 @@ a {
 }
 
 
+.menu-subicon {
+    font-size: 10px;
+    vertical-align: middle;
+    text-align: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 3px;
+    border: 1px solid var(--menu-semiaccent-background);
+    color: var(--menu-action);
+    cursor: pointer;
+    margin-right: 6px;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+.menu-subicon:hover {
+    background-color: var(--menu-accent-background);
+}
+
 
 .task-subicon:hover {
     color: var(--decorative-light-alt);
@@ -745,7 +773,7 @@ a {
     bottom: 0;
     width: 100%;
     margin-top: auto;
-    color: var(--content-normal-accent);
+    color: var(--menu-text);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
@@ -761,7 +789,7 @@ a {
 }
 
 #logout:hover {
-    background-color: var(--background-feature);
+    background-color: var(--menu-semiaccent-background);
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
@@ -862,7 +890,9 @@ a {
     height: 20px;
     width: 10%;
     font-size: 9px;
-    color: var(--content-normal-accent);
+    color: var(--task-clickbox);
+    margin: 0px !important;
+    border-radius: 3px;
 }
 
 .task-flagged.active{
@@ -870,14 +900,6 @@ a {
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
-}
-
-.task-flagged {
-    background-color: var(--task-textbox-background);
-    height: 20px;
-    width: 10%;
-    font-size: 9px;
-    color: var(--content-normal-accent);
 }
 
 .es-list {
@@ -889,6 +911,13 @@ a {
     border-radius: 3px;
     border: 0.5px solid  var(--background-feature);
     width: auto !important;
+    color: var(--content-normal-alt);
+    box-shadow: 0 2px 3px var(--background-feature);
+}
+
+.es-list li.selected {
+    color:  var(--content-normal-alt);
+    background-color: var(--background);
 }
 
 .es-visible {
@@ -906,7 +935,7 @@ a {
 }
 
 .task-floating.active{
-    background-color: var(--task-clickbox-accent-background);
+    background-color: var(--task-checkbox-feature-alt);
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
@@ -918,8 +947,18 @@ a {
     width: 10%;
     font-size: 9px;
     color: var(--task-clickbox);
+    margin: 0px !important;
+    border-radius: 3px;
 }
 
+
+.task-floating:hover {
+    color: var(--task-clickbox-accent);
+}
+
+.task-flagged:hover {
+    color: var(--task-clickbox-accent);
+}
 
 .task-tools {
     display: flex;
@@ -934,6 +973,29 @@ a {
 
 .ui-datepicker-calendar {
     color: var(--task-datepicker-elems);
+}
+
+.ui-widget-content {
+    background: var(--task-datepicker-background);
+    border: 1px solid var(--task-datepicker-selected);
+    color: var(--task-datepicker-elems);
+}
+
+.ui-icon{
+    background-image: none !important;
+}
+
+.ui-icon-circle-triangle-e {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0da";
+}
+
+.ui-widget.ui-widget-content {
+    border: 1px solid var(--background-feature);
+}
+
+.ui-widget-header {
+    color: var(--task-datepicker-selected);
 }
 
 .ui-state-default {
@@ -995,9 +1057,6 @@ a {
     background-color: var(--task-datepicker-feature);
 }
 
-.ui-datepicker-prev {
-    transform: translateY(1px);
-}
 
 .ui-datepicker-prev-hover {
     background: 0 !important;
@@ -1005,8 +1064,55 @@ a {
     background-color: var(--task-datepicker-action) !important;
     transform: translate(1px, 2px);
 }
+
 .ui-datepicker-next {
-    transform: translateY(1px);
+    transform: translate(-2px, 1px);
+    transition: all 400ms;
+    border: 0 !important;
+}
+
+.ui-datepicker-next::after{
+    font-family: "Font Awesome 5 Free";
+    content: "\f0da";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    transform: translate(8px, -1px);
+    font-size: 13px;
+}
+
+.ui-datepicker-next:hover {
+    transform: translate(-3px, 1px);
+    top: 2px;
+    right: 2px;
+    border: 0!important;
+    background-color: inherit !important;
+}
+
+.ui-datepicker-prev {
+    transform: translate(2px, 1px);
+    transition: all 400ms;
+    border: 0 !important;
+}
+
+.ui-datepicker-prev::after {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0d9";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    transform: translate(8px, -1px);
+    font-size: 13px;
+}
+
+.ui-datepicker-prev:hover {
+    transform: translate(2px, 1px);
+    top: 2px;
+    right: 2px;
+    border: 0!important;
+    background-color: inherit !important;
 }
 
 .ui-datepicker-next-hover {
@@ -1165,6 +1271,7 @@ label.od:hover:before {
     transform: translateY(-2px);
     font-size: 10px;
     padding: 1px 4px 1px 4px;
+    color: var(--decorative-light-accent);
     border-radius: 2px;
 }
 
@@ -1200,12 +1307,14 @@ label.od:hover:before {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     border: 0.5px solid var(--decorative-light);
-    box-shadow: 0 2px 3px #ccc;
+    box-shadow: 0 2px 3px var(--background-feature);
     transition: all 400ms;
 }
 
 .tt-suggestion {
     padding: 2px 10px 2px 10px;
+    color: var(--content-normal-alt);
+    transition: all 400ms;
 }
 
 .tt-suggestion:hover {
@@ -1242,8 +1351,8 @@ label.od:hover:before {
 #loading {
     margin-top: 35px;
     padding-left: 5px;
-    background-color: white;
-    color: black;
+    background-color: var(--background);
+    color: var(--content-normal-accent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1251,6 +1360,7 @@ label.od:hover:before {
     height: 100%;
     position: absolute;
     z-index: 100000;
+    display: none;
 }
 
 #content-wrapper {
@@ -1294,7 +1404,7 @@ label.od:hover:before {
     transition-property: color, background-color;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
-    color: var(--content-normal);
+    color: var(--quickadd-text);
 }
 
 #quickadd::placeholder{

@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, systemPreferences } = require('electron')
 
 function createWindow () {
     // Create the browser window.
@@ -13,7 +13,15 @@ function createWindow () {
             'nodeIntegration': true
         },
         'titleBarStyle': 'hiddenInset',
+        'show': false,
     })
+
+    if(systemPreferences.isDarkMode) {
+        win.setBackgroundColor("#161616");
+    } else {
+        win.setBackgroundColor("#f4f4f4");
+    }
+
     win.on('page-title-updated', function(e) {
         e.preventDefault()
     });
@@ -21,7 +29,11 @@ function createWindow () {
     win.removeMenu();
     // and load the main of the app.
     win.loadFile('app.html')
+    win.once('ready-to-show', function() {
+        win.show()
+    });
 }
+
 
 app.name = 'Condution';
 app.whenReady().then(createWindow)
