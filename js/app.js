@@ -198,7 +198,7 @@ let ui = function() {
                 $(this).css({"background-color": interfaceUtil.gtc("--background")});
             });
             $("#repeat-toggle-group").slideDown();
-            $("#repeat-type").fadeOut(() = >$("#repeat-type").html(""));
+            $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
             $("#"+activeMenu).addClass("menuitem-selected");
