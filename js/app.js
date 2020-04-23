@@ -1317,6 +1317,7 @@ let ui = function() {
         let value = $(this).val();
         modifyProject(uid, pid, {name: value});
         reloadPage();
+        console.error(err);
     });
 
     $(document).on("change", "#perspective-title", function(err) {
@@ -1324,6 +1325,7 @@ let ui = function() {
         let value = $(this).val();
         modifyPerspective(uid, pstID, {name: value});
         reloadPage();
+        console.error(err);
     });
 
     $(document).on("click", "#project-sequential-yes", function(err) {
@@ -1331,6 +1333,7 @@ let ui = function() {
         modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage();
         });
+        console.error(err);
     });
 
     $(document).on("click", "#project-sequential-no", function(err) {
@@ -1338,23 +1341,28 @@ let ui = function() {
         modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage();
         });
+        console.error(err);
     });
 
     $(document).on("click", "#logout", function(err) {
         firebase.auth().signOut().then(() => {}, console.error);
+        console.error(err);
     });
 
     $(document).on("click", "#perspective-edit", function(err) {
         showPerspectiveEdit(pageIndex.pageContentID);
+        console.error(err);
     });
 
     $("#quickadd").click(function(err) {
         $(this).animate({"width": "350px"}, 500);
+        console.error(err);
     });
 
     $("#quickadd").blur(function(err) {
         $(this).val("");
         $(this).animate({"width": "250px"}, 500);
+        console.error(err);
     });
 
 
