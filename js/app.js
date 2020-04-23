@@ -1473,9 +1473,9 @@ $(document).ready(async function() {
                 await ui.constructSidebar();
                 await ui.load("upcoming-page");
                 $("#loading").fadeOut();
-                currentTheme = "condutiontheme-default-dark";
-                $("body").removeClass();
-                $("body").addClass(currentTheme);
+                /*currentTheme = "condutiontheme-default-dark";*/
+                //$("body").removeClass();
+                /*$("body").addClass(currentTheme);*/
                 $("#content-wrapper").fadeIn();
                 setInterval(()=>ui.update(), 15 * 60 * 1000);
             } else {
