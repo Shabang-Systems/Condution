@@ -52,6 +52,7 @@
     --task-checkbox-od-feature: #ed938c;
     --task-checkbox-od-background: #f7d7d5;
     --task-checkmark: #2b3749;
+    --task-checkbox-feature-alt: #c5d0ef;
     --task-checkmark-ds: #f4721a;
     --task-checkmark-od: #d32f19;
 
@@ -72,7 +73,7 @@
     --quickadd-placeholder: #e2c0bc;
 
     /* Other Things */
-    --auth-background: background: url(./../static/auth-background.jpg);
+    --auth-background: url(./../static/auth-background.jpg);
 }
 
 

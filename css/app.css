@@ -180,7 +180,7 @@ a {
     margin: 3px;
     padding: 2px;
     font-weight: 500;
-    color: var(--content-normal-alt);
+    color: var(--content-normal-accent);
     border-radius: 3px;
 }
 
@@ -188,7 +188,7 @@ a {
     font-weight: 700;
     font-size: 16px;
     padding-top: 10px;
-    color: var(--content-normal-accent);
+    color: var(--content-normal-alt);
 }
 
 /*.repeat-monthgrid-day:hover {*/
@@ -290,7 +290,7 @@ a {
 }
 
 #newuser:hover {
-    border: 0.5px solid var(--content-normal-accent);
+    border: 0.5px solid var(--content-normal-alt);
 }
 
 #login {
@@ -369,7 +369,7 @@ a {
 }
 
 #greeting-auth {
-    color: var(--content-normal-alt);
+    color: var(--content-normal-accent);
     font-weight: 700;
     padding-right: 10px;
 }
@@ -883,7 +883,7 @@ a {
     height: 20px;
     width: 10%;
     font-size: 9px;
-    color: var(--content-normal-accent);
+    color: var(--task-clickbox);
     margin: 0px !important;
     border-radius: 3px;
 }
@@ -904,10 +904,13 @@ a {
     border-radius: 3px;
     border: 0.5px solid  var(--background-feature);
     width: auto !important;
-    color: var(--content-normal);
+    color: var(--content-normal-alt);
+    box-shadow: 0 2px 3px var(--background-feature);
 }
 
-.es-list {
+.es-list li.selected {
+    color:  var(--content-normal-alt);
+    background-color: var(--background);
 }
 
 .es-visible {
@@ -925,7 +928,7 @@ a {
 }
 
 .task-floating.active{
-    background-color: var(--task-clickbox-accent-background);
+    background-color: var(--task-checkbox-feature-alt);
     box-shadow: 0;
     -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
     box-shadow: 0 5px 15px rgba(0,0,0,0);
@@ -1230,13 +1233,14 @@ label.od:hover:before {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     border: 0.5px solid var(--decorative-light);
-    box-shadow: 0 2px 3px #ccc;
+    box-shadow: 0 2px 3px var(--background-feature);
     transition: all 400ms;
 }
 
 .tt-suggestion {
     padding: 2px 10px 2px 10px;
     color: var(--content-normal-alt);
+    transition: all 400ms;
 }
 
 .tt-suggestion:hover {
@@ -1326,7 +1330,7 @@ label.od:hover:before {
     transition-property: color, background-color;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
-    color: var(--content-normal);
+    color: var(--quickadd-text);
 }
 
 #quickadd::placeholder{
