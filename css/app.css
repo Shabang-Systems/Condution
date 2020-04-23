@@ -968,6 +968,29 @@ a {
     color: var(--task-datepicker-elems);
 }
 
+.ui-widget-content {
+    background: var(--task-datepicker-background);
+    border: 1px solid var(--task-datepicker-selected);
+    color: var(--task-datepicker-elems);
+}
+
+.ui-icon{
+    background-image: none !important;
+}
+
+.ui-icon-circle-triangle-e {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0da";
+}
+
+.ui-widget.ui-widget-content {
+    border: 1px solid var(--background-feature);
+}
+
+.ui-widget-header {
+    color: var(--task-datepicker-selected);
+}
+
 .ui-state-default {
     color: var(--task-datepicker-elems) !important;
     -moz-border-radius: 5px;
@@ -1027,9 +1050,6 @@ a {
     background-color: var(--task-datepicker-feature);
 }
 
-.ui-datepicker-prev {
-    transform: translateY(1px);
-}
 
 .ui-datepicker-prev-hover {
     background: 0 !important;
@@ -1037,8 +1057,55 @@ a {
     background-color: var(--task-datepicker-action) !important;
     transform: translate(1px, 2px);
 }
+
 .ui-datepicker-next {
-    transform: translateY(1px);
+    transform: translate(-2px, 1px);
+    transition: all 400ms;
+    border: 0 !important;
+}
+
+.ui-datepicker-next::after{
+    font-family: "Font Awesome 5 Free";
+    content: "\f0da";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    transform: translate(8px, -1px);
+    font-size: 13px;
+}
+
+.ui-datepicker-next:hover {
+    transform: translate(-3px, 1px);
+    top: 2px;
+    right: 2px;
+    border: 0!important;
+    background-color: inherit !important;
+}
+
+.ui-datepicker-prev {
+    transform: translate(2px, 1px);
+    transition: all 400ms;
+    border: 0 !important;
+}
+
+.ui-datepicker-prev::after {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0d9";
+    display: inline-block;
+    padding-right: 3px;
+    vertical-align: middle;
+    font-weight: 900;
+    transform: translate(8px, -1px);
+    font-size: 13px;
+}
+
+.ui-datepicker-prev:hover {
+    transform: translate(2px, 1px);
+    top: 2px;
+    right: 2px;
+    border: 0!important;
+    background-color: inherit !important;
 }
 
 .ui-datepicker-next-hover {

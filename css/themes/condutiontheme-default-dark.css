@@ -59,13 +59,13 @@
     --task-checkmark-od: #d32f19;
 
     /* Datepicker colors */
-    --task-datepicker-elems: grey;
-    --task-datepicker-elem-feature: #f4f4f5;
+    --task-datepicker-elems: #aab1ba;
+    --task-datepicker-elem-feature: #464747;
     --task-datepicker-elem-feature-alt: #a3a3a3;
-    --task-datepicker-background: #eeeeee;
-    --task-datepicker-selected: #e0e0e0;
-    --task-datepicker-feature: #434d5f;
-    --task-datepicker-action: #656e7a;
+    --task-datepicker-background: #333333;
+    --task-datepicker-selected: #484a4c;
+    --task-datepicker-feature: #b1b5bc;
+    --task-datepicker-action: #a2a3a5;
 
     /* Special accent */
     --special: #0e1c42;
