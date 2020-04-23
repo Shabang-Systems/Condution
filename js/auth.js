@@ -89,6 +89,7 @@ else {
             }
         } else {
             $("#authwall").fadeIn();
+            $('#auth-left-menu').fadeIn();
         }
     });
 

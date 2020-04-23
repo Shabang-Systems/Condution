@@ -348,6 +348,7 @@ a {
     overflow: hidden;
     background: var(--auth-background);
     background-size: cover;
+    display: none;
 }
 
 #auth-image-credit{
