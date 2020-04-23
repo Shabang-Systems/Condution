@@ -54,6 +54,10 @@ a {
     background-color: var(--background-feature);
 }
 
+.repeat-dropdown {
+    background: var(--background);
+}
+
 .repeat-option {
     color: var(--content-normal-alt);
     padding: 3px 1px 3px 8px;
@@ -63,6 +67,7 @@ a {
     transition-property: all;
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
+    background: var(--background);
 }
 
 .repeat-option:hover {
@@ -161,6 +166,7 @@ a {
     transition-property: all;
     transition-duration: 100ms;
     transition-timing-function: ease-in-out;
+    color: var(--content-normal-alt);
 
 }
 
