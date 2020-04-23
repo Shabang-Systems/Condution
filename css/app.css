@@ -188,6 +188,7 @@ a {
     font-weight: 700;
     font-size: 16px;
     padding-top: 10px;
+    color: var(--content-normal-accent);
 }
 
 /*.repeat-monthgrid-day:hover {*/
@@ -339,7 +340,7 @@ a {
     width: 250px;
     padding: 40px 10px 10px 10px;
     overflow: hidden;
-    background: url(./../static/auth-background.jpg);
+    background: var(--auth-background);
     background-size: cover;
 }
 

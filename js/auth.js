@@ -1,6 +1,16 @@
 // Chapter 0: Fire! Base!
 
 (function() {
+    if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").addClass(currentTheme);
+    $("#loading").hide().css("display", "flex").fadeIn();
+}
+else {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").addClass(currentTheme);
+    $("#loading").hide().css("display", "flex").fadeIn();
+}
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
     const obj = require("./secrets")

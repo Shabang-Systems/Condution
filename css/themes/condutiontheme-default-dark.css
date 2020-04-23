@@ -1,56 +1,58 @@
 /* Colours */
-.condutiontheme-default-light {
+.condutiontheme-default-dark {
     /* Background */
     /* These two colors should lightly contrast 
      * think: a hover over the background should
      * be colored --background-feature */
-    --background: #f4f4f4;
-    --background-feature: #e5e7ea;
-    --background-feature-overlay: rgba(229,231,234,0.7);
+    --background: #161616;
+    --background-feature: #212121;
+    --background-feature-overlay: rgba(40,40,40,0.7);
 
     /* Content */
     /* These are the mail colors. Make them mainly
      * to be bold and clear. Also make them kind of related 
      * to one main color */
-    --content-normal: #eaeaea;
-    --content-normal-alt: #434d5f;
-    --content-normal-accent: #1a283d;
+    --content-normal: #262626;
+    --content-normal-alt: #9a9ca0;
+    --content-normal-accent: #b9b9ba;
 
     /* Decorative */
-    --decorative-light: #cecece;
-    --decorative-light-alt: #838384;
-    --decorative-light-accent: #374559;
+    --decorative-light: #3a3a3a;
+    --decorative-light-alt: #4a4c4f;
+    --decorative-light-accent: #323b49;
 
     /* Menu colors */
     /* These colors should all in different
      * degrees contrast the --menu-background
      * think: a selected item over the background */
-    --menu-background: #eaebed;
-    --menu-semiaccent-background: #e5e7ea;
-    --menu-accent-background: #e1e2e5;
-    --menu-text: #414c5e;
-    --menu-accent: #323c4f;
-    --menu-label: #1a283d;
-    --menu-action: #90939a;
+    --menu-background: #232323;
+    --menu-semiaccent-background: #282828;
+    --menu-accent-background: #2d2d2d;
+    --menu-text: #CACED8;
+    --menu-accent: #BCC0C9;
+    --menu-label: #BCC0C9;
+    --menu-action: #9097a3;
+
 
     /* Task colors */
     --task: #90939a;
     --task-icon: #777777;
-    --task-feature: #efefef;
-    --task-feature-alt: #dbdbdd;
-    --task-textbox: #434d5f;
-    --task-textbox-background: #e8e8e8;
-    --task-clickbox-background: #e8e8e8;
-    --task-clickbox-accent-background: #d1d1d1;
-    --task-clickbox: #2d2d2d;
+    --task-feature: #222323;
+    --task-feature-alt: #27292d;
+    --task-textbox: #a9a9aa;
+    --task-textbox-background: #333333;
+    --task-clickbox-background: #333333;
+    --task-clickbox-accent-background: #3a3a3a;
+    --task-clickbox: #8b8b8c;
+    --task-clickbox-accent: #bfbfbf;
     --task-checkbox: #ccc;
-    --task-checkbox-feature: #e0e0e0;
+    --task-checkbox-feature: #3d3d3d;
     --task-checkbox-ds: #f8974a;
-    --task-checkbox-ds-feature: #f5c09d;
-    --task-checkbox-ds-background: #f4eae4;
+    --task-checkbox-ds-feature: #563424;
+    --task-checkbox-ds-background: #331e17;
     --task-checkbox-od: #c04f40;
-    --task-checkbox-od-feature: #ed938c;
-    --task-checkbox-od-background: #f7d7d5;
+    --task-checkbox-od-feature: #4c1d1d;
+    --task-checkbox-od-background: #301414;
     --task-checkmark: #2b3749;
     --task-checkmark-ds: #f4721a;
     --task-checkmark-od: #d32f19;
@@ -65,14 +67,14 @@
     --task-datepicker-action: #656e7a;
 
     /* Special accent */
-    --special: #dadeae;
+    --special: #669933;
     --quickadd: #c04f40;
     --quickadd-feature: #bf3b2a;
     --quickadd-success: #b1dcbf;
     --quickadd-placeholder: #e2c0bc;
 
     /* Other Things */
-    --auth-background: background: url(./../static/auth-background.jpg);
+    --auth-background: background: url(./../static/auth-background-dark.jpg);
 }
 
 
