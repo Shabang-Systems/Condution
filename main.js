@@ -19,8 +19,8 @@ function createWindow () {
     });
 
     win.removeMenu();
-    // and load the index.html of the app.
-    win.loadFile('auth.html')
+    // and load the main of the app.
+    win.loadFile('app.html')
 }
 
 app.name = 'Condution';

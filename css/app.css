@@ -37,6 +37,26 @@ a {
     padding-bottom:9px;
 }
 
+#perspective-edit-name {
+    color: var(--content-normal-accent);
+    padding-left: 4px;
+    background: inherit;
+    border: 0;
+    font-weight: 600;
+    border-radius: 3px;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+#perspective-edit-name:hover {
+    background-color: var(--background-feature);
+}
+
+#perspective-edit-name:focus {
+    background-color: var(--background-feature);
+}
+
 .repeat-option {
     color: var(--content-normal-alt);
     padding: 3px 1px 3px 8px;
@@ -167,9 +187,23 @@ a {
     border-radius: 3px;
 }
 
+.greeting-auth-subtitle {
+    font-weight: 700;
+    font-size: 16px;
+    padding-top: 10px;
+}
+
 /*.repeat-monthgrid-day:hover {*/
     /*background-color: var(--background-feature);*/
 /*}*/
+
+#perspective-callout {
+    color: var(--task);
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
 
 #repeat-callout {
     color: var(--task);
@@ -180,6 +214,13 @@ a {
 }
 
 #repeat-back {
+    display: inline-block;
+    position: absolute;
+    margin-right: 10px;
+    transform: translate(420px, -8px);
+}
+
+#perspective-back {
     display: inline-block;
     position: absolute;
     margin-right: 10px;
@@ -218,6 +259,9 @@ a {
     /*height: 105px;*/
 }
 
+#perspective-unit {
+}
+
 
 #overlay {
     position: absolute;
@@ -230,10 +274,30 @@ a {
     display: none;
 }
 
+#newuser {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--content-normal-alt);
+    font-weight: 500;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    border: 1px solid transparent;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 3px;
+    transform: translateX(-6px);
+    border: 0.5px solid transparent;
+}
+
+#newuser:hover {
+    border: 0.5px solid var(--content-normal-accent);
+}
+
 #login {
     bottom: 0;
     width: 150px;
-    margin-top: auto;
     color: var(--content-normal-accent);
     -webkit-transition-property: color, background-color;
     -webkit-transition-duration: 200ms;
@@ -242,7 +306,7 @@ a {
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
     margin-top: 15px;
-    padding: 5px 0 4px 10px;
+    padding: 5px 2px 4px 0;
     transform: translateX(-1px);
     cursor: default;
     -moz-border-radius: 5px;
@@ -251,6 +315,8 @@ a {
     border: var(--content-normal-accent) 1px solid;
     float: right;
     transform: translateX(-90px);
+    display: inline-block;
+    text-align: center;
 }
 
 #login:hover {
@@ -258,7 +324,7 @@ a {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    padding: 5px 0 4px 10px;
+    padding: 5px 2px 4px 0;
     color: var(--content-normal);
 }
 
@@ -276,7 +342,7 @@ a {
     width: 250px;
     padding: 40px 10px 10px 10px;
     overflow: hidden;
-    background: url(https://source.unsplash.com/HzSLh5zV42s/1600x900);
+    background: url(./../static/auth-background.jpg);
     background-size: cover;
 }
 
@@ -299,7 +365,7 @@ a {
 	left: 0;
 	right: 0;
 	margin: auto;
-    vertical-align: center;
+    /*vertical-align: center;*/
     padding-left: 50px;
     transform: translate(120px, -30px);
 }
@@ -310,11 +376,6 @@ a {
     padding-right: 10px;
 }
 
-#greeting-auth-subtitle {
-    font-weight: 700;
-    font-size: 16px;
-    padding-top: 10px;
-}
 
 #upcoming-header{
     font-size: 13px;
@@ -494,6 +555,9 @@ a {
 .project {
     font-size: 12px;
     padding: 2px 4px 2px 10px;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .subproject {
@@ -594,6 +658,41 @@ a {
     background-color: var(--content-normal);
 }
 
+#pquery {
+    font-size: 12pt;
+    font-weight:400;
+    background-color:inherit;
+    padding: 10px 5px 10px 5px;
+    border: 1px grey solid;
+    display: inline-block;
+    height: 30px;
+    width: 85%;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+    color: var(--content-normal-accent);
+}
+
+#pquery:focus {
+    background-color: var(--content-normal);
+}
+
+#pquery:hover {
+    background-color: var(--content-normal);
+}
+
+#pquery::placeholder {
+    color: var(--decorative-light);
+    font-size: 14px;
+}
 
 .auth-upf {
     font-size: 12pt;
@@ -618,14 +717,15 @@ a {
     margin-bottom: 5px;
 }
 
+.auth-upf:focus {
+    background-color: var(--content-normal);
+}
+
 .auth-upf.wrong {
     border-color: red;
 }
 
 
-.auth-upf:focus {
-    background-color: var(--content-normal);
-}
 
 .task-subicon:hover {
     color: var(--decorative-light-alt);
@@ -985,7 +1085,8 @@ a {
   text-transform: text;           /* proposed */
   content: '\f00c';
   position: absolute;
-  top .15em; left: .10em;
+  top: .15em; 
+  left: .10em;
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark);
@@ -1000,7 +1101,8 @@ a {
   text-transform: text;           /* proposed */
   content: '\f00c';
   position: absolute;
-  top .15em; left: .10em;
+  top: .15em;
+  left: .10em;
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkmark-ds);
@@ -1015,7 +1117,8 @@ a {
   text-transform: text;           /* proposed */
   content: '\f00c';
   position: absolute;
-  top .15em; left: .10em;
+  top: .15em; 
+  left: .10em;
   font-size: 9px;
   line-height: 0.6;
   color: var(--task-checkbox-od);
@@ -1044,10 +1147,6 @@ label.ds:hover:before {
 
 label.od:hover:before {
     background-color: var(--task-checkbox-od-feature) !important;
-}
-
-label:before {
-   /*transition: background-color 150ms linear;*/
 }
 
 .bootstrap-tagsinput {

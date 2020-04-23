@@ -2,7 +2,7 @@
 
 ## Game Plan
 ### Stage 0: remove cancer
-- [ ] Add semicolons to app.js
+- [x] Add semicolons to app.js
 ### Stage 1: make sure this is feasible
 - [ ] Get wasm working
     - [ ] Figure out how to serve wasm with electron
