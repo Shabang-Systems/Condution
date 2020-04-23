@@ -10,7 +10,7 @@ if (process.platform === "win32") {
     $("#left-menu").addClass("win32-windowing");
     $("#content-area").addClass("win32-windowing");
     $("#window-minimize").click(()=>remote.BrowserWindow.getFocusedWindow().minimize());
-    $("#window-maximize").click(function(e) {
+    $("#window-maximize").click(function(err) {
         if (remote.BrowserWindow.getFocusedWindow().isMaximized()) {
             remote.BrowserWindow.getFocusedWindow().unmaximize();
         } else {
@@ -25,8 +25,8 @@ if (process.platform === "win32") {
 }
 
 // Chapter 1: Utilities!
-var interfaceUtil = function() {
-    let Sortable = require('sortablejs')
+const interfaceUtil = function() {
+    const Sortable = require('sortablejs');
 
     let getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
@@ -46,7 +46,7 @@ var interfaceUtil = function() {
         };
     };
 
-    let smartParse = function(timeformat, timeString, o) {
+    const smartParse = function(timeformat, timeString, o) {
         // smart, better date parsing with chrono
         let d = chrono.parse(timeString)[0].start.date();
         return {
@@ -57,10 +57,10 @@ var interfaceUtil = function() {
             microsec: d.getMicroseconds(),
             timezone: d.getTimezoneOffset() * -1
         };
-    }
+    };
 
-    let numDaysBetween = function(d1, d2) {
-        var diff = Math.abs(d1.getTime() - d2.getTime());
+    const numDaysBetween = function(d1, d2) {
+        let diff = Math.abs(d1.getTime() - d2.getTime());
         return diff / (1000 * 60 * 60 * 24);
     };
 
@@ -68,12 +68,12 @@ var interfaceUtil = function() {
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
         return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
-    }
+    };
 
     return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
 }();
 
-var ui = function() {
+let ui = function() {
 
     // greeting of the day
     let greetings = ["Hello there,", "Hey,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
@@ -90,7 +90,7 @@ var ui = function() {
         currentView: "upcoming-page",
         projectDir: [],
         pageContentID: undefined
-    }
+    };
 
     activeMenu = "today";
 
@@ -104,7 +104,7 @@ var ui = function() {
         possiblePerspectives = await getPerspectives(uid);
         avalibility = await getItemAvailability(uid);
         inboxandDS = await getInboxandDS(uid, avalibility);
-    }
+    };
 
     // the outside world's refresh function
     let reloadPage = async function() {
@@ -115,17 +115,17 @@ var ui = function() {
                 await $("#"+activeMenu).addClass("menuitem-selected");
             }
         }, 500);
-    }
+    };
 
 
-    var showPerspectiveEdit = function() {
-        $("#perspective-back").on("click", function(e) {
+    const showPerspectiveEdit = function() {
+        $("#perspective-back").on("click", function(err) {
             $("#perspective-unit").fadeOut(200);
             $("#overlay").fadeOut(200, ()=>reloadPage());
             $("#"+activeMenu).addClass("menuitem-selected");
         });
 
-        $(document).on("click", "#overlay", function(e) {
+        $(document).on("click", "#overlay", function(err) {
             if (e.target === this) {
                 $(".repeat-subunit").slideUp();
                 $("#repeat-toggle-group").slideDown();
@@ -133,10 +133,10 @@ var ui = function() {
                 $("#repeat-unit").fadeOut(200);
                 $("#overlay").fadeOut(200, ()=>reloadPage());
                 $("#"+activeMenu).addClass("menuitem-selected");
-                $("#repeat-daterow").children().each(function(e) {
+                $("#repeat-daterow").children().each(function(err) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
                 });
-                $("#repeat-monthgrid").children().each(function(e) {
+                $("#repeat-monthgrid").children().each(function(err) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background")});
                 });
             }
@@ -144,42 +144,42 @@ var ui = function() {
 
         let currentP;
 
-        $("#pquery").change(function(e) {
+        $("#pquery").change(function(err) {
             modifyPerspective(uid, currentP, {query: $(this).val()});
         });
 
-        $("#perspective-edit-name").change(function(e) {
+        $("#perspective-edit-name").change(function(err) {
             modifyPerspective(uid, currentP, {name: $(this).val()});
         });
 
-        let edit = function(pspID) {
+        const edit = function(pspID) {
             $("#repeat-unit").hide();
             currentP = pspID;
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#perspective-unit").fadeIn(200);
             $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
-            $("#pquery").val(possiblePerspectives[0][pspID].query)
+            $("#pquery").val(possiblePerspectives[0][pspID].query);
             // fix weird focus-select bug
             setTimeout(function() {$("#pquery").focus()}, 100);
-        }
+        };
 
         return edit;
-    }()
+    }();
 
     // repeat view
-    var showRepeat = function() {
+    const showRepeat = function() {
 
         let tid;
         let repeatWeekDays = [];
         let repeatMonthDays = [];
 
         // Setup repeat things!
-        $("#repeat-back").on("click", function(e) {
+        $("#repeat-back").on("click", function(err) {
             $(".repeat-subunit").slideUp();
-            $("#repeat-daterow").children().each(function(e) {
+            $("#repeat-daterow").children().each(function(err) {
                 $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
             });
-            $("#repeat-monthgrid").children().each(function(e) {
+            $("#repeat-monthgrid").children().each(function(err) {
                 $(this).css({"background-color": interfaceUtil.gtc("--background")});
             });
             $("#repeat-toggle-group").slideDown();
@@ -192,18 +192,18 @@ var ui = function() {
         });
 
 
-        $(document).on("click", "#overlay", function(e) {
-            if (e.target === this) {
+        $(document).on("click", "#overlay", function(err) {
+            if (err.target === this) {
                 $(".repeat-subunit").slideUp();
                 $("#repeat-toggle-group").slideDown();
                 $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
                 $("#repeat-unit").fadeOut(200);
                 $("#overlay").fadeOut(200, ()=>reloadPage());
                 $("#"+activeMenu).addClass("menuitem-selected");
-                $("#repeat-daterow").children().each(function(e) {
+                $("#repeat-daterow").children().each(function(err) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
                 });
-                $("#repeat-monthgrid").children().each(function(e) {
+                $("#repeat-monthgrid").children().each(function(err) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background")});
                 });
                 let repeatWeekDays = [];
@@ -211,35 +211,35 @@ var ui = function() {
             }
         });
 
-        $("#repeat-type").on("click", function(e) {
+        $("#repeat-type").on("click", function(err) {
             $(".repeat-subunit").slideUp();
             $("#repeat-toggle-group").slideDown();
             $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
             modifyTask(uid, tid, {repeat: {rule: "none"}});
         });
 
-        $("#repeat-perday").on("click", function(e) {
+        $("#repeat-perday").on("click", function(err) {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every day.");
             $("#repeat-type").fadeIn();
             modifyTask(uid, tid, {repeat: {rule: "daily"}});
         });
 
-        $("#repeat-perweek").on("click", function(e) {
+        $("#repeat-perweek").on("click", function(err) {
             $("#repeat-weekly-unit").slideDown();
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every week.");
             $("#repeat-type").fadeIn();
         });
 
-        $("#repeat-permonth").on("click", function(e) {
+        $("#repeat-permonth").on("click", function(err) {
             $("#repeat-monthly-unit").slideDown();
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every month.");
             $("#repeat-type").fadeIn();
         });
 
-        $("#repeat-peryear").on("click", function(e) {
+        $("#repeat-peryear").on("click", function(err) {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every year.");
             $("#repeat-type").fadeIn();
@@ -247,7 +247,7 @@ var ui = function() {
         });
 
         // Actions
-        $(".repeat-daterow-weekname").on("click", function(e) {
+        $(".repeat-daterow-weekname").on("click", function(err) {
             if (repeatWeekDays.includes($(this).html())) {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                 repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
@@ -260,7 +260,7 @@ var ui = function() {
         });
 
         
-        $(".repeat-monthgrid-day").on("click", function(e) {
+        $(".repeat-monthgrid-day").on("click", function(err) {
             if (repeatMonthDays.includes($(this).html())) {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background")}, 100);
                 repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
@@ -288,7 +288,7 @@ var ui = function() {
                     $("#repeat-type").html("every day.");
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
-                    $("#repeat-daterow").children().each(function(e) {
+                    $("#repeat-daterow").children().each(function(err) {
                         if (ti.repeat.on.includes($(this).html())) {
                             $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                         }
@@ -299,7 +299,7 @@ var ui = function() {
                     $("#repeat-type").html("every week.");
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
-                    $("#repeat-monthgrid").children().each(function(e) {
+                    $("#repeat-monthgrid").children().each(function(err) {
                         if (ti.repeat.on.includes($(this).html())) {
                             $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                         }
@@ -315,11 +315,11 @@ var ui = function() {
                     $("#repeat-type").show();
                 }
             }
-        }
+        };
         return cr;
     }();
 
-        // the pubilc refresh function
+        // the public refresh function
 
     let activeTask = null; // TODO: shouldn't this be undefined?
     let activeTaskDeInboxed = false;
@@ -359,7 +359,7 @@ var ui = function() {
                     $("#due-soon").slideUp(300);
                 } else {
                     $("#duesoon-badge").html(''+dsC);
-                    if (activeMenu==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
+                    if (activeMenu==="today" && $($('#task-' + hTask).parent()).attr('id') !== "inbox") {
                         $('#task-'+hTask).slideUp(200);
                     }
                 }
@@ -369,8 +369,8 @@ var ui = function() {
                 let hTask = activeTask;
                 iC = inboxandDS[0].length;
                 dsC = inboxandDS[1].length;
-                $("#unsorted-badge").html(''+iC);
-                $("#duesoon-badge").html(''+dsC);
+                $("#unsorted-badge").html('' + iC);
+                $("#duesoon-badge").html('' + dsC);
                 if (activeMenu==="today") {
                     $('#task-'+hTask).appendTo("#inbox");
                 }
@@ -387,7 +387,7 @@ var ui = function() {
                 //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
             await reloadPage();
-        }
+        };
 
 
         let displayTask = async function(pageId, taskId, sequentialOverride) {
@@ -465,7 +465,7 @@ var ui = function() {
                 timeFormat: "hh:mm tt",
                 showHour: false,
                 showMinute: false,
-                onSelect: function(e) {
+                onSelect: function(err) {
                     let defer_set = $(this).datetimepicker('getDate');
                     let tz = moment.tz.guess();
                     if (new Date() < defer_set) {
@@ -482,7 +482,7 @@ var ui = function() {
                 timeFormat: "hh:mm tt",
                 showHour: false,
                 showMinute: false,
-                onSelect: function(e) {
+                onSelect: function(err) {
                     let due_set = $(this).datetimepicker('getDate');
                     let tz = moment.tz.guess();
                     if (new Date() > due_set) {
@@ -571,7 +571,7 @@ var ui = function() {
             // -------------------------------------------------------------------------------
             // Part 4: task action behaviors!
             // Task complete
-            $('#task-check-'+taskId).change(function(e) {
+            $('#task-check-'+taskId).change(function(err) {
                 if (this.checked) {
                     taskManager.hideActiveTask();
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
@@ -579,10 +579,10 @@ var ui = function() {
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
                     $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
                     $('#task-' + taskId).slideUp(300);
-                    completeTask(uid, taskId).then(function(e) {
+                    completeTask(uid, taskId).then(function(err) {
                         if (project === undefined) {
-                             getInboxTasks(uid).then(function(e){
-                                iC = e.length;
+                             getInboxTasks(uid).then(function(err){
+                                iC = err.length;
                                 if (iC === 0) {
                                     $("#inbox-subhead").slideUp(300);
                                     $("#inbox").slideUp(300);
@@ -591,6 +591,7 @@ var ui = function() {
                                 }
                             });
                         }
+                        console.error(err);
                     });
                     if (repeat.rule !== "none" && due) {
                         let rRule = repeat.rule;
@@ -706,7 +707,7 @@ var ui = function() {
             });
 
             // Task project change
-             $('#task-project-' + taskId).change(function(e) {
+             $('#task-project-' + taskId).change(function(err) {
                 if (this.value in possibleProjectsRev) {
                     let projId = possibleProjectsRev[this.value];
                     if (project === undefined){
@@ -731,7 +732,7 @@ var ui = function() {
             });
 
             // Trashing a task
-            $("#task-trash-" + taskId).click(function(e) {
+            $("#task-trash-" + taskId).click(function(err) {
                 if (project === undefined) activeTaskDeInboxed = true;
                 deleteTask(uid, taskId).then(function() {
                     hideActiveTask();
@@ -740,35 +741,35 @@ var ui = function() {
             });
 
             // Repeat popover
-            $("#task-repeat-" + taskId).click(function(e) {
+            $("#task-repeat-" + taskId).click(function(err) {
                 showRepeat(taskId);
             });
 
             // Task name change
-            $("#task-name-" + taskId).change(function(e) {
+            $("#task-name-" + taskId).change(function(err) {
                 modifyTask(uid, taskId, {name:this.value});
             });
 
             // Task discription change
-            $("#task-desc-" + taskId).change(function(e) {
+            $("#task-desc-" + taskId).change(function(err) {
                 modifyTask(uid, taskId, {desc:this.value});
             });
 
             // Task tag remove
-            $('#task-tag-' + taskId).on('itemRemoved', function(e) {
-                let removedTag = possibleTagsRev[e.item];
+            $('#task-tag-' + taskId).on('itemRemoved', function(err) {
+                let removedTag = possibleTagsRev[err.item];
                 tagIDs = tagIDs.filter(item => item !== removedTag);
                 modifyTask(uid, taskId, {tags:tagIDs});
             });
 
             // Task tag add
-            $('#task-tag-' + taskId).on('itemAdded', function(e) {
-                let addedTag = possibleTagsRev[e.item];
+            $('#task-tag-' + taskId).on('itemAdded', function(err) {
+                let addedTag = possibleTagsRev[err.item];
                 if (!addedTag){
-                    newTag(uid, e.item).then(function(addedTag) {
+                    newTag(uid, err.item).then(function(addedTag) {
                         tagIDs.push(addedTag);
-                        possibleTags[addedTag] = e.item;
-                        possibleTags[e.item] = addedTag;
+                        possibleTags[addedTag] = err.item;
+                        possibleTags[err.item] = addedTag;
                         modifyTask(uid, taskId, {tags:tagIDs});
                     });
                 } else if (!(addedTag in tagIDs)){
@@ -777,23 +778,23 @@ var ui = function() {
                 }
             });
 
-            // Remove flagged parametre
-            $("#task-flagged-no-" + taskId).change(function(e) {
+            // Remove flagged parameter
+            $("#task-flagged-no-" + taskId).change(function(err) {
                 isFlagged = false;
                 modifyTask(uid, taskId, {isFlagged: false});
                // TODO: Unflagged Style? So far flagged is
                // just another filter for perspective selection
             });
 
-            // Add flagged parametre
-            $("#task-flagged-yes-" + taskId).change(function(e) {
+            // Add flagged parameter
+            $("#task-flagged-yes-" + taskId).change(function(err) {
                 isFlagged = true;
                 modifyTask(uid, taskId, {isFlagged: true});
                // TODO: Flagged Style?
             });
 
-            // Remove floating parametre and calculate dates
-            $("#task-floating-no-" + taskId).change(function(e) {
+            // Remove floating parameter and calculate dates
+            $("#task-floating-no-" + taskId).change(function(err) {
                 isFloating = false;
                 modifyTask(uid, taskId, {isFloating: false});
                 defer_current = defer;
@@ -801,8 +802,8 @@ var ui = function() {
                 setDates();
             });
 
-            // Add floating parametre and calculate dates
-            $("#task-floating-yes-" + taskId).change(function(e) {
+            // Add floating parameter and calculate dates
+            $("#task-floating-yes-" + taskId).change(function(err) {
                 isFloating = true;
                 modifyTask(uid, taskId, {isFloating: true});
                 defer_current = moment(defer).tz(timezone).local(true).toDate();
@@ -810,7 +811,7 @@ var ui = function() {
                 setDates();
             });
 
-        }
+        };
 
         return {generateTaskInterface: displayTask, hideActiveTask: hideActiveTask};
     }();
@@ -821,9 +822,9 @@ var ui = function() {
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
-            onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
+            onEnd: function(err) {
+                let oi = err.oldIndex;
+                let ni = err.newIndex;
                 refresh().then(function() {
                     if (oi<ni) {
                         // handle task moved down
@@ -851,9 +852,9 @@ var ui = function() {
         // project sorter
         let projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
-            onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
+            onEnd: function(err) {
+                let oi = err.oldIndex;
+                let ni = err.newIndex;
 
                 getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
                     if (oi<ni) {
@@ -910,19 +911,19 @@ var ui = function() {
         // NW: perspective sorter
         var perspectiveSort = new interfaceUtil.Sortable($(".perspectives")[0], {
             animation: 200,
-            onStart: function(e) {
+            onStart: function(err) {
                 // Make sure that elements don't think that they are being hovered
                 // when they are being dragged over
-                let itemEl = $(e.item);
+                let itemEl = $(err.item);
                 $('.perspectives').children().each(function() {
                     if ($(this) !== itemEl) {
                         $(this).removeClass("mihov")
                     }
                 })
             },
-            onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
+            onEnd: function(err) {
+                let oi = err.oldIndex;
+                let ni = err.newIndex;
                 getPerspectives(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
@@ -946,19 +947,19 @@ var ui = function() {
         // NW: top level project sorter
         let topLevelProjectSort = new interfaceUtil.Sortable($(".projects")[0], {
             animation: 200,
-            onStart: function(e) {
+            onStart: function(err) {
                 // Make sure that elements don't think that they are being hovered
                 // when they are being dragged over
-                let itemEl = $(e.item);
+                let itemEl = $(err.item);
                 $('.projects').children().each(function() {
                     if ($(this) !== itemEl) {
                         $(this).removeClass("mihov")
                     }
                 })
             },
-             onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
+             onEnd: function(err) {
+                let oi = err.oldIndex;
+                let ni = err.newIndex;
                 getTopLevelProjects(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
@@ -1072,7 +1073,7 @@ var ui = function() {
                     $("#project-sequential-no").button("toggle")
                 }
             });
-        }
+        };
 
         return {upcoming: upcoming, project: project, perspective: perspective};
     }();
@@ -1088,7 +1089,7 @@ var ui = function() {
     let loadView = async function(viewName, itemID) {
         // hide other views
         $("#content-area").children().each(function() {
-            if ($(this).attr("id") != viewName){
+            if ($(this).attr("id") != viewName) {
                 $(this).css("display", "none");
             }
         });
@@ -1120,10 +1121,10 @@ var ui = function() {
         // tell everyone to bring it!
         pageIndex.currentView = viewName;
 
-    }
+    };
 
     // document action listeners!!
-    $(document).on('click', '.menuitem', function(e) {
+    $(document).on('click', '.menuitem', function(err) {
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         activeMenu = $(this).attr('id');
         if (activeMenu.includes("perspective")) {
@@ -1142,21 +1143,21 @@ var ui = function() {
         }
     });
 
-    $(document).on('click', '.today', function(e) {
+    $(document).on('click', '.today', function(err) {
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         loadView("upcoming-page");
         activeMenu = $(this).attr('id');
         $("#"+activeMenu).addClass("today-highlighted");
     });
 
-    $(document).on("click", ".task", async function(e) {
+    $(document).on("click", ".task", async function(err) {
         if ($(this).attr('id') === "task-" + activeTask) {
-            e.stopImmediatePropagation();
+            err.stopImmediatePropagation();
             return;
         }
         if (activeTask) await taskManager.hideActiveTask();
-        if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
-            e.stopImmediatePropagation();
+        if ($(err.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
+            err.stopImmediatePropagation();
             return;
         } else {
             let taskInfo = $(this).attr("id").split("-");
@@ -1170,11 +1171,11 @@ var ui = function() {
         }
     });
 
-    $(document).on("click", ".page, #left-menu div", function(e) {
+    $(document).on("click", ".page, #left-menu div", function(err) {
         if (activeTask) {
-            if ($(e.target).hasClass("task-pseudocheck")) {
+            if ($(err.target).hasClass("task-pseudocheck")) {
                 $("#task-check-"+activeTask).toggle();
-            } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name') || $(e.target).hasClass('task-display')) {
+            } else if ($(err.target).hasClass('task') || $(err.target).hasClass('task-name') || $(err.target).hasClass('task-display')) {
                 return false;
             }
             taskManager.hideActiveTask();
@@ -1185,8 +1186,8 @@ var ui = function() {
         // THE POP OPERATION IS NOT DUPLICATED.
         // On load, the current projDir will
         // be pushed to the array
-        pageIndex.projectDir.pop()
-        activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1]
+        pageIndex.projectDir.pop();
+        activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
         loadView("project-page", activeMenu.split("-")[1]);
         $("#"+activeMenu).addClass("menuitem-selected");
     });
@@ -1196,7 +1197,7 @@ var ui = function() {
         let projObj = {
             top_level: false,
             is_sequential: false,
-        }
+        };
         newProject(uid, projObj, pid).then(function(npID) {
             associateProject(uid, npID, pid);
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
@@ -1211,7 +1212,7 @@ var ui = function() {
         let perspectiveObj = {
             name: "",
             query: "",
-        }
+        };
         newPerspective(uid, perspectiveObj).then(function(npID) {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "perspective-"+npID;
@@ -1234,7 +1235,7 @@ var ui = function() {
             name: "New Project",
             top_level: true,
             is_sequential: false,
-        }
+        };
         newProject(uid, projObj).then(function(npID) {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
@@ -1266,7 +1267,7 @@ var ui = function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
         deleteProject(uid, pid).then(function() {
-            pageIndex.projectDir.pop()
+            pageIndex.projectDir.pop();
             if (pageIndex.projectDir.length > 0) {
                 dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
                 activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
@@ -1284,7 +1285,7 @@ var ui = function() {
     });
 
     $(document).on("click", "#new-task", function() {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let ntObject = {
             desc: "",
             isFlagged: false,
@@ -1311,55 +1312,55 @@ var ui = function() {
         });
     });
 
-    $(document).on("change", "#project-title", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+    $(document).on("change", "#project-title", function(err) {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let value = $(this).val();
         modifyProject(uid, pid, {name: value});
         reloadPage();
     });
 
-    $(document).on("change", "#perspective-title", function(e) {
+    $(document).on("change", "#perspective-title", function(err) {
         let pstID = pageIndex.pageContentID;
         let value = $(this).val();
         modifyPerspective(uid, pstID, {name: value});
         reloadPage();
     });
 
-    $(document).on("click", "#project-sequential-yes", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+    $(document).on("click", "#project-sequential-yes", function(err) {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage();
         });
     });
 
-    $(document).on("click", "#project-sequential-no", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+    $(document).on("click", "#project-sequential-no", function(err) {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage();
         });
     });
 
-    $(document).on("click", "#logout", function(e) {
+    $(document).on("click", "#logout", function(err) {
         firebase.auth().signOut().then(() => {}, console.error);
     });
 
-    $(document).on("click", "#perspective-edit", function(e) {
+    $(document).on("click", "#perspective-edit", function(err) {
         showPerspectiveEdit(pageIndex.pageContentID);
     });
 
-    $("#quickadd").click(function(e) {
+    $("#quickadd").click(function(err) {
         $(this).animate({"width": "350px"}, 500);
     });
 
-    $("#quickadd").blur(function(e) {
+    $("#quickadd").blur(function(err) {
         $(this).val("");
         $(this).animate({"width": "250px"}, 500);
     });
 
 
-    $("#quickadd").keydown(function(e) {
+    $("#quickadd").keydown(function(err) {
         // TODO: make the user unable to spam
-        if (e.keyCode == 13) {
+        if (err.keyCode == 13) {
             let tb = $(this);
             tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, 100, function() {
                 let newTaskUserRequest = chrono.parse($(this).val());
@@ -1402,8 +1403,8 @@ var ui = function() {
                     refresh().then(function(){
                         taskManager.generateTaskInterface("inbox", ntID)
                     });
-                    getInboxTasks(uid).then(function(e){
-                        iC = e.length;
+                    getInboxTasks(uid).then(function(err){
+                        iC = err.length;
                         $("#unsorted-badge").html(''+iC);
                         $("#inbox-subhead").slideDown(300);
                         $("#inbox").slideDown(300);
@@ -1437,14 +1438,14 @@ var ui = function() {
         for (let psp of psps[2]) {
             $(".perspectives").append(`<div id="perspective-${psp.id}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psp.name}</t></div>`)
         }
-    }
+    };
 
     let setUser = function(usr) {
         user = usr;
         uid = usr.uid;
         displayName = usr.displayName;
         user = usr;
-    }
+    };
 
     return {user:{set: setUser, get: ()=>user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
 }();
