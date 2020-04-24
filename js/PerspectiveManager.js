@@ -60,16 +60,16 @@ const perspectiveHandler = function(){
                 taskCompValues = taskCompValues.filter(t=>util_datesequal(t[1], value));
                 break;
             case ">":
-                ltr ? taskCompValues = taskCompValues.filter(t=>t[1]>value) : taskCompValues = taskCompValues.filter(t=>t[1]<value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] > value) : taskCompValues = taskCompValues.filter(t=>t[1]<value);
                 break;
             case "<":
-                ltr ? taskCompValues = taskCompValues.filter(t=>t[1]<value) : taskCompValues = taskCompValues.filter(t=>t[1]>value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] < value) : taskCompValues = taskCompValues.filter(t=>t[1]>value);
                 break;
             case ">=":
-                ltr ? taskCompValues = taskCompValues.filter(t=>t[1]>=value) : taskCompValues = taskCompValues.filter(t=>t[1]<=value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] >= value) : taskCompValues = taskCompValues.filter(t=>t[1]<=value);
                 break;
             case "<=":
-                ltr ? taskCompValues = taskCompValues.filter(t=>t[1]<=value) : taskCompValues = taskCompValues.filter(t=>t[1]>=value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] <= value) : taskCompValues = taskCompValues.filter(t=>t[1]>=value);
                 break;
 
         }
