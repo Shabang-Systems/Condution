@@ -606,7 +606,7 @@ let ui = function() {
                                 }
                             });
                         }
-                        console.error(err);
+                        //console.error(err);
                     });
                     if (repeat.rule !== "none" && due) {
                         let rRule = repeat.rule;
@@ -1165,14 +1165,14 @@ let ui = function() {
         $("#"+activeMenu).addClass("today-highlighted");
     });
 
-    $(document).on("click", ".task", async function(err) {
+    $(document).on("click", ".task", async function(e) {
         if ($(this).attr('id') === "task-" + activeTask) {
-            err.stopImmediatePropagation();
+            e.stopImmediatePropagation();
             return;
         }
         if (activeTask) await taskManager.hideActiveTask();
-        if ($(err.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
-            err.stopImmediatePropagation();
+        if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
+            e.stopImmediatePropagation();
             return;
         } else {
             let taskInfo = $(this).attr("id").split("-");
@@ -1186,11 +1186,11 @@ let ui = function() {
         }
     });
 
-    $(document).on("click", ".page, #left-menu div", function(err) {
+    $(document).on("click", ".page, #left-menu div", function(e) {
         if (activeTask) {
-            if ($(err.target).hasClass("task-pseudocheck")) {
+            if ($(e.target).hasClass("task-pseudocheck")) {
                 $("#task-check-"+activeTask).toggle();
-            } else if ($(err.target).hasClass('task') || $(err.target).hasClass('task-name') || $(err.target).hasClass('task-display')) {
+            } else if ($(e.target).hasClass('task') || $(e.target).hasClass('task-name') || $(e.target).hasClass('task-display')) {
                 return false;
             }
             taskManager.hideActiveTask();
@@ -1327,57 +1327,57 @@ let ui = function() {
         });
     });
 
-    $(document).on("change", "#project-title", function(err) {
+    $(document).on("change", "#project-title", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let value = $(this).val();
         modifyProject(uid, pid, {name: value});
         reloadPage();
-        console.error(err);
+        //console.error(e);
     });
 
-    $(document).on("change", "#perspective-title", function(err) {
+    $(document).on("change", "#perspective-title", function(e) {
         let pstID = pageIndex.pageContentID;
         let value = $(this).val();
         modifyPerspective(uid, pstID, {name: value});
         reloadPage();
-        console.error(err);
+        //console.error(e);
     });
 
-    $(document).on("click", "#project-sequential-yes", function(err) {
+    $(document).on("click", "#project-sequential-yes", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage();
         });
-        console.error(err);
+        //console.error(e);
     });
 
-    $(document).on("click", "#project-sequential-no", function(err) {
+    $(document).on("click", "#project-sequential-no", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage();
         });
-        console.error(err);
+        //console.error(e);
     });
 
-    $(document).on("click", "#logout", function(err) {
+    $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
-        console.error(err);
+        //console.error(e);
     });
 
-    $(document).on("click", "#perspective-edit", function(err) {
+    $(document).on("click", "#perspective-edit", function(e) {
         showPerspectiveEdit(pageIndex.pageContentID);
-        console.error(err);
+        //console.error(e);
     });
 
-    $("#quickadd").click(function(err) {
+    $("#quickadd").click(function(e) {
         $(this).animate({"width": "350px"}, 500);
-        console.error(err);
+        //console.error(e);
     });
 
-    $("#quickadd").blur(function(err) {
+    $("#quickadd").blur(function(e) {
         $(this).val("");
         $(this).animate({"width": "250px"}, 500);
-        console.error(err);
+        //console.error(e);
     });
 
 
@@ -1390,7 +1390,7 @@ let ui = function() {
                 // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
                 // Make that happen is the todo.
                 let startDate;
-                let endDate;
+                //let endDate;
                 let tz = moment.tz.guess();
                 let ntObject = {
                     desc: "",
@@ -1404,23 +1404,16 @@ let ui = function() {
                 };
                 if (newTaskUserRequest.length != 0) {
                     let start = newTaskUserRequest[0].start;
-                    let end = newTaskUserRequest[0].end;
-                    if (start && end) {
+                    //let end = newTaskUserRequest[0].end;
+                    if (start) {
                         startDate = start.date();
-                        endDate = end.date();
-                        ntObject.defer = startDate;
-                        ntObject.due = endDate;
-                    } else if (end) {
-                        endDate = end.date();
-                        ntObject.due = endDate;
-                    } else if (start) {
-                        startDate = start.date();
-                        ntObject.defer = startDate;
+                        ntObject.due = startDate;
+                        ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
                     }
-                    ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
                 } else {
                     ntObject.name = tb.val()
                 }
+
 
                 newTask(uid, ntObject).then(function(ntID) {
                     refresh().then(function(){
