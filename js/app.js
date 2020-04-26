@@ -1385,7 +1385,7 @@ let ui = function() {
         // TODO: make the user unable to spam
         if (err.keyCode == 13) {
             let tb = $(this);
-            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, 100, function() {
+            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, 100, function() {
                 let newTaskUserRequest = chrono.parse($(this).val());
                 // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
                 // Make that happen is the todo.
@@ -1425,9 +1425,10 @@ let ui = function() {
                         $("#inbox-subhead").slideDown(300);
                         $("#inbox").slideDown(300);
                     });
-                    tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})
-                    tb.blur();
-                    tb.val("");
+                    tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, function() {
+                        tb.blur();
+                        tb.val("");
+                    });
                 });
             });
             
