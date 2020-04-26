@@ -1,4 +1,3 @@
-console.log("Initializing the galvanitizer!");
 /* Query the system dark theme, and load the appropriate theme */
 
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
@@ -99,6 +98,7 @@ let ui = function() {
     let possiblePerspectives;
     let inboxandDS;
     let avalibility;
+    let projectDB;
 
     // current location
     let pageIndex = {
@@ -119,6 +119,14 @@ let ui = function() {
         possiblePerspectives = await getPerspectives(uid);
         avalibility = await getItemAvailability(uid);
         inboxandDS = await getInboxandDS(uid, avalibility);
+        projectDB = await (async function() {
+            let pdb = [];
+            let topLevels = (await getTopLevelProjects(uid))[0];
+            for (key in topLevels) {
+                pdb.push(await getProjectStructure(uid, key, recursive=true));
+            }
+            return pdb;
+        }());
     };
 
     // the outside world's refresh function
@@ -431,10 +439,25 @@ let ui = function() {
             // Part 1: data parsing!
             // The Project
             let project = possibleProjects[projectID];
+            
             // Project select options
             let projectSelects = " ";
-            for (let i in possibleProjects) {
-                projectSelects = projectSelects + "<option>" + possibleProjects[i] + "</option> ";
+            let buildSelectString = function(p, level) {
+                if (!level) {
+                    level = ""
+                }
+                pss = "<option>" + level + possibleProjects[p.id] + "</option>";
+                if (p.children) {
+                    for (let e of p.children) {
+                        if (e.type === "project") {
+                            pss = pss + buildSelectString(e.content, level+"&nbsp;&nbsp;");
+                        }
+                    }
+                }
+                return pss;
+            };
+            for (let proj of projectDB) {
+                projectSelects = projectSelects + buildSelectString(proj);
             }
             // Tag select options
             let possibleTagNames = function() {
@@ -541,7 +564,7 @@ let ui = function() {
                 duration: 200,
                 appendTo: 'body',
             }).on('select.editable-select', function (e, li) {
-                let projectSelected = li.text();
+                let projectSelected = li.text().trim();
                 let projId = possibleProjectsRev[projectSelected];
                 if (project === undefined) {
                     activeTaskDeInboxed = true;
@@ -550,7 +573,8 @@ let ui = function() {
                 }
                 modifyTask(uid, taskId, {project:projId});
                 projectID = projId;
-                project = this.value;
+                project = projectSelected;
+                $('#task-project-' + taskId).val(project);
                 associateTask(uid, taskId, projId);
             });
             $('#task-project-' + taskId).val(project);
@@ -1286,7 +1310,6 @@ let ui = function() {
             if (pageIndex.projectDir.length > 0) {
                 dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
                 activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
-                console.log(pageIndex);
                 loadView("project-page", pageIndex.projectDir[pageIndex.projectDir.length-1].split("-")[1]);
                 });
             } else {

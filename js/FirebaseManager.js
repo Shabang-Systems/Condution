@@ -370,7 +370,7 @@ async function getProjectStructure(userID, projectID, recursive=false) {
         } else if (type === "project") {
             if (recursive) {
                 let project = await getProjectStructure(userID, itemID);
-                children.push({type: "project", content: project, is_sequential: project.data().is_sequential, sortOrder: project.sortOrder}); 
+                children.push({type: "project", content: project, is_sequential: project.is_sequential, sortOrder: project.sortOrder}); 
             } else {
                 let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === itemID)[0];
                 children.push({type: "project", content: {id: itemID}, is_sequential: project.data().is_sequential, sortOrder: project.data().order}); 
