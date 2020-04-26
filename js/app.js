@@ -1358,7 +1358,14 @@ let ui = function() {
         });
         //console.error(e);
     });
-
+    $(document).on("click", "#settings", function(e) {
+        e.stopPropagation();
+        console.log("ANSDFLJSDFHKLSDKJFLKSDFHSD")
+        //console.error(e);
+    });
+    $("#settings").mouseover( function(e) {
+        console.log(undefined)
+    });
     $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
         //console.error(e);
