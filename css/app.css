@@ -263,10 +263,6 @@ a {
     /*height: 105px;*/
 }
 
-#perspective-unit {
-}
-
-
 #overlay {
     position: absolute;
     width: 100%;
@@ -611,13 +607,7 @@ a {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-/*    -webkit-transition-property: all;*/
-    /*-webkit-transition-duration: 200ms;*/
-    /*-webkit-transition-timing-function: ease-in-out;*/
-    /*transition-property: all;*/
-    /*transition-duration: 200ms;*/
-    /*transition-timing-function: ease-in-out;*/
-    /*text-overflow: ellipsis;*/
+    text-overflow: ellipsis;
 }
 
 .task-subicon {
