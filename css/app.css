@@ -1021,6 +1021,15 @@ a {
     border: 0;
 }
 
+.ui-state-highlight {
+    border: 1px solid var(--task-datepicker-selected) !important;
+    color: black;
+}
+
+.ui-state-highlight:hover {
+    border: 1px solid var(--task-datepicker-selected) !important;
+}
+
 .ui-priority-secondary {
     border-color: var(--task-datepicker-elem-feature-alt) !important;
     border-width: 0px !important;
