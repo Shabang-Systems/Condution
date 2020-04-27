@@ -541,10 +541,10 @@ var chrono = require('chrono-node');
 						update.setSeconds(parsedTime.second);
 						$.datepicker._setTime(tp_inst.inst, update);
 					} else {
-						this.value = tp_inst.formattedTime;
+						//this.value = tp_inst.formattedTime;
 						this.blur();
 					}
-                    tp_inst._onSelectHandler();
+                    //tp_inst._onSelectHandler();
 				});
 
 				if (this.inst !== null) {

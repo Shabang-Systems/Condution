@@ -73,6 +73,8 @@ const interfaceUtil = function() {
         };
     };
 
+    const smartParseFull = (timeString) => chrono.parse(timeString)[0];
+
     const numDaysBetween = function(d1, d2) {
         let diff = Math.abs(d1.getTime() - d2.getTime());
         return diff / (1000 * 60 * 60 * 24);
@@ -84,7 +86,7 @@ const interfaceUtil = function() {
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     };
 
-    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
+    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
 }();
 
 let ui = function() {
@@ -513,6 +515,55 @@ let ui = function() {
                     }
                     modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
                     defer = defer_set;
+                }
+            });
+            $("#task-defer-" + taskId).change(function(e) {
+                e.preventDefault();
+            });
+            let dfstr = "";
+            $("#task-defer-" + taskId).keydown(function(e) {
+                //e.preventDefault();
+                // TODO: this is a janky manual re-implimentation 
+                // of a textbox to override jQuery's manual 
+                // re-implimentation. The todo is to make it less
+                // janky.
+                if (e.keyCode >= 37 && e.keyCode <= 40) {
+                    // handle arrows
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (dfstr === "") {
+                        $("#task-defer-" + taskId).val("");
+                    } else {
+                        let parsed = interfaceUtil.spf(dfstr);
+                        if (parsed) {
+                            defer_set = parsed.start.date();
+                            $("#task-defer-" + taskId).datetimepicker("setDate", defer_set);
+                            let tz = moment.tz.guess();
+                            if (new Date() < defer_set) {
+                                $('#task-name-' + taskId).css("opacity", "0.3");
+                            } else {
+                                $('#task-name-' + taskId).css("opacity", "1");
+                            }
+                            modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+                            defer = defer_set;
+                        }
+                    }
+                } else if (e.keyCode == 8) {
+                    if (document.getSelection().toString() === this.value) {
+                        dfstr = "";
+                    } else {
+                        dfstr = dfstr.substring(0, dfstr.length-1);
+                    }
+                } else if (e.key.length == 1) {
+                    // handle actual key
+                    if (document.getSelection().toString() === this.value) {
+                        e.preventDefault();
+                        $(this).val(e.key);
+                    } else if (!e.metaKey) {
+                        e.preventDefault();
+                        $(this).val(this.value+e.key);
+                        dfstr = this.value;
+                    }
                 }
             });
             $("#task-due-" + taskId).datetimepicker({
