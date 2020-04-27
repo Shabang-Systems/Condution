@@ -1386,7 +1386,7 @@ let ui = function() {
                 setTimeout(function() {
                     $("#perspective-edit-name").focus();
                     $("#perspective-edit-name").select();
-                }, 100);
+                }, 500);
             });
             $("#"+activeMenu).addClass("menuitem-selected");
         });
@@ -1416,13 +1416,12 @@ let ui = function() {
 
     $(document).on("click", "#perspective-trash", function() {
         let pid = pageIndex.pageContentID;
-        deletePerspective(uid, pid).then(function() {
-            $("#"+activeMenu).removeClass("menuitem-selected");
-            loadView("upcoming-page");
-            activeMenu = "today";
-            $("#today").addClass("menuitem-selected");
-            reloadPage();
-        });
+        $("#"+activeMenu).removeClass("menuitem-selected");
+        loadView("upcoming-page");
+        activeMenu = "today";
+        $("#today").addClass("menuitem-selected");
+        $("#perspective-"+pid).remove();
+        deletePerspective(uid, pid);
     });
 
     $(document).on("click", "#project-trash", function() {
