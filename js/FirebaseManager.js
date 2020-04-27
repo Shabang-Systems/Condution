@@ -142,6 +142,14 @@ async function getTaskInformation(userID, taskID) {
     )[0].data();
 }
 
+async function removeParamFromTask(userID, taskID, paramName) {
+    let ti = await getTaskInformation(userID, taskID);
+    delete ti[paramName];
+    await cRef("users", userID, "tasks", taskID)
+        .set(ti)
+        .catch(console.error);
+}
+
 async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};

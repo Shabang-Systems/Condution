@@ -533,6 +533,9 @@ let ui = function() {
                     e.preventDefault();
                     if (dfstr === "") {
                         $("#task-defer-" + taskId).val("");
+                        removeParamFromTask(uid, taskId, "defer");
+                        defer = undefined;
+                        defer_current = undefined;
                     } else {
                         let parsed = interfaceUtil.spf(dfstr);
                         if (parsed) {
@@ -589,6 +592,72 @@ let ui = function() {
                     }
                     modifyTask(uid, taskId, {due:due_set, timezone:tz});
                     due = due_set;
+                }
+            });
+            $("#task-due-" + taskId).change(function(e) {
+                e.preventDefault();
+            });
+            let duestr = "";
+            $("#task-due-" + taskId).keydown(function(e) {
+                //e.preventDefault();
+                // TODO: this is a janky manual re-implimentation 
+                // of a textbox to override jQuery's manual 
+                // re-implimentation. The todo is to make it less
+                // janky.
+                if (e.keyCode >= 37 && e.keyCode <= 40) {
+                    // handle arrows
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (duestr === "") {
+                        if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                            activeTaskDeDsed = true;
+                        }
+                        $("#task-due-" + taskId).val("");
+                        removeParamFromTask(uid, taskId, "due");
+                        $('#task-pseudocheck-' + taskId).removeClass("od");
+                        $('#task-pseudocheck-' + taskId).removeClass("ds");
+                        due = undefined;
+                        due_current = undefined;
+                    } else {
+                        let parsed = interfaceUtil.spf(duestr);
+                        if (parsed) {
+                            due_set = parsed.start.date();
+                            $("#task-due-" + taskId).datetimepicker("setDate", due_set);
+                            let tz = moment.tz.guess();
+                            if (new Date() > due_set) {
+                                $('#task-pseudocheck-' + taskId).addClass("od");
+                                $('#task-pseudocheck-' + taskId).removeClass("ds");
+                            } else if (interfaceUtil.daysBetween(new Date(), due_set) <= 1) {
+                                $('#task-pseudocheck-' + taskId).addClass("ds");
+                                $('#task-pseudocheck-' + taskId).removeClass("od");
+                            } else {
+                                if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                                    activeTaskDeDsed = true;
+                                }
+                                $('#task-pseudocheck-' + taskId).removeClass("od");
+                                $('#task-pseudocheck-' + taskId).removeClass("ds");
+                            }
+                            modifyTask(uid, taskId, {due:due_set, timezone:tz});
+                            due = due_set;
+                        }
+                    }
+                } else if (e.keyCode == 8) {
+                    if (document.getSelection().toString() === this.value) {
+                        duestr = "";
+
+                    } else {
+                        duestr = duestr.substring(0, duestr.length-1);
+                    }
+                } else if (e.key.length == 1) {
+                    // handle actual key
+                    if (document.getSelection().toString() === this.value) {
+                        e.preventDefault();
+                        $(this).val(e.key);
+                    } else if (!e.metaKey) {
+                        e.preventDefault();
+                        $(this).val(this.value+e.key);
+                        duestr = this.value;
+                    }
                 }
             });
             // So apparently setting dates is hard for this guy, so we run this async
