@@ -1398,7 +1398,7 @@ label.od:hover:before {
     border: 0;
     border-radius: 7px;
     padding: 3px 1px 3px 10px;
-    box-shadow: 1px 1px 3px var(--decorative-light-alt);
+    box-shadow: 1px 1px 3px var(--background-feature);
     font-size: 14px;
     transition-property: color, background-color;
     transition-duration: 200ms;
