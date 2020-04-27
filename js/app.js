@@ -4,14 +4,21 @@ if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
     $("body").addClass(currentTheme);
-    $("#loading").hide().css("display", "flex").fadeIn();
 }
 else {
     currentTheme = "condutiontheme-default-light";
     $("body").removeClass();
     $("body").addClass(currentTheme);
-    $("#loading").hide().css("display", "flex").fadeIn();
 }
+
+lottie.loadAnimation({
+    container: $("#loading-anim")[0],
+    renderer: 'svg',
+    autoplay: true,
+    path: 'static/loadanim.json'
+})
+$("#loading-msg").hide();
+$("#loading").hide().css("display", "flex").fadeIn();
 
 const { remote } = require('electron');
 const { Menu, MenuItem } = remote;

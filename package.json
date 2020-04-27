@@ -41,6 +41,7 @@
     "jquery-ui": "^1.12.1",
     "jquery-ui-dist": "^1.12.1",
     "jquery-ui-timepicker-addon": "^1.6.3",
+    "lottie-web": "^5.6.8",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "mousetrap": "^1.6.5",

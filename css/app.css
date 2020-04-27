@@ -1352,7 +1352,6 @@ label.od:hover:before {
     padding-left: 5px;
     background-color: var(--background);
     color: var(--content-normal-accent);
-    display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;

@@ -18,6 +18,7 @@
         <!--Other People Codes-->
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script>var chrono = require('chrono-node');</script>
+        <script>var lottie = require('lottie-web');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
         <!--Firebase loading this way so that it well recognize the chrome runtime-->
         <script src="./node_modules/firebase/firebase-app.js"></script>
@@ -57,17 +58,8 @@
         <div class="main-head" id="main-head-darwin">
         </div>
         <div id="loading">
-            Condution is Loading...
-
-            Hopefully quickly.
-
-            <pre style="color: var(--content-normal-alt)">
-            This is alpha~MAY2020.v0.1.1-nightly.
-            INTERNAL USE ONLY.
-
-            (c) 2020 Shabang Systems, LLC and the program authors.
-            All rights reserved unless otherwise noted.
-            </pre>
+            <t id="loading-msg">This is alpha~MAY2020.v0.1.1-nightly.</t>
+            <div id="loading-anim"></div>
         </div>
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
