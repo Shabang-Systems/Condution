@@ -411,6 +411,8 @@ let ui = function() {
          /*   setTimeout(function() {*/
                 //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
+            sorters.project.option("disabled", false);
+            sorters.inbox.option("disabled", false);
             await reloadPage();
         };
 
@@ -683,19 +685,19 @@ let ui = function() {
                 effects: 'fade',
                 duration: 200,
                 appendTo: 'body',
-            }).on('select.editable-select', function (e, li) {
+            }).on('select.editable-select', async function (e, li) {
                 let projectSelected = li.text().trim();
                 let projId = possibleProjectsRev[projectSelected];
                 if (project === undefined) {
                     activeTaskDeInboxed = true;
                 } else {
-                    dissociateTask(uid, taskId, projectID);
+                    await dissociateTask(uid, taskId, projectID);
                 }
                 modifyTask(uid, taskId, {project:projId});
                 projectID = projId;
                 project = projectSelected;
                 $('#task-project-' + taskId).val(project);
-                associateTask(uid, taskId, projId);
+                await associateTask(uid, taskId, projId);
             });
             $('#task-project-' + taskId).val(project);
             // Set overdue style!
@@ -866,24 +868,24 @@ let ui = function() {
             });
 
             // Task project change
-             $('#task-project-' + taskId).change(function(e) {
+             $('#task-project-' + taskId).change(async function(e) {
                 if (this.value in possibleProjectsRev) {
                     let projId = possibleProjectsRev[this.value];
                     if (project === undefined){
                         activeTaskDeInboxed = true;
                     } else {
-                        dissociateTask(uid, taskId, projectID);
+                        await dissociateTask(uid, taskId, projectID);
                     }
                     modifyTask(uid, taskId, {project:projId});
+                    await associateTask(uid, taskId, projId);
                     projectID = projId;
                     project = this.value;
-                    associateTask(uid, taskId, projId);
                 } else {
                     modifyTask(uid, taskId, {project:""});
                     this.value = ""
                     if (project !== undefined) {
                         activeTaskInboxed = true;
-                        dissociateTask(uid, taskId, projectID);
+                        await dissociateTask(uid, taskId, projectID);
                     }
                     project = undefined;
                     projectID = "";
@@ -1067,7 +1069,6 @@ let ui = function() {
         });
 
 
-        // NW: perspective sorter
         var perspectiveSort = new interfaceUtil.Sortable($(".perspectives")[0], {
             animation: 200,
             onStart: function(e) {
@@ -1140,7 +1141,7 @@ let ui = function() {
             }
         });
 
-        return {inbox: inboxSort, project: projectSort, menuProject: topLevelProjectSort};
+        return {inbox: inboxSort, project: projectSort, menuProject: topLevelProjectSort, menuPerspective: perspectiveSort};
     }();
 
     // various sub-page loaders
@@ -1327,6 +1328,8 @@ let ui = function() {
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
             $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
+            sorters.project.option("disabled", true);
+            sorters.inbox.option("disabled", true);
         }
     });
 
@@ -1466,6 +1469,8 @@ let ui = function() {
                 $("#task-repeat-" + activeTask).css("display", "block");
                 $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
                 $("#task-name-" + task).focus();
+                sorters.project.option("disabled", true);
+                sorters.inbox.option("disabled", true);
             });
         });
     });
