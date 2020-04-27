@@ -30,8 +30,8 @@ const perspectiveHandler = function(){
         let queries = []
         str.match(cgs.taskFilter).forEach(function(e) {
             e = e.trim();
-            if (e[0] == "!") {
-                e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(1, e.length)]]);
+            if (e[0] === "!") {
+                e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(2, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(2, e.length)]]);
             } else {
                 e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
             }
