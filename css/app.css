@@ -1361,6 +1361,11 @@ label.od:hover:before {
     display: none;
 }
 
+#loading-anim {
+    width: 200px;
+    height: 200px;
+}
+
 #content-wrapper {
     margin: 0;
     height: 100%;

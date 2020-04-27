@@ -15,9 +15,9 @@ lottie.loadAnimation({
     container: $("#loading-anim")[0],
     renderer: 'svg',
     autoplay: true,
-    path: 'static/loadanim.json'
+    loop: true,
+    path: 'static/loadanim_dots.json'
 })
-$("#loading-msg").hide();
 $("#loading").hide().css("display", "flex").fadeIn();
 
 const { remote } = require('electron');
