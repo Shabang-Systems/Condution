@@ -18,6 +18,7 @@
         <!--Other People Codes-->
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script>var chrono = require('chrono-node');</script>
+        <script>var lottie = require('lottie-web');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
         <!--Firebase loading this way so that it well recognize the chrome runtime-->
         <script src="./node_modules/firebase/firebase-app.js"></script>
@@ -57,27 +58,32 @@
         <div class="main-head" id="main-head-darwin">
         </div>
         <div id="loading">
-            Condution is Loading...
+            <t id="loading-msg">
+                Condution alpha~MAY2020.v0.1.1-nightly,<br />a Bangin' <b>#!/Shabang</b> Project
+                <br /><br /><br />
+                <pre style="color: var(--content-normal-alt)">
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-            Hopefully quickly.
-
-            <pre style="color: var(--content-normal-alt)">
-            This is alpha~MAY2020.v0.1.1-nightly.
-            INTERNAL USE ONLY.
-
-            (c) 2020 Shabang Systems, LLC and the program authors.
-            All rights reserved unless otherwise noted.
-            </pre>
+You should have received a copy of the GNU General Public License
+along with this program. If not, see https://www.gnu.org/licenses/.
+                </pre>
+                Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors. 
+                <br /><br />
+            </t>
+            <div id="loading-anim"></div>
         </div>
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
                 <div class="overlay-unit" id="perspective-unit">
                     <div class="project-action" id="perspective-back"><i class="far fa-times-circle"></i></div>
-                    <h1 id="perspective-callout">Let's build <input id="perspective-edit-name" placeholder="Click to add a name?"></input></h1>
-                    <input id="pquery" type="text" autocomplete="off" value="" placeholder="try [#bontehu]...">
+                    <h1 id="perspective-callout">Let's build <input id="perspective-edit-name" placeholder="cool perspective name"></input></h1>
+                    <input id="pquery" type="text" autocomplete="off" value="" placeholder="try a filter like [#bontehu]...">
                     <br />
                     <a href="https://bontehu.shabang.cf" style="color: var(--task); font-weight: 600; font-size: 9px">Don't click me.</a>
-                    <!--Actually make the above the documentation-->
+                    <!--TODO: Actually make the above the documentation-->
                 </div>
                 <div class="overlay-unit" id="repeat-unit">
                     <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>

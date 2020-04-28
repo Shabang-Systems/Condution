@@ -1,4 +1,4 @@
-const { app, BrowserWindow, systemPreferences } = require('electron')
+const { app, BrowserWindow, systemPreferences, nativeTheme } = require('electron')
 
 function createWindow () {
     // Create the browser window.
@@ -16,7 +16,7 @@ function createWindow () {
         'show': false,
     })
 
-    if(systemPreferences.isDarkMode) {
+    if(nativeTheme.shouldUseDarkColors) {
         win.setBackgroundColor("#161616");
     } else {
         win.setBackgroundColor("#f4f4f4");

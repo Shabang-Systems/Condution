@@ -30,8 +30,8 @@ const perspectiveHandler = function(){
         let queries = []
         str.match(cgs.taskFilter).forEach(function(e) {
             e = e.trim();
-            if (e[0] == "!") {
-                e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(1, e.length)]]);
+            if (e[0] === "!") {
+                e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(2, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(2, e.length)]]);
             } else {
                 e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
             }
@@ -60,16 +60,16 @@ const perspectiveHandler = function(){
                 taskCompValues = taskCompValues.filter(t=>util_datesequal(t[1], value));
                 break;
             case ">":
-                ltr ? taskCompValues = taskCompValues.filter(t => t[1] > value) : taskCompValues = taskCompValues.filter(t=>t[1]<value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] > value) : taskCompValues = taskCompValues.filter(t => t[1] < value);
                 break;
             case "<":
-                ltr ? taskCompValues = taskCompValues.filter(t => t[1] < value) : taskCompValues = taskCompValues.filter(t=>t[1]>value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] < value) : taskCompValues = taskCompValues.filter(t => t[1] > value);
                 break;
             case ">=":
-                ltr ? taskCompValues = taskCompValues.filter(t => t[1] >= value) : taskCompValues = taskCompValues.filter(t=>t[1]<=value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] >= value) : taskCompValues = taskCompValues.filter(t => t[1] <= value);
                 break;
             case "<=":
-                ltr ? taskCompValues = taskCompValues.filter(t => t[1] <= value) : taskCompValues = taskCompValues.filter(t=>t[1]>=value);
+                ltr ? taskCompValues = taskCompValues.filter(t => t[1] <= value) : taskCompValues = taskCompValues.filter(t => t[1] >= value);
                 break;
 
         }
