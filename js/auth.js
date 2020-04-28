@@ -13,6 +13,14 @@ else {
     $("body").addClass(currentTheme);
     $("#loading").hide().css("display", "flex").fadeIn();
 }
+    lottie.loadAnimation({
+        container: $("#loading-anim")[0],
+        renderer: 'svg',
+        autoplay: true,
+        loop: true,
+        path: 'static/loadanim_dots.json'
+    })
+    $("#loading").hide().css("display", "flex").fadeIn();
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
     const obj = require("./secrets")
@@ -90,6 +98,7 @@ else {
         } else {
             $("#authwall").fadeIn();
             $('#auth-left-menu').fadeIn();
+            $("#loading").fadeOut();
         }
     });
 
