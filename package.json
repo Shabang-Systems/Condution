@@ -33,6 +33,7 @@
     "bootstrap-select-dropdown": "^0.14.6",
     "bootstrap-tagsinput": "^0.7.1",
     "chrono-node": "^1.4.4",
+    "express": "^4.17.1",
     "firebase": "^7.13.2",
     "firebaseui": "^4.5.0",
     "fuse.js": "^5.1.0",
