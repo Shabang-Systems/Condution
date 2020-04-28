@@ -93,12 +93,15 @@ else {
                 window.location = 'app.html'; 
             } else {
                 user.sendEmailVerification();
+                $('#auth-left-menu').fadeIn();
                 $('#need-verify').fadeIn();
+                $("#loading").fadeOut();
+                $("#authwall").fadeIn();
             }
         } else {
+            $("#loading").fadeOut();
             $("#authwall").fadeIn();
             $('#auth-left-menu').fadeIn();
-            $("#loading").fadeOut();
         }
     });
 
