@@ -1,6 +1,6 @@
 //"use strict";
 
-const obj = require("./secrets")
+const obj = require("./../secrets.json")
 
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
@@ -109,4 +109,6 @@ const cRef = (() => {
 
     return cacheRef;
 })();
+
+module.exports = cRef;
 

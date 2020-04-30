@@ -1,4 +1,4 @@
-import {getTaskInformation, getProjectsandTags} from './ObjectManager';
+let dbObj = require("./ObjectManager");
 
 const perspectiveHandler = function(){
     let cgs = {
@@ -39,7 +39,7 @@ const perspectiveHandler = function(){
             }
             queries.push(['isComplete', '==', false]);
         });
-        return await getTasksWithQuery(uid, util.select.all(...queries))
+        return await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries))
     };
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
@@ -79,7 +79,7 @@ const perspectiveHandler = function(){
     };
 
     let getPerspectiveFromString = async function(uid, pStr) {
-        let pPaT = await getProjectsandTags(uid);
+        let pPaT = await dbObj.getProjectsandTags(uid);
         let pRes = await getCaptureGroups(pStr);
         if (!pRes) {
             return [];
@@ -115,5 +115,5 @@ const perspectiveHandler = function(){
     return {calc: getPerspectiveFromString};
 }();
 
-export default perspectiveHandler;
+module.exports = perspectiveHandler;
 

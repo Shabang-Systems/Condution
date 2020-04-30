@@ -1,5 +1,6 @@
-import * as cObjs from "./src/ObjectManager";
-import * as cPerspectives from "./src/PerspectiveManager";
+let dbObj = require("./src/ObjectManager");
+let pspObj = require("./src/PerspectiveManager");
 
-export default {db: cObjs, perspective: cPerspectives};
+
+module.exports = {db: dbObj, perspective: pspObj};
 
