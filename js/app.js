@@ -120,19 +120,19 @@ let ui = function() {
 
     // refresh data
     let refresh = async function(){
-        pPandT = await getProjectsandTags(uid);
+        pPandT = await E.db.getProjectsandTags(uid);
         possibleProjects = pPandT[0][0];
         possibleTags = pPandT[1][0];
         possibleProjectsRev = pPandT[0][1];
         possibleTagsRev = pPandT[1][1];
-        possiblePerspectives = await getPerspectives(uid);
-        avalibility = await getItemAvailability(uid);
-        inboxandDS = await getInboxandDS(uid, avalibility);
+        possiblePerspectives = await E.db.getPerspectives(uid);
+        avalibility = await E.db.getItemAvailability(uid);
+        inboxandDS = await E.db.getInboxandDS(uid, avalibility);
         projectDB = await (async function() {
             let pdb = [];
-            let topLevels = (await getTopLevelProjects(uid))[0];
+            let topLevels = (await E.db.getTopLevelProjects(uid))[0];
             for (key in topLevels) {
-                pdb.push(await getProjectStructure(uid, key, recursive=true));
+                pdb.push(await E.db.getProjectStructure(uid, key, recursive=true));
             }
             return pdb;
         }());
@@ -177,11 +177,11 @@ let ui = function() {
         let currentP;
 
         $("#pquery").change(function(e) {
-            modifyPerspective(uid, currentP, {query: $(this).val()});
+            E.db.modifyPerspective(uid, currentP, {query: $(this).val()});
         });
 
         $("#perspective-edit-name").change(function(e) {
-            modifyPerspective(uid, currentP, {name: $(this).val()});
+            E.db.modifyPerspective(uid, currentP, {name: $(this).val()});
         });
 
         const edit = function(pspID) {
@@ -247,14 +247,14 @@ let ui = function() {
             $(".repeat-subunit").slideUp();
             $("#repeat-toggle-group").slideDown();
             $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
-            modifyTask(uid, tid, {repeat: {rule: "none"}});
+            E.db.modifyTask(uid, tid, {repeat: {rule: "none"}});
         });
 
         $("#repeat-perday").on("click", function(e) {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every day.");
             $("#repeat-type").fadeIn();
-            modifyTask(uid, tid, {repeat: {rule: "daily"}});
+            E.db.modifyTask(uid, tid, {repeat: {rule: "daily"}});
         });
 
         $("#repeat-perweek").on("click", function(e) {
@@ -275,7 +275,7 @@ let ui = function() {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every year.");
             $("#repeat-type").fadeIn();
-            modifyTask(uid, tid, {repeat: {rule: "yearly"}});
+            E.db.modifyTask(uid, tid, {repeat: {rule: "yearly"}});
         });
 
         // Actions
@@ -283,11 +283,11 @@ let ui = function() {
             if (repeatWeekDays.includes($(this).html())) {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                 repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             } else {
                 $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                 repeatWeekDays.push($(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             }
         });
 
@@ -296,11 +296,11 @@ let ui = function() {
             if (repeatMonthDays.includes($(this).html())) {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background")}, 100);
                 repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             } else {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")}, 100);
                 repeatMonthDays.push($(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             }
         });
 
@@ -311,7 +311,7 @@ let ui = function() {
             $("#perspective-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
-            let ti = await getTaskInformation(uid, taskId);
+            let ti = await E.db.getTaskInformation(uid, taskId);
             $("#repeat-task-name").html(ti.name);
             tid = taskId;
             if (ti.repeat.rule !== "none") {
@@ -427,7 +427,7 @@ let ui = function() {
         let displayTask = async function(pageId, taskId, sequentialOverride) {
             // Part 0: data gathering!
             // Get the task
-            let taskObj = await getTaskInformation(uid, taskId);
+            let taskObj = await E.db.getTaskInformation(uid, taskId);
 
             // Get info about the task
             let projectID = taskObj.project;
@@ -522,7 +522,7 @@ let ui = function() {
                     } else {
                         $('#task-name-' + taskId).css("opacity", "1");
                     }
-                    modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+                    E.db.modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
                     defer = defer_set;
                 }
             });
@@ -556,7 +556,7 @@ let ui = function() {
                             } else {
                                 $('#task-name-' + taskId).css("opacity", "1");
                             }
-                            modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+                            E.db.modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
                             defer = defer_set;
                         }
                     }
@@ -599,7 +599,7 @@ let ui = function() {
                         $('#task-pseudocheck-' + taskId).removeClass("od");
                         $('#task-pseudocheck-' + taskId).removeClass("ds");
                     }
-                    modifyTask(uid, taskId, {due:due_set, timezone:tz});
+                    E.db.modifyTask(uid, taskId, {due:due_set, timezone:tz});
                     due = due_set;
                 }
             });
@@ -646,7 +646,7 @@ let ui = function() {
                                 $('#task-pseudocheck-' + taskId).removeClass("od");
                                 $('#task-pseudocheck-' + taskId).removeClass("ds");
                             }
-                            modifyTask(uid, taskId, {due:due_set, timezone:tz});
+                            E.db.modifyTask(uid, taskId, {due:due_set, timezone:tz});
                             due = due_set;
                         }
                     }
@@ -698,13 +698,13 @@ let ui = function() {
                 if (project === undefined) {
                     activeTaskDeInboxed = true;
                 } else {
-                    await dissociateTask(uid, taskId, projectID);
+                    await E.db.dissociateTask(uid, taskId, projectID);
                 }
-                modifyTask(uid, taskId, {project:projId});
+                E.db.modifyTask(uid, taskId, {project:projId});
                 projectID = projId;
                 project = projectSelected;
                 $('#task-project-' + taskId).val(project);
-                await associateTask(uid, taskId, projId);
+                await E.db.associateTask(uid, taskId, projId);
             });
             $('#task-project-' + taskId).val(project);
             // Set overdue style!
@@ -747,9 +747,9 @@ let ui = function() {
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
                     $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
                     $('#task-' + taskId).slideUp(300);
-                    completeTask(uid, taskId).then(function(e) {
+                    E.db.completeTask(uid, taskId).then(function(e) {
                         if (project === undefined) {
-                             getInboxTasks(uid).then(function(e){
+                             E.db.getInboxTasks(uid).then(function(e){
                                 iC = e.length;
                                 if (iC === 0) {
                                     $("#inbox-subhead").slideUp(300);
@@ -767,10 +767,10 @@ let ui = function() {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setDate(due.getDate() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 due.setDate(due.getDate() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
 
                         } else if (rRule === "weekly") {
@@ -805,7 +805,7 @@ let ui = function() {
                                             break;
                                     }
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 let rOn = repeat.on;
                                 let current = "";
@@ -836,7 +836,7 @@ let ui = function() {
                                             break;
                                     }
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
                         } else if (rRule === "monthly") {
                             if (defer) {
@@ -856,16 +856,16 @@ let ui = function() {
                                     due.setDate(due.getDate() + 1);
                                     dow = due.getDate();
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
                         } else if (rRule === "yearly") {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setFullYear(due.getFullYear() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 due.setFullYear(due.getFullYear() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
 
                         }
@@ -881,18 +881,18 @@ let ui = function() {
                     if (project === undefined){
                         activeTaskDeInboxed = true;
                     } else {
-                        await dissociateTask(uid, taskId, projectID);
+                        await E.db.dissociateTask(uid, taskId, projectID);
                     }
-                    modifyTask(uid, taskId, {project:projId});
-                    await associateTask(uid, taskId, projId);
+                    E.db.modifyTask(uid, taskId, {project:projId});
+                    await E.db.associateTask(uid, taskId, projId);
                     projectID = projId;
                     project = this.value;
                 } else {
-                    modifyTask(uid, taskId, {project:""});
+                    E.db.modifyTask(uid, taskId, {project:""});
                     this.value = ""
                     if (project !== undefined) {
                         activeTaskInboxed = true;
-                        await dissociateTask(uid, taskId, projectID);
+                        await E.db.dissociateTask(uid, taskId, projectID);
                     }
                     project = undefined;
                     projectID = "";
@@ -902,7 +902,7 @@ let ui = function() {
             // Trashing a task
             $("#task-trash-" + taskId).click(function(e) {
                 if (project === undefined) activeTaskDeInboxed = true;
-                deleteTask(uid, taskId).then(function() {
+                E.db.deleteTask(uid, taskId).then(function() {
                     hideActiveTask();
                     $('#task-' + taskId).slideUp(150);
                 });
@@ -915,19 +915,19 @@ let ui = function() {
 
             // Task name change
             $("#task-name-" + taskId).change(function(e) {
-                modifyTask(uid, taskId, {name:this.value});
+                E.db.modifyTask(uid, taskId, {name:this.value});
             });
 
             // Task discription change
             $("#task-desc-" + taskId).change(function(e) {
-                modifyTask(uid, taskId, {desc:this.value});
+                E.db.modifyTask(uid, taskId, {desc:this.value});
             });
 
             // Task tag remove
             $('#task-tag-' + taskId).on('itemRemoved', function(e) {
                 let removedTag = possibleTagsRev[e.item];
                 tagIDs = tagIDs.filter(item => item !== removedTag);
-                modifyTask(uid, taskId, {tags:tagIDs});
+                E.db.modifyTask(uid, taskId, {tags:tagIDs});
             });
 
             // Task tag add
@@ -938,18 +938,18 @@ let ui = function() {
                         tagIDs.push(addedTag);
                         possibleTags[addedTag] = e.item;
                         possibleTags[e.item] = addedTag;
-                        modifyTask(uid, taskId, {tags:tagIDs});
+                        E.db.modifyTask(uid, taskId, {tags:tagIDs});
                     });
                 } else if (!(addedTag in tagIDs)){
                     tagIDs.push(addedTag);
-                    modifyTask(uid, taskId, {tags:tagIDs});
+                    E.db.modifyTask(uid, taskId, {tags:tagIDs});
                 }
             });
 
             // Remove flagged parameter
             $("#task-flagged-no-" + taskId).change(function(e) {
                 isFlagged = false;
-                modifyTask(uid, taskId, {isFlagged: false});
+                E.db.modifyTask(uid, taskId, {isFlagged: false});
                // TODO: Unflagged Style? So far flagged is
                // just another filter for perspective selection
             });
@@ -957,14 +957,14 @@ let ui = function() {
             // Add flagged parameter
             $("#task-flagged-yes-" + taskId).change(function(e) {
                 isFlagged = true;
-                modifyTask(uid, taskId, {isFlagged: true});
+                E.db.modifyTask(uid, taskId, {isFlagged: true});
                // TODO: Flagged Style?
             });
 
             // Remove floating parameter and calculate dates
             $("#task-floating-no-" + taskId).change(function(e) {
                 isFloating = false;
-                modifyTask(uid, taskId, {isFloating: false});
+                E.db.modifyTask(uid, taskId, {isFloating: false});
                 defer_current = defer;
                 due_current = due;
                 setDates();
@@ -973,7 +973,7 @@ let ui = function() {
             // Add floating parameter and calculate dates
             $("#task-floating-yes-" + taskId).change(function(e) {
                 isFloating = true;
-                modifyTask(uid, taskId, {isFloating: true});
+                E.db.modifyTask(uid, taskId, {isFloating: true});
                 defer_current = moment(defer).tz(timezone).local(true).toDate();
                 due_current = moment(due).tz(timezone).local(true).toDate();
                 setDates();
@@ -998,18 +998,18 @@ let ui = function() {
                         // handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
                             // move each task down in order
-                            modifyTask(uid, inboxandDS[0][i], {order: i-1});
+                            E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
                         }
                         // change the order of the moved task
-                        modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                        E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
                     } else if (oi>ni) {
                         // handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
                             // move each task up in order
-                            modifyTask(uid, inboxandDS[0][i], {order: i+1});
+                            E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
                         }
                         // change the order of the moved task
-                        modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                        E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
                     }
 
                 });
@@ -1024,7 +1024,7 @@ let ui = function() {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
 
-                getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
+                E.db.getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
                     if (oi<ni) {
                         // handle item moved down
                         for(let i=oi+1; i<=ni; i++) {
@@ -1032,20 +1032,20 @@ let ui = function() {
                             // move the item down
                             if (child.type === "task") {
                                 let id = child.content;
-                                modifyTask(uid, id, {order: i-1});
+                                E.db.modifyTask(uid, id, {order: i-1});
                             } else if (child.type === "project") {
                                 let id = child.content.id;
-                                modifyProject(uid, id, {order: i-1});
+                                E.db.modifyProject(uid, id, {order: i-1});
                             }
                         }
                         // change the order of the moved item
                         let moved = nstruct.children[oi];
                         if (moved.type === "task") {
                             let id = moved.content;
-                            modifyTask(uid, id, {order: ni});
+                            E.db.modifyTask(uid, id, {order: ni});
                         } else if (moved.type === "project") {
                             let id = moved.content.id;
-                            modifyProject(uid, id, {order: ni});
+                            E.db.modifyProject(uid, id, {order: ni});
                         }
                     } else if (oi>ni) {
                         // handle item moved up
@@ -1054,20 +1054,20 @@ let ui = function() {
                             // move the item up
                             if (child.type === "task") {
                                 let id = child.content;
-                                modifyTask(uid, id, {order: i+1});
+                                E.db.modifyTask(uid, id, {order: i+1});
                             } else if (child.type === "project") {
                                 let id = child.content.id;
-                                modifyProject(uid, id, {order: i+1});
+                                E.db.modifyProject(uid, id, {order: i+1});
                             }
                         }
                         // change the order of the moved item
                         let moved = nstruct.children[oi];
                         if (moved.type === "task") {
                             let id = moved.content;
-                            modifyTask(uid, id, {order: ni});
+                            E.db.modifyTask(uid, id, {order: ni});
                         } else if (moved.type === "project") {
                             let id = moved.content.id;
-                            modifyProject(uid, id, {order: ni});
+                            E.db.modifyProject(uid, id, {order: ni});
                         }
                     }
                     reloadPage();
@@ -1091,20 +1091,20 @@ let ui = function() {
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
-                getPerspectives(uid).then(function(topLevelItems) {
+                E.db.getPerspectives(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
                         // Handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
-                            modifyPerspective(uid, originalIBT[i], {order: i-1});
+                            E.db.modifyPerspective(uid, originalIBT[i], {order: i-1});
                         }
-                        modifyPerspective(uid, originalIBT[oi], {order: ni});
+                        E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
                     } else if (oi>ni) {
                         // Handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
-                            modifyPerspective(uid, originalIBT[i], {order: i+1});
+                            E.db.modifyPerspective(uid, originalIBT[i], {order: i+1});
                         }
-                        modifyPerspective(uid, originalIBT[oi], {order: ni});
+                        E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
                     }
                 });
             }
@@ -1127,20 +1127,20 @@ let ui = function() {
              onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
-                getTopLevelProjects(uid).then(function(topLevelItems) {
+                E.db.getTopLevelProjects(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
                         // Handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
-                            modifyProject(uid, originalIBT[i], {order: i-1});
+                            E.db.modifyProject(uid, originalIBT[i], {order: i-1});
                         }
-                        modifyProject(uid, originalIBT[oi], {order: ni});
+                        E.db.modifyProject(uid, originalIBT[oi], {order: ni});
                     } else if (oi>ni) {
                         // Handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
-                            modifyProject(uid, originalIBT[i], {order: i+1});
+                            E.db.modifyProject(uid, originalIBT[i], {order: i+1});
                         }
-                        modifyProject(uid, originalIBT[oi], {order: ni});
+                        E.db.modifyProject(uid, originalIBT[oi], {order: ni});
                     }
 
 
@@ -1195,7 +1195,7 @@ let ui = function() {
             // set value
             $("#perspective-title").val(perspectiveObject.name);
             // calculate perspective
-            perspectiveHandler.calc(uid, perspectiveObject.query).then(async function(tids) {
+            E.perspective.calc(uid, perspectiveObject.query).then(async function(tids) {
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
@@ -1218,7 +1218,7 @@ let ui = function() {
                 $("#project-back").show()
             }
             // get the project structure, and load the content
-            getProjectStructure(uid, pid).then(async function(struct) {
+            E.db.getProjectStructure(uid, pid).then(async function(struct) {
                 for (let item of struct.children) {
                     if (item.type === "task") {
                         // get and load the task
@@ -1367,8 +1367,8 @@ let ui = function() {
             top_level: false,
             is_sequential: false,
         };
-        newProject(uid, projObj, pid).then(function(npID) {
-            associateProject(uid, npID, pid);
+        E.db.newProject(uid, projObj, pid).then(function(npID) {
+            E.db.associateProject(uid, npID, pid);
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
             pageIndex.projectDir.push(activeMenu);
@@ -1382,7 +1382,7 @@ let ui = function() {
             name: "",
             query: "",
         };
-        newPerspective(uid, perspectiveObj).then(function(npID) {
+        E.db.newPerspective(uid, perspectiveObj).then(function(npID) {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "perspective-"+npID;
             $(".perspectives").append(`<div id="perspective-${npID}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px"></t></div>`)
@@ -1405,7 +1405,7 @@ let ui = function() {
             top_level: true,
             is_sequential: false,
         };
-        newProject(uid, projObj).then(function(npID) {
+        E.db.newProject(uid, projObj).then(function(npID) {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
             pageIndex.projectDir = [activeMenu];
@@ -1428,16 +1428,16 @@ let ui = function() {
         activeMenu = "today";
         $("#today").addClass("menuitem-selected");
         $("#perspective-"+pid).remove();
-        deletePerspective(uid, pid);
+        E.db.deletePerspective(uid, pid);
     });
 
     $(document).on("click", "#project-trash", function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
-        deleteProject(uid, pid).then(function() {
+        E.db.deleteProject(uid, pid).then(function() {
             pageIndex.projectDir.pop();
             if (pageIndex.projectDir.length > 0) {
-                dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
+                E.db.dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
                 activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
                 loadView("project-page", pageIndex.projectDir[pageIndex.projectDir.length-1].split("-")[1]);
                 });
@@ -1464,8 +1464,8 @@ let ui = function() {
             repeat: {rule: "none"},
             name: "",
         };
-        newTask(uid, ntObject).then(function(ntID) {
-            associateTask(uid, ntID, pid);
+        E.db.newTask(uid, ntObject).then(function(ntID) {
+            E.db.associateTask(uid, ntID, pid);
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
@@ -1484,7 +1484,7 @@ let ui = function() {
     $(document).on("change", "#project-title", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let value = $(this).val();
-        modifyProject(uid, pid, {name: value});
+        E.db.modifyProject(uid, pid, {name: value});
         reloadPage();
         //console.error(e);
     });
@@ -1492,14 +1492,14 @@ let ui = function() {
     $(document).on("change", "#perspective-title", function(e) {
         let pstID = pageIndex.pageContentID;
         let value = $(this).val();
-        modifyPerspective(uid, pstID, {name: value});
+        E.db.modifyPerspective(uid, pstID, {name: value});
         reloadPage();
         //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        modifyProject(uid, pid, {is_sequential: true}).then(function() {
+        E.db.modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage();
         });
         //console.error(e);
@@ -1507,7 +1507,7 @@ let ui = function() {
 
     $(document).on("click", "#project-sequential-no", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        modifyProject(uid, pid, {is_sequential: false}).then(function() {
+        E.db.modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage();
         });
         //console.error(e);
@@ -1558,7 +1558,7 @@ let ui = function() {
                 };
                 if (newTaskUserRequest.length != 0) {
                     let start = newTaskUserRequest[0].start;
-                    //let end = newTaskUserRequest[0].end;
+                    //let end = E.db.newTaskUserRequest[0].end;
                     if (start) {
                         startDate = start.date();
                         ntObject.due = startDate;
@@ -1569,11 +1569,11 @@ let ui = function() {
                 }
 
 
-                newTask(uid, ntObject).then(function(ntID) {
+                E.db.newTask(uid, ntObject).then(function(ntID) {
                     refresh().then(function(){
                         taskManager.generateTaskInterface("inbox", ntID)
                     });
-                    getInboxTasks(uid).then(function(e){
+                    E.db.getInboxTasks(uid).then(function(e){
                         iC = e.length;
                         $("#unsorted-badge").html(''+iC);
                         $("#inbox-subhead").slideDown(300);
@@ -1598,14 +1598,14 @@ let ui = function() {
     //let currentTheme = "condutiontheme-default";
 
     let constructSidebar = async function() {
-        let tlps = (await getTopLevelProjects(uid));
-        let pPandT = (await getProjectsandTags(uid));
+        let tlps = (await E.db.getTopLevelProjects(uid));
+        let pPandT = (await E.db.getProjectsandTags(uid));
         $(".projects").empty();
         $(".perspectives").empty();
         for (let proj of tlps[2]) {
             $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
         }
-        let psps = (await getPerspectives(uid));
+        let psps = (await E.db.getPerspectives(uid));
         for (let psp of psps[2]) {
             $(".perspectives").append(`<div id="perspective-${psp.id}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psp.name}</t></div>`)
         }
