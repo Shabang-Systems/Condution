@@ -1,3 +1,5 @@
+import {getTaskInformation, getProjectsandTags} from './ObjectManager';
+
 const perspectiveHandler = function(){
     let cgs = {
         taskFilter: /([^\w\d\s\[]{1,2}[\w\s]+)/gi,
@@ -112,4 +114,6 @@ const perspectiveHandler = function(){
 
     return {calc: getPerspectiveFromString};
 }();
+
+export default perspectiveHandler;
 

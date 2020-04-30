@@ -1,10 +1,6 @@
 //"use strict";
 
-//require("firebase/auth");   // TODO: dunno where to put this so that app.js doesn't error
-//require("firebase/firestore");
-
 const obj = require("./secrets")
-
 
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
