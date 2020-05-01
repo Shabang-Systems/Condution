@@ -23,7 +23,7 @@ else {
     $("#loading").hide().css("display", "flex").fadeIn();
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
-    const obj = require("./secrets")
+    const obj = require("./backend/secrets")
     firebase.initializeApp(obj.dbkeys.debug);
 
     let isNA = false;
