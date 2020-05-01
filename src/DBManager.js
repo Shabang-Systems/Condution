@@ -2,6 +2,10 @@
 
 const obj = require("./../secrets.json")
 
+let firebase = require("firebase/app");
+require("firebase/firestore");
+require("firebase/auth");
+
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
 firebase.initializeApp(obj.dbkeys.debug);
