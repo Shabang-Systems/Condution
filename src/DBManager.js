@@ -12,7 +12,7 @@ const initFirebase = (fbPointer) => {
 
     const obj = require("./../secrets.json")
     fbPointer.initializeApp(obj.dbkeys.debug);
-    [ firebaseDB, fsRef, faMod ] = [fbPointer.firestore(), fbPointer.firestore];
+    [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
 }
 
 const cRef = (() => {
