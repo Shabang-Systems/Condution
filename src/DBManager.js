@@ -1,25 +1,21 @@
 //"use strict";
 
-const obj = require("./../secrets.json")
-
-let firebase = require("firebase/app");
-require("firebase/firestore");
-require("firebase/auth");
-
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
-firebase.initializeApp(obj.dbkeys.debug);
 
-const initFirebase = () => {
+let firebaseDB, fsRef;
+
+const initFirebase = (fbPointer) => {
     // Firebase App (the core Firebase SDK) is always required and
     // must be listed before other Firebase SDKs
     // const firebase = require("firebase/app");
 
-    return [firebase.firestore(), firebase.firestore];
+    const obj = require("./../secrets.json")
+    fbPointer.initializeApp(obj.dbkeys.debug);
+    [ firebaseDB, fsRef, faMod ] = [fbPointer.firestore(), fbPointer.firestore];
 }
 
 const cRef = (() => {
-    const [ firebaseDB, fsRef ] = initFirebase();
     const cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
     const unsubscribeCallbacks = new Map();
 
@@ -114,5 +110,5 @@ const cRef = (() => {
     return cacheRef;
 })();
 
-module.exports = cRef;
+module.exports = {__init__:initFirebase, cRef};
 

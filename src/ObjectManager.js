@@ -1,4 +1,4 @@
-let cRef = require("./DBManager");
+let cRef = require("./DBManager").cRef;
 
 const util = {
     select: {
