@@ -44,7 +44,7 @@ const perspectiveHandler = function(){
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
         let taskInfo = await Promise.all(tasks[0].map(async function(t){
-            return [await getTaskInformation(uid, t), t];
+            return [await dbObj.getTaskInformation(uid, t), t];
         }));
         let taskCompValues;
         // TODO: add more?
