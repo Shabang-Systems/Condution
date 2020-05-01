@@ -1,5 +1,7 @@
 /* Query the system dark theme, and load the appropriate theme */
 
+E.start(firebase);
+
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
