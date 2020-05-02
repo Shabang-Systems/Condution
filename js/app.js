@@ -1,4 +1,5 @@
 /* Query the system dark theme, and load the appropriate theme */
+const { ipcRenderer } = require('electron');
 
 E.start(firebase);
 
@@ -12,6 +13,18 @@ else {
     $("body").removeClass();
     $("body").addClass(currentTheme);
 }
+
+ipcRenderer.on("systheme-dark", function (event, data) {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+ipcRenderer.on("systheme-light", function (event, data) {
+    currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
 
 lottie.loadAnimation({
     container: $("#loading-anim")[0],
