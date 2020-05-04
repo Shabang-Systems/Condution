@@ -8,7 +8,7 @@ const obj = require("./secrets")
 
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
-firebase.initializeApp(obj.dbkeys.dev);
+firebase.initializeApp(obj.dbkeys.debug);
 
 const initFirebase = () => {
     // Firebase App (the core Firebase SDK) is always required and

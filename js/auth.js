@@ -24,7 +24,7 @@ else {
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
     const obj = require("./secrets")
-    firebase.initializeApp(obj.dbkeys.dev);
+    firebase.initializeApp(obj.dbkeys.debug);
 
     let isNA = false;
     let isNASuccess = false;
