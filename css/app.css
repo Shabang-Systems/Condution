@@ -146,6 +146,12 @@ a {
     position: relative;
 }
 
+.search-bar {
+    padding: 300px 0px 7px 0px;
+    color: red;
+    background-color: green;
+}
+
 .newbutton:hover {
     background-color: var(--task-feature) !important;
 }

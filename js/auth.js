@@ -24,7 +24,7 @@ else {
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
     const obj = require("./secrets")
-    firebase.initializeApp(obj.dbkeys.debug);
+    firebase.initializeApp(obj.dbkeys.dev);
 
     let isNA = false;
     let isNASuccess = false;
@@ -93,12 +93,15 @@ else {
                 window.location = 'app.html'; 
             } else {
                 user.sendEmailVerification();
+                $('#auth-left-menu').fadeIn();
                 $('#need-verify').fadeIn();
+                $("#loading").fadeOut();
+                $("#authwall").fadeIn();
             }
         } else {
+            $("#loading").fadeOut();
             $("#authwall").fadeIn();
             $('#auth-left-menu').fadeIn();
-            $("#loading").fadeOut();
         }
     });
 

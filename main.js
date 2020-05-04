@@ -26,7 +26,7 @@ function createWindow () {
         e.preventDefault()
     });
 
-    win.removeMenu();
+    //win.removeMenu(); TODO undo this
     // and load the main of the app.
     win.loadFile('app.html')
     win.once('ready-to-show', function() {
