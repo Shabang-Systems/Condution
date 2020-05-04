@@ -146,10 +146,10 @@ a {
     position: relative;
 }
 
-.search-bar {
-    padding: 300px 0px 7px 0px;
-    color: red;
-    background-color: green;
+#search-bar {
+    padding: 3px 0px 5px 0px;
+    color: grey;
+    background-color: blue;
 }
 
 .newbutton:hover {
