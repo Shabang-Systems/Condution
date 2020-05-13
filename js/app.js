@@ -1332,7 +1332,6 @@ let ui = function() {
         let value = $(this).val();
         modifyProject(uid, pid, {name: value});
         reloadPage();
-        //console.error(e);
     });
 
     $(document).on("change", "#perspective-title", function(e) {
@@ -1340,7 +1339,6 @@ let ui = function() {
         let value = $(this).val();
         modifyPerspective(uid, pstID, {name: value});
         reloadPage();
-        //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
@@ -1348,7 +1346,6 @@ let ui = function() {
         modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage();
         });
-        //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-no", function(e) {
@@ -1356,7 +1353,6 @@ let ui = function() {
         modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage();
         });
-        //console.error(e);
     });
     $(document).on("click", "#settings", function(e) {
         e.stopPropagation();
@@ -1367,23 +1363,19 @@ let ui = function() {
     });
     $(document).on("click", "#logout-button", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
-        //console.error(e);
     });
 
     $(document).on("click", "#perspective-edit", function(e) {
         showPerspectiveEdit(pageIndex.pageContentID);
-        //console.error(e);
     });
 
     $("#quickadd").click(function(e) {
         $(this).animate({"width": "350px"}, 500);
-        //console.error(e);
     });
 
     $("#quickadd").blur(function(e) {
         $(this).val("");
         $(this).animate({"width": "250px"}, 500);
-        //console.error(e);
     });
 
 
@@ -1425,7 +1417,7 @@ let ui = function() {
                     refresh().then(function(){
                         taskManager.generateTaskInterface("inbox", ntID)
                     });
-                    getInboxTasks(uid).then(function(e){
+                    getInboxs(uid).then(function(e){
                         iC = e.length;
                         $("#unsorted-badge").html(''+iC);
                         $("#inbox-subhead").slideDown(300);

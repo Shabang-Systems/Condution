@@ -12,9 +12,9 @@ function createWindow () {
         'webPreferences': {
             'nodeIntegration': true
         },
-        'titleBarStyle': 'hiddenInset',
+        'titleBarStyle': 'customButtonsOnHover', // Was hiddenInset just in case this start's to cause issues TODO verify that it isn't bad
         'show': false,
-    })
+    });
 
     if(nativeTheme.shouldUseDarkColors) {
         win.setBackgroundColor("#161616");
@@ -28,7 +28,7 @@ function createWindow () {
 
     win.removeMenu();
     // and load the main of the app.
-    win.loadFile('app.html')
+    win.loadFile('app.html');
     win.once('ready-to-show', function() {
         win.show()
     });
@@ -36,4 +36,4 @@ function createWindow () {
 
 
 app.name = 'Condution';
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
