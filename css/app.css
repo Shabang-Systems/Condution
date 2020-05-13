@@ -772,6 +772,7 @@ a {
     position: relative;
     border-style: 1px solid red;
     z-index: 100;
+    /*width: 30%;*/
 }
 #settings:hover {
     background-color: var(--menu-semiaccent-background);
@@ -779,7 +780,7 @@ a {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     padding: 4px 0 4px 10px;
-    transform: translateX(-1px);
+    cursor: grab;
 }
 #logout {
     bottom: 0;
@@ -799,6 +800,13 @@ a {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     /*z-index: -1;*/
+}
+#logout-button {
+    /*width: 30%;*/
+}
+.settings_divider {
+    border: red;
+    height: auto;
 }
 
 .hover-highlight {

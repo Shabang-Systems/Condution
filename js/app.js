@@ -1361,12 +1361,11 @@ let ui = function() {
     $(document).on("click", "#settings", function(e) {
         e.stopPropagation();
         console.log("ANSDFLJSDFHKLSDKJFLKSDFHSD")
-        //console.error(e);
     });
     $("#settings").mouseover( function(e) {
         console.log(undefined)
     });
-    $(document).on("click", "#logout", function(e) {
+    $(document).on("click", "#logout-button", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
         //console.error(e);
     });
