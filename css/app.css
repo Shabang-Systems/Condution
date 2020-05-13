@@ -825,6 +825,7 @@ a {
     border-radius: 5px;
     padding: 4px 0 4px 10px;
     transform: translateX(-1px);
+    cursor: grab;
 }
 
 .task-desc:focus{
