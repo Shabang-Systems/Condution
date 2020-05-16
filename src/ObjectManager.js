@@ -402,11 +402,13 @@ async function getItemAvailability(userID) {
         let projStruct = (await getProjectStructure(userID, projectID));
         if (project.data().is_sequential) {
             let child = projStruct.children[0];
-            if (child.type === "project") {
-                Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)));
-                bstat[child.content.id] = true;
-            } else if (child.type === "task") {
-                bstat[child.content] = true;
+            if (child) {
+                if (child.type === "project") {
+                    Object.assign(bstat, (await recursivelyGetBlocks(userID, child.content.id)));
+                    bstat[child.content.id] = true;
+                } else if (child.type === "task") {
+                    bstat[child.content] = true;
+                }
             }
         } else {
             let children = projStruct.children;
