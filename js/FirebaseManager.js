@@ -19,7 +19,7 @@ const util = {
                 case "!has":
                     return !lhs.includes(rhs);
                 default:
-                    throw new TypeError("Unkown comparator " + cmp);
+                    throw new TypeError("Unknown comparator " + cmp);
             }
         },
         all: (...requirements) => (doc) => {
@@ -382,10 +382,10 @@ async function getProjectStructure(userID, projectID, recursive=false) {
 }
 
 async function getItemAvailability(userID) {
-    let t = new Date();
+    let t = new Date(); // TODO ask jack why this also exists and if it can be deleted
     let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {};
-    let timea = new Date();
+    let timea = new Date(); // TODO ask jack why this exists
     async function recursivelyGetBlocks(userID, projectID) {
         let bstat = {};
         let project = (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];

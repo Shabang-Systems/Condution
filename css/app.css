@@ -772,6 +772,7 @@ a {
     position: relative;
     border-style: 1px solid;
     z-index: 100;
+    /*font-family: "SansSerif";*/
     /*width: 30%;*/
 }
 #settings:hover {
@@ -801,14 +802,13 @@ a {
     /*z-index: -1;*/
 }
 #logout-button {
-    cursor: url(logout_cursor.png), auto;
     /*width: 30%;*/
 }
 
-.url-cursor {cursor: url(logout_cursor.png),auto;}
+.url-cursor {cursor: url(logout_cursor.png), auto;}
 
 .settings_divider {
-    border: red;
+    /*border: red;*/
     height: auto;
 }
 
@@ -821,7 +821,7 @@ a {
     transform: translateX(-1px);
 }
 
-#logout:hover {
+#logout-button:hover {
     background-color: var(--menu-semiaccent-background);
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;

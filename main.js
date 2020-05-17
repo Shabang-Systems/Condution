@@ -1,5 +1,4 @@
-const { app, BrowserWindow, systemPreferences, nativeTheme } = require('electron')
-
+const { app, BrowserWindow, systemPreferences, nativeTheme, Tray } = require('electron');
 function createWindow () {
     // Create the browser window.
     let win = new BrowserWindow({
