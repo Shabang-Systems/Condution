@@ -1,4 +1,8 @@
 const { app, BrowserWindow, systemPreferences, nativeTheme } = require('electron')
+const { autoUpdater } = require("electron-updater");
+autoUpdater.checkForUpdatesAndNotify();
+
+
 
 function createWindow () {
     // Create the browser window.
