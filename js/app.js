@@ -1,3 +1,6 @@
+const { autoUpdater } = require("electron-updater");
+autoUpdater.checkForUpdatesAndNotify();
+
 /* Query the system dark theme, and load the appropriate theme */
 const { ipcRenderer } = require('electron');
 
