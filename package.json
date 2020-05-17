@@ -1,6 +1,6 @@
 {
   "name": "condution",
-  "version": "0.1.1",
+  "version": "0.1.1-alpha.2",
   "description": "Tasks? Done. That was quick.",
   "main": "main.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "bootstrap-select-dropdown": "^0.14.6",
     "bootstrap-tagsinput": "^0.7.1",
     "chrono-node": "^1.4.4",
+    "electron-updater": "^4.3.1",
     "firebase": "^7.13.2",
     "firebaseui": "^4.5.0",
     "fuse.js": "^5.1.0",
@@ -62,6 +63,9 @@
     "copyright": "Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors.",
     "mac": {
       "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "nsis-web"
     }
   }
 }
