@@ -29,6 +29,17 @@ function createWindow () {
     win.removeMenu();
     // and load the main of the app.
     win.loadFile('app.html')
+    
+    nativeTheme.addListener("updated", function() {
+        if(nativeTheme.shouldUseDarkColors) {
+            win.setBackgroundColor("#161616");
+            win.webContents.send("systheme-dark", "hello")
+        } else {
+            win.setBackgroundColor("#f4f4f4");
+            win.webContents.send("systheme-light", "hello")
+        }
+    });
+
     win.once('ready-to-show', function() {
         win.show()
     });

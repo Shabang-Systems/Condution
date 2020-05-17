@@ -1,4 +1,5 @@
 // Chapter 0: Fire! Base!
+const { ipcRenderer } = require('electron');
 
 (function() {
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
@@ -13,6 +14,18 @@ else {
     $("body").addClass(currentTheme);
     $("#loading").hide().css("display", "flex").fadeIn();
 }
+
+ipcRenderer.on("systheme-dark", function (event, data) {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+ipcRenderer.on("systheme-light", function (event, data) {
+    currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
     lottie.loadAnimation({
         container: $("#loading-anim")[0],
         renderer: 'svg',
@@ -23,7 +36,7 @@ else {
     $("#loading").hide().css("display", "flex").fadeIn();
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
-    const obj = require("./secrets")
+    const obj = require("./backend/secrets")
     firebase.initializeApp(obj.dbkeys.debug);
 
     let isNA = false;
