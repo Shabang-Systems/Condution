@@ -1625,9 +1625,10 @@ let ui = function() {
                     if (ti.project === target[1]) return;
                     await E.db.dissociateTask(uid, dropped[1], ti.project); 
                 }
-                $("#task-"+dropped[1]).slideUp();
                 await E.db.modifyTask(uid, dropped[1], {project:target[1]});
                 await E.db.associateTask(uid, dropped[1], target[1]);
+                $("#task-"+dropped[1]).slideUp();
+                reloadPage();
             })();
         } else if (dropped[0] === "project") {
             (async function() {
@@ -1636,12 +1637,30 @@ let ui = function() {
                     if (ti.parentProj === target[1]) return;
                     await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
                 }
-                $("#project-"+dropped[1]).slideUp();
                 await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
                 await E.db.associateProject(uid, dropped[1], target[1]);
+                $("#project-"+dropped[1]).slideUp();
+                reloadPage();
             })();
         }
     });
+
+    /*$(document).on("drop", "#quickadd", function(e) {*/
+        //console.log("aoeu");
+        //let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
+
+        //console.log(dropped);
+        //if (dropped[0] === "task") {
+            //(async function() {
+                //let ti = await E.db.getTaskInformation(uid, dropped[1]);
+                //if (ti.project && ti.project !== "") {
+                    //$("#task-"+dropped[1]).slideUp();
+                    //await E.db.dissociateTask(uid, dropped[1], ti.project); 
+                    //await E.db.modifyTask(uid, dropped[1], {project:""});
+                //}
+            //})();
+        //}
+    /*});*/
 
     $(document).on("dragenter", ".project", function(e) {
         $(this).animate({"background-color": interfaceUtil.gtc("--menu-accent-background")}, 100);
@@ -1650,6 +1669,18 @@ let ui = function() {
     $(document).on("dragleave", ".project", function(e) {
         $(this).animate({"background-color": "transparent"}, 100);
     });
+
+/*    $(document).on("dragenter", "#quickadd", function(e) {*/
+        //e.preventDefault();
+        //$("#quickadd").prop('disabled', true);
+        //$("#quickadd").animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, 100, ()=>$("#quickadd").addClass("dragover"));
+    //});
+
+    //$(document).on("dragleave", "#quickadd", function(e) {
+        //e.preventDefault();
+        //$("#quickadd").prop('disabled', false);
+        //$("#quickadd").animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, ()=>$("#quickadd").removeClass("dragover"));
+    /*});*/
 
     $(document).on("dragstart", ".project", function(e) {
         e.originalEvent.dataTransfer.setData('text', e.target.id);

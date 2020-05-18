@@ -1414,6 +1414,10 @@ label.od:hover:before {
     color: var(--quickadd-placeholder);
 }
 
+#quickadd.dragover::placeholder{
+    color: var(--quickadd-success-text) !important;
+}
+
 #quickadd:hover {
     background-color: var(--quickadd-feature);
 }
