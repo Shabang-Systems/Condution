@@ -1606,6 +1606,58 @@ let ui = function() {
         }
     });
 
+    /*$(document).on(".menuitem", "dragover", function(e) {*/
+        //console.log(e);
+        //e.preventDefault();
+    /*});*/
+
+    $(document).on("drop", ".project", function(e) {
+        let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
+        let target = this.id.split("-"); 
+
+        if (dropped[1] === target[1]) return;
+        if (dropped[0] === "task") {
+            (async function() {
+                let ti = await E.db.getTaskInformation(uid, dropped[1]);
+                if (ti.project !== "") {
+                    if (ti.project === target[1]) return;
+                    await E.db.dissociateTask(uid, dropped[1], ti.project); 
+                }
+                $("#task-"+dropped[1]).slideUp();
+                await E.db.modifyTask(uid, dropped[1], {project:target[1]});
+                await E.db.associateTask(uid, dropped[1], target[1]);
+            })();
+        } else if (dropped[0] === "project") {
+            (async function() {
+                let ti = await E.db.getProjectStructure(uid, dropped[1]);
+                if (ti.parentProj !== "") {
+                    if (ti.parentProj === target[1]) return;
+                    await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
+                }
+                $("#project-"+dropped[1]).slideUp();
+                await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
+                await E.db.associateProject(uid, dropped[1], target[1]);
+            })();
+        }
+    });
+
+    $(document).on("dragenter", ".project", function(e) {
+        $(this).animate({"background-color": interfaceUtil.gtc("--menu-accent-background")}, 100);
+    });
+
+    $(document).on("dragleave", ".project", function(e) {
+        $(this).animate({"background-color": "transparent"}, 100);
+    });
+
+    $(document).on("dragstart", ".project", function(e) {
+        e.originalEvent.dataTransfer.setData('text', e.target.id);
+    });
+
+    $(document).on("dragstart", ".task", function(e) {
+        e.originalEvent.dataTransfer.setData('text', e.target.id);
+    });
+
+
     let user;
     let uid;
     let displayName;
