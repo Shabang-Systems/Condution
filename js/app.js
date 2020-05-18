@@ -1005,6 +1005,7 @@ let ui = function() {
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
+            swapThreshold: 0.20,
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
@@ -1035,6 +1036,7 @@ let ui = function() {
         // project sorter
         let projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
+            swapThreshold: 0.20,
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
