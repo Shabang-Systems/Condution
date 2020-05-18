@@ -1,4 +1,40 @@
-console.log("Initializing the galvanitizer!");
+/* Query the system dark theme, and load the appropriate theme */
+const { ipcRenderer } = require('electron');
+
+E.start(firebase);
+
+if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+}
+else {
+    currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+}
+
+ipcRenderer.on("systheme-dark", function (event, data) {
+    currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+ipcRenderer.on("systheme-light", function (event, data) {
+    currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+lottie.loadAnimation({
+    container: $("#loading-anim")[0],
+    renderer: 'svg',
+    autoplay: true,
+    loop: true,
+    path: 'static/loadanim_dots.json'
+})
+$("#loading").hide().css("display", "flex").fadeIn();
+
 const { remote } = require('electron');
 const { Menu, MenuItem } = remote;
 
@@ -25,8 +61,8 @@ if (process.platform === "win32") {
 }
 
 // Chapter 1: Utilities!
-var interfaceUtil = function() {
-    let Sortable = require('sortablejs')
+const interfaceUtil = function() {
+    const Sortable = require('sortablejs');
 
     let getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
@@ -46,7 +82,7 @@ var interfaceUtil = function() {
         };
     };
 
-    let smartParse = function(timeformat, timeString, o) {
+    const smartParse = function(timeformat, timeString, o) {
         // smart, better date parsing with chrono
         let d = chrono.parse(timeString)[0].start.date();
         return {
@@ -57,96 +93,183 @@ var interfaceUtil = function() {
             microsec: d.getMicroseconds(),
             timezone: d.getTimezoneOffset() * -1
         };
-    }
+    };
 
-    let numDaysBetween = function(d1, d2) {
-        var diff = Math.abs(d1.getTime() - d2.getTime());
+    const smartParseFull = (timeString) => chrono.parse(timeString)[0];
+
+    const numDaysBetween = function(d1, d2) {
+        let diff = Math.abs(d1.getTime() - d2.getTime());
         return diff / (1000 * 60 * 60 * 24);
     };
 
 
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
-        return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
+        return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
-    }
+    };
 
-    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
+    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
 }();
 
-var ui = function() {
+let ui = function() {
 
     // greeting of the day
-    let greetings = ["Hello there,", "Hey,", "What's up,", "Howdy,", "Welcome,", "Yo!"]
-    let greeting = greetings[Math.floor(Math.random() * greetings.length)]
+    let greetings = ["Hello there,", "Hey,", "What's up,", "Howdy,", "Welcome,", "Yo!"];
+    let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
     // generic data containers used by refresh and others
     let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev;
+    let possiblePerspectives;
     let inboxandDS;
     let avalibility;
+    let projectDB;
 
     // current location
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
-        projectID: undefined
-    }
+        pageContentID: undefined
+    };
 
     activeMenu = "today";
 
     // refresh data
     let refresh = async function(){
-        pPandT = await getProjectsandTags(uid);
+        pPandT = await E.db.getProjectsandTags(uid);
         possibleProjects = pPandT[0][0];
         possibleTags = pPandT[1][0];
         possibleProjectsRev = pPandT[0][1];
         possibleTagsRev = pPandT[1][1];
-        avalibility = await getItemAvailability(uid);
-        inboxandDS = await getInboxandDS(uid, avalibility);
-    }
+        possiblePerspectives = await E.db.getPerspectives(uid);
+        avalibility = await E.db.getItemAvailability(uid);
+        inboxandDS = await E.db.getInboxandDS(uid, avalibility);
+        projectDB = await (async function() {
+            let pdb = [];
+            let topLevels = (await E.db.getTopLevelProjects(uid))[0];
+            for (key in topLevels) {
+                pdb.push(await E.db.getProjectStructure(uid, key, recursive=true));
+            }
+            return pdb;
+        }());
+    };
 
     // the outside world's refresh function
     let reloadPage = async function() {
-        setTimeout(function() {
-            if (!activeTask) (loadView(pageIndex.currentView, pageIndex.projectID));
+        setTimeout(async function() {
+            if (!activeTask) {
+                (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                await constructSidebar();
+                await $("#"+activeMenu).addClass("menuitem-selected");
+            }
         }, 500);
-    }
+    };
+
+
+    const showPerspectiveEdit = function() {
+        $("#perspective-back").on("click", function(e) {
+            $("#perspective-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, () => reloadPage());
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+
+        $(document).on("click", "#overlay", function(e) {
+            if (e.target === this) {
+                $(".repeat-subunit").slideUp();
+                $("#repeat-toggle-group").slideDown();
+                $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
+                $("#repeat-unit").fadeOut(200);
+                $("#overlay").fadeOut(200, () => reloadPage());
+                $("#"+activeMenu).addClass("menuitem-selected");
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+            }
+        });
+
+        let currentP;
+
+        $("#pquery").change(function(e) {
+            E.db.modifyPerspective(uid, currentP, {query: $(this).val()});
+        });
+
+        $("#perspective-edit-name").change(function(e) {
+            E.db.modifyPerspective(uid, currentP, {name: $(this).val()});
+        });
+
+        const edit = function(pspID) {
+            $("#repeat-unit").hide();
+            currentP = pspID;
+            $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+            $("#perspective-unit").fadeIn(200);
+            $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
+            $("#pquery").val(possiblePerspectives[0][pspID].query);
+            // fix weird focus-select bug
+            setTimeout(function() {$("#pquery").focus()}, 100);
+        };
+
+        return edit;
+    }();
 
     // repeat view
-    var showRepeat = function() {
+    const showRepeat = function() {
 
         let tid;
+        let repeatWeekDays = [];
+        let repeatMonthDays = [];
 
         // Setup repeat things!
         $("#repeat-back").on("click", function(e) {
             $(".repeat-subunit").slideUp();
+            $("#repeat-daterow").children().each(function(e) {
+                $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+            });
+            $("#repeat-monthgrid").children().each(function(e) {
+                $(this).css({"background-color": interfaceUtil.gtc("--background")});
+            });
             $("#repeat-toggle-group").slideDown();
-            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+            $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
             $("#repeat-unit").fadeOut(200);
             $("#overlay").fadeOut(200);
+            $("#"+activeMenu).addClass("menuitem-selected");
+            let repeatWeekDays = [];
+            let repeatMonthDays = [];
         });
 
-        $("#overlay").on("click", function(e) {
+
+        $(document).on("click", "#overlay", function(e) {
             if (e.target === this) {
                 $(".repeat-subunit").slideUp();
                 $("#repeat-toggle-group").slideDown();
-                $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
+                $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
                 $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200);
+                $("#overlay").fadeOut(200, () => reloadPage());
+                $("#"+activeMenu).addClass("menuitem-selected");
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+                let repeatWeekDays = [];
+                let repeatMonthDays = [];
             }
         });
 
         $("#repeat-type").on("click", function(e) {
             $(".repeat-subunit").slideUp();
             $("#repeat-toggle-group").slideDown();
-            $("#repeat-type").fadeOut(()=>$("#repeat-type").html(""));
-            modifyTask(uid, tid, {repeat: {rule: "none"}});
+            $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
+            E.db.modifyTask(uid, tid, {repeat: {rule: "none"}});
         });
 
         $("#repeat-perday").on("click", function(e) {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every day.");
             $("#repeat-type").fadeIn();
-            modifyTask(uid, tid, {repeat: {rule: "daily"}});
+            E.db.modifyTask(uid, tid, {repeat: {rule: "daily"}});
         });
 
         $("#repeat-perweek").on("click", function(e) {
@@ -167,40 +290,43 @@ var ui = function() {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every year.");
             $("#repeat-type").fadeIn();
-            modifyTask(uid, tid, {repeat: {rule: "yearly"}});
+            E.db.modifyTask(uid, tid, {repeat: {rule: "yearly"}});
         });
 
         // Actions
-        let repeatWeekDays = [];
         $(".repeat-daterow-weekname").on("click", function(e) {
             if (repeatWeekDays.includes($(this).html())) {
                 $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                 repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             } else {
                 $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                 repeatWeekDays.push($(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             }
         });
 
-        let repeatMonthDays = [];
+        
         $(".repeat-monthgrid-day").on("click", function(e) {
             if (repeatMonthDays.includes($(this).html())) {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background")}, 100);
                 repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             } else {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
+                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")}, 100);
                 repeatMonthDays.push($(this).html());
-                modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
+                E.db.modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             }
         });
 
         let cr = async function(taskId) {
+            $(".repeat-subunit").hide();
+            $("#repeat-toggle-group").show();
+            $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
+            $("#perspective-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
-            let ti = await getTaskInformation(uid, taskId);
+            let ti = await E.db.getTaskInformation(uid, taskId);
             $("#repeat-task-name").html(ti.name);
             tid = taskId;
             if (ti.repeat.rule !== "none") {
@@ -210,9 +336,8 @@ var ui = function() {
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
                     $("#repeat-daterow").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html)) {
+                        if (ti.repeat.on.includes($(this).html())) {
                             $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
-                            repeatMonthDays.push($(this).html());
                         }
                     });
                     repeatWeekDays = ti.repeat.on;
@@ -222,7 +347,7 @@ var ui = function() {
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
                     $("#repeat-monthgrid").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html)) {
+                        if (ti.repeat.on.includes($(this).html())) {
                             $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
                         }
                     });
@@ -237,11 +362,11 @@ var ui = function() {
                     $("#repeat-type").show();
                 }
             }
-        }
+        };
         return cr;
     }();
 
-        // the pubilc refresh function
+        // the public refresh function
 
     let activeTask = null; // TODO: shouldn't this be undefined?
     let activeTaskDeInboxed = false;
@@ -281,7 +406,7 @@ var ui = function() {
                     $("#due-soon").slideUp(300);
                 } else {
                     $("#duesoon-badge").html(''+dsC);
-                    if (activeMenu==="today" && $($('#task-'+hTask).parent()).attr('id') !== "inbox") {
+                    if (activeMenu==="today" && $($('#task-' + hTask).parent()).attr('id') !== "inbox") {
                         $('#task-'+hTask).slideUp(200);
                     }
                 }
@@ -291,8 +416,8 @@ var ui = function() {
                 let hTask = activeTask;
                 iC = inboxandDS[0].length;
                 dsC = inboxandDS[1].length;
-                $("#unsorted-badge").html(''+iC);
-                $("#duesoon-badge").html(''+dsC);
+                $("#unsorted-badge").html('' + iC);
+                $("#duesoon-badge").html('' + dsC);
                 if (activeMenu==="today") {
                     $('#task-'+hTask).appendTo("#inbox");
                 }
@@ -308,14 +433,16 @@ var ui = function() {
          /*   setTimeout(function() {*/
                 //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
-            reloadPage();
-        }
+            sorters.project.option("disabled", false);
+            sorters.inbox.option("disabled", false);
+            await reloadPage();
+        };
 
 
         let displayTask = async function(pageId, taskId, sequentialOverride) {
             // Part 0: data gathering!
             // Get the task
-            let taskObj = await getTaskInformation(uid, taskId);
+            let taskObj = await E.db.getTaskInformation(uid, taskId);
 
             // Get info about the task
             let projectID = taskObj.project;
@@ -334,14 +461,29 @@ var ui = function() {
             if (taskObj.due) {
                 due = new Date(taskObj.due.seconds*1000);
             }
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 1: data parsing!
             // The Project
             let project = possibleProjects[projectID];
+            
             // Project select options
             let projectSelects = " ";
-            for (let i in possibleProjects) {
-                projectSelects = projectSelects + "<option>" + possibleProjects[i] + "</option> ";
+            let buildSelectString = function(p, level) {
+                if (!level) {
+                    level = ""
+                }
+                pss = "<option>" + level + possibleProjects[p.id] + "</option>";
+                if (p.children) {
+                    for (let e of p.children) {
+                        if (e.type === "project") {
+                            pss = pss + buildSelectString(e.content, level+"&nbsp;&nbsp;");
+                        }
+                    }
+                }
+                return pss;
+            };
+            for (let proj of projectDB) {
+                projectSelects = projectSelects + buildSelectString(proj);
             }
             // Tag select options
             let possibleTagNames = function() {
@@ -376,10 +518,10 @@ var ui = function() {
             }
             // The color of the carrot
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 2: the task!
             $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor));
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 3: customize the task!
             // Set the dates, aaaand set the date change trigger
             $("#task-defer-" + taskId).datetimepicker({
@@ -395,8 +537,60 @@ var ui = function() {
                     } else {
                         $('#task-name-' + taskId).css("opacity", "1");
                     }
-                    modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+                    E.db.modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
                     defer = defer_set;
+                }
+            });
+            $("#task-defer-" + taskId).change(function(e) {
+                e.preventDefault();
+            });
+            let dfstr = "";
+            $("#task-defer-" + taskId).keydown(function(e) {
+                //e.preventDefault();
+                // TODO: this is a janky manual re-implimentation 
+                // of a textbox to override jQuery's manual 
+                // re-implimentation. The todo is to make it less
+                // janky.
+                if (e.keyCode >= 37 && e.keyCode <= 40) {
+                    // handle arrows
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (dfstr === "") {
+                        $("#task-defer-" + taskId).val("");
+                        removeParamFromTask(uid, taskId, "defer");
+                        defer = undefined;
+                        defer_current = undefined;
+                    } else {
+                        let parsed = interfaceUtil.spf(dfstr);
+                        if (parsed) {
+                            defer_set = parsed.start.date();
+                            $("#task-defer-" + taskId).datetimepicker("setDate", defer_set);
+                            let tz = moment.tz.guess();
+                            if (new Date() < defer_set) {
+                                $('#task-name-' + taskId).css("opacity", "0.3");
+                            } else {
+                                $('#task-name-' + taskId).css("opacity", "1");
+                            }
+                            E.db.modifyTask(uid, taskId, {defer:defer_set, timezone:tz});
+                            defer = defer_set;
+                        }
+                    }
+                } else if (e.keyCode == 8) {
+                    if (document.getSelection().toString() === this.value) {
+                        dfstr = "";
+                    } else {
+                        dfstr = dfstr.substring(0, dfstr.length-1);
+                    }
+                } else if (e.key.length == 1) {
+                    // handle actual key
+                    if (document.getSelection().toString() === this.value) {
+                        e.preventDefault();
+                        $(this).val(e.key);
+                    } else if (!e.metaKey) {
+                        e.preventDefault();
+                        $(this).val(this.value+e.key);
+                        dfstr = this.value;
+                    }
                 }
             });
             $("#task-due-" + taskId).datetimepicker({
@@ -420,8 +614,74 @@ var ui = function() {
                         $('#task-pseudocheck-' + taskId).removeClass("od");
                         $('#task-pseudocheck-' + taskId).removeClass("ds");
                     }
-                    modifyTask(uid, taskId, {due:due_set, timezone:tz});
+                    E.db.modifyTask(uid, taskId, {due:due_set, timezone:tz});
                     due = due_set;
+                }
+            });
+            $("#task-due-" + taskId).change(function(e) {
+                e.preventDefault();
+            });
+            let duestr = "";
+            $("#task-due-" + taskId).keydown(function(e) {
+                //e.preventDefault();
+                // TODO: this is a janky manual re-implimentation 
+                // of a textbox to override jQuery's manual 
+                // re-implimentation. The todo is to make it less
+                // janky.
+                if (e.keyCode >= 37 && e.keyCode <= 40) {
+                    // handle arrows
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (duestr === "") {
+                        if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                            activeTaskDeDsed = true;
+                        }
+                        $("#task-due-" + taskId).val("");
+                        removeParamFromTask(uid, taskId, "due");
+                        $('#task-pseudocheck-' + taskId).removeClass("od");
+                        $('#task-pseudocheck-' + taskId).removeClass("ds");
+                        due = undefined;
+                        due_current = undefined;
+                    } else {
+                        let parsed = interfaceUtil.spf(duestr);
+                        if (parsed) {
+                            due_set = parsed.start.date();
+                            $("#task-due-" + taskId).datetimepicker("setDate", due_set);
+                            let tz = moment.tz.guess();
+                            if (new Date() > due_set) {
+                                $('#task-pseudocheck-' + taskId).addClass("od");
+                                $('#task-pseudocheck-' + taskId).removeClass("ds");
+                            } else if (interfaceUtil.daysBetween(new Date(), due_set) <= 1) {
+                                $('#task-pseudocheck-' + taskId).addClass("ds");
+                                $('#task-pseudocheck-' + taskId).removeClass("od");
+                            } else {
+                                if ($('#task-pseudocheck-' + taskId).hasClass("ds") || $('#task-pseudocheck-' + taskId).hasClass("od")) {
+                                    activeTaskDeDsed = true;
+                                }
+                                $('#task-pseudocheck-' + taskId).removeClass("od");
+                                $('#task-pseudocheck-' + taskId).removeClass("ds");
+                            }
+                            E.db.modifyTask(uid, taskId, {due:due_set, timezone:tz});
+                            due = due_set;
+                        }
+                    }
+                } else if (e.keyCode == 8) {
+                    if (document.getSelection().toString() === this.value) {
+                        duestr = "";
+
+                    } else {
+                        duestr = duestr.substring(0, duestr.length-1);
+                    }
+                } else if (e.key.length == 1) {
+                    // handle actual key
+                    if (document.getSelection().toString() === this.value) {
+                        e.preventDefault();
+                        $(this).val(e.key);
+                    } else if (!e.metaKey) {
+                        e.preventDefault();
+                        $(this).val(this.value+e.key);
+                        duestr = this.value;
+                    }
                 }
             });
             // So apparently setting dates is hard for this guy, so we run this async
@@ -447,18 +707,19 @@ var ui = function() {
                 effects: 'fade',
                 duration: 200,
                 appendTo: 'body',
-            }).on('select.editable-select', function (e, li) {
-                let projectSelected = li.text();
+            }).on('select.editable-select', async function (e, li) {
+                let projectSelected = li.text().trim();
                 let projId = possibleProjectsRev[projectSelected];
                 if (project === undefined) {
                     activeTaskDeInboxed = true;
                 } else {
-                    dissociateTask(uid, taskId, projectID);
+                    await E.db.dissociateTask(uid, taskId, projectID);
                 }
-                modifyTask(uid, taskId, {project:projId});
+                E.db.modifyTask(uid, taskId, {project:projId});
                 projectID = projId;
-                project = this.value;
-                associateTask(uid, taskId, projId);
+                project = projectSelected;
+                $('#task-project-' + taskId).val(project);
+                await E.db.associateTask(uid, taskId, projId);
             });
             $('#task-project-' + taskId).val(project);
             // Set overdue style!
@@ -490,19 +751,20 @@ var ui = function() {
             } else {
                 $("#task-floating-no-"+taskId).button("toggle")
             }
-            // ---------------------------------------------------------------------------------
+            // -------------------------------------------------------------------------------
             // Part 4: task action behaviors!
             // Task complete
             $('#task-check-'+taskId).change(function(e) {
                 if (this.checked) {
+                    taskManager.hideActiveTask();
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
                     $('#task-name-' + taskId).css("text-decoration", "line-through");
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
                     $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
                     $('#task-' + taskId).slideUp(300);
-                    completeTask(uid, taskId).then(function(e) {
+                    E.db.completeTask(uid, taskId).then(function(e) {
                         if (project === undefined) {
-                             getInboxTasks(uid).then(function(e){
+                             E.db.getInboxTasks(uid).then(function(e){
                                 iC = e.length;
                                 if (iC === 0) {
                                     $("#inbox-subhead").slideUp(300);
@@ -512,6 +774,7 @@ var ui = function() {
                                 }
                             });
                         }
+                        //console.error(err);
                     });
                     if (repeat.rule !== "none" && due) {
                         let rRule = repeat.rule;
@@ -519,10 +782,10 @@ var ui = function() {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setDate(due.getDate() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 due.setDate(due.getDate() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
 
                         } else if (rRule === "weekly") {
@@ -557,7 +820,7 @@ var ui = function() {
                                             break;
                                     }
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 let rOn = repeat.on;
                                 let current = "";
@@ -588,35 +851,36 @@ var ui = function() {
                                             break;
                                     }
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
                         } else if (rRule === "monthly") {
                             if (defer) {
                                 let rOn = repeat.on;
                                 let dow = due.getDate();
+                                let oDow = due.getDate();
                                 let defDistance = due-defer;
-                                while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 30 || dow == 30))) {
+                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
                                     due.setDate(due.getDate() + 1);
                                     dow = due.getDate();
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 let rOn = repeat.on;
                                 let dow = due.getDate();
-                                while (!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (dow == 31 || dow == 30))) {
+                                let oDow = due.getDate();
+                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
                                     due.setDate(due.getDate() + 1);
                                     dow = due.getDate();
                                 }
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
                         } else if (rRule === "yearly") {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setFullYear(due.getFullYear() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
                             } else {
                                 due.setFullYear(due.getFullYear() + 1);
-                                modifyTask(uid, taskId, {isComplete: false, due:due});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
 
                         }
@@ -626,24 +890,24 @@ var ui = function() {
             });
 
             // Task project change
-             $('#task-project-' + taskId).change(function(e) {
+             $('#task-project-' + taskId).change(async function(e) {
                 if (this.value in possibleProjectsRev) {
                     let projId = possibleProjectsRev[this.value];
                     if (project === undefined){
                         activeTaskDeInboxed = true;
                     } else {
-                        dissociateTask(uid, taskId, projectID);
+                        await E.db.dissociateTask(uid, taskId, projectID);
                     }
-                    modifyTask(uid, taskId, {project:projId});
+                    E.db.modifyTask(uid, taskId, {project:projId});
+                    await E.db.associateTask(uid, taskId, projId);
                     projectID = projId;
                     project = this.value;
-                    associateTask(uid, taskId, projId);
                 } else {
-                    modifyTask(uid, taskId, {project:""});
+                    E.db.modifyTask(uid, taskId, {project:""});
                     this.value = ""
                     if (project !== undefined) {
                         activeTaskInboxed = true;
-                        dissociateTask(uid, taskId, projectID);
+                        await E.db.dissociateTask(uid, taskId, projectID);
                     }
                     project = undefined;
                     projectID = "";
@@ -653,7 +917,7 @@ var ui = function() {
             // Trashing a task
             $("#task-trash-" + taskId).click(function(e) {
                 if (project === undefined) activeTaskDeInboxed = true;
-                deleteTask(uid, taskId).then(function() {
+                E.db.deleteTask(uid, taskId).then(function() {
                     hideActiveTask();
                     $('#task-' + taskId).slideUp(150);
                 });
@@ -666,19 +930,19 @@ var ui = function() {
 
             // Task name change
             $("#task-name-" + taskId).change(function(e) {
-                modifyTask(uid, taskId, {name:this.value});
+                E.db.modifyTask(uid, taskId, {name:this.value});
             });
 
             // Task discription change
             $("#task-desc-" + taskId).change(function(e) {
-                modifyTask(uid, taskId, {desc:this.value});
+                E.db.modifyTask(uid, taskId, {desc:this.value});
             });
 
             // Task tag remove
             $('#task-tag-' + taskId).on('itemRemoved', function(e) {
                 let removedTag = possibleTagsRev[e.item];
                 tagIDs = tagIDs.filter(item => item !== removedTag);
-                modifyTask(uid, taskId, {tags:tagIDs});
+                E.db.modifyTask(uid, taskId, {tags:tagIDs});
             });
 
             // Task tag add
@@ -689,48 +953,48 @@ var ui = function() {
                         tagIDs.push(addedTag);
                         possibleTags[addedTag] = e.item;
                         possibleTags[e.item] = addedTag;
-                        modifyTask(uid, taskId, {tags:tagIDs});
+                        E.db.modifyTask(uid, taskId, {tags:tagIDs});
                     });
                 } else if (!(addedTag in tagIDs)){
                     tagIDs.push(addedTag);
-                    modifyTask(uid, taskId, {tags:tagIDs});
+                    E.db.modifyTask(uid, taskId, {tags:tagIDs});
                 }
             });
 
-            // Remove flagged parametre
+            // Remove flagged parameter
             $("#task-flagged-no-" + taskId).change(function(e) {
                 isFlagged = false;
-                modifyTask(uid, taskId, {isFlagged: false});
+                E.db.modifyTask(uid, taskId, {isFlagged: false});
                // TODO: Unflagged Style? So far flagged is
                // just another filter for perspective selection
             });
 
-            // Add flagged parametre
+            // Add flagged parameter
             $("#task-flagged-yes-" + taskId).change(function(e) {
                 isFlagged = true;
-                modifyTask(uid, taskId, {isFlagged: true});
+                E.db.modifyTask(uid, taskId, {isFlagged: true});
                // TODO: Flagged Style?
             });
 
-            // Remove floating parametre and calculate dates
+            // Remove floating parameter and calculate dates
             $("#task-floating-no-" + taskId).change(function(e) {
                 isFloating = false;
-                modifyTask(uid, taskId, {isFloating: false});
+                E.db.modifyTask(uid, taskId, {isFloating: false});
                 defer_current = defer;
                 due_current = due;
                 setDates();
             });
 
-            // Add floating parametre and calculate dates
+            // Add floating parameter and calculate dates
             $("#task-floating-yes-" + taskId).change(function(e) {
                 isFloating = true;
-                modifyTask(uid, taskId, {isFloating: true});
+                E.db.modifyTask(uid, taskId, {isFloating: true});
                 defer_current = moment(defer).tz(timezone).local(true).toDate();
                 due_current = moment(due).tz(timezone).local(true).toDate();
                 setDates();
             });
 
-        }
+        };
 
         return {generateTaskInterface: displayTask, hideActiveTask: hideActiveTask};
     }();
@@ -749,18 +1013,18 @@ var ui = function() {
                         // handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
                             // move each task down in order
-                            modifyTask(uid, inboxandDS[0][i], {order: i-1});
+                            E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
                         }
                         // change the order of the moved task
-                        modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                        E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
                     } else if (oi>ni) {
                         // handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
                             // move each task up in order
-                            modifyTask(uid, inboxandDS[0][i], {order: i+1});
+                            E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
                         }
                         // change the order of the moved task
-                        modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                        E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
                     }
 
                 });
@@ -775,7 +1039,7 @@ var ui = function() {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
 
-                getProjectStructure(uid, pageIndex.projectID).then(async function(nstruct) {
+                E.db.getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
                     if (oi<ni) {
                         // handle item moved down
                         for(let i=oi+1; i<=ni; i++) {
@@ -783,20 +1047,20 @@ var ui = function() {
                             // move the item down
                             if (child.type === "task") {
                                 let id = child.content;
-                                modifyTask(uid, id, {order: i-1});
+                                E.db.modifyTask(uid, id, {order: i-1});
                             } else if (child.type === "project") {
                                 let id = child.content.id;
-                                modifyProject(uid, id, {order: i-1});
+                                E.db.modifyProject(uid, id, {order: i-1});
                             }
                         }
                         // change the order of the moved item
                         let moved = nstruct.children[oi];
                         if (moved.type === "task") {
                             let id = moved.content;
-                            modifyTask(uid, id, {order: ni});
+                            E.db.modifyTask(uid, id, {order: ni});
                         } else if (moved.type === "project") {
                             let id = moved.content.id;
-                            modifyProject(uid, id, {order: ni});
+                            E.db.modifyProject(uid, id, {order: ni});
                         }
                     } else if (oi>ni) {
                         // handle item moved up
@@ -805,20 +1069,20 @@ var ui = function() {
                             // move the item up
                             if (child.type === "task") {
                                 let id = child.content;
-                                modifyTask(uid, id, {order: i+1});
+                                E.db.modifyTask(uid, id, {order: i+1});
                             } else if (child.type === "project") {
                                 let id = child.content.id;
-                                modifyProject(uid, id, {order: i+1});
+                                E.db.modifyProject(uid, id, {order: i+1});
                             }
                         }
                         // change the order of the moved item
                         let moved = nstruct.children[oi];
                         if (moved.type === "task") {
                             let id = moved.content;
-                            modifyTask(uid, id, {order: ni});
+                            E.db.modifyTask(uid, id, {order: ni});
                         } else if (moved.type === "project") {
                             let id = moved.content.id;
-                            modifyProject(uid, id, {order: ni});
+                            E.db.modifyProject(uid, id, {order: ni});
                         }
                     }
                     reloadPage();
@@ -827,7 +1091,6 @@ var ui = function() {
         });
 
 
-        // NW: perspective sorter
         var perspectiveSort = new interfaceUtil.Sortable($(".perspectives")[0], {
             animation: 200,
             onStart: function(e) {
@@ -841,10 +1104,24 @@ var ui = function() {
                 })
             },
             onEnd: function(e) {
-                $('.perspectives').children().each(function() {
-                    // Aaand make elements hoverable after they've been dragged over
-                    $(this).addClass("mihov")
-                })
+                let oi = e.oldIndex;
+                let ni = e.newIndex;
+                E.db.getPerspectives(uid).then(function(topLevelItems) {
+                    let originalIBT = topLevelItems[2].map(i => i.id);
+                    if (oi<ni) {
+                        // Handle task moved down
+                        for(let i=oi+1; i<=ni; i++) {
+                            E.db.modifyPerspective(uid, originalIBT[i], {order: i-1});
+                        }
+                        E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
+                    } else if (oi>ni) {
+                        // Handle task moved up
+                        for(let i=oi-1; i>=ni; i--) {
+                            E.db.modifyPerspective(uid, originalIBT[i], {order: i+1});
+                        }
+                        E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
+                    }
+                });
             }
 
         });
@@ -865,20 +1142,20 @@ var ui = function() {
              onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
-                getTopLevelProjects(uid).then(function(topLevelItems) {
+                E.db.getTopLevelProjects(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
                         // Handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
-                            modifyProject(uid, originalIBT[i], {order: i-1});
+                            E.db.modifyProject(uid, originalIBT[i], {order: i-1});
                         }
-                        modifyProject(uid, originalIBT[oi], {order: ni});
+                        E.db.modifyProject(uid, originalIBT[oi], {order: ni});
                     } else if (oi>ni) {
                         // Handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
-                            modifyProject(uid, originalIBT[i], {order: i+1});
+                            E.db.modifyProject(uid, originalIBT[i], {order: i+1});
                         }
-                        modifyProject(uid, originalIBT[oi], {order: ni});
+                        E.db.modifyProject(uid, originalIBT[oi], {order: ni});
                     }
 
 
@@ -886,7 +1163,7 @@ var ui = function() {
             }
         });
 
-        return {inbox: inboxSort, project: projectSort, menuProject: topLevelProjectSort};
+        return {inbox: inboxSort, project: projectSort, menuProject: topLevelProjectSort, menuPerspective: perspectiveSort};
     }();
 
     // various sub-page loaders
@@ -903,7 +1180,7 @@ var ui = function() {
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
                 // load due soon tasks
-                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task)),
+                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task))
             ).then(function() {
                 // update upcoming view headers
                 if (inboxandDS[0].length === 0) {
@@ -925,10 +1202,27 @@ var ui = function() {
             });
         }
 
+        // perspective view loader
+        let perspective = async function(pid) {
+            pageIndex.pageContentID = pid;
+            // get name
+            let perspectiveObject = possiblePerspectives[0][pid];
+            // set value
+            $("#perspective-title").val(perspectiveObject.name);
+            // calculate perspective
+            E.perspective.calc(uid, perspectiveObject.query).then(async function(tids) {
+                for (let taskId of tids) {
+                    // Nononono don't even think about foreach 
+                    // othewise the order will be messed up
+                    await taskManager.generateTaskInterface("perspective-content", taskId);
+                }
+            });
+        }
+
         // project view loader
         let project = async function(pid) {
             // update pid
-            pageIndex.projectID = pid;
+            pageIndex.pageContentID = pid;
             // get the datum
             let projectName = pPandT[0][0][pid];
             // update the titlefield
@@ -939,7 +1233,7 @@ var ui = function() {
                 $("#project-back").show()
             }
             // get the project structure, and load the content
-            getProjectStructure(uid, pid).then(async function(struct) {
+            E.db.getProjectStructure(uid, pid).then(async function(struct) {
                 for (let item of struct.children) {
                     if (item.type === "task") {
                         // get and load the task
@@ -961,9 +1255,9 @@ var ui = function() {
                     $("#project-sequential-no").button("toggle")
                 }
             });
-        }
+        };
 
-        return {upcoming: upcoming, project: project};
+        return {upcoming: upcoming, project: project, perspective: perspective};
     }();
 
     /**
@@ -977,7 +1271,7 @@ var ui = function() {
     let loadView = async function(viewName, itemID) {
         // hide other views
         $("#content-area").children().each(function() {
-            if ($(this).attr("id") != viewName){
+            if ($(this).attr("id") != viewName) {
                 $(this).css("display", "none");
             }
         });
@@ -986,6 +1280,7 @@ var ui = function() {
         $("#inbox").empty();
         $("#due-soon").empty();
         $("#project-content").empty();
+        $("#perspective-content").empty();
 
         // refresh data
         await refresh();
@@ -993,6 +1288,9 @@ var ui = function() {
         switch(viewName) {
             case 'upcoming-page':
                 viewLoader.upcoming();
+                break;
+            case 'perspective-page':
+                viewLoader.perspective(itemID);
                 break;
             case 'project-page':
                 viewLoader.project(itemID);
@@ -1005,15 +1303,18 @@ var ui = function() {
         // tell everyone to bring it!
         pageIndex.currentView = viewName;
 
-    }
+    };
 
     // document action listeners!!
     $(document).on('click', '.menuitem', function(e) {
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         activeMenu = $(this).attr('id');
         if (activeMenu.includes("perspective")) {
-            loadView("perspective-page");
+            loadView("perspective-page", activeMenu.split("-")[1]);
             $("#"+activeMenu).addClass("menuitem-selected");
+        } else if (activeMenu.includes("perspective")) {
+            $("#"+activeMenu).addClass("menuitem-selected");
+            loadView("perspective-page", activeMenu.split("-")[1]);
         } else if (activeMenu.includes("project")) {
             if (!$(this).hasClass("subproject")) {
                 pageIndex.projectDir = [];
@@ -1049,6 +1350,8 @@ var ui = function() {
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
             $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
+            sorters.project.option("disabled", true);
+            sorters.inbox.option("disabled", true);
         }
     });
 
@@ -1067,9 +1370,10 @@ var ui = function() {
         // THE POP OPERATION IS NOT DUPLICATED.
         // On load, the current projDir will
         // be pushed to the array
-        pageIndex.projectDir.pop()
-        activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1]
+        pageIndex.projectDir.pop();
+        activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
         loadView("project-page", activeMenu.split("-")[1]);
+        $("#"+activeMenu).addClass("menuitem-selected");
     });
 
     $(document).on("click", "#new-project", function() {
@@ -1077,13 +1381,35 @@ var ui = function() {
         let projObj = {
             top_level: false,
             is_sequential: false,
-        }
-        newProject(uid, projObj, pid).then(function(npID) {
-            associateProject(uid, npID, pid);
+        };
+        E.db.newProject(uid, projObj, pid).then(function(npID) {
+            E.db.associateProject(uid, npID, pid);
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
             pageIndex.projectDir.push(activeMenu);
             loadView("project-page", npID).then(() => setTimeout(function() {$("#project-title").focus(); $("#project-title").select()}, 100));
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+    });
+
+    $(document).on("click", "#perspective-add", function() {
+        let perspectiveObj = {
+            name: "",
+            query: "",
+        };
+        E.db.newPerspective(uid, perspectiveObj).then(function(npID) {
+            $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+            activeMenu = "perspective-"+npID;
+            $(".perspectives").append(`<div id="perspective-${npID}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px"></t></div>`)
+            loadView("perspective-page", npID).then(async function(){
+                // Delay because of HTML bug
+                await refresh();
+                showPerspectiveEdit(npID);
+                setTimeout(function() {
+                    $("#perspective-edit-name").focus();
+                    $("#perspective-edit-name").select();
+                }, 500);
+            });
             $("#"+activeMenu).addClass("menuitem-selected");
         });
     });
@@ -1093,12 +1419,12 @@ var ui = function() {
             name: "New Project",
             top_level: true,
             is_sequential: false,
-        }
-        newProject(uid, projObj).then(function(npID) {
+        };
+        E.db.newProject(uid, projObj).then(function(npID) {
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
             pageIndex.projectDir = [activeMenu];
-            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">New Project</t></div>`);
+            $(".projects").append(`<div id="project-${npID}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">New Project</t></div>`);
             loadView("project-page", npID).then(function(){
                 // Delay because of HTML bug
                 setTimeout(function() {
@@ -1110,15 +1436,24 @@ var ui = function() {
         });
     });
 
+    $(document).on("click", "#perspective-trash", function() {
+        let pid = pageIndex.pageContentID;
+        $("#"+activeMenu).removeClass("menuitem-selected");
+        loadView("upcoming-page");
+        activeMenu = "today";
+        $("#today").addClass("menuitem-selected");
+        $("#perspective-"+pid).remove();
+        E.db.deletePerspective(uid, pid);
+    });
+
     $(document).on("click", "#project-trash", function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
-        deleteProject(uid, pid).then(function() {
-            pageIndex.projectDir.pop()
+        E.db.deleteProject(uid, pid).then(function() {
+            pageIndex.projectDir.pop();
             if (pageIndex.projectDir.length > 0) {
-                dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
+                E.db.dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
                 activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
-                console.log(pageIndex);
                 loadView("project-page", pageIndex.projectDir[pageIndex.projectDir.length-1].split("-")[1]);
                 });
             } else {
@@ -1132,7 +1467,7 @@ var ui = function() {
     });
 
     $(document).on("click", "#new-task", function() {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let ntObject = {
             desc: "",
             isFlagged: false,
@@ -1144,8 +1479,8 @@ var ui = function() {
             repeat: {rule: "none"},
             name: "",
         };
-        newTask(uid, ntObject).then(function(ntID) {
-            associateTask(uid, ntID, pid);
+        E.db.newTask(uid, ntObject).then(function(ntID) {
+            E.db.associateTask(uid, ntID, pid);
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
@@ -1155,42 +1490,63 @@ var ui = function() {
                 $("#task-repeat-" + activeTask).css("display", "block");
                 $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
                 $("#task-name-" + task).focus();
+                sorters.project.option("disabled", true);
+                sorters.inbox.option("disabled", true);
             });
         });
     });
 
     $(document).on("change", "#project-title", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let value = $(this).val();
-        modifyProject(uid, pid, {name: value});
-        $("#"+activeMenu+" t").html(value);
+        E.db.modifyProject(uid, pid, {name: value});
+        reloadPage();
+        //console.error(e);
+    });
+
+    $(document).on("change", "#perspective-title", function(e) {
+        let pstID = pageIndex.pageContentID;
+        let value = $(this).val();
+        E.db.modifyPerspective(uid, pstID, {name: value});
+        reloadPage();
+        //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
-        modifyProject(uid, pid, {is_sequential: true}).then(function() {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+        E.db.modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage();
         });
+        //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-no", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]
-        modifyProject(uid, pid, {is_sequential: false}).then(function() {
+        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+        E.db.modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage();
         });
+        //console.error(e);
     });
 
     $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
+        //console.error(e);
+    });
+
+    $(document).on("click", "#perspective-edit", function(e) {
+        showPerspectiveEdit(pageIndex.pageContentID);
+        //console.error(e);
     });
 
     $("#quickadd").click(function(e) {
         $(this).animate({"width": "350px"}, 500);
+        //console.error(e);
     });
 
     $("#quickadd").blur(function(e) {
         $(this).val("");
         $(this).animate({"width": "250px"}, 500);
+        //console.error(e);
     });
 
 
@@ -1198,12 +1554,12 @@ var ui = function() {
         // TODO: make the user unable to spam
         if (e.keyCode == 13) {
             let tb = $(this);
-            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--content-normal-alt")}, 100, function() {
+            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, 100, function() {
                 let newTaskUserRequest = chrono.parse($(this).val());
                 // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
                 // Make that happen is the todo.
                 let startDate;
-                let endDate;
+                //let endDate;
                 let tz = moment.tz.guess();
                 let ntObject = {
                     desc: "",
@@ -1217,37 +1573,31 @@ var ui = function() {
                 };
                 if (newTaskUserRequest.length != 0) {
                     let start = newTaskUserRequest[0].start;
-                    let end = newTaskUserRequest[0].end;
-                    if (start && end) {
+                    //let end = E.db.newTaskUserRequest[0].end;
+                    if (start) {
                         startDate = start.date();
-                        endDate = end.date();
-                        ntObject.defer = startDate;
-                        ntObject.due = endDate;
-                    } else if (end) {
-                        endDate = end.date();
-                        ntObject.due = endDate;
-                    } else if (start) {
-                        startDate = start.date();
-                        ntObject.defer = startDate;
+                        ntObject.due = startDate;
+                        ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
                     }
-                    ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
                 } else {
                     ntObject.name = tb.val()
                 }
 
-                newTask(uid, ntObject).then(function(ntID) {
+
+                E.db.newTask(uid, ntObject).then(function(ntID) {
                     refresh().then(function(){
                         taskManager.generateTaskInterface("inbox", ntID)
                     });
-                    getInboxTasks(uid).then(function(e){
+                    E.db.getInboxTasks(uid).then(function(e){
                         iC = e.length;
                         $("#unsorted-badge").html(''+iC);
                         $("#inbox-subhead").slideDown(300);
                         $("#inbox").slideDown(300);
                     });
-                    tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--content-normal")})
-                    tb.blur();
-                    tb.val("");
+                    tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, function() {
+                        tb.blur();
+                        tb.val("");
+                    });
                 });
             });
             
@@ -1260,24 +1610,30 @@ var ui = function() {
     let uid;
     let displayName;
     // TODO: actually set theme
-    let currentTheme = "condutiontheme-default-light";
+    //let currentTheme = "condutiontheme-default";
 
     let constructSidebar = async function() {
-        let tlps = (await getTopLevelProjects(uid));
-        let pPandT = (await getProjectsandTags(uid));
+        let tlps = (await E.db.getTopLevelProjects(uid));
+        let pPandT = (await E.db.getProjectsandTags(uid));
+        $(".projects").empty();
+        $(".perspectives").empty();
         for (let proj of tlps[2]) {
-            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px">${proj.name}</t></div>`);
+            $(".projects").append(`<div id="project-${proj.id}" class="menuitem project mihov"><i class="fas fa-project-diagram"></i><t style="padding-left:8px; text-overflow: ellipsis; overflow: hidden">${proj.name}</t></div>`);
         }
-    }
+        let psps = (await E.db.getPerspectives(uid));
+        for (let psp of psps[2]) {
+            $(".perspectives").append(`<div id="perspective-${psp.id}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psp.name}</t></div>`)
+        }
+    };
 
     let setUser = function(usr) {
         user = usr;
         uid = usr.uid;
         displayName = usr.displayName;
         user = usr;
-    }
+    };
 
-    return {user:{set: setUser, get: ()=>user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
+    return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
 }();
 
 $(document).ready(async function() {
@@ -1286,14 +1642,16 @@ $(document).ready(async function() {
             if (user.emailVerified) {
                 const startTime = Date.now();
                 // User is signed in. Do user related things.
-                currentTheme = "condutiontheme-default-light";
-                $("body").addClass(currentTheme);
+                // Check user's theme
                 ui.user.set(user);
                 await ui.constructSidebar();
                 await ui.load("upcoming-page");
                 $("#loading").fadeOut();
+                /*currentTheme = "condutiontheme-default-dark";*/
+                //$("body").removeClass();
+                /*$("body").addClass(currentTheme);*/
                 $("#content-wrapper").fadeIn();
-                setInterval(()=>ui.update(), 15 * 60 * 1000);
+                setInterval(() => ui.update(), 15 * 60 * 1000);
             } else {
                 window.location.replace("auth.html");
             }

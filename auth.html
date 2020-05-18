@@ -4,11 +4,18 @@
         <meta charset="UTF-8">
         <title>Bontehu</title>
 
+        <!--LOADMEFIRST: Themes-->
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default.css" />
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default-light.css" />
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default-dark.css" />
+        <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-exr0n-aggresivedark.css" />
+
         <!--Other People Codes-->
         <script>window.$ = window.jQuery = require('jquery');</script>
         <script type='text/javascript' src="js/jquery-ui.min.js"></script>
         <script>var firebase = require("firebase/app");</script>
         <script>var firebaseui = require('firebaseui');</script>
+        <script>var lottie = require('lottie-web');</script>
         <script>require('popper.js');</script>
         <script>require('bootstrap');</script>
         <script>require('fuse.js');</script>
@@ -37,22 +44,46 @@
     </head>
 
     <body class="condutiontheme-default-light">
+         <div id="loading">
+            <t id="loading-msg">
+                Condution alpha~MAY2020.v0.1.1-nightly,<br />a Bangin' <b>#!/Shabang</b> Project
+                <br /><br /><br />
+                <pre style="color: var(--content-normal-alt)">
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see https://www.gnu.org/licenses/.
+                </pre>
+                Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors. 
+                <br /><br >
+            </t>
+            <div id="loading-anim"></div>
+        </div>
         <div id="auth-content-wrapper">
             <div id="auth-left-menu">
                 <div id="menu-area" style="height:100%">
                     <div class="auth-component"></div>
                     <div class="auth-component"></div>
-                    <t id="auth-image-credit">Image by <t style="font-weight: 500;">Tobias Keller</t></t>
+                    <t id="auth-image-credit">Image by <t style="font-weight: 500;">Tobias Keller/Paweł Czerwiński</t></t>
                 </div>
             </div>
             <div id="authwall" style="display:none">
-                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t>You there...</t>
-                <h3 id="greeting-auth-subtitle">Welcome to Condution. Identify yourself:</h3>
+                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t style="color: var(--content-normal-alt)">Welcome to Condution.</t>
+                <h3 class="greeting-auth-subtitle" id="greeting-auth-normal">Let's authenticate. Otherwise this may not be useful...</h3>
+                <div id="name-tray" style="display:none">
+                    <input class="auth-upf" id="name" type="text" autocomplete="off" value="" placeholder="What should we call you?">
+                </div>
                 <input class="auth-upf" id="email" type="text" autocomplete="off" value="" placeholder="Email">
                 <input class="auth-upf" id="password" type="password" autocomplete="off" value="" placeholder="Password">
                 <br />
-                <t id="need-verify" style="color:red;font-size: 13px;display:none">Check your inbox. A lovely verification email is awaiting you.</t>
-                <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Let's Do This!</div>
+                <t id="need-verify" style="color:--var(content-normal-accent);font-size: 13px;display:none">Check your inbox. A lovely verification email is awaiting you.</t>
+                <div id="auth-actiongroup">
+                    <div id="newuser">Make an account.</div>
+                    <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Let's Do This!</div>
+                </div>
             </div>
         </div>
         <script type='text/javascript' src="js/auth.js"></script>

@@ -4,17 +4,17 @@
 ***
 
 ## What the heck?
-We are Shabang, a software development company aiming to design innovative solutions for clients and create fun projects and creative products.
+We are Shabang, a software development company aiming to design innovative solutions for interesting issues with fun and creative products.
 
-We happen to also be a group of students from the silicon valley wanting to make this world slightly better with technology.
+We happen also to be a group of students from the silicon valley wanting to make this world slightly better with technology.
 
 
 ## Why the heck?
-It is important that products like task management software should not be prohibitively expensive for students, nor should they be so bare-bones that they are no better than a list. Condution is created to serve both of those needs. 
+It is important that products like task management software are not prohibitively expensive for students, nor should they be so bare-bones that they are no better than a list. Condution is created to serve both of those needs. 
 
 
 ## When the heck?
-This project is being developed in our spare times, so we don't really have a formal timeline for this. However, if we must give one, expect a working demo very soon, and a first launch sometimes in June. Stay tuned!
+This project is currently being developed in our spare time, so we don't really have a formal timeline for this. We currently have a working demo, and expect a first full launch sometime in June. Stay tuned!
 
 ## How the heck?
 We love contributions! You are welcome to contribute, just keep in mind that we prefer 4 spaces over tabs.
