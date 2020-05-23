@@ -557,7 +557,7 @@ let ui = function() {
                     e.preventDefault();
                     if (dfstr === "") {
                         $("#task-defer-" + taskId).val("");
-                        removeParamFromTask(uid, taskId, "defer");
+                        E.db.removeParamFromTask(uid, taskId, "defer");
                         defer = undefined;
                         defer_current = undefined;
                     } else {
