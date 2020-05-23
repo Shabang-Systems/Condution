@@ -128,7 +128,8 @@ let ui = function() {
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
-        pageContentID: undefined
+        pageContentID: undefined,
+        pageLocks: [],
     };
 
     activeMenu = "today";
@@ -154,14 +155,24 @@ let ui = function() {
     };
 
     // the outside world's refresh function
-    let reloadPage = async function() {
-        setTimeout(async function() {
-            if (!activeTask) {
-                (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                await constructSidebar();
-                await $("#"+activeMenu).addClass("menuitem-selected");
-            }
-        }, 500);
+    let reloadPage = function() {
+        pageIndex.pageLocks.push(true);
+        return (new Promise(function(resolve, reject) {
+            setTimeout(async function() {
+                if (pageIndex.pageLocks.length > 1) {
+                    pageIndex.pageLocks.pop();
+                    reject("Error refreshing... Too many locks.");
+                } else if (activeTask) {
+                    reject("Error refreshing... Task active.");
+                } else {
+                    (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                    await constructSidebar();
+                    $("#"+activeMenu).addClass("menuitem-selected");
+                    pageIndex.pageLocks = [];
+                    resolve("Refresh success...");
+                }
+            }, 1000);
+        }));
     };
 
 
