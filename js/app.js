@@ -637,7 +637,7 @@ let ui = function() {
                             activeTaskDeDsed = true;
                         }
                         $("#task-due-" + taskId).val("");
-                        removeParamFromTask(uid, taskId, "due");
+                        E.db.removeParamFromTask(uid, taskId, "due");
                         $('#task-pseudocheck-' + taskId).removeClass("od");
                         $('#task-pseudocheck-' + taskId).removeClass("ds");
                         due = undefined;
@@ -949,7 +949,7 @@ let ui = function() {
             $('#task-tag-' + taskId).on('itemAdded', function(e) {
                 let addedTag = possibleTagsRev[e.item];
                 if (!addedTag){
-                    newTag(uid, e.item).then(function(addedTag) {
+                    E.db.newTag(uid, e.item).then(function(addedTag) {
                         tagIDs.push(addedTag);
                         possibleTags[addedTag] = e.item;
                         possibleTags[e.item] = addedTag;
