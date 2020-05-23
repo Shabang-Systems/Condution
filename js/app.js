@@ -161,9 +161,9 @@ let ui = function() {
             setTimeout(async function() {
                 if (pageIndex.pageLocks.length > 1) {
                     pageIndex.pageLocks.pop();
-                    reject("Error refreshing... Too many locks.");
+                    reject("Don't Worry: error refreshing... Too many locks.");
                 } else if (activeTask) {
-                    reject("Error refreshing... Task active.");
+                    reject("Don't Worry: error refreshing... Task active.");
                 } else {
                     (loadView(pageIndex.currentView, pageIndex.pageContentID));
                     await constructSidebar();
