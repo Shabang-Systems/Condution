@@ -167,11 +167,10 @@ let ui = function() {
                     resolve("Don't Worry: error refreshing... Task active.");
                 } else {
                     (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                    constructSidebar();
-                    $("#"+activeMenu).addClass("menuitem-selected");
+                    constructSidebar().then(()=>$("#"+activeMenu).addClass("menuitem-selected"));
                     resolve("Refresh success...");
                 }
-            }, 100)
+            }, 500)
         }));
     };
 
