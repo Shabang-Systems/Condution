@@ -28,8 +28,8 @@ const perspectiveHandler = function(){
         return vr;
     };
 
-    let compileTask = async function(uid, str, pPaT) {
-        let queries = []
+    let compileTask = async function(uid, str, pPaT, additionalFilter) {
+        let queries = additionalFilter ? [additionalFilter] : [];
         str.match(cgs.taskFilter).forEach(function(e) {
             e = e.trim();
             if (e[0] === "!") {
@@ -78,11 +78,20 @@ const perspectiveHandler = function(){
         return (taskCompValues.map(t => t[0]));
     };
 
-    let getPerspectiveFromString = async function(uid, pStr) {
+    let getPerspectiveFromString = async function(uid, pStr, filter, order) {
         let pPaT = await dbObj.getProjectsandTags(uid);
         let pRes = await getCaptureGroups(pStr);
         if (!pRes) {
             return [];
+        }
+        let fquery; 
+        switch (filter) {
+            case "avail":
+                fquery = ["defer", "<", new Date()];
+                break;
+            case "flagged":
+                fquery = ["isFlagged", "==", true];
+                break;
         }
         let tasks = await Promise.all(pRes.map(async function(i) {
             cgs.clear();
@@ -93,21 +102,22 @@ const perspectiveHandler = function(){
                 let [, lhs, cmp, rhs] = logicSort;
                 [lhs, rhs] = [parseTaskCaptureGroup(lhs), parseTaskCaptureGroup(rhs)];
                 if (cgs.taskCaptureGroup.test(lhs)) {
-                    lhs = [await compileTask(uid, lhs[0], pPaT), lhs[1]];
+                    lhs = [await compileTask(uid, lhs[0], pPaT, fquery), lhs[1]];
                     rhs = parseSpecialVariables(rhs[1]);
                     t = (await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true)); // true (that is, left to right order)
                 } else {
-                    rhs = [await compileTask(uid, rhs[0], pPaT), rhs[1]];
+                    rhs = [await compileTask(uid, rhs[0], pPaT, fquery), rhs[1]];
                     lhs = parseSpecialVariables(lhs[1]);
                     t = (await compileLogicCaptureGroup(uid, rhs, cmp, lhs, false)); // false (that is, right to left order)
                 }
             } else {
                 // handle standard group
-                t = (await compileTask(uid, i, pPaT));
+                t = (await compileTask(uid, i, pPaT, fquery));
             }
             return t;
         }));
         tasks = [...new Set(tasks.flat(1))];
+        //let taskObjs = tasks.map(t=>(await getTaskInformation(uid, t)));
         // TODO: Sort?
         return tasks;
     };
