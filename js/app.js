@@ -158,20 +158,17 @@ let ui = function() {
     let reloadPage = function() {
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
-            setTimeout(function() {
-                if (pageIndex.pageLocks.length > 1) {
-                    pageIndex.pageLocks.pop();
-                    reject("Don't Worry: error refreshing... Too many locks.");
-                } else if (activeTask) {
-                    reject("Don't Worry: error refreshing... Task active.");
-                } else {
-                    (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                    constructSidebar();
-                    $("#"+activeMenu).addClass("menuitem-selected");
-                    pageIndex.pageLocks = [];
-                    resolve("Refresh success...");
-                }
-            }, 100);
+            if (pageIndex.pageLocks.length > 1) {
+                pageIndex.pageLocks.pop();
+                resolve("Don't Worry: error refreshing... Too many locks.");
+            } else if (activeTask === null) {
+                resolve("Don't Worry: error refreshing... Task active.");
+            } else {
+                (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                constructSidebar();
+                $("#"+activeMenu).addClass("menuitem-selected");
+                resolve("Refresh success...");
+            }
         }));
     };
 
@@ -1399,8 +1396,11 @@ let ui = function() {
 
         // refresh data
         await refresh();
+
+        pageIndex.pageLocks = [];
         // load the dang view
         switch(viewName) {
+
             case 'upcoming-page':
                 viewLoader.upcoming();
                 break;
