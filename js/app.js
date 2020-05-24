@@ -158,7 +158,7 @@ let ui = function() {
     let reloadPage = function() {
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
-            setTimeout(async function() {
+            setTimeout(function() {
                 if (pageIndex.pageLocks.length > 1) {
                     pageIndex.pageLocks.pop();
                     reject("Don't Worry: error refreshing... Too many locks.");
@@ -166,12 +166,12 @@ let ui = function() {
                     reject("Don't Worry: error refreshing... Task active.");
                 } else {
                     (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                    await constructSidebar();
+                    constructSidebar();
                     $("#"+activeMenu).addClass("menuitem-selected");
                     pageIndex.pageLocks = [];
                     resolve("Refresh success...");
                 }
-            }, 1000);
+            }, 100);
         }));
     };
 
@@ -231,6 +231,40 @@ let ui = function() {
             $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
+        $("#pord-due-ascend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "duas"});
+            $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-due-descend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "duds"});
+            $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-defer-ascend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "deas"});
+            $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-defer-descend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "deds"});
+            $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-alpha").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "alpha"});
+            $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
 
         const edit = function(pspID) {
             $("#repeat-unit").hide();
@@ -239,7 +273,37 @@ let ui = function() {
             $("#perspective-unit").fadeIn(200);
             $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
             $("#pquery").val(possiblePerspectives[0][pspID].query);
+            let tord = possiblePerspectives[0][pspID].tord
             let avail = possiblePerspectives[0][pspID].avail
+            if (tord && tord !== "") {
+                switch (tord) {
+                    case "duas":
+                        $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "duds":
+                        $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "deas":
+                        $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "deds":
+                        $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "alpha":
+                        $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                }
+            }
             if (avail && avail !== "") {
                 switch (avail) {
                     case "avail":
@@ -1137,7 +1201,6 @@ let ui = function() {
                             E.db.modifyProject(uid, id, {order: ni});
                         }
                     }
-                    reloadPage();
                 });
             }
         });
