@@ -158,17 +158,20 @@ let ui = function() {
     let reloadPage = function() {
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
-            if (pageIndex.pageLocks.length > 1) {
-                pageIndex.pageLocks.pop();
-                resolve("Don't Worry: error refreshing... Too many locks.");
-            } else if (activeTask === null) {
-                resolve("Don't Worry: error refreshing... Task active.");
-            } else {
-                (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                constructSidebar();
-                $("#"+activeMenu).addClass("menuitem-selected");
-                resolve("Refresh success...");
-            }
+            setTimeout(() => {
+                if (pageIndex.pageLocks.length > 1) {
+                    pageIndex.pageLocks.pop();
+                    resolve("Don't Worry: error refreshing... Too many locks.");
+                } else if (activeTask !== null) {
+                    pageIndex.pageLocks.pop();
+                    resolve("Don't Worry: error refreshing... Task active.");
+                } else {
+                    (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                    constructSidebar();
+                    $("#"+activeMenu).addClass("menuitem-selected");
+                    resolve("Refresh success...");
+                }
+            }, 100)
         }));
     };
 
@@ -443,7 +446,7 @@ let ui = function() {
             /*}, 500);*/
             sorters.project.option("disabled", false);
             sorters.inbox.option("disabled", false);
-            await reloadPage();
+            reloadPage();
         };
 
 
