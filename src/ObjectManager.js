@@ -25,21 +25,28 @@ const util = {
             }
         },
         all: (...requirements) => (doc) => {
-            const dat = doc.data();
+            let dat = doc.data();
+            if (dat.defer) dat.defer = dat.defer.seconds;
+            if (dat.due) dat.due = dat.due.seconds;
             for (let [lhs, cmp, rhs] of requirements)
                 if (!util.select.compare(dat[lhs], cmp, rhs))
                     return false;
             return true;
         },
         any: (...requirements) => (doc) => {
-            const dat = doc.data();
+            let dat = doc.data();
+            if (dat.defer) dat.defer = dat.defer.seconds;
+            if (dat.due) dat.due = dat.due.seconds;
+
             for (let [lhs, cmp, rhs] of requirements)
                 if (util.select.compare(dat[lhs], cmp, rhs))
                     return true;
             return false;
         },
         atLeast: (threshold, ...requirements) => (doc) => {
-            const dat = doc.data();
+            let dat = doc.data();
+            if (dat.defer) dat.defer = dat.defer.seconds;
+            if (dat.due) dat.due = dat.due.seconds;
             let counter = 0;
             for (let [lhs, cmp, rhs] of requirements)
                 if (util.select.compare(dat[lhs], cmp, rhs)) {
@@ -50,7 +57,9 @@ const util = {
             return false;
         },
         atMost: (threshold, ...requirements) => (doc) => {
-            const dat = doc.data();
+            let dat = doc.data();
+            if (dat.defer) dat.defer = dat.defer.seconds;
+            if (dat.due) dat.due = dat.due.seconds;
             let counter = 0;
             for (let [lhs, cmp, rhs] of requirements)
                 if (util.select.compare(dat[lhs], cmp, rhs)) {
@@ -249,6 +258,12 @@ async function newTask(userID, taskObj) {
     } else {
         let projL = (await getProjectStructure(userID, taskObj.project)).children.length;
         taskObj.order = projL;
+    }
+
+    // Perspectives cannot have empty defer dates
+    // But! We could set no defer to defer today.
+    if (!taskObj.defer) {
+        taskObj.defer = new Date();
     }
 
     return (await cRef("users", userID, "tasks").add(taskObj)).id;

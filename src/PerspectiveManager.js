@@ -87,7 +87,7 @@ const perspectiveHandler = function(){
         let fquery; 
         switch (filter) {
             case "avail":
-                fquery = ["defer", "<", new Date()];
+                fquery = ["defer", "<", ((new Date()).getTime())/1000];
                 break;
             case "flagged":
                 fquery = ["isFlagged", "==", true];
