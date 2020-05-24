@@ -158,22 +158,25 @@ let ui = function() {
     let reloadPage = function() {
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
-            if (pageIndex.pageLocks.length > 1) {
-                pageIndex.pageLocks.pop();
-                resolve("Don't Worry: error refreshing... Too many locks.");
-            } else if (activeTask === null) {
-                resolve("Don't Worry: error refreshing... Task active.");
-            } else {
-                (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                constructSidebar();
-                $("#"+activeMenu).addClass("menuitem-selected");
-                resolve("Refresh success...");
-            }
+            setTimeout(() => {
+                if (pageIndex.pageLocks.length > 1) {
+                    pageIndex.pageLocks.pop();
+                    resolve("Don't Worry: error refreshing... Too many locks.");
+                } else if (activeTask !== null) {
+                    pageIndex.pageLocks.pop();
+                    resolve("Don't Worry: error refreshing... Task active.");
+                } else {
+                    (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                    constructSidebar();
+                    $("#"+activeMenu).addClass("menuitem-selected");
+                    resolve("Refresh success...");
+                }
+            }, 100)
         }));
     };
 
 
-        const showPerspectiveEdit = function() {
+    const showPerspectiveEdit = function() {
         $("#perspective-back").on("click", function(e) {
             $("#perspective-unit").fadeOut(200);
             $("#overlay").fadeOut(200, () => reloadPage());
@@ -304,14 +307,17 @@ let ui = function() {
             if (avail && avail !== "") {
                 switch (avail) {
                     case "avail":
+                        $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
                         $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
                         break;
                     case "flagged":
+                        $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
                         $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
                         break;
                     case "remain":
+                        $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
                         $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
                         break;
@@ -546,7 +552,7 @@ let ui = function() {
             /*}, 500);*/
             sorters.project.option("disabled", false);
             sorters.inbox.option("disabled", false);
-            await reloadPage();
+            reloadPage();
         };
 
 
@@ -1322,7 +1328,7 @@ let ui = function() {
             // set value
             $("#perspective-title").val(perspectiveObject.name);
             // calculate perspective
-            E.perspective.calc(uid, perspectiveObject.query).then(async function(tids) {
+            E.perspective.calc(uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord).then(async function(tids) {
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
