@@ -158,20 +158,17 @@ let ui = function() {
     let reloadPage = function() {
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
-            setTimeout(async function() {
-                if (pageIndex.pageLocks.length > 1) {
-                    pageIndex.pageLocks.pop();
-                    reject("Don't Worry: error refreshing... Too many locks.");
-                } else if (activeTask) {
-                    reject("Don't Worry: error refreshing... Task active.");
-                } else {
-                    (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                    await constructSidebar();
-                    $("#"+activeMenu).addClass("menuitem-selected");
-                    pageIndex.pageLocks = [];
-                    resolve("Refresh success...");
-                }
-            }, 1000);
+            if (pageIndex.pageLocks.length > 1) {
+                pageIndex.pageLocks.pop();
+                resolve("Don't Worry: error refreshing... Too many locks.");
+            } else if (activeTask === null) {
+                resolve("Don't Worry: error refreshing... Task active.");
+            } else {
+                (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                constructSidebar();
+                $("#"+activeMenu).addClass("menuitem-selected");
+                resolve("Refresh success...");
+            }
         }));
     };
 
@@ -568,7 +565,7 @@ let ui = function() {
                     e.preventDefault();
                     if (dfstr === "") {
                         $("#task-defer-" + taskId).val("");
-                        removeParamFromTask(uid, taskId, "defer");
+                        E.db.removeParamFromTask(uid, taskId, "defer");
                         defer = undefined;
                         defer_current = undefined;
                     } else {
@@ -648,7 +645,7 @@ let ui = function() {
                             activeTaskDeDsed = true;
                         }
                         $("#task-due-" + taskId).val("");
-                        removeParamFromTask(uid, taskId, "due");
+                        E.db.removeParamFromTask(uid, taskId, "due");
                         $('#task-pseudocheck-' + taskId).removeClass("od");
                         $('#task-pseudocheck-' + taskId).removeClass("ds");
                         due = undefined;
@@ -960,7 +957,7 @@ let ui = function() {
             $('#task-tag-' + taskId).on('itemAdded', function(e) {
                 let addedTag = possibleTagsRev[e.item];
                 if (!addedTag){
-                    newTag(uid, e.item).then(function(addedTag) {
+                    E.db.newTag(uid, e.item).then(function(addedTag) {
                         tagIDs.push(addedTag);
                         possibleTags[addedTag] = e.item;
                         possibleTags[e.item] = addedTag;
@@ -1098,7 +1095,6 @@ let ui = function() {
                             E.db.modifyProject(uid, id, {order: ni});
                         }
                     }
-                    reloadPage();
                 });
             }
         });
@@ -1297,8 +1293,11 @@ let ui = function() {
 
         // refresh data
         await refresh();
+
+        pageIndex.pageLocks = [];
         // load the dang view
         switch(viewName) {
+
             case 'upcoming-page':
                 viewLoader.upcoming();
                 break;
