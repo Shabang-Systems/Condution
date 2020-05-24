@@ -210,8 +210,8 @@ async function getPerspectives(userID) {
     await cRef("users", userID, "perspectives").get()   // TODO: combine database hits
         .then(snap => snap.docs.forEach(pstp => {
             if (pstp.exists) {
-                pInfobyID[pstp.id] = {name: pstp.data().name, query: pstp.data().query};
-                pInfobyName[pstp.data().name] = {id: pstp.id, query: pstp.data().query};
+                pInfobyID[pstp.id] = {name: pstp.data().name, query: pstp.data().query, avail: pstp.data().avail};
+                pInfobyName[pstp.data().name] = {id: pstp.id, query: pstp.data().query, avail: pstp.data().avail};
                 ps.push({id: pstp.id, ...pstp.data()});
             }
         }))
