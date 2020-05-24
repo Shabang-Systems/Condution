@@ -176,7 +176,7 @@ let ui = function() {
     };
 
 
-    const showPerspectiveEdit = function() {
+        const showPerspectiveEdit = function() {
         $("#perspective-back").on("click", function(e) {
             $("#perspective-unit").fadeOut(200);
             $("#overlay").fadeOut(200, () => reloadPage());
@@ -210,6 +210,28 @@ let ui = function() {
             E.db.modifyPerspective(uid, currentP, {name: $(this).val()});
         });
 
+        $("#pavail-avail").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {avail: "avail"});
+            $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pavail-group").children().css("background-color", "transparent");
+            $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pavail-flagged").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {avail: "flagged"});
+            $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pavail-group").children().css("background-color", "transparent");
+            $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pavail-remain").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {avail: "remain"});
+            $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pavail-group").children().css("background-color", "transparent");
+            $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+
         const edit = function(pspID) {
             $("#repeat-unit").hide();
             currentP = pspID;
@@ -217,6 +239,23 @@ let ui = function() {
             $("#perspective-unit").fadeIn(200);
             $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
             $("#pquery").val(possiblePerspectives[0][pspID].query);
+            let avail = possiblePerspectives[0][pspID].avail
+            if (avail && avail !== "") {
+                switch (avail) {
+                    case "avail":
+                        $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        break;
+                    case "flagged":
+                        $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        break;
+                    case "remain":
+                        $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        break;
+                }
+            }
             // fix weird focus-select bug
             setTimeout(function() {$("#pquery").focus()}, 100);
         };
