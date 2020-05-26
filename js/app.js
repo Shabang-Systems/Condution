@@ -128,7 +128,8 @@ let ui = function() {
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
-        pageContentID: undefined
+        pageContentID: undefined,
+        pageLocks: [],
     };
 
     activeMenu = "today";
@@ -154,14 +155,23 @@ let ui = function() {
     };
 
     // the outside world's refresh function
-    let reloadPage = async function() {
-        setTimeout(async function() {
-            if (!activeTask) {
-                (loadView(pageIndex.currentView, pageIndex.pageContentID));
-                await constructSidebar();
-                await $("#"+activeMenu).addClass("menuitem-selected");
-            }
-        }, 500);
+    let reloadPage = function() {
+        pageIndex.pageLocks.push(true);
+        return (new Promise(function(resolve, reject) {
+            setTimeout(() => {
+                if (pageIndex.pageLocks.length > 1) {
+                    pageIndex.pageLocks.pop();
+                    resolve("Don't Worry: error refreshing... Too many locks.");
+                } else if (activeTask !== null) {
+                    pageIndex.pageLocks.pop();
+                    resolve("Don't Worry: error refreshing... Task active.");
+                } else {
+                    (loadView(pageIndex.currentView, pageIndex.pageContentID));
+                    constructSidebar().then(()=>$("#"+activeMenu).addClass("menuitem-selected"));
+                    resolve("Refresh success...");
+                }
+            }, 500)
+        }));
     };
 
 
@@ -199,6 +209,62 @@ let ui = function() {
             E.db.modifyPerspective(uid, currentP, {name: $(this).val()});
         });
 
+        $("#pavail-avail").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {avail: "avail"});
+            $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pavail-group").children().css("background-color", "transparent");
+            $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pavail-flagged").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {avail: "flagged"});
+            $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pavail-group").children().css("background-color", "transparent");
+            $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pavail-remain").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {avail: "remain"});
+            $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pavail-group").children().css("background-color", "transparent");
+            $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-due-ascend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "duas"});
+            $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-due-descend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "duds"});
+            $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-defer-ascend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "deas"});
+            $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-defer-descend").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "deds"});
+            $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
+        $("#pord-alpha").click(function(e) {
+            E.db.modifyPerspective(uid, currentP, {tord: "alpha"});
+            $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#pord-group").children().css("background-color", "transparent");
+            $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
+        });
+
         const edit = function(pspID) {
             $("#repeat-unit").hide();
             currentP = pspID;
@@ -206,6 +272,56 @@ let ui = function() {
             $("#perspective-unit").fadeIn(200);
             $("#perspective-edit-name").val(possiblePerspectives[0][pspID].name);
             $("#pquery").val(possiblePerspectives[0][pspID].query);
+            let tord = possiblePerspectives[0][pspID].tord
+            let avail = possiblePerspectives[0][pspID].avail
+            if (tord && tord !== "") {
+                switch (tord) {
+                    case "duas":
+                        $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "duds":
+                        $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "deas":
+                        $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "deds":
+                        $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                    case "alpha":
+                        $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#pord-group").children().css("background-color", "transparent");
+                        $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        break;
+                }
+            }
+            if (avail && avail !== "") {
+                switch (avail) {
+                    case "avail":
+                        $("#pavail-group").children().css("background-color", "transparent");
+                        $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        break;
+                    case "flagged":
+                        $("#pavail-group").children().css("background-color", "transparent");
+                        $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        break;
+                    case "remain":
+                        $("#pavail-group").children().css("background-color", "transparent");
+                        $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
+                        $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        break;
+                }
+            }
             // fix weird focus-select bug
             setTimeout(function() {$("#pquery").focus()}, 100);
         };
@@ -435,7 +551,7 @@ let ui = function() {
             /*}, 500);*/
             sorters.project.option("disabled", false);
             sorters.inbox.option("disabled", false);
-            await reloadPage();
+            reloadPage();
         };
 
 
@@ -1005,6 +1121,7 @@ let ui = function() {
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
+            swapThreshold: 0.20,
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
@@ -1035,6 +1152,7 @@ let ui = function() {
         // project sorter
         let projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
+            swapThreshold: 0.20,
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
@@ -1085,7 +1203,6 @@ let ui = function() {
                             E.db.modifyProject(uid, id, {order: ni});
                         }
                     }
-                    reloadPage();
                 });
             }
         });
@@ -1210,7 +1327,7 @@ let ui = function() {
             // set value
             $("#perspective-title").val(perspectiveObject.name);
             // calculate perspective
-            E.perspective.calc(uid, perspectiveObject.query).then(async function(tids) {
+            E.perspective.calc(uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord).then(async function(tids) {
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
@@ -1284,8 +1401,11 @@ let ui = function() {
 
         // refresh data
         await refresh();
+
+        pageIndex.pageLocks = [];
         // load the dang view
         switch(viewName) {
+
             case 'upcoming-page':
                 viewLoader.upcoming();
                 break;
@@ -1605,6 +1725,89 @@ let ui = function() {
             $(this).blur();
         }
     });
+
+    /*$(document).on(".menuitem", "dragover", function(e) {*/
+        //console.log(e);
+        //e.preventDefault();
+    /*});*/
+
+    $(document).on("drop", ".project", function(e) {
+        let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
+        let target = this.id.split("-"); 
+
+        if (dropped[1] === target[1]) return;
+        if (dropped[0] === "task") {
+            (async function() {
+                let ti = await E.db.getTaskInformation(uid, dropped[1]);
+                if (ti.project !== "") {
+                    if (ti.project === target[1]) return;
+                    await E.db.dissociateTask(uid, dropped[1], ti.project); 
+                }
+                await E.db.modifyTask(uid, dropped[1], {project:target[1]});
+                await E.db.associateTask(uid, dropped[1], target[1]);
+                $("#task-"+dropped[1]).slideUp();
+                reloadPage();
+            })();
+        } else if (dropped[0] === "project") {
+            (async function() {
+                let ti = await E.db.getProjectStructure(uid, dropped[1]);
+                if (ti.parentProj !== "") {
+                    if (ti.parentProj === target[1]) return;
+                    await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
+                }
+                await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
+                await E.db.associateProject(uid, dropped[1], target[1]);
+                $("#project-"+dropped[1]).slideUp();
+                reloadPage();
+            })();
+        }
+    });
+
+    /*$(document).on("drop", "#quickadd", function(e) {*/
+        //console.log("aoeu");
+        //let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
+
+        //console.log(dropped);
+        //if (dropped[0] === "task") {
+            //(async function() {
+                //let ti = await E.db.getTaskInformation(uid, dropped[1]);
+                //if (ti.project && ti.project !== "") {
+                    //$("#task-"+dropped[1]).slideUp();
+                    //await E.db.dissociateTask(uid, dropped[1], ti.project); 
+                    //await E.db.modifyTask(uid, dropped[1], {project:""});
+                //}
+            //})();
+        //}
+    /*});*/
+
+    $(document).on("dragenter", ".project", function(e) {
+        $(this).animate({"background-color": interfaceUtil.gtc("--menu-accent-background")}, 100);
+    });
+
+    $(document).on("dragleave", ".project", function(e) {
+        $(this).animate({"background-color": "transparent"}, 100);
+    });
+
+/*    $(document).on("dragenter", "#quickadd", function(e) {*/
+        //e.preventDefault();
+        //$("#quickadd").prop('disabled', true);
+        //$("#quickadd").animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, 100, ()=>$("#quickadd").addClass("dragover"));
+    //});
+
+    //$(document).on("dragleave", "#quickadd", function(e) {
+        //e.preventDefault();
+        //$("#quickadd").prop('disabled', false);
+        //$("#quickadd").animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, ()=>$("#quickadd").removeClass("dragover"));
+    /*});*/
+
+    $(document).on("dragstart", ".project", function(e) {
+        e.originalEvent.dataTransfer.setData('text', e.target.id);
+    });
+
+    $(document).on("dragstart", ".task", function(e) {
+        e.originalEvent.dataTransfer.setData('text', e.target.id);
+    });
+
 
     let user;
     let uid;

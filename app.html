@@ -85,7 +85,27 @@ along with this program. If not, see https://www.gnu.org/licenses/.
                     <div class="project-action" id="perspective-back"><i class="far fa-times-circle"></i></div>
                     <h1 id="perspective-callout">Let's build <input id="perspective-edit-name" placeholder="cool perspective name"></input></h1>
                     <input id="pquery" type="text" autocomplete="off" value="" placeholder="try a filter like [#bontehu]...">
+                    <div id="perspective-avail-toggle-group">
+                            <button id="perspective-avail-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Include...&nbsp;<i class="fa fa-caret-down"></i></button>
+                            <ul id="pavail-group" class="dropdown-menu modal-dropdown">
+                                <li class="modal-option" id="pavail-avail"><a>Available</a></li>
+                                <li class="modal-option" id="pavail-remain"><a>Remaining</a></li>
+                                <li class="modal-option" id="pavail-flagged"><a>Flagged</a></li>
+                            </ul>
+                        </div>
                     <br />
+                    <div id="perspective-order-toggle-group">
+                            <button id="perspective-order-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Order...&nbsp;<i class="fa fa-caret-down"></i></button>
+                            <ul id="pord-group" class="dropdown-menu modal-dropdown">
+                                <li class="modal-option" id="pord-due-ascend"><a>Ascend by due</a></li>
+                                <li class="modal-option" id="pord-due-descend"><a>Descend by due</a></li>
+                                <li class="modal-option" id="pord-defer-ascend"><a>Ascend by defer</a></li>
+                                <li class="modal-option" id="pord-defer-descend"><a>Descend by defer</a></li>
+                                <li class="modal-option" id="pord-alpha"><a>Alphabetical</a></li>
+                            </ul>
+                        </div>
+                    <br />
+
                     <a href="https://bontehu.shabang.cf" style="color: var(--task); font-weight: 600; font-size: 9px">Don't click me.</a>
                     <!--TODO: Actually make the above the documentation-->
                 </div>
@@ -94,12 +114,12 @@ along with this program. If not, see https://www.gnu.org/licenses/.
                     <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
                     <div class="dropdown">
                         <div id="repeat-toggle-group">
-                            <button id="repeat-type-toggle" class="dropdown-toggle" type="button" data-toggle="dropdown">Every...<span class="caret"></span></button>
-                            <ul class="dropdown-menu repeat-dropdown">
-                                <li class="repeat-option" id="repeat-perday"><a>Day</a></li>
-                                <li class="repeat-option" id="repeat-perweek"><a>Week</a></li>
-                                <li class="repeat-option" id="repeat-permonth"><a>Month</a></li>
-                                <li class="repeat-option" id="repeat-peryear"><a>Year</a></li>
+                            <button id="repeat-type-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Every...&nbsp;<i class="fa fa-caret-down"></i></button>
+                            <ul class="dropdown-menu modal-dropdown">
+                                <li class="modal-option" id="repeat-perday"><a>Day</a></li>
+                                <li class="modal-option" id="repeat-perweek"><a>Week</a></li>
+                                <li class="modal-option" id="repeat-permonth"><a>Month</a></li>
+                                <li class="modal-option" id="repeat-peryear"><a>Year</a></li>
                             </ul>
                         </div>
                         <div id="repeat-weekly-unit" class="repeat-subunit" style="display:none" style="display:none">
