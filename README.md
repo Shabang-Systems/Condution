@@ -24,4 +24,4 @@ Thank you for supporting us on this project. We really hope that this will be so
 
 ***
 
-Designed with :heart: by #!/Shabang.
+Designed with :green_salad: by #!/Shabang.
