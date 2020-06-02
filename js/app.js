@@ -155,9 +155,10 @@ let ui = function() {
     };
 
     // the outside world's refresh function
-    let reloadPage = function() {
+    let reloadPage = function(delayOverride) {
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
+            let wait = delayOverride ? 100 : 1750;
             setTimeout(() => {
                 if (pageIndex.pageLocks.length > 1) {
                     pageIndex.pageLocks.pop();
@@ -170,7 +171,7 @@ let ui = function() {
                     constructSidebar().then(()=>$("#"+activeMenu).addClass("menuitem-selected"));
                     resolve("Refresh success...");
                 }
-            }, 500)
+            }, wait)
         }));
     };
 
@@ -178,7 +179,7 @@ let ui = function() {
     const showPerspectiveEdit = function() {
         $("#perspective-back").on("click", function(e) {
             $("#perspective-unit").fadeOut(200);
-            $("#overlay").fadeOut(200, () => reloadPage());
+            $("#overlay").fadeOut(200, () => reloadPage(true));
             $("#"+activeMenu).addClass("menuitem-selected");
         });
 
@@ -188,7 +189,7 @@ let ui = function() {
                 $("#repeat-toggle-group").slideDown();
                 $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
                 $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200, () => reloadPage());
+                $("#overlay").fadeOut(200, () => reloadPage(true));
                 $("#"+activeMenu).addClass("menuitem-selected");
                 $("#repeat-daterow").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
@@ -361,7 +362,7 @@ let ui = function() {
                 $("#repeat-toggle-group").slideDown();
                 $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
                 $("#repeat-unit").fadeOut(200);
-                $("#overlay").fadeOut(200, () => reloadPage());
+                $("#overlay").fadeOut(200, () => reloadPage(true));
                 $("#"+activeMenu).addClass("menuitem-selected");
                 $("#repeat-daterow").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
@@ -1204,6 +1205,7 @@ let ui = function() {
                         }
                     }
                 });
+                reloadPage(true);
             }
         });
 
@@ -1239,6 +1241,7 @@ let ui = function() {
                         E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
                     }
                 });
+                $('.perspectives').children().addClass("mihov");
             }
 
         });
@@ -1277,6 +1280,7 @@ let ui = function() {
 
 
                 });
+                $('.projects').children().addClass("mihov");
             }
         });
 
@@ -1620,7 +1624,7 @@ let ui = function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let value = $(this).val();
         E.db.modifyProject(uid, pid, {name: value});
-        reloadPage();
+        reloadPage(true);
         //console.error(e);
     });
 
@@ -1628,14 +1632,14 @@ let ui = function() {
         let pstID = pageIndex.pageContentID;
         let value = $(this).val();
         E.db.modifyPerspective(uid, pstID, {name: value});
-        reloadPage();
+        reloadPage(true);
         //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         E.db.modifyProject(uid, pid, {is_sequential: true}).then(function() {
-            reloadPage();
+            reloadPage(true);
         });
         //console.error(e);
     });
@@ -1643,7 +1647,7 @@ let ui = function() {
     $(document).on("click", "#project-sequential-no", function(e) {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         E.db.modifyProject(uid, pid, {is_sequential: false}).then(function() {
-            reloadPage();
+            reloadPage(true);
         });
         //console.error(e);
     });
@@ -1746,7 +1750,7 @@ let ui = function() {
                 await E.db.modifyTask(uid, dropped[1], {project:target[1]});
                 await E.db.associateTask(uid, dropped[1], target[1]);
                 $("#task-"+dropped[1]).slideUp();
-                reloadPage();
+                reloadPage(true);
             })();
         } else if (dropped[0] === "project") {
             (async function() {
@@ -1758,7 +1762,7 @@ let ui = function() {
                 await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
                 await E.db.associateProject(uid, dropped[1], target[1]);
                 $("#project-"+dropped[1]).slideUp();
-                reloadPage();
+                reloadPage(true);
             })();
         }
     });
