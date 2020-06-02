@@ -1371,9 +1371,29 @@ label.od:hover:before {
     display: none;
 }
 
+#loading-msg {
+    color: var(--content-normal-alt);
+    font-weight: 500;
+    font-size: 15px;
+}
+
+#loading-bottom {
+    bottom: 50px;
+    position: absolute;
+    display: flex;
+    font-size: 8px;
+    font-weight: 200;
+}
+
+#loading-msg-sub {
+    color: var(--content-normal-alt);
+    font-weight: 200;
+    font-size: 15px;
+}
+
 #loading-anim {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
 }
 
 #content-wrapper {

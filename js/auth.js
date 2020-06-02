@@ -31,7 +31,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
         renderer: 'svg',
         autoplay: true,
         loop: true,
-        path: 'static/loadanim_dots.json'
+        path: 'static/loadanim_final.json'
     })
     $("#loading").hide().css("display", "flex").fadeIn();
     // Initialize Firebase Application

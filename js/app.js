@@ -26,12 +26,16 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("body").addClass(currentTheme);
 });
 
+let loading_greeting_msgs = ["Welcome.", "Bontehu!", "Breath.", "Coffee or Tea?", "Productivity!", "Look up!", "Ready? Go!", "Accomplish!"];
+let loading_greeting = loading_greeting_msgs[Math.floor(Math.random() * loading_greeting_msgs.length)];
+$("#loading-msg").html(loading_greeting);
+
 lottie.loadAnimation({
     container: $("#loading-anim")[0],
     renderer: 'svg',
     autoplay: true,
     loop: true,
-    path: 'static/loadanim_dots.json'
+    path: 'static/loadanim_final.json'
 })
 $("#loading").hide().css("display", "flex").fadeIn();
 
