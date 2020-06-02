@@ -125,8 +125,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
 
 })();
 console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
-console.log('%c19/10 change you are either terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
 console.log('%cClose this panel now.', 'background: #fff0f0;color: red; font-size: 50px');
-console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
+console.log('%c19/10 change you are either terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
 console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
 
