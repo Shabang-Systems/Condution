@@ -1,6 +1,8 @@
 // Chapter 0: Fire! Base!
 const { ipcRenderer } = require('electron');
 
+
+
 (function() {
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
@@ -122,3 +124,8 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
 
 })();
+console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
+console.log('%c19/10 change you are either a terrible person or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
+console.log('%cClose this panel now.', 'background: #fff0f0;color: red; font-size: 50px');
+console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
+
