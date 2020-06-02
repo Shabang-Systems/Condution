@@ -1812,6 +1812,10 @@ let ui = function() {
         e.originalEvent.dataTransfer.setData('text', e.target.id);
     });
 
+    $(document).on("click", "#perspective-documentaion", function(e) {
+        require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+    });
+
 
     let user;
     let uid;
