@@ -1868,7 +1868,7 @@ $(document).ready(async function() {
                 //$("body").removeClass();
                 /*$("body").addClass(currentTheme);*/
                 $("#content-wrapper").fadeIn();
-                setInterval(() => ui.update(), 60 * 1000);
+                setInterval(() => {ui.update(); ipcRenderer.send("updatecheck");}, 60 * 1000);
             } else {
                 window.location.replace("auth.html");
             }

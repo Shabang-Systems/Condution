@@ -1,4 +1,4 @@
-const { app, BrowserWindow, systemPreferences, nativeTheme } = require('electron')
+const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain } = require('electron')
 const { autoUpdater } = require("electron-updater");
 autoUpdater.checkForUpdatesAndNotify();
 
@@ -43,6 +43,9 @@ function createWindow () {
             win.webContents.send("systheme-light", "hello")
         }
     });
+    ipcMain.on('updatecheck', (event, arg) => {
+        autoUpdater.checkForUpdatesAndNotify();
+    })
 
     win.once('ready-to-show', function() {
         win.show()
