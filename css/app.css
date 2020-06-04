@@ -54,11 +54,11 @@ a {
     background-color: var(--background-feature);
 }
 
-.repeat-dropdown {
+.modal-dropdown {
     background: var(--background);
 }
 
-.repeat-option {
+.modal-option {
     color: var(--content-normal-alt);
     padding: 3px 1px 3px 8px;
     margin: 0 3px 0 3px;
@@ -70,7 +70,7 @@ a {
     background: var(--background);
 }
 
-.repeat-option:hover {
+.modal-option:hover {
     background-color: var(--background-feature);
 }
 
@@ -403,7 +403,17 @@ a {
     background-color: var(--background-feature);
 }
 
-#repeat-type-toggle {
+#perspective-avail-toggle-group {
+    float: left;
+}
+
+#perspective-order-toggle-group {
+    margin-left: 10px;
+    display: inline-block
+}
+
+
+.modal-dropdown-toggle {
     border-radius: 3px;
     background-color: var(--background-feature);
     border: 0;
@@ -1361,9 +1371,29 @@ label.od:hover:before {
     display: none;
 }
 
+#loading-msg {
+    color: var(--content-normal-alt);
+    font-weight: 500;
+    font-size: 15px;
+}
+
+#loading-bottom {
+    bottom: 50px;
+    position: absolute;
+    display: flex;
+    font-size: 8px;
+    font-weight: 200;
+}
+
+#loading-msg-sub {
+    color: var(--content-normal-alt);
+    font-weight: 200;
+    font-size: 15px;
+}
+
 #loading-anim {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
 }
 
 #content-wrapper {
@@ -1412,6 +1442,10 @@ label.od:hover:before {
 
 #quickadd::placeholder{
     color: var(--quickadd-placeholder);
+}
+
+#quickadd.dragover::placeholder{
+    color: var(--quickadd-success-text) !important;
 }
 
 #quickadd:hover {
