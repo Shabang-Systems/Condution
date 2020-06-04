@@ -61,6 +61,10 @@
     "appId": "cf.shabang.condution",
     "productName": "Condution",
     "copyright": "Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors.",
+    "dmg": {
+        "icon": "build/dmg.png",
+        "backgroundColor": "#f4f4f4"
+    },
     "mac": {
       "category": "public.app-category.productivity"
     },
