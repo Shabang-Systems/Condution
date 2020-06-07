@@ -1,8 +1,6 @@
 // Chapter 0: Fire! Base!
 const { ipcRenderer } = require('electron');
 
-
-
 (function() {
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
@@ -28,6 +26,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("body").removeClass();
     $("body").addClass(currentTheme);
 });
+    let mode = "login";
     lottie.loadAnimation({
         container: $("#loading-anim")[0],
         renderer: 'svg',
@@ -41,7 +40,6 @@ ipcRenderer.on("systheme-light", function (event, data) {
     const obj = require("./backend/secrets")
     firebase.initializeApp(obj.dbkeys.debug);
 
-    let isNA = false;
     let isNASuccess = false;
 
     let auth = function() {
@@ -66,39 +64,59 @@ ipcRenderer.on("systheme-light", function (event, data) {
             console.log("Silly goose");
         });
         $('#need-verify').fadeIn();
-        isNA = false;
+        $('#recover-password').fadeOut();
         isNASuccess = true;
     }
 
     $("#password").keydown(function(e) {
         if (e.keyCode == 13) {
-            if (isNA) {
-                nu();
-            } else {
-                auth();
+            switch (mode) {
+                case "login":
+                    auth();
+                    break;
+                case "newuser":
+                    nu();
+                    break;
             }
         }
     });
 
     $("#login").click(function(e) {
-        if (isNA) {
-            nu();
-        } else {
-            auth();
+        switch (mode) {
+            case "login":
+                auth();
+                break;
+            case "newuser":
+                nu();
+                break;
+        }
+    });
+
+    $("#recover-password").click(function(e) {
+        switch (mode) {
+            case "login":
+                auth();
+                break;
+            case "newuser":
+                nu();
+                break;
         }
     });
 
     $("#newuser").click(function(e) {
-        if (isNA) {
-            $("#name-tray").slideUp(300);
-            $(this).html("Make an account.");
-            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
-            isNA = false;
-        } else {
-            $("#name-tray").slideDown(300);
-            $(this).html("Sign in.");
-            isNA = true;
-            $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+        switch (mode) {
+            case "login":
+                $("#name-tray").slideDown(300);
+                $(this).html("Sign in.");
+                mode = "newuser";
+                $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+                break;
+            case "newuser":
+                $("#name-tray").slideUp(300);
+                $(this).html("Make an account.");
+                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                mode = "login";
+                break;
         }
     });
 
@@ -110,6 +128,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
                 user.sendEmailVerification();
                 $('#auth-left-menu').fadeIn();
                 $('#need-verify').fadeIn();
+                $('#recover-password').fadeOut();
                 $("#loading").fadeOut();
                 $("#authwall").fadeIn();
             }
