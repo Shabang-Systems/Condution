@@ -59,6 +59,21 @@ ipcRenderer.on("systheme-light", function (event, data) {
         });
     };
 
+    let rec = function() {
+        firebase.auth().sendPasswordResetEmail($("#email").val()).then(function() {
+            $(".auth-upf").removeClass("wrong");
+            $("#password").show();
+            $("#newuser").html("Make an account.");
+            $("#newuser").show();
+            $("#recover-password").html("Recover Password");
+            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+            $('#recover-password').fadeOut();
+            $('#need-verify').fadeIn();
+        }).catch(function(error) {
+            $(".auth-upf").addClass("wrong");
+        });
+    }
+
     let nu = function() {
         firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
             console.log("Silly goose");
@@ -89,17 +104,36 @@ ipcRenderer.on("systheme-light", function (event, data) {
             case "newuser":
                 nu();
                 break;
+            case "recover":
+                rec();
+                break;
         }
     });
 
     $("#recover-password").click(function(e) {
         switch (mode) {
             case "login":
-                auth();
+                $("#password").hide();
+                $("#recover-password").html("Remembered? Login");
+                $("#newuser").hide();
+                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                mode = "recover";
                 break;
             case "newuser":
-                nu();
+                $("#name-tray").hide();
+                $("#password").hide();
+                $("#recover-password").html("Remembered? Login");
+                $("#newuser").hide();
+                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                mode = "recover";
                 break;
+            case "recover":
+                $("#password").show();
+                $("#newuser").html("Make an account.");
+                $("#newuser").show();
+                $("#recover-password").html("Recover Password");
+                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                mode = "login";
         }
     });
 
