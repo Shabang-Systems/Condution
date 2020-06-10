@@ -51,6 +51,37 @@ function createWindow () {
     });
 }
 
+function createAbout () {
+    // Create the browser window.
+    let win = new BrowserWindow({
+        'width': 550,
+        'height': 320,
+        'minWidth': 550,
+        'minHeight': 320,
+        'maxWidth': 550,
+        'maxHeight': 320,
+        'title': "About Condution",
+        'webPreferences': {
+            'nodeIntegration': true
+        },
+        //'titleBarStyle': 'hiddenInset',
+        'maximizable': false,
+        'show': false,
+    })
+
+    win.on('page-title-updated', function(e) {
+        e.preventDefault()
+    });
+
+    win.removeMenu();
+    // and load the main of the app.
+    win.loadFile('about.html')
+    
+    win.once('ready-to-show', function() {
+        win.show()
+    });
+}
+
 const isMac = process.platform === 'darwin'
 
 const template = [
@@ -58,7 +89,12 @@ const template = [
   ...(isMac ? [{
     label: app.name,
     submenu: [
-      { role: 'about' },
+      {
+        label: 'About Condution',
+        click: async () => {
+            createAbout();
+        }
+      },
       { type: 'separator' },
       { role: 'services' },
       { type: 'separator' },
