@@ -50,8 +50,20 @@ ipcRenderer.on("systheme-light", function (event, data) {
             window.location = 'app.html'; 
             isNASuccess = false;
         }
-        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
+        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
+            if (firebase.auth().currentUser.emailVerified){
+                window.location = 'app.html'; 
+            } else {
+                firebase.auth().currentUser.sendEmailVerification();
+                $('#auth-left-menu').fadeIn();
+                $('#need-verify').fadeIn();
+                $('#recover-password').fadeOut();
+                $("#loading").fadeOut();
+                $("#authwall").fadeIn();
+            }
+        }).catch(function(error) {
             // Handle Errors here.
+            console.log(error);
             console.log("Silly goose");
             const errorCode = error.code;
             const errorMessage = error.message;

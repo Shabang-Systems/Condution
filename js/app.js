@@ -136,6 +136,7 @@ let ui = function() {
         projectDir: [],
         pageContentID: undefined,
         pageLocks: [],
+        dateLoaders: {}
     };
 
     activeMenu = "today";
@@ -807,7 +808,7 @@ let ui = function() {
                     }
                 }
             });
-            // So apparently setting dates is hard for this guy, so we run this async
+            // So apparently setting dates is hard for this guy, so we run this later
             let setDates = async () => {
                 if (defer_current) {
                     $("#task-defer-" + taskId).datetimepicker('setDate', (defer_current));
@@ -815,8 +816,10 @@ let ui = function() {
                 if (due_current) {
                     $("#task-due-" + taskId).datetimepicker('setDate', (due_current));
                 }
+                // Afterwards, destruct
+                pageIndex.dateLoaders[taskId] = (()=>{});
             };
-            setDates();
+            pageIndex.dateLoaders[taskId] = setDates;
             // Set tags!
             $('#task-tag-' + taskId).val(tagString);
             $('#task-tag-' + taskId).tagsinput({
@@ -1480,6 +1483,7 @@ let ui = function() {
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
             $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
+            pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
         }
