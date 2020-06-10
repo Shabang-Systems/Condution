@@ -55,11 +55,11 @@ function createAbout () {
     // Create the browser window.
     let win = new BrowserWindow({
         'width': 550,
-        'height': 320,
+        'height': 250,
         'minWidth': 550,
-        'minHeight': 320,
+        'minHeight': 250,
         'maxWidth': 550,
-        'maxHeight': 320,
+        'maxHeight': 250,
         'title': "About Condution",
         'webPreferences': {
             'nodeIntegration': true
