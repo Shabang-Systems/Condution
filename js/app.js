@@ -1528,6 +1528,12 @@ let ui = function() {
     });
 
     $(document).on("click", "#perspective-add", function() {
+        if (pageIndex.interfaceLocks.npspLock) {
+            return;
+        } else {
+            pageIndex.interfaceLocks.npspLock = true;
+            setTimeout(()=>{pageIndex.interfaceLocks.npspLock = false}, 1000);
+        }
         let perspectiveObj = {
             name: "",
             query: "",
@@ -1550,6 +1556,12 @@ let ui = function() {
     });
 
     $(document).on("click", "#project-add-toplevel", function() {
+        if (pageIndex.interfaceLocks.nprojLock) {
+            return;
+        } else {
+            pageIndex.interfaceLocks.nprojLock = true;
+            setTimeout(()=>{pageIndex.interfaceLocks.nprojLock = false}, 1000);
+        }
         let projObj = {
             name: "New Project",
             top_level: true,
