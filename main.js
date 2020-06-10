@@ -11,7 +11,6 @@ function createWindow () {
         'height': 650,
         'minWidth': 950,
         'minHeight': 650,
-        'fullscreen': false,
         'title': "Condution",
         'webPreferences': {
             'nodeIntegration': true
