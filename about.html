@@ -22,28 +22,42 @@
                 font-family: sans-serif;
             }
 
+            *::-webkit-scrollbar { 
+                display: none;  /* Scrollbar Fix, Chrome? and Apple Runtime */
+            }
+
             #center {
                 position: absolute;
                 top: 50%;
                 height: 100px;
-                margin-top: -80px;
+                margin-top: -60px;
+            }
+
+            #floathead {
+                -webkit-app-region: drag;
+                background-color: #f4f4f4;
+                height: 34px;
+                z-index: 10000;
             }
         </style>
+        <script>
+            const remote = require('electron').remote;
+            $(window).on("blur", ()=>remote.getCurrentWindow().close());
+        </script>
     </head>
 
     <body style="background-color: #f4f4f4">
+        <div id="floathead"> </div>
         <div id="center">
-            <h1 style="margin:0"><t style="font-weight: 300">#!/Shabang</t> <b style="color:#434d5f">Condution</b></h1>
-            <br />
+            <h1 style="margin:0; font-size: 24px; padding-bottom: 6px"><t style="font-weight: 300;padding-right: 8px; border-right:1px solid #16222c;">#!/Shabang</t> <b style="color:#434d5f;">Condution</b></h1>
             <t style="font-size: 15px; font-weight: 600">Tasks? Done. That was easy.</t>
             <br />
             <br />
             <br />
             <div style="font-size: 12px;">
-                <div style="font-weight: 300">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors</div>
-                <div style="margin-top: 3px; font-size: 10px"><b>Lead Project Contributors</b> Albert Huang, Houjun Liu, Huxley Marvit, Micah Robinson, Zachary Sayyah, Dongling Yang</div>
-                <br />
-                <div style="margin-top: 5px; font-size:10px" >Scroll Down for Licensing Information</div>
+                <div style="margin-top: 3px; font-size: 10px"><b>Lead Contributors</b> Albert Huang, Houjun Liu, Huxley Marvit, Micah Robinson, Zachary Sayyah, Dongling Yang</div>
+                <div style="margin-top: 5px; font-weight: 300">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors</div>
+                <!--<div style="margin-top: 5px; font-size:10px" >Scroll Down for Licensing Information</div>-->
             </div>
             <br />
             <br />

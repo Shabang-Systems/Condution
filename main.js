@@ -55,17 +55,17 @@ function createAbout () {
     // Create the browser window.
     let win = new BrowserWindow({
         'width': 550,
-        'height': 250,
+        'height': 175,
         'minWidth': 550,
-        'minHeight': 250,
+        'minHeight': 175,
         'maxWidth': 550,
-        'maxHeight': 250,
+        'maxHeight': 175,
         'title': "About Condution",
         'webPreferences': {
             'nodeIntegration': true
         },
-        //'titleBarStyle': 'hiddenInset',
         'maximizable': false,
+        'frame': false,
         'show': false,
     })
 
