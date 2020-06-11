@@ -344,6 +344,8 @@ let ui = function() {
         let tid;
         let repeatWeekDays = [];
         let repeatMonthDays = [];
+        let advancedMonthMode = false;
+        let advancedWeekMode = false;
 
         // Setup repeat things!
         $("#repeat-back").on("click", function(e) {
@@ -361,6 +363,48 @@ let ui = function() {
             $("#"+activeMenu).addClass("menuitem-selected");
             let repeatWeekDays = [];
             let repeatMonthDays = [];
+        });
+
+        $("#repeat-advanced-monthly").on("click", function(e) {
+            if (advancedMonthMode) {
+                $(this).html("Advanced...");
+                $("#repeat-monthgrid").fadeOut();
+                E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+            } else {
+                $(this).html("Back to Basic...");
+                $("#repeat-monthgrid").fadeIn({
+                  start: function () {
+                    $(this).css({
+                      display: "grid"
+                    })
+                  }
+                });
+            }
+            advancedMonthMode = !advancedMonthMode;
+        });
+
+        $("#repeat-advanced-weekly").on("click", function(e) {
+            if (advancedWeekMode) {
+                $(this).html("Advanced...");
+                $("#repeat-daterow").fadeOut();
+                E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+            } else {
+                $(this).html("Back to Basic...");
+                $("#repeat-daterow").fadeIn({
+                  start: function () {
+                    $(this).css({
+                      display: "flex"
+                    })
+                  }
+                });
+            }
+            advancedWeekMode = !advancedWeekMode;
         });
 
 
@@ -402,6 +446,7 @@ let ui = function() {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every week.");
             $("#repeat-type").fadeIn();
+            E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
         });
 
         $("#repeat-permonth").on("click", function(e) {
@@ -409,6 +454,7 @@ let ui = function() {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every month.");
             $("#repeat-type").fadeIn();
+            E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
         });
 
         $("#repeat-peryear").on("click", function(e) {
@@ -460,23 +506,49 @@ let ui = function() {
                     $("#repeat-type").html("every day.");
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
-                    $("#repeat-daterow").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html())) {
-                            $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
-                        }
-                    });
-                    repeatWeekDays = ti.repeat.on;
+                    if (ti.repeat.on) {
+                        $("#repeat-daterow").children().each(function(e) {
+                            if (ti.repeat.on.includes($(this).html())) {
+                                $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
+                            }
+                        });
+                        repeatWeekDays = ti.repeat.on;
+                        $("#repeat-advanced-weekly").html("Back to Basic...");
+                        $("#repeat-daterow").fadeIn({
+                          start: function () {
+                            $(this).css({
+                              display: "flex"
+                            })
+                          }
+                        });
+                        advancedWeekMode = true;
+                    } else {
+                        advancedWeekMode = false;
+                    }
                     $("#repeat-weekly-unit").show();
                     $("#repeat-toggle-group").hide();
                     $("#repeat-type").html("every week.");
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
-                    $("#repeat-monthgrid").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html())) {
-                            $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
-                        }
-                    });
-                    repeatMonthDays = ti.repeat.on;
+                    if (ti.repeat.on) {
+                        $("#repeat-monthgrid").children().each(function(e) {
+                            if (ti.repeat.on.includes($(this).html())) {
+                                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
+                            }
+                        });
+                        repeatMonthDays = ti.repeat.on;
+                        $("#repeat-advanced-monthly").html("Back to Basic...");
+                        $("#repeat-monthgrid").fadeIn({
+                          start: function () {
+                            $(this).css({
+                              display: "grid"
+                            })
+                          }
+                        });
+                        advancedMonthMode = true;
+                    } else {
+                        advancedMonthMode = false;
+                    }
                     $("#repeat-monthly-unit").show();
                     $("#repeat-toggle-group").hide();
                     $("#repeat-type").html("every month.");
