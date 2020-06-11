@@ -65,7 +65,7 @@ function createAbout () {
             'nodeIntegration': true
         },
         'maximizable': false,
-        'frame': false,
+        //'frame': false,
         'show': false,
     })
 

@@ -64,6 +64,9 @@
     "mac": {
       "category": "public.app-category.productivity"
     },
+    "dmg": {
+      "icon": "dmg.icns"
+    },
     "win": {
       "target": "nsis-web"
     }
