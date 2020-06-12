@@ -134,6 +134,28 @@ a {
     transform: translateX(-2.5px);
 }
 
+.blankimage-content {
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 10px 0;
+    opacity: 0.20;
+    filter: saturate(40%);
+    display: none;
+}
+
+.blankimage {
+    height: 200px;
+    width: auto;
+}
+
+.blankimage-alt {
+    margin-top: 20px;
+    font-weight: 600;
+    color: var(--content-normal-accent);
+}
+
 .newbutton {
     background-color: transparent;
     border-radius: 5px;

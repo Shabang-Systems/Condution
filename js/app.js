@@ -88,6 +88,10 @@ const interfaceUtil = function() {
         };
     };
 
+    const newPlaceholderImage = function() {
+        $(".blankimage").attr("src","./static/BlkArt/BlkArt_"+Math.floor(Math.random() * 3)+".png");
+    }
+
     const smartParse = function(timeformat, timeString, o) {
         // smart, better date parsing with chrono
         let d = chrono.parse(timeString)[0].start.date();
@@ -114,7 +118,7 @@ const interfaceUtil = function() {
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     };
 
-    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor}
+    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage}
 }();
 
 let ui = function() {
@@ -1047,6 +1051,7 @@ let ui = function() {
                 E.db.deleteTask(uid, taskId).then(function() {
                     hideActiveTask();
                     $('#task-' + taskId).slideUp(150);
+                    reloadPage(true);
                 });
             });
 
@@ -1307,6 +1312,8 @@ let ui = function() {
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
 
+            $("#blankimage-today").css("display", (inboxandDS[0].length + inboxandDS[1].length == 0) ? "flex" : "none")
+
             Promise.all(
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
@@ -1342,6 +1349,7 @@ let ui = function() {
             $("#perspective-title").val(perspectiveObject.name);
             // calculate perspective
             E.perspective.calc(uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord).then(async function(tids) {
+                $("#blankimage-perspective").css("display", tids.length == 0 ? "flex" : "none");
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
@@ -1365,6 +1373,7 @@ let ui = function() {
             }
             // get the project structure, and load the content
             E.db.getProjectStructure(uid, pid).then(async function(struct) {
+                $("#blankimage-project").css("display", struct.children.length == 0 ? "flex" : "none");
                 for (let item of struct.children) {
                     if (item.type === "task") {
                         // get and load the task
@@ -1412,6 +1421,7 @@ let ui = function() {
         $("#due-soon").empty();
         $("#project-content").empty();
         $("#perspective-content").empty();
+        
 
         // refresh data
         await refresh();
@@ -1441,6 +1451,7 @@ let ui = function() {
 
     // document action listeners!!
     $(document).on('click', '.menuitem', function(e) {
+        interfaceUtil.newPHI();
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         activeMenu = $(this).attr('id');
         if (activeMenu.includes("perspective")) {
@@ -1460,6 +1471,7 @@ let ui = function() {
     });
 
     $(document).on('click', '.today', function(e) {
+        interfaceUtil.newPHI();
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         loadView("upcoming-page");
         activeMenu = $(this).attr('id');
@@ -1518,6 +1530,7 @@ let ui = function() {
             is_sequential: false,
         };
         E.db.newProject(uid, projObj, pid).then(function(npID) {
+            interfaceUtil.newPHI();
             E.db.associateProject(uid, npID, pid);
             $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
             activeMenu = "project-"+npID;
@@ -1556,6 +1569,7 @@ let ui = function() {
     });
 
     $(document).on("click", "#project-add-toplevel", function() {
+        interfaceUtil.newPHI();
         if (pageIndex.interfaceLocks.nprojLock) {
             return;
         } else {
@@ -1598,6 +1612,7 @@ let ui = function() {
         let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
         E.db.deleteProject(uid, pid).then(function() {
             pageIndex.projectDir.pop();
+            interfaceUtil.newPHI();
             if (pageIndex.projectDir.length > 0) {
                 E.db.dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
                 activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
@@ -1637,6 +1652,7 @@ let ui = function() {
                 $("#task-repeat-" + activeTask).css("display", "block");
                 $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
                 $("#task-name-" + task).focus();
+                $("#blankimage-project").hide();
                 sorters.project.option("disabled", true);
                 sorters.inbox.option("disabled", true);
             });
@@ -1750,6 +1766,7 @@ let ui = function() {
                             tb.blur();
                             tb.val("");
                         });
+                        $("#blankimage-today").css("display", "none");
                     });
                 });
             });
@@ -1844,6 +1861,8 @@ let ui = function() {
     $(document).on("click", "#perspective-documentaion", function(e) {
         require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
     });
+
+    interfaceUtil.newPHI();
 
 
     let user;
