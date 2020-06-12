@@ -981,7 +981,7 @@ let ui = function() {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setDate(due.getDate() + 1);
-                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 due.setDate(due.getDate() + 1);
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
@@ -992,63 +992,72 @@ let ui = function() {
                                 let rOn = repeat.on;
                                 let current = "";
                                 let defDistance = due-defer;
-                                while (!rOn.includes(current)) {
-                                    due.setDate(due.getDate() + 1);
-                                    let dow = due.getDay();
-                                    switch (dow) {
-                                        case 1:
-                                            current = "M";
-                                            break;
-                                        case 2:
-                                            current = "Tu";
-                                            break;
-                                        case 3:
-                                            current = "W";
-                                            break;
-                                        case 4:
-                                            current = "Th";
-                                            break;
-                                        case 5:
-                                            current = "F";
-                                            break;
-                                        case 6:
-                                            current = "Sa";
-                                            break;
-                                        case 7:
-                                            current = "Su";
-                                            break;
+                                if (rOn) {
+                                    while (!rOn.includes(current)) {
+                                        due.setDate(due.getDate() + 1);
+                                        let dow = due.getDay();
+                                        switch (dow) {
+                                            case 1:
+                                                current = "M";
+                                                break;
+                                            case 2:
+                                                current = "Tu";
+                                                break;
+                                            case 3:
+                                                current = "W";
+                                                break;
+                                            case 4:
+                                                current = "Th";
+                                                break;
+                                            case 5:
+                                                current = "F";
+                                                break;
+                                            case 6:
+                                                current = "Sa";
+                                                break;
+                                            case 7:
+                                                current = "Su";
+                                                break;
+                                        }
                                     }
+                                } else {
+                                    due.setDate(due.getDate()+7);
+                                    defer.setDate(defer.getDate()+7);
                                 }
-                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 let rOn = repeat.on;
-                                let current = "";
-                                while (!rOn.includes(current)) {
-                                    due.setDate(due.getDate() + 1);
-                                    let dow = due.getDay();
-                                    switch (dow) {
-                                        case 1:
-                                            current = "M";
-                                            break;
-                                        case 2:
-                                            current = "Tu";
-                                            break;
-                                        case 3:
-                                            current = "W";
-                                            break;
-                                        case 4:
-                                            current = "Th";
-                                            break;
-                                        case 5:
-                                            current = "F";
-                                            break;
-                                        case 6:
-                                            current = "Sa";
-                                            break;
-                                        case 7:
-                                            current = "Su";
-                                            break;
+                                if (rOn) {
+                                    let current = "";
+                                    while (!rOn.includes(current)) {
+                                        due.setDate(due.getDate() + 1);
+                                        let dow = due.getDay();
+                                        switch (dow) {
+                                            case 1:
+                                                current = "M";
+                                                break;
+                                            case 2:
+                                                current = "Tu";
+                                                break;
+                                            case 3:
+                                                current = "W";
+                                                break;
+                                            case 4:
+                                                current = "Th";
+                                                break;
+                                            case 5:
+                                                current = "F";
+                                                break;
+                                            case 6:
+                                                current = "Sa";
+                                                break;
+                                            case 7:
+                                                current = "Su";
+                                                break;
+                                        }
                                     }
+                                } else {
+                                    due.setDate(due.getDate()+7);
                                 }
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
@@ -1058,17 +1067,26 @@ let ui = function() {
                                 let dow = due.getDate();
                                 let oDow = due.getDate();
                                 let defDistance = due-defer;
-                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
-                                    due.setDate(due.getDate() + 1);
-                                    dow = due.getDate();
+                                if (rOn) {
+                                    while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
+                                        due.setDate(due.getDate() + 1);
+                                        dow = due.getDate();
+                                    }
+                                } else {
+                                    due.setMonth(due.getMonth()+1);
                                 }
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 let rOn = repeat.on;
-                                let dow = due.getDate();
-                                let oDow = due.getDate();
-                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
-                                    due.setDate(due.getDate() + 1);
-                                    dow = due.getDate();
+                                if (rOn) {
+                                    let dow = due.getDate();
+                                    let oDow = due.getDate();
+                                    while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
+                                        due.setDate(due.getDate() + 1);
+                                        dow = due.getDate();
+                                    }
+                                } else {
+                                    due.setMonth(due.getMonth()+1);
                                 }
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
@@ -1076,7 +1094,7 @@ let ui = function() {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setFullYear(due.getFullYear() + 1);
-                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 due.setFullYear(due.getFullYear() + 1);
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
