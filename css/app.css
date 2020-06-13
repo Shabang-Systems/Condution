@@ -143,6 +143,7 @@ a {
     opacity: 0.20;
     filter: saturate(40%);
     display: none;
+    user-select: none;
 }
 
 .blankimage {
