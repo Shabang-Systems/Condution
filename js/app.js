@@ -348,6 +348,8 @@ let ui = function() {
         let tid;
         let repeatWeekDays = [];
         let repeatMonthDays = [];
+        let advancedMonthMode = false;
+        let advancedWeekMode = false;
 
         // Setup repeat things!
         $("#repeat-back").on("click", function(e) {
@@ -365,6 +367,48 @@ let ui = function() {
             $("#"+activeMenu).addClass("menuitem-selected");
             let repeatWeekDays = [];
             let repeatMonthDays = [];
+        });
+
+        $("#repeat-advanced-monthly").on("click", function(e) {
+            if (advancedMonthMode) {
+                $(this).html("Advanced...");
+                $("#repeat-monthgrid").fadeOut();
+                E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+            } else {
+                $(this).html("Back to Basic...");
+                $("#repeat-monthgrid").fadeIn({
+                  start: function () {
+                    $(this).css({
+                      display: "grid"
+                    })
+                  }
+                });
+            }
+            advancedMonthMode = !advancedMonthMode;
+        });
+
+        $("#repeat-advanced-weekly").on("click", function(e) {
+            if (advancedWeekMode) {
+                $(this).html("Advanced...");
+                $("#repeat-daterow").fadeOut();
+                E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+            } else {
+                $(this).html("Back to Basic...");
+                $("#repeat-daterow").fadeIn({
+                  start: function () {
+                    $(this).css({
+                      display: "flex"
+                    })
+                  }
+                });
+            }
+            advancedWeekMode = !advancedWeekMode;
         });
 
 
@@ -406,6 +450,7 @@ let ui = function() {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every week.");
             $("#repeat-type").fadeIn();
+            E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
         });
 
         $("#repeat-permonth").on("click", function(e) {
@@ -413,6 +458,7 @@ let ui = function() {
             $("#repeat-toggle-group").slideUp();
             $("#repeat-type").html("every month.");
             $("#repeat-type").fadeIn();
+            E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
         });
 
         $("#repeat-peryear").on("click", function(e) {
@@ -464,23 +510,49 @@ let ui = function() {
                     $("#repeat-type").html("every day.");
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
-                    $("#repeat-daterow").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html())) {
-                            $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
-                        }
-                    });
-                    repeatWeekDays = ti.repeat.on;
+                    if (ti.repeat.on) {
+                        $("#repeat-daterow").children().each(function(e) {
+                            if (ti.repeat.on.includes($(this).html())) {
+                                $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
+                            }
+                        });
+                        repeatWeekDays = ti.repeat.on;
+                        $("#repeat-advanced-weekly").html("Back to Basic...");
+                        $("#repeat-daterow").fadeIn({
+                          start: function () {
+                            $(this).css({
+                              display: "flex"
+                            })
+                          }
+                        });
+                        advancedWeekMode = true;
+                    } else {
+                        advancedWeekMode = false;
+                    }
                     $("#repeat-weekly-unit").show();
                     $("#repeat-toggle-group").hide();
                     $("#repeat-type").html("every week.");
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
-                    $("#repeat-monthgrid").children().each(function(e) {
-                        if (ti.repeat.on.includes($(this).html())) {
-                            $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
-                        }
-                    });
-                    repeatMonthDays = ti.repeat.on;
+                    if (ti.repeat.on) {
+                        $("#repeat-monthgrid").children().each(function(e) {
+                            if (ti.repeat.on.includes($(this).html())) {
+                                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
+                            }
+                        });
+                        repeatMonthDays = ti.repeat.on;
+                        $("#repeat-advanced-monthly").html("Back to Basic...");
+                        $("#repeat-monthgrid").fadeIn({
+                          start: function () {
+                            $(this).css({
+                              display: "grid"
+                            })
+                          }
+                        });
+                        advancedMonthMode = true;
+                    } else {
+                        advancedMonthMode = false;
+                    }
                     $("#repeat-monthly-unit").show();
                     $("#repeat-toggle-group").hide();
                     $("#repeat-type").html("every month.");
@@ -913,7 +985,7 @@ let ui = function() {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setDate(due.getDate() + 1);
-                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 due.setDate(due.getDate() + 1);
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
@@ -924,63 +996,72 @@ let ui = function() {
                                 let rOn = repeat.on;
                                 let current = "";
                                 let defDistance = due-defer;
-                                while (!rOn.includes(current)) {
-                                    due.setDate(due.getDate() + 1);
-                                    let dow = due.getDay();
-                                    switch (dow) {
-                                        case 1:
-                                            current = "M";
-                                            break;
-                                        case 2:
-                                            current = "Tu";
-                                            break;
-                                        case 3:
-                                            current = "W";
-                                            break;
-                                        case 4:
-                                            current = "Th";
-                                            break;
-                                        case 5:
-                                            current = "F";
-                                            break;
-                                        case 6:
-                                            current = "Sa";
-                                            break;
-                                        case 7:
-                                            current = "Su";
-                                            break;
+                                if (rOn) {
+                                    while (!rOn.includes(current)) {
+                                        due.setDate(due.getDate() + 1);
+                                        let dow = due.getDay();
+                                        switch (dow) {
+                                            case 1:
+                                                current = "M";
+                                                break;
+                                            case 2:
+                                                current = "Tu";
+                                                break;
+                                            case 3:
+                                                current = "W";
+                                                break;
+                                            case 4:
+                                                current = "Th";
+                                                break;
+                                            case 5:
+                                                current = "F";
+                                                break;
+                                            case 6:
+                                                current = "Sa";
+                                                break;
+                                            case 7:
+                                                current = "Su";
+                                                break;
+                                        }
                                     }
+                                } else {
+                                    due.setDate(due.getDate()+7);
+                                    defer.setDate(defer.getDate()+7);
                                 }
-                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 let rOn = repeat.on;
-                                let current = "";
-                                while (!rOn.includes(current)) {
-                                    due.setDate(due.getDate() + 1);
-                                    let dow = due.getDay();
-                                    switch (dow) {
-                                        case 1:
-                                            current = "M";
-                                            break;
-                                        case 2:
-                                            current = "Tu";
-                                            break;
-                                        case 3:
-                                            current = "W";
-                                            break;
-                                        case 4:
-                                            current = "Th";
-                                            break;
-                                        case 5:
-                                            current = "F";
-                                            break;
-                                        case 6:
-                                            current = "Sa";
-                                            break;
-                                        case 7:
-                                            current = "Su";
-                                            break;
+                                if (rOn) {
+                                    let current = "";
+                                    while (!rOn.includes(current)) {
+                                        due.setDate(due.getDate() + 1);
+                                        let dow = due.getDay();
+                                        switch (dow) {
+                                            case 1:
+                                                current = "M";
+                                                break;
+                                            case 2:
+                                                current = "Tu";
+                                                break;
+                                            case 3:
+                                                current = "W";
+                                                break;
+                                            case 4:
+                                                current = "Th";
+                                                break;
+                                            case 5:
+                                                current = "F";
+                                                break;
+                                            case 6:
+                                                current = "Sa";
+                                                break;
+                                            case 7:
+                                                current = "Su";
+                                                break;
+                                        }
                                     }
+                                } else {
+                                    due.setDate(due.getDate()+7);
                                 }
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
@@ -990,17 +1071,26 @@ let ui = function() {
                                 let dow = due.getDate();
                                 let oDow = due.getDate();
                                 let defDistance = due-defer;
-                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
-                                    due.setDate(due.getDate() + 1);
-                                    dow = due.getDate();
+                                if (rOn) {
+                                    while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
+                                        due.setDate(due.getDate() + 1);
+                                        dow = due.getDate();
+                                    }
+                                } else {
+                                    due.setMonth(due.getMonth()+1);
                                 }
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 let rOn = repeat.on;
-                                let dow = due.getDate();
-                                let oDow = due.getDate();
-                                while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
-                                    due.setDate(due.getDate() + 1);
-                                    dow = due.getDate();
+                                if (rOn) {
+                                    let dow = due.getDate();
+                                    let oDow = due.getDate();
+                                    while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
+                                        due.setDate(due.getDate() + 1);
+                                        dow = due.getDate();
+                                    }
+                                } else {
+                                    due.setMonth(due.getMonth()+1);
                                 }
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});
                             }
@@ -1008,7 +1098,7 @@ let ui = function() {
                             if (defer) {
                                 let defDistance = due-defer;
                                 due.setFullYear(due.getFullYear() + 1);
-                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(due-defDistance)});
+                                E.db.modifyTask(uid, taskId, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                             } else {
                                 due.setFullYear(due.getFullYear() + 1);
                                 E.db.modifyTask(uid, taskId, {isComplete: false, due:due});

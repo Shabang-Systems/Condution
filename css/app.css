@@ -256,9 +256,9 @@ a {
 }
 
 #repeat-monthly-unit{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
 }
 
 #repeat-monthgrid {
@@ -270,6 +270,7 @@ a {
     width: 95%;
     /*background-color: var(--background-feature);*/
     margin: 4px;
+    display: none;
 }
 
 
@@ -279,6 +280,7 @@ a {
     flex-direction: row;
     justify-content: space-between;
     margin-top: 10px;
+    display: none;
 }
 
 #repeat-unit {
