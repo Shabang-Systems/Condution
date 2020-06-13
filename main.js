@@ -11,7 +11,7 @@ function createWindow () {
         'webPreferences': {
             'nodeIntegration': true
         },
-        'titleBarStyle': 'customButtonsOnHover', // Was hiddenInset just in case this start's to cause issues TODO verify that it isn't bad
+        'titleBarStyle': 'hiddenInset', // TODO customButtonsOnHover get's rid of the safe area
         'show': false,
     });
 

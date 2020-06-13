@@ -772,6 +772,7 @@ a {
     position: relative;
     border-style: 1px solid;
     z-index: 100;
+    bottom: 10px;
     /*font-family: "SansSerif";*/
     /*width: 30%;*/
 }
@@ -809,7 +810,7 @@ a {
 
 .settings_divider {
     /*border: red;*/
-    height: auto;
+    height: 0.5px;
 }
 
 .hover-highlight {
