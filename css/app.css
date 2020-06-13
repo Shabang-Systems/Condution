@@ -139,7 +139,7 @@ a {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 10px 0;
+    margin: 30px 0;
     opacity: 0.20;
     filter: saturate(40%);
     display: none;

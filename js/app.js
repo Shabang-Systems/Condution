@@ -1312,8 +1312,9 @@ let ui = function() {
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
 
+            $("#blankimage-today").css("opacity", "0.0");
             $("#blankimage-today").css("display", (inboxandDS[0].length + inboxandDS[1].length == 0) ? "flex" : "none")
-
+            $("#blankimage-today").animate({"opacity": "0.2"});
             Promise.all(
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
@@ -1349,7 +1350,9 @@ let ui = function() {
             $("#perspective-title").val(perspectiveObject.name);
             // calculate perspective
             E.perspective.calc(uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord).then(async function(tids) {
+                $("#blankimage-perspective").css("opacity", "0.0");
                 $("#blankimage-perspective").css("display", tids.length == 0 ? "flex" : "none");
+                $("#blankimage-perspective").animate({"opacity": "0.2"});
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
@@ -1373,7 +1376,9 @@ let ui = function() {
             }
             // get the project structure, and load the content
             E.db.getProjectStructure(uid, pid).then(async function(struct) {
+                $("#blankimage-project").css("opacity", "0.0");
                 $("#blankimage-project").css("display", struct.children.length == 0 ? "flex" : "none");
+                $("#blankimage-project").animate({"opacity": "0.2"});
                 for (let item of struct.children) {
                     if (item.type === "task") {
                         // get and load the task
@@ -1766,6 +1771,8 @@ let ui = function() {
                             tb.blur();
                             tb.val("");
                         });
+                
+
                         $("#blankimage-today").css("display", "none");
                     });
                 });
