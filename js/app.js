@@ -114,7 +114,7 @@ const interfaceUtil = function() {
 
 
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
-        return `<div id="task-${taskId}" class="task"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
+        return `<div id="task-${taskId}" class="task thov"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     };
 
@@ -141,7 +141,7 @@ let ui = function() {
         pageContentID: undefined,
         pageLocks: [],
         dateLoaders: {},
-        interfaceLocks: {"qaLock": false, "nprojLock": false, "npspLock": false}
+        interfaceLocks: {"qaLock": false, "nprojLock": false, "npspLock": false, "reloadLock": false}
     };
 
     activeMenu = "today";
@@ -168,6 +168,10 @@ let ui = function() {
 
     // the outside world's refresh function
     let reloadPage = function(delayOverride) {
+        console.log("Reload requested.");
+        if (pageIndex.interfaceLocks.reloadLock) {
+            return false;
+        }
         pageIndex.pageLocks.push(true);
         return (new Promise(function(resolve, reject) {
             let wait = delayOverride ? 100 : 1750;
@@ -1227,7 +1231,16 @@ let ui = function() {
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
-            swapThreshold: 0.20,
+            swapThreshold: 0.10,
+            onStart: function(e) {
+                let itemEl = $(e.item);
+                $('#inbox').children().each(function() {
+                    if ($(this) !== itemEl) {
+                        $(this).removeClass("thov")
+                    }
+                });
+                pageIndex.interfaceLocks.reloadLock = true;
+            },
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
@@ -1251,14 +1264,25 @@ let ui = function() {
                     }
 
                 });
-                reloadPage();
+                $('#inbox').children().addClass("thov");
+                pageIndex.interfaceLocks.reloadLock = false;
+                //reloadPage(true);
             }
         });
 
         // project sorter
         let projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
-            swapThreshold: 0.20,
+            swapThreshold: 0.10,
+            onStart: function(e) {
+                let itemEl = $(e.item);
+                $('#project-content').children().each(function() {
+                    if ($(this) !== itemEl) {
+                        $(this).removeClass("thov")
+                    }
+                });
+                pageIndex.interfaceLocks.reloadLock = true;
+            },
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
@@ -1310,7 +1334,9 @@ let ui = function() {
                         }
                     }
                 });
-                reloadPage(true);
+                $('#project-content').children().addClass("thov");
+                pageIndex.interfaceLocks.reloadLock = false;
+                //reloadPage(true);
             }
         });
 
@@ -1325,28 +1351,31 @@ let ui = function() {
                     if ($(this) !== itemEl) {
                         $(this).removeClass("mihov")
                     }
-                })
+                });
+                pageIndex.interfaceLocks.reloadLock = true;
             },
             onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
+                let loaders = [];
                 E.db.getPerspectives(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
                         // Handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
-                            E.db.modifyPerspective(uid, originalIBT[i], {order: i-1});
+                            loaders.push(E.db.modifyPerspective(uid, originalIBT[i], {order: i-1}));
                         }
-                        E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
+                        loaders.push(E.db.modifyPerspective(uid, originalIBT[oi], {order: ni}));
                     } else if (oi>ni) {
                         // Handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
-                            E.db.modifyPerspective(uid, originalIBT[i], {order: i+1});
+                            loaders.push(E.db.modifyPerspective(uid, originalIBT[i], {order: i+1}));
                         }
-                        E.db.modifyPerspective(uid, originalIBT[oi], {order: ni});
+                        loaders.push(E.db.modifyPerspective(uid, originalIBT[oi], {order: ni}));
                     }
+                    Promise.all(loaders).then(constructSidebar);
+                    pageIndex.interfaceLocks.reloadLock = false;
                 });
-                $('.perspectives').children().addClass("mihov");
             }
 
         });
@@ -1354,6 +1383,7 @@ let ui = function() {
         // NW: top level project sorter
         let topLevelProjectSort = new interfaceUtil.Sortable($(".projects")[0], {
             animation: 200,
+            swapThreshold: 0.10,
             onStart: function(e) {
                 // Make sure that elements don't think that they are being hovered
                 // when they are being dragged over
@@ -1362,30 +1392,32 @@ let ui = function() {
                     if ($(this) !== itemEl) {
                         $(this).removeClass("mihov")
                     }
-                })
+                });
+                pageIndex.interfaceLocks.reloadLock = true;
             },
              onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
+                let loaders = [];
                 E.db.getTopLevelProjects(uid).then(function(topLevelItems) {
                     let originalIBT = topLevelItems[2].map(i => i.id);
                     if (oi<ni) {
                         // Handle task moved down
                         for(let i=oi+1; i<=ni; i++) {
-                            E.db.modifyProject(uid, originalIBT[i], {order: i-1});
+                            loaders.push(E.db.modifyProject(uid, originalIBT[i], {order: i-1}));
                         }
-                        E.db.modifyProject(uid, originalIBT[oi], {order: ni});
+                        loaders.push(E.db.modifyProject(uid, originalIBT[oi], {order: ni}));
                     } else if (oi>ni) {
                         // Handle task moved up
                         for(let i=oi-1; i>=ni; i--) {
-                            E.db.modifyProject(uid, originalIBT[i], {order: i+1});
+                            loaders.push(E.db.modifyProject(uid, originalIBT[i], {order: i+1}));
                         }
-                        E.db.modifyProject(uid, originalIBT[oi], {order: ni});
+                        loaders.push(E.db.modifyProject(uid, originalIBT[oi], {order: ni}));
                     }
-
-
+                    Promise.all(loaders).then(constructSidebar);
+                    pageIndex.interfaceLocks.reloadLock = false;
                 });
-                $('.projects').children().addClass("mihov");
+                //reloadPage(true);
             }
         });
 
@@ -1621,6 +1653,7 @@ let ui = function() {
     $(document).on("click", "#new-project", function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let projObj = {
+            name: "New Project",
             top_level: false,
             is_sequential: false,
         };
