@@ -1,6 +1,6 @@
 {
-  "name": "condution",
-  "version": "0.1.2-alpha.1",
+  "name": "Condution",
+  "version": "0.1.3-beta.0",
   "description": "Tasks? Done. That was quick.",
   "main": "main.js",
   "scripts": {
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/Shabang-Systems/Condution#readme",
   "devDependencies": {
+    "babel-minify": "^0.5.1",
     "electron": "^8.1.1",
     "electron-builder": "^22.5.1",
     "electron-rebuild": "^1.10.1",
@@ -63,6 +64,9 @@
     "copyright": "Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors.",
     "mac": {
       "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "icon": "dmg.icns"
     },
     "win": {
       "target": "nsis-web"

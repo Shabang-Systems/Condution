@@ -66,7 +66,7 @@
             </t>
             <div id="loading-anim"></div>
             <t id="loading-msg-sub"><b style="font-weight: 800 !important">Condution</b> is Loading...</t>
-            <t id="loading-bottom">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors. Licensed and Distributed under GPL-v3.0. alpha-v0.1.2.</t>
+            <t id="loading-bottom">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors. Licensed and Distributed under GPL-v3.0. beta-v0.1.3_build0.</t>
         </div>
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
@@ -112,6 +112,7 @@
                             </ul>
                         </div>
                         <div id="repeat-weekly-unit" class="repeat-subunit" style="display:none" style="display:none">
+                            <t id="repeat-advanced-weekly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
                             <div id="repeat-daterow">
                                 <div class="repeat-daterow-weekname">M</div>
                                 <div class="repeat-daterow-weekname">Tu</div>
@@ -123,6 +124,7 @@
                             </div>
                         </div>
                         <div id="repeat-monthly-unit" class="repeat-subunit" style="display:none">
+                            <t id="repeat-advanced-monthly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
                             <div id="repeat-monthgrid">
                                 <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day">Last</div>
                             </div>
@@ -155,6 +157,10 @@
                         <div id="upcoming-header"><t id="greeting"></t><t id="greeting-name"></t>&middot;<t id="greeting-date"></t></div>
                         <hr class="perspective-divider"/>
                     </div>
+                    <div id="blankimage-today" class="blankimage-content">
+                        <img class="blankimage"></img>
+                        <div class="blankimage-alt">Wow... How empty. <b style="font-weight: 200">(Quick)Add a task?</b></div>
+                    </div>
                     <div id="inbox-subhead" class="perspective-subhead">
                         Unsorted <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)"></div>
                     </div>
@@ -173,6 +179,10 @@
                         <hr class="perspective-divider"/>
                     </div>
                     <div id="perspective-content"> </div>
+                    <div id="blankimage-perspective" class="blankimage-content">
+                        <img class="blankimage"></img>
+                        <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more filters?</b></div>
+                    </div>
                 </div>
                  <div id="project-page" class="page">
                     <div class="project-action" id="project-back" style="display: inline-block; float: left; margin-right: 10px"><i class="fas fa-chevron-left"></i></div>
@@ -196,6 +206,10 @@
                     </div>
                     <div id="new-project" class="newbutton" style="transform: translateY(-8px)">
                         <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
+                    </div>
+                    <div id="blankimage-project" class="blankimage-content">
+                        <img class="blankimage"></img>
+                        <div class="blankimage-alt">Wow... Such empty. <b style="font-weight: 200">Add a task?</b></div>
                     </div>
                 </div>
             </div>

@@ -1,20 +1,18 @@
 // Chapter 0: Fire! Base!
 const { ipcRenderer } = require('electron');
 
-
-
 (function() {
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
     $("body").addClass(currentTheme);
-    $("#loading").hide().css("display", "flex").fadeIn();
+    //$("#loading").hide().css("display", "flex").fadeIn();
 }
 else {
     currentTheme = "condutiontheme-default-light";
     $("body").removeClass();
     $("body").addClass(currentTheme);
-    $("#loading").hide().css("display", "flex").fadeIn();
+    //$("#loading").hide().css("display", "flex").fadeIn();
 }
 
 ipcRenderer.on("systheme-dark", function (event, data) {
@@ -28,20 +26,20 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("body").removeClass();
     $("body").addClass(currentTheme);
 });
-    lottie.loadAnimation({
-        container: $("#loading-anim")[0],
-        renderer: 'svg',
-        autoplay: true,
-        loop: true,
-        path: 'static/loadanim_final.json'
-    })
-    $("#loading").hide().css("display", "flex").fadeIn();
+    let mode = "login";
+    /*lottie.loadAnimation({*/
+        //container: $("#loading-anim")[0],
+        //renderer: 'svg',
+        //autoplay: true,
+        //loop: true,
+        //path: 'static/loadanim_final.json'
+    //})
+    /*$("#loading").hide().css("display", "flex").fadeIn();*/
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
     const obj = require("./backend/secrets")
     firebase.initializeApp(obj.dbkeys.debug);
 
-    let isNA = false;
     let isNASuccess = false;
 
     let auth = function() {
@@ -52,8 +50,20 @@ ipcRenderer.on("systheme-light", function (event, data) {
             window.location = 'app.html'; 
             isNASuccess = false;
         }
-        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
+        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
+            if (firebase.auth().currentUser.emailVerified){
+                window.location = 'app.html'; 
+            } else {
+                firebase.auth().currentUser.sendEmailVerification();
+                $('#auth-left-menu').fadeIn();
+                $('#need-verify').fadeIn();
+                $('#recover-password').fadeOut();
+                //$("#loading").fadeOut();
+                $("#authwall").fadeIn();
+            }
+        }).catch(function(error) {
             // Handle Errors here.
+            console.log(error);
             console.log("Silly goose");
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -61,44 +71,98 @@ ipcRenderer.on("systheme-light", function (event, data) {
         });
     };
 
+    let rec = function() {
+        firebase.auth().sendPasswordResetEmail($("#email").val()).then(function() {
+            $(".auth-upf").removeClass("wrong");
+            $("#password").show();
+            $("#newuser").html("Make an account.");
+            $("#newuser").show();
+            $("#recover-password").html("Recover Password");
+            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+            $('#recover-password').fadeOut();
+            $('#need-verify').fadeIn();
+        }).catch(function(error) {
+            $(".auth-upf").addClass("wrong");
+        });
+    }
+
     let nu = function() {
         firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
             console.log("Silly goose");
         });
         $('#need-verify').fadeIn();
-        isNA = false;
+        $('#recover-password').fadeOut();
         isNASuccess = true;
     }
 
     $("#password").keydown(function(e) {
         if (e.keyCode == 13) {
-            if (isNA) {
-                nu();
-            } else {
-                auth();
+            switch (mode) {
+                case "login":
+                    auth();
+                    break;
+                case "newuser":
+                    nu();
+                    break;
             }
         }
     });
 
     $("#login").click(function(e) {
-        if (isNA) {
-            nu();
-        } else {
-            auth();
+        switch (mode) {
+            case "login":
+                auth();
+                break;
+            case "newuser":
+                nu();
+                break;
+            case "recover":
+                rec();
+                break;
+        }
+    });
+
+    $("#recover-password").click(function(e) {
+        switch (mode) {
+            case "login":
+                $("#password").hide();
+                $("#recover-password").html("Remembered? Login");
+                $("#newuser").hide();
+                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                mode = "recover";
+                break;
+            case "newuser":
+                $("#name-tray").hide();
+                $("#password").hide();
+                $("#recover-password").html("Remembered? Login");
+                $("#newuser").hide();
+                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                mode = "recover";
+                break;
+            case "recover":
+                $("#password").show();
+                $("#newuser").html("Make an account.");
+                $("#newuser").show();
+                $("#recover-password").html("Recover Password");
+                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                mode = "login";
         }
     });
 
     $("#newuser").click(function(e) {
-        if (isNA) {
-            $("#name-tray").slideUp(300);
-            $(this).html("Make an account.");
-            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
-            isNA = false;
-        } else {
-            $("#name-tray").slideDown(300);
-            $(this).html("Sign in.");
-            isNA = true;
-            $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+        switch (mode) {
+            case "login":
+                $("#name-tray").slideDown(300);
+                $(this).html("Sign in.");
+                mode = "newuser";
+                $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+                break;
+            case "newuser":
+                $("#name-tray").slideUp(300);
+                $(this).html("Make an account.");
+                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                mode = "login";
+                break;
         }
     });
 
@@ -110,11 +174,12 @@ ipcRenderer.on("systheme-light", function (event, data) {
                 user.sendEmailVerification();
                 $('#auth-left-menu').fadeIn();
                 $('#need-verify').fadeIn();
-                $("#loading").fadeOut();
+                $('#recover-password').fadeOut();
+                //$("#loading").fadeOut();
                 $("#authwall").fadeIn();
             }
         } else {
-            $("#loading").fadeOut();
+            //$("#loading").fadeOut();
             $("#authwall").fadeIn();
             $('#auth-left-menu').fadeIn();
         }
