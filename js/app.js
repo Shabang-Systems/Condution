@@ -141,7 +141,7 @@ let ui = function() {
         pageContentID: undefined,
         pageLocks: [],
         dateLoaders: {},
-        interfaceLocks: {"qaLock": false, "nprojLock": false, "npspLock": false, "reloadLock": false}
+        interfaceLocks: {"qaLock": false, "nprojLock": false, "npspLock": false, "ntLock": false, "reloadLock": false}
     };
 
     activeMenu = "today";
@@ -168,7 +168,6 @@ let ui = function() {
 
     // the outside world's refresh function
     let reloadPage = function(delayOverride) {
-        console.log("Reload requested.");
         if (pageIndex.interfaceLocks.reloadLock) {
             return false;
         }
@@ -1651,6 +1650,12 @@ let ui = function() {
     });
 
     $(document).on("click", "#new-project", function() {
+        if (pageIndex.interfaceLocks.nprojLock) {
+            return;
+        } else {
+            pageIndex.interfaceLocks.nprojLock = true;
+            setTimeout(()=>{pageIndex.interfaceLocks.nprojLock = false}, 1000);
+        }
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let projObj = {
             name: "New Project",
@@ -1757,6 +1762,13 @@ let ui = function() {
     });
 
     $(document).on("click", "#new-task", function() {
+        if (pageIndex.interfaceLocks.ntLock) {
+            return;
+        } else {
+            pageIndex.interfaceLocks.ntLock = true;
+            setTimeout(()=>{pageIndex.interfaceLocks.ntLock = false}, 1000);
+        }
+
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
         let ntObject = {
             desc: "",
