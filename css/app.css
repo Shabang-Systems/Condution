@@ -626,7 +626,7 @@ a {
     transition: background-color 200ms ease-in-out;
 }
 
-.task:hover {
+.thov:hover {
     background-color: var(--task-feature) !important;
 }
 

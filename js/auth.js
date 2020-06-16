@@ -6,13 +6,13 @@ const { ipcRenderer } = require('electron');
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
     $("body").addClass(currentTheme);
-    $("#loading").hide().css("display", "flex").fadeIn();
+    //$("#loading").hide().css("display", "flex").fadeIn();
 }
 else {
     currentTheme = "condutiontheme-default-light";
     $("body").removeClass();
     $("body").addClass(currentTheme);
-    $("#loading").hide().css("display", "flex").fadeIn();
+    //$("#loading").hide().css("display", "flex").fadeIn();
 }
 
 ipcRenderer.on("systheme-dark", function (event, data) {
@@ -27,14 +27,14 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("body").addClass(currentTheme);
 });
     let mode = "login";
-    lottie.loadAnimation({
-        container: $("#loading-anim")[0],
-        renderer: 'svg',
-        autoplay: true,
-        loop: true,
-        path: 'static/loadanim_final.json'
-    })
-    $("#loading").hide().css("display", "flex").fadeIn();
+    /*lottie.loadAnimation({*/
+        //container: $("#loading-anim")[0],
+        //renderer: 'svg',
+        //autoplay: true,
+        //loop: true,
+        //path: 'static/loadanim_final.json'
+    //})
+    /*$("#loading").hide().css("display", "flex").fadeIn();*/
     // Initialize Firebase Application
     // TODO TODO TODO !!!! Change this on deploy
     const obj = require("./backend/secrets")
@@ -58,7 +58,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
                 $('#auth-left-menu').fadeIn();
                 $('#need-verify').fadeIn();
                 $('#recover-password').fadeOut();
-                $("#loading").fadeOut();
+                //$("#loading").fadeOut();
                 $("#authwall").fadeIn();
             }
         }).catch(function(error) {
@@ -175,11 +175,11 @@ ipcRenderer.on("systheme-light", function (event, data) {
                 $('#auth-left-menu').fadeIn();
                 $('#need-verify').fadeIn();
                 $('#recover-password').fadeOut();
-                $("#loading").fadeOut();
+                //$("#loading").fadeOut();
                 $("#authwall").fadeIn();
             }
         } else {
-            $("#loading").fadeOut();
+            //$("#loading").fadeOut();
             $("#authwall").fadeIn();
             $('#auth-left-menu').fadeIn();
         }
