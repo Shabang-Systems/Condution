@@ -64,7 +64,6 @@
     "appId": "cf.shabang.condution",
     "productName": "Condution",
     "copyright": "Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors.",
-    "aftersign": "build/buildscripts/aftersign.js",
     "mac": {
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
