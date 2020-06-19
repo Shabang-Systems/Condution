@@ -13,7 +13,10 @@ Condution is a wonderful electron app built to create a perfectly easy task-mana
 
 Condution attempts to change this. We want to create an open-source productivity/task-management app that is both simple, and, well, free (but we do take [Patreon](https://www.patreon.com/condution) donations though).
 
-We will add some glam => here <=, soon. 
+<p align="center">
+  <img src="https://condution.shabang.cf/images/pic06.png" />
+  <i>This. Is. (Actually.) Condution.</i>
+</p>
 
 ### Features 
 #### The Standard Spheal
