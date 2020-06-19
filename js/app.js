@@ -1972,13 +1972,13 @@ let ui = function() {
         //}
     /*});*/
 
-    $(document).on("dragenter", ".project", function(e) {
-        $(this).animate({"background-color": interfaceUtil.gtc("--menu-accent-background")}, 100);
-    });
+/*    $(document).on("dragenter", ".project", function(e) {*/
+        //$(this).animate({"background-color": interfaceUtil.gtc("--menu-accent-background")}, 100);
+    //});
 
-    $(document).on("dragleave", ".project", function(e) {
-        $(this).animate({"background-color": "transparent"}, 100);
-    });
+    //$(document).on("dragleave", ".project", function(e) {
+        //$(this).animate({"background-color": "transparent"}, 100);
+    /*});*/
 
 /*    $(document).on("dragenter", "#quickadd", function(e) {*/
         //e.preventDefault();
