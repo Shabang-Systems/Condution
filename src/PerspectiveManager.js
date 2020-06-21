@@ -74,9 +74,6 @@ const perspectiveHandler = function(){
                     case "#":
                         queries.push(['tags', '!has',  pPaT[1][1][e.slice(2, e.length)]]);
                 }
-                //e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(2, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(2, e.length)]]);
-                //e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
-                
             }
             queries.push(['isComplete', '==', false]);
         }));
