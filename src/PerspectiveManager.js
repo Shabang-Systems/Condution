@@ -44,6 +44,7 @@ const perspectiveHandler = function(){
     let compileTask = async function(uid, str, pPaT, additionalFilter) {
         let queries = additionalFilter ? [additionalFilter] : [];
         let taskCache = [];
+        let antiCache = [];
         await Promise.all(str.match(cgs.taskFilter).map(async function(e) {
             e = e.trim();
             if (e[0] !== "!") {
@@ -68,7 +69,7 @@ const perspectiveHandler = function(){
                         let pS = await dbObj.getProjectStructure(uid, pid);
                         for (let i of pS.children)
                             if (i.type === "project")
-                                taskCache = [...taskCache, ...(await compileTask(uid, str.replace(e.slice(2, e.length), pPaT[0][0][i.content.id]), pPaT, additionalFilter))];
+                                antiCache = [...antiCache, ...(await compileTask(uid, str.replace(e, "."+pPaT[0][0][i.content.id]), pPaT, additionalFilter))];
                         break;
                     case "#":
                         queries.push(['tags', '!has',  pPaT[1][1][e.slice(2, e.length)]]);
@@ -79,8 +80,7 @@ const perspectiveHandler = function(){
             }
             queries.push(['isComplete', '==', false]);
         }));
-        console.log(queries);
-        return [...taskCache, ...(await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries)))];
+        return [...taskCache, ...(await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries)))].filter(i=>(!antiCache.includes(i)));
     };
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
