@@ -28,18 +28,59 @@ const perspectiveHandler = function(){
         return vr;
     };
 
+    let transformFilter = function(filterString, pPaT) {
+        let analyzedQueries = [];
+        if (filterString[0] === "!") {
+            analyzedQueries.push([]);
+            switch (e[0]) {
+                case ".":
+                    analyzedQueries.push();
+                    break;
+            }
+        } else {
+        }
+    }
+
     let compileTask = async function(uid, str, pPaT, additionalFilter) {
         let queries = additionalFilter ? [additionalFilter] : [];
-        str.match(cgs.taskFilter).forEach(function(e) {
+        let taskCache = [];
+        await Promise.all(str.match(cgs.taskFilter).map(async function(e) {
             e = e.trim();
-            if (e[0] === "!") {
-                e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(2, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(2, e.length)]]);
+            if (e[0] !== "!") {
+                switch (e[0]) {
+                    case ".":
+                        let pid = pPaT[0][1][e.slice(1, e.length)];
+                        queries.push(['project', '==', pid]);
+                        let pS = await dbObj.getProjectStructure(uid, pid);
+                        for (let i of pS.children)
+                            if (i.type === "project")
+                                taskCache = [...taskCache, ...(await compileTask(uid, str.replace(e.slice(1, e.length), pPaT[0][0][i.content.id]), pPaT, additionalFilter))];
+                        break;
+                    case "#":
+                        queries.push(['tags', 'has',  pPaT[1][1][e.slice(1, e.length)]]);
+                }
             } else {
-                e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
+                switch (e[1]) {
+                    case ".":
+                        let pid = pPaT[0][1][e.slice(2, e.length)];
+                        queries.push(['project', '!=', pid]);
+
+                        let pS = await dbObj.getProjectStructure(uid, pid);
+                        for (let i of pS.children)
+                            if (i.type === "project")
+                                taskCache = [...taskCache, ...(await compileTask(uid, str.replace(e.slice(2, e.length), pPaT[0][0][i.content.id]), pPaT, additionalFilter))];
+                        break;
+                    case "#":
+                        queries.push(['tags', '!has',  pPaT[1][1][e.slice(2, e.length)]]);
+                }
+                //e.includes(".") ? queries.push(['project', '!=',  pPaT[0][1][e.slice(2, e.length)]]) : queries.push(['tags', '!has', pPaT[1][1][e.slice(2, e.length)]]);
+                //e.includes(".") ? queries.push(['project', '==',  pPaT[0][1][e.slice(1, e.length)]]) : queries.push(['tags', 'has', pPaT[1][1][e.slice(1, e.length)]]);
+                
             }
             queries.push(['isComplete', '==', false]);
-        });
-        return await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries))
+        }));
+        console.log(queries);
+        return [...taskCache, ...(await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries)))];
     };
 
     let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
