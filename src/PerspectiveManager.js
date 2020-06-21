@@ -28,19 +28,6 @@ const perspectiveHandler = function(){
         return vr;
     };
 
-    let transformFilter = function(filterString, pPaT) {
-        let analyzedQueries = [];
-        if (filterString[0] === "!") {
-            analyzedQueries.push([]);
-            switch (e[0]) {
-                case ".":
-                    analyzedQueries.push();
-                    break;
-            }
-        } else {
-        }
-    }
-
     let compileTask = async function(uid, str, pPaT, additionalFilter) {
         let queries = additionalFilter ? [additionalFilter] : [];
         let taskCache = [];
