@@ -118,8 +118,8 @@ async function getInboxTasks(userID) {
     return inboxDocs.map(doc => doc.id);
 }
 
-async function getDSTasks(userID, available) {
-    let dsTime = new Date(); // TODO: merge with next line?
+async function getDSTasks(userID, available, wrt) {
+    let dsTime = wrt ? wrt : new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
     //let available = await getItemAvailability(userID);
     let dsDocs = await cRef("users", userID,
@@ -137,6 +137,42 @@ async function getDSTasks(userID, available) {
             .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
     ).catch(console.error);
     return dsDocs.map(doc => doc.id);
+}
+
+async function dueTasks(userID, available, wrt) {
+    let dsTime = wrt ? wrt : new Date(); // TODO: merge with next line?
+    dsTime.setHours(23,59,59,999);
+    //let available = await getItemAvailability(userID);
+    let dsDocs = await cRef("users", userID,
+        "tasks")
+            //['due', '<=', dsTime],
+            //['isComplete', "==", false])
+        .get()
+        .then(snap => snap.docs
+            .filter(doc =>
+                (doc.data().due ? (doc.data().due.seconds <= (dsTime.getTime()/1000)) : false) && // has a due date and is ds
+                (doc.data().defer ? (doc.data().defer.seconds < ((new Date()).getTime())/1000) : true) && // has a defer and is not defered or has no defer date
+                (doc.data().isComplete === false) && // is not completed
+                (available[doc.id]) // aaaand is available
+            )
+            .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
+    ).catch(console.error);
+    return dsDocs.map(doc => doc.id);
+}
+
+async function getDSRow(userID, avaliable) {
+    let ibt = await getInboxTasks(userID);
+    let d = new Date();
+    let dsTasks = [];
+    let prev = [];
+    for (let i=0; i<=7; i++) {
+        let content = (await dueTasks(userID, avaliable, d))
+        let cache = content;
+        dsTasks.push(content.filter(x => !prev.includes(x)));
+        prev = cache;
+        d.setDate(d.getDate() + 1)
+    }
+    return dsTasks.map(dst => dst.filter(x => ibt.indexOf(x) < 0));
 }
 
 async function getInboxandDS(userID, avalibility) {
@@ -447,5 +483,5 @@ async function getItemAvailability(userID) {
     return blockstatus;
 }
 
-module.exports = {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation};
+module.exports = {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag};
 
