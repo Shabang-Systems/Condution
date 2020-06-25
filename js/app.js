@@ -128,7 +128,7 @@ let ui = function() {
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
     // generic data containers used by refresh and others
-    let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev;
+    let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev, nextSevenDSes;
     let possiblePerspectives;
     let inboxandDS;
     let avalibility;
@@ -138,6 +138,7 @@ let ui = function() {
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
+        dateSelected: 0,
         pageContentID: undefined,
         pageLocks: [],
         dateLoaders: {},
@@ -156,6 +157,7 @@ let ui = function() {
         possiblePerspectives = await E.db.getPerspectives(uid);
         avalibility = await E.db.getItemAvailability(uid);
         inboxandDS = await E.db.getInboxandDS(uid, avalibility);
+        nextSevenDSes = await E.db.getDSRow(uid, avalibility);
         projectDB = await (async function() {
             let pdb = [];
             let topLevels = (await E.db.getTopLevelProjects(uid))[0];
@@ -605,10 +607,7 @@ let ui = function() {
             } else if (activeTaskDeDsed) {
                 let hTask = activeTask;
                 dsC = inboxandDS[1].length;
-                if (dsC === 0) {
-                    $("#ds-subhead").slideUp(300);
-                    $("#due-soon").slideUp(300);
-                } else {
+                if (dsC !== 0) {
                     $("#duesoon-badge").html(''+dsC);
                     if (activeMenu==="today" && $($('#task-' + hTask).parent()).attr('id') !== "inbox") {
                         $('#task-'+hTask).slideUp(200);
@@ -1109,7 +1108,7 @@ let ui = function() {
 
                         }
                     }
-                    reloadPage();
+                    reloadPage(true);
                 }
             });
 
@@ -1432,15 +1431,19 @@ let ui = function() {
             $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
-
-            $("#blankimage-today").css("opacity", "0.0");
-            $("#blankimage-today").css("display", (inboxandDS[0].length + inboxandDS[1].length == 0) ? "flex" : "none")
-            $("#blankimage-today").animate({"opacity": "0.2"});
+            //nextSevenDSes
+            let d = new Date();
+            for (let i = 0; i <= 7; i++) {
+                $("#upcoming-daterow-t"+i).html(nextSevenDSes[i].length);
+                $("#upcoming-daterow-d"+i).html(d.getDate());
+                $("#upcoming-daterow-w"+i).html(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]);
+                d.setDate(d.getDate()+1);
+            }
             Promise.all(
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
                 // load due soon tasks
-                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task))
+                (pageIndex.dateSelected == 0 ? inboxandDS[1] : nextSevenDSes[pageIndex.dateSelected]).map(task => taskManager.generateTaskInterface("due-soon", task))
             ).then(function() {
                 // update upcoming view headers
                 if (inboxandDS[0].length === 0) {
@@ -1452,11 +1455,8 @@ let ui = function() {
                     $("#unsorted-badge").html('' + inboxandDS[0].length);
                 }
                 if (inboxandDS[1].length === 0) {
-                    $("#ds-subhead").hide();
-                    $("#due-soon").hide();
+                    $("#duesoon-badge").html('0');
                 } else {
-                    $("#ds-subhead").show();
-                    $("#due-soon").show();
                     $("#duesoon-badge").html('' + inboxandDS[1].length);
                 }
             });
@@ -1594,6 +1594,33 @@ let ui = function() {
             pageIndex.projectDir.push(activeMenu);
             loadView("project-page", activeMenu.split("-")[1]);
         }
+    });
+    
+    $(document).on('click', '.upcoming-daterow-item', function(e) {
+        $("#upcoming-daterow").children().each(function() {
+            $(this).removeClass("upcoming-daterow-active");
+            $(this).addClass("upcoming-daterow-normal");
+        });
+        let original = $(this);
+        original.removeClass("upcoming-daterow-normal");
+        original.addClass("upcoming-daterow-active");
+        let cat = Number(original.attr("id").split("-")[2]);
+        pageIndex.dateSelected = cat;
+        let d = new Date();
+        //console.log(d, cat, d.getDate()+);
+        d.setDate(d.getDate()+cat);
+        //console.log(d);
+        if (cat == 0) {
+            $("#ds-text").html("Due Soon");
+            $("#duesoon-badge").show();
+            $("#ds-daterowfield").hide();
+        } else {
+            $("#ds-text").html("Due");
+            $("#duesoon-badge").hide();
+            $("#ds-daterowfield").css("display", "inline-block");
+            $("#duesoon-ondate").html(d.toLocaleDateString("en-US", { weekday: 'short', day: 'numeric'}));
+        }
+        loadView("upcoming-page");
     });
 
     $(document).on('click', '.today', function(e) {
@@ -1906,9 +1933,6 @@ let ui = function() {
                             tb.blur();
                             tb.val("");
                         });
-                
-
-                        $("#blankimage-today").css("display", "none");
                     });
                 });
             });
