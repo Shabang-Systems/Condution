@@ -34,6 +34,21 @@ a {
     padding-bottom:9px;
 }
 
+#duesoon-ondate {
+    font-weight: 300;
+    display: inline-block;
+    /*padding-left: 1px;*/
+    font-size: 12px;
+    transform: translateY(-1px);
+}
+
+#upcoming-daterow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 30px;
+}
+
 #perspective-edit-name {
     color: var(--content-normal-accent);
     padding-left: 4px;
