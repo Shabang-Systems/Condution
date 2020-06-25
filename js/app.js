@@ -128,7 +128,7 @@ let ui = function() {
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
     // generic data containers used by refresh and others
-    let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev;
+    let pPandT, possibleProjects, possibleTags, possibleProjectsRev, possibleTagsRev, nextSevenDSes;
     let possiblePerspectives;
     let inboxandDS;
     let avalibility;
@@ -138,6 +138,7 @@ let ui = function() {
     let pageIndex = {
         currentView: "upcoming-page",
         projectDir: [],
+        dateSelected: 0,
         pageContentID: undefined,
         pageLocks: [],
         dateLoaders: {},
@@ -156,6 +157,7 @@ let ui = function() {
         possiblePerspectives = await E.db.getPerspectives(uid);
         avalibility = await E.db.getItemAvailability(uid);
         inboxandDS = await E.db.getInboxandDS(uid, avalibility);
+        nextSevenDSes = await E.db.getDSRow(uid, avalibility);
         projectDB = await (async function() {
             let pdb = [];
             let topLevels = (await E.db.getTopLevelProjects(uid))[0];
@@ -1432,7 +1434,14 @@ let ui = function() {
             $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
-
+            //nextSevenDSes
+            let d = new Date();
+            for (let i = 0; i <= 7; i++) {
+                $("#upcoming-daterow-t"+i).html(nextSevenDSes[i].length);
+                $("#upcoming-daterow-d"+i).html(d.getDate());
+                $("#upcoming-daterow-w"+i).html(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]);
+                d.setDate(d.getDate()+1);
+            }
             $("#blankimage-today").css("opacity", "0.0");
             $("#blankimage-today").css("display", (inboxandDS[0].length + inboxandDS[1].length == 0) ? "flex" : "none")
             $("#blankimage-today").animate({"opacity": "0.2"});
@@ -1440,7 +1449,7 @@ let ui = function() {
                 // load inbox tasks
                 inboxandDS[0].map(task => taskManager.generateTaskInterface("inbox", task)),
                 // load due soon tasks
-                inboxandDS[1].map(task => taskManager.generateTaskInterface("due-soon", task))
+                (pageIndex.dateSelected == 0 ? inboxandDS[1] : nextSevenDSes[pageIndex.dateSelected]).map(task => taskManager.generateTaskInterface("due-soon", task))
             ).then(function() {
                 // update upcoming view headers
                 if (inboxandDS[0].length === 0) {
@@ -1594,6 +1603,16 @@ let ui = function() {
             pageIndex.projectDir.push(activeMenu);
             loadView("project-page", activeMenu.split("-")[1]);
         }
+    });
+    
+    $(document).on('click', '.upcoming-daterow-item', function(e) {
+        $("#upcoming-daterow").children().each(function() {
+            $(this).removeClass("upcoming-daterow-active");
+        });
+        let original = $(this);
+        original.addClass("upcoming-daterow-active");
+        pageIndex.dateSelected = original.attr("id").split("-")[2]
+        loadView("upcoming-page");
     });
 
     $(document).on('click', '.today', function(e) {
