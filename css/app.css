@@ -37,9 +37,7 @@ a {
 #duesoon-ondate {
     font-weight: 300;
     display: inline-block;
-    /*padding-left: 1px;*/
     font-size: 12px;
-    transform: translateY(-1px);
 }
 
 #upcoming-daterow {
@@ -65,7 +63,7 @@ a {
     transition: 0.5s all;
 }
 
-.upcoming-daterow-item:hover {
+.upcoming-daterow-normal:hover {
     background: var(--content-normal);
 }
 
