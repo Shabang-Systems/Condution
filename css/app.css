@@ -22,69 +22,153 @@
       text-decoration: inherit;
     }
 
+    /* Windowing */
+
+        /* Classes */
+
+            .darwin-windowing-left {
+                padding-top: 40px !important;
+            }
+
+            .darwin-windowing-right {
+                padding-top: 45px !important;
+            }
+
+            .win32-windowing {
+                padding-top: 10px !important;
+            }
+
+            .main-head {
+                -webkit-app-region: drag;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+                position: fixed;
+                z-index: 100;
+                display: none;
+            }
+
+        /* IDs */
+
+            #main-head-win32 {
+                background-color: transparent;
+                height: 23px;
+            }
+
+            #main-head-darwin {
+                background-color: transparent;
+                height: 34px;
+            }
+
+
 /* == Pages and Views (Biggie Things) == */
 
-    /* Classes */
-        .page {
-            display: none;
-            overflow-y: scroll;
-            height: 100%;
-            margin: 1px;
-        }
+    /* Leading */
 
-        .blankimage {
-            height: 200px;
-            width: auto;
-        }
+        /* IDs */
 
-        .blankimage-alt {
-            margin-top: 20px;
-            font-weight: 600;
-            color: var(--content-normal-accent);
-        }
+            #loading {
+                margin-top: 35px;
+                padding-left: 5px;
+                background-color: var(--background);
+                color: var(--content-normal-accent);
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: 100000;
+                display: none;
+            }
 
-        .overlay-unit {
-            background-color: var(--background);
-            border-radius: 5px;
-            width: 450px; 
-            padding: 10px;
-        }
+            #loading-msg {
+                color: var(--content-normal-alt);
+                font-weight: 500;
+                font-size: 15px;
+            }
 
-    /* IDs */
+            #loading-bottom {
+                bottom: 50px;
+                position: absolute;
+                display: flex;
+                font-size: 8px;
+                font-weight: 200;
+            }
 
-        #content-wrapper {
-            margin: 0;
-            height: 100%;
-            background-color: var(--background);
-            display: grid;
-            grid-template-columns: 200px auto
-        }
+            #loading-msg-sub {
+                color: var(--content-normal-alt);
+                font-weight: 200;
+                font-size: 15px;
+            }
 
-        #content-area{
-            padding: 0 10px 0 10px;
-            overflow: scroll;
-        }
+            #loading-anim {
+                width: 150px;
+                height: 150px;
+            }
 
-        #overlay {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: var(--background-feature-overlay);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center; 
-            display: none;
-        }
+    /* Content Pages */
 
-        #repeat-unit {
-            display: none; /* TODO: remove? */
-        }
+        /* Classes */
+            .page {
+                display: none;
+                overflow-y: scroll;
+                height: 100%;
+                margin: 1px;
+            }
+
+            .blankimage {
+                height: 200px;
+                width: auto;
+            }
+
+            .blankimage-alt {
+                margin-top: 20px;
+                font-weight: 600;
+                color: var(--content-normal-accent);
+            }
+
+            .overlay-unit {
+                background-color: var(--background);
+                border-radius: 5px;
+                width: 450px; 
+                padding: 10px;
+            }
+
+        /* IDs */
+
+            #content-wrapper {
+                margin: 0;
+                height: 100%;
+                background-color: var(--background);
+                display: grid;
+                grid-template-columns: 200px auto
+            }
+
+            #content-area{
+                padding: 0 10px 0 10px;
+                overflow: scroll;
+            }
+
+            #overlay {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: var(--background-feature-overlay);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center; 
+                display: none;
+            }
+
+            #repeat-unit {
+                display: none; /* TODO: remove? */
+            }
 
 /* == Menu + Menu Actions == */
 
-    /* Classes */
+    /* Menu Wingdings */
 
-        /* Menu Wingdings */
+        /* Classes */
 
             .menu-portion {
                 transform: translateX(-9px);
@@ -129,7 +213,9 @@
 
 
 
-        /* Menu Items */
+    /* Menu Items */
+
+        /* Classes */
 
             .today {
                 color: var(--menu-text);
@@ -211,27 +297,72 @@
                 text-overflow: ellipsis;
             }
 
-    /* IDs */
+    /* Da Menu */
 
-        #left-menu{
-            grid-column-start: 1;
-            grid-column-end: 1;
-            background-color: var(--menu-background);
-            padding: 0 10px 10px 10px;
-            overflow: hidden;
-        }
+        /* IDs */
 
-        #menu-area{
-            height: 100%;
-            display: flex;
-            /*grid-template-rows: 60px 30px auto auto;*/
-            color: var(--menu-background);
-            flex-direction: column;
-        }
+            #left-menu{
+                grid-column-start: 1;
+                grid-column-end: 1;
+                background-color: var(--menu-background);
+                padding: 0 10px 10px 10px;
+                overflow: hidden;
+            }
+
+            #menu-area{
+                height: 100%;
+                display: flex;
+                /*grid-template-rows: 60px 30px auto auto;*/
+                color: var(--menu-background);
+                flex-direction: column;
+            }
 
 
 
 
 /* == Misc. Buttons and Actions == */
 
+    /* Quickadd */
+
+        /* IDs */
+
+            #quickadd {
+                background-color: var(--quickadd);
+                margin: 20px;
+                width: 250px;
+                height: 30px;
+                z-index: 10;
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                border: 0;
+                border-radius: 7px;
+                padding: 3px 1px 3px 10px;
+                box-shadow: 1px 1px 3px var(--background-feature);
+                font-size: 14px;
+                transition-property: color, background-color;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                color: var(--quickadd-text);
+            }
+
+                #quickadd::placeholder{
+                    color: var(--quickadd-placeholder);
+                }
+
+                #quickadd.dragover::placeholder{
+                    color: var(--quickadd-success-text) !important;
+                }
+
+                #quickadd:hover {
+                    background-color: var(--quickadd-feature);
+                }
+
+                #quickadd:focus {
+                    background-color: var(--quickadd-feature);
+                }
+
+                #quickadd:active {
+                    background-color: var(--quickadd-feature);
+            }
 
