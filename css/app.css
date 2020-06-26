@@ -410,6 +410,55 @@
                 width: 26%;
             }
 
+            .task-flagged {
+                background-color: var(--task-textbox-background);
+                height: 20px;
+                width: 10%;
+                font-size: 9px;
+                color: var(--task-clickbox);
+                margin: 0px !important;
+                border-radius: 3px;
+            }
+
+                .task-flagged.active{
+                    background-color: var(--special);
+                    box-shadow: 0;
+                    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0);
+                }
+
+                .task-flagged:hover {
+                    color: var(--task-clickbox-accent);
+                }
+
+            .task-floating {
+                background-color: var(--task-clickbox-background);
+                height: 20px;
+                width: 10%;
+                font-size: 9px;
+                color: var(--task-clickbox);
+                margin: 0px !important;
+                border-radius: 3px;
+            }
+
+                .task-floating.active{
+                    background-color: var(--task-checkbox-feature-alt);
+                    box-shadow: 0;
+                    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0);
+                }
+
+                .task-floating:hover {
+                    color: var(--task-clickbox-accent);
+                }
+
+            .task-tools {
+                display: flex;
+                width: 75vw;
+                margin-top: 10px;
+                justify-content: flex-start;
+            }          
+
             .task-subicon {
                 font-size: 10px;
                 vertical-align: middle;
