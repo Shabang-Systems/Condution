@@ -48,6 +48,22 @@
                 display: none;
             }
 
+            .window-action {
+                padding: 5.5px;
+                font-size: 12px;
+                /*Background animation*/
+                transition-property: color, background-color;
+                transition-duration: 100ms;
+                transition-timing-function: ease-in-out;
+                /*transform: translateY(-3px);*/
+            }
+
+                .window-action:hover {
+                    font-size: 12px;
+                    background-color: var(--background-feature);
+                    /*transform: translateY(-3px);*/
+                }
+
         /* IDs */
 
             #main-head-win32 {
@@ -58,6 +74,12 @@
             #main-head-darwin {
                 background-color: transparent;
                 height: 34px;
+            }
+
+            #window-actions {
+                float: right;
+                padding: 16px 6px 0px 0px;
+                color: var(--content-normal-alt);
             }
 
 /* == Pages and Views (Biggie Things) == */
@@ -677,9 +699,9 @@
                     transition: all 400ms;
                 }
 
-                .tt-suggestion:hover {
-                    background-color: var(--background-feature);
-                }
+                    .tt-suggestion:hover {
+                        background-color: var(--background-feature);
+                    }
 
                 .tt-cursor {
                     background-color: var(--background-feature);
@@ -718,9 +740,9 @@
                     /*height: 17px;*/
                 }
 
-                .es-visible:hover {
-                    background-color: var(--background-feature) !important;
-                }
+                    .es-visible:hover {
+                        background-color: var(--background-feature) !important;
+                    }
 
                 .editable-select {
                     transition: all 400ms;
@@ -778,30 +800,30 @@
                     transition-timing-function: ease-in-out;
                 }
 
-                .ui-state-default:hover {
-                    background: 0 !important;
-                    border-color: var(--task-datepicker-elem-feature) !important;
-                    background-color: var(--task-datepicker-elem-feature) !important;
-                }
+                    .ui-state-default:hover {
+                        background: 0 !important;
+                        border-color: var(--task-datepicker-elem-feature) !important;
+                        background-color: var(--task-datepicker-elem-feature) !important;
+                    }
 
                 .ui-state-active {
                     background-color: var(--task-datepicker-selected) !important;
                     color: black;
                 }
 
-                .ui-state-active:hover {
-                    background-color:  var(--task-datepicker-selected) !important;
-                    border: 0;
-                }
+                    .ui-state-active:hover {
+                        background-color:  var(--task-datepicker-selected) !important;
+                        border: 0;
+                    }
 
                 .ui-state-highlight {
                     border: 1px solid var(--task-datepicker-selected) !important;
                     color: black;
                 }
 
-                .ui-state-highlight:hover {
-                    border: 1px solid var(--task-datepicker-selected) !important;
-                }
+                    .ui-state-highlight:hover {
+                        border: 1px solid var(--task-datepicker-selected) !important;
+                    }
 
                 .ui-priority-secondary {
                     border-color: var(--task-datepicker-elem-feature-alt) !important;
@@ -854,13 +876,13 @@
                     font-size: 13px;
                 }
 
-                .ui-datepicker-next:hover {
-                    transform: translate(-3px, 1px);
-                    top: 2px;
-                    right: 2px;
-                    border: 0!important;
-                    background-color: inherit !important;
-                }
+                    .ui-datepicker-next:hover {
+                        transform: translate(-3px, 1px);
+                        top: 2px;
+                        right: 2px;
+                        border: 0!important;
+                        background-color: inherit !important;
+                    }
 
                 .ui-datepicker-prev {
                     transform: translate(2px, 1px);
@@ -879,13 +901,13 @@
                     font-size: 13px;
                 }
 
-                .ui-datepicker-prev:hover {
-                    transform: translate(2px, 1px);
-                    top: 2px;
-                    right: 2px;
-                    border: 0!important;
-                    background-color: inherit !important;
-                }
+                    .ui-datepicker-prev:hover {
+                        transform: translate(2px, 1px);
+                        top: 2px;
+                        right: 2px;
+                        border: 0!important;
+                        background-color: inherit !important;
+                    }
 
                 .ui-datepicker-next-hover {
                     background: 0 !important;
@@ -985,9 +1007,9 @@
                 width: 75%;
             }
 
-            .perspective-titleword:hover {
-                background-color: var(--background-feature);
-            }
+                .perspective-titleword:hover {
+                    background-color: var(--background-feature);
+                }
 
             .perspective-titleword:focus {
                 background-color: var(--background-feature);
@@ -1044,9 +1066,9 @@
                 position: relative;
             }
 
-            .newbutton:hover {
-                background-color: var(--task-feature) !important;
-            }
+                .newbutton:hover {
+                    background-color: var(--task-feature) !important;
+                }
 
             .newtext {
                 font-size: 13px;
@@ -1075,12 +1097,12 @@
                 color: var(--task-icon);
             }
 
-            .sbpro:hover {
-                -moz-border-radius: 5px;
-                -webkit-border-radius: 5px;
-                border-radius: 5px;
-                background-color: var(--task-feature);
-            }
+                .sbpro:hover {
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    background-color: var(--task-feature);
+                }
             
             .project-action {
                 font-size: 10px;
@@ -1101,10 +1123,464 @@
                 transition-timing-function: ease-in-out;
             }
 
-            .project-action:hover {
-                color: var(--decorative-light-alt);
-                background-color: var(--content-normal);
+                .project-action:hover {
+                    color: var(--decorative-light-alt);
+                    background-color: var(--content-normal);
+                }
+
+/* == Upcoming-Specific Elements == */
+
+    /* Daterow */
+
+        /* Classes */
+
+            .upcoming-daterow-item {
+                background: var(--background-feature);
+                color: var(--content-normal-alt);
+                font-size: 15px;
+                display: flex;
+                justify-content: flex-start;
+                flex-direction: column;
+                align-items: center;
+                width: 60px;
+                margin: 2px 2px;
+                border-radius: 2px;
+                transition: 0.5s all;
             }
+
+                .upcoming-daterow-normal:hover {
+                    background: var(--content-normal);
+                }
+
+            .upcoming-daterow-t {
+                font-weight: 700;
+                color: var(--content-normal-alt);
+                transform: translateY(4px);
+            }
+
+            .upcoming-daterow-w {
+                font-weight: 600;
+                font-size: 10px;
+                display: inline-block;
+            }
+
+            .upcoming-daterow-d {
+                font-weight: 300;
+                font-size: 10px;
+                display: inline-block;
+            }
+
+            .upcoming-daterow-active {
+                background: var(--decorative-light);
+            }
+
+        /* IDs */
+
+            #upcoming-daterow {
+                display: flex;
+                flex-direction: row;
+                height: 45px;
+                margin-bottom: 10px;
+                margin-top: 6px;
+            }
+
+    /* Upcoming UI Smidgets */
+        
+        /* Classes */
+
+            .upcoming-section {
+                padding-bottom:9px;
+            }
+
+        /* IDs */
+
+            #upcoming-header{
+                font-size: 13px;
+                color: var(--content-normal-alt);
+            }
+
+            #duesoon-ondate {
+                font-weight: 300;
+                display: inline-block;
+                font-size: 12px;
+            }
+
+            #greeting{
+                font-weight: 600;
+                padding-right: 3.5px;
+            }
+
+            #greeting-name{
+                font-weight: 300;
+                padding-right: 5px;
+            }
+
+            #greeting-date{
+                padding-left: 5px;
+                font-weight: 500;
+                font-size: 15px;
+            }
+
+/* == Modal Elements == */
+
+    /* Modal Masters */
+        
+        /* Classes */
+
+            .modal-dropdown {
+                background: var(--background);
+            }
+
+            .modal-option {
+                color: var(--content-normal-alt);
+                padding: 3px 1px 3px 8px;
+                margin: 0 3px 0 3px;
+                border-radius: 3px;
+                font-size: 13px;
+                transition-property: all;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                background: var(--background);
+            }
+
+                .modal-option:hover {
+                    background-color: var(--background-feature);
+                }
+
+            .modal-dropdown-toggle {
+                border-radius: 3px;
+                background-color: var(--background-feature);
+                border: 0;
+                box-shadow: 0 !important;
+                font-size: 13px;
+                color: var(--content-normal-alt);
+                transition-property: color, background-color;
+                transition-duration: 100ms;
+                transition-timing-function: ease-in-out;
+            }
+
+    /* Repeat Modal */
+
+        /* Classes */
+
+            .repeat-daterow-weekname {
+                text-align: center;
+                width: 100%;
+                background-color: var(--background-feature);
+                transition-property: all;
+                transition-duration: 100ms;
+                transition-timing-function: ease-in-out;
+                color: var(--content-normal-alt);
+            }
+
+            .repeat-monthgrid-day {
+                text-align: center;
+                transition-property: all;
+                transition-duration: 100ms;
+                transition-timing-function: ease-in-out;
+                font-size: 13px;
+                margin: 3px;
+                padding: 2px;
+                font-weight: 500;
+                color: var(--content-normal-accent);
+                border-radius: 3px;
+            }
+
+        /* IDs */
+
+            #repeat-callout {
+                color: var(--task);
+                font-weight: 600;
+                font-size: 15px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+            }
+
+            #repeat-back {
+                display: inline-block;
+                position: absolute;
+                margin-right: 10px;
+                transform: translate(420px, -8px);
+            }
+
+            #repeat-daterow{
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                margin-top: 10px;
+                display: none;
+            }
+
+            #repeat-monthgrid {
+                display: grid;
+                justify-content: space-between;
+                grid-template-columns: repeat(5, 60px);
+                border: 0.5px solid var(--content-normal-accent);
+                border-radius: 5px;
+                width: 95%;
+                /*background-color: var(--background-feature);*/
+                margin: 4px;
+                display: none;
+            }
+
+            #repeat-type {
+                width: 100%;
+                padding: 2px;
+                border-radius: 3px;
+                display:none;
+                transition-property: color, background-color;
+                transition-duration: 100ms;
+                transition-timing-function: ease-in-out;
+            }
+
+                #repeat-type:hover {
+                    background-color: var(--background-feature);
+                }
+
+                #repeat-type-toggle:hover {
+                    background-color: var(--task-feature-alt);
+                }
+
+                #repeat-type-toggle:focus {
+                    background-color: var(--task-feature-alt);
+                }
+
+    /* Perspective Modal */
+
+        /* Classes */
+
+        /* IDs */
+
+            #perspective-callout {
+                color: var(--task);
+                font-weight: 600;
+                font-size: 15px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+            }
+
+            #perspective-back {
+                display: inline-block;
+                position: absolute;
+                margin-right: 10px;
+                transform: translate(420px, -8px);
+            }
+
+            #perspective-avail-toggle-group {
+                float: left;
+            }
+
+            #perspective-order-toggle-group {
+                margin-left: 10px;
+                display: inline-block
+            }
+
+            #pquery {
+                font-size: 12pt;
+                font-weight:400;
+                background-color:inherit;
+                padding: 10px 5px 10px 5px;
+                border: 1px grey solid;
+                display: inline-block;
+                height: 30px;
+                width: 85%;
+                -moz-border-radius: 3px;
+                -webkit-border-radius: 3px;
+                border-radius: 3px;
+                -webkit-transition-property: all;
+                -webkit-transition-duration: 200ms;
+                -webkit-transition-timing-function: ease-in-out;
+                transition-property: all;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                text-overflow: ellipsis;
+                margin-bottom: 5px;
+                color: var(--content-normal-accent);
+            }
+
+                #pquery:focus {
+                    background-color: var(--content-normal);
+                }
+
+                #pquery:hover {
+                    background-color: var(--content-normal);
+                }
+
+                #pquery::placeholder {
+                    color: var(--decorative-light);
+                    font-size: 14px;
+                }
+
+            #perspective-edit-name {
+                color: var(--content-normal-accent);
+                padding-left: 4px;
+                background: inherit;
+                border: 0;
+                font-weight: 600;
+                border-radius: 3px;
+                transition-property: all;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+            }
+
+                #perspective-edit-name:hover {
+                    background-color: var(--background-feature);
+                }
+
+                #perspective-edit-name:focus {
+                    background-color: var(--background-feature);
+                }
+
+/* == Auth Interface == */
+
+    /* Classes */
+
+        .greeting-auth-subtitle {
+            font-weight: 700;
+            font-size: 16px;
+            padding-top: 10px;
+            color: var(--content-normal-alt);
+        }
+
+        .auth-upf {
+            font-size: 12pt;
+            font-weight:400;
+            background-color:inherit;
+            color: var(--content-normal-alt);
+            padding: 10px 5px 10px 5px;
+            border: 1px grey solid;
+            display: inline-block;
+            height: 30px;
+            width: 85%;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            -webkit-transition-property: all;
+            -webkit-transition-duration: 200ms;
+            -webkit-transition-timing-function: ease-in-out;
+            transition-property: all;
+            transition-duration: 200ms;
+            transition-timing-function: ease-in-out;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+        }
+
+        .auth-upf:focus {
+            background-color: var(--content-normal);
+        }
+
+        .auth-upf.wrong {
+            border-color: red;
+        }
+
+
+
+    /* IDs */
+
+        #newuser {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--content-normal-alt);
+            font-weight: 500;
+            transition-property: all;
+            transition-duration: 200ms;
+            transition-timing-function: ease-in-out;
+            border: 1px solid transparent;
+            padding: 3px;
+            padding-left: 6px;
+            padding-right: 6px;
+            border-radius: 3px;
+            transform: translateX(-6px);
+            border: 0.5px solid transparent;
+        }
+
+            #newuser:hover {
+                border: 0.5px solid var(--content-normal-alt);
+            }
+
+        #login {
+            bottom: 0;
+            width: 150px;
+            color: var(--content-normal-accent);
+            -webkit-transition-property: color, background-color;
+            -webkit-transition-duration: 200ms;
+            -webkit-transition-timing-function: ease-in-out;
+            transition-property: color, background-color;
+            transition-duration: 200ms;
+            transition-timing-function: ease-in-out;
+            margin-top: 15px;
+            padding: 5px 2px 4px 0;
+            transform: translateX(-1px);
+            cursor: default;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            border: var(--content-normal-accent) 1px solid;
+            float: right;
+            transform: translateX(-90px);
+            display: inline-block;
+            text-align: center;
+        }
+
+            #login:hover {
+                background-color: var(--content-normal-accent);
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                padding: 5px 2px 4px 0;
+                color: var(--content-normal);
+            }
+
+        #auth-content-wrapper{
+            margin: 0;
+            height: 100%;
+            background-color: var(--background);
+            display: grid;
+            /*grid-template-columns: 700px auto*/
+        }
+
+        #auth-left-menu{
+            grid-column-start: 1;
+            grid-column-end: 1;
+            width: 250px;
+            padding: 40px 10px 10px 10px;
+            overflow: hidden;
+            background: var(--auth-background);
+            background-size: cover;
+            display: none;
+        }
+
+        #auth-image-credit{
+            bottom: 0;
+            width: 100%;
+            margin-top: auto;
+            color: var(--content-normal);
+            font-size: 9px;
+            font-weight: 200;
+        }
+
+        #authwall {
+            width: 650px;
+            height: 100px;
+            display: block;
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            /*vertical-align: center;*/
+            padding-left: 50px;
+            transform: translate(120px, -30px);
+        }
+
+        #greeting-auth {
+            color: var(--content-normal-accent);
+            font-weight: 700;
+            padding-right: 10px;
+        }
+
 
 /* == Misc. Buttons and Actions == */
 
@@ -1164,4 +1640,48 @@
                 margin-left: 5px;
             }
 
-    
+            .blankimage-content {
+                /*display: flex;*/
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                margin: 30px 0;
+                opacity: 0.20;
+                filter: saturate(40%);
+                display: none;
+                user-select: none;
+                pointer-events: none;
+            }
+
+    /* Logout */
+
+        /* IDs */
+
+            #logout {
+                bottom: 0;
+                width: 100%;
+                margin-top: auto;
+                color: var(--menu-text);
+                -webkit-transition-property: color, background-color;
+                -webkit-transition-duration: 200ms;
+                -webkit-transition-timing-function: ease-in-out;
+                transition-property: color, background-color;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                padding: 4px 0 4px 10px;
+                transform: translateX(-1px);
+                cursor: default;
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+            #logout:hover {
+                background-color: var(--menu-semiaccent-background);
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                padding: 4px 0 4px 10px;
+                transform: translateX(-1px);
+            }
+
