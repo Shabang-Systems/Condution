@@ -67,7 +67,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
-      "identity": "Developer ID Application: Shabang Systems, LLC (9TEPY3US76)",
+      "identity": "Shabang Systems, LLC (9TEPY3US76)",
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist"
