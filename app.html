@@ -148,7 +148,7 @@
                     <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
                 </div>
             </div>
-            <input id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
+            <input title="Add a task on enter" id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
             <div id="content-area">
                 <div id="upcoming-page" class="page">
                     <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Upcoming</t></div>
@@ -226,9 +226,9 @@
                     <div id="due-soon" class="upcoming-section"> </div>
                 </div>
                 <div id="perspective-page" class="page">
-                    <div class="perspective-title"><i class="fa fa-layer-group"></i><input id="perspective-title" class="perspective-titleword" type="text"></input>
-                        <div class="task-subicon" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
-                        <div class="task-subicon" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
+                    <div class="perspective-title"><i class="fa fa-layer-group"></i><input id="perspective-title" title="Perspective Name" class="perspective-titleword" type="text"></input>
+                        <div class="task-subicon" title="Delete Perspective" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                        <div class="task-subicon" title="Edit Perspective" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
                     </div>
                     <div style="padding: 0 0 7px 0">
                         <hr class="perspective-divider"/>
@@ -241,13 +241,13 @@
                 </div>
                  <div id="project-page" class="page">
                     <div class="project-action" id="project-back" style="display: inline-block; float: left; margin-right: 10px"><i class="fas fa-chevron-left"></i></div>
-                    <div class="perspective-title"><i class="fas fa-project-diagram"></i><input id="project-title" class="perspective-titleword" type="text"></input>
-                        <div class="task-subicon" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                    <div class="perspective-title"><i class="fas fa-project-diagram"></i><input title="Project Name" id="project-title" class="perspective-titleword" type="text"></input>
+                        <div class="task-subicon" title="Delete Project" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
                         <div class="btn-group btn-group-toggle project-sequential-group" id="project-sequential" data-toggle="buttons" style="margin-right: 20px">
-                            <label class="btn project-sequential active" id="project-sequential-no">
+                            <label class="btn project-sequential active" title="Parallel Action Project" id="project-sequential-no">
                                 <input type="radio" name="task-sequential" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
                             </label>
-                            <label class="btn project-sequential" id="project-sequential-yes">
+                            <label class="btn project-sequential" title="Sequential Action Project" id="project-sequential-yes">
                                 <input type="radio" name="task-sequential"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
                             </label>
                         </div>
