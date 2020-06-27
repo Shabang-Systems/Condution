@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 var electron_notarize = require('electron-notarize');
 
 module.exports = async function (params) {
