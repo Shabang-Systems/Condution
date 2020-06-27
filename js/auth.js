@@ -155,7 +155,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
                 $("#name-tray").slideDown(300);
                 $(this).html("Sign in.");
                 mode = "newuser";
-                $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+                $("#greeting-auth-normal").html(`Welcome aboard! Check out <a>our terms</a> and <a>the amazing privacy policy</a>...`);
                 break;
             case "newuser":
                 $("#name-tray").slideUp(300);
