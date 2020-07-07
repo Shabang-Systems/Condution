@@ -24,7 +24,7 @@
   "homepage": "https://github.com/Shabang-Systems/Condution#readme",
   "devDependencies": {
     "babel-minify": "^0.5.1",
-    "electron": "^8.1.1",
+    "electron": "^8.2.4",
     "electron-builder": "^22.5.1",
     "electron-rebuild": "^1.10.1",
     "jquery-sortablejs": "^1.0.1"
