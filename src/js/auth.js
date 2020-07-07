@@ -47,12 +47,12 @@ ipcRenderer.on("systheme-light", function (event, data) {
             var user = firebase.auth().currentUser;
             user.updateProfile({displayName: $("#name").val()});
             // TODO: other wonderful onboarding things
-            window.location = 'app.html'; 
+            window.location = 'index.html'; 
             isNASuccess = false;
         }
         firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
             if (firebase.auth().currentUser.emailVerified){
-                window.location = 'app.html'; 
+                window.location = 'index.html'; 
             } else {
                 firebase.auth().currentUser.sendEmailVerification();
                 $('#auth-left-menu').fadeIn();
@@ -169,7 +169,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
             if (user.emailVerified){
-                window.location = 'app.html'; 
+                window.location = 'index.html'; 
             } else {
                 user.sendEmailVerification();
                 $('#auth-left-menu').fadeIn();

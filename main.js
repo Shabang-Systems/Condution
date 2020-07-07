@@ -31,7 +31,7 @@ function createWindow () {
 
     win.removeMenu();
     // and load the main of the app.
-    win.loadFile('src/app.html')
+    win.loadFile('src/index.html')
     
     nativeTheme.addListener("updated", function() {
         if(nativeTheme.shouldUseDarkColors) {
