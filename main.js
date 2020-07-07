@@ -31,7 +31,7 @@ function createWindow () {
 
     win.removeMenu();
     // and load the main of the app.
-    win.loadFile('app.html')
+    win.loadFile('src/app.html')
     
     nativeTheme.addListener("updated", function() {
         if(nativeTheme.shouldUseDarkColors) {
@@ -75,7 +75,7 @@ function createAbout () {
 
     win.removeMenu();
     // and load the main of the app.
-    win.loadFile('about.html')
+    win.loadFile('src/about.html')
     
     win.once('ready-to-show', function() {
         win.show()
