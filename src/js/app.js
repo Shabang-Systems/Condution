@@ -2204,6 +2204,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             $("#loading").fadeOut();
             $("#authwall").fadeIn();
             $("#auth-content-wrapper").fadeIn();
+            $(".auth-upf").val("");
         }
     } else {
         E.flush();
@@ -2213,6 +2214,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         $("#authwall").fadeIn();
         $('#auth-left-menu').fadeIn();
         $("#auth-content-wrapper").fadeIn();
+        $(".auth-upf").val("");
     }
 });
 
