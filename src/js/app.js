@@ -137,6 +137,147 @@ const interfaceUtil = function() {
     return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage}
 }();
 
+let auth = function() {
+    let mode = "login";
+    /*lottie.loadAnimation({*/
+        //container: $("#loading-anim")[0],
+        //renderer: 'svg',
+        //autoplay: true,
+        //loop: true,
+        //path: 'static/loadanim_final.json'
+    //})
+    /*$("#loading").hide().css("display", "flex").fadeIn();*/
+    // Initialize Firebase Application
+
+    let isNASuccess = false;
+
+    let auth = function() {
+        if (isNASuccess) {
+            var user = firebase.auth().currentUser;
+            user.updateProfile({displayName: $("#name").val()});
+            // TODO: other wonderful onboarding things
+            $("#auth-content-wrapper").fadeOut();
+            isNASuccess = false;
+        }
+        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
+            if (firebase.auth().currentUser.emailVerified){
+                $("#auth-content-wrapper").fadeOut();
+            } else {
+                firebase.auth().currentUser.sendEmailVerification();
+                $('#auth-left-menu').fadeIn();
+                $('#need-verify').fadeIn();
+                $('#recover-password').fadeOut();
+                $("#authwall").fadeIn();
+            }
+        }).catch(function(error) {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            $(".auth-upf").addClass("wrong");
+        });
+    };
+
+    let rec = function() {
+        firebase.auth().sendPasswordResetEmail($("#email").val()).then(function() {
+            $(".auth-upf").removeClass("wrong");
+            $("#password").show();
+            $("#newuser").html("Make an account.");
+            $("#newuser").show();
+            $("#recover-password").html("Recover Password");
+            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+            $('#recover-password').fadeOut();
+            $('#need-verify').fadeIn();
+        }).catch(function(error) {
+            $(".auth-upf").addClass("wrong");
+        });
+    }
+
+    let nu = function() {
+        firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
+            console.log("Silly goose");
+        });
+        $('#need-verify').fadeIn();
+        $('#recover-password').fadeOut();
+        isNASuccess = true;
+    }
+
+    $("#password").keydown(function(e) {
+        if (e.keyCode == 13) {
+            switch (mode) {
+                case "login":
+                    auth();
+                    break;
+                case "newuser":
+                    nu();
+                    break;
+            }
+        }
+    });
+
+    $("#login").click(function(e) {
+        switch (mode) {
+            case "login":
+                auth();
+                break;
+            case "newuser":
+                nu();
+                break;
+            case "recover":
+                rec();
+                break;
+        }
+    });
+
+    $("#recover-password").click(function(e) {
+        switch (mode) {
+            case "login":
+                $("#password").hide();
+                $("#recover-password").html("Remembered? Login");
+                $("#newuser").hide();
+                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                mode = "recover";
+                break;
+            case "newuser":
+                $("#name-tray").hide();
+                $("#password").hide();
+                $("#recover-password").html("Remembered? Login");
+                $("#newuser").hide();
+                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                mode = "recover";
+                break;
+            case "recover":
+                $("#password").show();
+                $("#newuser").html("Make an account.");
+                $("#newuser").show();
+                $("#recover-password").html("Recover Password");
+                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                mode = "login";
+        }
+    });
+
+    $("#newuser").click(function(e) {
+        switch (mode) {
+            case "login":
+                $("#name-tray").slideDown(300);
+                $(this).html("Sign in.");
+                mode = "newuser";
+                $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+                break;
+            case "newuser":
+                $("#name-tray").slideUp(300);
+                $(this).html("Make an account.");
+                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                mode = "login";
+                break;
+        }
+    });
+
+    const greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"];
+    $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
+
+};
+
+
 let ui = function() {
 
     // greeting of the day
@@ -1995,43 +2136,6 @@ let ui = function() {
         }
     });
 
-    /*$(document).on("drop", "#quickadd", function(e) {*/
-        //console.log("aoeu");
-        //let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
-
-        //console.log(dropped);
-        //if (dropped[0] === "task") {
-            //(async function() {
-                //let ti = await E.db.getTaskInformation(uid, dropped[1]);
-                //if (ti.project && ti.project !== "") {
-                    //$("#task-"+dropped[1]).slideUp();
-                    //await E.db.dissociateTask(uid, dropped[1], ti.project); 
-                    //await E.db.modifyTask(uid, dropped[1], {project:""});
-                //}
-            //})();
-        //}
-    /*});*/
-
-/*    $(document).on("dragenter", ".project", function(e) {*/
-        //$(this).animate({"background-color": interfaceUtil.gtc("--menu-accent-background")}, 100);
-    //});
-
-    //$(document).on("dragleave", ".project", function(e) {
-        //$(this).animate({"background-color": "transparent"}, 100);
-    /*});*/
-
-/*    $(document).on("dragenter", "#quickadd", function(e) {*/
-        //e.preventDefault();
-        //$("#quickadd").prop('disabled', true);
-        //$("#quickadd").animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, 100, ()=>$("#quickadd").addClass("dragover"));
-    //});
-
-    //$(document).on("dragleave", "#quickadd", function(e) {
-        //e.preventDefault();
-        //$("#quickadd").prop('disabled', false);
-        //$("#quickadd").animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, ()=>$("#quickadd").removeClass("dragover"));
-    /*});*/
-
     $(document).on("dragstart", ".project", function(e) {
         e.originalEvent.dataTransfer.setData('text', e.target.id);
     });
@@ -2081,6 +2185,7 @@ $(document).ready(async function() {
     firebase.auth().onAuthStateChanged(async function(user) {
         if (user) {
             if (user.emailVerified) {
+                console.log(ui.user.get() ? ui.user.get().uid : "nope", user.uid);
                 const startTime = Date.now();
                 // User is signed in. Do user related things.
                 // Check user's theme
@@ -2093,6 +2198,7 @@ $(document).ready(async function() {
                 setInterval(() => {ui.update()}, 60 * 1000);
                 setInterval(()=> {ipcRenderer.send("updatecheck")}, 15*60*1000);
             } else {
+                auth();
                 $("#content-wrapper").fadeOut();
                 user.sendEmailVerification();
                 $('#auth-left-menu').fadeIn();
@@ -2103,158 +2209,15 @@ $(document).ready(async function() {
                 $("#auth-content-wrapper").fadeIn();
             }
         } else {
-            firebase.auth().signOut();
+            auth();
             $("#content-wrapper").fadeOut();
             $("#loading").fadeOut();
             $("#authwall").fadeIn();
             $('#auth-left-menu').fadeIn();
             $("#auth-content-wrapper").fadeIn();
-
         }
     });
 });
-(function() {
-    let mode = "login";
-    /*lottie.loadAnimation({*/
-        //container: $("#loading-anim")[0],
-        //renderer: 'svg',
-        //autoplay: true,
-        //loop: true,
-        //path: 'static/loadanim_final.json'
-    //})
-    /*$("#loading").hide().css("display", "flex").fadeIn();*/
-    // Initialize Firebase Application
-    // TODO TODO TODO !!!! Change this on deploy
-
-    let isNASuccess = false;
-
-    let auth = function() {
-        if (isNASuccess) {
-            var user = firebase.auth().currentUser;
-            user.updateProfile({displayName: $("#name").val()});
-            // TODO: other wonderful onboarding things
-            $("#auth-content-wrapper").fadeOut();
-            isNASuccess = false;
-        }
-        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
-            if (firebase.auth().currentUser.emailVerified){
-                $("#auth-content-wrapper").fadeOut();
-            } else {
-                firebase.auth().currentUser.sendEmailVerification();
-                $('#auth-left-menu').fadeIn();
-                $('#need-verify').fadeIn();
-                $('#recover-password').fadeOut();
-                $("#authwall").fadeIn();
-            }
-        }).catch(function(error) {
-            // Handle Errors here.
-            console.log(error);
-            console.log("Silly goose");
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            $(".auth-upf").addClass("wrong");
-        });
-    };
-
-    let rec = function() {
-        firebase.auth().sendPasswordResetEmail($("#email").val()).then(function() {
-            $(".auth-upf").removeClass("wrong");
-            $("#password").show();
-            $("#newuser").html("Make an account.");
-            $("#newuser").show();
-            $("#recover-password").html("Recover Password");
-            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
-            $('#recover-password').fadeOut();
-            $('#need-verify').fadeIn();
-        }).catch(function(error) {
-            $(".auth-upf").addClass("wrong");
-        });
-    }
-
-    let nu = function() {
-        firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
-            console.log("Silly goose");
-        });
-        $('#need-verify').fadeIn();
-        $('#recover-password').fadeOut();
-        isNASuccess = true;
-    }
-
-    $("#password").keydown(function(e) {
-        if (e.keyCode == 13) {
-            switch (mode) {
-                case "login":
-                    auth();
-                    break;
-                case "newuser":
-                    nu();
-                    break;
-            }
-        }
-    });
-
-    $("#login").click(function(e) {
-        switch (mode) {
-            case "login":
-                auth();
-                break;
-            case "newuser":
-                nu();
-                break;
-            case "recover":
-                rec();
-                break;
-        }
-    });
-
-    $("#recover-password").click(function(e) {
-        switch (mode) {
-            case "login":
-                $("#password").hide();
-                $("#recover-password").html("Remembered? Login");
-                $("#newuser").hide();
-                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
-                mode = "recover";
-                break;
-            case "newuser":
-                $("#name-tray").hide();
-                $("#password").hide();
-                $("#recover-password").html("Remembered? Login");
-                $("#newuser").hide();
-                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
-                mode = "recover";
-                break;
-            case "recover":
-                $("#password").show();
-                $("#newuser").html("Make an account.");
-                $("#newuser").show();
-                $("#recover-password").html("Recover Password");
-                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
-                mode = "login";
-        }
-    });
-
-    $("#newuser").click(function(e) {
-        switch (mode) {
-            case "login":
-                $("#name-tray").slideDown(300);
-                $(this).html("Sign in.");
-                mode = "newuser";
-                $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
-                break;
-            case "newuser":
-                $("#name-tray").slideUp(300);
-                $(this).html("Make an account.");
-                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
-                mode = "login";
-                break;
-        }
-    });
-
-    const greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"];
-    $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
-
-})();
 
 console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
 console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
