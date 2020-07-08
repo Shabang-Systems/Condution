@@ -116,4 +116,4 @@ secrets.json
 .env
 
 # Built web components
-www
+pack
