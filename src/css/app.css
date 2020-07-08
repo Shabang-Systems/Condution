@@ -1,3 +1,25 @@
+/* == Useful things commented out == */
+
+@media (max-width: 575px) { 
+
+}
+
+@media (min-width: 576px) { 
+
+}
+
+@media (min-width: 768px) { 
+
+}
+
+@media (min-width: 992px) { 
+
+}
+
+@media (min-width: 1200px) { 
+
+}
+
 /* == Globals and Misc Things == */
     html, body {
         height: 100%;
@@ -1442,10 +1464,39 @@
 
         .greeting-auth-subtitle {
             font-weight: 700;
-            font-size: 16px;
             padding-top: 10px;
             color: var(--content-normal-alt);
         }
+
+                @media (max-width: 575px) { 
+                    .greeting-auth-subtitle {
+                        font-size: 3vw;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .greeting-auth-subtitle {
+                        font-size: 14px;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .greeting-auth-subtitle {
+                        font-size: 16px;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .greeting-auth-subtitle {
+                        font-size: 16px;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .greeting-auth-subtitle {
+                        font-size: 16px;
+                    }
+                }
 
         .auth-upf {
             font-size: 12pt;
@@ -1536,24 +1587,100 @@
                 color: var(--content-normal);
             }
 
+        #recover-password {
+            color:var(--content-normal-accent);
+            cursor:pointer;
+        }
+
+                @media (max-width: 575px) { 
+                    #recover-password {
+                        font-size: 2.5vw;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #recover-password {
+                        font-size: 13px;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    #recover-password {
+                        font-size: 13px;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    #recover-password {
+                        font-size: 13px;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    #recover-password {
+                        font-size: 13px;
+                    }
+                }
+
+        #need-verify {
+            color:var(--content-normal-accent);
+            font-size: 12.5px;
+            /*display:none*/
+        }
+
         #auth-content-wrapper{
             margin: 0;
             height: 100%;
+            width: 100%;
+            position: absolute;
             background-color: var(--background);
             display: grid;
+            overflow: hidden;
             /*grid-template-columns: 700px auto*/
         }
 
+        
         #auth-left-menu{
             grid-column-start: 1;
             grid-column-end: 1;
-            width: 250px;
-            padding: 40px 10px 10px 10px;
             overflow: hidden;
             background: var(--auth-background);
             background-size: cover;
             display: none;
         }
+
+            
+            @media (max-width: 575px) { 
+                #auth-left-menu{
+                    width: 20px;
+                    height: 100%;
+                }
+            }
+
+            @media (min-width: 576px) { 
+                #auth-left-menu{
+                    width: 150px;
+                }
+            }
+
+            @media (min-width: 768px) { 
+                #auth-left-menu{
+                    width: 200px;
+                }
+            }
+
+            @media (min-width: 992px) { 
+                #auth-left-menu{
+                    width: 250px;
+                }
+            }
+
+            @media (min-width: 1200px) { 
+                #auth-left-menu{
+                    width: 25vw;
+                }
+            }
+
 
         #auth-image-credit{
             bottom: 0;
@@ -1565,8 +1692,6 @@
         }
 
         #authwall {
-            width: 650px;
-            height: 100px;
             display: block;
             position: absolute;
             top:0;
@@ -1575,15 +1700,82 @@
             right: 0;
             margin: auto;
             /*vertical-align: center;*/
-            padding-left: 50px;
-            transform: translate(120px, -30px);
         }
+
+            @media (max-width: 575px) { 
+                #authwall {
+                    width: 100vw;
+                    height: 100px;
+                    padding-left: 35px;
+                }
+            }
+
+            @media (min-width: 576px) { 
+                #authwall {
+                    width: 90vw;
+                    height: 100px;
+                    padding-left: 50px;
+                    transform: translate(120px, -30px);
+                }
+            }
+
+            @media (min-width: 768px) { 
+                #authwall {
+                    width: 650px;
+                    height: 100px;
+                    padding-left: 50px;
+                    transform: translate(120px, -30px);
+                }
+            }
+
+            @media (min-width: 992px) { 
+                #authwall {
+                    width: 650px;
+                    height: 100px;
+                    padding-left: 50px;
+                    transform: translate(120px, -30px);
+                }
+            }
+
+            @media (min-width: 1200px) { 
+                #authwall {
+                    width: 650px;
+                    height: 100px;
+                    padding-left: 50px;
+                    transform: translate(120px, -30px);
+                }
+            }
+
 
         #greeting-auth {
             color: var(--content-normal-accent);
             font-weight: 700;
             padding-right: 10px;
         }
+
+            @media (max-width: 575px) { 
+                #greeting-auth {
+                    font-size: 8vw;
+                }
+            }
+
+            @media (min-width: 576px) { 
+                #greeting-auth {
+                    font-size: 35px;
+                }
+            }
+
+            @media (min-width: 768px) { 
+
+            }
+
+            @media (min-width: 992px) { 
+
+            }
+
+            @media (min-width: 1200px) { 
+
+            }
 
 
 /* == Misc. Buttons and Actions == */
