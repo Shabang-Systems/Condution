@@ -206,6 +206,11 @@
   dependencies:
     tslib "^1.9.0"
 
+"@capacitor/ios@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-2.2.1.tgz#f410a31843ef10eb2c908f6a634d16439915c420"
+  integrity sha512-+nGonZvaVE4pcWWFHb0Euad8pP01Dn8+tJaZwEq/TkZ0qAjZ9uAKPVqvChshBM5W0DtZF/t1uNUU7ELcGsAFIA==
+
 "@develar/schema-utils@~2.6.5":
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/@develar/schema-utils/-/schema-utils-2.6.5.tgz#3ece22c5838402419a6e0425f85742b961d9b6c6"

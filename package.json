@@ -38,6 +38,7 @@
   "dependencies": {
     "@capacitor/cli": "^2.2.1",
     "@capacitor/core": "^2.2.1",
+    "@capacitor/ios": "2.2.1",
     "bootstrap": "^4.4.1",
     "bootstrap-select-dropdown": "^0.14.6",
     "bootstrap-tagsinput": "^0.7.1",
