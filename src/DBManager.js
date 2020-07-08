@@ -15,9 +15,23 @@ const initFirebase = (fbPointer) => {
     [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
 }
 
-const cRef = (() => {
-    const cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
-    const unsubscribeCallbacks = new Map();
+const [cRef, flush] = (() => {
+    let cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
+    let unsubscribeCallbacks = new Map();
+
+    function flush() {
+        /* 
+         * Nukes the cache
+         *
+         * Used to log people out
+         *
+         * @return none
+         *
+         */
+
+        cache = new Map();
+        unsubscribeCallbacks = new Map();
+    }
 
     function getFirebaseRef(path) {
         /*
@@ -107,8 +121,8 @@ const cRef = (() => {
         );
     }
 
-    return cacheRef;
+    return [cacheRef, flush];
 })();
 
-module.exports = {__init__:initFirebase, cRef};
+module.exports = {__init__:initFirebase, cRef, flush};
 

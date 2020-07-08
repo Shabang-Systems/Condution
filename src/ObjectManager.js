@@ -302,7 +302,9 @@ async function newTask(userID, taskObj) {
         taskObj.defer = new Date();
     }
 
-    return (await cRef("users", userID, "tasks").add(taskObj)).id;
+    let taskID = (await cRef("users", userID, "tasks").add(taskObj)).id;
+
+    return taskID;
 }
 
 async function newProject(userID, projObj, parentProj) {
@@ -328,7 +330,8 @@ async function newProject(userID, projObj, parentProj) {
     projObj.order = projL;
     projObj.children = {};
 
-    return (await cRef("users", userID, "projects").add(projObj)).id;
+    let pid = (await cRef("users", userID, "projects").add(projObj)).id;
+    return pid;
 }
 
 async function newPerspective(userID, pstObj) {
