@@ -17,7 +17,7 @@ require('bootstrap-tagsinput');
 var moment = require('moment-timezone');
 
 
-var E = require('./backend/CondutionEngine.js');
+var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
 

@@ -1,5 +1,20 @@
 // Chapter 0: Fire! Base!
 const { ipcRenderer } = require('electron');
+var $ = jQuery = require('jquery');
+require("../node_modules/jquery-ui-dist/jquery-ui.min");
+require('./js/jquery-ui-timepicker-addon');
+var chrono = require('chrono-node');
+var lottie = require('lottie-web');
+require('popper.js');
+require('bootstrap');
+require('fuse.js');
+require('typeahead.js');
+require('mousetrap');
+require('jquery-editable-select');
+require('bootstrap-tagsinput');
+var moment = require('moment-timezone');
+
+
 
 (function() {
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
