@@ -274,12 +274,9 @@ let auth = function() {
 
     const greetings = ["Hello there!", "Hey!", "G'day!", "What's up!", "Howdy!", "Yo!"];
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
-
 };
 
-
 let ui = function() {
-
     // greeting of the day
     let greetings = ["Hello there,", "Hey,", "What's up,", "Howdy,", "Welcome,", "Yo!"];
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -2181,42 +2178,42 @@ let ui = function() {
     return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
 }();
 
-$(document).ready(async function() {
-    firebase.auth().onAuthStateChanged(async function(user) {
-        if (user) {
-            if (user.emailVerified) {
-                console.log(ui.user.get() ? ui.user.get().uid : "nope", user.uid);
-                const startTime = Date.now();
-                // User is signed in. Do user related things.
-                // Check user's theme
-                ui.user.set(user);
-                await ui.constructSidebar();
-                await ui.load("upcoming-page");
-                $("#loading").fadeOut();
-                $("#auth-content-wrapper").fadeOut();
-                $("#content-wrapper").fadeIn();
-                setInterval(() => {ui.update()}, 60 * 1000);
-                setInterval(()=> {ipcRenderer.send("updatecheck")}, 15*60*1000);
-            } else {
-                auth();
-                $("#content-wrapper").fadeOut();
-                user.sendEmailVerification();
-                $('#auth-left-menu').fadeIn();
-                $('#need-verify').fadeIn();
-                $('#recover-password').fadeOut();
-                $("#loading").fadeOut();
-                $("#authwall").fadeIn();
-                $("#auth-content-wrapper").fadeIn();
-            }
+
+firebase.auth().onAuthStateChanged(async function(user) {
+    if (user) {
+        if (user.emailVerified) {
+            const startTime = Date.now();
+            // User is signed in. Do user related things.
+            // Check user's theme
+            ui.user.set(user);
+            await ui.constructSidebar();
+            await ui.load("upcoming-page");
+            $("#loading").fadeOut();
+            $("#auth-content-wrapper").fadeOut();
+            $("#content-wrapper").fadeIn();
+            setInterval(() => {ui.update()}, 60 * 1000);
+            setInterval(()=> {ipcRenderer.send("updatecheck")}, 15*60*1000);
         } else {
+            E.flush();
             auth();
             $("#content-wrapper").fadeOut();
+            user.sendEmailVerification();
+            $('#auth-left-menu').fadeIn();
+            $('#need-verify').fadeIn();
+            $('#recover-password').fadeOut();
             $("#loading").fadeOut();
             $("#authwall").fadeIn();
-            $('#auth-left-menu').fadeIn();
             $("#auth-content-wrapper").fadeIn();
         }
-    });
+    } else {
+        E.flush();
+        auth();
+        $("#content-wrapper").fadeOut();
+        $("#loading").fadeOut();
+        $("#authwall").fadeIn();
+        $('#auth-left-menu').fadeIn();
+        $("#auth-content-wrapper").fadeIn();
+    }
 });
 
 console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
