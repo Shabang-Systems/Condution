@@ -1906,7 +1906,6 @@
             bottom: 0;
             left: 0;
             right: 0;
-            margin: auto;
             /*vertical-align: center;*/
         }
 
@@ -1915,6 +1914,7 @@
                     width: 100vw;
                     height: 100px;
                     padding-left: 40px;
+                    margin: 75px 0;
                 }
             }
 
@@ -1924,6 +1924,7 @@
                     height: 100px;
                     padding-left: 50px;
                     transform: translate(120px, -30px);
+                    margin: auto;
                 }
             }
 
@@ -1933,6 +1934,7 @@
                     height: 100px;
                     padding-left: 50px;
                     transform: translate(120px, -30px);
+                    margin: auto;
                 }
             }
 
@@ -1942,6 +1944,7 @@
                     height: 100px;
                     padding-left: 50px;
                     transform: translate(120px, -30px);
+                    margin: auto;
                 }
             }
 
@@ -1951,6 +1954,7 @@
                     height: 100px;
                     padding-left: 50px;
                     transform: translate(120px, -30px);
+                    margin: auto;
                 }
             }
 
