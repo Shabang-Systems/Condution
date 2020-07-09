@@ -114,3 +114,6 @@ dist
 secrets.json
 
 .env
+
+# Built web components
+pack
