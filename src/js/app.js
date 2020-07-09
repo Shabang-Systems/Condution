@@ -1280,14 +1280,22 @@ let ui = function() {
                     projectID = projId;
                     project = this.value;
                 } else {
-                    E.db.modifyTask(uid, taskId, {project:""});
-                    this.value = ""
-                    if (project !== undefined) {
-                        activeTaskInboxed = true;
-                        await E.db.dissociateTask(uid, taskId, projectID);
-                    }
-                    project = undefined;
-                    projectID = "";
+                    let projObj = {
+                        name: this.value,
+                        top_level: true,
+                        is_sequential: false,
+                    };
+                    E.db.newProject(uid, projObj).then(async function(npID) {
+                        if (project === undefined){
+                            activeTaskDeInboxed = true;
+                        } else {
+                            await E.db.dissociateTask(uid, taskId, projectID);
+                        }
+                        E.db.modifyTask(uid, taskId, {project:npID});
+                        await E.db.associateTask(uid, taskId,npID);
+                        projectID = npID;
+                        project = this.value;
+                    });
                 }
             });
 
