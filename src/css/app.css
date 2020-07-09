@@ -1470,44 +1470,45 @@
 
                 @media (max-width: 575px) { 
                     .greeting-auth-subtitle {
-                        font-size: 3vw;
+                        display: none;
                     }
                 }
 
                 @media (min-width: 576px) { 
                     .greeting-auth-subtitle {
                         font-size: 14px;
+                        display: block;
                     }
                 }
 
                 @media (min-width: 768px) { 
                     .greeting-auth-subtitle {
                         font-size: 16px;
+                        display: block;
                     }
                 }
 
                 @media (min-width: 992px) { 
                     .greeting-auth-subtitle {
                         font-size: 16px;
+                        display: block;
                     }
                 }
 
                 @media (min-width: 1200px) { 
                     .greeting-auth-subtitle {
                         font-size: 16px;
+                        display: block;
                     }
                 }
 
         .auth-upf {
-            font-size: 12pt;
             font-weight:400;
             background-color:inherit;
             color: var(--content-normal-alt);
             padding: 10px 5px 10px 5px;
             border: 1px grey solid;
             display: inline-block;
-            height: 30px;
-            width: 85%;
             -moz-border-radius: 3px;
             -webkit-border-radius: 3px;
             border-radius: 3px;
@@ -1518,7 +1519,6 @@
             transition-duration: 200ms;
             transition-timing-function: ease-in-out;
             text-overflow: ellipsis;
-            margin-bottom: 5px;
         }
 
         .auth-upf:focus {
@@ -1529,13 +1529,56 @@
             border-color: red;
         }
 
+            @media (max-width: 575px) { 
+                .auth-upf {
+                    font-size: 12px;
+                    height: 25px;
+                    width: 95%;
+                    margin-bottom: 7px;
+                }
+            }
+
+            @media (min-width: 576px) { 
+                .auth-upf {
+                    font-size: 10pt;
+                    height: 25px;
+                    width: 80%;
+                    margin-bottom: 5px;
+                }
+            }
+
+            @media (min-width: 768px) { 
+                .auth-upf {
+                    font-size: 10pt;
+                    height: 25px;
+                    margin-bottom: 5px;
+                    width: 80%;
+                }
+            }
+
+            @media (min-width: 992px) { 
+                .auth-upf {
+                    font-size: 12pt;
+                    height: 30px;
+                    margin-bottom: 5px;
+                    width: 80%;
+                }
+            }
+
+            @media (min-width: 1200px) { 
+                .auth-upf {
+                    font-size: 12pt;
+                    height: 30px;
+                    margin-bottom: 5px;
+                    width: 80%;
+                }
+            }
 
 
     /* IDs */
 
         #newuser {
             display: inline-block;
-            margin-top: 15px;
             color: var(--content-normal-alt);
             font-weight: 500;
             transition-property: all;
@@ -1550,13 +1593,65 @@
             border: 0.5px solid transparent;
         }
 
-            #newuser:hover {
-                border: 0.5px solid var(--content-normal-alt);
+
+            
+            @media (max-width: 575px) { 
+                #newuser {
+                    font-size: 2.5vw;
+                    margin-top: 1px;
+                }
+
+                #newuser:hover {
+                    border: 0.5px solid transparent;
+                }
+            }
+
+            @media (min-width: 576px) { 
+                #newuser {
+                    font-size: 13px;
+                    margin-top: 5px;
+                }
+
+                #newuser:hover {
+                    border: 0.5px solid transparent;
+                }
+            }
+
+            @media (min-width: 768px) { 
+                #newuser {
+                    font-size: 13px;
+                    margin-top: 10px;
+                }
+
+                #newuser:hover {
+                    border: 0.5px solid var(--content-normal-alt);
+                }
+            }
+
+            @media (min-width: 992px) { 
+                #newuser {
+                    font-size: 13px;
+                    margin-top: 15px;
+                }
+
+                #newuser:hover {
+                    border: 0.5px solid var(--content-normal-alt);
+                }
+            }
+
+            @media (min-width: 1200px) { 
+                #newuser {
+                    font-size: 13px;
+                    margin-top: 15px;
+                }
+
+                #newuser:hover {
+                    border: 0.5px solid var(--content-normal-alt);
+                }
             }
 
         #login {
             bottom: 0;
-            width: 150px;
             color: var(--content-normal-accent);
             -webkit-transition-property: color, background-color;
             -webkit-transition-duration: 200ms;
@@ -1564,7 +1659,6 @@
             transition-property: color, background-color;
             transition-duration: 200ms;
             transition-timing-function: ease-in-out;
-            margin-top: 15px;
             padding: 5px 2px 4px 0;
             transform: translateX(-1px);
             cursor: default;
@@ -1573,18 +1667,85 @@
             border-radius: 5px;
             border: var(--content-normal-accent) 1px solid;
             float: right;
-            transform: translateX(-90px);
             display: inline-block;
             text-align: center;
         }
 
-            #login:hover {
-                background-color: var(--content-normal-accent);
-                -moz-border-radius: 5px;
-                -webkit-border-radius: 5px;
-                border-radius: 5px;
-                padding: 5px 2px 4px 0;
-                color: var(--content-normal);
+            @media (max-width: 575px) { 
+
+                #login {
+                    width: 100px;
+                    margin-top: 0;
+                    font-size: 11px;
+                    transform: translateX(-20px);
+                }
+
+            }
+
+            @media (min-width: 576px) { 
+
+                #login {
+                    width: 120px;
+                    margin-top: 0;
+                    font-size: 14px;
+                    transform: translateX(-110px);
+                }
+
+
+            }
+
+            @media (min-width: 768px) { 
+
+                #login {
+                    width: 150px;
+                    margin-top: 15px;
+                    transform: translateX(-90px);
+                }
+
+                #login:hover {
+                    background-color: var(--content-normal-accent);
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 5px 2px 4px 0;
+                    color: var(--content-normal);
+                }
+            }
+
+            @media (min-width: 992px) { 
+
+                #login {
+                    width: 150px;
+                    margin-top: 15px;
+                    transform: translateX(-90px);
+                }
+
+                #login:hover {
+                    background-color: var(--content-normal-accent);
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 5px 2px 4px 0;
+                    color: var(--content-normal);
+                }
+            }
+
+            @media (min-width: 1200px) { 
+
+                #login {
+                    width: 150px;
+                    margin-top: 15px;
+                    transform: translateX(-90px);
+                }
+
+                #login:hover {
+                    background-color: var(--content-normal-accent);
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 5px 2px 4px 0;
+                    color: var(--content-normal);
+                }
             }
 
         #recover-password {
@@ -1613,19 +1774,21 @@
                 @media (min-width: 992px) { 
                     #recover-password {
                         font-size: 13px;
+                        margin-top: 4px;
                     }
                 }
 
                 @media (min-width: 1200px) { 
                     #recover-password {
                         font-size: 13px;
+                        margin-top: 4px;
                     }
                 }
 
         #need-verify {
             color:var(--content-normal-accent);
             font-size: 12.5px;
-            /*display:none*/
+            display:none
         }
 
         #auth-content-wrapper{
@@ -1687,9 +1850,54 @@
             width: 100%;
             margin-top: auto;
             color: var(--content-normal);
-            font-size: 9px;
             font-weight: 200;
+            padding-left: 10px;
+            padding-bottom: 5px;
         }
+
+            @media (max-width: 575px) { 
+                
+                #auth-image-credit{
+                    display: none;
+                }
+
+            }
+
+            @media (min-width: 576px) { 
+
+                #auth-image-credit{
+                    display: block;
+                    font-size: 7px;
+                }
+
+            }
+
+            @media (min-width: 768px) { 
+
+                #auth-image-credit{
+                    display: block;
+                    font-size: 8px;
+                }
+
+            }
+
+            @media (min-width: 992px) { 
+
+                #auth-image-credit{
+                    display: block;
+                    font-size: 8px;
+                }
+
+            }
+
+            @media (min-width: 1200px) { 
+
+                #auth-image-credit{
+                    display: block;
+                    font-size: 8px;
+                }
+
+            }
 
         #authwall {
             display: block;
@@ -1706,7 +1914,7 @@
                 #authwall {
                     width: 100vw;
                     height: 100px;
-                    padding-left: 35px;
+                    padding-left: 40px;
                 }
             }
 
@@ -1755,7 +1963,7 @@
 
             @media (max-width: 575px) { 
                 #greeting-auth {
-                    font-size: 8vw;
+                    font-size: 7vw;
                 }
             }
 
