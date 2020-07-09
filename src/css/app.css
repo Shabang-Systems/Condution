@@ -1531,8 +1531,8 @@
 
             @media (max-width: 575px) { 
                 .auth-upf {
-                    font-size: 12px;
-                    height: 25px;
+                    font-size: 15px;
+                    height: 35px;
                     width: 95%;
                     margin-bottom: 7px;
                 }
@@ -1674,9 +1674,9 @@
             @media (max-width: 575px) { 
 
                 #login {
-                    width: 100px;
+                    width: 175px;
                     margin-top: 0;
-                    font-size: 11px;
+                    font-size: 13px;
                     transform: translateX(-20px);
                 }
 
@@ -1914,7 +1914,7 @@
                     width: 100vw;
                     height: 100px;
                     padding-left: 40px;
-                    margin: 75px 0;
+                    margin: 250px 0;
                 }
             }
 
