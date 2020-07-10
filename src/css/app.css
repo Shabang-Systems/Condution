@@ -120,7 +120,8 @@
             }
 
             #main-head-default{
-                background-color: transparent;
+                /* Make this not colorful for web */
+                background-color: var(--background);
                 height: 37px;
             }
 
