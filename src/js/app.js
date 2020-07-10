@@ -2056,7 +2056,7 @@ let ui = function() {
     });
 
     $("#quickadd").click(function(e) {
-        $(this).stop().animate({"width": "350px"}, 500);
+        $(this).stop().animate({"width": "280px"}, 500);
         //console.error(e);
     });
 

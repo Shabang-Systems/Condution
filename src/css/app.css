@@ -1409,7 +1409,7 @@
 
                 @media (max-width: 575px) { 
                     .perspective-title {
-                        transform: translate(5px, -1px);
+                        transform: translate(6px, -1px);
                     }
                 }
 
@@ -1605,13 +1605,14 @@
 
             .upcoming-daterow-w {
                 font-weight: 600;
-                font-size: 10px;
+                font-size: 9px;
+                transform: translateX(-0.5px);
                 display: inline-block;
             }
 
             .upcoming-daterow-d {
                 font-weight: 300;
-                font-size: 10px;
+                font-size: 9px;
                 display: inline-block;
             }
 
