@@ -423,7 +423,7 @@
                         z-index: 888808;
                         resize: none;
                         width: 250px;
-                        box-shadow: 2px 0px 5px var(--background-feature);
+                        box-shadow: 2px 0px 5px var(--content-normal);
                         left: -260px;
                     }
                 }
