@@ -181,7 +181,6 @@
         /* Classes */
             .page {
                 display: none;
-                overflow-y: scroll;
                 height: 100%;
                 margin: 1px;
             }
@@ -284,37 +283,37 @@
         
         /* IDs */
 
-            #sandwich {
-                position: absolute;
+            .sandwich {
+                position: inline-block;
                 color: var(--content-normal-alt);
             }
 
                 @media (max-width: 575px) { 
-                    #sandwich {
-                        display: block !important;
+                    .sandwich {
+                        display: inline-block !important;
                     }
                 }
 
                 @media (min-width: 576px) { 
-                    #sandwich {
+                    .sandwich {
                         display: none !important;
                     }
                 }
 
                 @media (min-width: 768px) { 
-                    #sandwich {
+                    .sandwich {
                         display: none !important;
                     }
                 }
 
                 @media (min-width: 992px) { 
-                    #sandwich {
+                    .sandwich {
                         display: none !important;
                     }
                 }
 
                 @media (min-width: 1200px) { 
-                    #sandwich {
+                    .sandwich {
                         display: none !important;
                     }
                 }
@@ -539,7 +538,7 @@
                 @media (max-width: 575px) { 
                     .task-name {
                         font-size: 12pt;
-                        width: 70%;
+                        width: 67%;
                     }
                 }
 
@@ -623,7 +622,7 @@
             .task-flagged {
                 background-color: var(--task-textbox-background);
                 height: 20px;
-                width: 10%;
+                width: 50px;
                 font-size: 9px;
                 color: var(--task-clickbox);
                 margin: 0px !important;
@@ -644,7 +643,7 @@
             .task-floating {
                 background-color: var(--task-clickbox-background);
                 height: 20px;
-                width: 10%;
+                width: 50px;
                 font-size: 9px;
                 color: var(--task-clickbox);
                 margin: 0px !important;
@@ -678,7 +677,7 @@
 
                 @media (min-width: 576px) { 
                     .task-tools {
-                        width: 75vw;
+                        width: 95%;
                         display: flex;
                         justify-content: flex-start;
                     }
@@ -686,7 +685,7 @@
 
                 @media (min-width: 768px) { 
                     .task-tools {
-                        width: 75vw;
+                        width: 95%;
                         display: flex;
                         justify-content: flex-start;
                     }
@@ -694,7 +693,7 @@
 
                 @media (min-width: 992px) { 
                     .task-tools {
-                        width: 75vw;
+                        width: 95%;
                         display: flex;
                         justify-content: flex-start;
                     }
@@ -702,19 +701,19 @@
 
                 @media (min-width: 1200px) { 
                     .task-tools {
-                        width: 75vw;
+                        width: 95%;
                         display: flex;
                         justify-content: flex-start;
                     }
                 }
 
             .task-tools-sub {
-                min-width: fit-content;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
             }
 
             .task-tools-toggles {
                 flex-shrink: 3;
+                padding-right: 20px;
             }
 
             .task-tools-date {
@@ -722,12 +721,72 @@
             }
 
             .task-tools-project {
-                width: 100%;
+
+            }
+        
+                @media (max-width: 575px) { 
+                    .task-tools-project {
+                        width: 100%;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .task-tools-project {
+                        width: 30%;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .task-tools-project {
+                        width: 30%;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .task-tools-project {
+                        width: 30%;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .task-tools-project {
+                        width: 30%;
+                    }
+                }
+
+            .task-tools-tags {
+
             }
 
-            .task-tools-tag {
-                width: 100%;
-            }
+                @media (max-width: 575px) { 
+                    .task-tools-tags {
+                        width: 100%;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .task-tools-tags {
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .task-tools-tags {
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .task-tools-tags {
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .task-tools-tags {
+                        width: 70%;
+                    }
+                }
 
             .task-subicon {
                 font-size: 10px;
@@ -898,41 +957,40 @@
                     min-height: 20px;
                     transform: translateX(-4px);
                     display: inline-block;
+                    width: 80%;
                     /*height: 20px;*/
                 }
 
-
                     @media (max-width: 575px) { 
                         .bootstrap-tagsinput {
-                            width:  80%;
+                            width: 84%;
                         }
                     }
 
                     @media (min-width: 576px) { 
                         .bootstrap-tagsinput {
-                            width:  52%;
+                            width: 80%;
                         }
                     }
 
                     @media (min-width: 768px) { 
                         .bootstrap-tagsinput {
-                            width:  52%;
+                            width: 85%;
                         }
+
                     }
 
                     @media (min-width: 992px) { 
                         .bootstrap-tagsinput {
-                            width:  52%;
+                            width: 90%;
                         }
                     }
 
                     @media (min-width: 1200px) { 
                         .bootstrap-tagsinput {
-                            width:  52%;
+                            width: 90%;
                         }
                     }
-
-
 
                 .bootstrap-tagsinput > .label-info {
                     position: relative;
@@ -999,6 +1057,37 @@
                     display: inline-block;
                 }
 
+                    @media (max-width: 575px) { 
+                        .es-input {
+                            width: 84%;
+                            transform: translateX(5px);
+                        }
+                    }
+
+                    @media (min-width: 576px) { 
+                        .es-input {
+                            width: 57%;
+                        }
+                    }
+
+                    @media (min-width: 768px) { 
+                        .es-input {
+                            width: 70%;
+                        }
+                    }
+
+                    @media (min-width: 992px) { 
+                        .es-input {
+                            width: 76%;
+                        }
+                    }
+
+                    @media (min-width: 1200px) { 
+                        .es-input {
+                            width: 75%;
+                        }
+                    }
+
                 .es-list {
                     background-color: var(--background);
                     font-size: 11px;
@@ -1028,7 +1117,7 @@
                     }
 
                 .editable-select {
-                    transition: all 400ms;
+                    transition: background-color color 400ms;
                 }
 
         /* Datepicker */
@@ -1209,6 +1298,45 @@
                     display: inline-block;
                 }
 
+
+                    @media (max-width: 355px) { 
+                        .datebox {
+                            width: 28%;
+                        }
+                    }
+
+                    @media (min-width: 356px) { 
+                        .datebox {
+                            width: 27vw;
+                        }
+                    }
+
+                    @media (min-width: 576px) { 
+                        .datebox {
+                            width: 30%;
+                        }
+
+                    }
+
+                    @media (min-width: 768px) { 
+                        .datebox {
+                            width: 30%;
+                        }
+
+                    }
+
+                    @media (min-width: 992px) { 
+                        .datebox {
+                            width: 30%;
+                        }
+                    }
+
+                    @media (min-width: 1200px) { 
+                        .datebox {
+                            width: 30%;
+                        }
+                    }
+
                 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
                 .ui-timepicker-div dl { text-align: left; }
                 .ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
@@ -1274,11 +1402,13 @@
                 color: var(--decorative-light-alt);
                 font-size: 12px;
                 padding: 0;
+                display: inline-block;
+                width: 90%;
             }
 
                 @media (max-width: 575px) { 
                     .perspective-title {
-                        transform: translate(25px, 1.5px);
+                        transform: translate(5px, -1px);
                     }
                 }
 
