@@ -184,7 +184,6 @@
                 overflow-y: scroll;
                 height: 100%;
                 margin: 1px;
-                min-width: fit-content;
             }
 
             .blankimage {
@@ -520,7 +519,6 @@
         /* Classes */
 
             .task-name {
-                font-size: 12pt;
                 font-weight:400;
                 background-color:inherit;
                 color: var(--content-normal-alt);
@@ -528,7 +526,6 @@
                 border: 0px;
                 display: inline-block;
                 height: 30px;
-                width: 85%;
                 -moz-border-radius: 3px;
                 -webkit-border-radius: 3px;
                 border-radius: 3px;
@@ -538,6 +535,43 @@
                 .task-name:focus {
                     background-color: var(--content-normal);
                 }
+
+                @media (max-width: 575px) { 
+                    .task-name {
+                        font-size: 12pt;
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .task-name {
+                        font-size: 12pt;
+                        width: 75%;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .task-name {
+                        font-size: 12pt;
+                        width: 85%;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .task-name {
+                        font-size: 12pt;
+                        width: 85%;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .task-name {
+                        font-size: 12pt;
+                        width: 85%;
+                    }
+                }
+
+
 
             .task-desc {
                 font-size: 9pt;
@@ -629,11 +663,71 @@
                 }
 
             .task-tools {
-                display: flex;
-                width: 75vw;
                 margin-top: 10px;
-                justify-content: flex-start;
+                
             }          
+
+                @media (max-width: 575px) { 
+                    .task-tools {
+                        width: 100%;
+                        display: flex;
+                        justify-content: flex-start;
+                        flex-direction: column;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .task-tools {
+                        width: 75vw;
+                        display: flex;
+                        justify-content: flex-start;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .task-tools {
+                        width: 75vw;
+                        display: flex;
+                        justify-content: flex-start;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .task-tools {
+                        width: 75vw;
+                        display: flex;
+                        justify-content: flex-start;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .task-tools {
+                        width: 75vw;
+                        display: flex;
+                        justify-content: flex-start;
+                    }
+                }
+
+            .task-tools-sub {
+                min-width: fit-content;
+                margin-bottom: 5px;
+            }
+
+            .task-tools-toggles {
+                flex-shrink: 3;
+            }
+
+            .task-tools-date {
+                flex-grow: 3;
+            }
+
+            .task-tools-project {
+                width: 100%;
+            }
+
+            .task-tools-tag {
+                width: 100%;
+            }
 
             .task-subicon {
                 font-size: 10px;
@@ -802,10 +896,43 @@
                     background-color: var(--task-textbox-background);
                     height: auto !important;
                     min-height: 20px;
-                    width:  63%;
                     transform: translateX(-4px);
+                    display: inline-block;
                     /*height: 20px;*/
                 }
+
+
+                    @media (max-width: 575px) { 
+                        .bootstrap-tagsinput {
+                            width:  80%;
+                        }
+                    }
+
+                    @media (min-width: 576px) { 
+                        .bootstrap-tagsinput {
+                            width:  52%;
+                        }
+                    }
+
+                    @media (min-width: 768px) { 
+                        .bootstrap-tagsinput {
+                            width:  52%;
+                        }
+                    }
+
+                    @media (min-width: 992px) { 
+                        .bootstrap-tagsinput {
+                            width:  52%;
+                        }
+                    }
+
+                    @media (min-width: 1200px) { 
+                        .bootstrap-tagsinput {
+                            width:  52%;
+                        }
+                    }
+
+
 
                 .bootstrap-tagsinput > .label-info {
                     position: relative;
@@ -869,6 +996,7 @@
                 .es-input {
                     background-color: var(--task-textbox-background) !important;
                     padding-left: 5px;
+                    display: inline-block;
                 }
 
                 .es-list {
@@ -1078,6 +1206,7 @@
                 .datebox {
                     cursor: pointer;
                     padding-left: 4px;
+                    display: inline-block;
                 }
 
                 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -2205,6 +2334,7 @@
                 color: var(--task-icon);
                 margin-right: 10px;
                 margin-left: 5px;
+                display: inline-block;
             }
 
             .blankimage-content {
