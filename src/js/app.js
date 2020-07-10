@@ -1675,8 +1675,10 @@ let ui = function() {
             $("#project-title").val(projectName);
             if (pageIndex.projectDir.length <= 1) {
                 $("#project-back").hide()
+                $("#project-titlerow").removeClass("perspective-title-subproject");
             } else {
                 $("#project-back").show()
+                $("#project-titlerow").addClass("perspective-title-subproject");
             }
             // get the project structure, and load the content
             E.db.getProjectStructure(uid, pid).then(async function(struct) {
@@ -2246,7 +2248,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             ui.user.set(user);
             await ui.constructSidebar();
             await ui.load("upcoming-page");
-            $("#loading").fadeOut();
+            //$("#loading").fadeOut();
             $("#auth-content-wrapper").fadeOut();
             $("#content-wrapper").fadeIn();
             setInterval(() => {ui.update()}, 60 * 1000);

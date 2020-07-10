@@ -156,6 +156,7 @@
                 color: var(--content-normal-alt);
                 font-weight: 500;
                 font-size: 15px;
+                margin-left: 20px;
             }
 
             #loading-bottom {
@@ -170,6 +171,7 @@
                 color: var(--content-normal-alt);
                 font-weight: 200;
                 font-size: 15px;
+                margin-right: 10px;
             }
 
             #loading-anim {
@@ -200,9 +202,21 @@
             .overlay-unit {
                 background-color: var(--background);
                 border-radius: 5px;
-                width: 450px; 
                 padding: 10px;
             }
+
+                @media (max-width: 575px) { 
+                    .overlay-unit {
+                        width: 90%; 
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .overlay-unit {
+                        width: 450px; 
+                    }
+                }
+
 
         /* IDs */
 
@@ -215,10 +229,22 @@
             }
 
             #content-area{
-                padding: 0 10px 0 10px;
                 overflow: scroll;
                 width: 100%;
             }
+                @media (max-width: 355px) { 
+                    #content-area {
+                        padding: 0 10px 0 10px;
+                    }
+                }
+
+                @media (min-width: 356px) { 
+                    #content-area {
+                        padding: 0 15px 0 15px;
+                    }
+                }
+
+
 
             #overlay {
                 position: absolute;
@@ -1404,37 +1430,69 @@
                 font-size: 12px;
                 padding: 0;
                 display: inline-block;
-                width: 90%;
             }
 
                 @media (max-width: 575px) { 
                     .perspective-title {
+                        width: 93%;
+                        transform: translate(6px, -1px);
+                    }
+
+                    .perspective-title-subproject {
+                        width: 85%;
                         transform: translate(6px, -1px);
                     }
                 }
 
                 @media (min-width: 576px) { 
                     .perspective-title {
+                        width: 94%;
+                        transform: translate(0px, 0px);
+                    }
+
+                    .perspective-title-subproject {
+                        width: 94%;
                         transform: translate(0px, 0px);
                     }
                 }
 
                 @media (min-width: 768px) { 
                     .perspective-title {
+                        width: 94%;
                         transform: translate(0px, 0px);
                     }
+
+                    .perspective-title-subproject {
+                        width: 94%;
+                        transform: translate(0px, 0px);
+                    }
+
                 }
 
                 @media (min-width: 992px) { 
                     .perspective-title {
+                        width: 94%;
                         transform: translate(0px, 0px);
                     }
+
+                    .perspective-title-subproject {
+                        width: 94%;
+                        transform: translate(0px, 0px);
+                    }
+
                 }
 
                 @media (min-width: 1200px) { 
                     .perspective-title {
+                        width: 94%;
                         transform: translate(0px, 0px);
                     }
+
+                    .perspective-title-subproject {
+                        width: 94%;
+                        transform: translate(0px, 0px);
+                    }
+
                 }
 
             .perspective-titleword {
@@ -1449,16 +1507,45 @@
                 transition-property: all;
                 transition-duration: 200ms;
                 transition-timing-function: ease-in-out;
-                width: 75%;
             }
 
                 .perspective-titleword:hover {
                     background-color: var(--background-feature);
                 }
 
-            .perspective-titleword:focus {
-                background-color: var(--background-feature);
-            }
+                .perspective-titleword:focus {
+                    background-color: var(--background-feature);
+                }
+
+                @media (max-width: 575px) { 
+                    .perspective-titleword {
+                        width: 40%;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .perspective-titleword {
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .perspective-titleword {
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .perspective-titleword {
+                        width: 70%;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .perspective-titleword {
+                        width: 70%;
+                    }
+                }
 
             .perspective-divider{
                 margin: 5px 0 5px 0;    
@@ -1664,8 +1751,37 @@
             #greeting-date{
                 padding-left: 5px;
                 font-weight: 500;
-                font-size: 15px;
             }
+
+                @media (max-width: 575px) { 
+                    #greeting-date{
+                        font-size: 13px;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #greeting-date{
+                        font-size: 15px;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    #greeting-date{
+                        font-size: 15px;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    #greeting-date{
+                        font-size: 15px;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    #greeting-date{
+                        font-size: 15px;
+                    }
+                }
 
 /* == Modal Elements == */
 
@@ -1746,8 +1862,21 @@
                 display: inline-block;
                 position: absolute;
                 margin-right: 10px;
-                transform: translate(420px, -8px);
             }
+
+                @media (max-width: 575px) { 
+                    #repeat-back {
+                        transform: translate(82vw, 0px);
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #repeat-back {
+                        transform: translate(420px, -8px);
+                    }
+                }
+
+
 
             #repeat-daterow{
                 width: 100%;
@@ -1810,8 +1939,21 @@
                 display: inline-block;
                 position: absolute;
                 margin-right: 10px;
-                transform: translate(420px, -8px);
             }
+
+                @media (max-width: 575px) { 
+                    #perspective-back {
+                        transform: translate(82vw, 0px);
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #perspective-back {
+                        transform: translate(420px, -8px);
+                    }
+                }
+
+
 
             #perspective-avail-toggle-group {
                 float: left;
@@ -2017,7 +2159,7 @@
             
             @media (max-width: 575px) { 
                 #newuser {
-                    font-size: 2.5vw;
+                    font-size: 4vw;
                     margin-top: 1px;
                 }
 
@@ -2095,7 +2237,7 @@
 
                 #login {
                     width: 175px;
-                    margin-top: 0;
+                    margin-top: 10px;
                     font-size: 13px;
                     transform: translateX(-20px);
                 }
