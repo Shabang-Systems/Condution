@@ -16,6 +16,8 @@ require('mousetrap');
 require('jquery-editable-select');
 require('bootstrap-tagsinput');
 var moment = require('moment-timezone');
+var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
+var { Haptics } = Plugins;
 
 
 var E = require('./backend/CondutionEngine');
@@ -1151,6 +1153,7 @@ let ui = function() {
                     $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
                     $('#task-' + taskId).slideUp(300);
                     E.db.completeTask(uid, taskId).then(function(e) {
+                        Haptics.notification({type: HapticsNotificationType.SUCCESS});
                         if (project === undefined) {
                              E.db.getInboxTasks(uid).then(function(e){
                                 iC = e.length;
@@ -2248,7 +2251,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             ui.user.set(user);
             await ui.constructSidebar();
             await ui.load("upcoming-page");
-            //$("#loading").fadeOut();
+            $("#loading").fadeOut();
             $("#auth-content-wrapper").fadeOut();
             $("#content-wrapper").fadeIn();
             setInterval(() => {ui.update()}, 60 * 1000);
