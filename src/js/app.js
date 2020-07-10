@@ -76,11 +76,16 @@ if (process.platform === "win32") {
         }
     });
     $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
-} else {
+} else if (process.platform === "darwin") {
     $("#main-head-darwin").show();
     $("#left-menu").addClass("darwin-windowing-left");
     $("#content-area").addClass("darwin-windowing-right");
+} else {
+    $("#main-head-default").show();
+    $("#left-menu").addClass("default-windowing-left");
+    $("#content-area").addClass("default-windowing-right");
 }
+
 
 // Chapter 1: Utilities!
 const interfaceUtil = function() {
@@ -130,8 +135,8 @@ const interfaceUtil = function() {
 
 
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
-        return `<div id="task-${taskId}" class="task thov"> <div id="task-display-${taskId}" title="Tap to Edit" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input title="Task Name" class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div title="Trash Task" class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div title="Repeating Task" class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" title="Task Description" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> <label class="btn task-flagged" title="Task Unflagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" title="Task Flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important"> <label class="btn task-floating" title="Fixed Timezone" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" title="Floating Timezone" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input title="Defer Date" class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input title="Due Date" class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select title="Projects" class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
-<input title="Tags" class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
+        return `<div id="task-${taskId}" class="task thov"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools" style="margin-bottom: 9px;"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; transform: translateY(3px); margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> <div class="task-tools"> <div class="label"><i class="fas fa-tasks"></i></div> <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> <div class="label"><i class="fas fa-tags"></i></div>
+<input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     };
 
     return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage}
@@ -630,11 +635,11 @@ let ui = function() {
         // Actions
         $(".repeat-daterow-weekname").on("click", function(e) {
             if (repeatWeekDays.includes($(this).html())) {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
+                $(this).stop().animate({"background-color": interfaceUtil.gtc("--background-feature")});
                 repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
                 E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             } else {
-                $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
+                $(this).stop().animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                 repeatWeekDays.push($(this).html());
                 E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             }
@@ -643,11 +648,11 @@ let ui = function() {
         
         $(".repeat-monthgrid-day").on("click", function(e) {
             if (repeatMonthDays.includes($(this).html())) {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background")}, 100);
+                $(this).stop().animate({"background-color": interfaceUtil.gtc("--background")}, 100);
                 repeatMonthDays = repeatMonthDays.filter(i => i !== $(this).html());
                 E.db.modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             } else {
-                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")}, 100);
+                $(this).stop().animate({"background-color": interfaceUtil.gtc("--background-feature")}, 100);
                 repeatMonthDays.push($(this).html());
                 E.db.modifyTask(uid, tid, {repeat: {rule: "monthly", on: repeatMonthDays}});
             }
@@ -672,7 +677,7 @@ let ui = function() {
                     if (ti.repeat.on) {
                         $("#repeat-daterow").children().each(function(e) {
                             if (ti.repeat.on.includes($(this).html())) {
-                                $(this).animate({"background-color": interfaceUtil.gtc("--decorative-light")});
+                                $(this).stop().animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                             }
                         });
                         repeatWeekDays = ti.repeat.on;
@@ -696,7 +701,7 @@ let ui = function() {
                     if (ti.repeat.on) {
                         $("#repeat-monthgrid").children().each(function(e) {
                             if (ti.repeat.on.includes($(this).html())) {
-                                $(this).animate({"background-color": interfaceUtil.gtc("--background-feature")});
+                                $(this).stop().animate({"background-color": interfaceUtil.gtc("--background-feature")});
                             }
                         });
                         repeatMonthDays = ti.repeat.on;
@@ -743,7 +748,7 @@ let ui = function() {
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
-            $("#task-"+activeTask).animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
+            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
             await refresh();
             if (activeTaskDeInboxed) {
@@ -1119,7 +1124,7 @@ let ui = function() {
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
                     $('#task-name-' + taskId).css("text-decoration", "line-through");
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
-                    $('#task-' + taskId).animate({"margin": "5px 0 5px 0"}, 200);
+                    $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
                     $('#task-' + taskId).slideUp(300);
                     E.db.completeTask(uid, taskId).then(function(e) {
                         if (project === undefined) {
@@ -1280,22 +1285,14 @@ let ui = function() {
                     projectID = projId;
                     project = this.value;
                 } else {
-                    let projObj = {
-                        name: this.value,
-                        top_level: true,
-                        is_sequential: false,
-                    };
-                    E.db.newProject(uid, projObj).then(async function(npID) {
-                        if (project === undefined){
-                            activeTaskDeInboxed = true;
-                        } else {
-                            await E.db.dissociateTask(uid, taskId, projectID);
-                        }
-                        E.db.modifyTask(uid, taskId, {project:npID});
-                        await E.db.associateTask(uid, taskId,npID);
-                        projectID = npID;
-                        project = this.value;
-                    });
+                    E.db.modifyTask(uid, taskId, {project:""});
+                    this.value = ""
+                    if (project !== undefined) {
+                        activeTaskInboxed = true;
+                        await E.db.dissociateTask(uid, taskId, projectID);
+                    }
+                    project = undefined;
+                    projectID = "";
                 }
             });
 
@@ -1635,7 +1632,7 @@ let ui = function() {
             E.perspective.calc(uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord).then(async function(tids) {
                 $("#blankimage-perspective").css("opacity", "0.0");
                 $("#blankimage-perspective").css("display", tids.length == 0 ? "flex" : "none");
-                $("#blankimage-perspective").animate({"opacity": "0.2"});
+                $("#blankimage-perspective").stop().animate({"opacity": "0.2"});
                 for (let taskId of tids) {
                     // Nononono don't even think about foreach 
                     // othewise the order will be messed up
@@ -1661,7 +1658,7 @@ let ui = function() {
             E.db.getProjectStructure(uid, pid).then(async function(struct) {
                 $("#blankimage-project").css("opacity", "0.0");
                 $("#blankimage-project").css("display", struct.children.length == 0 ? "flex" : "none");
-                $("#blankimage-project").animate({"opacity": "0.2"});
+                $("#blankimage-project").stop().animate({"opacity": "0.2"});
                 for (let item of struct.children) {
                     if (item.type === "task") {
                         // get and load the task
@@ -1806,8 +1803,8 @@ let ui = function() {
             let taskInfo = $(this).attr("id").split("-");
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
-            $("#task-" + task).animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
-            $("#task-edit-" + activeTask).slideDown(200);
+            $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+            $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
             $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
@@ -1975,7 +1972,7 @@ let ui = function() {
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
-                $("#task-" + task).animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
                 $("#task-edit-" + activeTask).slideDown(200);
                 $("#task-trash-" + activeTask).css("display", "block");
                 $("#task-repeat-" + activeTask).css("display", "block");
@@ -2031,13 +2028,13 @@ let ui = function() {
     });
 
     $("#quickadd").click(function(e) {
-        $(this).animate({"width": "350px"}, 500);
+        $(this).stop().animate({"width": "350px"}, 500);
         //console.error(e);
     });
 
     $("#quickadd").blur(function(e) {
         $(this).val("");
-        $(this).animate({"width": "250px"}, 500);
+        $(this).stop().animate({"width": "250px"}, 500);
         //console.error(e);
     });
 
@@ -2051,7 +2048,7 @@ let ui = function() {
                 pageIndex.interfaceLocks.qaLock = true;
             }
             let tb = $(this);
-            tb.animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, function() {
+            tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, function() {
                 setTimeout(()=>(pageIndex.interfaceLocks.qaLock = false), 750);
                 let newTaskUserRequest = chrono.parse($(this).val());
                 // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
@@ -2091,7 +2088,7 @@ let ui = function() {
                         $("#unsorted-badge").html(''+iC);
                         $("#inbox-subhead").slideDown(300);
                         $("#inbox").slideDown(300);
-                        tb.animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, function() {
+                        tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, function() {
                             tb.blur();
                             tb.val("");
                         });

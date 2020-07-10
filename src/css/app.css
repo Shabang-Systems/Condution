@@ -60,6 +60,23 @@
                 padding-top: 45px !important;
             }
 
+            .default-windowing-left {
+                padding-top: 50px !important;
+            }
+
+            .default-windowing-right {
+                padding-top: 55px !important;
+            }
+
+            /* Uncomment this for web distro! */
+/*            .default-windowing-left {*/
+                /*padding-top: 30px !important;*/
+            /*}*/
+
+            /*.default-windowing-right {*/
+                /*padding-top: 35px !important;*/
+            /*}*/
+
             .win32-windowing {
                 padding-top: 10px !important;
             }
@@ -101,6 +118,12 @@
                 background-color: transparent;
                 height: 34px;
             }
+
+            #main-head-default{
+                background-color: transparent;
+                height: 37px;
+            }
+
 
             #window-actions {
                 float: right;
@@ -376,6 +399,7 @@
                 width: 99.5%;
                 min-height: 5px;
                 transition: background-color 200ms ease-in-out;
+                border: 1px solid transparent;
             }
 
                 .thov:hover {
@@ -384,6 +408,10 @@
 
             .task-display {
                 height: 30px;
+            }
+
+            .task-edit {
+                border: 1px solid transparent;
             }
 
     /* Task Elements */
