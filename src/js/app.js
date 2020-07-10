@@ -1778,6 +1778,7 @@ let ui = function() {
             pageIndex.projectDir.push(activeMenu);
             loadView("project-page", activeMenu.split("-")[1]);
         }
+        interfaceUtil.menu.close();
     });
     
     $(document).on('click', '.upcoming-daterow-item', function(e) {
@@ -1813,6 +1814,7 @@ let ui = function() {
         loadView("upcoming-page");
         activeMenu = $(this).attr('id');
         $("#"+activeMenu).addClass("today-highlighted");
+        interfaceUtil.menu.close();
     });
 
     $(document).on("click", ".task", async function(e) {
@@ -2189,9 +2191,13 @@ let ui = function() {
         }
     });
 
+    $("#sandwich").click(function(e) {
+        interfaceUtil.menu.open();
+    });
+
     $(document).click(function(e) { 
         var $target = $(e.target);
-        if(!$target.closest('#left-menu').length) {
+        if(!$target.closest('#left-menu').length && !$target.closest('#sandwich').length) {
             interfaceUtil.menu.close();
         }        
 });

@@ -287,11 +287,38 @@
 
             #sandwich {
                 position: absolute;
-                z-index: 8880888;
-                display: block !important;
-                color: white;
+                color: var(--content-normal-alt);
             }
 
+                @media (max-width: 575px) { 
+                    #sandwich {
+                        display: block !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #sandwich {
+                        display: none !important;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    #sandwich {
+                        display: none !important;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    #sandwich {
+                        display: none !important;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    #sandwich {
+                        display: none !important;
+                    }
+                }
 
     /* Menu Items */
 
@@ -1119,6 +1146,36 @@
                 font-size: 12px;
                 padding: 0;
             }
+
+                @media (max-width: 575px) { 
+                    .perspective-title {
+                        transform: translate(25px, 1.5px);
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .perspective-title {
+                        transform: translate(0px, 0px);
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .perspective-title {
+                        transform: translate(0px, 0px);
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .perspective-title {
+                        transform: translate(0px, 0px);
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .perspective-title {
+                        transform: translate(0px, 0px);
+                    }
+                }
 
             .perspective-titleword {
                 margin-left:4px;
