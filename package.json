@@ -49,6 +49,7 @@
     "firebase": "^7.13.2",
     "firebaseui": "^4.5.0",
     "fuse.js": "^5.1.0",
+    "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
     "jquery-editable-select": "^2.2.5",
     "jquery-ui": "^1.12.1",

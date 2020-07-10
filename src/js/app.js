@@ -9,6 +9,7 @@ var chrono = require('chrono-node');
 var lottie = require('lottie-web');
 require('popper.js');
 require('bootstrap');
+require('hammerjs');
 require('fuse.js');
 require('typeahead.js');
 require('mousetrap');
@@ -113,6 +114,18 @@ const interfaceUtil = function() {
         $(".blankimage").attr("src","./static/BlkArt/BlkArt_"+Math.floor(Math.random() * 3)+".png");
     }
 
+    const menu = function() {
+        const openMenu = function() {
+            $("#left-menu").animate({"left": "0px"}, 100);
+        }
+
+        const closeMenu = function() {
+            $("#left-menu").animate({"left": "-260px"}, 150);
+        }
+
+        return {open:openMenu, close:closeMenu};
+    }()
+
     const smartParse = function(timeformat, timeString, o) {
         // smart, better date parsing with chrono
         let d = chrono.parse(timeString)[0].start.date();
@@ -124,6 +137,18 @@ const interfaceUtil = function() {
             microsec: d.getMicroseconds(),
             timezone: d.getTimezoneOffset() * -1
         };
+    };
+
+    const getStartPosition = function(e) {
+        const delta_x = e.deltaX;
+        const delta_y = e.deltaY;
+        const final_x = e.srcEvent.pageX || e.srcEvent.screenX || 0;
+        const final_y = e.srcEvent.pageY || e.srcEvent.screenY || 0;
+
+        return {
+            x: final_x - delta_x,
+            y: final_y - delta_y
+        }
     };
 
     const smartParseFull = (timeString) => chrono.parse(timeString)[0];
@@ -139,7 +164,7 @@ const interfaceUtil = function() {
 <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div>`
     };
 
-    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage}
+    return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage, getStartSwipe: getStartPosition, menu}
 }();
 
 let auth = function() {
@@ -2149,6 +2174,27 @@ let ui = function() {
     $(document).on("click", "#perspective-documentaion", function(e) {
         require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
     });
+
+    Hammer($("#content-area")[0]).on('swiperight swipeleft', function (e) {
+        e.preventDefault();
+        const { x } = interfaceUtil.getStartSwipe(e);
+        //swipe right to open nav /* note the condition here */
+        if (e.type == 'swiperight' && x >= 0 && x <=500) {
+            // open menu
+            interfaceUtil.menu.open();
+            //swiping left should slide out nav and/or sub-nav
+        } else {
+            // close/hide menu
+            interfaceUtil.menu.close();
+        }
+    });
+
+    $(document).click(function(e) { 
+        var $target = $(e.target);
+        if(!$target.closest('#left-menu').length) {
+            interfaceUtil.menu.close();
+        }        
+});
 
     interfaceUtil.newPHI();
 

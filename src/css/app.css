@@ -184,6 +184,7 @@
                 overflow-y: scroll;
                 height: 100%;
                 margin: 1px;
+                min-width: fit-content;
             }
 
             .blankimage {
@@ -210,13 +211,14 @@
                 margin: 0;
                 height: 100%;
                 background-color: var(--background);
-                display: grid;
-                grid-template-columns: 200px auto
+                display: flex;
+                flex-direction: horizontal;
             }
 
             #content-area{
                 padding: 0 10px 0 10px;
                 overflow: scroll;
+                width: 100%;
             }
 
             #overlay {
@@ -280,7 +282,15 @@
                 .menu-subicon:hover {
                     background-color: var(--menu-accent-background);
                 }
+        
+        /* IDs */
 
+            #sandwich {
+                position: absolute;
+                z-index: 8880888;
+                display: block !important;
+                color: white;
+            }
 
 
     /* Menu Items */
@@ -378,6 +388,70 @@
                 padding: 0 10px 10px 10px;
                 overflow: hidden;
             }
+
+                @media (max-width: 575px) { 
+                    #left-menu{
+                        position: fixed;
+                        height: 100%;
+                        z-index: 888808;
+                        resize: none;
+                        width: 250px;
+                        box-shadow: 2px 0px 5px var(--background-feature);
+                        left: -260px;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #left-menu{
+                        position: relative;
+                        height: 100%;
+                        z-index: 0;
+                        resize: horizontal;
+                        min-width: 170px;
+                        width: 220px;
+                        max-width: 230px;
+                        left: 0 !important;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    #left-menu{
+                        position: relative;
+                        height: 100%;
+                        z-index: 0;
+                        resize: horizontal;
+                        min-width: 170px;
+                        width: 220px;
+                        max-width: 230px;
+                        left: 0 !important;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    #left-menu{
+                        position: relative;
+                        height: 100%;
+                        z-index: 0;
+                        resize: horizontal;
+                        min-width: 200px;
+                        width: 230px;
+                        max-width: 250px;
+                        left: 0 !important;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    #left-menu{
+                        position: relative;
+                        height: 100%;
+                        z-index: 0;
+                        resize: horizontal;
+                        min-width: 200px;
+                        width: 230px;
+                        max-width: 250px;
+                        left: 0 !important;
+                    }
+                }
 
             #menu-area{
                 height: 100%;
