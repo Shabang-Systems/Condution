@@ -1416,6 +1416,7 @@ let ui = function() {
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
             swapThreshold: 0.10,
+            delayOnTouchOnly: true,
             onStart: function(e) {
                 let itemEl = $(e.item);
                 $('#inbox').children().each(function() {
@@ -1458,6 +1459,7 @@ let ui = function() {
         let projectSort = new interfaceUtil.Sortable($("#project-content")[0], {
             animation: 200,
             swapThreshold: 0.10,
+            delayOnTouchOnly: true,
             onStart: function(e) {
                 let itemEl = $(e.item);
                 $('#project-content').children().each(function() {
@@ -1527,6 +1529,7 @@ let ui = function() {
 
         var perspectiveSort = new interfaceUtil.Sortable($(".perspectives")[0], {
             animation: 200,
+            delayOnTouchOnly: true,
             onStart: function(e) {
                 // Make sure that elements don't think that they are being hovered
                 // when they are being dragged over
@@ -1567,6 +1570,7 @@ let ui = function() {
         // NW: top level project sorter
         let topLevelProjectSort = new interfaceUtil.Sortable($(".projects")[0], {
             animation: 200,
+            delayOnTouchOnly: true,
             swapThreshold: 0.10,
             onStart: function(e) {
                 // Make sure that elements don't think that they are being hovered
