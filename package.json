@@ -36,6 +36,7 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
+    "@capacitor/android": "2.2.1",
     "@capacitor/cli": "^2.2.1",
     "@capacitor/core": "^2.2.1",
     "@capacitor/ios": "2.2.1",
