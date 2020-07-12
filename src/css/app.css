@@ -431,6 +431,18 @@
 
     /* Da Menu */
 
+        /* Classes */
+
+        .menu-area{
+            height: 100%;
+            display: flex;
+            /*grid-template-rows: 60px 30px auto auto;*/
+            color: var(--menu-background);
+            flex-direction: column;
+        }
+
+
+
         /* IDs */
 
             #left-menu{
@@ -503,14 +515,6 @@
                         left: 0 !important;
                     }
                 }
-
-            #menu-area{
-                height: 100%;
-                display: flex;
-                /*grid-template-rows: 60px 30px auto auto;*/
-                color: var(--menu-background);
-                flex-direction: column;
-            }
 
 /* == Task + Task Actions == */
 
@@ -2371,6 +2375,7 @@
             background: var(--auth-background);
             background-size: cover;
             display: none;
+            z-index: 8880888080;
         }
 
             
@@ -2571,7 +2576,7 @@
                 padding: 3px 1px 3px 10px;
                 box-shadow: 1px 1px 3px var(--background-feature);
                 font-size: 14px;
-                transition-property: color, background-color;
+                transition-property: color, background-color, bottom;
                 transition-duration: 200ms;
                 transition-timing-function: ease-in-out;
                 color: var(--quickadd-text);
@@ -2595,7 +2600,28 @@
 
                 #quickadd:active {
                     background-color: var(--quickadd-feature);
-            }
+                }
+
+
+        /* Classes */
+
+                .qa_bottom {
+
+                }
+
+                @media (max-width: 575px) { 
+                    .qa_bottom {
+                        bottom: -100px !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .qa_bottom {
+                        bottom: 0 !important;
+                    }
+                }
+
+
   
     /* Misc. Misc. Items */
 

@@ -770,6 +770,7 @@ let ui = function() {
         //displayTask("inbox", task)
 
         let hideActiveTask = async function() {
+            $("#quickadd").removeClass("qa_bottom");
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
@@ -1151,9 +1152,9 @@ let ui = function() {
                     $('#task-name-' + taskId).css("text-decoration", "line-through");
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
                     $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
+                    Haptics.notification({type: HapticsNotificationType.SUCCESS});
                     $('#task-' + taskId).slideUp(300);
                     E.db.completeTask(uid, taskId).then(function(e) {
-                        Haptics.notification({type: HapticsNotificationType.SUCCESS});
                         if (project === undefined) {
                              E.db.getInboxTasks(uid).then(function(e){
                                 iC = e.length;
@@ -1843,6 +1844,7 @@ let ui = function() {
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+            $("#quickadd").addClass("qa_bottom");
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
@@ -2010,6 +2012,7 @@ let ui = function() {
         };
         E.db.newTask(uid, ntObject).then(function(ntID) {
             E.db.associateTask(uid, ntID, pid);
+            $("#quickadd").addClass("qa_bottom");
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
