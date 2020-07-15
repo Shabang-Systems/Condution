@@ -1183,7 +1183,7 @@ let ui = function() {
             //
             $('#task-project-'+taskId).select2({
                 'width': '80%',
-                searchInputPlaceholder: "Search or Add Project...",
+                searchInputPlaceholder: "Search Projects...",
                 placeholder: 'Inbox',
                 allowClear: true
             });
