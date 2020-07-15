@@ -19,7 +19,16 @@ var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
 var { Haptics } = Plugins;
 
-
+const preventDefault = e => e.preventDefault();// When rendering our container
+/*window.addEventListener('touchmove', preventDefault, {*/
+   //passive: false
+//});
+window.addEventListener("touchmove", function(event) {
+  if (!event.target.classList.contains('scrollable')) {
+    // no more scrolling
+    event.preventDefault();
+  }
+}, false);
 var E = require('./backend/CondutionEngine');
 
 E.start(firebase);

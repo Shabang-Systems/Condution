@@ -25,18 +25,13 @@
         height: 100%;
         margin: 0;
         font-family: sans-serif;
-        overflow: hidden;
         -ms-overflow-style: -ms-autohiding-scrollbar; 
         cursor: default !important;
         background-color: var(--background) !important;
     }
 
-    html {
-        overflow-y: scroll;
-    }
-
     body {
-        overflow-y: visible;
+        overflow-y: hidden;
     }
 
     * {
@@ -237,7 +232,7 @@
             }
 
             #content-area{
-                overflow: visible;
+                overflow: scroll;
                 width: 100%;
             }
                 @media (max-width: 355px) { 
