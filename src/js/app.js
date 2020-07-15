@@ -13,7 +13,6 @@ require('hammerjs');
 require('fuse.js');
 require('typeahead.js');
 require('mousetrap');
-require('jquery-editable-select');
 require('bootstrap-tagsinput');
 require('select2')();
 var moment = require('moment-timezone');
@@ -231,7 +230,7 @@ const interfaceUtil = function() {
         <div class="task-tools task-tools-bottom"> 
             <div class="task-tools-sub task-tools-project">
                 <div class="label"><i class="fas fa-tasks"></i></div>
-                <select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px">
+                <select class="task-project textbox" id="task-project-${taskId}" style="margin-right: 14px">
                     ${projectSelects}
                 </select>
             </div> 
