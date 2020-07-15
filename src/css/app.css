@@ -31,8 +31,12 @@
         background-color: var(--background) !important;
     }
 
-    body {
+    html {
         overflow-y: scroll;
+    }
+
+    body {
+        overflow-y: visible;
     }
 
     * {
