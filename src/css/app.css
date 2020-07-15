@@ -1128,6 +1128,10 @@
                     background-color: var(--background);
                 }
 
+                .select2-selection__clear {
+                    transform: translateY(-1px);
+                }
+
 
                     /*@media (max-width: 575px) { */
                         /*.task-project {*/

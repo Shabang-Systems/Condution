@@ -934,20 +934,20 @@ let ui = function() {
             // Part 1: data parsing!
             // The Project
             let project = possibleProjects[projectID];
-            
+            let projectName = "";
             // Project select options
             let projectSelects = " ";
-            let levelTranslator = {};
             let buildSelectString = function(p, level) {
                 if (!level) {
                     level = ""
                 }
-                levelTranslator[possibleProjects[p.id]] = (level.split("&nbsp;").join(" ") + possibleProjects[p.id]);
-                pss = "<option>" + level + possibleProjects[p.id] + "</option>";
+                pss = `<option value="${p.id}">` + level + possibleProjects[p.id] + "</option>";
+                if (p.id === projectID)
+                    projectName = (level + possibleProjects[p.id]);
                 if (p.children) {
                     for (let e of p.children) {
                         if (e.type === "project") {
-                            pss = pss + buildSelectString(e.content, level+"&nbsp;&nbsp;");
+                            pss = pss + buildSelectString(e.content, level+":: ");
                         }
                     }
                 }
@@ -1185,24 +1185,37 @@ let ui = function() {
             $('#task-project-'+taskId).select2({
                 'width': '80%',
                 searchInputPlaceholder: "Search or Add Project...",
+                placeholder: 'Inbox',
+                allowClear: true
             });
-            console.log(project, levelTranslator[project]);
-            $('#task-project-' + taskId).val(levelTranslator[project])
+            $('#task-project-' + taskId).val(projectID)
             $('#task-project-' + taskId).trigger('change');
             $('#task-project-' + taskId).on('change', async function () {
-                let projectSelected = this.value.trim();
-                console.log(projectSelected);
-                let projId = possibleProjectsRev[projectSelected];
-                if (project === undefined) {
-                    activeTaskDeInboxed = true;
+                let selection = $(this).select2("data")[0];
+                if (selection) {
+                    let projectSelected = selection.text.split(":: ").join("");
+                    let projId = selection.id;
+                    if (project === undefined) {
+                        activeTaskDeInboxed = true;
+                    } else {
+                        await E.db.dissociateTask(uid, taskId, projectID);
+                    }
+                    projectName = selection.value;
+                    E.db.modifyTask(uid, taskId, {project:projId});
+                    projectID = projId;
+                    project = projectSelected;
+                    $('#task-project-' + taskId).val(project);
+                    await E.db.associateTask(uid, taskId, projId);
                 } else {
-                    await E.db.dissociateTask(uid, taskId, projectID);
+                    E.db.modifyTask(uid, taskId, {project:""});
+                    this.value = ""
+                    if (project !== undefined) {
+                        activeTaskInboxed = true;
+                        await E.db.dissociateTask(uid, taskId, projectID);
+                    }
+                    project = undefined;
+                    projectID = "";
                 }
-                E.db.modifyTask(uid, taskId, {project:projId});
-                projectID = projId;
-                project = projectSelected;
-                $('#task-project-' + taskId).val(project);
-                await E.db.associateTask(uid, taskId, projId);
             });
 
             // Set overdue style!
@@ -1392,29 +1405,29 @@ let ui = function() {
             });
 
             // Task project change
-             $('#task-project-' + taskId).change(async function(e) {
-                if (this.value in possibleProjectsRev) {
-                    let projId = possibleProjectsRev[this.value];
-                    if (project === undefined){
-                        activeTaskDeInboxed = true;
-                    } else {
-                        await E.db.dissociateTask(uid, taskId, projectID);
-                    }
-                    E.db.modifyTask(uid, taskId, {project:projId});
-                    await E.db.associateTask(uid, taskId, projId);
-                    projectID = projId;
-                    project = this.value;
-                } else {
-                    E.db.modifyTask(uid, taskId, {project:""});
-                    this.value = ""
-                    if (project !== undefined) {
-                        activeTaskInboxed = true;
-                        await E.db.dissociateTask(uid, taskId, projectID);
-                    }
-                    project = undefined;
-                    projectID = "";
-                }
-            });
+/*             $('#task-project-' + taskId).change(async function(e) {*/
+                //if (this.value in possibleProjectsRev) {
+                    //let projId = possibleProjectsRev[this.value];
+                    //if (project === undefined){
+                        //activeTaskDeInboxed = true;
+                    //} else {
+                        //await E.db.dissociateTask(uid, taskId, projectID);
+                    //}
+                    //E.db.modifyTask(uid, taskId, {project:projId});
+                    //await E.db.associateTask(uid, taskId, projId);
+                    //projectID = projId;
+                    //project = this.value;
+                //} else {
+                    //E.db.modifyTask(uid, taskId, {project:""});
+                    //this.value = ""
+                    //if (project !== undefined) {
+                        //activeTaskInboxed = true;
+                        //await E.db.dissociateTask(uid, taskId, projectID);
+                    //}
+                    //project = undefined;
+                    //projectID = "";
+                //}
+            /*});*/
 
             // Trashing a task
             $("#task-trash-" + taskId).click(function(e) {
