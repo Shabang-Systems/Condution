@@ -2581,10 +2581,11 @@
                 padding: 3px 1px 3px 10px;
                 box-shadow: 1px 1px 3px var(--background-feature);
                 font-size: 14px;
-                transition-property: color, background-color, bottom;
+                transition-property: color, background-color, opacity;
                 transition-duration: 200ms;
                 transition-timing-function: ease-in-out;
                 color: var(--quickadd-text);
+                pointer-events: auto !important;
             }
 
                 #quickadd::placeholder{
@@ -2616,13 +2617,15 @@
 
                 @media (max-width: 575px) { 
                     .qa_bottom {
-                        bottom: -100px !important;
+                        opacity: 0 !important;
+                        pointer-events: none !important;
                     }
                 }
 
                 @media (min-width: 576px) { 
                     .qa_bottom {
-                        bottom: 0 !important;
+                        opacity: 0 !important;
+                        pointer-events: none !important;
                     }
                 }
 
