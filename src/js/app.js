@@ -937,10 +937,12 @@ let ui = function() {
             
             // Project select options
             let projectSelects = " ";
+            let levelTranslator = {};
             let buildSelectString = function(p, level) {
                 if (!level) {
                     level = ""
                 }
+                levelTranslator[possibleProjects[p.id]] = (level.split("&nbsp;").join(" ") + possibleProjects[p.id]);
                 pss = "<option>" + level + possibleProjects[p.id] + "</option>";
                 if (p.children) {
                     for (let e of p.children) {
@@ -1184,8 +1186,9 @@ let ui = function() {
                 'width': '80%',
                 searchInputPlaceholder: "Search or Add Project...",
             });
-            console.log(project);
-            $('#task-project-' + taskId).val(project);
+            console.log(project, levelTranslator[project]);
+            $('#task-project-' + taskId).val(levelTranslator[project])
+            $('#task-project-' + taskId).trigger('change');
             $('#task-project-' + taskId).on('change', async function () {
                 let projectSelected = this.value.trim();
                 console.log(projectSelected);
