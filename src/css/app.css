@@ -30,10 +30,13 @@
         background-color: var(--background) !important;
     }
 
-    body {
-        overflow-y: hidden;
-        position: fixed;
+    html {
+        overflow-y: scroll;
         width: 100%;
+    }
+
+    body {
+        overflow-y: visible;
     }
 
     * {
@@ -234,19 +237,49 @@
             }
 
             #content-area{
-                overflow: scroll;
+                overflow: visible;
                 -webkit-overflow-scrolling: touch;
                 width: 100%;
             }
                 @media (max-width: 355px) { 
                     #content-area {
                         padding: 0 10px 0 10px;
+                        margin-left: 0;
                     }
                 }
 
                 @media (min-width: 356px) { 
                     #content-area {
                         padding: 0 15px 0 15px;
+                        margin-left: 0;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #content-area {
+                        padding: 0 15px 0 15px;
+                        margin-left: 200px;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    #content-area {
+                        padding: 0 15px 0 15px;
+                        margin-left: 200px;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    #content-area {
+                        padding: 0 15px 0 15px;
+                        margin-left: 220px;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    #content-area {
+                        padding: 0 15px 0 15px;
+                        margin-left: 220px;
                     }
                 }
 
@@ -472,52 +505,40 @@
 
                 @media (min-width: 576px) { 
                     #left-menu{
-                        position: relative;
+                        position: fixed;
                         height: 100%;
                         z-index: 0;
-                        resize: horizontal;
-                        min-width: 170px;
-                        width: 220px;
-                        max-width: 230px;
+                        width: 200px;
                         left: 0 !important;
                     }
                 }
 
                 @media (min-width: 768px) { 
                     #left-menu{
-                        position: relative;
+                        position:fixed;
                         height: 100%;
                         z-index: 0;
-                        resize: horizontal;
-                        min-width: 170px;
-                        width: 220px;
-                        max-width: 230px;
+                        width: 200px;
                         left: 0 !important;
                     }
                 }
 
                 @media (min-width: 992px) { 
                     #left-menu{
-                        position: relative;
+                        position: fixed;
                         height: 100%;
                         z-index: 0;
-                        resize: horizontal;
-                        min-width: 200px;
-                        width: 230px;
-                        max-width: 250px;
+                        width: 220px;
                         left: 0 !important;
                     }
                 }
 
                 @media (min-width: 1200px) { 
                     #left-menu{
-                        position: relative;
+                        position: fixed;
                         height: 100%;
                         z-index: 0;
-                        resize: horizontal;
-                        min-width: 200px;
-                        width: 230px;
-                        max-width: 250px;
+                        width: 220px;
                         left: 0 !important;
                     }
                 }
@@ -2615,7 +2636,7 @@
                 width: 250px;
                 height: 30px;
                 z-index: 10;
-                position: absolute;
+                position: fixed;
                 bottom: 0;
                 right: 0;
                 border: 0;
