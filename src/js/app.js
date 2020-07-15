@@ -17,7 +17,7 @@ require('jquery-editable-select');
 require('bootstrap-tagsinput');
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics } = Plugins;
+var { Haptics, Network } = Plugins;
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -29,6 +29,13 @@ window.addEventListener("touchmove", function(event) {
     event.preventDefault();
   }
 }, false);
+
+let handleInternet = function(hasInternet) {
+    if (hasInternet)
+        $("#missing-internet").hide();
+    else
+        $("#missing-internet").css("display", "flex");
+}
 var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
@@ -2272,6 +2279,14 @@ firebase.auth().onAuthStateChanged(async function(user) {
             ui.user.set(user);
             await ui.constructSidebar();
             await ui.load("upcoming-page");
+
+            let handler = Network.addListener('networkStatusChange', async function(status) {
+                await ui.update();
+                handleInternet(status.connected);
+            });
+            let status = Network.getStatus().then(status=>handleInternet(status.connected));
+            ;
+
             $("#loading").fadeOut();
             $("#auth-content-wrapper").fadeOut();
             $("#content-wrapper").fadeIn();
