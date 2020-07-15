@@ -31,6 +31,10 @@
         background-color: var(--background) !important;
     }
 
+    body {
+        overflow-y: scroll;
+    }
+
     * {
         scrollbar-width: none;
     }
@@ -229,7 +233,7 @@
             }
 
             #content-area{
-                overflow: scroll;
+                overflow: visible;
                 width: 100%;
             }
                 @media (max-width: 355px) { 
