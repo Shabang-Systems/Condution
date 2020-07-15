@@ -999,7 +999,7 @@
 
                     @media (max-width: 575px) { 
                         .bootstrap-tagsinput {
-                            width: 84%;
+                            width: 80%;
                         }
                     }
 
@@ -1741,15 +1741,15 @@
 
             .upcoming-daterow-w {
                 font-weight: 600;
-                font-size: 9px;
+                font-size: 8px;
                 transform: translateX(-0.5px);
                 display: inline-block;
-                margin-left: 3px;
+                margin-left: 2px;
             }
 
             .upcoming-daterow-d {
                 font-weight: 300;
-                font-size: 9px;
+                font-size: 8px;
                 display: inline-block;
             }
 
