@@ -17,7 +17,7 @@ require('bootstrap-tagsinput');
 require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics, Network } = Plugins;
+var { Haptics, Network, Browser } = Plugins;
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -2294,8 +2294,9 @@ let ui = function() {
         e.originalEvent.dataTransfer.setData('text', e.target.id);
     });
 
-    $(document).on("click", "#perspective-documentaion", function(e) {
-        require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+    $(document).on("click", "#perspective-documentaion", async function(e) {
+        //require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+        await Browser.open({ url: 'https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2' });
     });
 
     Hammer($("#content-area")[0]).on('swiperight swipeleft', function (e) {
