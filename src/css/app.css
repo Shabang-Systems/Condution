@@ -1132,8 +1132,12 @@
 
                 .select2-container--default .select2-results__option--highlighted[aria-selected] {
                     background-color: var(--task-textbox-background) !important;
-                    color: black;
+                    color: var(--content-normal-alt);
 
+                }
+
+                .select2-results__option[aria-selected] {
+                    color: var(--content-normal-alt);
                 }
                  
                 .select2-results__option {
