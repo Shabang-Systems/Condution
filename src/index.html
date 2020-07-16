@@ -30,7 +30,6 @@
         <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="https://rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 
         <!--Our Codes-->
@@ -50,7 +49,7 @@
     </head>
 
     <body style="background-color: transparent">
-        
+       
         <div class="main-head" id="main-head-darwin">
         </div>
         <div class="main-head" id="main-head-default">
@@ -60,7 +59,15 @@
             </t>
             <div id="loading-anim"></div>
             <t id="loading-msg-sub"><b style="font-weight: 800 !important">Condution</b> is Loading...</t>
-            <t id="loading-bottom">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors. Licensed and Distributed under GPL-v3.0. beta-v0.2.0_build1_M.</t>
+            <t id="loading-bottom">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors. Licensed and Distributed under GPL-v3.0. beta-v0.2.0_build3_M.</t>
+        </div>
+        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none">
+            <div style="margin-left: 20px;">
+                <h2 style="color: var(--content-normal-accent)">Missing Internet Connection...</h2>
+                <span style="color: var(--content-normal-alt)">🤷 You need the intrawebitubes to truly experience <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span>.</span>
+                <hr />
+                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online, restart the app, we will handle the rest ;)</span>
+            </div>
         </div>
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
@@ -134,16 +141,16 @@
                     <t class="menu-label">
                         Perspectives <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
                     </t>
-                    <div class="perspectives menu-portion"></div>
+                    <div class="perspectives menu-portion scrollable"></div>
                     <t class="menu-label">
                         Projects <div class="menu-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
                     </t>
-                    <div class="projects menu-portion"></div>
+                    <div class="projects menu-portion scrollable"></div>
                     <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
                 </div>
             </div>
             <input title="Add a task on enter" id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
-            <div id="content-area">
+            <div id="content-area" class="scrollable">
                 <div id="upcoming-page" class="page">
                     <div class="sandwich"><i class="fas fa-bars"></i></div>
                     <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Upcoming</t></div>

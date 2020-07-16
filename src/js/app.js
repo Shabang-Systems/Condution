@@ -13,16 +13,49 @@ require('hammerjs');
 require('fuse.js');
 require('typeahead.js');
 require('mousetrap');
-require('jquery-editable-select');
 require('bootstrap-tagsinput');
+require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics } = Plugins;
+var { Haptics, Network, Browser } = Plugins;
 
+const preventDefault = e => e.preventDefault();// When rendering our container
+/*window.addEventListener('touchmove', preventDefault, {*/
+   //passive: false
+//});
+//
+window.addEventListener("touchmove", function(event) {
+  if (!event.target.classList.contains('scrollable')) {
+    // no more scrolling
+    event.preventDefault();
+  }
+}, false);
 
+let handleInternet = function(hasInternet) {
+    if (hasInternet)
+        $("#missing-internet").hide();
+    else
+        $("#missing-internet").css("display", "flex");
+}
 var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
+
+// Select2 Modifications
+(function($) {
+    var Defaults = $.fn.select2.amd.require('select2/defaults');
+    $.extend(Defaults.defaults, {
+        searchInputPlaceholder: ''
+    });
+    var SearchDropdown = $.fn.select2.amd.require('select2/dropdown/search');
+    var _renderSearchDropdown = SearchDropdown.prototype.render;
+    SearchDropdown.prototype.render = function(decorated) {
+        // invoke parent method
+        var $rendered = _renderSearchDropdown.apply(this, Array.prototype.slice.apply(arguments));
+        this.$search.attr('placeholder', this.options.get('searchInputPlaceholder'));
+        return $rendered;
+    };
+})(window.jQuery);
 
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
@@ -161,8 +194,52 @@ const interfaceUtil = function() {
     };
 
 
-    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor) {
-        return `<div id="task-${taskId}" class="task thov"> <div id="task-display-${taskId}" class="task-display" style="display:block"> <input type="checkbox" id="task-check-${taskId}" class="task-check"/> <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label> <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}"> <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div> <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div> </div> <div id="task-edit-${taskId}" class="task-edit" style="display:none"> <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea> <div class="task-tools task-tools-top" style="margin-bottom: 9px"> <div class="task-tools-sub task-tools-toggles"> <div class="label"><i class="fas fa-flag"></i></div> <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> <div class="label"><i class="fas fa-globe-americas"></i></div> <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important"> <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label> <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> </div> </div> <div class="task-tools-sub task-tools-date"> <div class="label"><i class="far fa-play-circle"></i></div> <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px"> <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; margin-right: 5px"></i> <div class="label"><i class="far fa-stop-circle"></i></div> <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px"> </div> </div> <div class="task-tools task-tools-bottom"> <div class="task-tools-sub task-tools-project"><div class="label"><i class="fas fa-tasks"></i></div><select class="task-project textbox editable-select" id="task-project-${taskId}" style="margin-right: 14px"> ${projectSelects} </select> </div> <div class="task-tools-sub task-tools-tags"><div class="label"><i class="fas fa-tags"></i></div> <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> </div> </div> </div> </div>`
+    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor, disableTB) {
+        return `
+        <div id="task-${taskId}" class="task thov"> 
+            <div id="task-display-${taskId}" class="task-display" style="display:block">
+                <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
+                <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}">
+                <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
+                <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
+        </div> 
+        <div id="task-edit-${taskId}" class="task-edit" style="display:none">
+            <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea>
+            <div class="task-tools task-tools-top" style="margin-bottom: 9px">
+                <div class="task-tools-sub task-tools-toggles"> 
+                    <div class="label"><i class="fas fa-flag"></i></div>
+                    <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> 
+                        <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
+                        <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> 
+                    </div> 
+                    <div class="label"><i class="fas fa-globe-americas"></i></div>
+                    <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important">
+                        <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
+                        <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label>
+                    </div> 
+                </div> 
+            <div class="task-tools-sub task-tools-date">
+                <div class="label"><i class="far fa-play-circle"></i></div>
+                <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px" ${disableTB}> 
+                <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; margin-right: 5px"></i> 
+                <div class="label"><i class="far fa-stop-circle"></i></div> 
+                <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px" ${disableTB}> 
+            </div> 
+        </div> 
+        <div class="task-tools task-tools-bottom"> 
+            <div class="task-tools-sub task-tools-project">
+                <div class="label"><i class="fas fa-tasks"></i></div>
+                <select class="task-project textbox" id="task-project-${taskId}" style="margin-right: 14px">
+                    ${projectSelects}
+                </select>
+            </div> 
+            <div class="task-tools-sub task-tools-tags"><div class="label"><i class="fas fa-tags"></i></div> 
+                <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> 
+            </div> 
+        </div>
+    </div>
+</div>`
     };
 
     return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage, getStartSwipe: getStartPosition, menu}
@@ -829,6 +906,7 @@ let ui = function() {
 
 
         let displayTask = async function(pageId, taskId, sequentialOverride) {
+            // Part -1: lock the scroller
             // Part 0: data gathering!
             // Get the task
             let taskObj = await E.db.getTaskInformation(uid, taskId);
@@ -850,22 +928,25 @@ let ui = function() {
             if (taskObj.due) {
                 due = new Date(taskObj.due.seconds*1000);
             }
+            let disabletextbox = $(window).width()<576 ? `readonly="readonly"` : "";
             // -------------------------------------------------------------------------------
             // Part 1: data parsing!
             // The Project
             let project = possibleProjects[projectID];
-            
+            let projectName = "";
             // Project select options
             let projectSelects = " ";
             let buildSelectString = function(p, level) {
                 if (!level) {
                     level = ""
                 }
-                pss = "<option>" + level + possibleProjects[p.id] + "</option>";
+                pss = `<option value="${p.id}">` + level + possibleProjects[p.id] + "</option>";
+                if (p.id === projectID)
+                    projectName = (level + possibleProjects[p.id]);
                 if (p.children) {
                     for (let e of p.children) {
                         if (e.type === "project") {
-                            pss = pss + buildSelectString(e.content, level+"&nbsp;&nbsp;");
+                            pss = pss + buildSelectString(e.content, level+":: ");
                         }
                     }
                 }
@@ -909,7 +990,7 @@ let ui = function() {
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
             // -------------------------------------------------------------------------------
             // Part 2: the task!
-            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor));
+            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor, disabletextbox));
             // -------------------------------------------------------------------------------
             // Part 3: customize the task!
             // Set the dates, aaaand set the date change trigger
@@ -1094,25 +1175,48 @@ let ui = function() {
                 }
             });
             // Set project!
-            $('#task-project-' + taskId).editableSelect({
-                effects: 'fade',
-                duration: 200,
-                appendTo: 'body',
-            }).on('select.editable-select', async function (e, li) {
-                let projectSelected = li.text().trim();
-                let projId = possibleProjectsRev[projectSelected];
-                if (project === undefined) {
-                    activeTaskDeInboxed = true;
-                } else {
-                    await E.db.dissociateTask(uid, taskId, projectID);
-                }
-                E.db.modifyTask(uid, taskId, {project:projId});
-                projectID = projId;
-                project = projectSelected;
-                $('#task-project-' + taskId).val(project);
-                await E.db.associateTask(uid, taskId, projId);
+           /* $('#task-project-' + taskId).editableSelect({*/
+                //effects: 'fade',
+                //duration: 200,
+                //appendTo: 'body',
+            //})
+            //
+            $('#task-project-'+taskId).select2({
+                'width': '80%',
+                searchInputPlaceholder: "Search Projects...",
+                placeholder: 'Inbox',
+                allowClear: true
             });
-            $('#task-project-' + taskId).val(project);
+            $('#task-project-' + taskId).val(projectID)
+            $('#task-project-' + taskId).trigger('change');
+            $('#task-project-' + taskId).on('change', async function () {
+                let selection = $(this).select2("data")[0];
+                if (selection) {
+                    let projectSelected = selection.text.split(":: ").join("");
+                    let projId = selection.id;
+                    if (project === undefined) {
+                        activeTaskDeInboxed = true;
+                    } else {
+                        await E.db.dissociateTask(uid, taskId, projectID);
+                    }
+                    projectName = selection.value;
+                    E.db.modifyTask(uid, taskId, {project:projId});
+                    projectID = projId;
+                    project = projectSelected;
+                    $('#task-project-' + taskId).val(project);
+                    await E.db.associateTask(uid, taskId, projId);
+                } else {
+                    E.db.modifyTask(uid, taskId, {project:""});
+                    this.value = ""
+                    if (project !== undefined) {
+                        activeTaskInboxed = true;
+                        await E.db.dissociateTask(uid, taskId, projectID);
+                    }
+                    project = undefined;
+                    projectID = "";
+                }
+            });
+
             // Set overdue style!
             if (due_current) {
                 if (new Date() > due_current) {
@@ -1300,29 +1404,29 @@ let ui = function() {
             });
 
             // Task project change
-             $('#task-project-' + taskId).change(async function(e) {
-                if (this.value in possibleProjectsRev) {
-                    let projId = possibleProjectsRev[this.value];
-                    if (project === undefined){
-                        activeTaskDeInboxed = true;
-                    } else {
-                        await E.db.dissociateTask(uid, taskId, projectID);
-                    }
-                    E.db.modifyTask(uid, taskId, {project:projId});
-                    await E.db.associateTask(uid, taskId, projId);
-                    projectID = projId;
-                    project = this.value;
-                } else {
-                    E.db.modifyTask(uid, taskId, {project:""});
-                    this.value = ""
-                    if (project !== undefined) {
-                        activeTaskInboxed = true;
-                        await E.db.dissociateTask(uid, taskId, projectID);
-                    }
-                    project = undefined;
-                    projectID = "";
-                }
-            });
+/*             $('#task-project-' + taskId).change(async function(e) {*/
+                //if (this.value in possibleProjectsRev) {
+                    //let projId = possibleProjectsRev[this.value];
+                    //if (project === undefined){
+                        //activeTaskDeInboxed = true;
+                    //} else {
+                        //await E.db.dissociateTask(uid, taskId, projectID);
+                    //}
+                    //E.db.modifyTask(uid, taskId, {project:projId});
+                    //await E.db.associateTask(uid, taskId, projId);
+                    //projectID = projId;
+                    //project = this.value;
+                //} else {
+                    //E.db.modifyTask(uid, taskId, {project:""});
+                    //this.value = ""
+                    //if (project !== undefined) {
+                        //activeTaskInboxed = true;
+                        //await E.db.dissociateTask(uid, taskId, projectID);
+                    //}
+                    //project = undefined;
+                    //projectID = "";
+                //}
+            /*});*/
 
             // Trashing a task
             $("#task-trash-" + taskId).click(function(e) {
@@ -2190,8 +2294,9 @@ let ui = function() {
         e.originalEvent.dataTransfer.setData('text', e.target.id);
     });
 
-    $(document).on("click", "#perspective-documentaion", function(e) {
-        require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+    $(document).on("click", "#perspective-documentaion", async function(e) {
+        //require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+        await Browser.open({ url: 'https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2' });
     });
 
     Hammer($("#content-area")[0]).on('swiperight swipeleft', function (e) {
@@ -2262,6 +2367,14 @@ firebase.auth().onAuthStateChanged(async function(user) {
             ui.user.set(user);
             await ui.constructSidebar();
             await ui.load("upcoming-page");
+
+            let handler = Network.addListener('networkStatusChange', async function(status) {
+                await ui.update();
+                handleInternet(status.connected);
+            });
+            let status = Network.getStatus().then(status=>handleInternet(status.connected));
+            ;
+
             $("#loading").fadeOut();
             $("#auth-content-wrapper").fadeOut();
             $("#content-wrapper").fadeIn();
