@@ -1108,8 +1108,13 @@
 
             /* Classes */
 
+                .select2-container--default .select2-selection--single .select2-selection__rendered {
+                    color: var(--content-normal-alt);
+                }
+
                 .select2-container--default .select2-selection--single {
                     background-color: var(--task-textbox-background) !important;
+                    color: var(--content-normal-alt);
                     border: 0;
                     height: 20px;
                     margin-right: 4px;
