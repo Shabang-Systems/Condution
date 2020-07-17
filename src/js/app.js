@@ -103,15 +103,6 @@ if (process.platform === "win32") {
     $("#main-head-win32").show();
     $("#left-menu").addClass("win32-windowing");
     $("#content-area").addClass("win32-windowing");
-    $("#window-minimize").click(()=>remote.BrowserWindow.getFocusedWindow().minimize());
-    $("#window-maximize").click(function(e) {
-        if (remote.BrowserWindow.getFocusedWindow().isMaximized()) {
-            remote.BrowserWindow.getFocusedWindow().unmaximize();
-        } else {
-            remote.BrowserWindow.getFocusedWindow().maximize();
-        }
-    });
-    $("#window-close").click(()=>remote.BrowserWindow.getFocusedWindow().close());
 } else if (process.platform === "darwin") {
     $("#main-head-darwin").show();
     $("#left-menu").addClass("darwin-windowing-left");
@@ -2365,6 +2356,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
             // User is signed in. Do user related things.
             // Check user's theme
             ui.user.set(user);
+            await E.db.onBoard(user.uid, moment.tz.guess(), user.displayName);
             await ui.constructSidebar();
             await ui.load("upcoming-page");
 
