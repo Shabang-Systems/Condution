@@ -486,5 +486,240 @@ async function getItemAvailability(userID) {
     return blockstatus;
 }
 
-module.exports = {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag};
+async function onBoard(userID, tz, username) {
+    // Inbox, in reverse cronological order
+    await newTask(userID, {
+            name: `Hey ${username}, 🙌 welcome to Condution! 🙌 `,
+            desc: "Yaay!",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await newTask(userID, {
+            name: "⬅ Click this box to complete a task!",
+            desc: "Nice!",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await newTask(userID, {
+            name: "Click here 🎯 to edit a task.",
+            desc: "The Flag 🚩 toggle flags a task, the Globe 🌎 toggle toggles fixed and floating timezone, the dateboxes ▶️ ⏹ picks defer and due dates, the project 📋 field picks projects, the tag 🏷 field picks tags, and, most importantly, yours truly 👀 is the awesome description box!",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+
+    let cdyrslf = await newProject(userID, {name: "Condution Yourself", top_level: true, is_sequential: false});
+    let npd = await newProject(userID, {name: "Due, Due-Soon, Defer", top_level: true, is_sequential: false});
+    let od = new Date();
+    let ds = new Date();
+    od.setHours(od.getHours() - 24);
+    ds.setHours(ds.getHours() + 20);
+    let odid = await newTask(userID, {
+            name: "Oh no! I am overdue! 😓",
+            desc: "With Condution, you will never have another one of me again. (At least we hope.)",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: npd,
+            tags: [],
+            timezone: tz,
+            due: od,
+            repeat: {rule: "none"},
+        }
+    );
+    let dsID = await newTask(userID, {
+            name: "Aha, 🤨 I am due soon!",
+            desc: "The lovely orange color will change red when I become due.",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: npd,
+            tags: [],
+            timezone: tz,
+            due: ds,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, odid, npd);
+    await associateTask(userID, dsID, npd);
+    ds.setHours(ds.getHours() + 2);
+    let checkoutID = await newTask(userID, {
+            name: `👀 Check out the menu and tap 'Condution Yourself'`,
+            desc: "Because, why woulden't you?",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    let nice = await newTask(userID, {
+            name: `Nice! 😉 This is a lovely project!`,
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: cdyrslf,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, nice, cdyrslf);
+    let sequential = await newTask(userID, {
+            name: `Tap the three vertical dots ↗`,
+            desc: "That will make the project sequential!",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: cdyrslf,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, sequential, cdyrslf);
+    let blocked = await newTask(userID, {
+            name: "In a sequential project, I will be grey.",
+            desc: "We are blocked in that case.",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: cdyrslf,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, blocked, cdyrslf);
+    let click = await newTask(userID, {
+            name: "Only the top action ☝️  in sequential projects is available",
+            desc: "That one is not blocked.",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: cdyrslf,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, click, cdyrslf);
+    let pspDir = await newTask(userID, {
+            name: "Excellent. 😄 Now tap the 'Aftercare' Perspective in the Menu!",
+            desc: "Amazing Physics Going On...",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: cdyrslf,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, pspDir, cdyrslf);
+    let pspsp = await newProject(userID, {name: "Perspective Tasks", top_level: true, is_sequential: false});
+    let tags = await Promise.all([newTag(userID, "Aftercare"), newTag(userID, "Productivity"), newTag(userID, "Low Energy"), newTag(userID, "Unimportant")]);
+    let specific = await newTask(userID, {
+            name: "After you are done, tap 'Come hang out' in the menu!",
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: pspsp,
+            tags: [tags[2], tags[3]],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, specific, pspsp);
+    let sp = await newTask(userID, {
+            name: "Tap the pencil ✏️ icon to see what I'm filtering! ⤴",
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: pspsp,
+            tags: [tags[0]],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, sp, pspsp);
+    await newPerspective(userID, {name: "Aftercare", query: "([#Aftercare]) ([#Low Energy #Unimportant])"});
+    let promotion = await newProject(userID, {name: "Come hang out!", top_level: true, is_sequential: false});
+    let online = await newTask(userID, {
+            name: "Get Condution Everywhere! 🌎: condution.shabang.cf",
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: promotion,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, online, promotion);
+    let dis = await newTask(userID, {
+            name: "Catch us on Discord! 💬: discord.gg/QgxUCyj",
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: promotion,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, dis, promotion);
+    let patreon = await newTask(userID, {
+        name: "Support Condution! 🎗: patreon.comcondution",
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: promotion,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, patreon, promotion);
+    let yiipee = await newTask(userID, {
+        name: "From all of us at #!/Shabang + Condution Project, enjoy!",
+            desc: "Yiipee!",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: promotion,
+            tags: [],
+            timezone: tz,
+            repeat: {rule: "none"},
+        }
+    );
+    await associateTask(userID, yiipee, promotion);
+}
+
+module.exports = {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, onBoard};
 
