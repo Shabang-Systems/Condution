@@ -236,48 +236,58 @@ const interfaceUtil = function() {
     return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage, getStartSwipe: getStartPosition, menu}
 }();
 
-let auth = function() {
-    let mode = "login";
-    /*lottie.loadAnimation({*/
-        //container: $("#loading-anim")[0],
-        //renderer: 'svg',
-        //autoplay: true,
-        //loop: true,
-        //path: 'static/loadanim_final.json'
-    //})
-    /*$("#loading").hide().css("display", "flex").fadeIn();*/
-    // Initialize Firebase Application
+async function loadApp(user) {
+    const startTime = Date.now();
+    // User is signed in. Do user related things.
+    // Check user's theme
+    ui.user.set(user);
+    await ui.constructSidebar();
+    await ui.load("upcoming-page");
 
-    let isNASuccess = false;
+    let handler = Network.addListener('networkStatusChange', async function(status) {
+        await ui.update();
+        handleInternet(status.connected);
+    });
+    let status = Network.getStatus().then(status=>handleInternet(status.connected));
+    ;
 
-    let auth = function() {
+    $("#loading").fadeOut();
+    $("#auth-content-wrapper").fadeOut();
+    $("#content-wrapper").fadeIn();
+}
+
+let mode = "login";
+let isNASuccess = false;
+let authUI = function() {
+    let auth = async function() {
         if (isNASuccess) {
             var user = firebase.auth().currentUser;
             user.updateProfile({displayName: $("#name").val()});
             // TODO: other wonderful onboarding things
             $("#auth-content-wrapper").fadeOut();
+            $("#setting-up").css({"display": "flex", "opacity":"0"});
+            $("#setting-up").animate({"opacity": "1"});
+            await E.db.onBoard(user.uid, moment.tz.guess(), $("#name").val());
+            $("#setting-up").fadeOut();
+            await loadApp(user);
             isNASuccess = false;
+        } else {
+            firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
+                if (firebase.auth().currentUser.emailVerified){
+                    $("#auth-content-wrapper").fadeOut();
+                }
+            }).catch(function(error) {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                $(".auth-upf").addClass("wrong");
+            });
         }
-        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
-            if (firebase.auth().currentUser.emailVerified){
-                $("#auth-content-wrapper").fadeOut();
-            } else {
-                firebase.auth().currentUser.sendEmailVerification();
-                $('#auth-left-menu').fadeIn();
-                $('#need-verify').fadeIn();
-                $('#recover-password').fadeOut();
-                $("#authwall").fadeIn();
-            }
-        }).catch(function(error) {
-            // Handle Errors here.
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            $(".auth-upf").addClass("wrong");
-        });
     };
 
     let rec = function() {
         firebase.auth().sendPasswordResetEmail($("#email").val()).then(function() {
+            mode = "login";
             $(".auth-upf").removeClass("wrong");
             $("#password").show();
             $("#newuser").html("Make an account.");
@@ -285,6 +295,7 @@ let auth = function() {
             $("#recover-password").html("Recover Password");
             $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
             $('#recover-password').fadeOut();
+            $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
             $('#need-verify').fadeIn();
         }).catch(function(error) {
             $(".auth-upf").addClass("wrong");
@@ -292,12 +303,21 @@ let auth = function() {
     }
 
     let nu = function() {
+        let problem = false;
         firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
-            console.log("Silly goose");
+            $('#need-verify').html(error.message);
+            problem=true;
+        }).then(function() {
+            if (!problem) {
+                firebase.auth().currentUser.sendEmailVerification();
+                $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
+                isNASuccess = true;
+                mode="login";
+            }
         });
-        $('#need-verify').fadeIn();
-        $('#recover-password').fadeOut();
-        isNASuccess = true;
+        $('#recover-password').fadeOut(function() {
+            $('#need-verify').fadeIn();
+        });
     }
 
     $("#password").keydown(function(e) {
@@ -360,7 +380,7 @@ let auth = function() {
                 $("#name-tray").slideDown(300);
                 $(this).html("Sign in.");
                 mode = "newuser";
-                $("#greeting-auth-normal").html(`Welcome aboard! It is possible that we will loose your data...`);
+                $("#greeting-auth-normal").html(`Welcome aboard! By signing up, you agree to our <a href="https://condution.shabang.cf/privacy.html">Privacy Policy</a> and <a href="https://condution.shabang.cf/terms.html">Terms</a>.`);
                 break;
             case "newuser":
                 $("#name-tray").slideUp(300);
@@ -373,7 +393,8 @@ let auth = function() {
 
     const greetings = ["Hey!", "G'day!", "Howdy!", "Yo!"];
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
-};
+    return {auth, nu, rec}
+}();
 
 let ui = function() {
     // greeting of the day
@@ -2349,45 +2370,31 @@ let ui = function() {
 }();
 
 
+
+
 firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
         if (user.emailVerified) {
-            const startTime = Date.now();
-            // User is signed in. Do user related things.
-            // Check user's theme
-            ui.user.set(user);
-            await E.db.onBoard(user.uid, moment.tz.guess(), user.displayName);
-            await ui.constructSidebar();
-            await ui.load("upcoming-page");
-
-            let handler = Network.addListener('networkStatusChange', async function(status) {
-                await ui.update();
-                handleInternet(status.connected);
-            });
-            let status = Network.getStatus().then(status=>handleInternet(status.connected));
-            ;
-
-            $("#loading").fadeOut();
-            $("#auth-content-wrapper").fadeOut();
-            $("#content-wrapper").fadeIn();
+            await loadApp(user);
             setInterval(() => {ui.update()}, 60 * 1000);
             setInterval(()=> {ipcRenderer.send("updatecheck")}, 15*60*1000);
         } else {
             E.flush();
-            auth();
-            $("#content-wrapper").fadeOut();
-            user.sendEmailVerification();
-            $('#auth-left-menu').fadeIn();
-            $('#need-verify').fadeIn();
-            $('#recover-password').fadeOut();
-            $("#loading").fadeOut();
-            $("#authwall").fadeIn();
-            $("#auth-content-wrapper").fadeIn();
-            $(".auth-upf").val("");
+            // Generate auth UI
+            if (!isNASuccess) {
+                // if not currently signing up
+                $("#content-wrapper").fadeOut();
+                $("#loading").fadeOut();
+                $('#need-verify').html("Account unverified. Please sign up again.");
+                $('#need-verify').fadeIn();
+                $("#authwall").fadeIn();
+                $('#auth-left-menu').fadeIn();
+                $("#auth-content-wrapper").fadeIn();
+            }
         }
     } else {
         E.flush();
-        auth();
+        // Generate auth UI
         $("#content-wrapper").fadeOut();
         $("#loading").fadeOut();
         $("#authwall").fadeIn();
