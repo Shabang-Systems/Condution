@@ -306,6 +306,7 @@ let authUI = function() {
         let problem = false;
         firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
             $('#need-verify').html(error.message);
+            console.log(error);
             problem=true;
         }).then(function() {
             if (!problem) {
@@ -2385,7 +2386,9 @@ firebase.auth().onAuthStateChanged(async function(user) {
                 // if not currently signing up
                 $("#content-wrapper").fadeOut();
                 $("#loading").fadeOut();
-                $('#need-verify').html("Account unverified. Please sign up again.");
+                $('#need-verify').html("Account unverified. Please check your email.");
+                firebase.auth().currentUser.sendEmailVerification();
+                $('#recover-password').fadeOut();
                 $('#need-verify').fadeIn();
                 $("#authwall").fadeIn();
                 $('#auth-left-menu').fadeIn();
@@ -2398,6 +2401,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         $("#content-wrapper").fadeOut();
         $("#loading").fadeOut();
         $("#authwall").fadeIn();
+        $('#need-verify').fadeOut();
         $('#auth-left-menu').fadeIn();
         $("#auth-content-wrapper").fadeIn();
         $(".auth-upf").val("");
