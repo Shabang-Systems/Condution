@@ -2378,7 +2378,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
         if (user.emailVerified) {
             await loadApp(user);
             setInterval(() => {ui.update()}, 60 * 1000);
-            setInterval(()=> {ipcRenderer.send("updatecheck")}, 15*60*1000);
+            setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
         } else {
             E.flush();
             // Generate auth UI
