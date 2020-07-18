@@ -27,7 +27,7 @@
     "babel-minify": "^0.5.1",
     "browserify": "^16.5.1",
     "electron": "^9.1.0",
-    "electron-builder": "^22.5.1",
+    "electron-builder": "^22.7.0",
     "electron-rebuild": "^1.10.1",
     "event-stream": "^4.0.1",
     "gulp": "^4.0.2",
