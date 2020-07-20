@@ -1791,19 +1791,36 @@ let ui = function() {
         // completed view loader
         let completed = async function() {
             // get completed tasks
-            let completedTasks = await E.db.getCompletedTasks(uid);
+            let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
 
             // Show or unshow blankimage
             $("#blankimage-completed").css("opacity", "0.0");
-            $("#blankimage-completed").css("display", completedTasks.length == 0 ? "flex" : "none");
+            $("#blankimage-completed").css("display", (tasksToday+tasksYesterday+tasksWeek+tasksMonth+evenBefore).length == 0 ? "flex" : "none");
             $("#blankimage-completed").stop().animate({"opacity": "0.2"});
 
             // Show completed tasks
-            for (let taskId of completedTasks) {
-                // Nononono don't even think about foreach 
-                // othewise the order will be messed up
-                await taskManager.generateTaskInterface("completed-content", taskId);
+            for (let taskId of tasksToday) {
+                await taskManager.generateTaskInterface("completed-today", taskId);
             }
+            for (let taskId of tasksYesterday) {
+                await taskManager.generateTaskInterface("completed-yesterday", taskId);
+            }
+            for (let taskId of tasksWeek) {
+                await taskManager.generateTaskInterface("completed-thisweek", taskId);
+            }
+            for (let taskId of tasksMonth) {
+                await taskManager.generateTaskInterface("completed-thismonth", taskId);
+            }
+            for (let taskId of evenBefore) {
+                await taskManager.generateTaskInterface("completed-earlier", taskId);
+            }
+
+            // Hide unneeded labels
+            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();
+            if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
+            if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
+            if (tasksWeek.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
+            if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();
         }
 
 
@@ -1893,7 +1910,11 @@ let ui = function() {
         // clear all contentboxes
         $("#inbox").empty();
         $("#due-soon").empty();
-        $("#completed-content").empty();
+        $("#completed-today").empty();
+        $("#completed-yesterday").empty();
+        $("#completed-thisweek").empty();
+        $("#completed-thismonth").empty();
+        $("#completed-earlier").empty();
         $("#project-content").empty();
         $("#perspective-content").empty();
         
