@@ -1287,6 +1287,7 @@ let ui = function() {
                             });
                         }
                         //console.error(err);
+                        E.db.modifyTask(uid, taskId, {completeDate: new Date()});
                     });
                     if (repeat.rule !== "none" && due) {
                         let rRule = repeat.rule;
