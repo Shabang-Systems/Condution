@@ -486,6 +486,24 @@ async function getItemAvailability(userID) {
     return blockstatus;
 }
 
+async function getCompletedTasks(userID) {
+    let completedTasks = await getTasksWithQuery(userID, util.select.all(["isComplete", "==", true]));
+    let taskItems = await Promise.all(completedTasks.map(async function(t){return await getTaskInformation(userID, t)}));
+    return completedTasks.sort(function(b,a) {
+        let taskA = taskItems[completedTasks.indexOf(a)];
+        let taskB = taskItems[completedTasks.indexOf(b)];
+        return ((
+            (taskA.completeDate) ?
+                (taskA.completeDate.seconds) :
+                1
+        )-(
+            (taskB.completeDate) ?
+                (taskB).completeDate.seconds :
+                1
+        ));
+    });
+}
+
 async function onBoard(userID, tz, username) {
     // Inbox, in reverse cronological order
     await newTask(userID, {
@@ -721,5 +739,5 @@ async function onBoard(userID, tz, username) {
     await associateTask(userID, yiipee, promotion);
 }
 
-module.exports = {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, onBoard};
+module.exports = {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard};
 
