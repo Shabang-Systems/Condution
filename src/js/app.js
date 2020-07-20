@@ -1416,6 +1416,16 @@ let ui = function() {
                         }
                     }
                     reloadPage(true);
+                } else {
+                    taskManager.hideActiveTask();
+                    $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
+                    $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
+                    Haptics.notification({type: HapticsNotificationType.SUCCESS});
+                    $('#task-' + taskId).slideUp(300);
+                    E.db.completeTask(uid, taskId).then(function(e) {
+                    });
+                    E.db.modifyTask(uid, taskId, {isComplete: false});
+                    reloadPage(true);
                 }
             });
 
