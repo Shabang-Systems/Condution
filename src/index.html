@@ -145,6 +145,7 @@
                 <div class="menu-area">
                     <div>
                         <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
+                        <div id="completed" class="today"><i class="fas fa-check-circle"></i><t style="padding-left:8px">Completed</t></div>
                     </div>
                     <t class="menu-label">
                         Perspectives <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
@@ -235,16 +236,26 @@
                     </div>
                     <div id="due-soon" class="upcoming-section"> </div>
                 </div>
-                <div id="perspective-page" class="page">
+                <div id="completed-page" class="page">
                     <div class="sandwich"><i class="fas fa-bars"></i></div>
-                    <div class="perspective-title"><i class="fa fa-layer-group"></i><input id="perspective-title" title="Perspective Name" class="perspective-titleword" type="text"></input>
-                        <div class="task-subicon" title="Delete Perspective" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
-                        <div class="task-subicon" title="Edit Perspective" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
-                    </div>
+                    <div class="perspective-title"><i class="fas fa-check-circle"></i><t class="perspective-titleword">Completed</t></div>
                     <div style="padding: 0 0 7px 0">
                         <hr class="perspective-divider"/>
                     </div>
-                    <div id="perspective-content"> </div>
+                    <div id="completed-content"> </div>
+                    <div id="blankimage-completed" class="blankimage-content">
+                        <img class="blankimage"></img>
+                        <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more productivity?</b></div>
+                    </div>
+
+                </div>
+                <div id="perspective-page" class="page">
+                    <div class="sandwich"><i class="fas fa-bars"></i></div>
+                    <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Completed</t></div>
+                    <div style="padding: 0 0 7px 0">
+                        <hr class="perspective-divider"/>
+                    </div>
+                    <div id="completed-content"> </div>
                     <div id="blankimage-perspective" class="blankimage-content">
                         <img class="blankimage"></img>
                         <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more filters?</b></div>

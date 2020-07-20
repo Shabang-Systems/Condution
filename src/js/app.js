@@ -933,6 +933,7 @@ let ui = function() {
             let desc = taskObj.desc;
             let timezone = taskObj.timezone;
             let repeat = taskObj.repeat;
+            let isComplete = taskObj.isComplete;
             let defer;
             let due;
             if (taskObj.defer) {
@@ -1244,7 +1245,7 @@ let ui = function() {
                 }
             }
             // Set avaliable Style
-            if (!avalibility[taskId] && !sequentialOverride) {
+            if (!avalibility[taskId] && !sequentialOverride && !isComplete) {
                 $('#task-name-' + taskId).css("opacity", "0.3");
             }
             // Set flagged style
@@ -1259,6 +1260,8 @@ let ui = function() {
             } else {
                 $("#task-floating-no-"+taskId).button("toggle")
             }
+            if (isComplete)
+                $("#task-check-" + taskId).click();
             // -------------------------------------------------------------------------------
             // Part 4: task action behaviors!
             // Task complete
@@ -1774,6 +1777,26 @@ let ui = function() {
             });
         }
 
+        // completed view loader
+        let completed = async function() {
+            // get completed tasks
+            let completedTasks = await E.db.getTasksWithQuery(uid, E.db.util.select.all(["isComplete", "==", true]));
+
+            // Show or unshow blankimage
+            $("#blankimage-completed").css("opacity", "0.0");
+            $("#blankimage-completed").css("display", completedTasks.length == 0 ? "flex" : "none");
+            $("#blankimage-completed").stop().animate({"opacity": "0.2"});
+
+            // Show completed tasks
+            for (let taskId of completedTasks) {
+                // Nononono don't even think about foreach 
+                // othewise the order will be messed up
+                await taskManager.generateTaskInterface("completed-content", taskId);
+            }
+        }
+
+
+
         // perspective view loader
         let perspective = async function(pid) {
             pageIndex.pageContentID = pid;
@@ -1837,7 +1860,7 @@ let ui = function() {
             });
         };
 
-        return {upcoming: upcoming, project: project, perspective: perspective};
+        return {upcoming, project, perspective, completed};
     }();
 
     /**
@@ -1859,6 +1882,7 @@ let ui = function() {
         // clear all contentboxes
         $("#inbox").empty();
         $("#due-soon").empty();
+        $("#completed-content").empty();
         $("#project-content").empty();
         $("#perspective-content").empty();
         
@@ -1872,6 +1896,9 @@ let ui = function() {
 
             case 'upcoming-page':
                 viewLoader.upcoming();
+                break;
+            case 'completed-page':
+                viewLoader.completed();
                 break;
             case 'perspective-page':
                 viewLoader.perspective(itemID);
@@ -1938,10 +1965,19 @@ let ui = function() {
         loadView("upcoming-page");
     });
 
-    $(document).on('click', '.today', function(e) {
+    $(document).on('click', '#today', function(e) {
         interfaceUtil.newPHI();
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         loadView("upcoming-page");
+        activeMenu = $(this).attr('id');
+        $("#"+activeMenu).addClass("today-highlighted");
+        interfaceUtil.menu.close();
+    });
+
+    $(document).on('click', '#completed', function(e) {
+        interfaceUtil.newPHI();
+        $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+        loadView("completed-page");
         activeMenu = $(this).attr('id');
         $("#"+activeMenu).addClass("today-highlighted");
         interfaceUtil.menu.close();
