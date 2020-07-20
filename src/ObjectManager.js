@@ -397,20 +397,25 @@ async function deleteTask(userID, taskID, willDissociateTask = true) {
         .catch(console.error);
 }
 
-
 async function deletePerspective(userID, perspectiveID) {
     await cRef("users", userID, "perspectives", perspectiveID).delete();
 }
 
 async function deleteProject(userID, projectID) {
-    getProjectStructure(userID, projectID).then(async function(struct) {
-        for (let i of struct.children) {
-            if (i.type === "project") deleteProject(userID, i.content.id)
-            else modifyTask(userID, i.content, {project:""});
-        }
-        await cRef("users", userID, "projects", projectID).delete()
-            .catch(console.error);
-    });
+    let struct = await getProjectStructure(userID, projectID)
+    for (let i of struct.children) {
+        if (i.type === "project") deleteProject(userID, i.content.id)
+        else modifyTask(userID, i.content, {project:""});
+    }
+   
+    let cpLtTasks = await getCompletedTasks(userID);
+    const cpLt = [].concat(...cpLtTasks);
+    for (let t of cpLt)
+        if ((await getTaskInformation(userID, t)).project === projectID)
+            modifyTask(userID, t, {project:""});
+
+    await cRef("users", userID, "projects", projectID).delete()
+        .catch(console.error);
 }
 
 async function deleteTag(userID, tagID) {
@@ -489,7 +494,7 @@ async function getItemAvailability(userID) {
 async function getCompletedTasks(userID) {
     let completedTasks = await getTasksWithQuery(userID, util.select.all(["isComplete", "==", true]));
     let taskItems = await Promise.all(completedTasks.map(async function(t){return await getTaskInformation(userID, t)}));
-    return completedTasks.sort(function(b,a) {
+    const cpSorted = completedTasks.sort(function(b,a) {
         let taskA = taskItems[completedTasks.indexOf(a)];
         let taskB = taskItems[completedTasks.indexOf(b)];
         return ((
@@ -502,6 +507,43 @@ async function getCompletedTasks(userID) {
                 1
         ));
     });
+    let today = new Date();
+    let yesterday = new Date();
+    let thisWeek = new Date();
+    let thisMonth = new Date();
+    today.setHours(0,0,0,0);
+    yesterday.setDate(yesterday.getDate()-1);
+    yesterday.setHours(0,0,0,0);
+    thisWeek.setDate(thisWeek.getDate()-7);
+    thisWeek.setHours(0,0,0,0);
+    thisMonth.setMonth(thisMonth.getMonth()-1);
+    thisMonth.setHours(0,0,0,0);
+    let tasksToday = cpSorted.filter(function (a) {
+        let tsks = taskItems[completedTasks.indexOf(a)];
+        return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= today : false;
+    });
+    let tasksYesterday = cpSorted.filter(function (a) {
+        let tsks = taskItems[completedTasks.indexOf(a)];
+        return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= yesterday && new Date(tsks.completeDate.seconds * 1000) < today : false;
+    });
+    let tasksWeek = cpSorted.filter(function (a) {
+        let tsks = taskItems[completedTasks.indexOf(a)];
+        return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= thisWeek && new Date(tsks.completeDate.seconds * 1000) < yesterday : false;
+    });
+    let tasksMonth = cpSorted.filter(function (a) {
+        let tsks = taskItems[completedTasks.indexOf(a)];
+        return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= thisMonth && new Date(tsks.completeDate.seconds * 1000) < thisWeek : false;
+    });
+    let evenBefore = cpSorted.filter(function (a) {
+        let tsks = taskItems[completedTasks.indexOf(a)];
+        return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) < thisMonth : true;
+    });
+/*    console.log(tasksToday);*/
+    //console.log(tasksYesterday);
+    //console.log(tasksWeek);
+    //console.log(tasksMonth);
+    /*console.log(evenBefore);*/
+    return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
 }
 
 async function onBoard(userID, tz, username) {
