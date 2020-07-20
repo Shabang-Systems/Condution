@@ -1819,7 +1819,7 @@ let ui = function() {
             if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();
             if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
             if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
-            if (tasksWeek.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
+            if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
             if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();
         }
 
