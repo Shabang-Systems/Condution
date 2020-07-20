@@ -1791,7 +1791,7 @@ let ui = function() {
         // completed view loader
         let completed = async function() {
             // get completed tasks
-            let completedTasks = await E.db.getTasksWithQuery(uid, E.db.util.select.all(["isComplete", "==", true]));
+            let completedTasks = await E.db.getCompletedTasks(uid);
 
             // Show or unshow blankimage
             $("#blankimage-completed").css("opacity", "0.0");
