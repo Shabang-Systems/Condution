@@ -596,7 +596,7 @@
                 @media (max-width: 575px) { 
                     .task-name {
                         font-size: 12pt;
-                        width: 67%;
+                        width:80%;
                     }
                 }
 

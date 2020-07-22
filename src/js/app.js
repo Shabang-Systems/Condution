@@ -301,6 +301,8 @@ let presentWelcome = function() {
                         $("#onboarding-msg-2").fadeIn(1000, function() {
                             setTimeout(function() {
                                 $("#onboarding-2").fadeIn();
+                                $("#onboarding-3").fadeIn();
+                                $("#onboarding-msg-3").fadeIn();
                             },500);
                         });
                     });
@@ -309,7 +311,23 @@ let presentWelcome = function() {
             });
            }
         });
-    $('#onboarding-check-2').change(function(e) {
+    $('#onboarding-check-3').change(function(e) {
+            if (this.checked) {
+                $("#onboarding-name-3").css("color", interfaceUtil.gtc("--task-checkbox"));
+                $("#onboarding-name-3").css("text-decoration", "line-through");
+                $("#onboarding-pseudocheck-3").css("opacity", "0.6");
+                $("#onboarding-3").animate({"padding": "5px 0 5px 0 !important"}, 200);
+                Haptics.notification({type: HapticsNotificationType.SUCCESS});
+                $("#onboarding-3").slideUp(300);
+                authUI.anonomGeneration();
+                setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
+                Storage.set({
+                    key: "condution_onboarding",
+                    value: 1
+                });
+        }            
+      });
+      $('#onboarding-check-2').change(function(e) {
             if (this.checked) {
                 $("#onboarding-name-2").css("color", interfaceUtil.gtc("--task-checkbox"));
                 $("#onboarding-name-2").css("text-decoration", "line-through");
@@ -323,14 +341,28 @@ let presentWelcome = function() {
                         value: 1
                     });
             });
-        }            
+        }        
     });
     return ()=>{$("#onboarding").css("display", "flex")}
 }();
 
 let mode = "login";
 let isNASuccess = false;
+let isAnomAuthInProgress = false;
 let authUI = function() {
+    let anonomGeneration = async function() {
+        isAnomAuthInProgress = true;
+        firebase.auth().signInAnonymously().then(async function() {
+            $("#auth-content-wrapper").fadeOut();
+            $("#setting-up").css({"display": "flex", "opacity":"0"});
+            $("#setting-up").animate({"opacity": "1"});
+            await E.db.onBoard(firebase.auth().currentUser.uid, moment.tz.guess(), "there");
+            $("#setting-up").fadeOut();
+            await loadApp(firebase.auth().currentUser);
+            isAnomAuthInProgress = false;
+        });
+    }
+
     let auth = async function() {
         if (isNASuccess) {
             var user = firebase.auth().currentUser;
@@ -466,7 +498,7 @@ let authUI = function() {
 
     const greetings = ["Hey!", "G'day!", "Howdy!", "Yo!"];
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
-    return {auth, nu, rec}
+    return {auth, nu, rec, anonomGeneration}
 }();
 
 let ui = function() {
@@ -1997,7 +2029,6 @@ let ui = function() {
         pageIndex.pageLocks = [];
         // load the dang view
         switch(viewName) {
-
             case 'upcoming-page':
                 viewLoader.upcoming();
                 break;
@@ -2515,14 +2546,14 @@ let ui = function() {
 
 firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
-        if (user.emailVerified) {
+        if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
             await loadApp(user);
             setInterval(() => {ui.update()}, 60 * 1000);
             setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
         } else {
             E.flush();
             // Generate auth UI
-            if (!isNASuccess) {
+            if (!isNASuccess && !isAnomAuthInProgress) {
                 // if not currently signing up
                 $("#content-wrapper").fadeOut();
                 $("#loading").fadeOut();

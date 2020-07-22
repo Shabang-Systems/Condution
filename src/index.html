@@ -86,7 +86,7 @@
                     <div id="onboarding-display-0" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-0" class="task-check"/>
                         <label class="task-pseudocheck" id="onboarding-pseudocheck-0" for="onboarding-check-0" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                        <input class="task-name" id="onboarding-name-0" type="text" autocomplete="off" value="Ready to launch?" disabled>
+                        <input class="task-name" id="onboarding-name-0" type="text" autocomplete="off" value="Ready to launch? 🎉" disabled>
                     </div> 
                 </div>
                 <div id="onboarding-msg-0" style="color: var(--menu-text); font-size: 13px; display: none">Excellent. We know you are.</div>
@@ -95,7 +95,7 @@
                     <div id="onboarding-display-1" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-1" class="task-check"/>
                         <label class="task-pseudocheck" id="onboarding-pseudocheck-1" for="onboarding-check-1" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                        <input class="task-name" id="onboarding-name-1" type="text" autocomplete="off" value="I agree" disabled>
+                        <input class="task-name" id="onboarding-name-1" type="text" autocomplete="off" value="I agree 👍" disabled>
                     </div> 
                 </div>
                 <div id="onboarding-msg-2" style="color: var(--menu-text); font-size: 13px; display:none">Lastly, we need to connect you with sync.</div>
@@ -103,10 +103,17 @@
                     <div id="onboarding-display-2" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-2" class="task-check"/>
                         <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-2" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                        <input class="task-name" id="onboarding-name-2" type="text" autocomplete="off" value="Let's begin!" disabled>
+                        <input class="task-name" id="onboarding-name-2" type="text" autocomplete="off" value="Let's sync! 🌐" disabled>
                     </div> 
                 </div>
-
+                <div id="onboarding-3" class="task thov" style="display:none;"> 
+                    <div id="onboarding-display-3" class="task-display" style="display:block">
+                        <input type="checkbox" id="onboarding-check-3" class="task-check"/>
+                        <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-3" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                        <input class="task-name" id="onboarding-name-3" type="text" autocomplete="off" value="Don't sync. 💾" disabled>
+                    </div> 
+                </div>
+                <div id="onboarding-msg-3" style="color: var(--decorative-light); font-size: 13px; display:none">Data is still securely backed up in the United States regardless of sync. No registration needed if sync not enabled.</div>
         </div>
     </div>
 
@@ -299,15 +306,17 @@
                         <img class="blankimage"></img>
                         <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more productivity?</b></div>
                     </div>
-
                 </div>
                 <div id="perspective-page" class="page">
                     <div class="sandwich"><i class="fas fa-bars"></i></div>
-                    <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Completed</t></div>
+                    <div class="perspective-title"><i class="fa fa-layer-group"></i><input id="perspective-title" title="Perspective Name" class="perspective-titleword" type="text"></input>
+                        <div class="task-subicon" title="Delete Perspective" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                        <div class="task-subicon" title="Edit Perspective" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
+                    </div>
                     <div style="padding: 0 0 7px 0">
                         <hr class="perspective-divider"/>
-                    </div>
-                    <div id="completed-content"> </div>
+                    </iv>
+                    <div id="perspective-content"> </div>
                     <div id="blankimage-perspective" class="blankimage-content">
                         <img class="blankimage"></img>
                         <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more filters?</b></div>
