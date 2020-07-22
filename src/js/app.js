@@ -2366,7 +2366,7 @@ let ui = function() {
 
     $("#quickadd").blur(function(e) {
         $(this).val("");
-        $(this).stop().animate({"width": "250px"}, 500);
+        $(this).stop().animate({"width": "230px"}, 500);
         //console.error(e);
     });
 
@@ -2536,6 +2536,10 @@ let ui = function() {
         uid = usr.uid;
         displayName = usr.displayName;
         user = usr;
+        if (usr.isAnonymous === true) {
+            $("#convert").show();
+            $("#logout").hide();
+        }
     };
 
     return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};

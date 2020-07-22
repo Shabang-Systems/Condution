@@ -2642,7 +2642,7 @@
             #quickadd {
                 background-color: var(--quickadd);
                 margin: 20px;
-                width: 250px;
+                width: 230px;
                 height: 30px;
                 z-index: 10;
                 position: fixed;
@@ -2700,6 +2700,25 @@
                         pointer-events: auto !important;
                     }
                 }
+
+    /* UserConversion */
+
+        /* IDs */
+
+            #convert {
+                width: 40px;
+                height: 40px;
+                bottom: 15px;
+                left: 15px;
+                border-radius: 50%;
+                position: absolute;
+                background: var(--decorative-light);
+                z-index: 2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 2px 2px 4px var(--background-feature);
+            }
   
     /* Misc. Misc. Items */
 
