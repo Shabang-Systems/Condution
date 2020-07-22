@@ -17,7 +17,7 @@ require('bootstrap-tagsinput');
 require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics, Network, Browser } = Plugins;
+var { Haptics, Network, Browser, Storage } = Plugins;
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -280,11 +280,13 @@ let presentWelcome = function() {
                             $("#onboarding-msg-1").fadeIn();
                             $("#onboarding-1").fadeIn();
 
+
                         });
                     }, 1000);
                 });
             }, 1000);
         }
+
     });
     $('#onboarding-check-1').change(function(e) {
         if (this.checked) {
@@ -316,6 +318,10 @@ let presentWelcome = function() {
                 Haptics.notification({type: HapticsNotificationType.SUCCESS});
                 $("#onboarding-2").slideUp(300, function() {
                     $("#onboarding").fadeOut(1000);
+                    Storage.set({
+                        key: "condution_onboarding",
+                        value: 1
+                    });
             });
         }            
     });
@@ -2542,23 +2548,13 @@ firebase.auth().onAuthStateChanged(async function(user) {
     }
 });
 
-function getCookie(cname) {
-      var name = cname + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var ca = decodedCookie.split(';');
-      for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-}
-
-presentWelcome();
+(async function potentiallyOnboard(test) {
+    const ret = await Storage.get({ key: 'condution_onboarding' });
+    const val = JSON.parse(ret.value);
+    if (val !== 1) {
+        presentWelcome();
+    }
+})();
 
 console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
 console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
