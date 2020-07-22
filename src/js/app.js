@@ -257,6 +257,13 @@ async function loadApp(user) {
 }
 
 let presentWelcome = function() {
+    $("#welcome-terms").click(function() {
+        Browser.open({ url: 'https://condution.shabang.cf/terms.html' });
+    });
+    $("#welcome-policy").click(function() {
+        Browser.open({ url: 'https://condution.shabang.cf/privacy.html' });
+    });
+
     $('#onboarding-check-0').change(function(e) {
         if (this.checked) {
             $("#onboarding-name-0").css("color", interfaceUtil.gtc("--task-checkbox"));
@@ -312,7 +319,7 @@ let presentWelcome = function() {
             });
         }            
     });
-
+    return ()=>{$("#onboarding").css("display", "flex")}
 }();
 
 let mode = "login";
@@ -2534,6 +2541,24 @@ firebase.auth().onAuthStateChanged(async function(user) {
         $(".auth-upf").val("");
     }
 });
+
+function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+}
+
+presentWelcome();
 
 console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
 console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
