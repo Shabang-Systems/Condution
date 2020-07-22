@@ -256,6 +256,65 @@ async function loadApp(user) {
     $("#content-wrapper").fadeIn();
 }
 
+let presentWelcome = function() {
+    $('#onboarding-check-0').change(function(e) {
+        if (this.checked) {
+            $("#onboarding-name-0").css("color", interfaceUtil.gtc("--task-checkbox"));
+            $("#onboarding-name-0").css("text-decoration", "line-through");
+            $("#onboarding-pseudocheck-0").css("opacity", "0.6");
+            $("#onboarding-0").animate({"padding": "5px 0 5px 0 !important"}, 200);
+            Haptics.notification({type: HapticsNotificationType.SUCCESS});
+            $("#onboarding-0").slideUp(300);
+
+            setTimeout(function() {
+                $("#onboarding-msg-0").fadeIn(1000, function() {
+                    setTimeout(function() {
+                        $("#onboarding-msg-0").fadeOut(function() {
+                            $("#onboarding-msg-1").fadeIn();
+                            $("#onboarding-1").fadeIn();
+
+                        });
+                    }, 1000);
+                });
+            }, 1000);
+        }
+    });
+    $('#onboarding-check-1').change(function(e) {
+        if (this.checked) {
+            $("#onboarding-name-1").css("color", interfaceUtil.gtc("--task-checkbox"));
+            $("#onboarding-name-1").css("text-decoration", "line-through");
+            $("#onboarding-pseudocheck-1").css("opacity", "0.6");
+            $("#onboarding-1").animate({"padding": "5px 0 5px 0 !important"}, 200);
+            Haptics.notification({type: HapticsNotificationType.SUCCESS});
+            $("#onboarding-1").slideUp(300, function() {
+                setTimeout(function() {
+                    $("#onboarding-msg-1").fadeOut(function() {
+                        $("#onboarding-msg-2").fadeIn(1000, function() {
+                            setTimeout(function() {
+                                $("#onboarding-2").fadeIn();
+                            },500);
+                        });
+                    });
+
+                }, 300);
+            });
+           }
+        });
+    $('#onboarding-check-2').change(function(e) {
+            if (this.checked) {
+                $("#onboarding-name-2").css("color", interfaceUtil.gtc("--task-checkbox"));
+                $("#onboarding-name-2").css("text-decoration", "line-through");
+                $("#onboarding-pseudocheck-2").css("opacity", "0.6");
+                $("#onboarding-2").animate({"padding": "5px 0 5px 0 !important"}, 200);
+                Haptics.notification({type: HapticsNotificationType.SUCCESS});
+                $("#onboarding-2").slideUp(300, function() {
+                    $("#onboarding").fadeOut(1000);
+            });
+        }            
+    });
+
+}();
+
 let mode = "login";
 let isNASuccess = false;
 let authUI = function() {
