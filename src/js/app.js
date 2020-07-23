@@ -349,6 +349,7 @@ let presentWelcome = function() {
 let mode = "login";
 let isNASuccess = false;
 let isAnomAuthInProgress = false;
+let isConversionInProgress = false;
 let authUI = function() {
     let anonomGeneration = async function() {
         isAnomAuthInProgress = true;
@@ -373,6 +374,7 @@ let authUI = function() {
             $("#setting-up").animate({"opacity": "1"});
             await E.db.onBoard(user.uid, moment.tz.guess(), $("#name").val());
             $("#setting-up").fadeOut();
+            $('#login-text').html("Let's Do This!")
             await loadApp(user);
             isNASuccess = false;
         } else {
@@ -394,7 +396,7 @@ let authUI = function() {
             mode = "login";
             $(".auth-upf").removeClass("wrong");
             $("#password").show();
-            $("#newuser").html("Make an account.");
+            $("#newuser").html("Make an account");
             $("#newuser").show();
             $("#recover-password").html("Recover Password");
             $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
@@ -415,7 +417,8 @@ let authUI = function() {
         }).then(function() {
             if (!problem) {
                 firebase.auth().currentUser.sendEmailVerification();
-                $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
+                $('#need-verify').html("Verify your email, then proceed!");
+                $('#login-text').html("Proceed!")
                 isNASuccess = true;
                 mode="login";
             }
@@ -471,7 +474,7 @@ let authUI = function() {
                 break;
             case "recover":
                 $("#password").show();
-                $("#newuser").html("Make an account.");
+                $("#newuser").html("Make an account");
                 $("#newuser").show();
                 $("#recover-password").html("Recover Password");
                 $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
@@ -483,13 +486,13 @@ let authUI = function() {
         switch (mode) {
             case "login":
                 $("#name-tray").slideDown(300);
-                $(this).html("Sign in.");
+                $(this).html("Sign in");
                 mode = "newuser";
                 $("#greeting-auth-normal").html(`Welcome aboard! By signing up, you agree to our <a href="https://condution.shabang.cf/privacy.html">Privacy Policy</a> and <a href="https://condution.shabang.cf/terms.html">Terms</a>.`);
                 break;
             case "newuser":
                 $("#name-tray").slideUp(300);
-                $(this).html("Make an account.");
+                $(this).html("Make an account");
                 $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
                 mode = "login";
                 break;
@@ -664,6 +667,7 @@ let ui = function() {
 
         const edit = function(pspID) {
             $("#repeat-unit").hide();
+            $("#convert-unit").hide();
             currentP = pspID;
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#perspective-unit").fadeIn(200);
@@ -725,6 +729,70 @@ let ui = function() {
 
         return edit;
     }();
+
+
+    const showConvert = function() {
+        $("#convert-back").on("click", function(e) {
+            $("#convert-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, () => reloadPage(true));
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+
+        $("#convert-action").on("click", function(e) {
+            var credential = firebase.auth.EmailAuthProvider.credential($("#email-convert").val(), $("#password-convert").val());
+            $(this).css("background", "#133644");
+            $(this).html("Loading");
+            let btn = this;
+            firebase.auth().currentUser.linkWithCredential(credential).then(function(usercred) {
+                $(btn).html("Sync!");
+                $(btn).css("background", "#2b3749");
+                var user = usercred.user;
+                user.updateProfile({displayName: $("#name-convert").val()});
+                firebase.auth().currentUser.sendEmailVerification();
+                $("#convert-msg").html("Check your inbox. A lovely email's waiting ;)");
+                $("#convert-callout").html("Welcome Aboard!");
+                $(".auth-upf-conv").hide();
+                $("#convert-action").hide();
+                $("#convert").hide();
+                $("#logout").show();
+                user = firebase.auth().currentUser;
+                displayName = firebase.auth().currentUser.displayName;
+                uid = firebase.auth().uid;
+                setUser(firebase.auth().currentUser);
+            }).catch(function(error) {
+                console.log("Error upgrading anonymous account", error);
+                $(btn).html("Sync!");
+                $("#convert-msg").html(error.message);
+            }); 
+        });
+
+        $(document).on("click", "#overlay", function(e) {
+            if (e.target === this) {
+                $(".repeat-subunit").slideUp();
+                $("#repeat-toggle-group").slideDown();
+                $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
+                $("#repeat-unit").fadeOut(200);
+                $("#overlay").fadeOut(200, () => reloadPage(true));
+                $("#"+activeMenu).addClass("menuitem-selected");
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+            }
+        });
+
+        let currentP;
+        const convert = function(pspID) {
+            $("#repeat-unit").hide();
+            $("#perspective-unit").hide();
+            $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+            $("#convert-unit").fadeIn(200);
+        }
+        return convert;
+    }();
+
 
     // repeat view
     const showRepeat = function() {
@@ -883,6 +951,7 @@ let ui = function() {
             $("#repeat-toggle-group").show();
             $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
             $("#perspective-unit").hide();
+            $("#convert-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
             let ti = await E.db.getTaskInformation(uid, taskId);
@@ -2506,7 +2575,19 @@ let ui = function() {
         if(!$target.closest('#left-menu').length && !$target.closest('.sandwich').length) {
             interfaceUtil.menu.close();
         }        
-});
+    });
+
+
+    $(document).on("click", "#convert", function() {
+        showConvert();
+    });
+
+    $(document).on("click", "#convert-src", function() {
+        $("#auth-content-wrapper").fadeOut(300);
+
+        authUI.anonomGeneration();
+    });
+
 
     interfaceUtil.newPHI();
 
@@ -2561,7 +2642,7 @@ firebase.auth().onAuthStateChanged(async function(user) {
                 // if not currently signing up
                 $("#content-wrapper").fadeOut();
                 $("#loading").fadeOut();
-                $('#need-verify').html("Account unverified. Please check your email.");
+                $('#need-verify').html("Account unverified. Please check your email + sign in again.");
                 firebase.auth().currentUser.sendEmailVerification();
                 $('#recover-password').fadeOut();
                 $('#need-verify').fadeIn();
