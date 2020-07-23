@@ -29,7 +29,7 @@ function createWindow () {
         e.preventDefault()
     });
 
-    //win.removeMenu();
+    win.removeMenu();
     // and load the main of the app.
     win.loadFile('src/index.html')
     
