@@ -497,6 +497,9 @@ async function getCompletedTasks(userID) {
     const cpSorted = completedTasks.sort(function(b,a) {
         let taskA = taskItems[completedTasks.indexOf(a)];
         let taskB = taskItems[completedTasks.indexOf(b)];
+        if (!taskA || !taskB) {
+            return 1;
+        }
         return ((
             (taskA.completeDate) ?
                 (taskA.completeDate.seconds) :
@@ -538,7 +541,6 @@ async function getCompletedTasks(userID) {
         let tsks = taskItems[completedTasks.indexOf(a)];
         return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) < thisMonth : true;
     });
-/*    console.log(tasksToday);*/
     //console.log(tasksYesterday);
     //console.log(tasksWeek);
     //console.log(tasksMonth);
