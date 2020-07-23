@@ -2,7 +2,7 @@
 name: Bug report
 about: Make us slightly less bug ridden!
 title: BUG
-labels: bug
+labels: bug, needs-triage
 assignees: ''
 
 ---
