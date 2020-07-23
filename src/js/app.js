@@ -1962,8 +1962,35 @@ let ui = function() {
             });
         }
 
+        let completedLoaders;
+        $(window).bind('scroll', async function() {
+            if($(window).scrollTop() >= $('#completed-content').offset().top + $('#completed-content').outerHeight() - window.innerHeight) {
+                let tally = 0;
+                let kill = 10;
+                let stop = false;
+                while (!stop && completedLoaders.length !== 0) {
+                    let pld = completedLoaders.shift();
+                    tally += 1;
+                    if (pld.task === "header") {
+                        if (tally <= (kill-2))
+                            $("#"+pld.payload).show();
+                        else
+                            stop = true;
+                    } else
+                        await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
+                    if (tally >= kill)
+                        stop = true;
+                    if (completedLoaders.length === 0)
+                        $("#completed-loading").hide();
+
+                }
+            }
+    });
+
         // completed view loader
         let completed = async function() {
+            $("#completed-loading").show();
+            completedLoaders = [];
             // get completed tasks
             let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
 
@@ -1972,29 +1999,67 @@ let ui = function() {
             $("#blankimage-completed").css("display", (tasksToday+tasksYesterday+tasksWeek+tasksMonth+evenBefore).length == 0 ? "flex" : "none");
             $("#blankimage-completed").stop().animate({"opacity": "0.2"});
 
+            if (tasksToday.length > 0)
+                completedLoaders.push({task: "header", payload: "comp-lb-td"});
+
             // Show completed tasks
             for (let taskId of tasksToday) {
-                await taskManager.generateTaskInterface("completed-today", taskId);
+                completedLoaders.push({task: "task", payload: ["completed-today", taskId]});
             }
+
+            if (tasksYesterday.length > 0)
+                completedLoaders.push({task: "header", payload: "comp-lb-yd"});
+
             for (let taskId of tasksYesterday) {
-                await taskManager.generateTaskInterface("completed-yesterday", taskId);
+                completedLoaders.push({task: "task", payload: ["completed-yesterday", taskId]});
             }
+
+            if (tasksWeek.length > 0)
+                completedLoaders.push({task: "header", payload: "comp-lb-pw"});
+
             for (let taskId of tasksWeek) {
-                await taskManager.generateTaskInterface("completed-thisweek", taskId);
+                completedLoaders.push({task: "task", payload: ["completed-thisweek", taskId]});
             }
+
+            if (tasksWeek.length > 0)
+                completedLoaders.push({task: "header", payload: "comp-lb-pm"});
+
             for (let taskId of tasksMonth) {
-                await taskManager.generateTaskInterface("completed-thismonth", taskId);
+                completedLoaders.push({task: "task", payload: ["completed-thismonth", taskId]});
             }
+
+            if (tasksWeek.length > 0)
+                completedLoaders.push({task: "header", payload: "comp-lb-el"});
+
             for (let taskId of evenBefore) {
-                await taskManager.generateTaskInterface("completed-earlier", taskId);
+                completedLoaders.push({task: "task", payload: ["completed-earlier", taskId]});
+            }
+
+            let tally = 0;
+            let kill = 10;
+            let stop = false;
+            while (!stop && completedLoaders.length !== 0) {
+                let pld = completedLoaders.shift();
+                tally += 1;
+                if (pld.task === "header") {
+                    if (tally <= (kill-2))
+                        $("#"+pld.payload).show();
+                    else
+                        stop = true;
+                } else
+                    await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
+                if (tally >= kill)
+                    stop = true;
+                if (completedLoaders.length === 0)
+                    $("#completed-loading").hide();
             }
 
             // Hide unneeded labels
-            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();
-            if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
-            if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
-            if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
-            if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();
+/*            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();*/
+            //if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
+            //if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
+            //if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
+            /*if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();*/
         }
 
 
