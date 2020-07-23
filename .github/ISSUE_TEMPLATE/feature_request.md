@@ -1,8 +1,8 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
+about: Help us make your life marginally better!
+title: FEAT
+labels: feature, needs-triage
 assignees: ''
 
 ---
