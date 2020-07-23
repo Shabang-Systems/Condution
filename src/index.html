@@ -69,241 +69,301 @@
                 <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online, restart the app, we will handle the rest ;)</span>
             </div>
         </div>
-        <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none">
+        <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;">
             <div style="margin-left: 20px;">
-                <h2 style="color: var(--content-normal-accent)">👋 Setting Up Condution...</h2>
+                <h2 style="color: var(--content-normal-accent)">🚄 Setting Up Condution...</h2>
                 <span style="color: var(--content-normal-alt)">We are hard at work creating your <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span> account.</span>
                 <hr />
                 <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">🤙 Hold on tight!</span>
             </div>
         </div>
+        <div id="onboarding" style="width: 100%; height: 100%;position: absolute; z-index: 98080000; background-color:var(--background); display: flex; justify-content: center; padding-top: 40vh; overflow: hidden !important; display:none;">
+            <div style="width: 80%; z-index: 1000">
+                <h2 style="color: var(--content-normal-accent); font-size: 20px; font-weight: 300">Howdy! 👋 <span style="font-weight: 500">Welcome to</span><span style="font-weight:600"> Condution </span></h2>
+                <h2 style="color: var(--content-normal-accent); font-size: 14px; margin-bottom: 10px">Just a few quick things, and we will be task-wrangling in no time!</h2>
+                <br />
+                <div id="onboarding-0" class="task thov"> 
+                    <div id="onboarding-display-0" class="task-display" style="display:block">
+                        <input type="checkbox" id="onboarding-check-0" class="task-check"/>
+                        <label class="task-pseudocheck" id="onboarding-pseudocheck-0" for="onboarding-check-0" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                        <input class="task-name" id="onboarding-name-0" type="text" autocomplete="off" value="Ready to launch? 🎉" disabled>
+                    </div> 
+                </div>
+                <div id="onboarding-msg-0" style="color: var(--menu-text); font-size: 13px; display: none">Excellent. We know you are.</div>
+                <div id="onboarding-msg-1" style="color: var(--menu-label); font-size: 15px; display:none">Please take a look at our <span id="welcome-terms">terms</span> and <span id="welcome-policy">privacy policy</span> and make sure you agree with them.</div>
+                <div id="onboarding-1" class="task thov" style="display:none;"> 
+                    <div id="onboarding-display-1" class="task-display" style="display:block">
+                        <input type="checkbox" id="onboarding-check-1" class="task-check"/>
+                        <label class="task-pseudocheck" id="onboarding-pseudocheck-1" for="onboarding-check-1" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                        <input class="task-name" id="onboarding-name-1" type="text" autocomplete="off" value="I agree 👍" disabled>
+                    </div> 
+                </div>
+                <div id="onboarding-msg-2" style="color: var(--menu-text); font-size: 13px; display:none">Lastly, we want to connect you with sync.</div>
+                <div id="onboarding-2" class="task thov" style="display:none;"> 
+                    <div id="onboarding-display-2" class="task-display" style="display:block">
+                        <input type="checkbox" id="onboarding-check-2" class="task-check"/>
+                        <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-2" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                        <input class="task-name" id="onboarding-name-2" type="text" autocomplete="off" value="Let's sync! 🌐" disabled>
+                    </div> 
+                </div>
+                <div id="onboarding-3" class="task thov" style="display:none;"> 
+                    <div id="onboarding-display-3" class="task-display" style="display:block">
+                        <input type="checkbox" id="onboarding-check-3" class="task-check"/>
+                        <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-3" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
+                        <input class="task-name" id="onboarding-name-3" type="text" autocomplete="off" value="Don't sync. 💾" disabled>
+                    </div> 
+                </div>
+                <div id="onboarding-msg-3" style="color: var(--decorative-light); font-size: 13px; display:none">Data is securely backed up in the United States regardless of sync. No registration needed if sync is not enabled.</div>
+        </div>
+    </div>
+
+            </div>
+        </div>
+
         <div id="content-wrapper" style="display:none">
             <div id="overlay">
-                <div class="overlay-unit" id="perspective-unit">
-                    <div class="project-action" id="perspective-back"><i class="far fa-times-circle"></i></div>
-                    <h1 id="perspective-callout">Let's build <input id="perspective-edit-name" placeholder="cool perspective name"></input></h1>
-                    <input id="pquery" type="text" autocomplete="off" value="" placeholder="try a filter like [#bontehu]...">
-                    <div id="perspective-avail-toggle-group">
-                            <button id="perspective-avail-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Include...&nbsp;<i class="fa fa-caret-down"></i></button>
-                            <ul id="pavail-group" class="dropdown-menu modal-dropdown">
-                                <li class="modal-option" id="pavail-avail"><a>Available</a></li>
-                                <li class="modal-option" id="pavail-remain"><a>Remaining</a></li>
-                                <li class="modal-option" id="pavail-flagged"><a>Flagged</a></li>
-                            </ul>
-                        </div>
-                    <br />
-                    <div id="perspective-order-toggle-group">
-                            <button id="perspective-order-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Order...&nbsp;<i class="fa fa-caret-down"></i></button>
-                            <ul id="pord-group" class="dropdown-menu modal-dropdown">
-                                <li class="modal-option" id="pord-due-ascend"><a>Ascend by due</a></li>
-                                <li class="modal-option" id="pord-due-descend"><a>Descend by due</a></li>
-                                <li class="modal-option" id="pord-defer-ascend"><a>Ascend by defer</a></li>
-                                <li class="modal-option" id="pord-defer-descend"><a>Descend by defer</a></li>
-                                <li class="modal-option" id="pord-alpha"><a>Alphabetical</a></li>
-                            </ul>
-                        </div>
-                    <br />
+                    <div class="overlay-unit" id="perspective-unit">
+                        <div class="project-action" id="perspective-back"><i class="far fa-times-circle"></i></div>
+                        <h1 id="perspective-callout">Let's build <input id="perspective-edit-name" placeholder="cool perspective name"></input></h1>
+                        <input id="pquery" type="text" autocomplete="off" value="" placeholder="try a filter like [#bontehu]...">
+                        <div id="perspective-avail-toggle-group">
+                                <button id="perspective-avail-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Include...&nbsp;<i class="fa fa-caret-down"></i></button>
+                                <ul id="pavail-group" class="dropdown-menu modal-dropdown">
+                                    <li class="modal-option" id="pavail-avail"><a>Available</a></li>
+                                    <li class="modal-option" id="pavail-remain"><a>Remaining</a></li>
+                                    <li class="modal-option" id="pavail-flagged"><a>Flagged</a></li>
+                                </ul>
+                            </div>
+                        <br />
+                        <div id="perspective-order-toggle-group">
+                                <button id="perspective-order-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Order...&nbsp;<i class="fa fa-caret-down"></i></button>
+                                <ul id="pord-group" class="dropdown-menu modal-dropdown">
+                                    <li class="modal-option" id="pord-due-ascend"><a>Ascend by due</a></li>
+                                    <li class="modal-option" id="pord-due-descend"><a>Descend by due</a></li>
+                                    <li class="modal-option" id="pord-defer-ascend"><a>Ascend by defer</a></li>
+                                    <li class="modal-option" id="pord-defer-descend"><a>Descend by defer</a></li>
+                                    <li class="modal-option" id="pord-alpha"><a>Alphabetical</a></li>
+                                </ul>
+                            </div>
+                        <br />
 
-                    <a id="perspective-documentaion" href="#" title="Well, click this if you need help." style="color: var(--task); font-weight: 600; font-size: 9px">Need Help?</a>
-                    <!--TODO: Actually make the above the documentation-->
-                </div>
-                <div class="overlay-unit" id="repeat-unit">
-                    <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
-                    <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
-                    <div class="dropdown">
-                        <div id="repeat-toggle-group">
-                            <button id="repeat-type-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Every...&nbsp;<i class="fa fa-caret-down"></i></button>
-                            <ul class="dropdown-menu modal-dropdown">
-                                <li class="modal-option" id="repeat-perday"><a>Day</a></li>
-                                <li class="modal-option" id="repeat-perweek"><a>Week</a></li>
-                                <li class="modal-option" id="repeat-permonth"><a>Month</a></li>
-                                <li class="modal-option" id="repeat-peryear"><a>Year</a></li>
-                            </ul>
-                        </div>
-                        <div id="repeat-weekly-unit" class="repeat-subunit" style="display:none" style="display:none">
-                            <t id="repeat-advanced-weekly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
-                            <div id="repeat-daterow">
-                                <div class="repeat-daterow-weekname">M</div>
-                                <div class="repeat-daterow-weekname">Tu</div>
-                                <div class="repeat-daterow-weekname">W</div>
-                                <div class="repeat-daterow-weekname">Th</div>
-                                <div class="repeat-daterow-weekname">F</div>
-                                <div class="repeat-daterow-weekname">Sa</div>
-                                <div class="repeat-daterow-weekname">Su</div>
+                        <a id="perspective-documentaion" href="#" title="Well, click this if you need help." style="color: var(--task); font-weight: 600; font-size: 9px">Need Help?</a>
+                        <!--TODO: Actually make the above the documentation-->
+                    </div>
+                    <div class="overlay-unit" id="repeat-unit">
+                        <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
+                        <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
+                        <div class="dropdown">
+                            <div id="repeat-toggle-group">
+                                <button id="repeat-type-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Every...&nbsp;<i class="fa fa-caret-down"></i></button>
+                                <ul class="dropdown-menu modal-dropdown">
+                                    <li class="modal-option" id="repeat-perday"><a>Day</a></li>
+                                    <li class="modal-option" id="repeat-perweek"><a>Week</a></li>
+                                    <li class="modal-option" id="repeat-permonth"><a>Month</a></li>
+                                    <li class="modal-option" id="repeat-peryear"><a>Year</a></li>
+                                </ul>
+                            </div>
+                            <div id="repeat-weekly-unit" class="repeat-subunit" style="display:none" style="display:none">
+                                <t id="repeat-advanced-weekly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
+                                <div id="repeat-daterow">
+                                    <div class="repeat-daterow-weekname">M</div>
+                                    <div class="repeat-daterow-weekname">Tu</div>
+                                    <div class="repeat-daterow-weekname">W</div>
+                                    <div class="repeat-daterow-weekname">Th</div>
+                                    <div class="repeat-daterow-weekname">F</div>
+                                    <div class="repeat-daterow-weekname">Sa</div>
+                                    <div class="repeat-daterow-weekname">Su</div>
+                                </div>
+                            </div>
+                            <div id="repeat-monthly-unit" class="repeat-subunit" style="display:none">
+                                <t id="repeat-advanced-monthly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
+                                <div id="repeat-monthgrid">
+                                    <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day">Last</div>
+                                </div>
                             </div>
                         </div>
-                        <div id="repeat-monthly-unit" class="repeat-subunit" style="display:none">
-                            <t id="repeat-advanced-monthly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
-                            <div id="repeat-monthgrid">
-                                <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day">Last</div>
+                    </div>
+                    <div class="overlay-unit" id="convert-unit">
+                        <div class="project-action" id="convert-back"><i class="far fa-times-circle"></i></div>
+                        <h3 id="convert-callout" style="font-size: 20px; font-weight: 600; color: var(--content-normal-accent); margin-bottom:0">Let's Sync!</h3>
+                        <span id="convert-msg" style="font-weight: 300; color: var(--content-normal-alt); font-size: 12px">Enjoy Condution everywhere... 🌐</span>
+                        <div style="margin-top: 5px">
+                            <input class="auth-upf auth-upf-conv" id="name-convert" type="text" autocomplete="off" value="" placeholder="What should we call you?">
+                            <input class="auth-upf auth-upf-conv" id="email-convert" type="email" autocomplete="off" value="" placeholder="Email">
+                            <input class="auth-upf auth-upf-conv" id="password-convert" type="password" autocomplete="off" value="" placeholder="Password">
+                            <div id="convert-action">
+                                Sync!
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="left-menu">
-                <div class="menu-area">
-                    <div>
-                        <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
-                        <div id="completed" class="today"><i class="fas fa-check-circle"></i><t style="padding-left:8px">Completed</t></div>
+                <div id="left-menu">
+                    <div class="menu-area">
+                        <div>
+                            <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
+                            <div id="completed" class="today"><i class="fas fa-check-circle"></i><t style="padding-left:8px">Completed</t></div>
+                        </div>
+                        <t class="menu-label">
+                            Perspectives <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                        </t>
+                        <div class="perspectives menu-portion scrollable"></div>
+                        <t class="menu-label">
+                            Projects <div class="menu-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                        </t>
+                        <div class="projects menu-portion scrollable"></div>
+                        <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
                     </div>
-                    <t class="menu-label">
-                        Perspectives <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
-                    </t>
-                    <div class="perspectives menu-portion scrollable"></div>
-                    <t class="menu-label">
-                        Projects <div class="menu-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
-                    </t>
-                    <div class="projects menu-portion scrollable"></div>
-                    <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
                 </div>
-            </div>
-            <input title="Add a task on enter" id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
-            <div id="content-area" class="scrollable">
-                <div id="upcoming-page" class="page">
-                    <div class="sandwich"><i class="fas fa-bars"></i></div>
-                    <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Upcoming</t></div>
-                    <div style="padding: 0 0 7px 0">
+                <div id="convert" style="display: none"><i class="fas fa-arrow-circle-up"></i></div>
+                <input title="Add a task on enter" id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
+                <div id="content-area" class="scrollable">
+                    <div id="upcoming-page" class="page">
+                        <div class="sandwich"><i class="fas fa-bars"></i></div>
+                        <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Upcoming</t></div>
+                        <div style="padding: 0 0 7px 0">
+                            <hr class="perspective-divider"/>
+                            <div id="upcoming-header"><t id="greeting"></t><t id="greeting-name"></t>&middot;<t id="greeting-date"></t></div>
+                            <!--<hr class="perspective-divider"/>-->
+                        </div>
+                        <div id="upcoming-daterow">
+                            <div id="upcoming-daterow-0" class="upcoming-daterow-item upcoming-daterow-active">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t0"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d0"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w0"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-1" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t1"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d1"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w1"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-2" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t2"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d2"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w2"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-3" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t3"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d3"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w3"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-4" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t4"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d4"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w4"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-5" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t5"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d5"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w5"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-6" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t6"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d6"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w6"></div>
+                                </div>
+                            </div>
+                            <div id="upcoming-daterow-7" class="upcoming-daterow-item upcoming-daterow-normal">
+                                <div class="upcoming-daterow-t" id="upcoming-daterow-t7"></div>
+                                <div style="transform: translateY(-2px);">
+                                    <div class="upcoming-daterow-d" id="upcoming-daterow-d7"></div>
+                                    <div class="upcoming-daterow-w" id="upcoming-daterow-w7"></div>
+                                </div>
+                            </div>
+                        </div>
                         <hr class="perspective-divider"/>
-                        <div id="upcoming-header"><t id="greeting"></t><t id="greeting-name"></t>&middot;<t id="greeting-date"></t></div>
-                        <!--<hr class="perspective-divider"/>-->
+                        <div id="inbox-subhead" class="perspective-subhead">
+                            Unsorted <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)"></div>
+                        </div>
+                        <div id="inbox" class="upcoming-section"> </div>
+                        <div id="ds-subhead" class="perspective-subhead">
+                            <t id="ds-text">Due Soon</t> <div id="duesoon-badge" class="badge" style="transform: translate(3px, -2px)">0</div> <div id="ds-daterowfield" style="display:none; transform: translateY(-1px)"><div style="font-weight: 600; display: inline-block; font-size: 10px;">@</div> <div id="duesoon-ondate"></div> </div>
+                        </div>
+                        <div id="due-soon" class="upcoming-section"> </div>
                     </div>
-                    <div id="upcoming-daterow">
-                        <div id="upcoming-daterow-0" class="upcoming-daterow-item upcoming-daterow-active">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t0"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d0"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w0"></div>
+                    <div id="completed-page" class="page">
+                        <div class="sandwich"><i class="fas fa-bars"></i></div>
+                        <div class="perspective-title"><i class="fas fa-check-circle"></i><t class="perspective-titleword">Completed</t></div>
+                        <div style="padding: 0 0 7px 0">
+                            <hr class="perspective-divider"/>
+                        </div>
+                        <div id="completed-content"> 
+                            <div class="perspective-subhead" id="comp-lb-td"> Today </div>
+                            <div id="completed-today">
+                            </div>
+                            <div class="perspective-subhead" id="comp-lb-yd"> Yesterday </div>
+                            <div id="completed-yesterday">
+                            </div>
+                            <div class="perspective-subhead" id="comp-lb-pw"> Past Week </div>
+                            <div id="completed-thisweek">
+                            </div>
+                            <div class="perspective-subhead" id="comp-lb-pm"> Past Month </div>
+                            <div id="completed-thismonth">
+                            </div>
+                            <div class="perspective-subhead" id="comp-lb-el"> Earlier/Untracked </div>
+                            <div id="completed-earlier">
                             </div>
                         </div>
-                        <div id="upcoming-daterow-1" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t1"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d1"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w1"></div>
+                        <div id="blankimage-completed" class="blankimage-content">
+                            <img class="blankimage"></img>
+                            <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more productivity?</b></div>
+                        </div>
+                    </div>
+                    <div id="perspective-page" class="page">
+                        <div class="sandwich"><i class="fas fa-bars"></i></div>
+                        <div class="perspective-title"><i class="fa fa-layer-group"></i><input id="perspective-title" title="Perspective Name" class="perspective-titleword" type="text"></input>
+                            <div class="task-subicon" title="Delete Perspective" id="perspective-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                            <div class="task-subicon" title="Edit Perspective" id="perspective-edit" style="float: right; display: inline-block"><i class="fas fa-pen"></i></div>
+                        </div>
+                        <div style="padding: 0 0 7px 0">
+                            <hr class="perspective-divider"/>
+                        </iv>
+                        <div id="perspective-content"> </div>
+                        <div id="blankimage-perspective" class="blankimage-content">
+                            <img class="blankimage"></img>
+                            <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more filters?</b></div>
+                        </div>
+                    </div>
+                     <div id="project-page" class="page">
+                        <div id="project-sandwich" class="sandwich"><i class="fas fa-bars"></i></div>
+                        <div class="project-action" id="project-back" style="display: inline-block; margin-right: 1px; margin-left: 2px"><i class="fas fa-chevron-left"></i></div>
+                        <div class="perspective-title" id="project-titlerow"><i class="fas fa-project-diagram"></i><input title="Project Name" id="project-title" class="perspective-titleword" type="text"></input>
+                            <div class="task-subicon" title="Delete Project" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
+                            <div class="btn-group btn-group-toggle project-sequential-group" id="project-sequential" data-toggle="buttons" style="margin-right: 20px">
+                                <label class="btn project-sequential active" title="Parallel Action Project" id="project-sequential-no">
+                                    <input type="radio" name="task-sequential" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
+                                </label>
+                                <label class="btn project-sequential" title="Sequential Action Project" id="project-sequential-yes">
+                                    <input type="radio" name="task-sequential"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
+                                </label>
                             </div>
                         </div>
-                        <div id="upcoming-daterow-2" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t2"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d2"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w2"></div>
-                            </div>
+                        <div style="padding: 0 0 7px 0">
+                            <hr class="perspective-divider"/>
                         </div>
-                        <div id="upcoming-daterow-3" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t3"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d3"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w3"></div>
-                            </div>
+                        <div id="project-content"> </div>
+                        <div id="new-task" class="newbutton">
+                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a task</div>
                         </div>
-                        <div id="upcoming-daterow-4" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t4"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d4"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w4"></div>
-                            </div>
+                        <div id="new-project" class="newbutton" style="transform: translateY(-8px)">
+                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
                         </div>
-                        <div id="upcoming-daterow-5" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t5"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d5"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w5"></div>
-                            </div>
+                        <div id="blankimage-project" class="blankimage-content">
+                            <img class="blankimage"></img>
+                            <div class="blankimage-alt">Wow... Such empty. <b style="font-weight: 200">Add a task?</b></div>
                         </div>
-                        <div id="upcoming-daterow-6" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t6"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d6"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w6"></div>
-                            </div>
-                        </div>
-                        <div id="upcoming-daterow-7" class="upcoming-daterow-item upcoming-daterow-normal">
-                            <div class="upcoming-daterow-t" id="upcoming-daterow-t7"></div>
-                            <div style="transform: translateY(-2px);">
-                                <div class="upcoming-daterow-d" id="upcoming-daterow-d7"></div>
-                                <div class="upcoming-daterow-w" id="upcoming-daterow-w7"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="perspective-divider"/>
-                    <div id="inbox-subhead" class="perspective-subhead">
-                        Unsorted <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)"></div>
-                    </div>
-                    <div id="inbox" class="upcoming-section"> </div>
-                    <div id="ds-subhead" class="perspective-subhead">
-                        <t id="ds-text">Due Soon</t> <div id="duesoon-badge" class="badge" style="transform: translate(3px, -2px)">0</div> <div id="ds-daterowfield" style="display:none; transform: translateY(-1px)"><div style="font-weight: 600; display: inline-block; font-size: 10px;">@</div> <div id="duesoon-ondate"></div> </div>
-                    </div>
-                    <div id="due-soon" class="upcoming-section"> </div>
-                </div>
-                <div id="completed-page" class="page">
-                    <div class="sandwich"><i class="fas fa-bars"></i></div>
-                    <div class="perspective-title"><i class="fas fa-check-circle"></i><t class="perspective-titleword">Completed</t></div>
-                    <div style="padding: 0 0 7px 0">
-                        <hr class="perspective-divider"/>
-                    </div>
-                    <div id="completed-content"> 
-                        <div class="perspective-subhead" id="comp-lb-td"> Today </div>
-                        <div id="completed-today">
-                        </div>
-                        <div class="perspective-subhead" id="comp-lb-yd"> Yesterday </div>
-                        <div id="completed-yesterday">
-                        </div>
-                        <div class="perspective-subhead" id="comp-lb-pw"> Past Week </div>
-                        <div id="completed-thisweek">
-                        </div>
-                        <div class="perspective-subhead" id="comp-lb-pm"> Past Month </div>
-                        <div id="completed-thismonth">
-                        </div>
-                        <div class="perspective-subhead" id="comp-lb-el"> Earlier/Untracked </div>
-                        <div id="completed-earlier">
-                        </div>
-                    </div>
-                    <div id="blankimage-completed" class="blankimage-content">
-                        <img class="blankimage"></img>
-                        <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more productivity?</b></div>
-                    </div>
-
-                </div>
-                <div id="perspective-page" class="page">
-                    <div class="sandwich"><i class="fas fa-bars"></i></div>
-                    <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Completed</t></div>
-                    <div style="padding: 0 0 7px 0">
-                        <hr class="perspective-divider"/>
-                    </div>
-                    <div id="completed-content"> </div>
-                    <div id="blankimage-perspective" class="blankimage-content">
-                        <img class="blankimage"></img>
-                        <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more filters?</b></div>
-                    </div>
-                </div>
-                 <div id="project-page" class="page">
-                    <div id="project-sandwich" class="sandwich"><i class="fas fa-bars"></i></div>
-                    <div class="project-action" id="project-back" style="display: inline-block; margin-right: 1px; margin-left: 2px"><i class="fas fa-chevron-left"></i></div>
-                    <div class="perspective-title" id="project-titlerow"><i class="fas fa-project-diagram"></i><input title="Project Name" id="project-title" class="perspective-titleword" type="text"></input>
-                        <div class="task-subicon" title="Delete Project" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
-                        <div class="btn-group btn-group-toggle project-sequential-group" id="project-sequential" data-toggle="buttons" style="margin-right: 20px">
-                            <label class="btn project-sequential active" title="Parallel Action Project" id="project-sequential-no">
-                                <input type="radio" name="task-sequential" checked> <i class="fas fa-ellipsis-h" style="transform:translateY(-5.5px)"></i>
-                            </label>
-                            <label class="btn project-sequential" title="Sequential Action Project" id="project-sequential-yes">
-                                <input type="radio" name="task-sequential"> <i class="fas fa-ellipsis-v" style="transform:translateY(-5.5px)"></i>
-                            </label>
-                        </div>
-                    </div>
-                    <div style="padding: 0 0 7px 0">
-                        <hr class="perspective-divider"/>
-                    </div>
-                    <div id="project-content"> </div>
-                    <div id="new-task" class="newbutton">
-                        <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a task</div>
-                    </div>
-                    <div id="new-project" class="newbutton" style="transform: translateY(-8px)">
-                        <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
-                    </div>
-                    <div id="blankimage-project" class="blankimage-content">
-                        <img class="blankimage"></img>
-                        <div class="blankimage-alt">Wow... Such empty. <b style="font-weight: 200">Add a task?</b></div>
                     </div>
                 </div>
             </div>
@@ -325,11 +385,12 @@
                 <input class="auth-upf" id="email" type="email" autocomplete="off" value="" placeholder="Email">
                 <input class="auth-upf" id="password" type="password" autocomplete="off" value="" placeholder="Password">
                 <br />
-                <t id="need-verify">Check your inbox. A lovely email is awaiting you.</t>
+                <t id="need-verify">Verify your email, then proceed!</t>
                 <t id="recover-password">Recover Password</t>
                 <div id="auth-actiongroup">
                     <div id="newuser">Make an account</div>
-                    <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Let's Do This!</div>
+                    <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i><span id="login-text">Let's Do This!</span></div>
+                    <div id="convert-src">Use w/o Sync</div>
                 </div>
             </div>
         </div>

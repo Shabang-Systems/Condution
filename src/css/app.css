@@ -596,7 +596,7 @@
                 @media (max-width: 575px) { 
                     .task-name {
                         font-size: 12pt;
-                        width: 67%;
+                        width:80%;
                     }
                 }
 
@@ -2101,6 +2101,51 @@
                     background-color: var(--background-feature);
                 }
 
+    /* Convert Modal */
+
+        /* IDs */
+
+            #convert-back {
+                display: inline-block;
+                position: absolute;
+                margin-right: 10px;
+            }
+
+                @media (max-width: 575px) { 
+                    #convert-back {
+                        transform: translate(82vw, 0px);
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    #convert-back {
+                        transform: translate(420px, -8px);
+                    }
+                }
+            
+            #convert-action {
+                border-radius: 3px;
+                background: #2b3749;
+                color: white; 
+                width: 65px; 
+                height: 25px;
+                display: flex;
+                justify-content: center; 
+                align-items: center;
+                float: right; 
+                margin-right: 15px;
+                margin-top: 10px;
+                margin-bottom: 5px;
+                font-size: 14px;
+                transform: translateY(-10px);
+                transition: background 0.3s;
+            }
+
+                #convert-action:hover {
+                    background: #434d5f;
+                }
+
+
 /* == Auth Interface == */
 
     /* Classes */
@@ -2175,7 +2220,7 @@
             @media (max-width: 575px) { 
                 .auth-upf {
                     font-size: 15px;
-                    height: 35px;
+                    height: 30px;
                     width: 95%;
                     margin-bottom: 7px;
                 }
@@ -2219,6 +2264,80 @@
 
 
     /* IDs */
+
+        #convert-src {
+            display: inline-block;
+            color: var(--decorative-light);
+            font-weight: 500;
+            transition-property: all;
+            transition-duration: 200ms;
+            transition-timing-function: ease-in-out;
+            border: 1px solid transparent;
+            padding: 3px;
+            padding-left: 6px;
+            padding-right: 6px;
+            border-radius: 3px;
+            transform: translateX(-6px);
+            border: 0.5px solid transparent;
+        }
+
+
+            
+            @media (max-width: 575px) { 
+                #convert-src {
+                    font-size: 4vw;
+                    margin-top: 1px;
+                }
+
+                #convert-src:hover {
+                    border: 0.5px solid transparent;
+                }
+            }
+
+            @media (min-width: 576px) { 
+                #convert-src {
+                    font-size: 13px;
+                    margin-top: 5px;
+                }
+
+                #convert-src:hover {
+                    border: 0.5px solid transparent;
+                }
+            }
+
+            @media (min-width: 768px) { 
+                #convert-src {
+                    font-size: 13px;
+                    margin-top: 10px;
+                }
+
+                #convert-src:hover {
+                    border: 0.5px solid var(--decorative-light);
+                }
+            }
+
+            @media (min-width: 992px) { 
+                #convert-src {
+                    font-size: 13px;
+                    margin-top: 15px;
+                }
+
+                #convert-src:hover {
+                    border: 0.5px solid var(--decorative-light);
+                }
+            }
+
+            @media (min-width: 1200px) { 
+                #convert-src {
+                    font-size: 13px;
+                    margin-top: 15px;
+                }
+
+                #convert-src:hover {
+                    border: 0.5px solid var(--decorative-light);
+                }
+            }
+
 
         #newuser {
             display: inline-block;
@@ -2453,7 +2572,7 @@
             background: var(--auth-background);
             background-size: cover;
             display: none;
-            z-index: 8880888080;
+            z-index: 808080;
         }
 
             
@@ -2633,7 +2752,6 @@
 
             }
 
-
 /* == Misc. Buttons and Actions == */
 
     /* Quickadd */
@@ -2643,7 +2761,7 @@
             #quickadd {
                 background-color: var(--quickadd);
                 margin: 20px;
-                width: 250px;
+                width: 230px;
                 height: 30px;
                 z-index: 10;
                 position: fixed;
@@ -2702,7 +2820,24 @@
                     }
                 }
 
+    /* UserConversion */
 
+        /* IDs */
+
+            #convert {
+                width: 40px;
+                height: 40px;
+                bottom: 15px;
+                left: 15px;
+                border-radius: 50%;
+                position: absolute;
+                background: var(--decorative-light);
+                z-index: 2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 2px 2px 4px var(--background-feature);
+            }
   
     /* Misc. Misc. Items */
 
@@ -2761,4 +2896,27 @@
                 padding: 4px 0 4px 10px;
                 transform: translateX(-1px);
             }
+
+/* == Welcome == */
+
+    /* IDs */
+        
+        #welcome-terms {
+            transition: color font-weight 0.3s;
+            border-bottom: solid 0.5px var(--task-checkmark-ds);
+        }
+
+            #welcome-terms:hover {
+                color: var(--content-normal-accent);
+            }
+ 
+        #welcome-policy {
+            transition: color font-weight 0.3s;
+            border-bottom: solid 0.5px var(--task-checkmark-od);
+        }
+
+            #welcome-policy:hover {
+                color: var(--content-normal-accent);
+            }
+
 
