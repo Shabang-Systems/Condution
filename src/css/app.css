@@ -2838,6 +2838,26 @@
                 align-items: center;
                 box-shadow: 2px 2px 4px var(--background-feature);
             }
+
+                .convert_bottom {
+
+                }
+
+                @media (max-width: 575px) { 
+                    .convert_bottom {
+                        opacity: 0 !important;
+                        pointer-events: none !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .convert_bottom {
+                        opacity: 1 !important;
+                        pointer-events: auto !important;
+                    }
+                }
+
+
   
     /* Misc. Misc. Items */
 

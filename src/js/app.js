@@ -1034,6 +1034,7 @@ let ui = function() {
 
         let hideActiveTask = async function() {
             $("#quickadd").removeClass("qa_bottom");
+            $("#convert").removeClass("convert_bottom");
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
@@ -2202,6 +2203,7 @@ let ui = function() {
             activeTask = task;
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
+            $("#convert").addClass("convert_bottom");
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
@@ -2370,6 +2372,7 @@ let ui = function() {
         E.db.newTask(uid, ntObject).then(function(ntID) {
             E.db.associateTask(uid, ntID, pid);
             $("#quickadd").addClass("qa_bottom");
+            $("#convert").addClass("convert_bottom");
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
