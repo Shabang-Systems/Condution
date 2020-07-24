@@ -1962,39 +1962,119 @@ let ui = function() {
             });
         }
 
+        let completedLoaders;
+        $('#completed-fm').click(function() {
+            $('#completed-fm').fadeOut(function() {
+                $("#completed-spinner").fadeIn(async function() {
+                    let tally = 0;
+                    let kill = 10;
+                    let stop = false;
+                    while (!stop && completedLoaders.length !== 0) {
+                        let pld = completedLoaders.shift();
+                        tally += 1;
+                        if (pld.task === "header") {
+                            if (tally <= (kill-2))
+                                $("#"+pld.payload).show();
+                            else {
+                                completedLoaders.unshift(pld);
+                                stop = true;
+                            }
+                        } else
+                            await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
+                        if (tally >= kill)
+                            stop = true;
+                        if (completedLoaders.length === 0)
+                            $("#completed-loading").hide();
+
+                    }
+                    $('#completed-fm').show();
+                    $("#completed-spinner").hide();
+                });
+            });
+        });
+
         // completed view loader
         let completed = async function() {
+            completedLoaders = [];
             // get completed tasks
             let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
+
 
             // Show or unshow blankimage
             $("#blankimage-completed").css("opacity", "0.0");
             $("#blankimage-completed").css("display", (tasksToday+tasksYesterday+tasksWeek+tasksMonth+evenBefore).length == 0 ? "flex" : "none");
             $("#blankimage-completed").stop().animate({"opacity": "0.2"});
 
+            let cld = [];
+
+            if (tasksToday.length > 0) {
+                cld.push({task: "header", payload: "comp-lb-td"});
+            }
+
             // Show completed tasks
             for (let taskId of tasksToday) {
-                await taskManager.generateTaskInterface("completed-today", taskId);
+                cld.push({task: "task", payload: ["completed-today", taskId]});
             }
+
+            if (tasksYesterday.length > 0)
+                cld.push({task: "header", payload: "comp-lb-yd"});
+
             for (let taskId of tasksYesterday) {
-                await taskManager.generateTaskInterface("completed-yesterday", taskId);
+                cld.push({task: "task", payload: ["completed-yesterday", taskId]});
             }
+
+            if (tasksWeek.length > 0)
+                cld.push({task: "header", payload: "comp-lb-pw"});
+
             for (let taskId of tasksWeek) {
-                await taskManager.generateTaskInterface("completed-thisweek", taskId);
+                cld.push({task: "task", payload: ["completed-thisweek", taskId]});
             }
+
+            if (tasksWeek.length > 0)
+                cld.push({task: "header", payload: "comp-lb-pm"});
+
             for (let taskId of tasksMonth) {
-                await taskManager.generateTaskInterface("completed-thismonth", taskId);
+                cld.push({task: "task", payload: ["completed-thismonth", taskId]});
             }
+
+            if (tasksWeek.length > 0)
+                cld.push({task: "header", payload: "comp-lb-el"});
+
             for (let taskId of evenBefore) {
-                await taskManager.generateTaskInterface("completed-earlier", taskId);
+                cld.push({task: "task", payload: ["completed-earlier", taskId]});
+            }
+
+            completedLoaders = cld;
+
+            let tally = 0;
+            let kill = 7;
+            let stop = false;
+            if (completedLoaders.length !== 0)
+                $("#completed-loading").show();
+            while (!stop && completedLoaders.length !== 0) {
+                let pld = completedLoaders.shift();
+                tally += 1;
+                if (pld.task === "header") {
+                    if (tally <= (kill-2))
+                        $("#"+pld.payload).show();
+                    else {
+                        completedLoaders.unshift(pld);
+                        stop = true;
+                    }
+                } else
+                    await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
+                if (tally >= kill)
+                    stop = true;
+                if (completedLoaders.length === 0)
+                    $("#completed-loading").hide();
             }
 
             // Hide unneeded labels
-            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();
-            if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
-            if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
-            if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
-            if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();
+/*            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();*/
+            //if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
+            //if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
+            //if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
+            /*if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();*/
         }
 
 
@@ -2089,6 +2169,11 @@ let ui = function() {
         $("#completed-thisweek").empty();
         $("#completed-thismonth").empty();
         $("#completed-earlier").empty();
+        $("#comp-lb-td").hide();
+        $("#comp-lb-yd").hide();
+        $("#comp-lb-pw").hide();
+        $("#comp-lb-pm").hide();
+        $("#comp-lb-el").hide();
         $("#project-content").empty();
         $("#perspective-content").empty();
         

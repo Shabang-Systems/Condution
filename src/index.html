@@ -300,20 +300,27 @@
                             <hr class="perspective-divider"/>
                         </div>
                         <div id="completed-content"> 
-                            <div class="perspective-subhead" id="comp-lb-td"> Today </div>
+                            <div class="perspective-subhead" id="comp-lb-td" style="display: none"> Today </div>
                             <div id="completed-today">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-yd"> Yesterday </div>
+                            <div class="perspective-subhead" id="comp-lb-yd" style="display: none"> Yesterday </div>
                             <div id="completed-yesterday">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-pw"> Past Week </div>
+                            <div class="perspective-subhead" id="comp-lb-pw" style="display: none"> Past Week </div>
                             <div id="completed-thisweek">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-pm"> Past Month </div>
+                            <div class="perspective-subhead" id="comp-lb-pm" style="display: none"> Past Month </div>
                             <div id="completed-thismonth">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-el"> Earlier/Untracked </div>
+                            <div class="perspective-subhead" id="comp-lb-el" style="display: none"> Earlier/Untracked </div>
                             <div id="completed-earlier">
+                            </div>
+                            <div id="completed-loading" style="margin-bottom: 10px; margin-top: 10px; display: none">
+                                <div id="completed-fm" style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px">Fetch more...</div>
+                                <div id="completed-spinner" style="transform: translateX(-3px); display:none">
+                                    <div class="lds-ring" style="transform: translate(6px, 6.5px);"><div></div><div></div><div></div><div></div></div>
+                                    <span style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px">Fetching 'em tasks!</span>
+                                </div>
                             </div>
                         </div>
                         <div id="blankimage-completed" class="blankimage-content">
