@@ -213,7 +213,7 @@ const interfaceUtil = function() {
                         <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
                         <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label>
                     </div> 
-                    <span class="task-close-button" id="task-close-button-${taskId}" style="float:right"><div class="project-action"><i class="far fa-times-circle"></i></div></span>
+                    <span class="task-close-button" id="task-close-button-${taskId}" style="float:right"><div class="project-action" style="padding-top: 4px"><i class="far fa-times-circle"></i></div></span>
                 </div> 
             <div class="task-tools-sub task-tools-date">
                 <div class="label"><i class="far fa-play-circle"></i></div>
@@ -1194,6 +1194,7 @@ let ui = function() {
                 $("#task-close-button-" + taskId).show();
             else
                 $("#task-close-button-" + taskId).hide();
+
             // Set the dates, aaaand set the date change trigger
             $("#task-defer-" + taskId).datetimepicker({
                 timeInput: true,
@@ -1383,7 +1384,7 @@ let ui = function() {
             //})
             //
             $('#task-project-'+taskId).select2({
-                'width': '88%',
+                'width': '80%',
                 searchInputPlaceholder: "Search Projects...",
                 placeholder: 'Inbox',
                 allowClear: true

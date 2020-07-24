@@ -359,6 +359,7 @@
             .sandwich {
                 position: inline-block;
                 color: var(--content-normal-alt);
+                transform: translateY(1.5px);
             }
 
                 @media (max-width: 575px) { 
@@ -1028,7 +1029,7 @@
 
                     @media (max-width: 575px) { 
                         .bootstrap-tagsinput {
-                            width: 86%;
+                            width: 80%;
                         }
                     }
 
