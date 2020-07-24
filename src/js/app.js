@@ -19,8 +19,6 @@ var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
 var { Haptics, Network, Browser, Storage, Device } = Plugins;
 
-console.log(Device.getInfo());
-
 const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
 }
@@ -215,6 +213,7 @@ const interfaceUtil = function() {
                         <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
                         <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label>
                     </div> 
+                    <span class="task-close-button" id="task-close-button-${taskId}" style="float:right"><div class="project-action"><i class="far fa-times-circle"></i></div></span>
                 </div> 
             <div class="task-tools-sub task-tools-date">
                 <div class="label"><i class="far fa-play-circle"></i></div>
@@ -1189,6 +1188,12 @@ let ui = function() {
             $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor, disabletextbox));
             // -------------------------------------------------------------------------------
             // Part 3: customize the task!
+            // Show/hide the close button
+
+            if (await isMobile())
+                $("#task-close-button-" + taskId).show();
+            else
+                $("#task-close-button-" + taskId).hide();
             // Set the dates, aaaand set the date change trigger
             $("#task-defer-" + taskId).datetimepicker({
                 timeInput: true,
@@ -1378,7 +1383,7 @@ let ui = function() {
             //})
             //
             $('#task-project-'+taskId).select2({
-                'width': '80%',
+                'width': '88%',
                 searchInputPlaceholder: "Search Projects...",
                 placeholder: 'Inbox',
                 allowClear: true
@@ -2304,7 +2309,7 @@ let ui = function() {
             $("#convert").addClass("convert_bottom");
             if (mb) {
                 $('html').animate({ 
-                    scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-40
+                    scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
                 }, 'slow');
             }
             $("#task-edit-" + activeTask).stop().slideDown(200);
@@ -2329,6 +2334,11 @@ let ui = function() {
             }
             taskManager.hideActiveTask();
         }
+    });
+
+    $(document).on("click", ".task-close-button", function(e) {
+        taskManager.hideActiveTask();
+        document.activeElement.blur();
     });
 
     $(document).on("click", "#project-back", function() {
