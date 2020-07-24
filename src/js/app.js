@@ -17,7 +17,7 @@ require('bootstrap-tagsinput');
 require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics, Network, Browser } = Plugins;
+var { Haptics, Network, Browser, Storage } = Plugins;
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -256,9 +256,114 @@ async function loadApp(user) {
     $("#content-wrapper").fadeIn();
 }
 
+let presentWelcome = function() {
+    $("#welcome-terms").click(function() {
+        Browser.open({ url: 'https://condution.shabang.cf/terms.html' });
+    });
+    $("#welcome-policy").click(function() {
+        Browser.open({ url: 'https://condution.shabang.cf/privacy.html' });
+    });
+
+    $('#onboarding-check-0').change(function(e) {
+        if (this.checked) {
+            $("#onboarding-name-0").css("color", interfaceUtil.gtc("--task-checkbox"));
+            $("#onboarding-name-0").css("text-decoration", "line-through");
+            $("#onboarding-pseudocheck-0").css("opacity", "0.6");
+            $("#onboarding-0").animate({"padding": "5px 0 5px 0 !important"}, 200);
+            Haptics.notification({type: HapticsNotificationType.SUCCESS});
+            $("#onboarding-0").slideUp(300);
+
+            setTimeout(function() {
+                $("#onboarding-msg-0").fadeIn(1000, function() {
+                    setTimeout(function() {
+                        $("#onboarding-msg-0").fadeOut(function() {
+                            $("#onboarding-msg-1").fadeIn();
+                            $("#onboarding-1").fadeIn();
+
+
+                        });
+                    }, 1000);
+                });
+            }, 1000);
+        }
+
+    });
+    $('#onboarding-check-1').change(function(e) {
+        if (this.checked) {
+            $("#onboarding-name-1").css("color", interfaceUtil.gtc("--task-checkbox"));
+            $("#onboarding-name-1").css("text-decoration", "line-through");
+            $("#onboarding-pseudocheck-1").css("opacity", "0.6");
+            $("#onboarding-1").animate({"padding": "5px 0 5px 0 !important"}, 200);
+            Haptics.notification({type: HapticsNotificationType.SUCCESS});
+            $("#onboarding-1").slideUp(300, function() {
+                setTimeout(function() {
+                    $("#onboarding-msg-1").fadeOut(function() {
+                        $("#onboarding-msg-2").fadeIn(1000, function() {
+                            setTimeout(function() {
+                                $("#onboarding-2").fadeIn();
+                                $("#onboarding-3").fadeIn();
+                                $("#onboarding-msg-3").fadeIn();
+                            },500);
+                        });
+                    });
+
+                }, 300);
+            });
+           }
+        });
+    $('#onboarding-check-3').change(function(e) {
+            if (this.checked) {
+                $("#onboarding-name-3").css("color", interfaceUtil.gtc("--task-checkbox"));
+                $("#onboarding-name-3").css("text-decoration", "line-through");
+                $("#onboarding-pseudocheck-3").css("opacity", "0.6");
+                $("#onboarding-3").animate({"padding": "5px 0 5px 0 !important"}, 200);
+                Haptics.notification({type: HapticsNotificationType.SUCCESS});
+                $("#onboarding-3").slideUp(300);
+                authUI.anonomGeneration();
+                setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
+                Storage.set({
+                    key: "condution_onboarding",
+                    value: 1
+                });
+        }            
+      });
+      $('#onboarding-check-2').change(function(e) {
+            if (this.checked) {
+                $("#onboarding-name-2").css("color", interfaceUtil.gtc("--task-checkbox"));
+                $("#onboarding-name-2").css("text-decoration", "line-through");
+                $("#onboarding-pseudocheck-2").css("opacity", "0.6");
+                $("#onboarding-2").animate({"padding": "5px 0 5px 0 !important"}, 200);
+                Haptics.notification({type: HapticsNotificationType.SUCCESS});
+                $("#onboarding-2").slideUp(300, function() {
+                    $("#onboarding").fadeOut(1000);
+                    Storage.set({
+                        key: "condution_onboarding",
+                        value: 1
+                    });
+            });
+        }        
+    });
+    return ()=>{$("#onboarding").css("display", "flex")}
+}();
+
 let mode = "login";
 let isNASuccess = false;
+let isAnomAuthInProgress = false;
+let isConversionInProgress = false;
 let authUI = function() {
+    let anonomGeneration = async function() {
+        isAnomAuthInProgress = true;
+        firebase.auth().signInAnonymously().then(async function() {
+            $("#auth-content-wrapper").fadeOut();
+            $("#setting-up").css({"display": "flex", "opacity":"0"});
+            $("#setting-up").animate({"opacity": "1"});
+            await E.db.onBoard(firebase.auth().currentUser.uid, moment.tz.guess(), "there");
+            $("#setting-up").fadeOut();
+            await loadApp(firebase.auth().currentUser);
+            isAnomAuthInProgress = false;
+        });
+    }
+
     let auth = async function() {
         if (isNASuccess) {
             var user = firebase.auth().currentUser;
@@ -269,6 +374,7 @@ let authUI = function() {
             $("#setting-up").animate({"opacity": "1"});
             await E.db.onBoard(user.uid, moment.tz.guess(), $("#name").val());
             $("#setting-up").fadeOut();
+            $('#login-text').html("Let's Do This!")
             await loadApp(user);
             isNASuccess = false;
         } else {
@@ -290,7 +396,7 @@ let authUI = function() {
             mode = "login";
             $(".auth-upf").removeClass("wrong");
             $("#password").show();
-            $("#newuser").html("Make an account.");
+            $("#newuser").html("Make an account");
             $("#newuser").show();
             $("#recover-password").html("Recover Password");
             $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
@@ -311,7 +417,8 @@ let authUI = function() {
         }).then(function() {
             if (!problem) {
                 firebase.auth().currentUser.sendEmailVerification();
-                $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
+                $('#need-verify').html("Verify your email, then proceed!");
+                $('#login-text').html("Proceed!")
                 isNASuccess = true;
                 mode="login";
             }
@@ -367,7 +474,7 @@ let authUI = function() {
                 break;
             case "recover":
                 $("#password").show();
-                $("#newuser").html("Make an account.");
+                $("#newuser").html("Make an account");
                 $("#newuser").show();
                 $("#recover-password").html("Recover Password");
                 $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
@@ -379,13 +486,13 @@ let authUI = function() {
         switch (mode) {
             case "login":
                 $("#name-tray").slideDown(300);
-                $(this).html("Sign in.");
+                $(this).html("Sign in");
                 mode = "newuser";
                 $("#greeting-auth-normal").html(`Welcome aboard! By signing up, you agree to our <a href="https://condution.shabang.cf/privacy.html">Privacy Policy</a> and <a href="https://condution.shabang.cf/terms.html">Terms</a>.`);
                 break;
             case "newuser":
                 $("#name-tray").slideUp(300);
-                $(this).html("Make an account.");
+                $(this).html("Make an account");
                 $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
                 mode = "login";
                 break;
@@ -394,7 +501,7 @@ let authUI = function() {
 
     const greetings = ["Hey!", "G'day!", "Howdy!", "Yo!"];
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
-    return {auth, nu, rec}
+    return {auth, nu, rec, anonomGeneration}
 }();
 
 let ui = function() {
@@ -560,6 +667,7 @@ let ui = function() {
 
         const edit = function(pspID) {
             $("#repeat-unit").hide();
+            $("#convert-unit").hide();
             currentP = pspID;
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#perspective-unit").fadeIn(200);
@@ -621,6 +729,70 @@ let ui = function() {
 
         return edit;
     }();
+
+
+    const showConvert = function() {
+        $("#convert-back").on("click", function(e) {
+            $("#convert-unit").fadeOut(200);
+            $("#overlay").fadeOut(200, () => reloadPage(true));
+            $("#"+activeMenu).addClass("menuitem-selected");
+        });
+
+        $("#convert-action").on("click", function(e) {
+            var credential = firebase.auth.EmailAuthProvider.credential($("#email-convert").val(), $("#password-convert").val());
+            $(this).css("background", "#133644");
+            $(this).html("Loading");
+            let btn = this;
+            firebase.auth().currentUser.linkWithCredential(credential).then(function(usercred) {
+                $(btn).html("Sync!");
+                $(btn).css("background", "#2b3749");
+                var user = usercred.user;
+                user.updateProfile({displayName: $("#name-convert").val()});
+                firebase.auth().currentUser.sendEmailVerification();
+                $("#convert-msg").html("Check your inbox. A lovely email's waiting ;)");
+                $("#convert-callout").html("Welcome Aboard!");
+                $(".auth-upf-conv").hide();
+                $("#convert-action").hide();
+                $("#convert").hide();
+                $("#logout").show();
+                user = firebase.auth().currentUser;
+                displayName = firebase.auth().currentUser.displayName;
+                uid = firebase.auth().uid;
+                setUser(firebase.auth().currentUser);
+            }).catch(function(error) {
+                console.log("Error upgrading anonymous account", error);
+                $(btn).html("Sync!");
+                $("#convert-msg").html(error.message);
+            }); 
+        });
+
+        $(document).on("click", "#overlay", function(e) {
+            if (e.target === this) {
+                $(".repeat-subunit").slideUp();
+                $("#repeat-toggle-group").slideDown();
+                $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
+                $("#repeat-unit").fadeOut(200);
+                $("#overlay").fadeOut(200, () => reloadPage(true));
+                $("#"+activeMenu).addClass("menuitem-selected");
+                $("#repeat-daterow").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
+                });
+                $("#repeat-monthgrid").children().each(function(e) {
+                    $(this).css({"background-color": interfaceUtil.gtc("--background")});
+                });
+            }
+        });
+
+        let currentP;
+        const convert = function(pspID) {
+            $("#repeat-unit").hide();
+            $("#perspective-unit").hide();
+            $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
+            $("#convert-unit").fadeIn(200);
+        }
+        return convert;
+    }();
+
 
     // repeat view
     const showRepeat = function() {
@@ -779,6 +951,7 @@ let ui = function() {
             $("#repeat-toggle-group").show();
             $("#repeat-type").fadeOut(() => $("#repeat-type").html(""));
             $("#perspective-unit").hide();
+            $("#convert-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#repeat-unit").fadeIn(200);
             let ti = await E.db.getTaskInformation(uid, taskId);
@@ -861,6 +1034,7 @@ let ui = function() {
 
         let hideActiveTask = async function() {
             $("#quickadd").removeClass("qa_bottom");
+            $("#convert").removeClass("convert_bottom");
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
@@ -933,6 +1107,7 @@ let ui = function() {
             let desc = taskObj.desc;
             let timezone = taskObj.timezone;
             let repeat = taskObj.repeat;
+            let isComplete = taskObj.isComplete;
             let defer;
             let due;
             if (taskObj.defer) {
@@ -1244,7 +1419,7 @@ let ui = function() {
                 }
             }
             // Set avaliable Style
-            if (!avalibility[taskId] && !sequentialOverride) {
+            if (!avalibility[taskId] && !sequentialOverride && !isComplete) {
                 $('#task-name-' + taskId).css("opacity", "0.3");
             }
             // Set flagged style
@@ -1259,6 +1434,8 @@ let ui = function() {
             } else {
                 $("#task-floating-no-"+taskId).button("toggle")
             }
+            if (isComplete)
+                $("#task-check-" + taskId).click();
             // -------------------------------------------------------------------------------
             // Part 4: task action behaviors!
             // Task complete
@@ -1284,6 +1461,7 @@ let ui = function() {
                             });
                         }
                         //console.error(err);
+                        E.db.modifyTask(uid, taskId, {completeDate: new Date()});
                     });
                     if (repeat.rule !== "none" && due) {
                         let rRule = repeat.rule;
@@ -1412,6 +1590,16 @@ let ui = function() {
 
                         }
                     }
+                    reloadPage(true);
+                } else {
+                    taskManager.hideActiveTask();
+                    $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
+                    $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
+                    Haptics.notification({type: HapticsNotificationType.SUCCESS});
+                    $('#task-' + taskId).slideUp(300);
+                    E.db.completeTask(uid, taskId).then(function(e) {
+                    });
+                    E.db.modifyTask(uid, taskId, {isComplete: false});
                     reloadPage(true);
                 }
             });
@@ -1774,6 +1962,43 @@ let ui = function() {
             });
         }
 
+        // completed view loader
+        let completed = async function() {
+            // get completed tasks
+            let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
+
+            // Show or unshow blankimage
+            $("#blankimage-completed").css("opacity", "0.0");
+            $("#blankimage-completed").css("display", (tasksToday+tasksYesterday+tasksWeek+tasksMonth+evenBefore).length == 0 ? "flex" : "none");
+            $("#blankimage-completed").stop().animate({"opacity": "0.2"});
+
+            // Show completed tasks
+            for (let taskId of tasksToday) {
+                await taskManager.generateTaskInterface("completed-today", taskId);
+            }
+            for (let taskId of tasksYesterday) {
+                await taskManager.generateTaskInterface("completed-yesterday", taskId);
+            }
+            for (let taskId of tasksWeek) {
+                await taskManager.generateTaskInterface("completed-thisweek", taskId);
+            }
+            for (let taskId of tasksMonth) {
+                await taskManager.generateTaskInterface("completed-thismonth", taskId);
+            }
+            for (let taskId of evenBefore) {
+                await taskManager.generateTaskInterface("completed-earlier", taskId);
+            }
+
+            // Hide unneeded labels
+            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();
+            if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
+            if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
+            if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
+            if (evenBefore.length === 0) $("#comp-lb-el").hide(); else $("#comp-lb-el").show();
+        }
+
+
+
         // perspective view loader
         let perspective = async function(pid) {
             pageIndex.pageContentID = pid;
@@ -1837,7 +2062,7 @@ let ui = function() {
             });
         };
 
-        return {upcoming: upcoming, project: project, perspective: perspective};
+        return {upcoming, project, perspective, completed};
     }();
 
     /**
@@ -1859,6 +2084,11 @@ let ui = function() {
         // clear all contentboxes
         $("#inbox").empty();
         $("#due-soon").empty();
+        $("#completed-today").empty();
+        $("#completed-yesterday").empty();
+        $("#completed-thisweek").empty();
+        $("#completed-thismonth").empty();
+        $("#completed-earlier").empty();
         $("#project-content").empty();
         $("#perspective-content").empty();
         
@@ -1869,9 +2099,11 @@ let ui = function() {
         pageIndex.pageLocks = [];
         // load the dang view
         switch(viewName) {
-
             case 'upcoming-page':
                 viewLoader.upcoming();
+                break;
+            case 'completed-page':
+                viewLoader.completed();
                 break;
             case 'perspective-page':
                 viewLoader.perspective(itemID);
@@ -1938,10 +2170,19 @@ let ui = function() {
         loadView("upcoming-page");
     });
 
-    $(document).on('click', '.today', function(e) {
+    $(document).on('click', '#today', function(e) {
         interfaceUtil.newPHI();
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         loadView("upcoming-page");
+        activeMenu = $(this).attr('id');
+        $("#"+activeMenu).addClass("today-highlighted");
+        interfaceUtil.menu.close();
+    });
+
+    $(document).on('click', '#completed', function(e) {
+        interfaceUtil.newPHI();
+        $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
+        loadView("completed-page");
         activeMenu = $(this).attr('id');
         $("#"+activeMenu).addClass("today-highlighted");
         interfaceUtil.menu.close();
@@ -1962,6 +2203,7 @@ let ui = function() {
             activeTask = task;
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
+            $("#convert").addClass("convert_bottom");
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
@@ -2130,6 +2372,7 @@ let ui = function() {
         E.db.newTask(uid, ntObject).then(function(ntID) {
             E.db.associateTask(uid, ntID, pid);
             $("#quickadd").addClass("qa_bottom");
+            $("#convert").addClass("convert_bottom");
             taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
                 let task = ntID;
                 activeTask = task;
@@ -2195,7 +2438,7 @@ let ui = function() {
 
     $("#quickadd").blur(function(e) {
         $(this).val("");
-        $(this).stop().animate({"width": "250px"}, 500);
+        $(this).stop().animate({"width": "230px"}, 500);
         //console.error(e);
     });
 
@@ -2335,7 +2578,19 @@ let ui = function() {
         if(!$target.closest('#left-menu').length && !$target.closest('.sandwich').length) {
             interfaceUtil.menu.close();
         }        
-});
+    });
+
+
+    $(document).on("click", "#convert", function() {
+        showConvert();
+    });
+
+    $(document).on("click", "#convert-src", function() {
+        $("#auth-content-wrapper").fadeOut(300);
+
+        authUI.anonomGeneration();
+    });
+
 
     interfaceUtil.newPHI();
 
@@ -2365,6 +2620,10 @@ let ui = function() {
         uid = usr.uid;
         displayName = usr.displayName;
         user = usr;
+        if (usr.isAnonymous === true) {
+            $("#convert").show();
+            $("#logout").hide();
+        }
     };
 
     return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
@@ -2375,18 +2634,18 @@ let ui = function() {
 
 firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
-        if (user.emailVerified) {
+        if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
             await loadApp(user);
             setInterval(() => {ui.update()}, 60 * 1000);
-            setInterval(()=> {ipcRenderer.send("updatecheck")}, 15*60*1000);
+            setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
         } else {
             E.flush();
             // Generate auth UI
-            if (!isNASuccess) {
+            if (!isNASuccess && !isAnomAuthInProgress) {
                 // if not currently signing up
                 $("#content-wrapper").fadeOut();
                 $("#loading").fadeOut();
-                $('#need-verify').html("Account unverified. Please check your email.");
+                $('#need-verify').html("Account unverified. Please check your email + sign in again.");
                 firebase.auth().currentUser.sendEmailVerification();
                 $('#recover-password').fadeOut();
                 $('#need-verify').fadeIn();
@@ -2407,6 +2666,14 @@ firebase.auth().onAuthStateChanged(async function(user) {
         $(".auth-upf").val("");
     }
 });
+
+(async function potentiallyOnboard(test) {
+    const ret = await Storage.get({ key: 'condution_onboarding' });
+    const val = JSON.parse(ret.value);
+    if (val !== 1) {
+        presentWelcome();
+    }
+})();
 
 console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
 console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
