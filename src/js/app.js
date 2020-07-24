@@ -1963,29 +1963,35 @@ let ui = function() {
         }
 
         let completedLoaders;
-        $(window).bind('scroll', async function() {
-            if($(window).scrollTop() >= $('#completed-content').offset().top + $('#completed-content').outerHeight() - window.innerHeight) {
-                let tally = 0;
-                let kill = 10;
-                let stop = false;
-                while (!stop && completedLoaders.length !== 0) {
-                    let pld = completedLoaders.shift();
-                    tally += 1;
-                    if (pld.task === "header") {
-                        if (tally <= (kill-2))
-                            $("#"+pld.payload).show();
-                        else
+        $('#completed-fm').click(function() {
+            $('#completed-fm').fadeOut(function() {
+                $("#completed-spinner").fadeIn(async function() {
+                    let tally = 0;
+                    let kill = 10;
+                    let stop = false;
+                    while (!stop && completedLoaders.length !== 0) {
+                        let pld = completedLoaders.shift();
+                        tally += 1;
+                        if (pld.task === "header") {
+                            if (tally <= (kill-2))
+                                $("#"+pld.payload).show();
+                            else {
+                                completedLoaders.unshift(pld);
+                                stop = true;
+                            }
+                        } else
+                            await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
+                        if (tally >= kill)
                             stop = true;
-                    } else
-                        await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
-                    if (tally >= kill)
-                        stop = true;
-                    if (completedLoaders.length === 0)
-                        $("#completed-loading").hide();
+                        if (completedLoaders.length === 0)
+                            $("#completed-loading").hide();
 
-                }
-            }
-    });
+                    }
+                    $('#completed-fm').show();
+                    $("#completed-spinner").hide();
+                });
+            });
+        });
 
         // completed view loader
         let completed = async function() {
@@ -1994,58 +2000,67 @@ let ui = function() {
             // get completed tasks
             let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
 
+
             // Show or unshow blankimage
             $("#blankimage-completed").css("opacity", "0.0");
             $("#blankimage-completed").css("display", (tasksToday+tasksYesterday+tasksWeek+tasksMonth+evenBefore).length == 0 ? "flex" : "none");
             $("#blankimage-completed").stop().animate({"opacity": "0.2"});
 
-            if (tasksToday.length > 0)
-                completedLoaders.push({task: "header", payload: "comp-lb-td"});
+            let cld = [];
+
+            if (tasksToday.length > 0) {
+                cld.push({task: "header", payload: "comp-lb-td"});
+            }
 
             // Show completed tasks
             for (let taskId of tasksToday) {
-                completedLoaders.push({task: "task", payload: ["completed-today", taskId]});
+                cld.push({task: "task", payload: ["completed-today", taskId]});
             }
 
             if (tasksYesterday.length > 0)
-                completedLoaders.push({task: "header", payload: "comp-lb-yd"});
+                cld.push({task: "header", payload: "comp-lb-yd"});
 
             for (let taskId of tasksYesterday) {
-                completedLoaders.push({task: "task", payload: ["completed-yesterday", taskId]});
+                cld.push({task: "task", payload: ["completed-yesterday", taskId]});
             }
 
             if (tasksWeek.length > 0)
-                completedLoaders.push({task: "header", payload: "comp-lb-pw"});
+                cld.push({task: "header", payload: "comp-lb-pw"});
 
             for (let taskId of tasksWeek) {
-                completedLoaders.push({task: "task", payload: ["completed-thisweek", taskId]});
+                cld.push({task: "task", payload: ["completed-thisweek", taskId]});
             }
 
             if (tasksWeek.length > 0)
-                completedLoaders.push({task: "header", payload: "comp-lb-pm"});
+                cld.push({task: "header", payload: "comp-lb-pm"});
 
             for (let taskId of tasksMonth) {
-                completedLoaders.push({task: "task", payload: ["completed-thismonth", taskId]});
+                cld.push({task: "task", payload: ["completed-thismonth", taskId]});
             }
 
             if (tasksWeek.length > 0)
-                completedLoaders.push({task: "header", payload: "comp-lb-el"});
+                cld.push({task: "header", payload: "comp-lb-el"});
 
             for (let taskId of evenBefore) {
-                completedLoaders.push({task: "task", payload: ["completed-earlier", taskId]});
+                cld.push({task: "task", payload: ["completed-earlier", taskId]});
             }
 
+            completedLoaders = cld;
+
             let tally = 0;
-            let kill = 10;
+            let kill = 7;
             let stop = false;
+            $("#completed-loading").show();
             while (!stop && completedLoaders.length !== 0) {
                 let pld = completedLoaders.shift();
                 tally += 1;
                 if (pld.task === "header") {
                     if (tally <= (kill-2))
                         $("#"+pld.payload).show();
-                    else
+                    else {
+                        completedLoaders.unshift(pld);
                         stop = true;
+                    }
                 } else
                     await taskManager.generateTaskInterface(pld.payload[0], pld.payload[1]);
                 if (tally >= kill)
@@ -2154,6 +2169,11 @@ let ui = function() {
         $("#completed-thisweek").empty();
         $("#completed-thismonth").empty();
         $("#completed-earlier").empty();
+        $("#comp-lb-td").hide();
+        $("#comp-lb-yd").hide();
+        $("#comp-lb-pw").hide();
+        $("#comp-lb-pm").hide();
+        $("#comp-lb-el").hide();
         $("#project-content").empty();
         $("#perspective-content").empty();
         

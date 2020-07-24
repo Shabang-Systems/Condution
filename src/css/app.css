@@ -192,8 +192,8 @@
         /* Classes */
             .page {
                 display: none;
-                height: 100%;
                 margin: 1px;
+                margin-bottom: 50px;
             }
 
             .blankimage {
