@@ -17,7 +17,13 @@ require('bootstrap-tagsinput');
 require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics, Network, Browser, Storage } = Plugins;
+var { Haptics, Network, Browser, Storage, Device } = Plugins;
+
+console.log(Device.getInfo());
+
+const isMobile = async function () {
+    return (await Device.getInfo()).platform !== "web";
+}
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -1041,6 +1047,8 @@ let ui = function() {
             $("#task-repeat-"+activeTask).css("display", "none");
             $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
+            if (await isMobile())
+                $(".page").removeClass("pa-bottom");
             await refresh();
             if (activeTaskDeInboxed) {
                 let hTask = activeTask;
@@ -2278,7 +2286,11 @@ let ui = function() {
             e.stopImmediatePropagation();
             return;
         }
-        if (activeTask) await taskManager.hideActiveTask();
+        let activeTaskLeverage = 0;
+        if (activeTask) {
+            activeTaskLeverage = $("#task-"+activeTask).height()+40;
+            await taskManager.hideActiveTask(); 
+        }
         if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
             e.stopImmediatePropagation();
             return;
@@ -2286,9 +2298,15 @@ let ui = function() {
             let taskInfo = $(this).attr("id").split("-");
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
+            let mb = await isMobile();
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
+            if (mb) {
+                $('html').animate({ 
+                    scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-40
+                }, 'slow');
+            }
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
@@ -2296,6 +2314,9 @@ let ui = function() {
             pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
+            if (mb) {
+                $(".page").addClass("pa-bottom");
+            }
         }
     });
 
