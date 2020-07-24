@@ -1995,7 +1995,6 @@ let ui = function() {
 
         // completed view loader
         let completed = async function() {
-            $("#completed-loading").show();
             completedLoaders = [];
             // get completed tasks
             let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
@@ -2050,7 +2049,8 @@ let ui = function() {
             let tally = 0;
             let kill = 7;
             let stop = false;
-            $("#completed-loading").show();
+            if (completedLoaders.length !== 0)
+                $("#completed-loading").show();
             while (!stop && completedLoaders.length !== 0) {
                 let pld = completedLoaders.shift();
                 tally += 1;
