@@ -1384,7 +1384,7 @@ let ui = function() {
             //})
             //
             $('#task-project-'+taskId).select2({
-                'width': '80%',
+                'width': $(window).width()<576 ? '88%' : '80%',
                 searchInputPlaceholder: "Search Projects...",
                 placeholder: 'Inbox',
                 allowClear: true
