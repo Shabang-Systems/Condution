@@ -97,9 +97,6 @@ lottie.loadAnimation({
 })
 $("#loading").hide().css("display", "flex").fadeIn();
 
-const { remote } = require('electron');
-const { Menu, MenuItem } = remote;
-
 // TODO: apply themes to colors
 // TODO: make a kickstarter
 // Chapter 0: The Header.
@@ -2325,8 +2322,10 @@ let ui = function() {
             pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
-            if (await isMobile()) 
+            if (await isMobile()) {
                 $(".page").addClass("pa-bottom");
+                $("#task-name-" + task).blur();
+            }
             /*}*/
         }
     });
