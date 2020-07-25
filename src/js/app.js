@@ -21,7 +21,7 @@ var { Haptics, Network, Browser, Storage, Device } = Plugins;
 
 const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
-}
+};
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -40,7 +40,7 @@ let handleInternet = function(hasInternet) {
         $("#missing-internet").hide();
     else
         $("#missing-internet").css("display", "flex");
-}
+};
 var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
@@ -144,14 +144,14 @@ const interfaceUtil = function() {
     const menu = function() {
         const openMenu = function() {
             $("#left-menu").animate({"left": "0px"}, 100);
-        }
+        };
 
         const closeMenu = function() {
             $("#left-menu").animate({"left": "-260px"}, 150);
-        }
+        };
 
         return {open:openMenu, close:closeMenu};
-    }()
+    }();
 
     const smartParse = function(timeformat, timeString, o) {
         // smart, better date parsing with chrono
