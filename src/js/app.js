@@ -1046,8 +1046,8 @@ let ui = function() {
             $("#task-repeat-"+activeTask).css("display", "none");
             $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
-            if (await isMobile())
-                $(".page").removeClass("pa-bottom");
+/*            if (await isMobile())*/
+                /*$(".page").removeClass("pa-bottom");*/
             await refresh();
             if (activeTaskDeInboxed) {
                 let hTask = activeTask;
@@ -2304,15 +2304,15 @@ let ui = function() {
             let taskInfo = $(this).attr("id").split("-");
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
-            let mb = await isMobile();
+            //let mb = await isMobile();
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
-            if (mb) {
-                $('html').animate({ 
-                    scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
-                }, 'slow');
-            }
+/*            if (mb) {*/
+                //$('html').animate({ 
+                    //scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
+                //}, 'slow');
+            /*}*/
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
@@ -2320,9 +2320,9 @@ let ui = function() {
             pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
-            if (mb) {
-                $(".page").addClass("pa-bottom");
-            }
+/*            if (mb) {*/
+                //$(".page").addClass("pa-bottom");
+            /*}*/
         }
     });
 
