@@ -44,6 +44,7 @@
     "bootstrap-select-dropdown": "^0.14.6",
     "bootstrap-tagsinput": "^0.7.1",
     "chrono-node": "^1.4.4",
+    "devtools-detect": "^3.0.1",
     "dotenv": "^8.2.0",
     "electron-notarize": "^1.0.0",
     "electron-updater": "^4.3.1",
