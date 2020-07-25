@@ -1297,7 +1297,7 @@ let ui = function() {
             let duestr = "";
             $("#task-due-" + taskId).keydown(function(e) {
                 //e.preventDefault();
-                // TODO: this is a janky manual re-implimentation 
+                // TODO: this is a janky manual re-implementation
                 // of a textbox to override jQuery's manual 
                 // re-implimentation. The todo is to make it less
                 // janky.

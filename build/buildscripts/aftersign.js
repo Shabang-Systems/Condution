@@ -11,7 +11,7 @@ module.exports = async function (params) {
     console.log('afterSign hook triggered', params);
 
     // Same appId in electron-builder.
-    let appId = 'cf.shabang.condution'
+    let appId = 'cf.shabang.condution';
 
     let appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`);
     if (!fs.existsSync(appPath)) {
