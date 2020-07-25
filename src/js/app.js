@@ -2122,10 +2122,10 @@ let ui = function() {
             // update the titlefield
             $("#project-title").val(projectName);
             if (pageIndex.projectDir.length <= 1) {
-                $("#project-back").hide()
+                $("#project-back").hide();
                 $("#project-titlerow").removeClass("perspective-title-subproject");
             } else {
-                $("#project-back").show()
+                $("#project-back").show();
                 $("#project-titlerow").addClass("perspective-title-subproject");
             }
             // get the project structure, and load the content
@@ -2451,7 +2451,7 @@ let ui = function() {
 
     $(document).on("click", "#project-trash", function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
+        let isTopLevel = pageIndex.projectDir.length === 1 ? true : false; // why does this exist?
         E.db.deleteProject(uid, pid).then(function() {
             pageIndex.projectDir.pop();
             interfaceUtil.newPHI();
@@ -2576,7 +2576,7 @@ let ui = function() {
             tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, function() {
                 setTimeout(()=>(pageIndex.interfaceLocks.qaLock = false), 750);
                 let newTaskUserRequest = chrono.parse($(this).val());
-                // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+                // TODO: so this doesn't actively watch for the word "DUE", which is a problem.
                 // Make that happen is the todo.
                 let startDate;
                 //let endDate;
