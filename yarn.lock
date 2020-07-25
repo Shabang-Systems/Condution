@@ -2146,6 +2146,11 @@ detective@^5.2.0:
     defined "^1.0.0"
     minimist "^1.1.1"
 
+devtools-detect@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/devtools-detect/-/devtools-detect-3.0.1.tgz#b862f64be80ac6627e3164c68424e7c2c7257481"
+  integrity sha512-nmp9QLSDKqHYtUPIMRtg1uX5euxTbTHf+ATCsPqZqCfROSwu3Sm0yfJD4Zc/LqgCjA6mgj3zpnBUUZMvSJcROg==
+
 dialog-polyfill@^0.4.7:
   version "0.4.10"
   resolved "https://registry.yarnpkg.com/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz#c4ea68a0deed4abb59a6a2a025c548b278cd532e"

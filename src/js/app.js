@@ -17,7 +17,11 @@ require('bootstrap-tagsinput');
 require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-var { Haptics, Network, Browser, Storage } = Plugins;
+var { Haptics, Network, Browser, Storage, Device } = Plugins;
+
+const isMobile = async function () {
+    return (await Device.getInfo()).platform !== "web";
+}
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -92,9 +96,6 @@ lottie.loadAnimation({
     path: 'static/loadanim_final.json'
 })
 $("#loading").hide().css("display", "flex").fadeIn();
-
-const { remote } = require('electron');
-const { Menu, MenuItem } = remote;
 
 // TODO: apply themes to colors
 // TODO: make a kickstarter
@@ -185,13 +186,14 @@ const interfaceUtil = function() {
     };
 
 
-    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor, disableTB) {
+    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor, disableTB, mb) {
+        let content = mb ? "readonly" : "";
         return `
         <div id="task-${taskId}" class="task thov"> 
             <div id="task-display-${taskId}" class="task-display" style="display:block">
                 <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
                 <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}">
+                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}" ${content}>
                 <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
                 <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
         </div> 
@@ -209,6 +211,7 @@ const interfaceUtil = function() {
                         <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
                         <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label>
                     </div> 
+                    <span class="task-close-button" id="task-close-button-${taskId}" style="float:right; transform: translateX(20px)"><div class="project-action" style="padding-top: 4px"><i class="far fa-times-circle"></i></div></span>
                 </div> 
             <div class="task-tools-sub task-tools-date">
                 <div class="label"><i class="far fa-play-circle"></i></div>
@@ -1041,6 +1044,10 @@ let ui = function() {
             $("#task-repeat-"+activeTask).css("display", "none");
             $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
+            //if (await isMobile())
+            $("#task-name-" +activeTask).prop("readonly", true);
+            if (await isMobile())
+                $(".page").removeClass("pa-bottom");
             await refresh();
             if (activeTaskDeInboxed) {
                 let hTask = activeTask;
@@ -1178,9 +1185,16 @@ let ui = function() {
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
             // -------------------------------------------------------------------------------
             // Part 2: the task!
-            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor, disabletextbox));
+            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor, disabletextbox, true));
             // -------------------------------------------------------------------------------
             // Part 3: customize the task!
+            // Show/hide the close button
+
+/*            if (await isMobile())*/
+                //$("#task-close-button-" + taskId).show();
+            /*else*/
+            $("#task-close-button-" + taskId).hide();
+
             // Set the dates, aaaand set the date change trigger
             $("#task-defer-" + taskId).datetimepicker({
                 timeInput: true,
@@ -1370,7 +1384,7 @@ let ui = function() {
             //})
             //
             $('#task-project-'+taskId).select2({
-                'width': '80%',
+                'width': $(window).width()<576 ? '88%' : '80%',
                 searchInputPlaceholder: "Search Projects...",
                 placeholder: 'Inbox',
                 allowClear: true
@@ -2278,7 +2292,11 @@ let ui = function() {
             e.stopImmediatePropagation();
             return;
         }
-        if (activeTask) await taskManager.hideActiveTask();
+        let activeTaskLeverage = 0;
+        if (activeTask) {
+            activeTaskLeverage = $("#task-"+activeTask).height()+40;
+            await taskManager.hideActiveTask(); 
+        }
         if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
             e.stopImmediatePropagation();
             return;
@@ -2286,9 +2304,17 @@ let ui = function() {
             let taskInfo = $(this).attr("id").split("-");
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
+            //let mb = await isMobile();
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
+            //if (await isMobile())
+            $("#task-name-" + task).prop("readonly", false);
+/*            if (mb) {*/
+                //$('html').animate({ 
+                    //scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
+                //}, 'slow');
+            /*}*/
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
@@ -2296,6 +2322,11 @@ let ui = function() {
             pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
+            if (await isMobile()) {
+                $(".page").addClass("pa-bottom");
+                $("#task-name-" + task).blur();
+            }
+            /*}*/
         }
     });
 
@@ -2308,6 +2339,11 @@ let ui = function() {
             }
             taskManager.hideActiveTask();
         }
+    });
+
+    $(document).on("click", ".task-close-button", function(e) {
+        taskManager.hideActiveTask();
+        document.activeElement.blur();
     });
 
     $(document).on("click", "#project-back", function() {
@@ -2760,8 +2796,14 @@ firebase.auth().onAuthStateChanged(async function(user) {
     }
 })();
 
-console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
-console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
-console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
-console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
+function warn() {
+    console.log('%c', "height: 300px");
+    console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
+    console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
+    console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
+    console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
+}
 
+window.addEventListener('devtoolschange', event => {
+    warn();
+});

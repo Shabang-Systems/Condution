@@ -33,6 +33,7 @@
     html {
         overflow-y: scroll;
         width: 100%;
+        -webkit-overflow-scrolling: touch;
     }
 
     body {
@@ -196,6 +197,10 @@
                 margin-bottom: 50px;
             }
 
+                .pa-bottom {
+                    height: 400%;
+                }
+
             .blankimage {
                 height: 200px;
                 width: auto;
@@ -238,9 +243,10 @@
 
             #content-area{
                 overflow: visible;
-                -webkit-overflow-scrolling: touch;
                 width: 100%;
             }
+
+
                 @media (max-width: 355px) { 
                     #content-area {
                         padding: 0 10px 0 10px;
@@ -309,6 +315,7 @@
             .menu-portion {
                 transform: translateX(-9px);
                 overflow-y: scroll;
+                -webkit-overflow-scrolling: touch;
             }
 
             .menu-label {
@@ -352,6 +359,7 @@
             .sandwich {
                 position: inline-block;
                 color: var(--content-normal-alt);
+                transform: translateY(1.5px);
             }
 
                 @media (max-width: 575px) { 
@@ -595,8 +603,8 @@
 
                 @media (max-width: 575px) { 
                     .task-name {
-                        font-size: 12pt;
-                        width:80%;
+                        font-size: 11pt;
+                        width:74%;
                     }
                 }
 
@@ -1021,7 +1029,7 @@
 
                     @media (max-width: 575px) { 
                         .bootstrap-tagsinput {
-                            width: 80%;
+                            width: 86%;
                         }
                     }
 
