@@ -84,9 +84,9 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("body").addClass(currentTheme);
 });
 
-let loading_greeting_msgs = ["Welcome.", "Bontehu!", "Breath.", "Coffee or Tea?", "Productivity!", "Look up!", "Ready? Go!", "Accomplish!"];
-let loading_greeting = loading_greeting_msgs[Math.floor(Math.random() * loading_greeting_msgs.length)];
-$("#loading-msg").html(loading_greeting);
+/*let loading_greeting_msgs = ["Welcome.", "Bontehu!", "Breath.", "Coffee or Tea?", "Productivity!", "Look up!", "Ready? Go!", "Accomplish!"];*/
+//let loading_greeting = loading_greeting_msgs[Math.floor(Math.random() * loading_greeting_msgs.length)];
+//$("#loading-msg").html(loading_greeting);
 
 lottie.loadAnimation({
     container: $("#loading-anim")[0],
@@ -95,7 +95,6 @@ lottie.loadAnimation({
     loop: true,
     path: 'static/loadanim_final.json'
 })
-$("#loading").hide().css("display", "flex").fadeIn();
 
 // TODO: apply themes to colors
 // TODO: make a kickstarter
@@ -2788,14 +2787,6 @@ firebase.auth().onAuthStateChanged(async function(user) {
     }
 });
 
-(async function potentiallyOnboard(test) {
-    const ret = await Storage.get({ key: 'condution_onboarding' });
-    const val = JSON.parse(ret.value);
-    if (val !== 1) {
-        presentWelcome();
-    }
-})();
-
 function warn() {
     console.log('%c', "height: 300px");
     console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
@@ -2807,3 +2798,15 @@ function warn() {
 window.addEventListener('devtoolschange', event => {
     warn();
 });
+
+(async function potentiallyOnboard() {
+    const ret = await Storage.get({ key: 'condution_onboarding' });
+    const val = JSON.parse(ret.value);
+    if (val !== 1) {
+        presentWelcome();
+    } else {
+        $("#loading").hide().css("display", "flex").fadeIn();
+    }
+})();
+
+
