@@ -189,13 +189,14 @@ const interfaceUtil = function() {
     };
 
 
-    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor, disableTB) {
+    let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor, disableTB, mb) {
+        let content = mb ? "readonly" : "";
         return `
         <div id="task-${taskId}" class="task thov"> 
             <div id="task-display-${taskId}" class="task-display" style="display:block">
                 <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
                 <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}">
+                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}" ${content}>
                 <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
                 <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
         </div> 
@@ -1046,8 +1047,10 @@ let ui = function() {
             $("#task-repeat-"+activeTask).css("display", "none");
             $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
-/*            if (await isMobile())*/
-                /*$(".page").removeClass("pa-bottom");*/
+            //if (await isMobile())
+            $("#task-name-" +activeTask).prop("readonly", true);
+            if (await isMobile())
+                $(".page").removeClass("pa-bottom");
             await refresh();
             if (activeTaskDeInboxed) {
                 let hTask = activeTask;
@@ -1185,7 +1188,7 @@ let ui = function() {
             let rightCarrotColor = interfaceUtil.gtc("--decorative-light");
             // -------------------------------------------------------------------------------
             // Part 2: the task!
-            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor, disabletextbox));
+            $("#" + pageId).append(interfaceUtil.taskHTML(taskId, name, desc, projectSelects, rightCarrotColor, disabletextbox, true));
             // -------------------------------------------------------------------------------
             // Part 3: customize the task!
             // Show/hide the close button
@@ -2308,6 +2311,8 @@ let ui = function() {
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
+            //if (await isMobile())
+            $("#task-name-" + task).prop("readonly", false);
 /*            if (mb) {*/
                 //$('html').animate({ 
                     //scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
@@ -2320,8 +2325,8 @@ let ui = function() {
             pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
-/*            if (mb) {*/
-                //$(".page").addClass("pa-bottom");
+            if (await isMobile()) 
+                $(".page").addClass("pa-bottom");
             /*}*/
         }
     });
