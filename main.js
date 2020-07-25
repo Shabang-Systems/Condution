@@ -1,4 +1,4 @@
-const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu } = require('electron')
+const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu } = require('electron');
 const { autoUpdater } = require("electron-updater");
 autoUpdater.checkForUpdatesAndNotify();
 
@@ -17,7 +17,7 @@ function createWindow () {
         },
         'titleBarStyle': 'hiddenInset',
         'show': false,
-    })
+    });
 
     if(nativeTheme.shouldUseDarkColors) {
         win.setBackgroundColor("#161616");
@@ -31,7 +31,7 @@ function createWindow () {
 
     //win.removeMenu();
     // and load the main of the app.
-    win.loadFile('src/index.html')
+    win.loadFile('src/index.html');
     
     nativeTheme.addListener("updated", function() {
         if(nativeTheme.shouldUseDarkColors) {
@@ -184,7 +184,7 @@ const template = [
       }
     ]
   }
-]
+];
 
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
