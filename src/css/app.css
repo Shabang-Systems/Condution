@@ -603,8 +603,8 @@
 
                 @media (max-width: 575px) { 
                     .task-name {
-                        font-size: 12pt;
-                        width:80%;
+                        font-size: 11pt;
+                        width:74%;
                     }
                 }
 
