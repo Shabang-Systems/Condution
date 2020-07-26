@@ -37,10 +37,10 @@ window.addEventListener("touchmove", function(event) {
 }, false);
 
 let handleInternet = function(hasInternet) {
-    if (hasInternet)
-        $("#missing-internet").hide();
-    else
-        $("#missing-internet").css("display", "flex"); // TODO change this to support offline mode
+    //if (hasInternet)
+    //    $("#missing-internet").hide();
+    //else
+    //    $("#missing-internet").css("display", "flex");
 };
 
 E.start(firebase);
@@ -84,7 +84,7 @@ ipcRenderer.on("systheme-light", function (event, data) {
     $("body").addClass(currentTheme);
 });
 
-let loading_greeting_msgs = ["Welcome.", "Bontehu!", "Breath.", "Coffee or Tea?", "Productivity!", "Look up!", "Ready? Go!", "Accomplish!"];
+let loading_greeting_msgs = ["Welcome.", "Bontehu!", "Breathe.", "Coffee or Tea?", "Productivity!", "Look up!", "Ready? Go!", "Accomplish!"];
 let loading_greeting = loading_greeting_msgs[Math.floor(Math.random() * loading_greeting_msgs.length)];
 $("#loading-msg").html(loading_greeting);
 
@@ -189,48 +189,48 @@ const interfaceUtil = function() {
     let calculateTaskHTML = function(taskId, name, desc, projectSelects, rightCarrotColor, disableTB, mb) {
         let content = mb ? "readonly" : "";
         return `
-        <div id="task-${taskId}" class="task thov"> 
+        <div id="task-${taskId}" class="task thov">
             <div id="task-display-${taskId}" class="task-display" style="display:block">
                 <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
                 <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
                 <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" value="${name}" ${content}>
                 <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
                 <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
-        </div> 
+        </div>
         <div id="task-edit-${taskId}" class="task-edit" style="display:none">
             <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea>
             <div class="task-tools task-tools-top" style="margin-bottom: 9px">
-                <div class="task-tools-sub task-tools-toggles"> 
+                <div class="task-tools-sub task-tools-toggles">
                     <div class="label"><i class="fas fa-flag"></i></div>
-                    <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important"> 
+                    <div class="btn-group btn-group-toggle task-flagged" id="task-flagged-${taskId}" data-toggle="buttons" style="margin-right: 20px !important">
                         <label class="btn task-flagged" id="task-flagged-no-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-no"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
-                        <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label> 
-                    </div> 
+                        <label class="btn task-flagged" id="task-flagged-yes-${taskId}"> <input type="radio" name="task-flagged" class="task-flagged-yes"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label>
+                    </div>
                     <div class="label"><i class="fas fa-globe-americas"></i></div>
                     <div class="btn-group btn-group-toggle task-floating" id="task-floating-${taskId}" data-toggle="buttons" style="margin-right: 14px !important">
                         <label class="btn task-floating" id="task-floating-no-${taskId}"> <input type="radio" name="task-floating"> <i class="far fa-circle" style="transform:translateY(-4px)"></i> </label>
                         <label class="btn task-floating" id="task-floating-yes-${taskId}"> <input type="radio" name="task-floating"> <i class="fas fa-circle" style="transform:translateY(-4px)"></i> </label>
-                    </div> 
+                    </div>
                     <span class="task-close-button" id="task-close-button-${taskId}" style="float:right; transform: translateX(20px)"><div class="project-action" style="padding-top: 4px"><i class="far fa-times-circle"></i></div></span>
-                </div> 
+                </div>
             <div class="task-tools-sub task-tools-date">
                 <div class="label"><i class="far fa-play-circle"></i></div>
-                <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px" ${disableTB}> 
-                <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; margin-right: 5px"></i> 
-                <div class="label"><i class="far fa-stop-circle"></i></div> 
-                <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px" ${disableTB}> 
-            </div> 
-        </div> 
-        <div class="task-tools task-tools-bottom"> 
+                <input class="task-defer textbox datebox" id="task-defer-${taskId}" type="text" autocomplete="off" style="margin-right: 10px" ${disableTB}>
+                <i class="fas fa-caret-right" style="color:${rightCarrotColor}; font-size:13px; margin-right: 5px"></i>
+                <div class="label"><i class="far fa-stop-circle"></i></div>
+                <input class="task-due textbox datebox" id="task-due-${taskId}" type="text" autocomplete="off" style="margin-right: 20px" ${disableTB}>
+            </div>
+        </div>
+        <div class="task-tools task-tools-bottom">
             <div class="task-tools-sub task-tools-project">
                 <div class="label"><i class="fas fa-tasks"></i></div>
                 <select class="task-project textbox" id="task-project-${taskId}" style="margin-right: 14px">
                     ${projectSelects}
                 </select>
-            </div> 
-            <div class="task-tools-sub task-tools-tags"><div class="label"><i class="fas fa-tags"></i></div> 
-                <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" /> 
-            </div> 
+            </div>
+            <div class="task-tools-sub task-tools-tags"><div class="label"><i class="fas fa-tags"></i></div>
+                <input class="task-tag textbox" id="task-tag-${taskId}" type="text" value="" onkeypress="this.style.width = ((this.value.length + 5) * 8) + 'px';" data-role="tagsinput" />
+            </div>
         </div>
     </div>
 </div>`
@@ -328,7 +328,7 @@ let presentWelcome = function() {
                     key: "condution_onboarding",
                     value: 1
                 });
-        }            
+        }
       });
       $('#onboarding-check-2').change(function(e) {
             if (this.checked) {
@@ -344,7 +344,7 @@ let presentWelcome = function() {
                         value: 1
                     });
             });
-        }        
+        }
     });
     return ()=>{$("#onboarding").css("display", "flex")}
 }();
@@ -766,7 +766,7 @@ let ui = function() {
                 console.log("Error upgrading anonymous account", error);
                 $(btn).html("Sync!");
                 $("#convert-msg").html(error.message);
-            }); 
+            });
         });
 
         $(document).on("click", "#overlay", function(e) {
@@ -936,7 +936,7 @@ let ui = function() {
             }
         });
 
-        
+
         $(".repeat-monthgrid-day").on("click", function(e) {
             if (repeatMonthDays.includes($(this).html())) {
                 $(this).stop().animate({"background-color": interfaceUtil.gtc("--background")}, 100);
@@ -1219,8 +1219,8 @@ let ui = function() {
             let dfstr = "";
             $("#task-defer-" + taskId).keydown(function(e) {
                 //e.preventDefault();
-                // TODO: this is a janky manual re-implimentation 
-                // of a textbox to override jQuery's manual 
+                // TODO: this is a janky manual re-implimentation
+                // of a textbox to override jQuery's manual
                 // re-implimentation. The todo is to make it less
                 // janky.
                 if (e.keyCode >= 37 && e.keyCode <= 40) {
@@ -1297,7 +1297,7 @@ let ui = function() {
             $("#task-due-" + taskId).keydown(function(e) {
                 //e.preventDefault();
                 // TODO: this is a janky manual re-implementation
-                // of a textbox to override jQuery's manual 
+                // of a textbox to override jQuery's manual
                 // re-implimentation. The todo is to make it less
                 // janky.
                 if (e.keyCode >= 37 && e.keyCode <= 40) {
@@ -2106,7 +2106,7 @@ let ui = function() {
                 $("#blankimage-perspective").css("display", tids.length == 0 ? "flex" : "none");
                 $("#blankimage-perspective").stop().animate({"opacity": "0.2"});
                 for (let taskId of tids) {
-                    // Nononono don't even think about foreach 
+                    // Nononono don't even think about foreach
                     // othewise the order will be messed up
                     await taskManager.generateTaskInterface("perspective-content", taskId);
                 }
@@ -2190,7 +2190,7 @@ let ui = function() {
         $("#comp-lb-el").hide();
         $("#project-content").empty();
         $("#perspective-content").empty();
-        
+
 
         // refresh data
         await refresh();
@@ -2241,7 +2241,7 @@ let ui = function() {
         }
         interfaceUtil.menu.close();
     });
-    
+
     $(document).on('click', '.upcoming-daterow-item', function(e) {
         $("#upcoming-daterow").children().each(function() {
             $(this).removeClass("upcoming-daterow-active");
@@ -2295,7 +2295,7 @@ let ui = function() {
         let activeTaskLeverage = 0;
         if (activeTask) {
             activeTaskLeverage = $("#task-"+activeTask).height()+40;
-            await taskManager.hideActiveTask(); 
+            await taskManager.hideActiveTask();
         }
         if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
             e.stopImmediatePropagation();
@@ -2311,7 +2311,7 @@ let ui = function() {
             //if (await isMobile())
             $("#task-name-" + task).prop("readonly", false);
 /*            if (mb) {*/
-                //$('html').animate({ 
+                //$('html').animate({
                     //scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
                 //}, 'slow');
             /*}*/
@@ -2613,7 +2613,7 @@ let ui = function() {
                     });
                 });
             });
-            
+
         } else if (e.keyCode == 27) {
             $(this).blur();
         }
@@ -2625,8 +2625,8 @@ let ui = function() {
     /*});*/
 
     $(document).on("drop", ".project", function(e) {
-        let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
-        let target = this.id.split("-"); 
+        let dropped = e.originalEvent.dataTransfer.getData('text').split("-");
+        let target = this.id.split("-");
 
         if (dropped[1] === target[1]) return;
         if (dropped[0] === "task") {
@@ -2634,7 +2634,7 @@ let ui = function() {
                 let ti = await E.db.getTaskInformation(uid, dropped[1]);
                 if (ti.project !== "") {
                     if (ti.project === target[1]) return;
-                    await E.db.dissociateTask(uid, dropped[1], ti.project); 
+                    await E.db.dissociateTask(uid, dropped[1], ti.project);
                 }
                 await E.db.modifyTask(uid, dropped[1], {project:target[1]});
                 await E.db.associateTask(uid, dropped[1], target[1]);
@@ -2646,7 +2646,7 @@ let ui = function() {
                 let ti = await E.db.getProjectStructure(uid, dropped[1]);
                 if (ti.parentProj !== "") {
                     if (ti.parentProj === target[1]) return;
-                    await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
+                    await E.db.dissociateProject(uid, dropped[1], ti.parentProj);
                 }
                 await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
                 await E.db.associateProject(uid, dropped[1], target[1]);
@@ -2687,11 +2687,11 @@ let ui = function() {
         interfaceUtil.menu.open();
     });
 
-    $(document).click(function(e) { 
+    $(document).click(function(e) {
         var $target = $(e.target);
         if(!$target.closest('#left-menu').length && !$target.closest('.sandwich').length) {
             interfaceUtil.menu.close();
-        }        
+        }
     });
 
 
@@ -2794,9 +2794,7 @@ function warn() {
     console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
     console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
     console.log('%cClose this panel now.', 'background: #fff0f0;color: black;'+css);
-    console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
+    console.log('%cPlease help us to help you... Don\'t XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
 }
+window.addEventListener('devtoolschange', warn, { once: true });
 
-window.addEventListener('devtoolschange', event => {
-    warn();
-});
