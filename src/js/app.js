@@ -2910,7 +2910,8 @@ window.addEventListener('devtoolschange', event => {
 
 (async function potentiallyOnboard() {
     const ret = await Storage.get({ key: 'condution_onboarding' });
-    if (ret.value !== "done") {
+    const val = JSON.parse(ret.value);
+    if (ret.value !== "done" || val !== "done") {
         presentWelcome();
     } else {
         $("#loading").hide().css("display", "flex").fadeIn();
