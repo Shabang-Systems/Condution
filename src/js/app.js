@@ -39,7 +39,7 @@ let handleInternet = function(hasInternet) {
     if (hasInternet)
         $("#missing-internet").hide();
     else
-        $("#missing-internet").css("display", "flex");
+        $("#missing-internet").css("display", "flex"); // TODO change this to support offline mode
 };
 var E = require('./backend/CondutionEngine');
 
