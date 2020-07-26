@@ -24,7 +24,7 @@ Condution attempts to change this. We want to create an open-source productivity
 </p>
 
 ### Features 
-#### The Standard Spheal
+#### The Standard Spiel
 Create tasks, manage them in projects, add some tags, set due dates, and repeat them at will. Condution has the whole nine-yards of the core list-making features nailed so you could create and edit anything from grocery lists to hundred-task projects.
 
 #### Due + Start Dates (and Times!)
