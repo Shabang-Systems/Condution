@@ -3290,7 +3290,7 @@
         
         #welcome-terms {
             transition: color font-weight 0.3s;
-            border-bottom: solid 0.5px var(--task-checkmark-ds);
+            border-bottom: solid 0.5px green;
         }
 
             #welcome-terms:hover {
@@ -3299,7 +3299,7 @@
  
         #welcome-policy {
             transition: color font-weight 0.3s;
-            border-bottom: solid 0.5px var(--task-checkmark-od);
+            border-bottom: solid 0.5px blue;
         }
 
             #welcome-policy:hover {
