@@ -13,14 +13,28 @@ const initFirebase = (fbPointer) => {
     const obj = require("./../secrets.json")
     fbPointer.initializeApp(obj.dbkeys.debug);
     [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
-}
+    firebaseDB.enablePersistence()
+    .catch(err => {
+        // yoinked from https://firebase.google.com/docs/firestore/manage-data/enable-offline
+        if (err.code == 'failed-precondition') {
+            // Multiple tabs open, persistence can only be enabled
+            // in one tab at a a time.
+            // ...
+        } else if (err.code == 'unimplemented') {
+            // The current browser does not support all of the
+            // features required to enable persistence
+            // ...
+        }
+        throw new Error("Failed to enablePersistence on firestore()");
+    });
+};
 
 const [cRef, flush] = (() => {
     let cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
     let unsubscribeCallbacks = new Map();
 
     function flush() {
-        /* 
+        /*
          * Nukes the cache
          *
          * Used to log people out
