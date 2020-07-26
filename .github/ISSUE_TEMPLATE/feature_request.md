@@ -2,7 +2,7 @@
 name: Feature request
 about: Help us make your life marginally better!
 title: FEAT
-labels: feature, needs-triage
+labels: ''
 assignees: ''
 
 ---
