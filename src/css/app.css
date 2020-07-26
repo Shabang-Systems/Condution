@@ -38,6 +38,7 @@
 
     body {
         overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
     }
 
     * {
@@ -174,6 +175,8 @@
                 display: flex;
                 font-size: 8px;
                 font-weight: 200;
+                padding-left: 5px;
+                padding-right: 5px;
             }
 
             #loading-msg-sub {
@@ -244,6 +247,7 @@
             #content-area{
                 overflow: visible;
                 width: 100%;
+                -webkit-overflow-scrolling: touch;
             }
 
 
@@ -2809,17 +2813,53 @@
                     }
                 }
 
+
+    /* QA_Mobile */
+
+        /* IDs */
+
+            #quickaddmobile {
+                width: 50px;
+                height: 50px;
+                bottom: 30px;
+                right: 30px;
+                border-radius: 50%;
+                position: fixed;
+                background: var(--quickadd);
+                z-index: 2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 2px 2px 4px var(--background-feature);
+                color: var(--quickadd-text);
+            }
+
+                @media (max-width: 575px) { 
+                    .quickaddmobile_bottom {
+                        opacity: 0 !important;
+                        pointer-events: none !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .quickaddmobile_bottom {
+                        opacity: 1 !important;
+                        pointer-events: auto !important;
+                    }
+                }
+
+
     /* UserConversion */
 
         /* IDs */
 
             #convert {
-                width: 40px;
-                height: 40px;
-                bottom: 15px;
-                left: 15px;
+                width: 50px;
+                height: 50px;
+                bottom: 30px;
+                left: 30px;
                 border-radius: 50%;
-                position: absolute;
+                position: fixed;
                 background: var(--decorative-light);
                 z-index: 2;
                 display: flex;
