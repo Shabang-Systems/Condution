@@ -38,6 +38,7 @@
 
     body {
         overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
     }
 
     * {
@@ -246,6 +247,7 @@
             #content-area{
                 overflow: visible;
                 width: 100%;
+                -webkit-overflow-scrolling: touch;
             }
 
 
@@ -2811,6 +2813,42 @@
                     }
                 }
 
+
+    /* QA_Mobile */
+
+        /* IDs */
+
+            #quickaddmobile {
+                width: 40px;
+                height: 40px;
+                bottom: 20px;
+                right: 15px;
+                border-radius: 50%;
+                position: absolute;
+                background: var(--quickadd);
+                z-index: 2;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-shadow: 2px 2px 4px var(--background-feature);
+                color: var(--quickadd-text);
+            }
+
+                @media (max-width: 575px) { 
+                    .quickaddmobile_bottom {
+                        opacity: 0 !important;
+                        pointer-events: none !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .quickaddmobile_bottom {
+                        opacity: 1 !important;
+                        pointer-events: auto !important;
+                    }
+                }
+
+
     /* UserConversion */
 
         /* IDs */
@@ -2818,7 +2856,7 @@
             #convert {
                 width: 40px;
                 height: 40px;
-                bottom: 15px;
+                bottom: 20px;
                 left: 15px;
                 border-radius: 50%;
                 position: absolute;

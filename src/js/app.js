@@ -23,17 +23,21 @@ const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
 }
 
+const isiOS = async function() {
+    return (await Device.getInfo()).operatingSystem === "ios";
+}
+
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
    //passive: false
 //});
 //
-window.addEventListener("touchmove", function(event) {
-  if (!event.target.classList.contains('scrollable')) {
-    // no more scrolling
-    event.preventDefault();
-  }
-}, false);
+/*window.addEventListener("touchmove", function(event) {*/
+  //if (!event.target.classList.contains('scrollable')) {
+    //// no more scrolling
+    //event.preventDefault();
+  //}
+/*}, false);*/
 
 let handleInternet = function(hasInternet) {
     if (hasInternet)
@@ -243,6 +247,14 @@ async function loadApp(user) {
     // User is signed in. Do user related things.
     // Check user's theme
     ui.user.set(user);
+    if (await isMobile()) {
+    //if (true) {
+        $("#quickaddmobile").show();
+        $("#quickadd").hide();
+    } else {
+        $("#quickaddmobile").hide();
+        $("#quickadd").show();
+    }
     await ui.constructSidebar();
     await ui.load("upcoming-page");
 
@@ -2491,11 +2503,15 @@ let ui = function() {
         };
         E.db.newTask(uid, ntObject).then(function(ntID) {
             E.db.associateTask(uid, ntID, pid);
+            let activeTaskLeverage = 0;
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
-            taskManager.generateTaskInterface("project-content", ntID, true).then(function() {
+            taskManager.generateTaskInterface("project-content", ntID, true).then(async function() {
                 let task = ntID;
                 activeTask = task;
+                if (activeTask) {
+                    activeTaskLeverage = $("#task-"+activeTask).height()+40;
+                }
                 $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
                 $("#task-edit-" + activeTask).slideDown(200);
                 $("#task-trash-" + activeTask).css("display", "block");
@@ -2503,8 +2519,14 @@ let ui = function() {
                 $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
                 $("#task-name-" + task).focus();
                 $("#blankimage-project").hide();
+                $("#task-name-" + task).prop("readonly", false);
                 sorters.project.option("disabled", true);
                 sorters.inbox.option("disabled", true);
+                if (await isMobile()) {
+                    $(".page").addClass("pa-bottom");
+                    $("#task-name-" + task).blur();
+                }
+
             });
         });
     });
@@ -2710,6 +2732,95 @@ let ui = function() {
 
         authUI.anonomGeneration();
     });
+
+    // https://codepen.io/leonardo-fernandes/pen/xjzgWM
+    $(document).on("click", "#quickaddmobile", async function(evt) {
+    var btn = $(evt.currentTarget);
+    var x = evt.pageX - btn.offset().left;
+    var y = evt.pageY - btn.offset().top;
+  
+    var duration = 500;
+    var animationFrame, animationStart;
+  
+    var animationStep = function(timestamp) {
+        if (!animationStart) {
+          animationStart = timestamp;
+        }
+   
+    var frame = timestamp - animationStart;
+    if (frame < duration) {
+      var easing = (frame/duration) * (2 - (frame/duration));
+      
+      var circle = "circle at " + x + "px " + y + "px";
+      var color = "rgba(0, 0, 0, " + (0.3 * (1 - easing)) + ")";
+      var stop = 90 * easing + "%";
+
+      btn.css({
+        "background-image": "radial-gradient(" + circle + ", " + color + " " + stop + ", transparent " + stop + ")"
+      });
+
+      animationFrame = window.requestAnimationFrame(animationStep);
+    } else {
+      $(btn).css({
+        "background-image": "none"
+      });
+      window.cancelAnimationFrame(animationFrame);
+    }
+
+
+    
+  };
+  
+    Haptics.impact({style: HapticsImpactStyle.Heavy});
+  animationFrame = window.requestAnimationFrame(animationStep);
+  loadView("upcoming-page");
+    let ntObject = {
+        desc: "",
+        isFlagged: false,
+        isFloating: false,
+        isComplete: false,
+        project: "",
+        tags: [],
+        timezone: moment.tz.guess(),
+        repeat: {rule: "none"},
+        name: "",
+    };
+    E.db.newTask(uid, ntObject).then(function(ntID) {
+        let activeTaskLeverage = 0;
+        E.db.getInboxTasks(uid).then(function(e){
+            iC = e.length;
+            $("#unsorted-badge").html(''+iC);
+            $("#inbox-subhead").slideDown(300);
+            $("#inbox").slideDown(300);
+
+        $("#quickadd").addClass("qa_bottom");
+        $("#convert").addClass("convert_bottom");
+        taskManager.generateTaskInterface("inbox", ntID, true).then(async function() {
+            let task = ntID;
+            activeTask = task;
+            if (activeTask) {
+                activeTaskLeverage = $("#task-"+activeTask).height()+40;
+            }
+            $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+            $("#task-edit-" + activeTask).slideDown(200);
+            $("#task-trash-" + activeTask).css("display", "block");
+            $("#task-repeat-" + activeTask).css("display", "block");
+            $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
+            $("#task-name-" + task).focus();
+            $("#blankimage-project").hide();
+            $("#task-name-" + task).prop("readonly", false);
+            sorters.project.option("disabled", true);
+            sorters.inbox.option("disabled", true);
+            if (await isMobile()) {
+                $(".page").addClass("pa-bottom");
+                $("#task-name-" + task).blur();
+            }
+
+        });
+        });
+    });
+
+});
 
 
     interfaceUtil.newPHI();
