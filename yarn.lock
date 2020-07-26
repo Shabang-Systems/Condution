@@ -182,15 +182,15 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@capacitor/android@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-2.2.1.tgz#20b722d634cb7b9e12aa6612e22f1f37dbbc57ca"
-  integrity sha512-EWrzpufsxBsRWu+cWXP/3w8C7q2nYDOcsbF2MHO1r1ScsEbw1DPRzwVylo/9q457UJDpRU7jwMl3A9CWAM3j0g==
+"@capacitor/android@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-2.3.0.tgz#6092a219c1d5bf2b541b8c4e9b8bc7794b192601"
+  integrity sha512-5mxRW/3ZJPKZStXcqkuEJemsY1A9JrmhEz3lInRfCRvDZKTJWcR7NLrOawDHHFO3pjjej2jnSbmQHo6EjGuZ9w==
 
-"@capacitor/cli@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-2.2.1.tgz#0d818bd14e5ddc88560722308b6a15c885993015"
-  integrity sha512-5x6BTiWg5/d1roBDM/eNrJGwj/x/WGWCcqkzgxsZQRxZKs/fX2uyjhhFgGCoeTFiYDeQMOKnHwVzHI9nERisZw==
+"@capacitor/cli@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-2.3.0.tgz#29791c6d7e984cec27e661bf5a5dd8d948198310"
+  integrity sha512-MU6T0L3p4cvpkkPUjh63NVzrGMn+u4AS5TCGquj9wJ4sO/r7g1oTfYvLbqi7TjFqliVwVqUuUa7IUYfNuEAdrw==
   dependencies:
     chalk "^2.3.0"
     commander "^4.1.1"
@@ -204,17 +204,17 @@
     which "^1.3.0"
     xml2js "^0.4.19"
 
-"@capacitor/core@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-2.2.1.tgz#20f07d35c4af3650eed90cbfd0d5c260cbb59ba5"
-  integrity sha512-Qbx+4woY24Ixb74zizaKAJur/gpFDwdZAZbZtXIc5yNhyaD13XLyqwLm5LTI1CKw7Vc7xoENUaWLqNQYtr6v2g==
+"@capacitor/core@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-2.3.0.tgz#e8a16226d8f0873d73e259b96d32ab1f845f02b4"
+  integrity sha512-hiU6Im1R195NB/7U5Zdli5UVUje0JztgwE7r5zaRQKUXyEyHsQ4bOTo2qqPZv9XYXa1QrulfKAgMzBQzt41bVg==
   dependencies:
     tslib "^1.9.0"
 
-"@capacitor/ios@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-2.2.1.tgz#f410a31843ef10eb2c908f6a634d16439915c420"
-  integrity sha512-+nGonZvaVE4pcWWFHb0Euad8pP01Dn8+tJaZwEq/TkZ0qAjZ9uAKPVqvChshBM5W0DtZF/t1uNUU7ELcGsAFIA==
+"@capacitor/ios@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-2.3.0.tgz#361bc00b3b773ced5389b287caa6816e1d31b045"
+  integrity sha512-RQYY8It3dPOhZs5kCymnt02NxSCNo90Etgc6bnUjzB7IqQRFNRJ/f56vWb9F61wKOVDrUPJkoeDpXt76Svd+Nw==
 
 "@develar/schema-utils@~2.6.5":
   version "2.6.5"
