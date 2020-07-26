@@ -80,7 +80,7 @@ const util = {
             return arg;
         }
     }
-}
+};
 
 async function getTasks(userID) {
     return cRef("users", userID, "tasks").get()
@@ -203,7 +203,7 @@ async function getTopLevelProjects(userID) {
     let projectsSorted = []; 
 
     let snap = (await cRef('users', userID, "projects")
-        .get())
+        .get());
 
     snap.docs.forEach(proj => {
         if (proj.exists && proj.data().top_level === true) {
@@ -250,7 +250,7 @@ async function getProjectsandTags(userID) {
 
 async function getPerspectives(userID) {
     let pInfobyName = {};
-    let pInfobyID = {}
+    let pInfobyID = {};
     let ps = [];
     await cRef("users", userID, "perspectives").get()   // TODO: combine database hits
         .then(snap => snap.docs.forEach(pstp => {
@@ -576,7 +576,7 @@ async function onBoard(userID, tz, username) {
     );
     await newTask(userID, {
             name: "Click here 🎯 to edit a task.",
-            desc: "The Flag 🚩 toggle flags a task, the Globe 🌎 toggle toggles fixed and floating timezone, the dateboxes ▶️ ⏹ picks defer and due dates, the project 📋 field picks projects, the tag 🏷 field picks tags, and, most importantly, yours truly 👀 is the awesome description box!",
+            desc: "The Flag 🚩 toggle flags a task, the Globe 🌎 toggle toggles fixed and floating timezone, the date-boxes ▶️ ⏹ picks defer and due dates, the project 📋 field picks projects, the tag 🏷 field picks tags, and, most importantly, yours truly 👀 is the awesome description box!",
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -594,7 +594,7 @@ async function onBoard(userID, tz, username) {
     od.setHours(od.getHours() - 24);
     ds.setHours(ds.getHours() + 20);
     let odid = await newTask(userID, {
-            name: "Oh no! I am overdue! 😓",
+            name: "Oh no! I'm overdue! 😓",
             desc: "With Condution, you will never have another one of me again. (At least we hope.)",
             isFlagged: false,
             isFloating: false,
@@ -607,8 +607,8 @@ async function onBoard(userID, tz, username) {
         }
     );
     let dsID = await newTask(userID, {
-            name: "Aha, 🤨 I am due soon!",
-            desc: "The lovely orange color will change red when I become due.",
+            name: "🤨 I'm due soon! Better get going on me.",
+            desc: "The lovely orange color will change to red when I become due.",
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -703,7 +703,7 @@ async function onBoard(userID, tz, username) {
     let tags = await Promise.all([newTag(userID, "Aftercare"), newTag(userID, "Productivity"), newTag(userID, "Low Energy"), newTag(userID, "Unimportant")]);
     let specific = await newTask(userID, {
             name: "After you are done, tap 'Come hang out' in the menu!",
-            desc: "",
+            desc: "Bontehu",
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -716,7 +716,7 @@ async function onBoard(userID, tz, username) {
     await associateTask(userID, specific, pspsp);
     let sp = await newTask(userID, {
             name: "Tap the pencil ✏️ icon to see what I'm filtering! ⤴",
-            desc: "",
+            desc: "Bontehu",
             isFlagged: false,
             isFloating: false,
             isComplete: false,
