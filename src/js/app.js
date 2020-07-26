@@ -18,6 +18,7 @@ require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
 var { Haptics, Network, Browser, Storage, Device } = Plugins;
+var E = require('./backend/CondutionEngine');
 
 const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
@@ -41,12 +42,10 @@ let handleInternet = function(hasInternet) {
     else
         $("#missing-internet").css("display", "flex"); // TODO change this to support offline mode
 };
-var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
 
 // Select2 Modifications
-// TODO WHY ARE THESE ALL VAR!!!
 (function($) {
     var Defaults = $.fn.select2.amd.require('select2/defaults');
     $.extend(Defaults.defaults, {
