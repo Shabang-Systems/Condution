@@ -548,7 +548,6 @@ async function getCompletedTasks(userID) {
     //console.log(tasksWeek);
     //console.log(tasksMonth);
     /*console.log(evenBefore);*/
-    console.log([tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]);
     return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
 }
 
