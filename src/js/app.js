@@ -26,7 +26,7 @@ const isMobile = async function () {
 
 const isiOS = async function() {
     return (await Device.getInfo()).operatingSystem === "ios";
-}
+};
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -264,7 +264,9 @@ async function loadApp(user) {
         handleInternet(status.connected);
     });
     let status = Network.getStatus().then(status=>handleInternet(status.connected));
-
+    if (status) {
+        console.log("status obtained :)")
+    }
 
     $("#loading").fadeOut();
     $("#auth-content-wrapper").fadeOut();
