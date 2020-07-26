@@ -338,7 +338,7 @@ let presentWelcome = function() {
                 setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
                 Storage.set({
                     key: "condution_onboarding",
-                    value: 1
+                    value: "done"
                 });
         }            
       });
@@ -2910,8 +2910,7 @@ window.addEventListener('devtoolschange', event => {
 
 (async function potentiallyOnboard() {
     const ret = await Storage.get({ key: 'condution_onboarding' });
-    const val = JSON.parse(ret.value);
-    if (val !== "done") {
+    if (ret.value !== "done") {
         presentWelcome();
     } else {
         $("#loading").hide().css("display", "flex").fadeIn();
