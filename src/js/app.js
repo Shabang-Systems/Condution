@@ -353,7 +353,7 @@ let presentWelcome = function() {
                     $("#onboarding").fadeOut(1000);
                     Storage.set({
                         key: "condution_onboarding",
-                        value: 1
+                        value: "done"
                     });
             });
         }        
@@ -2911,7 +2911,7 @@ window.addEventListener('devtoolschange', event => {
 (async function potentiallyOnboard() {
     const ret = await Storage.get({ key: 'condution_onboarding' });
     const val = JSON.parse(ret.value);
-    if (val !== 1) {
+    if (val !== "done") {
         presentWelcome();
     } else {
         $("#loading").hide().css("display", "flex").fadeIn();
