@@ -17,7 +17,7 @@ const initFirebase = (fbPointer) => {
 };
 
 const [cRef, flush] = (() => {
-    let cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
+    let cache = new Map();
     let unsubscribeCallbacks = new Map();
 
     function flush() {
@@ -100,6 +100,7 @@ const [cRef, flush] = (() => {
                 ref.onSnapshot({
                     error: console.trace,
                     next: (snap) => {
+                        console.log(snap);
                         cache.set(TODOstring, snap);
                     }
                 })
@@ -107,6 +108,20 @@ const [cRef, flush] = (() => {
         }
         return await cache.get(TODOstring);
     }
+
+    // async function cachedSet(path, value) {
+    //     const stringPath = JSON.stringify(path);
+    //     const ref = getFirebaseRef(path);
+    //     ref.set(value);
+    //     cache.set(stringPath, value)
+    // }
+    //
+    // async function cachedUpdate(path, value) {
+    //     const stringPath = JSON.stringify(path);
+    //     const ref = getFirebaseRef(path);
+    //     ref.set(value);
+    //     cache.set(stringPath, value)
+    // }
 
     function cacheRef(...path) {
         /*
