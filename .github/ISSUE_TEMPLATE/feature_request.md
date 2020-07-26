@@ -2,7 +2,7 @@
 name: Feature request
 about: Help us make your life marginally better!
 title: FEAT
-labels: feature, needs-triage
+labels: "feature \U0001F684, needs-triage \U0001F4E9"
 assignees: ''
 
 ---

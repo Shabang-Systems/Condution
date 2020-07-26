@@ -1,4 +1,4 @@
-const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu } = require('electron')
+const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu } = require('electron');
 const { autoUpdater } = require("electron-updater");
 autoUpdater.checkForUpdatesAndNotify();
 
@@ -17,7 +17,7 @@ function createWindow () {
         },
         'titleBarStyle': 'hiddenInset',
         'show': false,
-    })
+    });
 
     if(nativeTheme.shouldUseDarkColors) {
         win.setBackgroundColor("#161616");
@@ -29,9 +29,9 @@ function createWindow () {
         e.preventDefault()
     });
 
-    //win.removeMenu();
+    win.removeMenu();
     // and load the main of the app.
-    win.loadFile('src/index.html')
+    win.loadFile('src/index.html');
     
     nativeTheme.addListener("updated", function() {
         if(nativeTheme.shouldUseDarkColors) {
@@ -44,7 +44,7 @@ function createWindow () {
     });
     ipcMain.on('updatecheck', (event, arg) => {
         autoUpdater.checkForUpdatesAndNotify();
-    })
+    });
 
     win.once('ready-to-show', function() {
         win.show()
@@ -67,7 +67,7 @@ function createAbout () {
         'maximizable': false,
         //'frame': false,
         'show': false,
-    })
+    });
 
     win.on('page-title-updated', function(e) {
         e.preventDefault()
@@ -75,14 +75,14 @@ function createAbout () {
 
     win.removeMenu();
     // and load the main of the app.
-    win.loadFile('src/about.html')
+    win.loadFile('src/about.html');
     
     win.once('ready-to-show', function() {
         win.show()
     });
 }
 
-const isMac = process.platform === 'darwin'
+const isMac = process.platform === 'darwin';
 
 const template = [
   // { role: 'appMenu' }
@@ -156,7 +156,7 @@ const template = [
       { role: 'togglefullscreen' }
     ]
   },
-  // { role: 'windoMenu' }
+  // { role: 'windowMenu' }
   {
     label: 'Window',
     submenu: [
@@ -178,16 +178,16 @@ const template = [
       {
         label: 'Help and Documentation',
         click: async () => {
-          const { shell } = require('electron')
+          const { shell } = require('electron');
           await shell.openExternal('https://condutiondocs.shabang.cf')
         }
       }
     ]
   }
-]
+];
 
-const menu = Menu.buildFromTemplate(template)
-Menu.setApplicationMenu(menu)
+const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
 
 app.name = 'Condution';
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);

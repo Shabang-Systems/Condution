@@ -21,7 +21,7 @@ var { Haptics, Network, Browser, Storage, Device } = Plugins;
 
 const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
-}
+};
 
 const isiOS = async function() {
     return (await Device.getInfo()).operatingSystem === "ios";
@@ -44,12 +44,13 @@ let handleInternet = function(hasInternet) {
         $("#missing-internet").hide();
     else
         $("#missing-internet").css("display", "flex");
-}
+};
 var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
 
 // Select2 Modifications
+// TODO WHY ARE THESE ALL VAR!!!
 (function($) {
     var Defaults = $.fn.select2.amd.require('select2/defaults');
     $.extend(Defaults.defaults, {
@@ -98,7 +99,7 @@ lottie.loadAnimation({
     autoplay: true,
     loop: true,
     path: 'static/loadanim_final.json'
-})
+});
 
 // TODO: apply themes to colors
 // TODO: make a kickstarter
@@ -142,19 +143,19 @@ const interfaceUtil = function() {
 
     const newPlaceholderImage = function() {
         $(".blankimage").attr("src","./static/BlkArt/BlkArt_"+Math.floor(Math.random() * 3)+".png");
-    }
+    };
 
     const menu = function() {
         const openMenu = function() {
             $("#left-menu").animate({"left": "0px"}, 100);
-        }
+        };
 
         const closeMenu = function() {
             $("#left-menu").animate({"left": "-260px"}, 150);
-        }
+        };
 
         return {open:openMenu, close:closeMenu};
-    }()
+    }();
 
     const smartParse = function(timeformat, timeString, o) {
         // smart, better date parsing with chrono
@@ -263,7 +264,7 @@ async function loadApp(user) {
         handleInternet(status.connected);
     });
     let status = Network.getStatus().then(status=>handleInternet(status.connected));
-    ;
+
 
     $("#loading").fadeOut();
     $("#auth-content-wrapper").fadeOut();
@@ -376,7 +377,7 @@ let authUI = function() {
             await loadApp(firebase.auth().currentUser);
             isAnomAuthInProgress = false;
         });
-    }
+    };
 
     let auth = async function() {
         if (isNASuccess) {
@@ -420,7 +421,7 @@ let authUI = function() {
         }).catch(function(error) {
             $(".auth-upf").addClass("wrong");
         });
-    }
+    };
 
     let nu = function() {
         let problem = false;
@@ -440,7 +441,7 @@ let authUI = function() {
         $('#recover-password').fadeOut(function() {
             $('#need-verify').fadeIn();
         });
-    }
+    };
 
     $("#password").keydown(function(e) {
         if (e.keyCode == 13) {
@@ -803,10 +804,9 @@ let ui = function() {
             $("#perspective-unit").hide();
             $("#overlay").fadeIn(200).css("display", "flex").hide().fadeIn(200);
             $("#convert-unit").fadeIn(200);
-        }
+        };
         return convert;
     }();
-
 
     // repeat view
     const showRepeat = function() {
@@ -892,6 +892,7 @@ let ui = function() {
                 $("#repeat-monthgrid").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background")});
                 });
+                // TODO why do these exist? Free memory hogging? At least comment them out.
                 let repeatWeekDays = [];
                 let repeatMonthDays = [];
             }
@@ -1307,7 +1308,7 @@ let ui = function() {
             let duestr = "";
             $("#task-due-" + taskId).keydown(function(e) {
                 //e.preventDefault();
-                // TODO: this is a janky manual re-implimentation 
+                // TODO: this is a janky manual re-implementation
                 // of a textbox to override jQuery's manual 
                 // re-implimentation. The todo is to make it less
                 // janky.
@@ -2133,10 +2134,10 @@ let ui = function() {
             // update the titlefield
             $("#project-title").val(projectName);
             if (pageIndex.projectDir.length <= 1) {
-                $("#project-back").hide()
+                $("#project-back").hide();
                 $("#project-titlerow").removeClass("perspective-title-subproject");
             } else {
-                $("#project-back").show()
+                $("#project-back").show();
                 $("#project-titlerow").addClass("perspective-title-subproject");
             }
             // get the project structure, and load the content
@@ -2462,7 +2463,7 @@ let ui = function() {
 
     $(document).on("click", "#project-trash", function() {
         let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        let isTopLevel = pageIndex.projectDir.length === 1 ? true : false;
+        let isTopLevel = pageIndex.projectDir.length === 1 ? true : false; // why does this exist?
         E.db.deleteProject(uid, pid).then(function() {
             pageIndex.projectDir.pop();
             interfaceUtil.newPHI();
@@ -2536,7 +2537,6 @@ let ui = function() {
         let value = $(this).val();
         E.db.modifyProject(uid, pid, {name: value});
         reloadPage(true);
-        //console.error(e);
     });
 
     $(document).on("change", "#perspective-title", function(e) {
@@ -2544,7 +2544,6 @@ let ui = function() {
         let value = $(this).val();
         E.db.modifyPerspective(uid, pstID, {name: value});
         reloadPage(true);
-        //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-yes", function(e) {
@@ -2552,7 +2551,6 @@ let ui = function() {
         E.db.modifyProject(uid, pid, {is_sequential: true}).then(function() {
             reloadPage(true);
         });
-        //console.error(e);
     });
 
     $(document).on("click", "#project-sequential-no", function(e) {
@@ -2560,22 +2558,18 @@ let ui = function() {
         E.db.modifyProject(uid, pid, {is_sequential: false}).then(function() {
             reloadPage(true);
         });
-        //console.error(e);
     });
 
     $(document).on("click", "#logout", function(e) {
         firebase.auth().signOut().then(() => {}, console.error);
-        //console.error(e);
     });
 
     $(document).on("click", "#perspective-edit", function(e) {
         showPerspectiveEdit(pageIndex.pageContentID);
-        //console.error(e);
     });
 
     $("#quickadd").click(function(e) {
         $(this).stop().animate({"width": "280px"}, 500);
-        //console.error(e);
     });
 
     $("#quickadd").blur(function(e) {
@@ -2597,7 +2591,7 @@ let ui = function() {
             tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, function() {
                 setTimeout(()=>(pageIndex.interfaceLocks.qaLock = false), 750);
                 let newTaskUserRequest = chrono.parse($(this).val());
-                // TODO: so this dosen't actively watch for the word "DUE", which is a problem.
+                // TODO: so this doesn't actively watch for the word "DUE", which is a problem.
                 // Make that happen is the todo.
                 let startDate;
                 //let endDate;
