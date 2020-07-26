@@ -2821,8 +2821,8 @@
             #quickaddmobile {
                 width: 40px;
                 height: 40px;
-                bottom: 20px;
-                right: 15px;
+                bottom: 27px;
+                right: 27px;
                 border-radius: 50%;
                 position: absolute;
                 background: var(--quickadd);
@@ -2856,8 +2856,8 @@
             #convert {
                 width: 40px;
                 height: 40px;
-                bottom: 20px;
-                left: 15px;
+                bottom: 27px;
+                left: 27px;
                 border-radius: 50%;
                 position: absolute;
                 background: var(--decorative-light);
