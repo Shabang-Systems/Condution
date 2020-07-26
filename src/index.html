@@ -50,17 +50,13 @@
     </head>
 
     <body style="background-color: transparent">
-       
         <div class="main-head" id="main-head-darwin">
         </div>
         <div class="main-head" id="main-head-default">
         </div>
         <div id="loading">
-            <t id="loading-msg">
-            </t>
             <div id="loading-anim"></div>
-            <t id="loading-msg-sub"><b style="font-weight: 800 !important">Condution</b> is Loading...</t>
-            <t id="loading-bottom">&#169;2019-2020 Shabang Systems, LLC and the Condution Project Contributors. Licensed and Distributed under GPL-v3.0. beta-v0.2.3_build0_M.</t>
+            <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.2.3_beta.0_M</t>
         </div>
         <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none">
             <div style="margin-left: 20px;">
@@ -216,7 +212,8 @@
                     </div>
                 </div>
                 <div id="convert" style="display: none"><i class="fas fa-arrow-circle-up"></i></div>
-                <input title="Add a task on enter" id="quickadd" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
+                <div id="quickaddmobile" style="display: none"><i class="fas fa-plus"></i></div>
+                <input title="Add a task on enter" id="quickadd" style="display: none" type="text" autocomplete="off" value="" placeholder="Add something to the inbox?">
                 <div id="content-area" class="scrollable">
                     <div id="upcoming-page" class="page">
                         <div class="sandwich"><i class="fas fa-bars"></i></div>
