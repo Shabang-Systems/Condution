@@ -770,7 +770,7 @@ async function onBoard(userID, tz, username) {
     await associateTask(userID, patreon, promotion);
     let yiipee = await newTask(userID, {
         name: "From all of us at #!/Shabang + Condution Project, enjoy!",
-            desc: "Yiipee!",
+            desc: "Why are you reading this description? Go be productive!",
             isFlagged: false,
             isFloating: false,
             isComplete: false,
