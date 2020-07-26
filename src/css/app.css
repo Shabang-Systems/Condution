@@ -471,7 +471,6 @@
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
                     border-radius: 5px;
-                    padding: 4px 0 4px 10px;
                     background-color: var(--menu-semiaccent-background);
                 }
 
