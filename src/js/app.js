@@ -2792,7 +2792,7 @@ let ui = function() {
             $("#unsorted-badge").html(''+iC);
             $("#inbox-subhead").slideDown(300);
             $("#inbox").slideDown(300);
-
+        });
         $("#quickadd").addClass("qa_bottom");
         $("#convert").addClass("convert_bottom");
         taskManager.generateTaskInterface("inbox", ntID, true).then(async function() {
@@ -2816,7 +2816,6 @@ let ui = function() {
                 $("#task-name-" + task).blur();
             }
 
-        });
         });
     });
 
