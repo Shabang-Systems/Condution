@@ -8,6 +8,11 @@
 
 ***
 
+## Those Download Buttons?
+👉 [**Direct Download**](https://condution.shabang.cf/#downloads) the latest version of Condution here! 👈 
+
+Also, here's the [App Store](https://apps.apple.com/us/app/condution/id1523249900) & [Play Store](https://play.google.com/store/apps/details?id=cf.shabang.condution) links for y'all phone nerds out there.
+
 ## The App
 Condution is a wonderful electron app built to create a perfectly easy task-management dashboard that's powerful, yet also simple. The inspiration of the project spanned from our long frustration with the current state of productivity software on the internet — they are expensive and often complicated to use.
 
