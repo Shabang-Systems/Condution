@@ -338,7 +338,7 @@ let presentWelcome = function() {
                 setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
                 Storage.set({
                     key: "condution_onboarding",
-                    value: 1
+                    value: "done"
                 });
         }            
       });
@@ -353,7 +353,7 @@ let presentWelcome = function() {
                     $("#onboarding").fadeOut(1000);
                     Storage.set({
                         key: "condution_onboarding",
-                        value: 1
+                        value: "done"
                     });
             });
         }        
@@ -1054,7 +1054,7 @@ let ui = function() {
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
-            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
+            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":$(window).width()<576?"5px 0 10px 0":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
             //if (await isMobile())
             $("#task-name-" +activeTask).prop("readonly", true);
@@ -1471,7 +1471,7 @@ let ui = function() {
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
                     $('#task-name-' + taskId).css("text-decoration", "line-through");
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
-                    $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
+                    $('#task-' + taskId).stop().animate({"margin": $(window).width()<576?"20px 0 20px 0":"5px 0 5px 0"}, 200);
                     Haptics.notification({type: HapticsNotificationType.SUCCESS});
                     $('#task-' + taskId).slideUp(300);
                     E.db.completeTask(uid, taskId).then(function(e) {
@@ -1964,6 +1964,11 @@ let ui = function() {
                 $("#upcoming-daterow-d"+i).html(d.getDate());
                 $("#upcoming-daterow-w"+i).html(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]);
                 d.setDate(d.getDate()+1);
+            }
+            if (await isMobile()) {
+            //if (true) {
+                $("#upcoming-daterow-7").hide();
+                $("#upcoming-daterow-6").hide();
             }
             Promise.all(
                 // load inbox tasks
@@ -2905,8 +2910,7 @@ window.addEventListener('devtoolschange', event => {
 
 (async function potentiallyOnboard() {
     const ret = await Storage.get({ key: 'condution_onboarding' });
-    const val = JSON.parse(ret.value);
-    if (val !== 1) {
+    if (ret.value !== "done") {
         presentWelcome();
     } else {
         $("#loading").hide().css("display", "flex").fadeIn();
