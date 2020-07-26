@@ -1768,6 +1768,42 @@
                 transition: 0.5s all;
             }
 
+                @media (max-width: 575px) { 
+
+                    .upcoming-daterow-item {
+                        width: 60px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+                    .upcoming-daterow-item {
+                        width: 60px;
+                    }
+
+                }
+
+                @media (min-width: 768px) { 
+                    .upcoming-daterow-item {
+                        width: 60px;
+                    }
+
+                }
+
+                @media (min-width: 992px) { 
+                    .upcoming-daterow-item {
+                        width: 60px;
+                    }
+
+                }
+
+                @media (min-width: 1200px) { 
+                    .upcoming-daterow-item {
+                        width: 60px;
+                    }
+
+                }
+
                 .upcoming-daterow-normal:hover {
                     background: var(--content-normal);
                 }
