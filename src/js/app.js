@@ -1054,7 +1054,7 @@ let ui = function() {
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
-            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":"0"}, 100);
+            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":$(window).width()<576?"5px 0 10px 0":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
             //if (await isMobile())
             $("#task-name-" +activeTask).prop("readonly", true);
@@ -1471,7 +1471,7 @@ let ui = function() {
                     $('#task-name-' + taskId).css("color", interfaceUtil.gtc("--task-checkbox"));
                     $('#task-name-' + taskId).css("text-decoration", "line-through");
                     $('#task-pseudocheck-' + taskId).css("opacity", "0.6");
-                    $('#task-' + taskId).stop().animate({"margin": "5px 0 5px 0"}, 200);
+                    $('#task-' + taskId).stop().animate({"margin": $(window).width()<576?"20px 0 20px 0":"5px 0 5px 0"}, 200);
                     Haptics.notification({type: HapticsNotificationType.SUCCESS});
                     $('#task-' + taskId).slideUp(300);
                     E.db.completeTask(uid, taskId).then(function(e) {

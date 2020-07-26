@@ -572,6 +572,24 @@
                 border: 1px solid transparent;
             }
 
+                @media (max-width: 575px) { 
+
+                    .task {
+                        margin-top: 5px;
+                        margin-bottom: 10px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+
+                    .task {
+                        margin-top: 0px;
+                        margin-bottom: 0px;
+                    }
+
+                }
+
                 .thov:hover {
                     background-color: var(--task-feature) !important;
                 }
@@ -608,7 +626,7 @@
 
                 @media (max-width: 575px) { 
                     .task-name {
-                        font-size: 11pt;
+                        font-size: 14pt;
                         width:74%;
                     }
                 }
@@ -644,7 +662,7 @@
 
 
             .task-desc {
-                font-size: 9pt;
+                font-size: 10pt;
                 font-weight:300;
                 background-color:inherit;
                 color: var(--task-textbox);
@@ -888,6 +906,46 @@
         /* Checkmark */
 
             /* Classes */
+
+                    @media (max-width: 575px) { 
+
+                        .task-pseudocheck {
+                            transform: scale(1.4) translateY(-1px);
+                        }
+
+                    }
+
+                    @media (min-width: 576px) { 
+
+                        .task-pseudocheck {
+                            transform: scale(1.0) translateY(0px);
+                        }
+
+                    }
+
+                    @media (min-width: 768px) { 
+
+                        .task-pseudocheck {
+                            transform: scale(1.0) translateY(0px);
+                        }
+
+                    }
+
+                    @media (min-width: 992px) { 
+
+                        .task-pseudocheck {
+                            transform: scale(1.0) translateY(0px);
+                        }
+
+                    }
+
+                    @media (min-width: 1200px) { 
+
+                        .task-pseudocheck {
+                            transform: scale(1.0) translateY(0px);
+                        }
+
+                    }
 
                 .tick-icon {
                     position: absolute;
@@ -1647,6 +1705,46 @@
                 padding-bottom: 3px;
                 font-size: 15px;
             }
+
+                @media (max-width: 575px) { 
+
+                    .perspective-subhead{
+                        font-size: 17px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+
+                    .perspective-subhead{
+                        font-size: 15px;
+                    }
+
+                }
+
+                @media (min-width: 768px) { 
+
+                    .perspective-subhead{
+                        font-size: 15px;
+                    }
+
+                }
+
+                @media (min-width: 992px) { 
+
+                    .perspective-subhead{
+                        font-size: 15px;
+                    }
+
+                }
+
+                @media (min-width: 1200px) { 
+
+                    .perspective-subhead{
+                        font-size: 15px;
+                    }
+
+                }
 
     /* The Badge */
 
