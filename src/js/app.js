@@ -2056,7 +2056,7 @@ let ui = function() {
                 cld.push({task: "task", payload: ["completed-thisweek", taskId]});
             }
 
-            if (tasksWeek.length > 0)
+            if (tasksMonth.length > 0)
                 cld.push({task: "header", payload: "comp-lb-pm"});
 
             for (let taskId of tasksMonth) {
