@@ -493,10 +493,13 @@ async function getItemAvailability(userID) {
 
 async function getCompletedTasks(userID) {
     let completedTasks = await getTasksWithQuery(userID, util.select.all(["isComplete", "==", true]));
-    let taskItems = await Promise.all(completedTasks.map(async function(t){return await getTaskInformation(userID, t)}));
+    let taskItems = {};
+    await Promise.all(completedTasks.map(async function(tsk){
+        taskItems[tsk] = await getTaskInformation(userID, tsk);
+    }));
     const cpSorted = completedTasks.sort(function(b,a) {
-        let taskA = taskItems[completedTasks.indexOf(a)];
-        let taskB = taskItems[completedTasks.indexOf(b)];
+        let taskA = taskItems[a];
+        let taskB = taskItems[b];
         if (!taskA || !taskB) {
             return 1;
         }
@@ -522,29 +525,30 @@ async function getCompletedTasks(userID) {
     thisMonth.setMonth(thisMonth.getMonth()-1);
     thisMonth.setHours(0,0,0,0);
     let tasksToday = cpSorted.filter(function (a) {
-        let tsks = taskItems[completedTasks.indexOf(a)];
+        let tsks = taskItems[a];
         return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= today : false;
     });
     let tasksYesterday = cpSorted.filter(function (a) {
-        let tsks = taskItems[completedTasks.indexOf(a)];
+        let tsks = taskItems[a];
         return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= yesterday && new Date(tsks.completeDate.seconds * 1000) < today : false;
     });
     let tasksWeek = cpSorted.filter(function (a) {
-        let tsks = taskItems[completedTasks.indexOf(a)];
+        let tsks = taskItems[a];
         return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= thisWeek && new Date(tsks.completeDate.seconds * 1000) < yesterday : false;
     });
     let tasksMonth = cpSorted.filter(function (a) {
-        let tsks = taskItems[completedTasks.indexOf(a)];
+        let tsks = taskItems[a];
         return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) >= thisMonth && new Date(tsks.completeDate.seconds * 1000) < thisWeek : false;
     });
     let evenBefore = cpSorted.filter(function (a) {
-        let tsks = taskItems[completedTasks.indexOf(a)];
+        let tsks = taskItems[a];
         return tsks.completeDate ? new Date(tsks.completeDate.seconds * 1000) < thisMonth : true;
     });
     //console.log(tasksYesterday);
     //console.log(tasksWeek);
     //console.log(tasksMonth);
     /*console.log(evenBefore);*/
+    console.log([tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]);
     return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
 }
 
