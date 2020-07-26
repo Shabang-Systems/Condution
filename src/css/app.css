@@ -362,8 +362,9 @@
 
             .sandwich {
                 position: inline-block;
-                color: var(--content-normal-alt);
+                color: var(--decorative-light-alt);
                 transform: translateY(1.5px);
+                font-size: 20px;
             }
 
                 @media (max-width: 575px) { 
@@ -1501,20 +1502,21 @@
 
             .perspective-title {
                 color: var(--decorative-light-alt);
-                font-size: 12px;
                 padding: 0;
                 display: inline-block;
             }
 
                 @media (max-width: 575px) { 
                     .perspective-title {
-                        width: 93%;
-                        transform: translate(6px, -1px);
+                        width: 90%;
+                        transform: translate(6px, 0px);
+                        font-size: 15px;
                     }
 
                     .perspective-title-subproject {
                         width: 85%;
-                        transform: translate(6px, -1px);
+                        transform: translate(6px, 0px);
+                        font-size: 15px;
                     }
                 }
 
@@ -1522,11 +1524,13 @@
                     .perspective-title {
                         width: 94%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                     .perspective-title-subproject {
                         width: 90%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
                 }
 
@@ -1534,11 +1538,13 @@
                     .perspective-title {
                         width: 100%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                     .perspective-title-subproject {
                         width: 96%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                 }
@@ -1547,11 +1553,13 @@
                     .perspective-title {
                         width: 100%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                     .perspective-title-subproject {
                         width: 96%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                 }
@@ -1560,11 +1568,13 @@
                     .perspective-title {
                         width: 100%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                     .perspective-title-subproject {
                         width: 96%;
                         transform: translate(0px, 0px);
+                        font-size: 12px;
                     }
 
                 }
@@ -1574,7 +1584,6 @@
                 padding-left:4px;
                 font-weight: 600;
                 color: var(--decorative-light-alt);
-                font-size: 12px;
                 border: 0;
                 background-color: transparent;
                 border-radius: 3px;
@@ -1594,30 +1603,35 @@
                 @media (max-width: 575px) { 
                     .perspective-titleword {
                         width: 40%;
+                        font-size: 15px;
                     }
                 }
 
                 @media (min-width: 576px) { 
                     .perspective-titleword {
                         width: 70%;
+                        font-size: 12px;
                     }
                 }
 
                 @media (min-width: 768px) { 
                     .perspective-titleword {
                         width: 70%;
+                        font-size: 12px;
                     }
                 }
 
                 @media (min-width: 992px) { 
                     .perspective-titleword {
                         width: 70%;
+                        font-size: 12px;
                     }
                 }
 
                 @media (min-width: 1200px) { 
                     .perspective-titleword {
                         width: 70%;
+                        font-size: 12px;
                     }
                 }
 
