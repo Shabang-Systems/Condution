@@ -264,9 +264,6 @@ async function loadApp(user) {
         handleInternet(status.connected);
     });
     let status = Network.getStatus().then(status=>handleInternet(status.connected));
-    if (status) {
-        console.log("status obtained :)")
-    }
 
     $("#loading").fadeOut();
     $("#auth-content-wrapper").fadeOut();
@@ -2620,12 +2617,14 @@ let ui = function() {
                     ntObject.name = tb.val()
                 }
 
-
                 E.db.newTask(uid, ntObject).then(function(ntID) {
+                    console.log("no");
                     refresh().then(function(){
+                        console.log("bo");
                         taskManager.generateTaskInterface("inbox", ntID)
                     });
                     E.db.getInboxTasks(uid).then(function(e){
+                        console.log("aoe");
                         iC = e.length;
                         $("#unsorted-badge").html(''+iC);
                         $("#inbox-subhead").slideDown(300);
