@@ -160,7 +160,7 @@ const perspectiveHandler = function(){
                 break;
 
         }
-        // Final avaliablitiy filter for sequential
+        // Final availability filter for sequential
         let aval = await dbObj.getItemAvailability(uid);
         if (filter === "avail") taskObjs = taskObjs.filter(it => (aval[it.id] !== undefined)); 
         return taskObjs.map(t=>t.id);
