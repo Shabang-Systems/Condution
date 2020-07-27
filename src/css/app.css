@@ -767,6 +767,10 @@
                 /*text-overflow: ellipsis;*/
             }
 
+                .task-name::placeholder{
+                    color: var(--decorative-light-alt);
+                }
+
                 .task-name:focus {
                     background-color: var(--content-normal);
                 }
