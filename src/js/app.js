@@ -2911,7 +2911,7 @@ window.addEventListener('devtoolschange', event => {
 (async function potentiallyOnboard() {
     const ret = await Storage.get({ key: 'condution_onboarding' });
     const val = JSON.parse(ret.value);
-    if (ret.value !== "done" || val !== "done") {
+    if (ret.value !== "done" && val !== "done") {
         presentWelcome();
     } else {
         $("#loading").hide().css("display", "flex").fadeIn();
