@@ -837,7 +837,7 @@
                 }
 
                 .task-desc::placeholder{
-                    color: var(--decorative-light);
+                    color: var(--decorative-light-alt);
                 }
 
             .textbox {
