@@ -396,6 +396,12 @@
                         display: none !important;
                     }
                 }
+    /* Completed View */
+        /* Classes */
+            .completed-fm {
+                font-size: 12px;
+            }
+
 
     /* Menu Items */
 
