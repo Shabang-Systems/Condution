@@ -1054,7 +1054,7 @@ let ui = function() {
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
-            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":$(window).width()<576?"5px 0 10px 0":"0"}, 100);
+            $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":$(window).width()<576?"5px 0 5px 0":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
             //if (await isMobile())
             $("#task-name-" +activeTask).prop("readonly", true);
