@@ -1954,6 +1954,8 @@ let ui = function() {
 
         // upcoming view loader
         let upcoming = async function() {
+            $("#inbox").empty();
+            $("#due-soon").empty();
             $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
@@ -2026,6 +2028,16 @@ let ui = function() {
 
         // completed view loader
         let completed = async function() {
+            $("#completed-today").empty();
+            $("#completed-yesterday").empty();
+            $("#completed-thisweek").empty();
+            $("#completed-thismonth").empty();
+            $("#completed-earlier").empty();
+            $("#comp-lb-td").hide();
+            $("#comp-lb-yd").hide();
+            $("#comp-lb-pw").hide();
+            $("#comp-lb-pm").hide();
+            $("#comp-lb-el").hide();
             completedLoaders = [];
             // get completed tasks
             let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await E.db.getCompletedTasks(uid);
@@ -2112,6 +2124,7 @@ let ui = function() {
 
         // perspective view loader
         let perspective = async function(pid) {
+            $("#perspective-content").empty();
             pageIndex.pageContentID = pid;
             // get name
             let perspectiveObject = possiblePerspectives[0][pid];
@@ -2132,6 +2145,7 @@ let ui = function() {
 
         // project view loader
         let project = async function(pid) {
+            $("#project-content").empty();
             // update pid
             pageIndex.pageContentID = pid;
             // get the datum
@@ -2191,23 +2205,6 @@ let ui = function() {
                 $(this).css("display", "none");
             }
         });
-
-        // clear all contentboxes
-        $("#inbox").empty();
-        $("#due-soon").empty();
-        $("#completed-today").empty();
-        $("#completed-yesterday").empty();
-        $("#completed-thisweek").empty();
-        $("#completed-thismonth").empty();
-        $("#completed-earlier").empty();
-        $("#comp-lb-td").hide();
-        $("#comp-lb-yd").hide();
-        $("#comp-lb-pw").hide();
-        $("#comp-lb-pm").hide();
-        $("#comp-lb-el").hide();
-        $("#project-content").empty();
-        $("#perspective-content").empty();
-        
 
         // refresh data
         await refresh();
