@@ -1,7 +1,9 @@
 /* == Useful things commented out == */
 
-@media (max-width: 575px) { 
-
+@media (max-width: 575px) {
+    .completed-fm {
+        font-size: 15px !important;
+    }
 }
 
 @media (min-width: 576px) { 
@@ -398,9 +400,11 @@
                 }
     /* Completed View */
         /* Classes */
+    @media (min-width: 2px) {
             .completed-fm {
-                font-size: 12px;
+                font-size: 15px !important;
             }
+    }
 
 
     /* Menu Items */
