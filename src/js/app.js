@@ -18,6 +18,7 @@ require('select2')();
 var moment = require('moment-timezone');
 var { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
 var { Haptics, Network, Browser, Storage, Device } = Plugins;
+var E = require('./backend/CondutionEngine');
 
 const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
@@ -26,6 +27,9 @@ const isMobile = async function () {
 const isiOS = async function() {
     return (await Device.getInfo()).operatingSystem === "ios";
 }
+
+let ism = isMobile();
+let isi = isiOS();
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
@@ -45,7 +49,6 @@ let handleInternet = function(hasInternet) {
     else
         $("#missing-internet").css("display", "flex");
 };
-var E = require('./backend/CondutionEngine');
 
 E.start(firebase);
 
@@ -248,7 +251,7 @@ async function loadApp(user) {
     // User is signed in. Do user related things.
     // Check user's theme
     ui.user.set(user);
-    if (await isMobile()) {
+    if (await ism) {
     //if (true) {
         $("#quickaddmobile").show();
         $("#quickadd").hide();
@@ -520,6 +523,7 @@ let authUI = function() {
 }();
 
 let ui = function() {
+    let isMobile = false;
     // greeting of the day
     let greetings = ["Hello there,", "Hey,", "What's up,", "Howdy,", "Welcome,", "Yo!"];
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -1056,9 +1060,9 @@ let ui = function() {
             $("#task-repeat-"+activeTask).css("display", "none");
             $("#task-"+activeTask).stop().animate({"background-color": interfaceUtil.gtc("--background"), "padding": "0", "margin":$(window).width()<576?"5px 0 5px 0":"0"}, 100);
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0", "box-shadow": "0 0 0"});
-            //if (await isMobile())
+            //if (await ism)
             $("#task-name-" +activeTask).prop("readonly", true);
-            if (await isMobile())
+            if (await ism)
                 $(".page").removeClass("pa-bottom");
             await refresh();
             if (activeTaskDeInboxed) {
@@ -1202,7 +1206,7 @@ let ui = function() {
             // Part 3: customize the task!
             // Show/hide the close button
 
-/*            if (await isMobile())*/
+/*            if (await ism)*/
                 //$("#task-close-button-" + taskId).show();
             /*else*/
             $("#task-close-button-" + taskId).hide();
@@ -1967,7 +1971,7 @@ let ui = function() {
                 $("#upcoming-daterow-w"+i).html(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]);
                 d.setDate(d.getDate()+1);
             }
-            if (await isMobile()) {
+            if (await ism) {
             //if (true) {
                 $("#upcoming-daterow-7").hide();
                 $("#upcoming-daterow-6").hide();
@@ -2318,11 +2322,11 @@ let ui = function() {
             let taskInfo = $(this).attr("id").split("-");
             let task = taskInfo[taskInfo.length - 1];
             activeTask = task;
-            //let mb = await isMobile();
+            //let mb = await ism;
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
-            //if (await isMobile())
+            //if (await ism)
             $("#task-name-" + task).prop("readonly", false);
 /*            if (mb) {*/
                 //$('html').animate({ 
@@ -2336,7 +2340,7 @@ let ui = function() {
             pageIndex.dateLoaders[activeTask]();
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
-            if (await isMobile()) {
+            if (await ism) {
                 $(".page").addClass("pa-bottom");
                 $("#task-name-" + task).blur();
             }
@@ -2525,7 +2529,7 @@ let ui = function() {
                 $("#task-name-" + task).prop("readonly", false);
                 sorters.project.option("disabled", true);
                 sorters.inbox.option("disabled", true);
-                if (await isMobile()) {
+                if (await ism) {
                     $(".page").addClass("pa-bottom");
                     $("#task-name-" + task).blur();
                 }
@@ -2807,7 +2811,7 @@ let ui = function() {
             $("#task-name-" + task).prop("readonly", false);
             sorters.project.option("disabled", true);
             sorters.inbox.option("disabled", true);
-            if (await isMobile()) {
+            if (await ism) {
                 $(".page").addClass("pa-bottom");
                 $("#task-name-" + task).blur();
             }
