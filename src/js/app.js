@@ -1055,6 +1055,7 @@ let ui = function() {
             $("#quickadd").removeClass("qa_bottom");
             $("#convert").removeClass("convert_bottom");
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
+            $("#task-name-"+activeTask).removeClass("task-name-bottom");
             $("#task-edit-"+activeTask).slideUp(300);
             $("#task-trash-"+activeTask).css("display", "none");
             $("#task-repeat-"+activeTask).css("display", "none");
@@ -2324,6 +2325,7 @@ let ui = function() {
             activeTask = task;
             //let mb = await ism;
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+            $("#task-name"+task).addClass("task-name-bottom");
             $("#quickadd").addClass("qa_bottom");
             $("#convert").addClass("convert_bottom");
             //if (await ism)
@@ -2334,6 +2336,7 @@ let ui = function() {
                 //}, 'slow');
             /*}*/
             $("#task-edit-" + activeTask).stop().slideDown(200);
+            $("#task-name-"+activeTask).addClass("task-name-bottom");
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
             $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
@@ -2521,6 +2524,7 @@ let ui = function() {
                 }
                 $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
                 $("#task-edit-" + activeTask).slideDown(200);
+                $("#task-name-"+activeTask).addClass("task-name-bottom");
                 $("#task-trash-" + activeTask).css("display", "block");
                 $("#task-repeat-" + activeTask).css("display", "block");
                 $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
@@ -2803,6 +2807,7 @@ let ui = function() {
             }
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#task-edit-" + activeTask).slideDown(200);
+            $("#task-name-"+activeTask).addClass("task-name-bottom");
             $("#task-trash-" + activeTask).css("display", "block");
             $("#task-repeat-" + activeTask).css("display", "block");
             $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
@@ -2910,12 +2915,11 @@ window.addEventListener('devtoolschange', event => {
 });
 
 (async function potentiallyOnboard() {
+    $("#loading").hide().css("display", "flex").fadeIn();
     const ret = await Storage.get({ key: 'condution_onboarding' });
     const val = JSON.parse(ret.value);
     if (ret.value !== "done" && val !== "done") {
         presentWelcome();
-    } else {
-        $("#loading").hide().css("display", "flex").fadeIn();
     }
 })();
 
