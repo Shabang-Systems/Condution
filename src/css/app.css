@@ -2,7 +2,7 @@
 
 @media (max-width: 575px) {
     .completed-fm {
-        font-size: 15px !important;
+        font-size: 5px !important;
     }
 }
 
@@ -400,14 +400,17 @@
                 }
     /* Completed View */
         /* Classes */
-    @media (min-width: 2px) {
-            .completed-fm {
-                font-size: 15px !important;
-            }
-    }
+    /*@media (min-width: 2px) {*/
+    /*        .completed-fm {*/
+    /*            font-size: 15px !important;*/
+    /*        }*/
+    /*}*/
 
+.completed-fm {
+            font-size: 5px;
+}
 
-    /* Menu Items */
+/* Menu Items */
 
         /* Classes */
 
