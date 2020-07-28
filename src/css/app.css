@@ -39,6 +39,8 @@
     body {
         overflow-y: visible;
         -webkit-overflow-scrolling: touch;
+        padding-top: constant(safe-area-inset-top);
+        padding-top: env(safe-area-inset-top);
     }
 
     * {
@@ -71,11 +73,11 @@
             }
 
             .default-windowing-left {
-                padding-top: 50px !important;
+                /*padding-top: 50px !important;*/
             }
 
             .default-windowing-right {
-                padding-top: 55px !important;
+                /*padding-top: 55px !important;*/
             }
 
             /* Uncomment this for web distribution */
@@ -198,6 +200,7 @@
                 display: none;
                 margin: 1px;
                 margin-bottom: 50px;
+                height: 100%;
             }
 
                 .pa-bottom {
@@ -1884,7 +1887,7 @@
                 @media (max-width: 575px) { 
 
                     .perspective-subhead{
-                        font-size: 17px;
+                        font-size: 18.5px;
                     }
 
                 }
@@ -2159,7 +2162,7 @@
             #upcoming-daterow {
                 display: flex;
                 flex-direction: row;
-                height: 45px;
+                height: 47px;
                 margin-bottom: 10px;
                 margin-top: 6px;
             }
@@ -2217,7 +2220,7 @@
 
                 @media (max-width: 575px) { 
                     #greeting-date{
-                        font-size: 16px;
+                        font-size: 15px;
                     }
                 }
 

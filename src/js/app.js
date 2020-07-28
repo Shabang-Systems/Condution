@@ -108,15 +108,15 @@ lottie.loadAnimation({
 // TODO: make a kickstarter
 // Chapter 0: The Header.
 if (process.platform === "win32") {
-    $("#main-head-win32").show();
+    //$("#main-head-win32").show();
     $("#left-menu").addClass("win32-windowing");
     $("#content-area").addClass("win32-windowing");
 } else if (process.platform === "darwin") {
-    $("#main-head-darwin").show();
+    //$("#main-head-darwin").show();
     $("#left-menu").addClass("darwin-windowing-left");
     $("#content-area").addClass("darwin-windowing-right");
 } else {
-    $("#main-head-default").show();
+    //$("#main-head-default").show();
     $("#left-menu").addClass("default-windowing-left");
     $("#content-area").addClass("default-windowing-right");
 }
@@ -1053,6 +1053,7 @@ let ui = function() {
 
         let hideActiveTask = async function() {
             $("#quickadd").removeClass("qa_bottom");
+            $("#quickaddmobile").removeClass("quickaddmobile_bottom");
             $("#convert").removeClass("convert_bottom");
             $("#task-"+activeTask).css({"border-bottom": "0", "border-right": "0"});
             $("#task-name-"+activeTask).removeClass("task-name-bottom");
@@ -1401,7 +1402,7 @@ let ui = function() {
             //})
             //
             $('#task-project-'+taskId).select2({
-                'width': $(window).width()<576 ? '88%' : '80%',
+                'width': $(window).width()<576 ? '88%' : '79%',
                 searchInputPlaceholder: "Search Projects...",
                 placeholder: 'Inbox',
                 allowClear: true
@@ -2327,6 +2328,7 @@ let ui = function() {
             $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
             $("#task-name"+task).addClass("task-name-bottom");
             $("#quickadd").addClass("qa_bottom");
+            $("#quickaddmobile").addClass("quickaddmobile_bottom");
             $("#convert").addClass("convert_bottom");
             //if (await ism)
             $("#task-name-" + task).prop("readonly", false);
@@ -2515,6 +2517,7 @@ let ui = function() {
             E.db.associateTask(uid, ntID, pid);
             let activeTaskLeverage = 0;
             $("#quickadd").addClass("qa_bottom");
+            $("#quickaddmobile").addClass("quickaddmobile_bottom");
             $("#convert").addClass("convert_bottom");
             taskManager.generateTaskInterface("project-content", ntID, true).then(async function() {
                 let task = ntID;
@@ -2798,6 +2801,7 @@ let ui = function() {
             $("#inbox").slideDown(300);
         });
         $("#quickadd").addClass("qa_bottom");
+        $("#quickaddmobile").addClass("quickaddmobile_bottom");
         $("#convert").addClass("convert_bottom");
         taskManager.generateTaskInterface("inbox", ntID, true).then(async function() {
             let task = ntID;
