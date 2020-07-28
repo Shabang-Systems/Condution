@@ -251,8 +251,8 @@ async function loadApp(user) {
     // User is signed in. Do user related things.
     // Check user's theme
     ui.user.set(user);
-    if (await ism) {
-    //if (true) {
+    //if (await ism) {
+    if (true) {
         $("#quickaddmobile").show();
         $("#quickadd").hide();
     } else {
