@@ -33,14 +33,14 @@ let isi = isiOS();
 
 const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
-   //passive: false
+//passive: false
 //});
 //
 /*window.addEventListener("touchmove", function(event) {*/
-  //if (!event.target.classList.contains('scrollable')) {
-    //// no more scrolling
-    //event.preventDefault();
-  //}
+//if (!event.target.classList.contains('scrollable')) {
+//// no more scrolling
+//event.preventDefault();
+//}
 /*}, false);*/
 
 let handleInternet = function(hasInternet) {
@@ -251,8 +251,8 @@ async function loadApp(user) {
     // User is signed in. Do user related things.
     // Check user's theme
     ui.user.set(user);
-    if (await ism) {
-    //if (true) {
+    //if (await ism) {
+    if (true) {
         $("#quickaddmobile").show();
         $("#quickadd").hide();
     } else {
@@ -327,37 +327,37 @@ let presentWelcome = function() {
 
                 }, 300);
             });
-           }
-        });
+        }
+    });
     $('#onboarding-check-3').change(function(e) {
-            if (this.checked) {
-                $("#onboarding-name-3").css("color", interfaceUtil.gtc("--task-checkbox"));
-                $("#onboarding-name-3").css("text-decoration", "line-through");
-                $("#onboarding-pseudocheck-3").css("opacity", "0.6");
-                $("#onboarding-3").animate({"padding": "5px 0 5px 0 !important"}, 200);
-                Haptics.notification({type: HapticsNotificationType.SUCCESS});
-                $("#onboarding-3").slideUp(300);
-                authUI.anonomGeneration();
-                setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
+        if (this.checked) {
+            $("#onboarding-name-3").css("color", interfaceUtil.gtc("--task-checkbox"));
+            $("#onboarding-name-3").css("text-decoration", "line-through");
+            $("#onboarding-pseudocheck-3").css("opacity", "0.6");
+            $("#onboarding-3").animate({"padding": "5px 0 5px 0 !important"}, 200);
+            Haptics.notification({type: HapticsNotificationType.SUCCESS});
+            $("#onboarding-3").slideUp(300);
+            authUI.anonomGeneration();
+            setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
+            Storage.set({
+                key: "condution_onboarding",
+                value: "done"
+            });
+        }            
+    });
+    $('#onboarding-check-2').change(function(e) {
+        if (this.checked) {
+            $("#onboarding-name-2").css("color", interfaceUtil.gtc("--task-checkbox"));
+            $("#onboarding-name-2").css("text-decoration", "line-through");
+            $("#onboarding-pseudocheck-2").css("opacity", "0.6");
+            $("#onboarding-2").animate({"padding": "5px 0 5px 0 !important"}, 200);
+            Haptics.notification({type: HapticsNotificationType.SUCCESS});
+            $("#onboarding-2").slideUp(300, function() {
+                $("#onboarding").fadeOut(1000);
                 Storage.set({
                     key: "condution_onboarding",
                     value: "done"
                 });
-        }            
-      });
-      $('#onboarding-check-2').change(function(e) {
-            if (this.checked) {
-                $("#onboarding-name-2").css("color", interfaceUtil.gtc("--task-checkbox"));
-                $("#onboarding-name-2").css("text-decoration", "line-through");
-                $("#onboarding-pseudocheck-2").css("opacity", "0.6");
-                $("#onboarding-2").animate({"padding": "5px 0 5px 0 !important"}, 200);
-                Haptics.notification({type: HapticsNotificationType.SUCCESS});
-                $("#onboarding-2").slideUp(300, function() {
-                    $("#onboarding").fadeOut(1000);
-                    Storage.set({
-                        key: "condution_onboarding",
-                        value: "done"
-                    });
             });
         }        
     });
@@ -850,11 +850,11 @@ let ui = function() {
             } else {
                 $(this).html("Back to Basic...");
                 $("#repeat-monthgrid").fadeIn({
-                  start: function () {
-                    $(this).css({
-                      display: "grid"
-                    })
-                  }
+                    start: function () {
+                        $(this).css({
+                            display: "grid"
+                        })
+                    }
                 });
             }
             advancedMonthMode = !advancedMonthMode;
@@ -871,11 +871,11 @@ let ui = function() {
             } else {
                 $(this).html("Back to Basic...");
                 $("#repeat-daterow").fadeIn({
-                  start: function () {
-                    $(this).css({
-                      display: "flex"
-                    })
-                  }
+                    start: function () {
+                        $(this).css({
+                            display: "flex"
+                        })
+                    }
                 });
             }
             advancedWeekMode = !advancedWeekMode;
@@ -952,7 +952,7 @@ let ui = function() {
             }
         });
 
-        
+
         $(".repeat-monthgrid-day").on("click", function(e) {
             if (repeatMonthDays.includes($(this).html())) {
                 $(this).stop().animate({"background-color": interfaceUtil.gtc("--background")}, 100);
@@ -991,11 +991,11 @@ let ui = function() {
                         repeatWeekDays = ti.repeat.on;
                         $("#repeat-advanced-weekly").html("Back to Basic...");
                         $("#repeat-daterow").fadeIn({
-                          start: function () {
-                            $(this).css({
-                              display: "flex"
-                            })
-                          }
+                            start: function () {
+                                $(this).css({
+                                    display: "flex"
+                                })
+                            }
                         });
                         advancedWeekMode = true;
                     } else {
@@ -1015,11 +1015,11 @@ let ui = function() {
                         repeatMonthDays = ti.repeat.on;
                         $("#repeat-advanced-monthly").html("Back to Basic...");
                         $("#repeat-monthgrid").fadeIn({
-                          start: function () {
-                            $(this).css({
-                              display: "grid"
-                            })
-                          }
+                            start: function () {
+                                $(this).css({
+                                    display: "grid"
+                                })
+                            }
                         });
                         advancedMonthMode = true;
                     } else {
@@ -1039,7 +1039,7 @@ let ui = function() {
         return cr;
     }();
 
-        // the public refresh function
+    // the public refresh function
 
     let activeTask = null; // TODO: shouldn't this be undefined?
     let activeTaskDeInboxed = false;
@@ -1108,8 +1108,8 @@ let ui = function() {
 
             // that actually waits for the finishing of all animations...
             // JANKY!
-         /*   setTimeout(function() {*/
-                //if (!isTaskActive) loadView(currentPage)
+            /*   setTimeout(function() {*/
+            //if (!isTaskActive) loadView(currentPage)
             /*}, 500);*/
             sorters.project.option("disabled", false);
             sorters.inbox.option("disabled", false);
@@ -1208,8 +1208,8 @@ let ui = function() {
             // Part 3: customize the task!
             // Show/hide the close button
 
-/*            if (await ism)*/
-                //$("#task-close-button-" + taskId).show();
+            /*            if (await ism)*/
+            //$("#task-close-button-" + taskId).show();
             /*else*/
             $("#task-close-button-" + taskId).hide();
 
@@ -1395,10 +1395,10 @@ let ui = function() {
                 }
             });
             // Set project!
-           /* $('#task-project-' + taskId).editableSelect({*/
-                //effects: 'fade',
-                //duration: 200,
-                //appendTo: 'body',
+            /* $('#task-project-' + taskId).editableSelect({*/
+            //effects: 'fade',
+            //duration: 200,
+            //appendTo: 'body',
             //})
             //
             $('#task-project-'+taskId).select2({
@@ -1482,7 +1482,7 @@ let ui = function() {
                     $('#task-' + taskId).slideUp(300);
                     E.db.completeTask(uid, taskId).then(function(e) {
                         if (project === undefined) {
-                             E.db.getInboxTasks(uid).then(function(e){
+                            E.db.getInboxTasks(uid).then(function(e){
                                 iC = e.length;
                                 if (iC === 0) {
                                     $("#inbox-subhead").slideUp(300);
@@ -1637,28 +1637,28 @@ let ui = function() {
             });
 
             // Task project change
-/*             $('#task-project-' + taskId).change(async function(e) {*/
-                //if (this.value in possibleProjectsRev) {
-                    //let projId = possibleProjectsRev[this.value];
-                    //if (project === undefined){
-                        //activeTaskDeInboxed = true;
-                    //} else {
-                        //await E.db.dissociateTask(uid, taskId, projectID);
-                    //}
-                    //E.db.modifyTask(uid, taskId, {project:projId});
-                    //await E.db.associateTask(uid, taskId, projId);
-                    //projectID = projId;
-                    //project = this.value;
-                //} else {
-                    //E.db.modifyTask(uid, taskId, {project:""});
-                    //this.value = ""
-                    //if (project !== undefined) {
-                        //activeTaskInboxed = true;
-                        //await E.db.dissociateTask(uid, taskId, projectID);
-                    //}
-                    //project = undefined;
-                    //projectID = "";
-                //}
+            /*             $('#task-project-' + taskId).change(async function(e) {*/
+            //if (this.value in possibleProjectsRev) {
+            //let projId = possibleProjectsRev[this.value];
+            //if (project === undefined){
+            //activeTaskDeInboxed = true;
+            //} else {
+            //await E.db.dissociateTask(uid, taskId, projectID);
+            //}
+            //E.db.modifyTask(uid, taskId, {project:projId});
+            //await E.db.associateTask(uid, taskId, projId);
+            //projectID = projId;
+            //project = this.value;
+            //} else {
+            //E.db.modifyTask(uid, taskId, {project:""});
+            //this.value = ""
+            //if (project !== undefined) {
+            //activeTaskInboxed = true;
+            //await E.db.dissociateTask(uid, taskId, projectID);
+            //}
+            //project = undefined;
+            //projectID = "";
+            //}
             /*});*/
 
             // Trashing a task
@@ -1713,15 +1713,15 @@ let ui = function() {
             $("#task-flagged-no-" + taskId).change(function(e) {
                 isFlagged = false;
                 E.db.modifyTask(uid, taskId, {isFlagged: false});
-               // TODO: Unflagged Style? So far flagged is
-               // just another filter for perspective selection
+                // TODO: Unflagged Style? So far flagged is
+                // just another filter for perspective selection
             });
 
             // Add flagged parameter
             $("#task-flagged-yes-" + taskId).change(function(e) {
                 isFlagged = true;
                 E.db.modifyTask(uid, taskId, {isFlagged: true});
-               // TODO: Flagged Style?
+                // TODO: Flagged Style?
             });
 
             // Remove floating parameter and calculate dates
@@ -1925,7 +1925,7 @@ let ui = function() {
                 });
                 pageIndex.interfaceLocks.reloadLock = true;
             },
-             onEnd: function(e) {
+            onEnd: function(e) {
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
                 let loaders = [];
@@ -1974,7 +1974,7 @@ let ui = function() {
                 d.setDate(d.getDate()+1);
             }
             if (await ism) {
-            //if (true) {
+                //if (true) {
                 $("#upcoming-daterow-7").hide();
                 $("#upcoming-daterow-6").hide();
             }
@@ -2119,7 +2119,7 @@ let ui = function() {
             }
 
             // Hide unneeded labels
-/*            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();*/
+            /*            if (tasksToday.length === 0) $("#comp-lb-td").hide(); else $("#comp-lb-td").show();*/
             //if (tasksYesterday.length === 0) $("#comp-lb-yd").hide(); else $("#comp-lb-yd").show();
             //if (tasksWeek.length === 0) $("#comp-lb-pw").hide(); else $("#comp-lb-pw").show();
             //if (tasksMonth.length === 0) $("#comp-lb-pm").hide(); else $("#comp-lb-pm").show();
@@ -2261,7 +2261,7 @@ let ui = function() {
         }
         interfaceUtil.menu.close();
     });
-    
+
     $(document).on('click', '.upcoming-daterow-item', function(e) {
         $("#upcoming-daterow").children().each(function() {
             $(this).removeClass("upcoming-daterow-active");
@@ -2332,10 +2332,10 @@ let ui = function() {
             $("#convert").addClass("convert_bottom");
             //if (await ism)
             $("#task-name-" + task).prop("readonly", false);
-/*            if (mb) {*/
-                //$('html').animate({ 
-                    //scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
-                //}, 'slow');
+            /*            if (mb) {*/
+            //$('html').animate({ 
+            //scrollTop: $("#task-"+task).offset().top-activeTaskLeverage-50
+            //}, 'slow');
             /*}*/
             $("#task-edit-" + activeTask).stop().slideDown(200);
             $("#task-name-"+activeTask).addClass("task-name-bottom");
@@ -2480,8 +2480,8 @@ let ui = function() {
             interfaceUtil.newPHI();
             if (pageIndex.projectDir.length > 0) {
                 E.db.dissociateProject(uid, pid, (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1]).then(function() {
-                activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
-                loadView("project-page", pageIndex.projectDir[pageIndex.projectDir.length-1].split("-")[1]);
+                    activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
+                    loadView("project-page", pageIndex.projectDir[pageIndex.projectDir.length-1].split("-")[1]);
                 });
             } else {
                 activeMenu = "today";
@@ -2545,290 +2545,296 @@ let ui = function() {
         });
     });
 
-    $(document).on("change", "#project-title", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        let value = $(this).val();
-        E.db.modifyProject(uid, pid, {name: value});
+$(document).on("change", "#project-title", function(e) {
+    let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+    let value = $(this).val();
+    E.db.modifyProject(uid, pid, {name: value});
+    reloadPage(true);
+});
+
+$(document).on("change", "#perspective-title", function(e) {
+    let pstID = pageIndex.pageContentID;
+    let value = $(this).val();
+    E.db.modifyPerspective(uid, pstID, {name: value});
+    reloadPage(true);
+});
+
+$(document).on("click", "#project-sequential-yes", function(e) {
+    let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+    E.db.modifyProject(uid, pid, {is_sequential: true}).then(function() {
         reloadPage(true);
     });
+});
 
-    $(document).on("change", "#perspective-title", function(e) {
-        let pstID = pageIndex.pageContentID;
-        let value = $(this).val();
-        E.db.modifyPerspective(uid, pstID, {name: value});
+$(document).on("click", "#project-sequential-no", function(e) {
+    let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
+    E.db.modifyProject(uid, pid, {is_sequential: false}).then(function() {
         reloadPage(true);
     });
+});
 
-    $(document).on("click", "#project-sequential-yes", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        E.db.modifyProject(uid, pid, {is_sequential: true}).then(function() {
-            reloadPage(true);
-        });
-    });
+$(document).on("click", "#logout", function(e) {
+    firebase.auth().signOut().then(() => {}, console.error);
+});
 
-    $(document).on("click", "#project-sequential-no", function(e) {
-        let pid = (pageIndex.projectDir[pageIndex.projectDir.length-1]).split("-")[1];
-        E.db.modifyProject(uid, pid, {is_sequential: false}).then(function() {
-            reloadPage(true);
-        });
-    });
+$(document).on("click", "#perspective-edit", function(e) {
+    showPerspectiveEdit(pageIndex.pageContentID);
+});
 
-    $(document).on("click", "#logout", function(e) {
-        firebase.auth().signOut().then(() => {}, console.error);
-    });
+$("#quickadd").click(function(e) {
+    $(this).stop().animate({"width": "280px"}, 500);
+});
 
-    $(document).on("click", "#perspective-edit", function(e) {
-        showPerspectiveEdit(pageIndex.pageContentID);
-    });
-
-    $("#quickadd").click(function(e) {
-        $(this).stop().animate({"width": "280px"}, 500);
-    });
-
-    $("#quickadd").blur(function(e) {
-        $(this).val("");
-        $(this).stop().animate({"width": "230px"}, 500);
-        //console.error(e);
-    });
+$("#quickadd").blur(function(e) {
+    $(this).val("");
+    $(this).stop().animate({"width": "230px"}, 500);
+    //console.error(e);
+});
 
 
-    $("#quickadd").keydown(function(e) {
-        // TODO: make the user unable to spam
-        if (e.keyCode == 13) {
-            if (pageIndex.interfaceLocks.qaLock) {
-                return;
-            } else {
-                pageIndex.interfaceLocks.qaLock = true;
-            }
-            let tb = $(this);
-            tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, function() {
-                setTimeout(()=>(pageIndex.interfaceLocks.qaLock = false), 750);
-                let newTaskUserRequest = chrono.parse($(this).val());
-                // TODO: so this doesn't actively watch for the word "DUE", which is a problem.
-                // Make that happen is the todo.
-                let startDate;
-                //let endDate;
-                let tz = moment.tz.guess();
-                let ntObject = {
-                    desc: "",
-                    isFlagged: false,
-                    isFloating: false,
-                    isComplete: false,
-                    project: "",
-                    tags: [],
-                    timezone: tz,
-                    repeat: {rule: "none"},
-                };
-                if (newTaskUserRequest.length != 0) {
-                    let start = newTaskUserRequest[0].start;
-                    //let end = E.db.newTaskUserRequest[0].end;
-                    if (start) {
-                        startDate = start.date();
-                        ntObject.due = startDate;
-                        ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
-                    }
-                } else {
-                    ntObject.name = tb.val()
+$("#quickadd").keydown(function(e) {
+    // TODO: make the user unable to spam
+    if (e.keyCode == 13) {
+        if (pageIndex.interfaceLocks.qaLock) {
+            return;
+        } else {
+            pageIndex.interfaceLocks.qaLock = true;
+        }
+        let tb = $(this);
+        tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd-success"), "color": interfaceUtil.gtc("--quickadd-success-text")}, function() {
+            setTimeout(()=>(pageIndex.interfaceLocks.qaLock = false), 750);
+            let newTaskUserRequest = chrono.parse($(this).val());
+            // TODO: so this doesn't actively watch for the word "DUE", which is a problem.
+            // Make that happen is the todo.
+            let startDate;
+            //let endDate;
+            let tz = moment.tz.guess();
+            let ntObject = {
+                desc: "",
+                isFlagged: false,
+                isFloating: false,
+                isComplete: false,
+                project: "",
+                tags: [],
+                timezone: tz,
+                repeat: {rule: "none"},
+            };
+            if (newTaskUserRequest.length != 0) {
+                let start = newTaskUserRequest[0].start;
+                //let end = E.db.newTaskUserRequest[0].end;
+                if (start) {
+                    startDate = start.date();
+                    ntObject.due = startDate;
+                    ntObject.name = tb.val().replace(newTaskUserRequest[0].text, '')
                 }
+            } else {
+                ntObject.name = tb.val()
+            }
 
 
-                E.db.newTask(uid, ntObject).then(function(ntID) {
-                    refresh().then(function(){
-                        taskManager.generateTaskInterface("inbox", ntID)
-                    });
-                    E.db.getInboxTasks(uid).then(function(e){
-                        iC = e.length;
-                        $("#unsorted-badge").html(''+iC);
-                        $("#inbox-subhead").slideDown(300);
-                        $("#inbox").slideDown(300);
-                        tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, function() {
-                            tb.blur();
-                            tb.val("");
-                        });
+            E.db.newTask(uid, ntObject).then(function(ntID) {
+                refresh().then(function(){
+                    taskManager.generateTaskInterface("inbox", ntID)
+                });
+                E.db.getInboxTasks(uid).then(function(e){
+                    iC = e.length;
+                    $("#unsorted-badge").html(''+iC);
+                    $("#inbox-subhead").slideDown(300);
+                    $("#inbox").slideDown(300);
+                    tb.stop().animate({"background-color": interfaceUtil.gtc("--quickadd"), "color": interfaceUtil.gtc("--quickadd-text")}, 100, function() {
+                        tb.blur();
+                        tb.val("");
                     });
                 });
             });
-            
-        } else if (e.keyCode == 27) {
-            $(this).blur();
-        }
-    });
+        });
 
-    /*$(document).on(".menuitem", "dragover", function(e) {*/
-        //console.log(e);
-        //e.preventDefault();
-    /*});*/
-
-    $(document).on("drop", ".project", function(e) {
-        let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
-        let target = this.id.split("-"); 
-
-        if (dropped[1] === target[1]) return;
-        if (dropped[0] === "task") {
-            (async function() {
-                let ti = await E.db.getTaskInformation(uid, dropped[1]);
-                if (ti.project !== "") {
-                    if (ti.project === target[1]) return;
-                    await E.db.dissociateTask(uid, dropped[1], ti.project); 
-                }
-                await E.db.modifyTask(uid, dropped[1], {project:target[1]});
-                await E.db.associateTask(uid, dropped[1], target[1]);
-                $("#task-"+dropped[1]).slideUp();
-                reloadPage(true);
-            })();
-        } else if (dropped[0] === "project") {
-            (async function() {
-                let ti = await E.db.getProjectStructure(uid, dropped[1]);
-                if (ti.parentProj !== "") {
-                    if (ti.parentProj === target[1]) return;
-                    await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
-                }
-                await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
-                await E.db.associateProject(uid, dropped[1], target[1]);
-                $("#project-"+dropped[1]).slideUp();
-                reloadPage(true);
-            })();
-        }
-    });
-
-    $(document).on("dragstart", ".project", function(e) {
-        e.originalEvent.dataTransfer.setData('text', e.target.id);
-    });
-
-    $(document).on("dragstart", ".task", function(e) {
-        e.originalEvent.dataTransfer.setData('text', e.target.id);
-    });
-
-    $(document).on("click", "#perspective-documentaion", async function(e) {
-        //require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
-        await Browser.open({ url: 'https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2' });
-    });
-
-    Hammer($("#content-area")[0]).on('swiperight swipeleft', function (e) {
-        e.preventDefault();
-        const { x } = interfaceUtil.getStartSwipe(e);
-        //swipe right to open nav /* note the condition here */
-        if (e.type == 'swiperight' && x >= 0 && x <=500) {
-            // open menu
-            interfaceUtil.menu.open();
-            //swiping left should slide out nav and/or sub-nav
-        } else {
-            // close/hide menu
-            interfaceUtil.menu.close();
-        }
-    });
-
-    $(".sandwich").click(function(e) {
-        interfaceUtil.menu.open();
-    });
-
-    $(document).click(function(e) { 
-        var $target = $(e.target);
-        if(!$target.closest('#left-menu').length && !$target.closest('.sandwich').length) {
-            interfaceUtil.menu.close();
-        }        
-    });
-
-
-    $(document).on("click", "#convert", function() {
-        showConvert();
-    });
-
-    $(document).on("click", "#convert-src", function() {
-        $("#auth-content-wrapper").fadeOut(300);
-
-        authUI.anonomGeneration();
-    });
-
-    // https://codepen.io/leonardo-fernandes/pen/xjzgWM
-    $(document).on("click", "#quickaddmobile", async function(evt) {
-    var btn = $(evt.currentTarget);
-    var x = evt.pageX - btn.offset().left;
-    var y = evt.pageY - btn.offset().top;
-  
-    var duration = 500;
-    var animationFrame, animationStart;
-  
-    var animationStep = function(timestamp) {
-        if (!animationStart) {
-          animationStart = timestamp;
-        }
-   
-    var frame = timestamp - animationStart;
-    if (frame < duration) {
-      var easing = (frame/duration) * (2 - (frame/duration));
-      
-      var circle = "circle at " + x + "px " + y + "px";
-      var color = "rgba(0, 0, 0, " + (0.3 * (1 - easing)) + ")";
-      var stop = 90 * easing + "%";
-
-      btn.css({
-        "background-image": "radial-gradient(" + circle + ", " + color + " " + stop + ", transparent " + stop + ")"
-      });
-
-      animationFrame = window.requestAnimationFrame(animationStep);
-    } else {
-      $(btn).css({
-        "background-image": "none"
-      });
-      window.cancelAnimationFrame(animationFrame);
+    } else if (e.keyCode == 27) {
+        $(this).blur();
     }
-
-
-    
-  };
-  
-    Haptics.impact({style: HapticsImpactStyle.Heavy});
-  animationFrame = window.requestAnimationFrame(animationStep);
-  loadView("upcoming-page");
-    let ntObject = {
-        desc: "",
-        isFlagged: false,
-        isFloating: false,
-        isComplete: false,
-        project: "",
-        tags: [],
-        timezone: moment.tz.guess(),
-        repeat: {rule: "none"},
-        name: "",
-    };
-    E.db.newTask(uid, ntObject).then(function(ntID) {
-        let activeTaskLeverage = 0;
-        E.db.getInboxTasks(uid).then(function(e){
-            iC = e.length;
-            $("#unsorted-badge").html(''+iC);
-            $("#inbox-subhead").slideDown(300);
-            $("#inbox").slideDown(300);
-        });
-        $("#quickadd").addClass("qa_bottom");
-        $("#quickaddmobile").addClass("quickaddmobile_bottom");
-        $("#convert").addClass("convert_bottom");
-        taskManager.generateTaskInterface("inbox", ntID, true).then(async function() {
-            let task = ntID;
-            activeTask = task;
-            if (activeTask) {
-                activeTaskLeverage = $("#task-"+activeTask).height()+40;
-            }
-            $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
-            $("#task-edit-" + activeTask).slideDown(200);
-            $("#task-name-"+activeTask).addClass("task-name-bottom");
-            $("#task-trash-" + activeTask).css("display", "block");
-            $("#task-repeat-" + activeTask).css("display", "block");
-            $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
-            $("#task-name-" + task).focus();
-            $("#blankimage-project").hide();
-            $("#task-name-" + task).prop("readonly", false);
-            sorters.project.option("disabled", true);
-            sorters.inbox.option("disabled", true);
-            if (await ism) {
-                $(".page").addClass("pa-bottom");
-                $("#task-name-" + task).blur();
-            }
-
-        });
-    });
-
 });
+
+/*$(document).on(".menuitem", "dragover", function(e) {*/
+//console.log(e);
+//e.preventDefault();
+/*});*/
+
+$(document).on("drop", ".project", function(e) {
+    let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
+    let target = this.id.split("-"); 
+
+    if (dropped[1] === target[1]) return;
+    if (dropped[0] === "task") {
+        (async function() {
+            let ti = await E.db.getTaskInformation(uid, dropped[1]);
+            if (ti.project !== "") {
+                if (ti.project === target[1]) return;
+                await E.db.dissociateTask(uid, dropped[1], ti.project); 
+            }
+            await E.db.modifyTask(uid, dropped[1], {project:target[1]});
+            await E.db.associateTask(uid, dropped[1], target[1]);
+            $("#task-"+dropped[1]).slideUp();
+            reloadPage(true);
+        })();
+    } else if (dropped[0] === "project") {
+        (async function() {
+            let ti = await E.db.getProjectStructure(uid, dropped[1]);
+            if (ti.parentProj !== "") {
+                if (ti.parentProj === target[1]) return;
+                await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
+            }
+            await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
+            await E.db.associateProject(uid, dropped[1], target[1]);
+            $("#project-"+dropped[1]).slideUp();
+            reloadPage(true);
+        })();
+    }
+});
+
+$(document).on("dragstart", ".project", function(e) {
+    e.originalEvent.dataTransfer.setData('text', e.target.id);
+});
+
+$(document).on("dragstart", ".task", function(e) {
+    e.originalEvent.dataTransfer.setData('text', e.target.id);
+});
+
+$(document).on("click", "#perspective-documentaion", async function(e) {
+    //require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+    await Browser.open({ url: 'https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2' });
+});
+
+Hammer($("#content-area")[0]).on('swiperight swipeleft', function (e) {
+    e.preventDefault();
+    const { x } = interfaceUtil.getStartSwipe(e);
+    //swipe right to open nav /* note the condition here */
+    if (e.type == 'swiperight' && x >= 0 && x <=500) {
+        // open menu
+        interfaceUtil.menu.open();
+        //swiping left should slide out nav and/or sub-nav
+    } else {
+        // close/hide menu
+        interfaceUtil.menu.close();
+    }
+});
+
+$(".sandwich").click(function(e) {
+    interfaceUtil.menu.open();
+});
+
+$(document).click(function(e) { 
+    var $target = $(e.target);
+    if(!$target.closest('#left-menu').length && !$target.closest('.sandwich').length) {
+        interfaceUtil.menu.close();
+    }        
+});
+
+
+$(document).on("click", "#convert", function() {
+    showConvert();
+});
+
+$(document).on("click", "#convert-src", function() {
+    $("#auth-content-wrapper").fadeOut(300);
+
+    authUI.anonomGeneration();
+});
+
+// https://codepen.io/leonardo-fernandes/pen/xjzgWM
+$(document).on("click", "#quickaddmobile", async function(evt) {
+    if (pageIndex.interfaceLocks.qaLock) {
+        return
+    } else {
+
+        pageIndex.interfaceLocks.qaLock = true;
+        setTimeout(()=>(pageIndex.interfaceLocks.qaLock = false), 750);
+
+
+        var btn = $(evt.currentTarget);
+        var x = evt.pageX - btn.offset().left;
+        var y = evt.pageY - btn.offset().top;
+
+        var duration = 500;
+        var animationFrame, animationStart;
+
+        var animationStep = function(timestamp) {
+            if (!animationStart) {
+                animationStart = timestamp;
+            }
+
+            var frame = timestamp - animationStart;
+            if (frame < duration) {
+                var easing = (frame/duration) * (2 - (frame/duration));
+
+                var circle = "circle at " + x + "px " + y + "px";
+                var color = "rgba(0, 0, 0, " + (0.3 * (1 - easing)) + ")";
+                var stop = 90 * easing + "%";
+
+                btn.css({
+                    "background-image": "radial-gradient(" + circle + ", " + color + " " + stop + ", transparent " + stop + ")"
+                });
+
+                animationFrame = window.requestAnimationFrame(animationStep);
+            } else {
+                $(btn).css({
+                    "background-image": "none"
+                });
+                window.cancelAnimationFrame(animationFrame);
+            }
+
+        };
+
+        Haptics.impact({style: HapticsImpactStyle.Heavy});
+        animationFrame = window.requestAnimationFrame(animationStep);
+        loadView("upcoming-page");
+        let ntObject = {
+            desc: "",
+            isFlagged: false,
+            isFloating: false,
+            isComplete: false,
+            project: "",
+            tags: [],
+            timezone: moment.tz.guess(),
+            repeat: {rule: "none"},
+            name: "",
+        };
+        E.db.newTask(uid, ntObject).then(function(ntID) {
+            let activeTaskLeverage = 0;
+            E.db.getInboxTasks(uid).then(function(e){
+                iC = e.length;
+                $("#unsorted-badge").html(''+iC);
+                $("#inbox-subhead").slideDown(300);
+                $("#inbox").slideDown(300);
+            });
+            $("#quickadd").addClass("qa_bottom");
+            $("#quickaddmobile").addClass("quickaddmobile_bottom");
+            $("#convert").addClass("convert_bottom");
+            taskManager.generateTaskInterface("inbox", ntID, true).then(async function() {
+                let task = ntID;
+                activeTask = task;
+                if (activeTask) {
+                    activeTaskLeverage = $("#task-"+activeTask).height()+40;
+                }
+                $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-edit-" + activeTask).slideDown(200);
+                $("#task-name-"+activeTask).addClass("task-name-bottom");
+                $("#task-trash-" + activeTask).css("display", "block");
+                $("#task-repeat-" + activeTask).css("display", "block");
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
+                $("#task-name-" + task).focus();
+                $("#blankimage-project").hide();
+                $("#task-name-" + task).prop("readonly", false);
+                sorters.project.option("disabled", true);
+                sorters.inbox.option("disabled", true);
+                if (await ism) {
+                    $(".page").addClass("pa-bottom");
+                    $("#task-name-" + task).blur();
+                }
+
+            });
+            });
+        };
+    });
 
 
     interfaceUtil.newPHI();
@@ -2866,6 +2872,7 @@ let ui = function() {
     };
 
     return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
+
 }();
 
 
