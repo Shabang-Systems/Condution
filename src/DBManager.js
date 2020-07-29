@@ -32,15 +32,14 @@ const [cRef, flush] = (() => {
          * @return none
          *
          */
-
         cache = new Map();
         unsubscribeCallbacks = new Map();
     }
 
-    async function decideWhetherToUseHardStorage() {
-        return await Network.getStatus().connected;
+    async function decideWhetherToUseFirebase() {
+        console.log('net status: ', (await Network.getStatus()).connected);
+        return (await Network.getStatus()).connected;
     }
-
 
     function getFirebaseRef(path) {
         /*
@@ -116,6 +115,8 @@ const [cRef, flush] = (() => {
         return await cache.get(TODOstring);
     }
 
+    async function storageRead(path) { TODO(); }
+
     //async function storageSet(path, value) {
         /*
          * Set a value in the storage.
@@ -137,7 +138,7 @@ const [cRef, flush] = (() => {
     //    cache.set(stringPath, value)
     //}
 
-    //function cacheRef(...path) {
+    function cacheRef(...path) {
         /*
          * Get a reference wrapper that forces cache hits.
          * This function will be exposed to the outside world.
@@ -145,12 +146,13 @@ const [cRef, flush] = (() => {
          * @param   path    A valid path array.
          * @return  wrapper A wrapper object around the expected reference.
          */
-    //    console.log(getFirebaseRef(path));
-    //    return Object.assign(
-    //        getFirebaseRef(path),               //  default methods from firebase reference
-    //        { get: () => cachedRead(path) }     //  read on get, read from cache if available
-    //    );
-    //}
+        //console.log(getFirebaseRef(path));
+        return Object.assign(
+            getFirebaseRef(path),               //  default methods from firebase reference
+            { get: () => cachedRead(path) }     //  read on get, read from cache if available
+        );
+    }
+    function TODO() { alert('bad news bears'); }
     function storageRef(...path) {
         /*
          * Get a reference wrapper that acts as a database blackbox.
@@ -158,21 +160,23 @@ const [cRef, flush] = (() => {
          * @param   path    A valid path array.
          * @return  wrapper A wrapper object around the expected reference.
          */
-        const ref = getFirebaseRef(path);
         //console.log(ref.add, ref.doc, ref.docs);
         return {
-            id: ref.id,                         // TODO: this is a performance sinkhole! don't greedily call getters
-            add: ref.add,
-            doc: ref.doc,
-            docs: ref.docs, // TODO: docs.filter
-            get: () => cachedRead(path),
-            set: ref.set,
-            update: ref.update
+            id: TODO,
+            add: TODO,
+            doc: TODO,
+            docs: TODO, // TODO: docs.filter
+            get: () => storageRead(path),
+            set: TODO,
+            update: TODO
         };
     }
 
-    //return [cacheRef, flush];
-    return [storageRef, flush];
+    if (decideWhetherToUseFirebase()) { // TODO: how to get bool out of promise???
+        return [cacheRef, flush];
+    } else { console.log('using hard storage');
+        return [storageRef, flush];
+    }
 })();
 
 module.exports = {__init__:initFirebase, cRef, flush};
