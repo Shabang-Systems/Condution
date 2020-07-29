@@ -1,7 +1,7 @@
 /* == Useful things commented out == */
 
 @media (max-width: 575px) {
-    .completed-fm {
+    #completed-fm {
         font-size: 5px !important;
     }
 }
@@ -196,6 +196,7 @@
     /* Content Pages */
 
         /* Classes */
+
             .page {
                 display: none;
                 margin: 1px;
@@ -398,17 +399,7 @@
                         display: none !important;
                     }
                 }
-    /* Completed View */
-        /* Classes */
-    /*@media (min-width: 2px) {*/
-    /*        .completed-fm {*/
-    /*            font-size: 15px !important;*/
-    /*        }*/
-    /*}*/
 
-.completed-fm {
-            font-size: 5px;
-}
 
 /* Menu Items */
 
@@ -2514,7 +2505,17 @@
                         display: none;
                     }
                 }
+/* Completed specific elements */
+    /* add more crap */
+        @media (max-width: 575px) {
+            #completed-fm {
+                font-size: 15px !important;
+            }
+        }
 
+        #completed-fm {
+            font-size: 10px;
+        }
                 @media (min-width: 576px) { 
                     .greeting-auth-subtitle {
                         font-size: 14px;
