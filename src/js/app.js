@@ -251,8 +251,8 @@ async function loadApp(user) {
     // User is signed in. Do user related things.
     // Check user's theme
     ui.user.set(user);
-    //if (await ism) {
-    if (true) {
+    if (await ism) {
+    //if (true) {
         $("#quickaddmobile").show();
         $("#quickadd").hide();
     } else {
@@ -1973,8 +1973,8 @@ let ui = function() {
                 $("#upcoming-daterow-w"+i).html(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]);
                 d.setDate(d.getDate()+1);
             }
-            //if (await ism) {
-            if (true) {
+            if (await ism) {
+            //if (true) {
                 $("#upcoming-daterow-7").hide();
                 $("#upcoming-daterow-6").hide();
             }
