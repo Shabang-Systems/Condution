@@ -47,7 +47,7 @@ let handleInternet = function(hasInternet) {
     //    $("#missing-internet").css("display", "flex");
 };
 
-E.start(firebase, true);    // TODO: true/false = should use firebase?
+E.start(firebase, false);    // TODO: true/false = should use firebase?
 
 // Select2 Modifications
 (function($) {
@@ -2857,40 +2857,41 @@ let ui = function() {
 
 
 
-firebase.auth().onAuthStateChanged(async function(user) {
-    if (user) {
-        if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
-            await loadApp(user);
+//firebase.auth().onAuthStateChanged(async function(user) {
+//    if (user) {
+//        if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
+            //await loadApp(user);
+            loadApp({uid: 'hard-storage-user', displayName: 'Anonymous'});
             setInterval(() => {ui.update()}, 60 * 1000);
             setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
-        } else {
-            E.flush();
-            // Generate auth UI
-            if (!isNASuccess && !isAnomAuthInProgress) {
-                // if not currently signing up
-                $("#content-wrapper").fadeOut();
-                $("#loading").fadeOut();
-                $('#need-verify').html("Account unverified. Please check your email + sign in again.");
-                firebase.auth().currentUser.sendEmailVerification();
-                $('#recover-password').fadeOut();
-                $('#need-verify').fadeIn();
-                $("#authwall").fadeIn();
-                $('#auth-left-menu').fadeIn();
-                $("#auth-content-wrapper").fadeIn();
-            }
-        }
-    } else {
-        E.flush();
-        // Generate auth UI
-        $("#content-wrapper").fadeOut();
-        $("#loading").fadeOut();
-        $("#authwall").fadeIn();
-        $('#need-verify').fadeOut();
-        $('#auth-left-menu').fadeIn();
-        $("#auth-content-wrapper").fadeIn();
-        $(".auth-upf").val("");
-    }
-});
+//        } else {
+//            E.flush();
+//            // Generate auth UI
+//            if (!isNASuccess && !isAnomAuthInProgress) {
+//                // if not currently signing up
+//                $("#content-wrapper").fadeOut();
+//                $("#loading").fadeOut();
+//                $('#need-verify').html("Account unverified. Please check your email + sign in again.");
+//                firebase.auth().currentUser.sendEmailVerification();
+//                $('#recover-password').fadeOut();
+//                $('#need-verify').fadeIn();
+//                $("#authwall").fadeIn();
+//                $('#auth-left-menu').fadeIn();
+//                $("#auth-content-wrapper").fadeIn();
+//            }
+//        }
+//    } else {
+//        E.flush();
+//        // Generate auth UI
+//        $("#content-wrapper").fadeOut();
+//        $("#loading").fadeOut();
+//        $("#authwall").fadeIn();
+//        $('#need-verify').fadeOut();
+//        $('#auth-left-menu').fadeIn();
+//        $("#auth-content-wrapper").fadeIn();
+//        $(".auth-upf").val("");
+//    }
+//});
 
 function warn() {
     console.log('%c', "height: 300px");
