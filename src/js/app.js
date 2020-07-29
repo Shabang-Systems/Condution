@@ -47,7 +47,7 @@ let handleInternet = function(hasInternet) {
     //    $("#missing-internet").css("display", "flex");
 };
 
-E.start(firebase);
+E.start(firebase, true);    // TODO: true/false = should use firebase?
 
 // Select2 Modifications
 (function($) {
@@ -2733,19 +2733,19 @@ let ui = function() {
     var btn = $(evt.currentTarget);
     var x = evt.pageX - btn.offset().left;
     var y = evt.pageY - btn.offset().top;
-  
+
     var duration = 500;
     var animationFrame, animationStart;
-  
+
     var animationStep = function(timestamp) {
         if (!animationStart) {
           animationStart = timestamp;
         }
-   
+
     var frame = timestamp - animationStart;
     if (frame < duration) {
       var easing = (frame/duration) * (2 - (frame/duration));
-      
+
       var circle = "circle at " + x + "px " + y + "px";
       var color = "rgba(0, 0, 0, " + (0.3 * (1 - easing)) + ")";
       var stop = 90 * easing + "%";
@@ -2763,9 +2763,9 @@ let ui = function() {
     }
 
 
-    
+
   };
-  
+
     Haptics.impact({style: HapticsImpactStyle.Heavy});
   animationFrame = window.requestAnimationFrame(animationStep);
   loadView("upcoming-page");
