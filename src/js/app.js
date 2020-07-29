@@ -108,15 +108,15 @@ lottie.loadAnimation({
 // TODO: make a kickstarter
 // Chapter 0: The Header.
 if (process.platform === "win32") {
-    //$("#main-head-win32").show();
+    $("#main-head-win32").show();
     $("#left-menu").addClass("win32-windowing");
     $("#content-area").addClass("win32-windowing");
 } else if (process.platform === "darwin") {
-    //$("#main-head-darwin").show();
+    $("#main-head-darwin").show();
     $("#left-menu").addClass("darwin-windowing-left");
     $("#content-area").addClass("darwin-windowing-right");
 } else {
-    //$("#main-head-default").show();
+    $("#main-head-default").show();
     $("#left-menu").addClass("default-windowing-left");
     $("#content-area").addClass("default-windowing-right");
 }

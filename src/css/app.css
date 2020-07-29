@@ -132,7 +132,7 @@
             #main-head-default{
                 /* Make this not colorful for web */
                 background-color: var(--background);
-                height: 37px;
+                height: env(safe-area-inset-top);
             }
 
 
@@ -249,6 +249,7 @@
                 overflow: visible;
                 width: 100%;
                 padding-top: max(15px, env(safe-area-inset-top));
+                /*margin-top: 10px;*/
                 -webkit-overflow-scrolling: touch;
             }
 
@@ -659,7 +660,7 @@
                 background-color: var(--menu-background);
                 padding: 0 10px 10px 10px;
                 overflow: hidden;
-                padding-top: max(15px, env(safe-area-inset-top));
+                padding-top: max(25px, env(safe-area-inset-top));
             }
 
                 @media (max-width: 575px) { 
