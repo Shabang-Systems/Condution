@@ -3,17 +3,22 @@
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
 
+let usingFirebase;
+const sqlite3 = require('sqlite3').verbose();
 let firebaseDB, fsRef;
 
-const initFirebase = (fbPointer) => {
+const initStorage = (fbPointer, useFirebase) => {
     // Firebase App (the core Firebase SDK) is always required and
     // must be listed before other Firebase SDKs
     // const firebase = require("firebase/app");
 
-    const obj = require("./../secrets.json");
-    fbPointer.initializeApp(obj.dbkeys.debug);
-    [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
-    firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+    usingFirebase = useFirebase;
+    if (usingFirebase) {
+        const obj = require("./../secrets.json");
+        fbPointer.initializeApp(obj.dbkeys.debug);
+        [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
+        firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+    }
 };
 
 const [cRef, flush] = (() => {
@@ -179,5 +184,5 @@ const [cRef, flush] = (() => {
     }
 })();
 
-module.exports = {__init__:initFirebase, cRef, flush};
+module.exports = {__init__:initStorage, cRef, flush};
 

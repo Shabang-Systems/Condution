@@ -5,5 +5,8 @@
   "main": "CondutionEngine.js",
   "repository": "https://github.com/Shabang-Systems/CondutionEngine",
   "author": "Shabang Systems, and the Condution Authors",
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "sqlite3": "^5.0.0"
+  }
 }
