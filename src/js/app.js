@@ -2914,6 +2914,12 @@ firebase.auth().onAuthStateChanged(async function(user) {
     }
 });
 
+$(document).keypress(async function(e) {
+    if (document.activeElement.tagName === "BODY" && !(await ism)) {
+        $("#quickadd").focus();
+    }
+});
+
 function warn() {
     console.log('%c', "height: 300px");
     console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
