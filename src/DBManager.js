@@ -22,8 +22,8 @@ const initStorage = (fbPointer, useFirebase) => {
 };
 
 const [cRef, flush] = (() => {
-    const { Plugins } = require('@capacitor/core');
-    const { Network } = Plugins;
+    //const { Plugins } = require('@capacitor/core');
+    //const { Network } = Plugins;
 
     let cache = new Map();
     let unsubscribeCallbacks = new Map();
