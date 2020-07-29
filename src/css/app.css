@@ -246,7 +246,8 @@
             }
 
             #content-area{
-                overflow: visible;
+                overflow-y: visible;
+                overflow-x: hidden;
                 width: 100%;
                 padding-top: max(15px, env(safe-area-inset-top));
                 /*margin-top: 10px;*/
@@ -678,7 +679,7 @@
                     #left-menu{
                         position: fixed;
                         height: 100%;
-                        z-index: 0;
+                        z-index: 1;
                         width: 200px;
                         left: 0 !important;
                     }
@@ -688,7 +689,7 @@
                     #left-menu{
                         position:fixed;
                         height: 100%;
-                        z-index: 0;
+                        z-index: 1;
                         width: 200px;
                         left: 0 !important;
                     }
@@ -698,7 +699,7 @@
                     #left-menu{
                         position: fixed;
                         height: 100%;
-                        z-index: 0;
+                        z-index: 1;
                         width: 220px;
                         left: 0 !important;
                     }
@@ -708,7 +709,7 @@
                     #left-menu{
                         position: fixed;
                         height: 100%;
-                        z-index: 0;
+                        z-index: 1;
                         width: 220px;
                         left: 0 !important;
                     }
@@ -799,7 +800,7 @@
                 @media (min-width: 576px) { 
                     .task-name {
                         font-size: 12pt;
-                        width: 90%;
+                        width: 89%;
                     }
 
                     .task-name-bottom {
@@ -1742,6 +1743,38 @@
 
         /* Classes */
 
+                @media (max-width: 575px) { 
+                    .project-action {
+                        transform: translateY(-2px) !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .project-action {
+                        transform: translateY(0px);
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .project-action {
+                        transform: translateY(0px);
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .project-action {
+                        transform: translateY(0px);
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .project-action {
+                        transform: translateY(0px);
+                    }
+                }
+
+
+
             .perspective-title {
                 color: var(--decorative-light-alt);
                 padding: 0;
@@ -1750,7 +1783,7 @@
 
                 @media (max-width: 575px) { 
                     .perspective-title {
-                        width: 90%;
+                        width: 92%;
                         transform: translate(6px, -1px);
                         font-size: 15px;
                     }
@@ -1764,7 +1797,7 @@
 
                 @media (min-width: 576px) { 
                     .perspective-title {
-                        width: 94%;
+                        width: 97%;
                         transform: translate(0px, 0px);
                         font-size: 12px;
                     }
@@ -1784,7 +1817,7 @@
                     }
 
                     .perspective-title-subproject {
-                        width: 96%;
+                        width: 95%;
                         transform: translate(0px, 0px);
                         font-size: 12px;
                     }
@@ -1845,14 +1878,14 @@
 
                 @media (max-width: 575px) { 
                     .perspective-titleword {
-                        width: 48%;
+                        width: 44%;
                         font-size: 15px;
                     }
                 }
 
                 @media (min-width: 576px) { 
                     .perspective-titleword {
-                        width: 70%;
+                        width: 58%;
                         font-size: 12px;
                     }
                 }
@@ -2060,8 +2093,9 @@
                 font-size: 14px;
                 vertical-align: middle;
                 text-align: left;
-                width: 23px;
-                height: 29px;
+                width: 20px;
+                height: 20px;
+                text-align: center;
                 border-radius: 3px;
                 color: var(--task-icon);
                 cursor: pointer;
@@ -2415,13 +2449,13 @@
 
                 @media (max-width: 575px) { 
                     #perspective-back {
-                        transform: translate(82vw, 0px);
+                        transform: translate(83vw, -4px) !important;
                     }
                 }
 
                 @media (min-width: 576px) { 
                     #perspective-back {
-                        transform: translate(420px, -8px);
+                        transform: translate(417px, -6px);
                     }
                 }
 
