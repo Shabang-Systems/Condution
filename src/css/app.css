@@ -39,8 +39,6 @@
     body {
         overflow-y: visible;
         -webkit-overflow-scrolling: touch;
-        padding-top: constant(safe-area-inset-top);
-        padding-top: env(safe-area-inset-top);
     }
 
     * {
@@ -69,7 +67,7 @@
             }
 
             .darwin-windowing-right {
-                padding-top: 45px !important;
+                padding-top: 40px !important;
             }
 
             .default-windowing-left {
@@ -250,48 +248,55 @@
             #content-area{
                 overflow: visible;
                 width: 100%;
+                padding-top: max(15px, env(safe-area-inset-top));
                 -webkit-overflow-scrolling: touch;
             }
 
 
                 @media (max-width: 355px) { 
                     #content-area {
-                        padding: 0 10px 0 10px;
+                        padding-left: 10px;
+                        padding-right: 10px;
                         margin-left: 0;
                     }
                 }
 
                 @media (min-width: 356px) { 
                     #content-area {
-                        padding: 0 15px 0 15px;
+                        padding-left: 15px;
+                        padding-right: 15px;
                         margin-left: 0;
                     }
                 }
 
                 @media (min-width: 576px) { 
                     #content-area {
-                        padding: 0 15px 0 15px;
+                        padding-left: 15px;
+                        padding-right: 15px;
                         margin-left: 200px;
                     }
                 }
 
                 @media (min-width: 768px) { 
                     #content-area {
-                        padding: 0 15px 0 15px;
+                        padding-left: 15px;
+                        padding-right: 15px;
                         margin-left: 200px;
                     }
                 }
 
                 @media (min-width: 992px) { 
                     #content-area {
-                        padding: 0 15px 0 15px;
+                        padding-left: 15px;
+                        padding-right: 15px;
                         margin-left: 220px;
                     }
                 }
 
                 @media (min-width: 1200px) { 
                     #content-area {
-                        padding: 0 15px 0 15px;
+                        padding-left: 15px;
+                        padding-right: 15px;
                         margin-left: 220px;
                     }
                 }
@@ -654,6 +659,7 @@
                 background-color: var(--menu-background);
                 padding: 0 10px 10px 10px;
                 overflow: hidden;
+                padding-top: max(15px, env(safe-area-inset-top));
             }
 
                 @media (max-width: 575px) { 
