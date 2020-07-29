@@ -116,9 +116,6 @@ secrets.json
 
 .env
 
-# Built web components
-pack
-
 # Generated Icons
 resources/android/icon
 resources/android/splash
