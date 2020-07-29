@@ -41,11 +41,6 @@ const [cRef, flush] = (() => {
         unsubscribeCallbacks = new Map();
     }
 
-    async function decideWhetherToUseFirebase() {
-        console.log('net status: ', (await Network.getStatus()).connected);
-        return (await Network.getStatus()).connected;
-    }
-
     function getFirebaseRef(path) {
         /*
          * Get a database reference.
@@ -177,7 +172,7 @@ const [cRef, flush] = (() => {
         };
     }
 
-    if (decideWhetherToUseFirebase()) { // TODO: how to get bool out of promise???
+    if (usingFirebase) { // TODO: how to get bool out of promise???
         return [cacheRef, flush];
     } else { console.log('using hard storage');
         return [storageRef, flush];
