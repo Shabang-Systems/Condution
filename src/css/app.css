@@ -2057,11 +2057,11 @@
                 }
             
             .project-action {
-                font-size: 10px;
+                font-size: 14px;
                 vertical-align: middle;
-                text-align: center;
-                width: 17px;
-                height: 17px;
+                text-align: left;
+                width: 23px;
+                height: 29px;
                 border-radius: 3px;
                 color: var(--task-icon);
                 cursor: pointer;
