@@ -4,7 +4,7 @@
 // TODO TODO TODO !!!! Change this on deploy
 
 let usingFirebase;
-const sqlite3 = require('sqlite3').verbose();
+let sqliteDB;
 let firebaseDB, fsRef;
 
 const initStorage = (fbPointer, useFirebase) => {
@@ -18,6 +18,14 @@ const initStorage = (fbPointer, useFirebase) => {
         fbPointer.initializeApp(obj.dbkeys.debug);
         [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
         firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+    } else {
+        const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
+        sqliteDB = new sqlite3.Database('./condution.db', (err) => {    // TODO: use capacitor storage api
+            if (err) {
+                console.error(err.message);
+            }
+            console.log('Connected to the condution hard storage database.');
+        });
     }
 };
 
@@ -152,7 +160,7 @@ const [cRef, flush] = (() => {
             { get: () => cachedRead(path) }     //  read on get, read from cache if available
         );
     }
-    function TODO() { alert('bad news bears'); }
+    function TODO() { console.error('bad news bears'); }
     function storageRef(...path) {
         /*
          * Get a reference wrapper that acts as a database blackbox.
