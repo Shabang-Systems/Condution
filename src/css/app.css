@@ -3341,6 +3341,11 @@
                 -webkit-border-radius: 5px;
                 border-radius: 5px;
             }
+            @media (max-width: 575px) {
+                #logout {
+                    font-size: 15px !important;
+                }
+            }
 
             #logout:hover {
                 background-color: var(--menu-semiaccent-background);
