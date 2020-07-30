@@ -1,9 +1,6 @@
 /* == Useful things commented out == */
 
 @media (max-width: 575px) {
-    #completed-fm {
-        font-size: 5px !important;
-    }
 }
 
 @media (min-width: 576px) { 
@@ -2515,6 +2512,12 @@
 
         #completed-fm {
             font-size: 10px;
+        }
+    /* loading more*/
+        @media (max-width: 575px) {
+            #completed-load-more-text {
+                font-size: 15px !important;
+            }
         }
                 @media (min-width: 576px) { 
                     .greeting-auth-subtitle {
