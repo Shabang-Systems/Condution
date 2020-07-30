@@ -44,7 +44,7 @@
 
         <!--Electron Crap-->
         <meta http-equiv="Content-Security-Policy" content="script-src 'self' code.jquery.com;" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
         <!--Unicode-->
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
@@ -56,9 +56,9 @@
         </div>
         <div id="loading">
             <div id="loading-anim"></div>
-            <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.2.3_beta.0_M</t>
+            <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.2.4_beta.0_M</t>
         </div>
-        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none">
+        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none; overflow: none;">
             <div style="margin-left: 20px;">
                 <h2 style="color: var(--content-normal-accent)">Missing Internet Connection...</h2>
                 <span style="color: var(--content-normal-alt)">🤷 You need the intrawebitubes to truly experience <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span>.</span>
@@ -66,7 +66,7 @@
                 <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online, restart the app, we will handle the rest ;)</span>
             </div>
         </div>
-        <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;">
+        <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;overflow: none;">
             <div style="margin-left: 20px;">
                 <h2 style="color: var(--content-normal-accent)">🚄 Setting Up Condution...</h2>
                 <span style="color: var(--content-normal-alt)">We are hard at work creating your <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span> account.</span>
@@ -100,14 +100,14 @@
                     <div id="onboarding-display-2" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-2" class="task-check"/>
                         <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-2" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                        <input class="task-name" id="onboarding-name-2" type="text" autocomplete="off" value="Let's sync! 🌐" readonly>
+                        <input class="task-name" id="onboarding-name-2" type="text" autocomplete="off" value="Let's do it! 🌐" readonly>
                     </div> 
                 </div>
                 <div id="onboarding-3" class="task thov" style="display:none;"> 
                     <div id="onboarding-display-3" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-3" class="task-check"/>
                         <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-3" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                        <input class="task-name" id="onboarding-name-3" type="text" autocomplete="off" value="Don't sync. 💾" readonly>
+                        <input class="task-name" id="onboarding-name-3" type="text" autocomplete="off" value="Go accountless. 💾" readonly>
                     </div> 
                 </div>
                 <div id="onboarding-msg-3" style="color: var(--decorative-light); font-size: 13px; display:none">Data is securely backed up in the United States regardless of sync. No registration needed if sync is not enabled.</div>
@@ -343,7 +343,7 @@
                     </div>
                      <div id="project-page" class="page">
                         <div id="project-sandwich" class="sandwich"><i class="fas fa-bars"></i></div>
-                        <div class="project-action" id="project-back" style="display: inline-block; margin-right: 1px; margin-left: 2px"><i class="fas fa-chevron-left"></i></div>
+                        <div class="project-action" id="project-back" style="display: inline-block; margin-right: 1px; margin-left: 2px;"><i class="fas fa-chevron-left"></i></div>
                         <div class="perspective-title" id="project-titlerow"><i class="fas fa-project-diagram"></i><input title="Project Name" id="project-title" class="perspective-titleword" type="text"></input>
                             <div class="task-subicon" title="Delete Project" id="project-trash" style="float: right; display: inline-block"><i class="fas fa-trash"></i></div>
                             <div class="btn-group btn-group-toggle project-sequential-group" id="project-sequential" data-toggle="buttons" style="margin-right: 20px">

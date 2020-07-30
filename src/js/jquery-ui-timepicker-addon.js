@@ -540,6 +540,7 @@ var chrono = require('chrono-node');
 						update.setMinutes(parsedTime.minute);
 						update.setSeconds(parsedTime.second);
 						$.datepicker._setTime(tp_inst.inst, update);
+						tp_inst._onSelectHandler();
 					} else {
 						//this.value = tp_inst.formattedTime;
 						this.blur();
