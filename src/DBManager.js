@@ -130,7 +130,16 @@ const [cRef, flush] = (() => {
     }
 
     async function storageRead(path) { 
-        TODO(); 
+        /*
+         * Read value in storage
+         *
+         * @param   path    The path to a reference
+         * @return  DocumentSnapshot    A snapshot of documents
+         *
+         */
+        console.log(path);
+        
+        //TODO(); 
     }
 
     //async function storageSet(path, value) {
