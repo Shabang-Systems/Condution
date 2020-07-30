@@ -18,17 +18,19 @@ const initStorage = (fbPointer, useFirebase) => {
         fbPointer.initializeApp(obj.dbkeys.debug);
         [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
         firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+        return new Promise(function(resolve) {
+            return resolve(fsRef);
+        });
     } else {
         const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
         const { FilesystemDirectory, Plugins } = require('@capacitor/core');
         const { Device } = Plugins;
-        (async function() {
+        return (async function() {
             const isMobile = (await Device.getInfo()).platform !== "web";
             const dbRoot = isMobile ? FilesystemDirectory.Data : process.resourcesPath;
             const dbPath = '/condution.db'; // TODO: use capacitor storage api
-            sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.log(e)});
-            //sqliteDB.close();
-            console.log(sqliteDB);
+            sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.error(e)});
+            return sqliteDB;
         })();
     }
 };
@@ -127,7 +129,9 @@ const [cRef, flush] = (() => {
         return await cache.get(TODOstring);
     }
 
-    async function storageRead(path) { TODO(); }
+    async function storageRead(path) { 
+        TODO(); 
+    }
 
     //async function storageSet(path, value) {
         /*
