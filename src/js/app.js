@@ -526,7 +526,7 @@ let authUI = function() {
 let ui = function() {
     let isMobile = false;
     // greeting of the day
-    let greetings = ["Hello there,", "Hey,", "What's up,", "Howdy,", "Welcome,", "Yo!"];
+    let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
     // generic data containers used by refresh and others
