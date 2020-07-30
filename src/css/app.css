@@ -3344,6 +3344,7 @@
             @media (max-width: 575px) {
                 #logout {
                     font-size: 18px !important;
+                    tranform: translateY(6px);
                 }
             }
 
