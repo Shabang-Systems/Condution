@@ -5,3 +5,4 @@
 [submodule "pack"]
 	path = pack
 	url = https://github.com/Shabang-Systems/CondutionWeb
+    branch = beta-v0.2.4
