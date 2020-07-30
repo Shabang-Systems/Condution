@@ -1,7 +1,6 @@
 /* == Useful things commented out == */
 
-@media (max-width: 575px) { 
-
+@media (max-width: 575px) {
 }
 
 @media (min-width: 576px) { 
@@ -194,6 +193,7 @@
     /* Content Pages */
 
         /* Classes */
+
             .page {
                 display: none;
                 margin: 1px;
@@ -407,7 +407,8 @@
                     }
                 }
 
-    /* Menu Items */
+
+/* Menu Items */
 
         /* Classes */
 
@@ -2585,7 +2586,23 @@
                         display: none;
                     }
                 }
+/* Completed specific elements */
+    /* add more */
+        @media (max-width: 575px) {
+            #completed-fm {
+                font-size: 15px !important;
+            }
+        }
 
+        #completed-fm {
+            font-size: 10px;
+        }
+    /* loading more*/
+        @media (max-width: 575px) {
+            #completed-load-more-text {
+                font-size: 15px !important;
+            }
+        }
                 @media (min-width: 576px) { 
                     .greeting-auth-subtitle {
                         font-size: 14px;
@@ -3407,6 +3424,12 @@
                 -moz-border-radius: 5px;
                 -webkit-border-radius: 5px;
                 border-radius: 5px;
+            }
+            @media (max-width: 575px) {
+                #logout {
+                    font-size: 18px !important;
+                    transform: translateY(6px);
+                }
             }
 
             #logout:hover {

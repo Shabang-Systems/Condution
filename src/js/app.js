@@ -1857,6 +1857,7 @@ let ui = function() {
                             E.db.modifyTask(uid, id, {order: ni});
                         } else if (moved.type === "project") {
                             let id = moved.content.id;
+
                             E.db.modifyProject(uid, id, {order: ni});
                         }
                     }
