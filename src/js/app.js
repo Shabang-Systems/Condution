@@ -21,6 +21,56 @@ let { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacit
 let { Haptics, Network, Browser, Storage, Device } = Plugins;
 let E = require('./backend/CondutionEngine');
 
+const internationalize = async function() {
+    let do_INT = function(charcode) {
+        let translations = require(`../static/I18n/${charcode}.json`);
+        $("title").html(translations.client_name);
+        $("#missing-internet-msg").html(translations.missing_internet);
+        $("#missing-internet-yn").html(translations.missing_internet_content);
+        $("#missing-internet-yn").html(translations.missing_internet_content);
+        $("#missing-internet-action").html(translations.missing_internet_action);
+        $("#setting-up-callout").html(translations.setting_up_callout);
+        $("#setting-up-action").html(translations.setting_up_action);
+        $("#setting-up-hold").html(translations.setting_up_hold);
+        $("#onboarding-howdy").html(translations.onboarding_howdy);
+        $("#onboarding-welcome").html(translations.onboarding_welcome);
+        $("#onboarding-quick-things").html(translations.onboarding_quick_things);
+        $("#onboarding-name-0").val(translations.onboarding_ready);
+        $("#onboarding-msg-0").html(translations.onboarding_msg_0);
+        $("#onboarding-msg-1-1").html(translations.onboarading_msg_1_1);
+        $("#welcome-terms").html(translations.terms);
+        $("#onboarding-msg-1-2").html(translations.and);
+        $("#welcome-policy").html(translations.policy);
+        $("#onboarding-msg-1-3").html(translations.onboarding_msg_1_3);
+        $("#onboarding-agree").html(translations.onboarding_agree);
+        $("#onboarding-msg-2").html(translations.onboarding_msg_2);
+        $("#onboarding-name-2").val(translations.onboarding_sync_yes);
+        $("#onboarding-name-3").val(translations.onboarding_sync_no);
+        $("#onboarding-msg-3").html(translations.onboarding_msg_3);
+        $("#perspective-build-callout").html(translations.perspective_build_callout);
+        $("#perspective-edit-name").val(translations.perspective_name_placeholder);
+        $("#pquery").attr("placeholder", translations.perspective_string_placeholder);
+        $("#psp-include").html(translations.perspective_include);
+        $("#psp-order").html(translations.perspective_order);
+        $("#psp-avil").html(translations.psp_avil);
+        $("#psp-rem").html(translations.psp_rem);
+        $("#psp-flg").html(translations.psp_flg);
+        $("#psp-abd").html(translations.psp_abd);
+        $("#psp-dbd").html(translations.psp_dbd);
+        $("#psp-abe").html(translations.psp_abe);
+        $("#psp-dbe").html(translations.psp_dbe);
+        $("#psp-alpha").html(translations.psp_alpha);
+        $("#perspective-documentation").html(translations.psp_doc);
+
+    }
+
+    let langCode = await Device.getLanguageCode();
+    switch (langCode) {
+        case "en_US":
+            do_INT("en_US");
+    }
+}
+
 const isMobile = async function () {
     return (await Device.getInfo()).platform !== "web";
 };
