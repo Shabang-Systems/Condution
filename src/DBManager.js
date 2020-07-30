@@ -20,15 +20,16 @@ const initStorage = (fbPointer, useFirebase) => {
         firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
     } else {
         const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
-        const dbPath = './condution.db'; // TODO: use capacitor storage api
-        sqliteDB = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {   // TODO: close the database on app close
-            if (err) {
-                sqliteDB = new sqlite3.Database(dbPath, sqlite3.OPEN_CREATE, console.error);
-                // TODO: next up: insert test data into database, migrate firebase structure to sql, then write reference object to simulate firebase object
-            }
-            console.log('Connected to the condution hard storage database.');
-        });
-        console.log(sqliteDB);
+        const { FilesystemDirectory, Plugins } = require('@capacitor/core');
+        const { Device } = Plugins;
+        (async function() {
+            const isMobile = (await Device.getInfo()).platform !== "web";
+            const dbRoot = isMobile ? FilesystemDirectory.Data : process.resourcesPath;
+            const dbPath = '/condution.db'; // TODO: use capacitor storage api
+            sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.log(e)});
+            //sqliteDB.close();
+            console.log(sqliteDB);
+        })();
     }
 };
 
