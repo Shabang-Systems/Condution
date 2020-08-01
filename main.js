@@ -16,14 +16,16 @@ function createWindow () {
             'nodeIntegration': true
         },
         'titleBarStyle': 'hiddenInset',
+        'transparent': true,
+        'vibrancy': 'sidebar',
         'show': false,
     });
 
-    if(nativeTheme.shouldUseDarkColors) {
-        win.setBackgroundColor("#161616");
-    } else {
-        win.setBackgroundColor("#f4f4f4");
-    }
+/*    if(nativeTheme.shouldUseDarkColors) {*/
+        //win.setBackgroundColor("#161616");
+    //} else {
+        //win.setBackgroundColor("#f4f4f4");
+    /*}*/
 
     win.on('page-title-updated', function(e) {
         e.preventDefault()
@@ -33,15 +35,15 @@ function createWindow () {
     // and load the main of the app.
     win.loadFile('src/index.html');
     
-    nativeTheme.addListener("updated", function() {
-        if(nativeTheme.shouldUseDarkColors) {
-            win.setBackgroundColor("#161616");
-            win.webContents.send("systheme-dark", "hello")
-        } else {
-            win.setBackgroundColor("#f4f4f4");
-            win.webContents.send("systheme-light", "hello")
-        }
-    });
+/*    nativeTheme.addListener("updated", function() {*/
+        //if(nativeTheme.shouldUseDarkColors) {
+            //win.setBackgroundColor("#161616");
+            //win.webContents.send("systheme-dark", "hello")
+        //} else {
+            //win.setBackgroundColor("#f4f4f4");
+            //win.webContents.send("systheme-light", "hello")
+        //}
+    /*});*/
     ipcMain.on('updatecheck', (event, arg) => {
         autoUpdater.checkForUpdatesAndNotify();
     });
@@ -189,4 +191,4 @@ const template = [
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
 app.name = 'Condution';
-app.whenReady().then(createWindow);
+app.on('ready', () => setTimeout(createWindow, 300));

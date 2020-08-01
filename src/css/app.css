@@ -26,7 +26,7 @@
         font-family: sans-serif;
         -ms-overflow-style: -ms-autohiding-scrollbar; 
         cursor: default !important;
-        background-color: var(--background) !important;
+        /*background-color: var(--background) !important;*/
     }
 
     html {
@@ -240,7 +240,6 @@
             #content-wrapper {
                 margin: 0;
                 height: 100%;
-                background-color: var(--background);
                 display: flex;
                 flex-direction: horizontal;
             }
@@ -250,6 +249,7 @@
                 overflow-x: hidden;
                 width: 100%;
                 padding-top: max(15px, env(safe-area-inset-top));
+                background-color: var(--background);
                 /*margin-top: 10px;*/
                 -webkit-overflow-scrolling: touch;
             }
@@ -659,7 +659,7 @@
             #left-menu{
                 grid-column-start: 1;
                 grid-column-end: 1;
-                background-color: var(--menu-background);
+                /*background-color: var(--menu-background);*/
                 padding: 0 10px 10px 10px;
                 overflow: hidden;
                 padding-top: max(25px, env(safe-area-inset-top));
