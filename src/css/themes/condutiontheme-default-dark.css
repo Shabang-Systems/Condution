@@ -27,7 +27,7 @@
      * think: a selected item over the background */
     --menu-background: #232323;
     --menu-semiaccent-background: #282828;
-    --menu-accent-background: #2d2d2d;
+    --menu-accent-background: #2d2d2d99;
     --menu-text: #CACED8;
     --menu-accent: #BCC0C9;
     --menu-label: #BCC0C9;

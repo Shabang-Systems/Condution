@@ -478,12 +478,12 @@
 
                 }
 
-                .today:hover {
-                    -moz-border-radius: 5px;
-                    -webkit-border-radius: 5px;
-                    border-radius: 5px;
-                    background-color: var(--menu-semiaccent-background);
-                }
+/*                .today:hover {*/
+                    /*-moz-border-radius: 5px;*/
+                    /*-webkit-border-radius: 5px;*/
+                    /*border-radius: 5px;*/
+                    /*background-color: var(--menu-semiaccent-background);*/
+                /*}*/
 
                 .today-highlighted {
                     background-color: var(--menu-accent-background) !important;
@@ -556,12 +556,12 @@
 
                 }
 
-                .mihov:hover {
-                    -moz-border-radius: 5px;
-                    -webkit-border-radius: 5px;
-                    border-radius: 5px;
-                    background-color: var(--menu-semiaccent-background);
-                }
+/*                .mihov:hover {*/
+                    /*-moz-border-radius: 5px;*/
+                    /*-webkit-border-radius: 5px;*/
+                    /*border-radius: 5px;*/
+                    /*background-color: var(--menu-semiaccent-background);*/
+                /*}*/
 
                 .menuitem-selected {
                     -moz-border-radius: 5px;
