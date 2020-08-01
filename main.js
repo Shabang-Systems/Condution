@@ -16,6 +16,7 @@ function createWindow () {
             'nodeIntegration': true
         },
         'titleBarStyle': 'hiddenInset',
+        'transparent': true,
         'show': false,
     });
 
