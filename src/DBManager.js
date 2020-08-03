@@ -3,17 +3,18 @@
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
 
-let usingFirebase;
+let storageType;
 let sqliteDB;
+let memoryDB;
 let firebaseDB, fsRef;
 
-const initStorage = (fbPointer, useFirebase) => {
+const initStorage = (fbPointer, stoType) => {
     // Firebase App (the core Firebase SDK) is always required and
     // must be listed before other Firebase SDKs
     // const firebase = require("firebase/app");
 
-    usingFirebase = useFirebase;
-    if (usingFirebase) {
+    storageType = stoType;
+    if (storageType === "firebase") {
         const obj = require("./../secrets.json");
         fbPointer.initializeApp(obj.dbkeys.debug);
         [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
@@ -21,16 +22,40 @@ const initStorage = (fbPointer, useFirebase) => {
         return new Promise(function(resolve) {
             return resolve(fsRef);
         });
-    } else {
+    } else if (storageType === "sqlite") {
         const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
         const { FilesystemDirectory, Plugins } = require('@capacitor/core');
         const { Device } = Plugins;
+        console.error("algobert come to the rescue!");
         return (async function() {
             const isMobile = (await Device.getInfo()).platform !== "web";
             const dbRoot = isMobile ? FilesystemDirectory.Data : process.resourcesPath;
             const dbPath = '/condution.db'; // TODO: use capacitor storage api
             sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.error(e)});
             return sqliteDB;
+        })();
+    } else if (storageType === "json") {
+        const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
+        const { Device, Filesystem } = Plugins;
+        return (async function() {
+            const dbRoot = FilesystemDirectory.Data;
+            const dbPath = 'condution.json'; // TODO: use capacitor storage api
+            try {
+                contents = (await Filesystem.readFile({
+                    path: dbPath,
+                    directory: dbRoot,
+                    encoding: FilesystemEncoding.UTF8
+                })).data;
+            } catch(e) {
+                contents = "{}";
+                await Filesystem.writeFile({
+                    path: dbPath,
+                    directory: dbRoot,
+                    data: JSON.stringify({}),
+                    encoding: FilesystemEncoding.UTF8
+                })
+            }
+            memoryDB = JSON.parse(contents);
         })();
     }
 };
@@ -137,9 +162,12 @@ const [cRef, flush] = (() => {
          * @return  DocumentSnapshot    A snapshot of documents
          *
          */
-        console.log(path);
-        
-        //TODO(); 
+        let pointer = memoryDB;
+        path.some(i => {
+            pointer = pointer[i];
+            return (pointer === undefined); // https://stackoverflow.com/questions/2641347/short-circuit-array-foreach-like-calling-break
+        });
+        return pointer ? {docs: pointer} : undefined;
     }
 
     //async function storageSet(path, value) {
@@ -197,7 +225,7 @@ const [cRef, flush] = (() => {
         };
     }
 
-    if (usingFirebase) { // TODO: how to get bool out of promise???
+    if (storageType) { // TODO: how to get bool out of promise???
         return [cacheRef, flush];
     } else { console.log('using hard storage');
         return [storageRef, flush];
