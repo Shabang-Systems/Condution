@@ -176,6 +176,7 @@ const [cRef, flush] = (() => {
          *
          */
 
+
         let pointer;
         if (storageType === "sqlite3") {
             console.error("Algobert go bontehu");
@@ -205,12 +206,50 @@ const [cRef, flush] = (() => {
              */
 
             docRefs = [];
-            for (const docID in pointer) {
-                docRefs.push({id: docID, data: ()=>pointer[docID], exists: true});
-            }
+            for (const docID in pointer) 
+                docRefs.push({id: docID, data: ()=>Object.assign({}, pointer[docID]), exists: true}); // TODO TODO Better way to make JS objects immutable?
             return {docs: docRefs}
         })(pointer)
         return parsed;
+    }
+
+    async function storageAdd(path, payload) {
+        /* 
+         * Add a value
+         *
+         * @param   path   Document Path
+         * @param   payload   Object payload
+         * @return  Document Firebase-Style Document
+         * 
+         */
+
+        let pointer;
+        let id;
+        if (storageType === "sqlite3") {
+            console.error("Algobert go bontehu");
+            /*
+             * Unlike storageRead, ya just gotta impliment
+             * the whole thing. This is because the means and
+             * methods of writing for sqlite is probably 
+             * extremely different compared to the JSON
+             * implimentation. Please return an ID. 
+             */
+        } else if (storageType === "json") {
+            pointer = memoryDB;
+            path.forEach(i => {
+                if(!pointer[i]) pointer[i] = {};
+                pointer = pointer[i];
+            });
+            id = generateRandomString();
+            while (pointer[id]) id = generateRandomString();
+            for (const key in payload) {
+                if (payload[key] instanceof Date) {
+                    payload[key] = {seconds: Math.round(payload[key].getTime()/1000)-5} // The function runs a bit too quickly. Bump time forward by 5 ms.
+                }
+            }
+            pointer[id] = payload;
+        }
+        return Object.assign(payload, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
     }
 
     //async function storageSet(path, value) {
@@ -259,7 +298,7 @@ const [cRef, flush] = (() => {
         //console.log(ref.add, ref.doc, ref.docs);
         return {
             id: TODO,
-            add: TODO,
+            add: (payload) => storageAdd(path, payload),
             doc: TODO,
             docs: TODO, // TODO: docs.filter
             get: () => storageRead(path),

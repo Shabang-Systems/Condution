@@ -299,9 +299,8 @@ async function newTask(userID, taskObj) {
 
     // Perspectives cannot have empty defer dates
     // But! We could set no defer to defer today.
-    if (!taskObj.defer) {
+    if (!taskObj.defer)
         taskObj.defer = new Date();
-    }
 
     let taskID = (await cRef("users", userID, "tasks").add(taskObj)).id;
 
