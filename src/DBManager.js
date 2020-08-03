@@ -3,24 +3,47 @@
 // Initialize Firebase Application
 // TODO TODO TODO !!!! Change this on deploy
 
+let usingFirebase;
+let sqliteDB;
 let firebaseDB, fsRef;
 
-const initFirebase = (fbPointer) => {
+const initStorage = (fbPointer, useFirebase) => {
     // Firebase App (the core Firebase SDK) is always required and
     // must be listed before other Firebase SDKs
     // const firebase = require("firebase/app");
 
-    const obj = require("./../secrets.json")
-    fbPointer.initializeApp(obj.dbkeys.debug);
-    [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
-}
+    usingFirebase = useFirebase;
+    if (usingFirebase) {
+        const obj = require("./../secrets.json");
+        fbPointer.initializeApp(obj.dbkeys.debug);
+        [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
+        firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+        return new Promise(function(resolve) {
+            return resolve(fsRef);
+        });
+    } else {
+        const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
+        const { FilesystemDirectory, Plugins } = require('@capacitor/core');
+        const { Device } = Plugins;
+        return (async function() {
+            const isMobile = (await Device.getInfo()).platform !== "web";
+            const dbRoot = isMobile ? FilesystemDirectory.Data : process.resourcesPath;
+            const dbPath = '/condution.db'; // TODO: use capacitor storage api
+            sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.error(e)});
+            return sqliteDB;
+        })();
+    }
+};
 
 const [cRef, flush] = (() => {
-    let cache = new Map();            // TODO: ['a'] != ['a'], so this doesn't work
+    //const { Plugins } = require('@capacitor/core');
+    //const { Network } = Plugins;
+
+    let cache = new Map();
     let unsubscribeCallbacks = new Map();
 
     function flush() {
-        /* 
+        /*
          * Nukes the cache
          *
          * Used to log people out
@@ -28,7 +51,6 @@ const [cRef, flush] = (() => {
          * @return none
          *
          */
-
         cache = new Map();
         unsubscribeCallbacks = new Map();
     }
@@ -64,7 +86,7 @@ const [cRef, flush] = (() => {
                 } else {
                     throw new Error("Unknown reference", ref.toString());
                 }
-            } else if (Array.isArray(nav)) {                // query
+            } else if (Array.isArray(nav)) {                // query, TODO shouldn't need to query
                 if (ref instanceof fsRef.Query) {
                     ref = ref.where(...nav);
                 } else {
@@ -78,7 +100,7 @@ const [cRef, flush] = (() => {
         return ref;
     }
 
-    async function cachedRead(path) {
+    async function cachedRead(path) {   // TODO: make this also use hard storage, dupe for cachedSet
         /*
          * Get a snapshot from the cache.
          *
@@ -107,6 +129,40 @@ const [cRef, flush] = (() => {
         return await cache.get(TODOstring);
     }
 
+    async function storageRead(path) { 
+        /*
+         * Read value in storage
+         *
+         * @param   path    The path to a reference
+         * @return  DocumentSnapshot    A snapshot of documents
+         *
+         */
+        console.log(path);
+        
+        //TODO(); 
+    }
+
+    //async function storageSet(path, value) {
+        /*
+         * Set a value in the storage.
+         *
+         * @param   path    The valid path to reference
+         * @param   value   The value to set it to
+         * @return  none
+         */
+    //    const TODOstring = JSON.stringify(path);    // stringify array, please change someday
+    //    // update storage
+    //    if (decideWhetherToUseHardStorage())
+    //
+    //    // maintain the cache
+    //    if (!cache.has(TODOstring)) {
+    //        cache.set();
+    //    }
+    //    const ref = getFirebaseRef(path);
+    //    ref.set(value);
+    //    cache.set(stringPath, value)
+    //}
+
     function cacheRef(...path) {
         /*
          * Get a reference wrapper that forces cache hits.
@@ -115,14 +171,38 @@ const [cRef, flush] = (() => {
          * @param   path    A valid path array.
          * @return  wrapper A wrapper object around the expected reference.
          */
+        //console.log(getFirebaseRef(path));
         return Object.assign(
             getFirebaseRef(path),               //  default methods from firebase reference
             { get: () => cachedRead(path) }     //  read on get, read from cache if available
         );
     }
+    function TODO() { console.error('bad news bears'); }
+    function storageRef(...path) {
+        /*
+         * Get a reference wrapper that acts as a database blackbox.
+         *
+         * @param   path    A valid path array.
+         * @return  wrapper A wrapper object around the expected reference.
+         */
+        //console.log(ref.add, ref.doc, ref.docs);
+        return {
+            id: TODO,
+            add: TODO,
+            doc: TODO,
+            docs: TODO, // TODO: docs.filter
+            get: () => storageRead(path),
+            set: TODO,
+            update: TODO
+        };
+    }
 
-    return [cacheRef, flush];
+    if (usingFirebase) { // TODO: how to get bool out of promise???
+        return [cacheRef, flush];
+    } else { console.log('using hard storage');
+        return [storageRef, flush];
+    }
 })();
 
-module.exports = {__init__:initFirebase, cRef, flush};
+module.exports = {__init__:initStorage, cRef, flush};
 

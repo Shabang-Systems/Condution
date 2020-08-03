@@ -147,20 +147,20 @@ const perspectiveHandler = function(){
         })).then(values=>values);
         switch (order) {
             case "duas":
-                taskObjs.sort((a,b)=>(a.due?a.due.seconds:10000000000)-(b.due?b.due.seconds:10000000000))
+                taskObjs.sort((a,b)=>(a.due?a.due.seconds:10000000000)-(b.due?b.due.seconds:10000000000));
                 break;
             case "duds":
-                taskObjs.sort((a,b)=>(b.due?b.due.seconds:1)-(a.due?a.due.seconds:1))
+                taskObjs.sort((a,b)=>(b.due?b.due.seconds:1)-(a.due?a.due.seconds:1));
                 break;
             case "deas":
-                taskObjs.sort((a,b)=>(a.defer?a.defer.seconds:10000000000)-(b.defer?b.defer.seconds:10000000000))
+                taskObjs.sort((a,b)=>(a.defer?a.defer.seconds:10000000000)-(b.defer?b.defer.seconds:10000000000));
                 break;
             case "deds":
-                taskObjs.sort((a,b)=>(b.defer?b.defer.seconds:1)-(a.defer?a.defer.seconds:1))
+                taskObjs.sort((a,b)=>(b.defer?b.defer.seconds:1)-(a.defer?a.defer.seconds:1));
                 break;
 
         }
-        // Final avaliablitiy filter for sequential
+        // Final availability filter for sequential
         let aval = await dbObj.getItemAvailability(uid);
         if (filter === "avail") taskObjs = taskObjs.filter(it => (aval[it.id] !== undefined)); 
         return taskObjs.map(t=>t.id);
