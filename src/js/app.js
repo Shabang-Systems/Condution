@@ -18,21 +18,21 @@
     require('select2')();
     let moment = require('moment-timezone');
     let { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
-    let { Haptics, Network, Browser, Storage, Device } = Plugins;
+    let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
     let E = require('./backend/CondutionEngine');
 
     const isMobile = async function () {
         return (await Device.getInfo()).platform !== "web";
     };
 
-const isiOS = async function() {
-    return (await Device.getInfo()).operatingSystem === "ios";
-}
+    const isiOS = async function() {
+        return (await Device.getInfo()).operatingSystem === "ios";
+    }
 
-let ism = isMobile();
-let isi = isiOS();
+    let ism = isMobile();
+    let isi = isiOS();
 
-const preventDefault = e => e.preventDefault();// When rendering our container
+    const preventDefault = e => e.preventDefault();// When rendering our container
 /*window.addEventListener('touchmove', preventDefault, {*/
 //passive: false
 //});
@@ -548,6 +548,18 @@ let ui = function() {
     };
 
     activeMenu = "today";
+
+    App.addListener("backButton", function() {
+        // if not in subproject
+        if (pageIndex.projectDir.length <= 1) {
+            App.exitApp();
+        } else {
+            pageIndex.projectDir.pop();
+            activeMenu = pageIndex.projectDir[pageIndex.projectDir.length-1];
+            loadView("project-page", activeMenu.split("-")[1]);
+            $("#"+activeMenu).addClass("menuitem-selected");
+        }
+    });
 
     // refresh data
     let refresh = async function(){
