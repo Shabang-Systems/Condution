@@ -50,7 +50,7 @@ let handleInternet = function(hasInternet) {
     //    $("#missing-internet").css("display", "flex");
 };
 
-E.start(firebase, false);    // TODO: true/false = should use firebase?
+let dbReady = E.start(firebase, "json");    // TODO: true/false = should use firebase?
 
 // Select2 Modifications
 (function($) {
@@ -247,6 +247,7 @@ const interfaceUtil = function() {
 }();
 
 async function loadApp(user) {
+    await dbReady;
     const startTime = Date.now();
     // User is signed in. Do user related things.
     // Check user's theme
@@ -2961,9 +2962,9 @@ return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage
 //    if (user) {
 //        if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
             //await loadApp(user);
-            loadApp({uid: 'hard-storage-user', displayName: 'Anonymous'});
-            setInterval(() => {ui.update()}, 60 * 1000);
-            setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
+loadApp({uid: 'hard-storage-user', displayName: 'Anonymous'});
+setInterval(() => {ui.update()}, 60 * 1000);
+setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
 //        } else {
 //            E.flush();
 //            // Generate auth UI
