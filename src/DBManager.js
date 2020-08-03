@@ -125,6 +125,18 @@ const [cRef, flush] = (() => {
         return ref;
     }
 
+    function generateRandomString() {
+        /*
+         * Generates a random string. Used for Ids.
+         * THIS IS NOT CRYPTOGRAPHICALLY SECURE
+         *
+         * @return  string  The random string
+         *
+         */
+
+        return Math.random().toString(36).substring(2)+Math.random().toString(36).substring(2)+Math.random().toString(36).substring(2);
+    }
+
     async function cachedRead(path) {   // TODO: make this also use hard storage, dupe for cachedSet
         /*
          * Get a snapshot from the cache.
@@ -162,12 +174,41 @@ const [cRef, flush] = (() => {
          * @return  DocumentSnapshot    A snapshot of documents
          *
          */
-        let pointer = memoryDB;
-        path.some(i => {
-            pointer = pointer[i];
-            return (pointer === undefined); // https://stackoverflow.com/questions/2641347/short-circuit-array-foreach-like-calling-break
-        });
-        return pointer ? {docs: pointer} : undefined;
+
+        let pointer;
+        if (storageType === "sqlite3") {
+            console.error("Algobert go bontehu");
+            /*
+             * Get an object pointer that's an option that
+             * looks like a noSQL object.  See JSON implimentation 
+             * for tips and tricks.
+             *
+             */
+
+        } else if (storageType === "json") {
+            pointer = memoryDB;
+            path.some(i => {
+                pointer = pointer[i];
+                return (pointer === undefined); // https://stackoverflow.com/questions/2641347/short-circuit-array-foreach-like-calling-break
+            });
+        }
+
+        return (function parsePointer(pointer) {
+            /*
+             * Parse a dbPointerObject
+             *
+             * @param    pointer   A Javascript Object containing data
+             * @return   DocumentSnapshot   A Firebase-like Doc Snapshot
+             *
+             * TODO: also make this work for single documents, not just collections
+             */
+
+            docRefs = [];
+            for (const docID in pointer) {
+                docRefs.push({id: docID, data: ()=>pointer[docID]});
+            }
+            return {docs: docRefs}
+        })(pointer)
     }
 
     //async function storageSet(path, value) {
