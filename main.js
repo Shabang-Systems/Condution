@@ -16,6 +16,7 @@ function createWindow () {
             'nodeIntegration': true
         },
         'titleBarStyle': 'hiddenInset',
+        'transparent': true,
         'show': false,
     });
 
@@ -188,6 +189,5 @@ const template = [
 
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
-
 app.name = 'Condution';
 app.whenReady().then(createWindow);
