@@ -218,7 +218,8 @@ async function getTopLevelProjects(userID) {
     });
 
     projectsSorted.sort((a,b) => a.sortOrder-b.sortOrder);
-    return [projectNameById, projectIdByName, projectsSorted];
+    ret = [projectNameById, projectIdByName, projectsSorted];
+    return ret;
 }
 
 async function getProjectsandTags(userID) {

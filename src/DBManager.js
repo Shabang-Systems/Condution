@@ -55,6 +55,7 @@ const initStorage = (fbPointer, stoType) => {
                     encoding: FilesystemEncoding.UTF8
                 })
             }
+            //contents = `{"users":{"hard-storage-user":{"projects":{"asenuoth239p8":{"name":"bontehu","is_sequential":false,"order":0,"parent":"","top_level":true, "children": []}}}}}`;
             memoryDB = JSON.parse(contents);
         })();
     }
@@ -193,7 +194,7 @@ const [cRef, flush] = (() => {
             });
         }
 
-        return (function parsePointer(pointer) {
+        let parsed = (function parsePointer(pointer) {
             /*
              * Parse a dbPointerObject
              *
@@ -205,10 +206,11 @@ const [cRef, flush] = (() => {
 
             docRefs = [];
             for (const docID in pointer) {
-                docRefs.push({id: docID, data: ()=>pointer[docID]});
+                docRefs.push({id: docID, data: ()=>pointer[docID], exists: true});
             }
             return {docs: docRefs}
         })(pointer)
+        return parsed;
     }
 
     //async function storageSet(path, value) {
