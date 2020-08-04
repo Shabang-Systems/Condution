@@ -7,6 +7,7 @@ let storageType;
 let sqliteDB;
 let memoryDB;
 let firebaseDB, fsRef;
+let firebaseLoaded = false;
 
 const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
 const { Device, Filesystem } = Plugins;
@@ -20,9 +21,12 @@ const initStorage = (fbPointer, stoType) => {
     storageType = stoType;
     if (storageType === "firebase") {
         const obj = require("./../secrets.json");
-        fbPointer.initializeApp(obj.dbkeys.debug);
-        [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
-        firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+        if (!firebaseLoaded) { // you could only load firebase once. TODO: make a switch function that is independent of initialize
+            fbPointer.initializeApp(obj.dbkeys.debug);
+            [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
+            firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+            firebaseLoaded = true
+        };
         return new Promise(function(resolve) {
             return resolve(fsRef);
         });
@@ -69,6 +73,7 @@ const [cRef, flush] = (() => {
 
     let cache = new Map();
     let unsubscribeCallbacks = new Map();
+
 
     function flush() {
         /*
@@ -411,7 +416,7 @@ const [cRef, flush] = (() => {
     //    cache.set(stringPath, value)
     //}
 
-    function cacheRef(...path) {
+    function cacheRef(path) {
         /*
          * Get a reference wrapper that forces cache hits.
          * This function will be exposed to the outside world.
@@ -426,7 +431,7 @@ const [cRef, flush] = (() => {
         );
     }
     function TODO() { console.error('bad news bears'); }
-    function storageRef(...path) {
+    function storageRef(path) {
         /*
          * Get a reference wrapper that acts as a database blackbox.
          *
@@ -446,11 +451,23 @@ const [cRef, flush] = (() => {
         };
     }
 
-    if (storageType) { // TODO: how to get bool out of promise???
-        return [cacheRef, flush];
-    } else { console.log('using hard storage');
-        return [storageRef, flush];
+    function dispatch(...path) {
+        /* 
+         * Get the currently initialized storageRef
+         *
+         * @return  storageRef/CacheRef
+         *
+         */
+
+        switch (storageType) {
+            case "firebase":
+                return cacheRef(path);
+            default:
+                return storageRef(path);
+        }
     }
+
+    return [dispatch, flush];
 })();
 
 module.exports = {__init__:initStorage, cRef, flush};
