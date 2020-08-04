@@ -252,6 +252,39 @@ const [cRef, flush] = (() => {
         return Object.assign({}, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
     }
 
+    async function storageDel(path) {
+        /* 
+         * Sets the value of a document
+         *
+         * @param   path   Document Path
+         * @return  none
+         * 
+         */
+
+        let pointer;
+        let id;
+        if (storageType === "sqlite3") {
+            console.error("Algobert go bontehu");
+            /*
+             * Unlike storageRead, ya just gotta impliment
+             * the whole thing. This is because the means and
+             * methods of writing for sqlite is probably 
+             * extremely different compared to the JSON
+             * implimentation. Please return an ID. 
+             */
+        } else if (storageType === "json") {
+            pointer = memoryDB;
+            let task = path.pop();
+            path.forEach(i => {
+                if(!pointer[i]) pointer[i] = {};
+                pointer = pointer[i];
+            });
+            delete pointer[task];
+        }
+    }
+
+
+
     async function storageSet(path, payload) {
         /* 
          * Sets the value of a document
@@ -286,7 +319,6 @@ const [cRef, flush] = (() => {
                 }
             }
             pointer[task] = payload;
-            console.log(memoryDB);
         }
         return Object.assign({}, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
     }
@@ -382,7 +414,7 @@ const [cRef, flush] = (() => {
             get: () => storageRead(path),
             set: (payload) => storageSet(path, payload),
             update: (payload) => storageUpdate(path, payload),
-            delete: TODO
+            delete: () => storageDel(path),
         };
     }
 
