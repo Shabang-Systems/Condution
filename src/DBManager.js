@@ -8,6 +8,10 @@ let sqliteDB;
 let memoryDB;
 let firebaseDB, fsRef;
 
+const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
+const { Device, Filesystem } = Plugins;
+
+
 const initStorage = (fbPointer, stoType) => {
     // Firebase App (the core Firebase SDK) is always required and
     // must be listed before other Firebase SDKs
@@ -35,8 +39,6 @@ const initStorage = (fbPointer, stoType) => {
             return sqliteDB;
         })();
     } else if (storageType === "json") {
-        const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
-        const { Device, Filesystem } = Plugins;
         return (async function() {
             const dbRoot = FilesystemDirectory.Data;
             const dbPath = 'condution.json'; // TODO: use capacitor storage api
@@ -167,6 +169,30 @@ const [cRef, flush] = (() => {
         return await cache.get(TODOstring);
     }
 
+    let diskJSONDB = function() {
+        const dbRoot = FilesystemDirectory.Data;
+        const dbPath = 'condution.json'; // TODO: use capacitor storage api
+        let read = async function() {
+            let contents = (await Filesystem.readFile({
+                path: dbPath,
+                directory: dbRoot,
+                encoding: FilesystemEncoding.UTF8
+            })).data;
+            memoryDB = JSON.parse(contents);
+        }
+
+        let write = async function() {
+            await Filesystem.writeFile({
+                path: dbPath,
+                directory: dbRoot,
+                data: JSON.stringify(memoryDB),
+                encoding: FilesystemEncoding.UTF8
+            })
+        }
+
+        return {read, write};
+    }()
+
     async function storageRead(path) { 
         /*
          * Read value in storage
@@ -248,6 +274,7 @@ const [cRef, flush] = (() => {
                 }
             }
             pointer[id] = payload;
+            await diskJSONDB.write();
         }
         return Object.assign({}, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
     }
@@ -280,10 +307,9 @@ const [cRef, flush] = (() => {
                 pointer = pointer[i];
             });
             delete pointer[task];
+            await diskJSONDB.write();
         }
     }
-
-
 
     async function storageSet(path, payload) {
         /* 
@@ -319,6 +345,7 @@ const [cRef, flush] = (() => {
                 }
             }
             pointer[task] = payload;
+            await diskJSONDB.write();
         }
         return Object.assign({}, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
     }
@@ -356,6 +383,7 @@ const [cRef, flush] = (() => {
                 }
             }
             pointer = Object.assign(pointer, payload);
+            await diskJSONDB.write();
         }
         return Object.assign(payload, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
     }
