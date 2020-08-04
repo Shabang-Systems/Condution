@@ -2708,7 +2708,7 @@
 
         #convert-src {
             display: inline-block;
-            color: var(--decorative-light);
+            color: var(--content-normal-alt);
             font-weight: 500;
             transition-property: all;
             transition-duration: 200ms;
@@ -2721,8 +2721,6 @@
             transform: translateX(-6px);
             border: 0.5px solid transparent;
         }
-
-
             
             @media (max-width: 575px) { 
                 #convert-src {
@@ -2753,7 +2751,7 @@
                 }
 
                 #convert-src:hover {
-                    border: 0.5px solid var(--decorative-light);
+                    border: 0.5px solid var(--content-normal-alt);
                 }
             }
 
@@ -2764,7 +2762,7 @@
                 }
 
                 #convert-src:hover {
-                    border: 0.5px solid var(--decorative-light);
+                    border: 0.5px solid var(--content-normal-alt);
                 }
             }
 
@@ -2775,7 +2773,7 @@
                 }
 
                 #convert-src:hover {
-                    border: 0.5px solid var(--decorative-light);
+                    border: 0.5px solid var(--content-normal-alt);
                 }
             }
 
