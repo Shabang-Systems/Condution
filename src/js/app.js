@@ -50,7 +50,6 @@ let handleInternet = function(hasInternet) {
 };
 
 let dbType = await Storage.get({key: 'condution_stotype'});
-let dbReady = E.start(firebase, dbType.value ? dbType.value : "firebase"); // TODO: should we default to firebase?
 
 // Select2 Modifications
 (function($) {
@@ -67,6 +66,10 @@ let dbReady = E.start(firebase, dbType.value ? dbType.value : "firebase"); // TO
         return $rendered;
     };
 })(window.jQuery);
+
+E.start({firebase}, "firebase", "json"); 
+
+let dbReady = E.use(dbType.value ? dbType.value : "firebase") // TODO: should we default to firebase?
 
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
@@ -376,7 +379,7 @@ let isConversionInProgress = false;
 let authUI = function() {
     let anonomGeneration = async function(onboard) {
         isAnomAuthInProgress = true;
-        await E.start(firebase, "json");
+        await E.use("json");
         if (onboard) await E.db.onBoard("hard-storage-user", moment.tz.guess(), "there");
         Storage.set({
             key: "condution_stotype",
@@ -439,7 +442,7 @@ let authUI = function() {
             $("#newuser").html("Make an account");
             $("#newuser").show();
             $("#recover-password").html("Recover Password");
-            $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+            $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
             $('#recover-password').fadeOut();
             $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
             $('#need-verify').fadeIn();
@@ -517,7 +520,7 @@ let authUI = function() {
                 $("#newuser").html("Make an account");
                 $("#newuser").show();
                 $("#recover-password").html("Recover Password");
-                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
                 mode = "login";
         }
     });
@@ -533,7 +536,7 @@ let authUI = function() {
             case "newuser":
                 $("#name-tray").slideUp(300);
                 $(this).html("Make an account");
-                $("#greeting-auth-normal").html("Let's authenticate. Otherwise this may not be useful...");
+                $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
                 mode = "login";
                 break;
         }
@@ -2629,7 +2632,9 @@ $(document).on("click", "#logout", async function(e) {
             value: "firebase"
         });
         dbType.value = "firebase";
-        await E.start(firebase, "firebase");
+        //await E.start(firebase, "firebase");
+
+        await E.use("firebase");
         // Generate auth UI
         $("#content-wrapper").fadeOut();
         $("#loading").fadeOut();
@@ -3008,48 +3013,6 @@ return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage
 }();
 
 
-
-if (dbType.value && dbType.value !== "firebase") {
-    await loadApp({uid: 'hard-storage-user', displayName: ''});
-    setInterval(() => {ui.update()}, 60 * 1000);
-    setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
-}
-
-firebase.auth().onAuthStateChanged(async function(user) {
-    if (user) {
-        if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
-            await loadApp(user);
-            setInterval(() => {ui.update()}, 60 * 1000);
-            setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
-        } else {
-            E.flush();
-            // Generate auth UI
-            if (!isNASuccess && !isAnomAuthInProgress) {
-                // if not currently signing up
-                $("#content-wrapper").fadeOut();
-                $("#loading").fadeOut();
-                $('#need-verify').html("Account unverified. Please check your email + sign in again.");
-                firebase.auth().currentUser.sendEmailVerification();
-                $('#recover-password').fadeOut();
-                $('#need-verify').fadeIn();
-                $("#authwall").fadeIn();
-                $('#auth-left-menu').fadeIn();
-                $("#auth-content-wrapper").fadeIn();
-            }
-        }
-    } else {
-        E.flush();
-        // Generate auth UI
-        $("#content-wrapper").fadeOut();
-        $("#loading").fadeOut();
-        $("#authwall").fadeIn();
-        $('#need-verify').fadeOut();
-        $('#auth-left-menu').fadeIn();
-        $("#auth-content-wrapper").fadeIn();
-        $(".auth-upf").val("");
-    }
-});
-
 $(document).keypress(async function(e) {
     if (document.activeElement.tagName === "BODY" && !(await ism)) {
         $("#quickadd").focus();
@@ -3068,12 +3031,60 @@ window.addEventListener('devtoolschange', event => {
     warn();
 });
 
-(async function potentiallyOnboard() {
+(async function onAppWillLoad() {
     $("#loading").hide().css("display", "flex").fadeIn();
     const ret = await Storage.get({ key: 'condution_onboarding' });
-    const val = JSON.parse(ret.value);
+    try {
+        const val = JSON.parse(ret.value);
+    } catch(e) {} finally {
     if (ret.value !== "done" && val !== "done") {
         presentWelcome();
+    } else {
+        if (dbType.value && dbType.value !== "firebase") {
+                await loadApp({uid: 'hard-storage-user', displayName: ''});
+                setInterval(() => {ui.update()}, 60 * 1000);
+                setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
+            }
+
+            firebase.auth().onAuthStateChanged(async function(user) {
+                if (dbType.value && dbType.value !== "firebase") {
+                    return;
+                }
+                if (user) {
+                    if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
+                        await loadApp(user);
+                        setInterval(() => {ui.update()}, 60 * 1000);
+                        setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
+                    } else {
+                        E.flush();
+                        // Generate auth UI
+                        if (!isNASuccess && !isAnomAuthInProgress) {
+                            // if not currently signing up
+                            $("#content-wrapper").fadeOut();
+                            $("#loading").fadeOut();
+                            $('#need-verify').html("Account unverified. Please check your email + sign in again.");
+                            firebase.auth().currentUser.sendEmailVerification();
+                            $('#recover-password').fadeOut();
+                            $('#need-verify').fadeIn();
+                            $("#authwall").fadeIn();
+                            $('#auth-left-menu').fadeIn();
+                            $("#auth-content-wrapper").fadeIn();
+                        }
+                    }
+                } else {
+                    E.flush();
+                    // Generate auth UI
+                    $("#content-wrapper").fadeOut();
+                    $("#loading").fadeOut();
+                    $("#authwall").fadeIn();
+                    $('#need-verify').fadeOut();
+                    $('#auth-left-menu').fadeIn();
+                    $("#auth-content-wrapper").fadeIn();
+                    $(".auth-upf").val("");
+                }
+            });
+    }
+
     }
 })();
 
