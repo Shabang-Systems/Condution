@@ -7,43 +7,45 @@ let storageType;
 let sqliteDB;
 let memoryDB;
 let firebaseDB, fsRef;
-let firebaseLoaded = false;
 
 const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
 const { Device, Filesystem } = Plugins;
 
+let readiness;
 
-const initStorage = (fbPointer, stoType) => {
-    // Firebase App (the core Firebase SDK) is always required and
-    // must be listed before other Firebase SDKs
+const initStorage = (payload, ...features) => {
+ /*   // Firebase App (the core Firebase SDK) is always required and*/
+    //// must be listed before other Firebase SDKs
     // const firebase = require("firebase/app");
 
-    storageType = stoType;
-    if (storageType === "firebase") {
+    let loaders = [];
+
+    if (features.includes("firebase")) {
         const obj = require("./../secrets.json");
-        if (!firebaseLoaded) { // you could only load firebase once. TODO: make a switch function that is independent of initialize
-            fbPointer.initializeApp(obj.dbkeys.debug);
-            [ firebaseDB, fsRef ] = [fbPointer.firestore(), fbPointer.firestore];
-            firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
-            firebaseLoaded = true
-        };
-        return new Promise(function(resolve) {
+        payload.firebase.initializeApp(obj.dbkeys.debug);
+        [ firebaseDB, fsRef ] = [payload.firebase.firestore(), payload.firebase.firestore];
+        firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
+        loaders.push(new Promise(function(resolve) {
             return resolve(fsRef);
-        });
-    } else if (storageType === "sqlite") {
+        }));
+    } 
+
+    if (features.includes("sqlite")) {
+        console.error("algobert come to the rescue!");
         const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
         const { FilesystemDirectory, Plugins } = require('@capacitor/core');
         const { Device } = Plugins;
-        console.error("algobert come to the rescue!");
-        return (async function() {
+        loaders.push((async function() {
             const isMobile = (await Device.getInfo()).platform !== "web";
             const dbRoot = isMobile ? FilesystemDirectory.Data : process.resourcesPath;
             const dbPath = '/condution.db'; // TODO: use capacitor storage api
             sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.error(e)});
             return sqliteDB;
-        })();
-    } else if (storageType === "json") {
-        return (async function() {
+        })());
+    } 
+
+    if (features.includes("json")) {
+        loaders.push((async function() {
             const dbRoot = FilesystemDirectory.Data;
             const dbPath = 'condution.json'; // TODO: use capacitor storage api
             try {
@@ -63,8 +65,16 @@ const initStorage = (fbPointer, stoType) => {
             }
             //contents = `{"users":{"hard-storage-user":{"projects":{"asenuoth239p8":{"name":"bontehu","is_sequential":false,"order":0,"parent":"","top_level":true, "children": []}}}}}`;
             memoryDB = JSON.parse(contents);
-        })();
+        })());
     }
+
+    readiness = Promise.all(loaders);
+    return readiness;
+};
+
+const useDb = (db) => {
+    storageType = db;
+    return readiness;
 };
 
 const [cRef, flush] = (() => {
@@ -470,5 +480,5 @@ const [cRef, flush] = (() => {
     return [dispatch, flush];
 })();
 
-module.exports = {__init__:initStorage, cRef, flush};
+module.exports = {__init__:initStorage, cRef, flush, useDb};
 
