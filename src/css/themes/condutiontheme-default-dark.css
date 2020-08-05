@@ -77,7 +77,7 @@
     --quickadd-placeholder: #e2c0bc;
 
     /* Other Things */
-    --auth-background: url(./../../static/auth-background-dark.jpg);
+    --auth-background: url(./../static/auth-background-dark.jpg);
 }
 
 
