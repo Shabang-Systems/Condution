@@ -14,7 +14,7 @@
 
         <!--Fonts and Icons-->
         <!--<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">-->
-        <script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>
+        <!--<script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>-->
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
         <!--Other People Codes-->
@@ -27,8 +27,11 @@
         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
         <script src="../node_modules/devtools-detect/index.js"></script>
+        <!--<script src="../node_modules/devtools-detect/index.js"></script>-->
+        <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
 
-        <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+
+       <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
@@ -58,12 +61,13 @@
             <div id="loading-anim"></div>
             <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.2.4_beta.0_M</t>
         </div>
-        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none; overflow: none;">
+        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 8000000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none; overflow: none;">
             <div style="margin-left: 20px;">
                 <h2 style="color: var(--content-normal-accent)">Missing Internet Connection...</h2>
-                <span style="color: var(--content-normal-alt)">🤷 You need the intrawebitubes to truly experience <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span>.</span>
+                <span style="color: var(--content-normal-alt)">🤷 You need the intrawebitubes to truly experience cloud-synced <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span>.</span>
                 <hr />
-                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online, restart the app, we will handle the rest ;)</span>
+                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online to proceed. Or, you could </span>
+                <div class="convert-src" style="margin-left: 5px; text-decoration: underline; color: var(--content-normal-alt)">Use Local Database</div>
             </div>
         </div>
         <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;overflow: none;">
@@ -395,11 +399,11 @@
                 <div id="auth-actiongroup">
                     <div id="newuser">Make an account</div>
                     <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i><span id="login-text">Let's Do This!</span></div>
-                    <div id="convert-src">Use Locally</div>
+                    <div class="convert-src">Use Locally</div>
                 </div>
             </div>
         </div>
-
+ 
         <script type='text/javascript' src="js/app.js"></script>
   </body>
 </html>

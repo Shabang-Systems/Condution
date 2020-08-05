@@ -45,9 +45,10 @@
 let handleInternet = function(hasInternet) {
     if (hasInternet)
         $("#missing-internet").hide();
-    else
+    else {
         if (dbType.value === "firebase")
             $("#missing-internet").css("display", "flex");
+    }
 };
 
 let dbType = await Storage.get({key: 'condution_stotype'});
@@ -250,6 +251,15 @@ const interfaceUtil = function() {
     return {Sortable:Sortable, sMatch: substringMatcher, sp: smartParse, spf: smartParseFull, daysBetween: numDaysBetween, taskHTML: calculateTaskHTML, gtc: getThemeColor, newPHI: newPlaceholderImage, getStartSwipe: getStartPosition, menu}
 }();
 
+let handler = Network.addListener('networkStatusChange', async function(status) {
+    await ui.update();
+    handleInternet(status.connected);
+});
+
+let status = Network.getStatus().then(status=>handleInternet(status.connected));
+
+
+
 async function loadApp(user) {
     await dbReady;
     const startTime = Date.now();
@@ -266,12 +276,6 @@ async function loadApp(user) {
     }
     await ui.constructSidebar();
     await ui.load("upcoming-page");
-
-    let handler = Network.addListener('networkStatusChange', async function(status) {
-        await ui.update();
-        handleInternet(status.connected);
-    });
-    let status = Network.getStatus().then(status=>handleInternet(status.connected));
 
     $("#loading").fadeOut();
     $("#auth-content-wrapper").fadeOut();
@@ -2624,9 +2628,9 @@ $(document).on("click", "#project-sequential-no", function(e) {
 });
 
 $(document).on("click", "#logout", async function(e) {
-    if (dbType.value === "firebase") {
-        firebase.auth().signOut().then(() => {}, console.error);
-    } else {
+    let status = Network.getStatus().then(status=>handleInternet(status.connected));
+    firebase.auth().signOut().then(() => {}, console.log);
+    if (dbType.value !== "firebase") {
         E.flush();
         Storage.set({
             key: "condution_stotype",
@@ -2873,7 +2877,8 @@ $(document).on("click", "#convert", function() {
     showConvert();
 });
 
-$(document).on("click", "#convert-src", function() {
+$(document).on("click", ".convert-src", function() {
+    $("#missing-internet").hide();
     $("#auth-content-wrapper").fadeOut(300);
     authUI.anonomGeneration(false);
 });

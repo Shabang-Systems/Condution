@@ -2706,7 +2706,7 @@
 
     /* IDs */
 
-        #convert-src {
+        .convert-src {
             display: inline-block;
             color: var(--content-normal-alt);
             font-weight: 500;
@@ -2723,56 +2723,56 @@
         }
             
             @media (max-width: 575px) { 
-                #convert-src {
+                .convert-src {
                     font-size: 4vw;
                     margin-top: 1px;
                 }
 
-                #convert-src:hover {
+                .convert-src:hover {
                     border: 0.5px solid transparent;
                 }
             }
 
             @media (min-width: 576px) { 
-                #convert-src {
+                .convert-src {
                     font-size: 13px;
                     margin-top: 5px;
                 }
 
-                #convert-src:hover {
+                .convert-src:hover {
                     border: 0.5px solid transparent;
                 }
             }
 
             @media (min-width: 768px) { 
-                #convert-src {
+                .convert-src {
                     font-size: 13px;
                     margin-top: 10px;
                 }
 
-                #convert-src:hover {
+                .convert-src:hover {
                     border: 0.5px solid var(--content-normal-alt);
                 }
             }
 
             @media (min-width: 992px) { 
-                #convert-src {
+                .convert-src {
                     font-size: 13px;
                     margin-top: 15px;
                 }
 
-                #convert-src:hover {
+                .convert-src:hover {
                     border: 0.5px solid var(--content-normal-alt);
                 }
             }
 
             @media (min-width: 1200px) { 
-                #convert-src {
+                .convert-src {
                     font-size: 13px;
                     margin-top: 15px;
                 }
 
-                #convert-src:hover {
+                .convert-src:hover {
                     border: 0.5px solid var(--content-normal-alt);
                 }
             }
