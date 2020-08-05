@@ -12,7 +12,7 @@
 
         <!--Fonts and Icons-->
         <!--<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">-->
-        <script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>
+        <!--<script src="https://kit.fontawesome.com/c54dcdbe34.js" crossorigin="anonymous"></script>-->
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
         <!--Other People Codes-->
@@ -25,8 +25,11 @@
         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
         <script src="../node_modules/devtools-detect/index.js"></script>
+        <!--<script src="../node_modules/devtools-detect/index.js"></script>-->
+        <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
 
-        <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+
+       <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
@@ -56,12 +59,13 @@
             <div id="loading-anim"></div>
             <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.2.4_beta.0_M</t>
         </div>
-        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none; overflow: none;">
+        <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 8000000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none; overflow: none;">
             <div style="margin-left: 20px;">
                 <h2 style="color: var(--content-normal-accent)" id="missing-internet-msg">Missing Internet Connection...</h2>
-                <span style="color: var(--content-normal-alt)">🤷 <span id="missing-internet-yn">You need the intrawebitubes to truly experience Condution.</span>
+                <span style="color: var(--content-normal-alt)">🤷 <span id="missing-internet-yn">You need the intrawebitubes to truly experience cloud-synced <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span>.</span>
                 <hr />
-                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;" id="missing-internet-action">Get online, restart the app, we will handle the rest ;)</span>
+                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online to proceed. Or, you could </span>
+                <div class="convert-src" style="margin-left: 5px; text-decoration: underline; color: var(--content-normal-alt)">Use Local Database</div>
             </div>
         </div>
         <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;overflow: none;">
@@ -105,10 +109,10 @@
                     <div id="onboarding-display-3" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-3" class="task-check"/>
                         <label class="task-pseudocheck" id="onboarding-pseudocheck-2" for="onboarding-check-3" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                        <input class="task-name" id="onboarding-name-3" type="text" autocomplete="off" value="Go accountless. 💾" readonly>
+                        <input class="task-name" id="onboarding-name-3" type="text" autocomplete="off" value="Use locally. 💾" readonly>
                     </div> 
                 </div>
-                <div id="onboarding-msg-3" style="color: var(--decorative-light); font-size: 13px; display:none">Data is securely backed up in the United States regardless of sync. No registration needed if sync is not enabled.</div>
+                <div id="onboarding-msg-3" style="color: var(--decorative-light); font-size: 13px; display:none">Data stored on your machine if used locally. No registration needed if sync is not enabled.</div>
         </div>
     </div>
 
@@ -143,7 +147,6 @@
                         <br />
 
                         <a id="perspective-documentaion" href="#" title="Well, click this if you need help." style="color: var(--task); font-weight: 600; font-size: 9px">Need Help?</a>
-                        <!--TODO: Actually make the above the documentation-->
                     </div>
                     <div class="overlay-unit" id="repeat-unit">
                         <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
@@ -312,10 +315,10 @@
                             <div id="completed-earlier">
                             </div>
                             <div id="completed-loading" style="margin-bottom: 10px; margin-top: 10px; display: none">
-                                <div id="completed-fm" style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px">Fetch more...</div>
+                                <div id="completed-fm" style="color: var(--decorative-light-alt); font-weight: 600; transform: translateY(-2px); padding-left: 5px">Fetch more...</div>
                                 <div id="completed-spinner" style="transform: translateX(-3px); display:none">
                                     <div class="lds-ring" style="transform: translate(6px, 6.5px);"><div></div><div></div><div></div><div></div></div>
-                                    <span style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px">Fetching 'em tasks!</span>
+                                    <div class="completed-load-more-text"><span style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px">Fetching 'em tasks!</span></div>
                                 </div>
                             </div>
                         </div>
@@ -382,7 +385,7 @@
             </div>
             <div id="authwall" style="display:none">
                 <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t style="color: var(--content-normal-alt)">Welcome to Condution.</t>
-                <h3 class="greeting-auth-subtitle" id="greeting-auth-normal">Let's authenticate. Otherwise this may not be useful...</h3>
+                <h3 class="greeting-auth-subtitle" id="greeting-auth-normal">Good to see you. Please sign in or tap Use Locally.</h3>
                 <div id="name-tray" style="display:none">
                     <input class="auth-upf" id="name" type="text" autocomplete="off" value="" placeholder="What should we call you?">
                 </div>
@@ -394,11 +397,11 @@
                 <div id="auth-actiongroup">
                     <div id="newuser">Make an account</div>
                     <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i><span id="login-text">Let's Do This!</span></div>
-                    <div id="convert-src">Go Accountless</div>
+                    <div class="convert-src">Use Locally</div>
                 </div>
             </div>
         </div>
-
+ 
         <script type='text/javascript' src="js/app.js"></script>
   </body>
 </html>
