@@ -34,6 +34,7 @@
         $("#missing-internet-msg").html(translations.missing_internet);
         $("#missing-internet-yn").html(translations.missing_internet_content);
         $("#missing-internet-action").html(translations.missing_internet_action);
+        $("#missing-internet-action-button").html(translations.missing_internet_action_button);
         $("#setting-up-callout").html(translations.setting_up_callout);
         $("#setting-up-action").html(translations.setting_up_action);
         $("#setting-up-hold").html(translations.setting_up_hold);
@@ -66,7 +67,27 @@
         $("#psp-dbe").html(translations.psp_dbe);
         $("#psp-alpha").html(translations.psp_alpha);
         $("#perspective-documentation").html(translations.psp_doc);
-
+        $("#repeat-word").html(translations.repeat_word);
+        $("#repeat-every").html(translations.repeat_every);
+        $("#repeat-every-day").html(translations.repeat_every_day);
+        $("#repeat-every-week").html(translations.repeat_every_week);
+        $("#repeat-every-month").html(translations.repeat_every_month);
+        $("#repeat-every-year").html(translations.repeat_every_year);
+        $("#repeat-datework-weekname-m").html(translations.repeat_datework_weekname_m);
+        $("#repeat-datework-weekname-tu").html(translations.repeat_datework_weekname_tu);
+        $("#repeat-datework-weekname-w").html(translations.repeat_datework_weekname_w);
+        $("#repeat-datework-weekname-th").html(translations.repeat_datework_weekname_th);
+        $("#repeat-datework-weekname-f").html(translations.repeat_datework_weekname_f);
+        $("#repeat-datework-weekname-sa").html(translations.repeat_datework_weekname_sa);
+        $("#repeat-datework-weekname-su").html(translations.repeat_datework_weekname_su);
+        $("#repeat-last").html(translations.repeat_last);
+        $("#convert-callout").html(translations.convert_callout);
+        $("#convert-msg").html(translations.convert_everywhere);
+        $("#convert-msg").html(translations.convert_everywhere);
+        $("#name-convert").attr("placeholder", translations.what_should_we);
+        $("#email-convert").attr("placeholder", translations.email);
+        $("#password-convert").attr("placeholder", translations.password);
+        $("#convert-action").attr("placeholder", translations.sync);
     }
 
     let langCode = await Device.getLanguageCode();
