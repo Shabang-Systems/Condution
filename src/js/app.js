@@ -43,10 +43,11 @@
     /*}, false);*/
 
 let handleInternet = function(hasInternet) {
-    //if (hasInternet)
-    //    $("#missing-internet").hide();
-    //else
-    //    $("#missing-internet").css("display", "flex");
+    if (hasInternet)
+        $("#missing-internet").hide();
+    else
+        if (dbType.value === "firebase")
+            $("#missing-internet").css("display", "flex");
 };
 
 let dbType = await Storage.get({key: 'condution_stotype'});
@@ -2632,8 +2633,6 @@ $(document).on("click", "#logout", async function(e) {
             value: "firebase"
         });
         dbType.value = "firebase";
-        //await E.start(firebase, "firebase");
-
         await E.use("firebase");
         // Generate auth UI
         $("#content-wrapper").fadeOut();
