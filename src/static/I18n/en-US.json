@@ -114,6 +114,7 @@
     "order_dbe": "Order: descend by defer", 
     "order_alpha": "Order: alphabetical",
     "loading": "Loading",
-    "welcome_aboard": "Welcome Aboard!"
+    "welcome_aboard": "Welcome Aboard!",
+    "b2b": "Back to Basic..."
 }
 

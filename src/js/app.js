@@ -65,11 +65,12 @@
         return (await Device.getInfo()).operatingSystem === "ios";
     }
 
-    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!"};
+    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic..."};
 
     let do_INT = function(charcode) {
         let translations = require(`./static/I18n/${charcode}.json`);
         default_localizations.welcome_aboard = translations.welcome_aboard;
+        default_localizations.advanced = translations.repeat_advanced;
         default_localizations.include_avalibale = translations.include_avalibale;
         default_localizations.include_flagged = translations.include_flagged;
         default_localizations.include_remaining = translations.include_remaining;
@@ -142,13 +143,14 @@
         $("#repeat-every-week").html(translations.repeat_every_week);
         $("#repeat-every-month").html(translations.repeat_every_month);
         $("#repeat-every-year").html(translations.repeat_every_year);
-        $("#repeat-datework-weekname-m").html(translations.repeat_datework_weekname_m);
-        $("#repeat-datework-weekname-tu").html(translations.repeat_datework_weekname_tu);
-        $("#repeat-datework-weekname-w").html(translations.repeat_datework_weekname_w);
-        $("#repeat-datework-weekname-th").html(translations.repeat_datework_weekname_th);
-        $("#repeat-datework-weekname-f").html(translations.repeat_datework_weekname_f);
-        $("#repeat-datework-weekname-sa").html(translations.repeat_datework_weekname_sa);
-        $("#repeat-datework-weekname-su").html(translations.repeat_datework_weekname_su);
+        $(".repeat-advanced-text").html(translations.repeat_advanced);
+        $("#repeat-daterow-weekname-m").html(translations.repeat_datework_weekname_m);
+        $("#repeat-daterow-weekname-tu").html(translations.repeat_datework_weekname_tu);
+        $("#repeat-daterow-weekname-w").html(translations.repeat_datework_weekname_w);
+        $("#repeat-daterow-weekname-th").html(translations.repeat_datework_weekname_th);
+        $("#repeat-daterow-weekname-f").html(translations.repeat_datework_weekname_f);
+        $("#repeat-daterow-weekname-sa").html(translations.repeat_datework_weekname_sa);
+        $("#repeat-daterow-weekname-su").html(translations.repeat_datework_weekname_su);
         $("#repeat-last").html(translations.repeat_last);
         $("#convert-callout").html(translations.convert_callout);
         $("#convert-msg").html(translations.convert_everywhere);
@@ -1065,14 +1067,14 @@ let ui = function() {
 
         $("#repeat-advanced-monthly").on("click", function(e) {
             if (advancedMonthMode) {
-                $(this).html("Advanced...");
+                $(this).html(default_localizations.advanced);
                 $("#repeat-monthgrid").fadeOut();
                 E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
                 $("#repeat-monthgrid").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background")});
                 });
             } else {
-                $(this).html("Back to Basic...");
+                $(this).html(default_localizations.b2b);
                 $("#repeat-monthgrid").fadeIn({
                     start: function () {
                         $(this).css({
@@ -1086,14 +1088,14 @@ let ui = function() {
 
         $("#repeat-advanced-weekly").on("click", function(e) {
             if (advancedWeekMode) {
-                $(this).html("Advanced...");
+                $(this).html(default_localizations.advanced);
                 $("#repeat-daterow").fadeOut();
                 E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
                 $("#repeat-daterow").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
                 });
             } else {
-                $(this).html("Back to Basic...");
+                $(this).html(default_localizations.b2b);
                 $("#repeat-daterow").fadeIn({
                     start: function () {
                         $(this).css({
