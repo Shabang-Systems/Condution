@@ -27,7 +27,7 @@
      * READ ME READ ME READ ME READ ME
      *
      * As of beta-v0.3.0, the browserifying protocol
-     * has changed to be _slightly_ more complicated
+     * HAS CHANGED to be _slightly_ more complicated
      * 1. Remove all electron refrences
      * 2. Remove all electron.remote (IPC renderers)
      * 3. Change directories on line for 
@@ -42,6 +42,8 @@
      *         needs to be changed by adding a dot
      *         before as well.
      *      </this is new>
+     *
+     * ...from w.r.t. index.html to w.r.t. ./js
      *
      * #NeverForget
      * #DontBeABroom
@@ -63,10 +65,21 @@
         return (await Device.getInfo()).operatingSystem === "ios";
     }
 
-    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", gretting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password."};
+    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining"};
 
     let do_INT = function(charcode) {
         let translations = require(`./static/I18n/${charcode}.json`);
+        default_localizations.include_avalibale = translations.include_avalibale;
+        default_localizations.include_flagged = translations.include_flagged;
+        default_localizations.include_remaining = translations.include_remaining;
+        default_localizations.greetings_setA = translations.greetings_setA;
+        default_localizations.greetings_setB = translations.greetings_setB;
+        default_localizations.rec_pswd = translations.rec_pswd;
+        default_localizations.signupmsg = translations.signupmsg;
+        default_localizations.newuser = translations.newuser;
+        default_localizations.terms = translations.terms;
+        default_localizations.and = translations.onboarding_msg_1_2;
+        default_localizations.privacy = translations.policy;
         default_localizations.nt = translations.nt;
         default_localizations.remembered = translations.remembered;
         default_localizations.noworries = translations.noworries;
@@ -76,7 +89,7 @@
         default_localizations.rec_pswd = translations.rec_pswd;
         default_localizations.proceed = translations.proceed;
         default_localizations.need_verify = translations.need_verify;
-        default_localizations.gretting_auth_normal = translations.gretting_auth_normal;
+        default_localizations.greeting_auth_normal = translations.greeting_auth_normal;
         default_localizations.lovely_email = translations.lovely_email;
         $("title").html(translations.client_name);
         $("#missing-internet-msg").html(translations.missing_internet);
@@ -159,7 +172,7 @@
         $("#newbutton-at").html(translations.nb_at);
         $("#newbutton-ap").html(translations.nb_ap);
         $("#welcome-auth-msg").html(translations.welcome_auth_msg);
-        $("#greeting-auth-normal").html(translations.gretting_auth_normal);
+        $("#greeting-auth-normal").html(translations.greeting_auth_normal);
         $("#name").attr("placeholder", translations.what_should_we);
         $("#email").attr("placeholder", translations.email);
         $("#password").attr("placeholder", translations.password);
@@ -600,7 +613,7 @@ let authUI = function() {
             $("#newuser").html(default_localizations.newuser);
             $("#newuser").show();
             $("#recover-password").html(default_localizations.rec_pswd);
-            $("#greeting-auth-normal").html(default_localizations.gretting_auth_normal);
+            $("#greeting-auth-normal").html(default_localizations.greeting_auth_normal);
             $('#recover-password').fadeOut();
             $('#need-verify').html(default_localizations.lovely_email);
             $('#need-verify').fadeIn();
@@ -675,10 +688,10 @@ let authUI = function() {
                 break;
             case "recover":
                 $("#password").show();
-                $("#newuser").html("Make an account");
+                $("#newuser").html(default_localizations.newuser);
                 $("#newuser").show();
-                $("#recover-password").html("Recover Password");
-                $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
+                $("#recover-password").html(default_localizations.rec_pswd);
+                $("#greeting-auth-normal").html(default_localizations.greeting_auth_normal);
                 mode = "login";
         }
     });
@@ -689,18 +702,18 @@ let authUI = function() {
                 $("#name-tray").slideDown(300);
                 $(this).html("Sign in");
                 mode = "newuser";
-                $("#greeting-auth-normal").html(`Welcome aboard! By signing up, you agree to our <a href="https://condution.shabang.cf/privacy.html">Privacy Policy</a> and <a href="https://condution.shabang.cf/terms.html">Terms</a>.`);
+                $("#greeting-auth-normal").html(default_localizations.signupmsg+` <a href=\"https://condution.shabang.cf/privacy.html\">${default_localizations.privacy}</a> ${default_localizations.and} <a href=\"https://condution.shabang.cf/terms.html\">${default_localizations.terms}</a>.`);
                 break;
             case "newuser":
                 $("#name-tray").slideUp(300);
-                $(this).html("Make an account");
-                $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
+                $(this).html(default_localizations.newuser);
+                $("#greeting-auth-normal").html(default_localizations.greeting_auth_normal);
                 mode = "login";
                 break;
         }
     });
 
-    const greetings = ["Hey!", "G'day!", "Howdy!", "Yo!"];
+    const greetings = default_localizations.greetings_setA;
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
     return {auth, nu, rec, anonomGeneration}
 }();
@@ -708,7 +721,7 @@ let authUI = function() {
 let ui = function() {
     let isMobile = false;
     // greeting of the day
-    let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
+    let greetings = default_localizations.greetings_setB;
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
     // generic data containers used by refresh and others
@@ -825,21 +838,21 @@ let ui = function() {
 
         $("#pavail-avail").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {avail: "avail"});
-            $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-avail-toggle").html(`${default_localizations.include_avalibale} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pavail-group").children().css("background-color", "transparent");
             $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pavail-flagged").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {avail: "flagged"});
-            $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-avail-toggle").html(`${default_localizations.include_flagged} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pavail-group").children().css("background-color", "transparent");
             $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pavail-remain").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {avail: "remain"});
-            $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-avail-toggle").html(`${default_localizations.include_remaining} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pavail-group").children().css("background-color", "transparent");
             $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
