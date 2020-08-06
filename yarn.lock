@@ -2930,6 +2930,11 @@ gensync@^1.0.0-beta.1:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.1.tgz#58f4361ff987e5ff6e1e7a210827aa371eaac269"
   integrity sha512-r8EC6NO1sngH/zdD9fiRDLdcgnbayXah+mLgManTaIZJqEC1MZstmnox8KpnI2/fxQwrp5OpCOYWLp4rBl4Jcg==
 
+geoplugin@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/geoplugin/-/geoplugin-1.0.5.tgz#2aaeca589c97e64779b020de2022fdad5c711eb2"
+  integrity sha512-COpRBM6OtHlGvieWQVl9zk7yxz2HiMjNuqzaRn0EEIf0Pvvs5tWScoDxSmGY5msu105oWsVRDOx4xJkhSq9qzQ==
+
 get-assigned-identifiers@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/get-assigned-identifiers/-/get-assigned-identifiers-1.2.0.tgz#6dbf411de648cbaf8d9169ebb0d2d576191e2ff1"

@@ -16,11 +16,13 @@
     require('mousetrap');
     require('bootstrap-tagsinput');
     require('select2')();
+    let {getGeo, getGeoByIp} = require('geoplugin');
     let moment = require('moment-timezone');
     let { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
     let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
     let E = require('./backend/CondutionEngine');
-    
+
+   
     /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
      *
      * #$%^&* REEE***E*E**E*AAAD MEEEEEEE @#$%^&*
@@ -68,7 +70,21 @@
     //let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic...", search_projects: "Search Projects...", unsorted: "Unsorted", m: "M", tu: "Tu", w: "W", th: "Th", f: "F", sa: "Sa", su: "Su", onboarding_content: undefined};
     let default_localizations = {};
 
+    let firebase_avaliable = false;
+
     let do_INT = function(charcode) {
+
+        // Geo-Based Blocking of Features
+        getGeo().then(function(res) {
+            if (res.countryCode==="CN") {
+                $("#logout").hide();
+                firebase_avaliable = false;
+            } else {
+                firebase_avaliable = true;
+            }
+        });
+
+        // Translation
         let translations = require(`./static/I18n/${charcode}.json`);
         default_localizations.every_day = translations.repeat_every_text_day;
         default_localizations.every_week = translations.repeat_every_text_week;
@@ -127,10 +143,11 @@
         $("#onboarding-welcome").html(translations.onboarding_welcome);
         $("#onboarding-quick-things").html(translations.onboarding_quick_things);
         $("#onboarding-name-0").val(translations.onboarding_ready);
+        $("#onboarding-name-1").val(translations.onboarding_agree);
         $("#onboarding-msg-0").html(translations.onboarding_msg_0);
-        $("#onboarding-msg-1-1").html(translations.onboarading_msg_1_1);
+        $("#onboarding-msg-1-1").html(translations.onboarding_msg_1_1);
         $("#welcome-terms").html(translations.terms);
-        $("#onboarding-msg-1-2").html(translations.and);
+        $("#onboarding-msg-1-2").html(translations.onboarding_msg_1_2);
         $("#welcome-policy").html(translations.policy);
         $("#onboarding-msg-1-3").html(translations.onboarding_msg_1_3);
         $("#onboarding-agree").html(translations.onboarding_agree);
@@ -215,15 +232,15 @@
             do_INT("en-US");
             break;
         case "zh-CN":
-            do_INT("zh-CN");
-            break;
         case "zh-HK":
         case "zh-MO":
         case "zh-SG":
         case "zh-TW":
             do_INT("zh-CN");
+            break;
         default:
-            console.log(langCode.value);
+            console.log(`Undefined langcode ${langCode.value}`);
+            do_INT("en-US");
             break;
     }
 
@@ -524,13 +541,22 @@ let presentWelcome = function() {
             $("#onboarding-1").slideUp(300, function() {
                 setTimeout(function() {
                     $("#onboarding-msg-1").fadeOut(function() {
-                        $("#onboarding-msg-2").fadeIn(1000, function() {
-                            setTimeout(function() {
-                                $("#onboarding-2").fadeIn();
-                                $("#onboarding-3").fadeIn();
-                                $("#onboarding-msg-3").fadeIn();
-                            },500);
-                        });
+                        if (!firebase_avaliable) {
+                            authUI.anonomGeneration(true);
+                            setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
+                            Storage.set({
+                                key: "condution_onboarding",
+                                value: "done"
+                            });
+                        } else {
+                            $("#onboarding-msg-2").fadeIn(1000, function() {
+                                setTimeout(function() {
+                                    $("#onboarding-2").fadeIn();
+                                    $("#onboarding-3").fadeIn();
+                                    $("#onboarding-msg-3").fadeIn();
+                                },500);
+                            });
+                        }
                     });
 
                 }, 300);
@@ -585,7 +611,7 @@ let authUI = function() {
     let anonomGeneration = async function(onboard) {
         isAnomAuthInProgress = true;
         await E.use("json");
-        if (onboard) await E.db.onBoard("hard-storage-user", moment.tz.guess(), "there", default_localizations.onboarding_content);
+        if (onboard) await E.db.onBoard("hard-storage-user", moment.tz.guess(), langCode.value.includes("en") ? "there": "", default_localizations.onboarding_content);
         Storage.set({
             key: "condution_stotype",
             value: "json"
@@ -3247,8 +3273,9 @@ window.addEventListener('devtoolschange', event => {
 (async function onAppWillLoad() {
     $("#loading").hide().css("display", "flex").fadeIn();
     const ret = await Storage.get({ key: 'condution_onboarding' });
+    let val = undefined;
     try {
-        const val = JSON.parse(ret.value);
+        val = JSON.parse(ret.value);
     } catch(e) {} finally {
     if (ret.value !== "done" && val !== "done") {
         presentWelcome();
