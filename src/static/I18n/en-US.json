@@ -43,6 +43,10 @@
     "repeat_every_week": "Week",
     "repeat_every_month": "Month",
     "repeat_every_year": "Year",
+    "repeat_every_text_day": "every day.",
+    "repeat_every_text_week": "every week.",
+    "repeat_every_text_month": "every month.",
+    "repeat_every_text_year": "every year.",
     "repeat_advanced": "Advanced...",
     "repeat_datework_weekname_m": "M",
     "repeat_datework_weekname_tu": "Tu",
@@ -117,6 +121,7 @@
     "welcome_aboard": "Welcome Aboard!",
     "b2b": "Back to Basic...",
     "search_projects": "Search Projects...",
+    "qa_content": "Add something to the inbox?",
     "onboarding_content": [
         "Hey",
         "🙌 welcome to Condution! 🙌",

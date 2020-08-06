@@ -65,10 +65,15 @@
         return (await Device.getInfo()).operatingSystem === "ios";
     }
 
-    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic...", search_projects: "Search Projects...", unsorted: "Unsorted", m: "M", tu: "Tu", w: "W", th: "Th", f: "F", sa: "Sa", su: "Su", onboarding_content};
+    //let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic...", search_projects: "Search Projects...", unsorted: "Unsorted", m: "M", tu: "Tu", w: "W", th: "Th", f: "F", sa: "Sa", su: "Su", onboarding_content: undefined};
+    let default_localizations = {};
 
     let do_INT = function(charcode) {
         let translations = require(`./static/I18n/${charcode}.json`);
+        default_localizations.every_day = translations.repeat_every_text_day;
+        default_localizations.every_week = translations.repeat_every_text_week;
+        default_localizations.every_month = translations.repeat_every_text_month;
+        default_localizations.every_year = translations.repeat_every_text_year;
         default_localizations.onboarding_content  = translations.onboarding_content;
         default_localizations.m  = translations.repeat_datework_weekname_m;
         default_localizations.tu  = translations.repeat_datework_weekname_tu;
@@ -201,6 +206,7 @@
         $("#newuser").html(translations.newuser);
         $("#login-text").html(translations.lds);
         $("#ulac").html(translations.ulac);
+        $("#quickadd").attr("placeholder", translations.qa_content);
     }
 
     let langCode = await Device.getLanguageCode();
@@ -208,6 +214,14 @@
         case "en-US":
             do_INT("en-US");
             break;
+        case "zh-CN":
+            do_INT("zh-CN");
+            break;
+        case "zh-HK":
+        case "zh-MO":
+        case "zh-SG":
+        case "zh-TW":
+            do_INT("zh-CN");
         default:
             console.log(langCode.value);
             break;
@@ -1147,7 +1161,7 @@ let ui = function() {
 
         $("#repeat-perday").on("click", function(e) {
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every day.");
+            $("#repeat-type").html(default_localizations.every_day);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "daily"}});
         });
@@ -1155,7 +1169,7 @@ let ui = function() {
         $("#repeat-perweek").on("click", function(e) {
             $("#repeat-weekly-unit").slideDown();
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every week.");
+            $("#repeat-type").html(default_localizations.every_week);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
         });
@@ -1163,14 +1177,14 @@ let ui = function() {
         $("#repeat-permonth").on("click", function(e) {
             $("#repeat-monthly-unit").slideDown();
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every month.");
+            $("#repeat-type").html(default_localizations.every_month);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
         });
 
         $("#repeat-peryear").on("click", function(e) {
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every year.");
+            $("#repeat-type").html(default_localizations.every_year);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "yearly"}});
         });
@@ -1215,7 +1229,7 @@ let ui = function() {
             if (ti.repeat.rule !== "none") {
                 if (ti.repeat.rule === "daily") {
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every day.");
+                    $("#repeat-type").html(default_localizations.every_day);
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
                     if (ti.repeat.on) {
@@ -1239,7 +1253,7 @@ let ui = function() {
                     }
                     $("#repeat-weekly-unit").show();
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every week.");
+                    $("#repeat-type").html(default_localizations.every_week);
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
                     if (ti.repeat.on) {
@@ -1263,11 +1277,11 @@ let ui = function() {
                     }
                     $("#repeat-monthly-unit").show();
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every month.");
+                    $("#repeat-type").html(default_localizations.every_month);
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "yearly") {
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every year.");
+                    $("#repeat-type").html(default_localizations.every_year);
                     $("#repeat-type").show();
                 }
             }
@@ -2200,7 +2214,7 @@ let ui = function() {
         let upcoming = async function() {
             $("#inbox").empty();
             $("#due-soon").empty();
-            $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
+            $("#greeting-date").html((new Date().toLocaleDateString(langCode.value, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
             //nextSevenDSes
