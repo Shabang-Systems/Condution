@@ -107,6 +107,13 @@
     ],
     "include_avalibale": "Include: Avaliable", 
     "include_flagged": "Include: Flagged", 
-    "include_remaining": "Include: Remaining"
+    "include_remaining": "Include: Remaining",
+    "order_abd": "Order: ascend by due", 
+    "order_dbd": "Order: descend by due", 
+    "order_abe": "Order: ascend by defer", 
+    "order_dbe": "Order: descend by defer", 
+    "order_alpha": "Order: alphabetical",
+    "loading": "Loading",
+    "welcome_aboard": "Welcome Aboard!"
 }
 

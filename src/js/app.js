@@ -65,13 +65,21 @@
         return (await Device.getInfo()).operatingSystem === "ios";
     }
 
-    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining"};
+    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!"};
 
     let do_INT = function(charcode) {
         let translations = require(`./static/I18n/${charcode}.json`);
+        default_localizations.welcome_aboard = translations.welcome_aboard;
         default_localizations.include_avalibale = translations.include_avalibale;
         default_localizations.include_flagged = translations.include_flagged;
         default_localizations.include_remaining = translations.include_remaining;
+        default_localizations.loading = translations.loading;
+        default_localizations.sync = translations.sync;
+        default_localizations.order_abd = translations.order_abd;
+        default_localizations.order_dbd = translations.order_dbd;
+        default_localizations.order_abe = translations.order_abe;
+        default_localizations.order_dbe = translations.order_dbe;
+        default_localizations.order_alpha = translations.order_alpha;
         default_localizations.greetings_setA = translations.greetings_setA;
         default_localizations.greetings_setB = translations.greetings_setB;
         default_localizations.rec_pswd = translations.rec_pswd;
@@ -859,35 +867,35 @@ let ui = function() {
 
         $("#pord-due-ascend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "duas"});
-            $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_abd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-due-descend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "duds"});
-            $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_dbd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-defer-ascend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "deas"});
-            $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_abe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-defer-descend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "deds"});
-            $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_dbe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-alpha").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "alpha"});
-            $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.alpha}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
@@ -905,27 +913,32 @@ let ui = function() {
             if (tord && tord !== "") {
                 switch (tord) {
                     case "duas":
-                        $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_abd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "duds":
-                        $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_dbd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "deas":
-                        $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_abe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "deds":
-                        $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_dbe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "alpha":
-                        $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.alpha}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
@@ -936,17 +949,20 @@ let ui = function() {
                     case "avail":
                         $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
-                        $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-avail-toggle").html(`${default_localizations.include_avalibale} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         break;
                     case "flagged":
                         $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
-                        $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-avail-toggle").html(`${default_localizations.include_flagged} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         break;
                     case "remain":
                         $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
-                        $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-avail-toggle").html(`${default_localizations.include_remaining} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         break;
                 }
             }
@@ -968,16 +984,16 @@ let ui = function() {
         $("#convert-action").on("click", function(e) {
             var credential = firebase.auth.EmailAuthProvider.credential($("#email-convert").val(), $("#password-convert").val());
             $(this).css("background", "#133644");
-            $(this).html("Loading");
+            $(this).html(default_localizations.loading);
             let btn = this;
             firebase.auth().currentUser.linkWithCredential(credential).then(function(usercred) {
-                $(btn).html("Sync!");
+                $(btn).html(default_localizations.sync);
                 $(btn).css("background", "#2b3749");
                 var user = usercred.user;
                 user.updateProfile({displayName: $("#name-convert").val()});
                 firebase.auth().currentUser.sendEmailVerification();
-                $("#convert-msg").html("Check your inbox. A lovely email's waiting ;)");
-                $("#convert-callout").html("Welcome Aboard!");
+                $("#convert-msg").html(default_localizations.lovely_email);
+                $("#convert-callout").html(default_localizations.welcome_aboard);
                 $(".auth-upf-conv").hide();
                 $("#convert-action").hide();
                 $("#convert").hide();
@@ -988,7 +1004,7 @@ let ui = function() {
                 setUser(firebase.auth().currentUser);
             }).catch(function(error) {
                 console.log("Error upgrading anonymous account", error);
-                $(btn).html("Sync!");
+                $(btn).html(default_localizations.sync);
                 $("#convert-msg").html(error.message);
             });
         });
