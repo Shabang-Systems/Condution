@@ -1193,7 +1193,7 @@
                 /* checked mark aspect */
                 .task-check:not(:checked) + label:after,
                 .task-check:checked + label:after {
-                    font-family: FontAwesome;
+                    font-family: "Font Awesome 5 Free";
                     font-weight: 900; /* Fix version 5.0.9 */
                     text-transform: text;           /* proposed */
                     content: '\f00c';
@@ -1209,7 +1209,7 @@
 
                 .task-check:not(:checked) + label.ds:after,
                 .task-check:checked + label.ds:after {
-                    font-family: FontAwesome;
+                    font-family: "Font Awesome 5 Free";
                     font-weight: 900; /* Fix version 5.0.9 */
                     text-transform: text;           /* proposed */
                     content: '\f00c';
@@ -1225,7 +1225,7 @@
 
                 .task-check:not(:checked) + label.od:after,
                 .task-check:checked + label.od:after {
-                    font-family: FontAwesome;
+                    font-family: "Font Awesome 5 Free";
                     font-weight: 900; /* Fix version 5.0.9 */
                     text-transform: text;           /* proposed */
                     content: '\f00c';

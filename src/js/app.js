@@ -87,7 +87,26 @@
         $("#name-convert").attr("placeholder", translations.what_should_we);
         $("#email-convert").attr("placeholder", translations.email);
         $("#password-convert").attr("placeholder", translations.password);
-        $("#convert-action").attr("placeholder", translations.sync);
+        $("#convert-action").html(translations.sync);
+        $("#upcoming-text-name").html(translations.upcoming);
+        $("#completed-text-name").html(translations.completed);
+        $("#perspectives-text-name").html(translations.perspectives);
+        $("#projects-text-name").html(translations.projects);
+        $("#logout-text-name").html(translations.logout);
+        $("#upcoming-titleword").html(translations.upcoming);
+        $("#inbox-titleword-unsorted").html(translations.unsorted);
+        $("#ds-text").html(translations.ds);
+        $("#completed-titleword").html(translations.completed);
+        $("#comp-lb-td").html(translations.clbtd);
+        $("#comp-lb-yd").html(translations.clbyd);
+        $("#comp-lb-pw").html(translations.clbpw);
+        $("#comp-lb-pm").html(translations.clbpm);
+        $("#comp-lb-el").html(translations.clbel);
+        $("#completed-fm").html(translations.fetchmore);
+        $("#completed-fmt").html(translations.fetchmoretasks);
+        $(".muchempty").html(translations.muchempty);
+        $("#blk-smp").html(translations.blk_smp);
+        $("#blk-smf").html(translations.blk_smf);
     }
 
     let langCode = await Device.getLanguageCode();

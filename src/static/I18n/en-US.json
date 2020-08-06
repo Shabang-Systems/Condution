@@ -56,6 +56,23 @@
     "what_should_we": "What should we call you?",
     "email": "Email",
     "password": "Password",
-    "sync": "Sync!"
+    "sync": "Sync!",
+    "upcoming": "Upcoming",
+    "completed": "Completed",
+    "perspectives": "Perspectives",
+    "projects": "Projects",
+    "logout": "Logout",
+    "unsorted": "Unsorted",
+    "ds": "Due Soon",
+    "clbtd": "Today",
+    "clbyd": "Yesterday",
+    "clbpw": "Past Week",
+    "clbpm": "Past Month",
+    "clbel": "Earlier/Untracked",
+    "fetchmore": "Fetch more...",
+    "fetchmoretasks": "Fetch 'em tasks!",
+    "muchempty": "Wow... Much empty!",
+    "blk_smp": "Some more productivity?",
+    "blk_smf": "Some more filters?"
 }
 
