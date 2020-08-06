@@ -83,6 +83,13 @@
     "recover_password": "Recover Password",
     "newuser": "Make an account",
     "lds": "Let's do this!",
-    "ulac": "Use Locally"
+    "ulac": "Use Locally",
+    "nt": "New Task",
+    "desc": "Description",
+    "rec_pswd": "Recover Password",
+    "lovely_email": "Check your inbox. A lovely email is awaiting you.",
+    "proceed": "Proceed!",
+    "remembered": "Remembered? Login",
+    "noworries": "No worries! Let's recover your password."
 }
 

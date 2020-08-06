@@ -20,6 +20,41 @@
     let { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
     let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
     let E = require('./backend/CondutionEngine');
+    
+    /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
+     *
+     * #$%^&* REEE***E*E**E*AAAD MEEEEEEE @#$%^&*
+     * READ ME READ ME READ ME READ ME
+     *
+     * As of beta-v0.3.0, the browserifying protocol
+     * has changed to be _slightly_ more complicated
+     * 1. Remove all electron refrences
+     * 2. Remove all electron.remote (IPC renderers)
+     * 3. Change directories on line for 
+     *      jQuery UI
+     *      jQuery Time Picker
+     *      CondutionEngine
+     *
+     *
+     *      <this is new>
+     * 4.   And, THIS IS NEW:: Localization files at
+     *         ./static/I18n/${charcode}.json`
+     *         needs to be changed by adding a dot
+     *         before as well.
+     *      </this is new>
+     *
+     * #NeverForget
+     * #DontBeABroom
+     *
+     * Sincerely yours,
+     * @jemoka
+     * Your favourite annoying person
+     *
+     * READ ME READ ME READ ME READ ME
+     * #$%^&* REEE***E*E**E*AAAD MEEEEEEE @#$%^&*
+     *
+    /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
+     */
 
     const isMobile = async function () {
         return (await Device.getInfo()).platform !== "web";
@@ -28,8 +63,21 @@
         return (await Device.getInfo()).operatingSystem === "ios";
     }
 
+    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", gretting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password."};
+
     let do_INT = function(charcode) {
         let translations = require(`./static/I18n/${charcode}.json`);
+        default_localizations.nt = translations.nt;
+        default_localizations.remembered = translations.remembered;
+        default_localizations.noworries = translations.noworries;
+        default_localizations.desc = translations.desc;
+        default_localizations.lds = translations.lds;
+        default_localizations.newuser = translations.newuser;
+        default_localizations.rec_pswd = translations.rec_pswd;
+        default_localizations.proceed = translations.proceed;
+        default_localizations.need_verify = translations.need_verify;
+        default_localizations.gretting_auth_normal = translations.gretting_auth_normal;
+        default_localizations.lovely_email = translations.lovely_email;
         $("title").html(translations.client_name);
         $("#missing-internet-msg").html(translations.missing_internet);
         $("#missing-internet-yn").html(translations.missing_internet_content);
@@ -310,12 +358,12 @@ const interfaceUtil = function() {
             <div id="task-display-${taskId}" class="task-display" style="display:block">
                 <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
                 <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" placeholder="New Task" value="${name}" ${content}>
+                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" placeholder="${default_localizations.nt}" value="${name}" ${content}>
                 <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
                 <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
         </div>
         <div id="task-edit-${taskId}" class="task-edit" style="display:none">
-            <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea>
+            <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="${default_localizations.desc}">${desc}</textarea>
             <div class="task-tools task-tools-top" style="margin-bottom: 9px">
                 <div class="task-tools-sub task-tools-toggles">
                     <div class="label"><i class="fas fa-flag"></i></div>
@@ -527,7 +575,7 @@ let authUI = function() {
             $("#setting-up").animate({"opacity": "1"});
             await E.db.onBoard(user.uid, moment.tz.guess(), $("#name").val());
             $("#setting-up").fadeOut();
-            $('#login-text').html("Let's Do This!")
+            $('#login-text').html(default_localizations.lds)
             await loadApp(user);
             isNASuccess = false;
         } else {
@@ -549,12 +597,12 @@ let authUI = function() {
             mode = "login";
             $(".auth-upf").removeClass("wrong");
             $("#password").show();
-            $("#newuser").html("Make an account");
+            $("#newuser").html(default_localizations.newuser);
             $("#newuser").show();
-            $("#recover-password").html("Recover Password");
-            $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
+            $("#recover-password").html(default_localizations.rec_pswd);
+            $("#greeting-auth-normal").html(default_localizations.gretting_auth_normal);
             $('#recover-password').fadeOut();
-            $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
+            $('#need-verify').html(default_localizations.lovely_email);
             $('#need-verify').fadeIn();
         }).catch(function(error) {
             $(".auth-upf").addClass("wrong");
@@ -570,8 +618,8 @@ let authUI = function() {
         }).then(function() {
             if (!problem) {
                 firebase.auth().currentUser.sendEmailVerification();
-                $('#need-verify').html("Verify your email, then proceed!");
-                $('#login-text').html("Proceed!")
+                $('#need-verify').html(default_localizations.need_verify);
+                $('#login-text').html(default_localizations.proceed)
                 isNASuccess = true;
                 mode="login";
             }
@@ -612,17 +660,17 @@ let authUI = function() {
         switch (mode) {
             case "login":
                 $("#password").hide();
-                $("#recover-password").html("Remembered? Login");
+                $("#recover-password").html(default_localizations.remembered);
                 $("#newuser").hide();
-                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                $("#greeting-auth-normal").html(default_localizations.noworries);
                 mode = "recover";
                 break;
             case "newuser":
                 $("#name-tray").hide();
                 $("#password").hide();
-                $("#recover-password").html("Remembered? Login");
+                $("#recover-password").html(default_localizations.remembered);
                 $("#newuser").hide();
-                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                $("#greeting-auth-normal").html(default_localizations.noworries);
                 mode = "recover";
                 break;
             case "recover":
