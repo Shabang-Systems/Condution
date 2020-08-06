@@ -551,11 +551,11 @@ async function getCompletedTasks(userID) {
     return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
 }
 
-async function onBoard(userID, tz, username) {
+async function onBoard(userID, tz, username, payload) {
     // Inbox, in reverse cronological order
     await newTask(userID, {
-            name: `Hey ${username}, 🙌 welcome to Condution! 🙌 `,
-            desc: "Yaay!",
+            name: payload[0] + ` ${username}, ` + payload[1],
+            desc: payload[2],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -566,8 +566,8 @@ async function onBoard(userID, tz, username) {
         }
     );
     await newTask(userID, {
-            name: "⬅ Click this box to complete a task!",
-            desc: "Nice!",
+            name: payload[3],
+            desc: payload[4],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -578,8 +578,8 @@ async function onBoard(userID, tz, username) {
         }
     );
     await newTask(userID, {
-            name: "Click here 🎯 to edit a task.",
-            desc: "The Flag 🚩 toggle flags a task, the Globe 🌎 toggle toggles fixed and floating timezone, the date-boxes ▶️ ⏹ picks defer and due dates, the project 📋 field picks projects, the tag 🏷 field picks tags, and, most importantly, yours truly 👀 is the awesome description box!",
+            name: payload[5],
+            desc: payload[6],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -590,15 +590,15 @@ async function onBoard(userID, tz, username) {
         }
     );
 
-    let cdyrslf = await newProject(userID, {name: "Condution Yourself", top_level: true, is_sequential: false});
-    let npd = await newProject(userID, {name: "Due, Due-Soon, Defer", top_level: true, is_sequential: false});
+    let cdyrslf = await newProject(userID, {name: payload[7], top_level: true, is_sequential: false});
+    let npd = await newProject(userID, {name: payload[8], top_level: true, is_sequential: false});
     let od = new Date();
     let ds = new Date();
     od.setHours(od.getHours() - 24);
     ds.setHours(ds.getHours() + 20);
     let odid = await newTask(userID, {
-            name: "Oh no! I'm overdue! 😓",
-            desc: "With Condution, you will never have another one of me again. (At least we hope.)",
+            name: payload[9],
+            desc: payload[10],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -610,8 +610,8 @@ async function onBoard(userID, tz, username) {
         }
     );
     let dsID = await newTask(userID, {
-            name: "🤨 I'm due soon! Better get going on me.",
-            desc: "The lovely orange color will change to red when I become due.",
+            name: payload[11],
+            desc: payload[12],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -626,8 +626,8 @@ async function onBoard(userID, tz, username) {
     await associateTask(userID, dsID, npd);
     ds.setHours(ds.getHours() + 2);
     let checkoutID = await newTask(userID, {
-            name: `👀 Check out the menu and tap 'Condution Yourself'`,
-            desc: "Because, why woulden't you?",
+            name: payload[13],
+            desc: payload[14],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -638,7 +638,7 @@ async function onBoard(userID, tz, username) {
         }
     );
     let nice = await newTask(userID, {
-            name: `Nice! 😉 This is a lovely project!`,
+            name: payload[15],
             desc: "",
             isFlagged: false,
             isFloating: false,
@@ -651,8 +651,8 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, nice, cdyrslf);
     let sequential = await newTask(userID, {
-            name: `Tap the three vertical dots ↗`,
-            desc: "That will make the project sequential!",
+            name: payload[16],
+            desc: payload[17],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -664,8 +664,8 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, sequential, cdyrslf);
     let blocked = await newTask(userID, {
-            name: "In a sequential project, I will be grey.",
-            desc: "We are blocked in that case.",
+            name: payload[18],
+            desc: payload[19],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -677,8 +677,8 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, blocked, cdyrslf);
     let click = await newTask(userID, {
-            name: "Only the top action ☝️  in sequential projects is available",
-            desc: "That one is not blocked.",
+            name: payload[20],
+            desc: payload[21],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -690,8 +690,8 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, click, cdyrslf);
     let pspDir = await newTask(userID, {
-            name: "Excellent. 😄 Now tap the 'Aftercare' Perspective in the Menu!",
-            desc: "Amazing Physics Going On...",
+            name: payload[22],
+            desc: payload[23],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -702,11 +702,11 @@ async function onBoard(userID, tz, username) {
         }
     );
     await associateTask(userID, pspDir, cdyrslf);
-    let pspsp = await newProject(userID, {name: "Perspective Tasks", top_level: true, is_sequential: false});
-    let tags = await Promise.all([newTag(userID, "Aftercare"), newTag(userID, "Productivity"), newTag(userID, "Low Energy"), newTag(userID, "Unimportant")]);
+    let pspsp = await newProject(userID, {name: payload[24], top_level: true, is_sequential: false});
+    let tags = await Promise.all([newTag(userID, payload[25]), newTag(userID, payload[26]), newTag(userID, payload[27]), newTag(userID, payload[28])]);
     let specific = await newTask(userID, {
-            name: "After you are done, tap 'Come hang out' in the menu!",
-            desc: "Bontehu",
+            name: payload[29],
+            desc: payload[30],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -718,8 +718,8 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, specific, pspsp);
     let sp = await newTask(userID, {
-            name: "Tap the pencil ✏️ icon to see what I'm filtering! ⤴",
-            desc: "Bontehu",
+            name: payload[31],
+            desc: payload[32],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
@@ -730,10 +730,10 @@ async function onBoard(userID, tz, username) {
         }
     );
     await associateTask(userID, sp, pspsp);
-    await newPerspective(userID, {name: "Aftercare", query: "([#Aftercare]) ([#Low Energy #Unimportant])"});
-    let promotion = await newProject(userID, {name: "Come hang out!", top_level: true, is_sequential: false});
+    await newPerspective(userID, {name: payload[33], query: payload[34]});
+    let promotion = await newProject(userID, {name: payload[35], top_level: true, is_sequential: false});
     let online = await newTask(userID, {
-            name: "Get Condution Everywhere! 🌎: condution.shabang.cf",
+            name: payload[36],
             desc: "",
             isFlagged: false,
             isFloating: false,
@@ -746,7 +746,7 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, online, promotion);
     let dis = await newTask(userID, {
-            name: "Catch us on Discord! 💬: discord.gg/QgxUCyj",
+            name: payload[37],
             desc: "",
             isFlagged: false,
             isFloating: false,
@@ -759,7 +759,7 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, dis, promotion);
     let patreon = await newTask(userID, {
-        name: "Support Condution! 🎗: patreon.comcondution",
+        name: payload[38],
             desc: "",
             isFlagged: false,
             isFloating: false,
@@ -772,8 +772,8 @@ async function onBoard(userID, tz, username) {
     );
     await associateTask(userID, patreon, promotion);
     let yiipee = await newTask(userID, {
-        name: "From all of us at #!/Shabang + Condution Project, enjoy!",
-            desc: "Why are you reading this description? Go be productive!",
+        name: payload[39],
+            desc: payload[40],
             isFlagged: false,
             isFloating: false,
             isComplete: false,
