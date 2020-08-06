@@ -65,10 +65,19 @@
         return (await Device.getInfo()).operatingSystem === "ios";
     }
 
-    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic..."};
+    let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic...", search_projects: "Search Projects...", unsorted: "Unsorted", m: "M", tu: "Tu", w: "W", th: "Th", f: "F", sa: "Sa", su: "Su"};
 
     let do_INT = function(charcode) {
         let translations = require(`./static/I18n/${charcode}.json`);
+        default_localizations.m  = translations.repeat_datework_weekname_m;
+        default_localizations.tu  = translations.repeat_datework_weekname_tu;
+        default_localizations.w  = translations.repeat_datework_weekname_w;
+        default_localizations.th  = translations.repeat_datework_weekname_th;
+        default_localizations.f  = translations.repeat_datework_weekname_f;
+        default_localizations.sa  = translations.repeat_datework_weekname_sa;
+        default_localizations.su  = translations.repeat_datework_weekname_su;
+        default_localizations.unsorted = translations.unsorted;
+        default_localizations.search_projects = translations.search_projects;
         default_localizations.welcome_aboard = translations.welcome_aboard;
         default_localizations.advanced = translations.repeat_advanced;
         default_localizations.include_avalibale = translations.include_avalibale;
@@ -1215,7 +1224,7 @@ let ui = function() {
                             }
                         });
                         repeatWeekDays = ti.repeat.on;
-                        $("#repeat-advanced-weekly").html("Back to Basic...");
+                        $("#repeat-advanced-weekly").html(default_localizations.b2b);
                         $("#repeat-daterow").fadeIn({
                             start: function () {
                                 $(this).css({
@@ -1239,7 +1248,7 @@ let ui = function() {
                             }
                         });
                         repeatMonthDays = ti.repeat.on;
-                        $("#repeat-advanced-monthly").html("Back to Basic...");
+                        $("#repeat-advanced-monthly").html(default_localizations.b2b);
                         $("#repeat-monthgrid").fadeIn({
                             start: function () {
                                 $(this).css({
@@ -1629,8 +1638,8 @@ let ui = function() {
             //
             $('#task-project-'+taskId).select2({
                 'width': $(window).width()<576 ? '88%' : '79%',
-                searchInputPlaceholder: "Search Projects...",
-                placeholder: 'Inbox',
+                searchInputPlaceholder: default_localizations.search_projects,
+                placeholder: default_localizations.unsorted,
                 allowClear: true
             });
             $('#task-project-' + taskId).val(projectID)
@@ -1744,25 +1753,25 @@ let ui = function() {
                                         let dow = due.getDay();
                                         switch (dow) {
                                             case 1:
-                                                current = "M";
+                                                current = default_localizations.m;
                                                 break;
                                             case 2:
-                                                current = "Tu";
+                                                current = default_localizations.tu;
                                                 break;
                                             case 3:
-                                                current = "W";
+                                                current = default_localizations.w;
                                                 break;
                                             case 4:
-                                                current = "Th";
+                                                current = default_localizations.th;
                                                 break;
                                             case 5:
-                                                current = "F";
+                                                current = default_localizations.f;
                                                 break;
                                             case 6:
-                                                current = "Sa";
+                                                current = default_localizations.sa;
                                                 break;
                                             case 7:
-                                                current = "Su";
+                                                current = default_localizations.su;
                                                 break;
                                         }
                                     }
@@ -1780,26 +1789,27 @@ let ui = function() {
                                         let dow = due.getDay();
                                         switch (dow) {
                                             case 1:
-                                                current = "M";
+                                                current = default_localizations.m;
                                                 break;
                                             case 2:
-                                                current = "Tu";
+                                                current = default_localizations.tu;
                                                 break;
                                             case 3:
-                                                current = "W";
+                                                current = default_localizations.w;
                                                 break;
                                             case 4:
-                                                current = "Th";
+                                                current = default_localizations.th;
                                                 break;
                                             case 5:
-                                                current = "F";
+                                                current = default_localizations.f;
                                                 break;
                                             case 6:
-                                                current = "Sa";
+                                                current = default_localizations.sa;
                                                 break;
                                             case 7:
-                                                current = "Su";
+                                                current = default_localizations.su;
                                                 break;
+
                                         }
                                     }
                                 } else {
