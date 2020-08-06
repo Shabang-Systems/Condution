@@ -1,3 +1,4 @@
+/* Query the system dark theme, and load the appropriate theme */
 (async function() {
     let css = "text-shadow: -1px -1px hsl(0,100%,50%), 1px 1px hsl(5.4, 100%, 50%), 3px 2px hsl(10.8, 100%, 50%), 5px 3px hsl(16.2, 100%, 50%), 7px 4px hsl(21.6, 100%, 50%), 9px 5px hsl(27, 100%, 50%), 11px 6px hsl(32.4, 100%, 50%), 13px 7px hsl(37.8, 100%, 50%), 14px 8px hsl(43.2, 100%, 50%), 16px 9px hsl(48.6, 100%, 50%), 18px 10px hsl(54, 100%, 50%), 20px 11px hsl(59.4, 100%, 50%), 22px 12px hsl(64.8, 100%, 50%), 23px 13px hsl(70.2, 100%, 50%), 25px 14px hsl(75.6, 100%, 50%), 27px 15px hsl(81, 100%, 50%), 28px 16px hsl(86.4, 100%, 50%), 30px 17px hsl(91.8, 100%, 50%), 32px 18px hsl(97.2, 100%, 50%), 33px 19px hsl(102.6, 100%, 50%), 35px 20px hsl(108, 100%, 50%), 36px 21px hsl(113.4, 100%, 50%), 38px 22px hsl(118.8, 100%, 50%), 39px 23px hsl(124.2, 100%, 50%), 41px 24px hsl(129.6, 100%, 50%), 42px 25px hsl(135, 100%, 50%), 43px 26px hsl(140.4, 100%, 50%), 45px 27px hsl(145.8, 100%, 50%), 46px 28px hsl(151.2, 100%, 50%), 47px 29px hsl(156.6, 100%, 50%), 48px 30px hsl(162, 100%, 50%), 49px 31px hsl(167.4, 100%, 50%), 50px 32px hsl(172.8, 100%, 50%), 51px 33px hsl(178.2, 100%, 50%), 52px 34px hsl(183.6, 100%, 50%), 53px 35px hsl(189, 100%, 50%), 54px 36px hsl(194.4, 100%, 50%), 55px 37px hsl(199.8, 100%, 50%), 55px 38px hsl(205.2, 100%, 50%), 56px 39px hsl(210.6, 100%, 50%), 57px 40px hsl(216, 100%, 50%), 57px 41px hsl(221.4, 100%, 50%), 58px 42px hsl(226.8, 100%, 50%), 58px 43px hsl(232.2, 100%, 50%), 58px 44px hsl(237.6, 100%, 50%), 59px 45px hsl(243, 100%, 50%), 59px 46px hsl(248.4, 100%, 50%), 59px 47px hsl(253.8, 100%, 50%), 59px 48px hsl(259.2, 100%, 50%), 59px 49px hsl(264.6, 100%, 50%), 60px 50px hsl(270, 100%, 50%), 59px 51px hsl(275.4, 100%, 50%), 59px 52px hsl(280.8, 100%, 50%), 59px 53px hsl(286.2, 100%, 50%), 59px 54px hsl(291.6, 100%, 50%), 59px 55px hsl(297, 100%, 50%), 58px 56px hsl(302.4, 100%, 50%), 58px 57px hsl(307.8, 100%, 50%), 58px 58px hsl(313.2, 100%, 50%), 57px 59px hsl(318.6, 100%, 50%), 57px 60px hsl(324, 100%, 50%), 56px 61px hsl(329.4, 100%, 50%), 55px 62px hsl(334.8, 100%, 50%), 55px 63px hsl(340.2, 100%, 50%), 54px 64px hsl(345.6, 100%, 50%), 53px 65px hsl(351, 100%, 50%), 52px 66px hsl(356.4, 100%, 50%), 51px 67px hsl(361.8, 100%, 50%), 50px 68px hsl(367.2, 100%, 50%), 49px 69px hsl(372.6, 100%, 50%), 48px 70px hsl(378, 100%, 50%), 47px 71px hsl(383.4, 100%, 50%), 46px 72px hsl(388.8, 100%, 50%), 45px 73px hsl(394.2, 100%, 50%), 43px 74px hsl(399.6, 100%, 50%), 42px 75px hsl(405, 100%, 50%), 41px 76px hsl(410.4, 100%, 50%), 39px 77px hsl(415.8, 100%, 50%), 38px 78px hsl(421.2, 100%, 50%), 36px 79px hsl(426.6, 100%, 50%), 35px 80px hsl(432, 100%, 50%), 33px 81px hsl(437.4, 100%, 50%), 32px 82px hsl(442.8, 100%, 50%), 30px 83px hsl(448.2, 100%, 50%), 28px 84px hsl(453.6, 100%, 50%), 27px 85px hsl(459, 100%, 50%), 25px 86px hsl(464.4, 100%, 50%), 23px 87px hsl(469.8, 100%, 50%), 22px 88px hsl(475.2, 100%, 50%), 20px 89px hsl(480.6, 100%, 50%), 18px 90px hsl(486, 100%, 50%), 16px 91px hsl(491.4, 100%, 50%), 14px 92px hsl(496.8, 100%, 50%), 13px 93px hsl(502.2, 100%, 50%), 11px 94px hsl(507.6, 100%, 50%), 9px 95px hsl(513, 100%, 50%), 7px 96px hsl(518.4, 100%, 50%), 5px 97px hsl(523.8, 100%, 50%), 3px 98px hsl(529.2, 100%, 50%), 1px 99px hsl(534.6, 100%, 50%), 7px 100px hsl(540, 100%, 50%), -1px 101px hsl(545.4, 100%, 50%), -3px 102px hsl(550.8, 100%, 50%), -5px 103px hsl(556.2, 100%, 50%), -7px 104px hsl(561.6, 100%, 50%), -9px 105px hsl(567, 100%, 50%), -11px 106px hsl(572.4, 100%, 50%), -13px 107px hsl(577.8, 100%, 50%), -14px 108px hsl(583.2, 100%, 50%), -16px 109px hsl(588.6, 100%, 50%), -18px 110px hsl(594, 100%, 50%), -20px 111px hsl(599.4, 100%, 50%), -22px 112px hsl(604.8, 100%, 50%), -23px 113px hsl(610.2, 100%, 50%), -25px 114px hsl(615.6, 100%, 50%), -27px 115px hsl(621, 100%, 50%), -28px 116px hsl(626.4, 100%, 50%), -30px 117px hsl(631.8, 100%, 50%), -32px 118px hsl(637.2, 100%, 50%), -33px 119px hsl(642.6, 100%, 50%), -35px 120px hsl(648, 100%, 50%), -36px 121px hsl(653.4, 100%, 50%), -38px 122px hsl(658.8, 100%, 50%), -39px 123px hsl(664.2, 100%, 50%), -41px 124px hsl(669.6, 100%, 50%), -42px 125px hsl(675, 100%, 50%), -43px 126px hsl(680.4, 100%, 50%), -45px 127px hsl(685.8, 100%, 50%), -46px 128px hsl(691.2, 100%, 50%), -47px 129px hsl(696.6, 100%, 50%), -48px 130px hsl(702, 100%, 50%), -49px 131px hsl(707.4, 100%, 50%), -50px 132px hsl(712.8, 100%, 50%), -51px 133px hsl(718.2, 100%, 50%), -52px 134px hsl(723.6, 100%, 50%), -53px 135px hsl(729, 100%, 50%), -54px 136px hsl(734.4, 100%, 50%), -55px 137px hsl(739.8, 100%, 50%), -55px 138px hsl(745.2, 100%, 50%), -56px 139px hsl(750.6, 100%, 50%), -57px 140px hsl(756, 100%, 50%), -57px 141px hsl(761.4, 100%, 50%), -58px 142px hsl(766.8, 100%, 50%), -58px 143px hsl(772.2, 100%, 50%), -58px 144px hsl(777.6, 100%, 50%), -59px 145px hsl(783, 100%, 50%), -59px 146px hsl(788.4, 100%, 50%), -59px 147px hsl(793.8, 100%, 50%), -59px 148px hsl(799.2, 100%, 50%), -59px 149px hsl(804.6, 100%, 50%), -60px 150px hsl(810, 100%, 50%), -59px 151px hsl(815.4, 100%, 50%), -59px 152px hsl(820.8, 100%, 50%), -59px 153px hsl(826.2, 100%, 50%), -59px 154px hsl(831.6, 100%, 50%), -59px 155px hsl(837, 100%, 50%), -58px 156px hsl(842.4, 100%, 50%), -58px 157px hsl(847.8, 100%, 50%), -58px 158px hsl(853.2, 100%, 50%), -57px 159px hsl(858.6, 100%, 50%), -57px 160px hsl(864, 100%, 50%), -56px 161px hsl(869.4, 100%, 50%), -55px 162px hsl(874.8, 100%, 50%), -55px 163px hsl(880.2, 100%, 50%), -54px 164px hsl(885.6, 100%, 50%), -53px 165px hsl(891, 100%, 50%), -52px 166px hsl(896.4, 100%, 50%), -51px 167px hsl(901.8, 100%, 50%), -50px 168px hsl(907.2, 100%, 50%), -49px 169px hsl(912.6, 100%, 50%), -48px 170px hsl(918, 100%, 50%), -47px 171px hsl(923.4, 100%, 50%), -46px 172px hsl(928.8, 100%, 50%), -45px 173px hsl(934.2, 100%, 50%), -43px 174px hsl(939.6, 100%, 50%), -42px 175px hsl(945, 100%, 50%), -41px 176px hsl(950.4, 100%, 50%), -39px 177px hsl(955.8, 100%, 50%), -38px 178px hsl(961.2, 100%, 50%), -36px 179px hsl(966.6, 100%, 50%), -35px 180px hsl(972, 100%, 50%), -33px 181px hsl(977.4, 100%, 50%), -32px 182px hsl(982.8, 100%, 50%), -30px 183px hsl(988.2, 100%, 50%), -28px 184px hsl(993.6, 100%, 50%), -27px 185px hsl(999, 100%, 50%), -25px 186px hsl(1004.4, 100%, 50%), -23px 187px hsl(1009.8, 100%, 50%), -22px 188px hsl(1015.2, 100%, 50%), -20px 189px hsl(1020.6, 100%, 50%), -18px 190px hsl(1026, 100%, 50%), -16px 191px hsl(1031.4, 100%, 50%), -14px 192px hsl(1036.8, 100%, 50%), -13px 193px hsl(1042.2, 100%, 50%), -11px 194px hsl(1047.6, 100%, 50%), -9px 195px hsl(1053, 100%, 50%), -7px 196px hsl(1058.4, 100%, 50%), -5px 197px hsl(1063.8, 100%, 50%), -3px 198px hsl(1069.2, 100%, 50%), -1px 199px hsl(1074.6, 100%, 50%), -1px 200px hsl(1080, 100%, 50%), 1px 201px hsl(1085.4, 100%, 50%), 3px 202px hsl(1090.8, 100%, 50%), 5px 203px hsl(1096.2, 100%, 50%), 7px 204px hsl(1101.6, 100%, 50%), 9px 205px hsl(1107, 100%, 50%), 11px 206px hsl(1112.4, 100%, 50%), 13px 207px hsl(1117.8, 100%, 50%), 14px 208px hsl(1123.2, 100%, 50%), 16px 209px hsl(1128.6, 100%, 50%), 18px 210px hsl(1134, 100%, 50%), 20px 211px hsl(1139.4, 100%, 50%), 22px 212px hsl(1144.8, 100%, 50%), 23px 213px hsl(1150.2, 100%, 50%), 25px 214px hsl(1155.6, 100%, 50%), 27px 215px hsl(1161, 100%, 50%), 28px 216px hsl(1166.4, 100%, 50%), 30px 217px hsl(1171.8, 100%, 50%), 32px 218px hsl(1177.2, 100%, 50%), 33px 219px hsl(1182.6, 100%, 50%), 35px 220px hsl(1188, 100%, 50%), 36px 221px hsl(1193.4, 100%, 50%), 38px 222px hsl(1198.8, 100%, 50%), 39px 223px hsl(1204.2, 100%, 50%), 41px 224px hsl(1209.6, 100%, 50%), 42px 225px hsl(1215, 100%, 50%), 43px 226px hsl(1220.4, 100%, 50%), 45px 227px hsl(1225.8, 100%, 50%), 46px 228px hsl(1231.2, 100%, 50%), 47px 229px hsl(1236.6, 100%, 50%), 48px 230px hsl(1242, 100%, 50%), 49px 231px hsl(1247.4, 100%, 50%), 50px 232px hsl(1252.8, 100%, 50%), 51px 233px hsl(1258.2, 100%, 50%), 52px 234px hsl(1263.6, 100%, 50%), 53px 235px hsl(1269, 100%, 50%), 54px 236px hsl(1274.4, 100%, 50%), 55px 237px hsl(1279.8, 100%, 50%), 55px 238px hsl(1285.2, 100%, 50%), 56px 239px hsl(1290.6, 100%, 50%), 57px 240px hsl(1296, 100%, 50%), 57px 241px hsl(1301.4, 100%, 50%), 58px 242px hsl(1306.8, 100%, 50%), 58px 243px hsl(1312.2, 100%, 50%), 58px 244px hsl(1317.6, 100%, 50%), 59px 245px hsl(1323, 100%, 50%), 59px 246px hsl(1328.4, 100%, 50%), 59px 247px hsl(1333.8, 100%, 50%), 59px 248px hsl(1339.2, 100%, 50%), 59px 249px hsl(1344.6, 100%, 50%), 60px 250px hsl(1350, 100%, 50%), 59px 251px hsl(1355.4, 100%, 50%), 59px 252px hsl(1360.8, 100%, 50%), 59px 253px hsl(1366.2, 100%, 50%), 59px 254px hsl(1371.6, 100%, 50%), 59px 255px hsl(1377, 100%, 50%), 58px 256px hsl(1382.4, 100%, 50%), 58px 257px hsl(1387.8, 100%, 50%), 58px 258px hsl(1393.2, 100%, 50%), 57px 259px hsl(1398.6, 100%, 50%), 57px 260px hsl(1404, 100%, 50%), 56px 261px hsl(1409.4, 100%, 50%), 55px 262px hsl(1414.8, 100%, 50%), 55px 263px hsl(1420.2, 100%, 50%), 54px 264px hsl(1425.6, 100%, 50%), 53px 265px hsl(1431, 100%, 50%), 52px 266px hsl(1436.4, 100%, 50%), 51px 267px hsl(1441.8, 100%, 50%), 50px 268px hsl(1447.2, 100%, 50%), 49px 269px hsl(1452.6, 100%, 50%), 48px 270px hsl(1458, 100%, 50%), 47px 271px hsl(1463.4, 100%, 50%), 46px 272px hsl(1468.8, 100%, 50%), 45px 273px hsl(1474.2, 100%, 50%), 43px 274px hsl(1479.6, 100%, 50%), 42px 275px hsl(1485, 100%, 50%), 41px 276px hsl(1490.4, 100%, 50%), 39px 277px hsl(1495.8, 100%, 50%), 38px 278px hsl(1501.2, 100%, 50%), 36px 279px hsl(1506.6, 100%, 50%), 35px 280px hsl(1512, 100%, 50%), 33px 281px hsl(1517.4, 100%, 50%), 32px 282px hsl(1522.8, 100%, 50%), 30px 283px hsl(1528.2, 100%, 50%), 28px 284px hsl(1533.6, 100%, 50%), 27px 285px hsl(1539, 100%, 50%), 25px 286px hsl(1544.4, 100%, 50%), 23px 287px hsl(1549.8, 100%, 50%), 22px 288px hsl(1555.2, 100%, 50%), 20px 289px hsl(1560.6, 100%, 50%), 18px 290px hsl(1566, 100%, 50%), 16px 291px hsl(1571.4, 100%, 50%), 14px 292px hsl(1576.8, 100%, 50%), 13px 293px hsl(1582.2, 100%, 50%), 11px 294px hsl(1587.6, 100%, 50%), 9px 295px hsl(1593, 100%, 50%), 7px 296px hsl(1598.4, 100%, 50%), 5px 297px hsl(1603.8, 100%, 50%), 3px 298px hsl(1609.2, 100%, 50%), 1px 299px hsl(1614.6, 100%, 50%), 2px 300px hsl(1620, 100%, 50%), -1px 301px hsl(1625.4, 100%, 50%), -3px 302px hsl(1630.8, 100%, 50%), -5px 303px hsl(1636.2, 100%, 50%), -7px 304px hsl(1641.6, 100%, 50%), -9px 305px hsl(1647, 100%, 50%), -11px 306px hsl(1652.4, 100%, 50%), -13px 307px hsl(1657.8, 100%, 50%), -14px 308px hsl(1663.2, 100%, 50%), -16px 309px hsl(1668.6, 100%, 50%), -18px 310px hsl(1674, 100%, 50%), -20px 311px hsl(1679.4, 100%, 50%), -22px 312px hsl(1684.8, 100%, 50%), -23px 313px hsl(1690.2, 100%, 50%), -25px 314px hsl(1695.6, 100%, 50%), -27px 315px hsl(1701, 100%, 50%), -28px 316px hsl(1706.4, 100%, 50%), -30px 317px hsl(1711.8, 100%, 50%), -32px 318px hsl(1717.2, 100%, 50%), -33px 319px hsl(1722.6, 100%, 50%), -35px 320px hsl(1728, 100%, 50%), -36px 321px hsl(1733.4, 100%, 50%), -38px 322px hsl(1738.8, 100%, 50%), -39px 323px hsl(1744.2, 100%, 50%), -41px 324px hsl(1749.6, 100%, 50%), -42px 325px hsl(1755, 100%, 50%), -43px 326px hsl(1760.4, 100%, 50%), -45px 327px hsl(1765.8, 100%, 50%), -46px 328px hsl(1771.2, 100%, 50%), -47px 329px hsl(1776.6, 100%, 50%), -48px 330px hsl(1782, 100%, 50%), -49px 331px hsl(1787.4, 100%, 50%), -50px 332px hsl(1792.8, 100%, 50%), -51px 333px hsl(1798.2, 100%, 50%), -52px 334px hsl(1803.6, 100%, 50%), -53px 335px hsl(1809, 100%, 50%), -54px 336px hsl(1814.4, 100%, 50%), -55px 337px hsl(1819.8, 100%, 50%), -55px 338px hsl(1825.2, 100%, 50%), -56px 339px hsl(1830.6, 100%, 50%), -57px 340px hsl(1836, 100%, 50%), -57px 341px hsl(1841.4, 100%, 50%), -58px 342px hsl(1846.8, 100%, 50%), -58px 343px hsl(1852.2, 100%, 50%), -58px 344px hsl(1857.6, 100%, 50%), -59px 345px hsl(1863, 100%, 50%), -59px 346px hsl(1868.4, 100%, 50%), -59px 347px hsl(1873.8, 100%, 50%), -59px 348px hsl(1879.2, 100%, 50%), -59px 349px hsl(1884.6, 100%, 50%), -60px 350px hsl(1890, 100%, 50%), -59px 351px hsl(1895.4, 100%, 50%), -59px 352px hsl(1900.8, 100%, 50%), -59px 353px hsl(1906.2, 100%, 50%), -59px 354px hsl(1911.6, 100%, 50%), -59px 355px hsl(1917, 100%, 50%), -58px 356px hsl(1922.4, 100%, 50%), -58px 357px hsl(1927.8, 100%, 50%), -58px 358px hsl(1933.2, 100%, 50%), -57px 359px hsl(1938.6, 100%, 50%), -57px 360px hsl(1944, 100%, 50%), -56px 361px hsl(1949.4, 100%, 50%), -55px 362px hsl(1954.8, 100%, 50%), -55px 363px hsl(1960.2, 100%, 50%), -54px 364px hsl(1965.6, 100%, 50%), -53px 365px hsl(1971, 100%, 50%), -52px 366px hsl(1976.4, 100%, 50%), -51px 367px hsl(1981.8, 100%, 50%), -50px 368px hsl(1987.2, 100%, 50%), -49px 369px hsl(1992.6, 100%, 50%), -48px 370px hsl(1998, 100%, 50%), -47px 371px hsl(2003.4, 100%, 50%), -46px 372px hsl(2008.8, 100%, 50%), -45px 373px hsl(2014.2, 100%, 50%), -43px 374px hsl(2019.6, 100%, 50%), -42px 375px hsl(2025, 100%, 50%), -41px 376px hsl(2030.4, 100%, 50%), -39px 377px hsl(2035.8, 100%, 50%), -38px 378px hsl(2041.2, 100%, 50%), -36px 379px hsl(2046.6, 100%, 50%), -35px 380px hsl(2052, 100%, 50%), -33px 381px hsl(2057.4, 100%, 50%), -32px 382px hsl(2062.8, 100%, 50%), -30px 383px hsl(2068.2, 100%, 50%), -28px 384px hsl(2073.6, 100%, 50%), -27px 385px hsl(2079, 100%, 50%), -25px 386px hsl(2084.4, 100%, 50%), -23px 387px hsl(2089.8, 100%, 50%), -22px 388px hsl(2095.2, 100%, 50%), -20px 389px hsl(2100.6, 100%, 50%), -18px 390px hsl(2106, 100%, 50%), -16px 391px hsl(2111.4, 100%, 50%), -14px 392px hsl(2116.8, 100%, 50%), -13px 393px hsl(2122.2, 100%, 50%), -11px 394px hsl(2127.6, 100%, 50%), -9px 395px hsl(2133, 100%, 50%), -7px 396px hsl(2138.4, 100%, 50%), -5px 397px hsl(2143.8, 100%, 50%), -3px 398px hsl(2149.2, 100%, 50%), -1px 399px hsl(2154.6, 100%, 50%); font-size: 40px;";
 
@@ -15,16 +16,232 @@
     require('mousetrap');
     require('bootstrap-tagsinput');
     require('select2')();
+    let {getGeo, getGeoByIp} = require('geoplugin');
     let moment = require('moment-timezone');
     let { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
     let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
     let E = require('./backend/CondutionEngine');
+
+   
+    /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
+     *
+     * #$%^&* REEE***E*E**E*AAAD MEEEEEEE @#$%^&*
+     * READ ME READ ME READ ME READ ME
+     *
+     * As of beta-v0.3.0, the browserifying protocol
+     * HAS CHANGED to be _slightly_ more complicated
+     * 1. Remove all electron refrences
+     * 2. Remove all electron.remote (IPC renderers)
+     * 3. Change directories on line for 
+     *      jQuery UI
+     *      jQuery Time Picker
+     *      CondutionEngine
+     *
+     *
+     *      <this is new>
+     * 4.   And, THIS IS NEW:: Localization files at
+     *         ./static/I18n/${charcode}.json`
+     *         needs to be changed by adding a dot
+     *         before as well.
+     *      </this is new>
+     *
+     * ...from w.r.t. index.html to w.r.t. ./js
+     *
+     * #NeverForget
+     * #DontBeABroom
+     *
+     * Sincerely yours,
+     * @jemoka
+     * Your favourite annoying person
+     *
+     * READ ME READ ME READ ME READ ME
+     * #$%^&* REEE***E*E**E*AAAD MEEEEEEE @#$%^&*
+     *
+    /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
+     */
 
     const isMobile = async function () {
         return (await Device.getInfo()).platform !== "web";
     };
     const isiOS = async function() {
         return (await Device.getInfo()).operatingSystem === "ios";
+    }
+
+    //let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic...", search_projects: "Search Projects...", unsorted: "Unsorted", m: "M", tu: "Tu", w: "W", th: "Th", f: "F", sa: "Sa", su: "Su", onboarding_content: undefined};
+    let default_localizations = {};
+
+    let firebase_avaliable = false;
+
+    let do_INT = function(charcode) {
+
+        // Geo-Based Blocking of Features
+        getGeo().then(function(res) {
+            if (res.countryCode==="CN") {
+                $("#logout").hide();
+                firebase_avaliable = false;
+            } else {
+                firebase_avaliable = true;
+            }
+        });
+
+        // Translation
+        let translations = require(`./static/I18n/${charcode}.json`);
+        default_localizations.every_day = translations.repeat_every_text_day;
+        default_localizations.every_week = translations.repeat_every_text_week;
+        default_localizations.every_month = translations.repeat_every_text_month;
+        default_localizations.every_year = translations.repeat_every_text_year;
+        default_localizations.onboarding_content  = translations.onboarding_content;
+        default_localizations.m  = translations.repeat_datework_weekname_m;
+        default_localizations.tu  = translations.repeat_datework_weekname_tu;
+        default_localizations.w  = translations.repeat_datework_weekname_w;
+        default_localizations.th  = translations.repeat_datework_weekname_th;
+        default_localizations.f  = translations.repeat_datework_weekname_f;
+        default_localizations.sa  = translations.repeat_datework_weekname_sa;
+        default_localizations.su  = translations.repeat_datework_weekname_su;
+        default_localizations.unsorted = translations.unsorted;
+        default_localizations.search_projects = translations.search_projects;
+        default_localizations.welcome_aboard = translations.welcome_aboard;
+        default_localizations.advanced = translations.repeat_advanced;
+        default_localizations.include_avalibale = translations.include_avalibale;
+        default_localizations.include_flagged = translations.include_flagged;
+        default_localizations.include_remaining = translations.include_remaining;
+        default_localizations.loading = translations.loading;
+        default_localizations.sync = translations.sync;
+        default_localizations.order_abd = translations.order_abd;
+        default_localizations.order_dbd = translations.order_dbd;
+        default_localizations.order_abe = translations.order_abe;
+        default_localizations.order_dbe = translations.order_dbe;
+        default_localizations.order_alpha = translations.order_alpha;
+        default_localizations.greetings_setA = translations.greetings_setA;
+        default_localizations.greetings_setB = translations.greetings_setB;
+        default_localizations.rec_pswd = translations.rec_pswd;
+        default_localizations.signupmsg = translations.signupmsg;
+        default_localizations.newuser = translations.newuser;
+        default_localizations.terms = translations.terms;
+        default_localizations.and = translations.onboarding_msg_1_2;
+        default_localizations.privacy = translations.policy;
+        default_localizations.nt = translations.nt;
+        default_localizations.remembered = translations.remembered;
+        default_localizations.noworries = translations.noworries;
+        default_localizations.desc = translations.desc;
+        default_localizations.lds = translations.lds;
+        default_localizations.newuser = translations.newuser;
+        default_localizations.rec_pswd = translations.rec_pswd;
+        default_localizations.proceed = translations.proceed;
+        default_localizations.need_verify = translations.need_verify;
+        default_localizations.greeting_auth_normal = translations.greeting_auth_normal;
+        default_localizations.lovely_email = translations.lovely_email;
+        $("title").html(translations.client_name);
+        $("#missing-internet-msg").html(translations.missing_internet);
+        $("#missing-internet-yn").html(translations.missing_internet_content);
+        $("#missing-internet-action").html(translations.missing_internet_action);
+        $("#missing-internet-action-button").html(translations.missing_internet_action_button);
+        $("#setting-up-callout").html(translations.setting_up_callout);
+        $("#setting-up-action").html(translations.setting_up_action);
+        $("#setting-up-hold").html(translations.setting_up_hold);
+        $("#onboarding-howdy").html(translations.onboarding_howdy);
+        $("#onboarding-welcome").html(translations.onboarding_welcome);
+        $("#onboarding-quick-things").html(translations.onboarding_quick_things);
+        $("#onboarding-name-0").val(translations.onboarding_ready);
+        $("#onboarding-name-1").val(translations.onboarding_agree);
+        $("#onboarding-msg-0").html(translations.onboarding_msg_0);
+        $("#onboarding-msg-1-1").html(translations.onboarding_msg_1_1);
+        $("#welcome-terms").html(translations.terms);
+        $("#onboarding-msg-1-2").html(translations.onboarding_msg_1_2);
+        $("#welcome-policy").html(translations.policy);
+        $("#onboarding-msg-1-3").html(translations.onboarding_msg_1_3);
+        $("#onboarding-agree").html(translations.onboarding_agree);
+        $("#onboarding-msg-2").html(translations.onboarding_msg_2);
+        $("#onboarding-name-2").val(translations.onboarding_sync_yes);
+        $("#onboarding-name-3").val(translations.onboarding_sync_no);
+        $("#onboarding-msg-3").html(translations.onboarding_msg_3);
+        $("#perspective-build-callout").html(translations.perspective_build_callout);
+        $("#perspective-edit-name").val(translations.perspective_name_placeholder);
+        $("#pquery").attr("placeholder", translations.perspective_string_placeholder);
+        $("#psp-include").html(translations.perspective_include);
+        $("#psp-order").html(translations.perspective_order);
+        $("#psp-avil").html(translations.psp_avil);
+        $("#psp-rem").html(translations.psp_rem);
+        $("#psp-flg").html(translations.psp_flg);
+        $("#psp-abd").html(translations.psp_abd);
+        $("#psp-dbd").html(translations.psp_dbd);
+        $("#psp-abe").html(translations.psp_abe);
+        $("#psp-dbe").html(translations.psp_dbe);
+        $("#psp-alpha").html(translations.psp_alpha);
+        $("#perspective-documentation").html(translations.psp_doc);
+        $("#repeat-word").html(translations.repeat_word);
+        $("#repeat-every").html(translations.repeat_every);
+        $("#repeat-every-day").html(translations.repeat_every_day);
+        $("#repeat-every-week").html(translations.repeat_every_week);
+        $("#repeat-every-month").html(translations.repeat_every_month);
+        $("#repeat-every-year").html(translations.repeat_every_year);
+        $(".repeat-advanced-text").html(translations.repeat_advanced);
+        $("#repeat-daterow-weekname-m").html(translations.repeat_datework_weekname_m);
+        $("#repeat-daterow-weekname-tu").html(translations.repeat_datework_weekname_tu);
+        $("#repeat-daterow-weekname-w").html(translations.repeat_datework_weekname_w);
+        $("#repeat-daterow-weekname-th").html(translations.repeat_datework_weekname_th);
+        $("#repeat-daterow-weekname-f").html(translations.repeat_datework_weekname_f);
+        $("#repeat-daterow-weekname-sa").html(translations.repeat_datework_weekname_sa);
+        $("#repeat-daterow-weekname-su").html(translations.repeat_datework_weekname_su);
+        $("#repeat-last").html(translations.repeat_last);
+        $("#convert-callout").html(translations.convert_callout);
+        $("#convert-msg").html(translations.convert_everywhere);
+        $("#convert-msg").html(translations.convert_everywhere);
+        $("#name-convert").attr("placeholder", translations.what_should_we);
+        $("#email-convert").attr("placeholder", translations.email);
+        $("#password-convert").attr("placeholder", translations.password);
+        $("#convert-action").html(translations.sync);
+        $("#upcoming-text-name").html(translations.upcoming);
+        $("#completed-text-name").html(translations.completed);
+        $("#perspectives-text-name").html(translations.perspectives);
+        $("#projects-text-name").html(translations.projects);
+        $("#logout-text-name").html(translations.logout);
+        $("#upcoming-titleword").html(translations.upcoming);
+        $("#inbox-titleword-unsorted").html(translations.unsorted);
+        $("#ds-text").html(translations.ds);
+        $("#completed-titleword").html(translations.completed);
+        $("#comp-lb-td").html(translations.clbtd);
+        $("#comp-lb-yd").html(translations.clbyd);
+        $("#comp-lb-pw").html(translations.clbpw);
+        $("#comp-lb-pm").html(translations.clbpm);
+        $("#comp-lb-el").html(translations.clbel);
+        $("#completed-fm").html(translations.fetchmore);
+        $("#completed-fmt").html(translations.fetchmoretasks);
+        $(".muchempty").html(translations.muchempty);
+        $("#blk-smp").html(translations.blk_smp);
+        $("#blk-smf").html(translations.blk_smf);
+        $("#blk-adt").html(translations.blk_adt);
+        $("#newbutton-at").html(translations.nb_at);
+        $("#newbutton-ap").html(translations.nb_ap);
+        $("#welcome-auth-msg").html(translations.welcome_auth_msg);
+        $("#greeting-auth-normal").html(translations.greeting_auth_normal);
+        $("#name").attr("placeholder", translations.what_should_we);
+        $("#email").attr("placeholder", translations.email);
+        $("#password").attr("placeholder", translations.password);
+        $("#need-verify").html(translations.need_verify);
+        $("#recover-password").html(translations.recover_password);
+        $("#newuser").html(translations.newuser);
+        $("#login-text").html(translations.lds);
+        $("#ulac").html(translations.ulac);
+        $("#quickadd").attr("placeholder", translations.qa_content);
+    }
+
+    let langCode = await Device.getLanguageCode();
+    switch (langCode.value) {
+        case "en-US":
+            do_INT("en-US");
+            break;
+        case "zh-CN":
+        case "zh-HK":
+        case "zh-MO":
+        case "zh-SG":
+        case "zh-TW":
+            do_INT("zh-CN");
+            break;
+        default:
+            console.log(`Undefined langcode ${langCode.value}`);
+            do_INT("en-US");
+            break;
     }
 
     let ism = isMobile();
@@ -205,12 +422,12 @@ const interfaceUtil = function() {
             <div id="task-display-${taskId}" class="task-display" style="display:block">
                 <input type="checkbox" id="task-check-${taskId}" class="task-check"/>
                 <label class="task-pseudocheck" id="task-pseudocheck-${taskId}" for="task-check-${taskId}" style="font-family: 'Inter', sans-serif;">&zwnj;</label>
-                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" placeholder="New Task" value="${name}" ${content}>
+                <input class="task-name" id="task-name-${taskId}" type="text" autocomplete="off" placeholder="${default_localizations.nt}" value="${name}" ${content}>
                 <div class="task-trash task-subicon" id="task-trash-${taskId}" style="float: right; display: none;"><i class="fas fa-trash"></i></div>
                 <div class="task-repeat task-subicon" id="task-repeat-${taskId}" style="float: right; display: none;"><i class="fas fa-redo-alt"></i></div>
         </div>
         <div id="task-edit-${taskId}" class="task-edit" style="display:none">
-            <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="Description">${desc}</textarea>
+            <textarea class="task-desc" id="task-desc-${taskId}" type="text" autocomplete="off" placeholder="${default_localizations.desc}">${desc}</textarea>
             <div class="task-tools task-tools-top" style="margin-bottom: 9px">
                 <div class="task-tools-sub task-tools-toggles">
                     <div class="label"><i class="fas fa-flag"></i></div>
@@ -324,13 +541,22 @@ let presentWelcome = function() {
             $("#onboarding-1").slideUp(300, function() {
                 setTimeout(function() {
                     $("#onboarding-msg-1").fadeOut(function() {
-                        $("#onboarding-msg-2").fadeIn(1000, function() {
-                            setTimeout(function() {
-                                $("#onboarding-2").fadeIn();
-                                $("#onboarding-3").fadeIn();
-                                $("#onboarding-msg-3").fadeIn();
-                            },500);
-                        });
+                        if (!firebase_avaliable) {
+                            authUI.anonomGeneration(true);
+                            setTimeout(()=>$("#onboarding").fadeOut(1000), 1000);
+                            Storage.set({
+                                key: "condution_onboarding",
+                                value: "done"
+                            });
+                        } else {
+                            $("#onboarding-msg-2").fadeIn(1000, function() {
+                                setTimeout(function() {
+                                    $("#onboarding-2").fadeIn();
+                                    $("#onboarding-3").fadeIn();
+                                    $("#onboarding-msg-3").fadeIn();
+                                },500);
+                            });
+                        }
                     });
 
                 }, 300);
@@ -385,7 +611,7 @@ let authUI = function() {
     let anonomGeneration = async function(onboard) {
         isAnomAuthInProgress = true;
         await E.use("json");
-        if (onboard) await E.db.onBoard("hard-storage-user", moment.tz.guess(), "there");
+        if (onboard) await E.db.onBoard("hard-storage-user", moment.tz.guess(), langCode.value.includes("en") ? "there": "", default_localizations.onboarding_content);
         Storage.set({
             key: "condution_stotype",
             value: "json"
@@ -420,9 +646,9 @@ let authUI = function() {
             $("#auth-content-wrapper").fadeOut();
             $("#setting-up").css({"display": "flex", "opacity":"0"});
             $("#setting-up").animate({"opacity": "1"});
-            await E.db.onBoard(user.uid, moment.tz.guess(), $("#name").val());
+            await E.db.onBoard(user.uid, moment.tz.guess(), $("#name").val(), default_localizations.onboarding_content);
             $("#setting-up").fadeOut();
-            $('#login-text').html("Let's Do This!")
+            $('#login-text').html(default_localizations.lds)
             await loadApp(user);
             isNASuccess = false;
         } else {
@@ -444,12 +670,12 @@ let authUI = function() {
             mode = "login";
             $(".auth-upf").removeClass("wrong");
             $("#password").show();
-            $("#newuser").html("Make an account");
+            $("#newuser").html(default_localizations.newuser);
             $("#newuser").show();
-            $("#recover-password").html("Recover Password");
-            $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
+            $("#recover-password").html(default_localizations.rec_pswd);
+            $("#greeting-auth-normal").html(default_localizations.greeting_auth_normal);
             $('#recover-password').fadeOut();
-            $('#need-verify').html("Check your inbox. A lovely email is awaiting you.");
+            $('#need-verify').html(default_localizations.lovely_email);
             $('#need-verify').fadeIn();
         }).catch(function(error) {
             $(".auth-upf").addClass("wrong");
@@ -465,8 +691,8 @@ let authUI = function() {
         }).then(function() {
             if (!problem) {
                 firebase.auth().currentUser.sendEmailVerification();
-                $('#need-verify').html("Verify your email, then proceed!");
-                $('#login-text').html("Proceed!")
+                $('#need-verify').html(default_localizations.need_verify);
+                $('#login-text').html(default_localizations.proceed)
                 isNASuccess = true;
                 mode="login";
             }
@@ -507,25 +733,25 @@ let authUI = function() {
         switch (mode) {
             case "login":
                 $("#password").hide();
-                $("#recover-password").html("Remembered? Login");
+                $("#recover-password").html(default_localizations.remembered);
                 $("#newuser").hide();
-                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                $("#greeting-auth-normal").html(default_localizations.noworries);
                 mode = "recover";
                 break;
             case "newuser":
                 $("#name-tray").hide();
                 $("#password").hide();
-                $("#recover-password").html("Remembered? Login");
+                $("#recover-password").html(default_localizations.remembered);
                 $("#newuser").hide();
-                $("#greeting-auth-normal").html("No worries! Let's recover your password.");
+                $("#greeting-auth-normal").html(default_localizations.noworries);
                 mode = "recover";
                 break;
             case "recover":
                 $("#password").show();
-                $("#newuser").html("Make an account");
+                $("#newuser").html(default_localizations.newuser);
                 $("#newuser").show();
-                $("#recover-password").html("Recover Password");
-                $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
+                $("#recover-password").html(default_localizations.rec_pswd);
+                $("#greeting-auth-normal").html(default_localizations.greeting_auth_normal);
                 mode = "login";
         }
     });
@@ -536,18 +762,18 @@ let authUI = function() {
                 $("#name-tray").slideDown(300);
                 $(this).html("Sign in");
                 mode = "newuser";
-                $("#greeting-auth-normal").html(`Welcome aboard! By signing up, you agree to our <a href="https://condution.shabang.cf/privacy.html">Privacy Policy</a> and <a href="https://condution.shabang.cf/terms.html">Terms</a>.`);
+                $("#greeting-auth-normal").html(default_localizations.signupmsg+` <a href=\"https://condution.shabang.cf/privacy.html\">${default_localizations.privacy}</a> ${default_localizations.and} <a href=\"https://condution.shabang.cf/terms.html\">${default_localizations.terms}</a>.`);
                 break;
             case "newuser":
                 $("#name-tray").slideUp(300);
-                $(this).html("Make an account");
-                $("#greeting-auth-normal").html("Good to see you. Please sign in or tap Use Locally.");
+                $(this).html(default_localizations.newuser);
+                $("#greeting-auth-normal").html(default_localizations.greeting_auth_normal);
                 mode = "login";
                 break;
         }
     });
 
-    const greetings = ["Hey!", "G'day!", "Howdy!", "Yo!"];
+    const greetings = default_localizations.greetings_setA;
     $("#greeting-auth").html(greetings[Math.floor(Math.random() * greetings.length)]);
     return {auth, nu, rec, anonomGeneration}
 }();
@@ -555,7 +781,7 @@ let authUI = function() {
 let ui = function() {
     let isMobile = false;
     // greeting of the day
-    let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
+    let greetings = default_localizations.greetings_setB;
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
     // generic data containers used by refresh and others
@@ -672,56 +898,56 @@ let ui = function() {
 
         $("#pavail-avail").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {avail: "avail"});
-            $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-avail-toggle").html(`${default_localizations.include_avalibale} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pavail-group").children().css("background-color", "transparent");
             $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pavail-flagged").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {avail: "flagged"});
-            $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-avail-toggle").html(`${default_localizations.include_flagged} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pavail-group").children().css("background-color", "transparent");
             $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pavail-remain").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {avail: "remain"});
-            $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-avail-toggle").html(`${default_localizations.include_remaining} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pavail-group").children().css("background-color", "transparent");
             $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-due-ascend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "duas"});
-            $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_abd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-due-descend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "duds"});
-            $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_dbd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-defer-ascend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "deas"});
-            $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_abe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-defer-descend").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "deds"});
-            $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.order_dbe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
 
         $("#pord-alpha").click(function(e) {
             E.db.modifyPerspective(uid, currentP, {tord: "alpha"});
-            $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+            $("#perspective-order-toggle").html(`${default_localizations.alpha}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
             $("#pord-group").children().css("background-color", "transparent");
             $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
         });
@@ -739,27 +965,32 @@ let ui = function() {
             if (tord && tord !== "") {
                 switch (tord) {
                     case "duas":
-                        $("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: ascend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_abd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-due-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "duds":
-                        $("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: descend by due&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_dbd}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-due-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "deas":
-                        $("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: ascend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_abe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-defer-ascend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "deds":
-                        $("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: descend by defer&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.order_dbe}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-defer-descend").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
                     case "alpha":
-                        $("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-order-toggle").html("Order: alphabetical&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-order-toggle").html(`${default_localizations.alpha}&nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         $("#pord-group").children().css("background-color", "transparent");
                         $("#pord-alpha").css("background-color", interfaceUtil.gtc("--background-feature"));
                         break;
@@ -770,17 +1001,20 @@ let ui = function() {
                     case "avail":
                         $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-avail").css("background-color", interfaceUtil.gtc("--background-feature"));
-                        $("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-avail-toggle").html("Include: Available &nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-avail-toggle").html(`${default_localizations.include_avalibale} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         break;
                     case "flagged":
                         $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-flagged").css("background-color", interfaceUtil.gtc("--background-feature"));
-                        $("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-avail-toggle").html("Include: Flagged&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-avail-toggle").html(`${default_localizations.include_flagged} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         break;
                     case "remain":
                         $("#pavail-group").children().css("background-color", "transparent");
                         $("#pavail-remain").css("background-color", interfaceUtil.gtc("--background-feature"));
-                        $("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        //$("#perspective-avail-toggle").html("Include: Remain&nbsp;<i class=\"fa fa-caret-down\"></i>");
+                        $("#perspective-avail-toggle").html(`${default_localizations.include_remaining} &nbsp;<i class=\"fa fa-caret-down\"></i>`);
                         break;
                 }
             }
@@ -802,16 +1036,16 @@ let ui = function() {
         $("#convert-action").on("click", function(e) {
             var credential = firebase.auth.EmailAuthProvider.credential($("#email-convert").val(), $("#password-convert").val());
             $(this).css("background", "#133644");
-            $(this).html("Loading");
+            $(this).html(default_localizations.loading);
             let btn = this;
             firebase.auth().currentUser.linkWithCredential(credential).then(function(usercred) {
-                $(btn).html("Sync!");
+                $(btn).html(default_localizations.sync);
                 $(btn).css("background", "#2b3749");
                 var user = usercred.user;
                 user.updateProfile({displayName: $("#name-convert").val()});
                 firebase.auth().currentUser.sendEmailVerification();
-                $("#convert-msg").html("Check your inbox. A lovely email's waiting ;)");
-                $("#convert-callout").html("Welcome Aboard!");
+                $("#convert-msg").html(default_localizations.lovely_email);
+                $("#convert-callout").html(default_localizations.welcome_aboard);
                 $(".auth-upf-conv").hide();
                 $("#convert-action").hide();
                 $("#convert").hide();
@@ -822,7 +1056,7 @@ let ui = function() {
                 setUser(firebase.auth().currentUser);
             }).catch(function(error) {
                 console.log("Error upgrading anonymous account", error);
-                $(btn).html("Sync!");
+                $(btn).html(default_localizations.sync);
                 $("#convert-msg").html(error.message);
             });
         });
@@ -883,14 +1117,14 @@ let ui = function() {
 
         $("#repeat-advanced-monthly").on("click", function(e) {
             if (advancedMonthMode) {
-                $(this).html("Advanced...");
+                $(this).html(default_localizations.advanced);
                 $("#repeat-monthgrid").fadeOut();
                 E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
                 $("#repeat-monthgrid").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background")});
                 });
             } else {
-                $(this).html("Back to Basic...");
+                $(this).html(default_localizations.b2b);
                 $("#repeat-monthgrid").fadeIn({
                     start: function () {
                         $(this).css({
@@ -904,14 +1138,14 @@ let ui = function() {
 
         $("#repeat-advanced-weekly").on("click", function(e) {
             if (advancedWeekMode) {
-                $(this).html("Advanced...");
+                $(this).html(default_localizations.advanced);
                 $("#repeat-daterow").fadeOut();
                 E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
                 $("#repeat-daterow").children().each(function(e) {
                     $(this).css({"background-color": interfaceUtil.gtc("--background-feature")});
                 });
             } else {
-                $(this).html("Back to Basic...");
+                $(this).html(default_localizations.b2b);
                 $("#repeat-daterow").fadeIn({
                     start: function () {
                         $(this).css({
@@ -953,7 +1187,7 @@ let ui = function() {
 
         $("#repeat-perday").on("click", function(e) {
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every day.");
+            $("#repeat-type").html(default_localizations.every_day);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "daily"}});
         });
@@ -961,7 +1195,7 @@ let ui = function() {
         $("#repeat-perweek").on("click", function(e) {
             $("#repeat-weekly-unit").slideDown();
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every week.");
+            $("#repeat-type").html(default_localizations.every_week);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "weekly"}});
         });
@@ -969,14 +1203,14 @@ let ui = function() {
         $("#repeat-permonth").on("click", function(e) {
             $("#repeat-monthly-unit").slideDown();
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every month.");
+            $("#repeat-type").html(default_localizations.every_month);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "monthly"}});
         });
 
         $("#repeat-peryear").on("click", function(e) {
             $("#repeat-toggle-group").slideUp();
-            $("#repeat-type").html("every year.");
+            $("#repeat-type").html(default_localizations.every_year);
             $("#repeat-type").fadeIn();
             E.db.modifyTask(uid, tid, {repeat: {rule: "yearly"}});
         });
@@ -1021,7 +1255,7 @@ let ui = function() {
             if (ti.repeat.rule !== "none") {
                 if (ti.repeat.rule === "daily") {
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every day.");
+                    $("#repeat-type").html(default_localizations.every_day);
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "weekly") {
                     if (ti.repeat.on) {
@@ -1031,7 +1265,7 @@ let ui = function() {
                             }
                         });
                         repeatWeekDays = ti.repeat.on;
-                        $("#repeat-advanced-weekly").html("Back to Basic...");
+                        $("#repeat-advanced-weekly").html(default_localizations.b2b);
                         $("#repeat-daterow").fadeIn({
                             start: function () {
                                 $(this).css({
@@ -1045,7 +1279,7 @@ let ui = function() {
                     }
                     $("#repeat-weekly-unit").show();
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every week.");
+                    $("#repeat-type").html(default_localizations.every_week);
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "monthly") {
                     if (ti.repeat.on) {
@@ -1055,7 +1289,7 @@ let ui = function() {
                             }
                         });
                         repeatMonthDays = ti.repeat.on;
-                        $("#repeat-advanced-monthly").html("Back to Basic...");
+                        $("#repeat-advanced-monthly").html(default_localizations.b2b);
                         $("#repeat-monthgrid").fadeIn({
                             start: function () {
                                 $(this).css({
@@ -1069,11 +1303,11 @@ let ui = function() {
                     }
                     $("#repeat-monthly-unit").show();
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every month.");
+                    $("#repeat-type").html(default_localizations.every_month);
                     $("#repeat-type").show();
                 } else if (ti.repeat.rule === "yearly") {
                     $("#repeat-toggle-group").hide();
-                    $("#repeat-type").html("every year.");
+                    $("#repeat-type").html(default_localizations.every_year);
                     $("#repeat-type").show();
                 }
             }
@@ -1445,8 +1679,8 @@ let ui = function() {
             //
             $('#task-project-'+taskId).select2({
                 'width': $(window).width()<576 ? '88%' : '79%',
-                searchInputPlaceholder: "Search Projects...",
-                placeholder: 'Inbox',
+                searchInputPlaceholder: default_localizations.search_projects,
+                placeholder: default_localizations.unsorted,
                 allowClear: true
             });
             $('#task-project-' + taskId).val(projectID)
@@ -1560,25 +1794,25 @@ let ui = function() {
                                         let dow = due.getDay();
                                         switch (dow) {
                                             case 1:
-                                                current = "M";
+                                                current = default_localizations.m;
                                                 break;
                                             case 2:
-                                                current = "Tu";
+                                                current = default_localizations.tu;
                                                 break;
                                             case 3:
-                                                current = "W";
+                                                current = default_localizations.w;
                                                 break;
                                             case 4:
-                                                current = "Th";
+                                                current = default_localizations.th;
                                                 break;
                                             case 5:
-                                                current = "F";
+                                                current = default_localizations.f;
                                                 break;
                                             case 6:
-                                                current = "Sa";
+                                                current = default_localizations.sa;
                                                 break;
                                             case 7:
-                                                current = "Su";
+                                                current = default_localizations.su;
                                                 break;
                                         }
                                     }
@@ -1596,26 +1830,27 @@ let ui = function() {
                                         let dow = due.getDay();
                                         switch (dow) {
                                             case 1:
-                                                current = "M";
+                                                current = default_localizations.m;
                                                 break;
                                             case 2:
-                                                current = "Tu";
+                                                current = default_localizations.tu;
                                                 break;
                                             case 3:
-                                                current = "W";
+                                                current = default_localizations.w;
                                                 break;
                                             case 4:
-                                                current = "Th";
+                                                current = default_localizations.th;
                                                 break;
                                             case 5:
-                                                current = "F";
+                                                current = default_localizations.f;
                                                 break;
                                             case 6:
-                                                current = "Sa";
+                                                current = default_localizations.sa;
                                                 break;
                                             case 7:
-                                                current = "Su";
+                                                current = default_localizations.su;
                                                 break;
+
                                         }
                                     }
                                 } else {
@@ -2005,7 +2240,7 @@ let ui = function() {
         let upcoming = async function() {
             $("#inbox").empty();
             $("#due-soon").empty();
-            $("#greeting-date").html((new Date().toLocaleDateString("en-GB", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
+            $("#greeting-date").html((new Date().toLocaleDateString(langCode.value, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })));
             $("#greeting").html(greeting);
             $("#greeting-name").html(displayName);
             //nextSevenDSes
@@ -3038,8 +3273,9 @@ window.addEventListener('devtoolschange', event => {
 (async function onAppWillLoad() {
     $("#loading").hide().css("display", "flex").fadeIn();
     const ret = await Storage.get({ key: 'condution_onboarding' });
+    let val = undefined;
     try {
-        const val = JSON.parse(ret.value);
+        val = JSON.parse(ret.value);
     } catch(e) {} finally {
     if (ret.value !== "done" && val !== "done") {
         presentWelcome();

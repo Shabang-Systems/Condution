@@ -4,8 +4,6 @@
         <meta charset="UTF-8">
         <title>Condution Desktop Client</title>
 
-
-
         <!--LOADMEFIRST: Themes-->
         <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default.css" />
         <link rel="stylesheet" type="text/css" href="css/themes/condutiontheme-default-light.css" />
@@ -28,7 +26,7 @@
         <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
         <script src="../node_modules/devtools-detect/index.js"></script>
         <!--<script src="../node_modules/devtools-detect/index.js"></script>-->
-        <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+        <link rel="stylesheet" href="./static/fa/scripts/all.min.css">
 
 
        <link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
@@ -59,29 +57,29 @@
         </div>
         <div id="loading">
             <div id="loading-anim"></div>
-            <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.2.4_beta.0_M</t>
+            <t id="loading-bottom">&#169;2020 Shabang Systems, LLC and the Condution Project Contributors. v0.3.0_beta.0_M</t>
         </div>
         <div id="missing-internet" style="width: 100%; height: 100%;position: absolute; z-index: 8000000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display: none; overflow: none;">
             <div style="margin-left: 20px;">
-                <h2 style="color: var(--content-normal-accent)">Missing Internet Connection...</h2>
-                <span style="color: var(--content-normal-alt)">🤷 You need the intrawebitubes to truly experience cloud-synced <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span>.</span>
+                <h2 style="color: var(--content-normal-accent)" id="missing-internet-msg">Missing Internet Connection...</h2>
+                <span style="color: var(--content-normal-alt)">🤷 <span id="missing-internet-yn">You need the intrawebitubes to truly experience cloud-synced Condution.</span>
                 <hr />
-                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">Get online to proceed. Or, you could </span>
-                <div class="convert-src" style="margin-left: 5px; text-decoration: underline; color: var(--content-normal-alt)">Use Local Database</div>
+                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;" id="missing-internet-action">Get online to proceed. Or, you could </span>
+                <div class="convert-src" style="margin-left: 5px; text-decoration: underline; color: var(--content-normal-alt)" id="missing-internet-action-button">Use Local Database</div>
             </div>
         </div>
         <div id="setting-up" style="width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;overflow: none;">
             <div style="margin-left: 20px;">
-                <h2 style="color: var(--content-normal-accent)">🚄 Setting Up Condution...</h2>
-                <span style="color: var(--content-normal-alt)">We are hard at work creating your <span style="color: var(--content-normal-accent); font-weight: 600;">Condution</span> account.</span>
+                <h2 style="color: var(--content-normal-accent)">🚄 <span id="setting-up-callout">Setting Up Condution...</span></h2>
+                <span style="color: var(--content-normal-alt)" id="setting-up-action">We are hard at work creating your Condution account.</span>
                 <hr />
-                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">🤙 Hold on tight!</span>
+                <span style="color: var(--content-normal-alt); font-weight: 300; font-size: 13px;">🤙 <span id="setting-up-hold">Hold on tight!</span></span>
             </div>
         </div>
         <div id="onboarding" style="width: 100%; height: 100%;position: absolute; z-index: 98080000; background-color:var(--background); display: flex; justify-content: center; padding-top: 40vh; overflow: hidden !important; display:none;">
             <div style="width: 80%; z-index: 1000">
-                <h2 style="color: var(--content-normal-accent); font-size: 20px; font-weight: 300">Howdy! 👋 <span style="font-weight: 500">Welcome to</span><span style="font-weight:600"> Condution </span></h2>
-                <h2 style="color: var(--content-normal-accent); font-size: 14px; margin-bottom: 10px">Just a few quick things, and we will have you task-wrangling in no time!</h2>
+                <h2 style="color: var(--content-normal-accent); font-size: 20px; font-weight: 300"><span id="onboarding-howdy">Howdy!</span> 👋 <span style="font-weight: 500" id="onboarding-welcome">Welcome to Condution </span></h2>
+                <h2 style="color: var(--content-normal-accent); font-size: 14px; margin-bottom: 10px" id="onboarding-quick-things">Just a few quick things, and we will have you task-wrangling in no time!</h2>
                 <br />
                 <div id="onboarding-0" class="task thov"> 
                     <div id="onboarding-display-0" class="task-display" style="display:block">
@@ -91,7 +89,7 @@
                     </div> 
                 </div>
                 <div id="onboarding-msg-0" style="color: var(--menu-text); font-size: 13px; display: none">Excellent. We know you are.</div>
-                <div id="onboarding-msg-1" style="color: var(--menu-label); font-size: 15px; display:none">Please take a look at our <span id="welcome-terms">terms</span> and <span id="welcome-policy">privacy policy</span> and make sure you agree with them.</div>
+                <div id="onboarding-msg-1" style="color: var(--menu-label); font-size: 15px; display:none"><span id="onboarding-msg-1-1">Please take a look at our</span> <span id="welcome-terms">terms</span> <span id="onboarding-msg-1-2">and</span> <span id="welcome-policy">privacy policy</span> <span id="onboarding-msg-1-3">and make sure you agree with them.</span></div>
                 <div id="onboarding-1" class="task thov" style="display:none;"> 
                     <div id="onboarding-display-1" class="task-display" style="display:block">
                         <input type="checkbox" id="onboarding-check-1" class="task-check"/>
@@ -125,25 +123,25 @@
             <div id="overlay">
                     <div class="overlay-unit" id="perspective-unit">
                         <div class="project-action" id="perspective-back"><i class="far fa-times-circle"></i></div>
-                        <h1 id="perspective-callout">Let's build <input id="perspective-edit-name" placeholder="cool perspective name"></input></h1>
+                        <h1 id="perspective-callout"><span id="perspective-build-callout">Let's build</span> <input id="perspective-edit-name" placeholder="cool perspective name"></input></h1>
                         <input id="pquery" type="text" autocomplete="off" value="" placeholder="try a filter like [#bontehu]...">
                         <div id="perspective-avail-toggle-group">
-                                <button id="perspective-avail-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Include...&nbsp;<i class="fa fa-caret-down"></i></button>
+                            <button id="perspective-avail-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown"><span id="psp-include">Include...</span>&nbsp;<i class="fa fa-caret-down"></i></button>
                                 <ul id="pavail-group" class="dropdown-menu modal-dropdown">
-                                    <li class="modal-option" id="pavail-avail"><a>Available</a></li>
-                                    <li class="modal-option" id="pavail-remain"><a>Remaining</a></li>
-                                    <li class="modal-option" id="pavail-flagged"><a>Flagged</a></li>
+                                    <li class="modal-option" id="pavail-avail"><a id="psp-avil">Available</a></li>
+                                    <li class="modal-option" id="pavail-remain"><a id="psp-rem">Remaining</a></li>
+                                    <li class="modal-option" id="pavail-flagged"><a id="psp-flg">Flagged</a></li>
                                 </ul>
                             </div>
                         <br />
                         <div id="perspective-order-toggle-group">
-                                <button id="perspective-order-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Order...&nbsp;<i class="fa fa-caret-down"></i></button>
+                            <button id="perspective-order-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown"><span id="psp-order">Order...</span>&nbsp;<i class="fa fa-caret-down"></i></button>
                                 <ul id="pord-group" class="dropdown-menu modal-dropdown">
-                                    <li class="modal-option" id="pord-due-ascend"><a>Ascend by due</a></li>
-                                    <li class="modal-option" id="pord-due-descend"><a>Descend by due</a></li>
-                                    <li class="modal-option" id="pord-defer-ascend"><a>Ascend by defer</a></li>
-                                    <li class="modal-option" id="pord-defer-descend"><a>Descend by defer</a></li>
-                                    <li class="modal-option" id="pord-alpha"><a>Alphabetical</a></li>
+                                    <li class="modal-option" id="pord-due-ascend"><a id="psp-abd">Ascend by due</a></li>
+                                    <li class="modal-option" id="pord-due-descend"><a id="psp-dbd">Descend by due</a></li>
+                                    <li class="modal-option" id="pord-defer-ascend"><a id="psp-abe">Ascend by defer</a></li>
+                                    <li class="modal-option" id="pord-defer-descend"><a id="psp-dbe">Descend by defer</a></li>
+                                    <li class="modal-option" id="pord-alpha"><a id="psp-alpha">Alphabetical</a></li>
                                 </ul>
                             </div>
                         <br />
@@ -152,33 +150,33 @@
                     </div>
                     <div class="overlay-unit" id="repeat-unit">
                         <div class="project-action" id="repeat-back"><i class="far fa-times-circle"></i></div>
-                        <h1 id="repeat-callout">Repeat <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
+                        <h1 id="repeat-callout"><span id="repeat-word">Repeat</span> <t id="repeat-task-name" style="color: var(--content-normal-accent); padding-left: 2px;"></t> <t id="repeat-type"></t></h1>
                         <div class="dropdown">
                             <div id="repeat-toggle-group">
-                                <button id="repeat-type-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown">Every...&nbsp;<i class="fa fa-caret-down"></i></button>
+                                <button id="repeat-type-toggle" class="modal-dropdown-toggle" type="button" data-toggle="dropdown"><span id="repeat-every">Every...</span>&nbsp;<i class="fa fa-caret-down"></i></button>
                                 <ul class="dropdown-menu modal-dropdown">
-                                    <li class="modal-option" id="repeat-perday"><a>Day</a></li>
-                                    <li class="modal-option" id="repeat-perweek"><a>Week</a></li>
-                                    <li class="modal-option" id="repeat-permonth"><a>Month</a></li>
-                                    <li class="modal-option" id="repeat-peryear"><a>Year</a></li>
+                                    <li class="modal-option" id="repeat-perday"><a><span id="repeat-every-day">Day</span></a></li>
+                                    <li class="modal-option" id="repeat-perweek"><a><span id="repeat-every-week">Week</span></a></li>
+                                    <li class="modal-option" id="repeat-permonth"><a><span id="repeat-every-month">Month</span></a></li>
+                                    <li class="modal-option" id="repeat-peryear"><a><span id="repeat-every-year">Year</span></a></li>
                                 </ul>
                             </div>
                             <div id="repeat-weekly-unit" class="repeat-subunit" style="display:none" style="display:none">
-                                <t id="repeat-advanced-weekly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
+                                <t id="repeat-advanced-weekly" style="color:var(--content-normal-accent);font-size: 13px;" class="repeat-advanced-text">Advanced...</t>
                                 <div id="repeat-daterow">
-                                    <div class="repeat-daterow-weekname">M</div>
-                                    <div class="repeat-daterow-weekname">Tu</div>
-                                    <div class="repeat-daterow-weekname">W</div>
-                                    <div class="repeat-daterow-weekname">Th</div>
-                                    <div class="repeat-daterow-weekname">F</div>
-                                    <div class="repeat-daterow-weekname">Sa</div>
-                                    <div class="repeat-daterow-weekname">Su</div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-m">M</span></div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-tu">Tu</span></div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-w">W</span></div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-th">Th</span></div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-f">F</span></div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-sa">Sa</span></div>
+                                    <div class="repeat-daterow-weekname"><span id="repeat-daterow-weekname-su">Su</span></div>
                                 </div>
                             </div>
                             <div id="repeat-monthly-unit" class="repeat-subunit" style="display:none">
-                                <t id="repeat-advanced-monthly" style="color:var(--content-normal-accent);font-size: 13px;">Advanced...</t>
+                                <t id="repeat-advanced-monthly" style="color:var(--content-normal-accent);font-size: 13px;" class="repeat-advanced-text">Advanced...</t>
                                 <div id="repeat-monthgrid">
-                                    <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day">Last</div>
+                                    <div class="repeat-monthgrid-day">1</div> <div class="repeat-monthgrid-day">2</div> <div class="repeat-monthgrid-day">3</div> <div class="repeat-monthgrid-day">4</div> <div class="repeat-monthgrid-day">5</div> <div class="repeat-monthgrid-day">6</div> <div class="repeat-monthgrid-day">7</div> <div class="repeat-monthgrid-day">8</div> <div class="repeat-monthgrid-day">9</div> <div class="repeat-monthgrid-day">10</div> <div class="repeat-monthgrid-day">11</div> <div class="repeat-monthgrid-day">12</div> <div class="repeat-monthgrid-day">13</div> <div class="repeat-monthgrid-day">14</div> <div class="repeat-monthgrid-day">15</div> <div class="repeat-monthgrid-day">16</div> <div class="repeat-monthgrid-day">17</div> <div class="repeat-monthgrid-day">18</div> <div class="repeat-monthgrid-day">19</div> <div class="repeat-monthgrid-day">20</div> <div class="repeat-monthgrid-day">21</div> <div class="repeat-monthgrid-day">22</div> <div class="repeat-monthgrid-day">23</div> <div class="repeat-monthgrid-day">24</div> <div class="repeat-monthgrid-day">25</div> <div class="repeat-monthgrid-day">26</div> <div class="repeat-monthgrid-day">27</div> <div class="repeat-monthgrid-day">28</div> <div class="repeat-monthgrid-day">29</div> <div class="repeat-monthgrid-day">30</div> <div class="repeat-monthgrid-day">31</div> <div class="repeat-monthgrid-day"><span id="repeat-last">Last</span></div>
                                 </div>
                             </div>
                         </div>
@@ -200,18 +198,18 @@
                 <div id="left-menu">
                     <div class="menu-area">
                         <div>
-                            <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px">Upcoming</t></div>
-                            <div id="completed" class="today"><i class="fas fa-check-circle"></i><t style="padding-left:8px">Completed</t></div>
+                            <div id="today" class="today today-highlighted"><i class="fas fa-chevron-circle-right"></i><t style="padding-left:8px" id="upcoming-text-name">Upcoming</t></div>
+                            <div id="completed" class="today"><i class="fas fa-check-circle"></i><t style="padding-left:8px" id="completed-text-name">Completed</t></div>
                         </div>
                         <t class="menu-label">
-                            Perspectives <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                            <span id="perspectives-text-name">Perspectives</span> <div class="menu-subicon" id="perspective-add" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
                         </t>
                         <div class="perspectives menu-portion scrollable"></div>
                         <t class="menu-label">
-                            Projects <div class="menu-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
+                            <span id="projects-text-name">Projects</span> <div class="menu-subicon" id="project-add-toplevel" style="float: right; display: inline-block"><i class="fas fa-plus"></i></div>
                         </t>
                         <div class="projects menu-portion scrollable"></div>
-                        <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i>Logout</div>
+                        <div id="logout"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i><span id="logout-text-name">Logout</span></div>
                     </div>
                 </div>
                 <div id="convert" style="display: none"><i class="fas fa-arrow-circle-up"></i></div>
@@ -220,7 +218,7 @@
                 <div id="content-area" class="scrollable">
                     <div id="upcoming-page" class="page">
                         <div class="sandwich"><i class="fas fa-bars"></i></div>
-                        <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t class="perspective-titleword">Upcoming</t></div>
+                        <div class="perspective-title"><i class="fas fa-chevron-circle-right"></i><t id="upcoming-titleword" class="perspective-titleword">Upcoming</t></div>
                         <div style="padding: 0 0 7px 0">
                             <hr class="perspective-divider"/>
                             <div id="upcoming-header"><t id="greeting"></t><t id="greeting-name"></t>&middot;<t id="greeting-date"></t></div>
@@ -286,7 +284,7 @@
                         </div>
                         <hr class="perspective-divider"/>
                         <div id="inbox-subhead" class="perspective-subhead">
-                            Unsorted <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)"></div>
+                            <span id="inbox-titleword-unsorted">Unsorted</span> <div id="unsorted-badge" class="badge" style="transform: translate(3px, -2px)"></div>
                         </div>
                         <div id="inbox" class="upcoming-section"> </div>
                         <div id="ds-subhead" class="perspective-subhead">
@@ -296,37 +294,37 @@
                     </div>
                     <div id="completed-page" class="page">
                         <div class="sandwich"><i class="fas fa-bars"></i></div>
-                        <div class="perspective-title"><i class="fas fa-check-circle"></i><t class="perspective-titleword">Completed</t></div>
+                        <div class="perspective-title"><i class="fas fa-check-circle"></i><t class="perspective-titleword" id="completed-titleword">Completed</t></div>
                         <div style="padding: 0 0 7px 0">
                             <hr class="perspective-divider"/>
                         </div>
                         <div id="completed-content"> 
-                            <div class="perspective-subhead" id="comp-lb-td" style="display: none"> Today </div>
+                            <div class="perspective-subhead" id="comp-lb-td" style="display: none">Today</div>
                             <div id="completed-today">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-yd" style="display: none"> Yesterday </div>
+                            <div class="perspective-subhead" id="comp-lb-yd" style="display: none">Yesterday</div>
                             <div id="completed-yesterday">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-pw" style="display: none"> Past Week </div>
+                            <div class="perspective-subhead" id="comp-lb-pw" style="display: none">Past Week</div>
                             <div id="completed-thisweek">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-pm" style="display: none"> Past Month </div>
+                            <div class="perspective-subhead" id="comp-lb-pm" style="display: none">Past Month</div>
                             <div id="completed-thismonth">
                             </div>
-                            <div class="perspective-subhead" id="comp-lb-el" style="display: none"> Earlier/Untracked </div>
+                            <div class="perspective-subhead" id="comp-lb-el" style="display: none">Earlier/Untracked</div>
                             <div id="completed-earlier">
                             </div>
                             <div id="completed-loading" style="margin-bottom: 10px; margin-top: 10px; display: none">
                                 <div id="completed-fm" style="color: var(--decorative-light-alt); font-weight: 600; transform: translateY(-2px); padding-left: 5px">Fetch more...</div>
                                 <div id="completed-spinner" style="transform: translateX(-3px); display:none">
                                     <div class="lds-ring" style="transform: translate(6px, 6.5px);"><div></div><div></div><div></div><div></div></div>
-                                    <div class="completed-load-more-text"><span style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px">Fetching 'em tasks!</span></div>
+                                    <div class="completed-load-more-text"><span style="color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px" id="completed-fmt">Fetching 'em tasks!</span></div>
                                 </div>
                             </div>
                         </div>
                         <div id="blankimage-completed" class="blankimage-content">
                             <img class="blankimage"></img>
-                            <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more productivity?</b></div>
+                            <div class="blankimage-alt"><span class="muchempty">Wow... Much empty.</span> <b style="font-weight: 200" id="blk-smp">Some more productivity?</b></div>
                         </div>
                     </div>
                     <div id="perspective-page" class="page">
@@ -341,7 +339,7 @@
                         <div id="perspective-content"> </div>
                         <div id="blankimage-perspective" class="blankimage-content">
                             <img class="blankimage"></img>
-                            <div class="blankimage-alt">Wow... Much empty. <b style="font-weight: 200">Some more filters?</b></div>
+                            <div class="blankimage-alt"><span class="muchempty">Wow... Much empty.</span> <b style="font-weight: 200" id="blk-smf">Some more filters?</b></div>
                         </div>
                     </div>
                     </div>
@@ -364,14 +362,14 @@
                         </div>
                         <div id="project-content"> </div>
                         <div id="new-task" class="newbutton">
-                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a task</div>
+                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i><span id="newbutton-at">add a task</span></div>
                         </div>
                         <div id="new-project" class="newbutton" style="transform: translateY(-8px)">
-                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
+                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i><span id="newbutton-ap">add a project</span></div>
                         </div>
                         <div id="blankimage-project" class="blankimage-content">
                             <img class="blankimage"></img>
-                            <div class="blankimage-alt">Wow... Such empty. <b style="font-weight: 200">Add a task?</b></div>
+                            <div class="blankimage-alt"><span class="muchempty">Wow... Such empty.</span> <b id="blk-adt" style="font-weight: 200">Add a task?</b></div>
                         </div>
                     </div>
                 </div>
@@ -385,8 +383,8 @@
                     <t id="auth-image-credit">Image by <t style="font-weight: 500;">Tobias Keller/Paweł Czerwiński</t></t>
                 </div>
             </div>
-            <div id="authwall" style="display:none">
-                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t style="color: var(--content-normal-alt)">Welcome to Condution.</t>
+            <div id="authwall" style="display:none"blk-adt>
+                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t style="color: var(--content-normal-alt)" id="welcome-auth-msg">Welcome to Condution.</t>
                 <h3 class="greeting-auth-subtitle" id="greeting-auth-normal">Good to see you. Please sign in or tap Use Locally.</h3>
                 <div id="name-tray" style="display:none">
                     <input class="auth-upf" id="name" type="text" autocomplete="off" value="" placeholder="What should we call you?">
@@ -399,7 +397,7 @@
                 <div id="auth-actiongroup">
                     <div id="newuser">Make an account</div>
                     <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i><span id="login-text">Let's Do This!</span></div>
-                    <div class="convert-src">Use Locally</div>
+                    <div class="convert-src" id="ulac">Use Locally</div>
                 </div>
             </div>
         </div>
