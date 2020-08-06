@@ -107,6 +107,19 @@
         $(".muchempty").html(translations.muchempty);
         $("#blk-smp").html(translations.blk_smp);
         $("#blk-smf").html(translations.blk_smf);
+        $("#blk-adt").html(translations.blk_adt);
+        $("#newbutton-at").html(translations.nb_at);
+        $("#newbutton-ap").html(translations.nb_ap);
+        $("#welcome-auth-msg").html(translations.welcome_auth_msg);
+        $("#greeting-auth-normal").html(translations.gretting_auth_normal);
+        $("#name").attr("placeholder", translations.what_should_we);
+        $("#email").attr("placeholder", translations.email);
+        $("#password").attr("placeholder", translations.password);
+        $("#need-verify").html(translations.need_verify);
+        $("#recover-password").html(translations.recover_password);
+        $("#newuser").html(translations.newuser);
+        $("#login-text").html(translations.lds);
+        $("#ulac").html(translations.ulac);
     }
 
     let langCode = await Device.getLanguageCode();

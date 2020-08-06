@@ -362,14 +362,14 @@
                         </div>
                         <div id="project-content"> </div>
                         <div id="new-task" class="newbutton">
-                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a task</div>
+                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i><span id="newbutton-at">add a task</span></div>
                         </div>
                         <div id="new-project" class="newbutton" style="transform: translateY(-8px)">
-                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i>add a project</div>
+                            <div class="newtext"><i class="fas fa-plus-circle" style="padding-right: 10px"></i><span id="newbutton-ap">add a project</span></div>
                         </div>
                         <div id="blankimage-project" class="blankimage-content">
                             <img class="blankimage"></img>
-                            <div class="blankimage-alt">Wow... Such empty. <b style="font-weight: 200">Add a task?</b></div>
+                            <div class="blankimage-alt"><span class="muchempty">Wow... Such empty.</span> <b id="blk-adt" style="font-weight: 200">Add a task?</b></div>
                         </div>
                     </div>
                 </div>
@@ -383,8 +383,8 @@
                     <t id="auth-image-credit">Image by <t style="font-weight: 500;">Tobias Keller/Paweł Czerwiński</t></t>
                 </div>
             </div>
-            <div id="authwall" style="display:none">
-                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t style="color: var(--content-normal-alt)">Welcome to Condution.</t>
+            <div id="authwall" style="display:none"blk-adt>
+                <h1 id="greeting-auth" style="display: inline-block; padding-right: 10px;">Hello</h1><t style="color: var(--content-normal-alt)" id="welcome-auth-msg">Welcome to Condution.</t>
                 <h3 class="greeting-auth-subtitle" id="greeting-auth-normal">Good to see you. Please sign in or tap Use Locally.</h3>
                 <div id="name-tray" style="display:none">
                     <input class="auth-upf" id="name" type="text" autocomplete="off" value="" placeholder="What should we call you?">
@@ -397,7 +397,7 @@
                 <div id="auth-actiongroup">
                     <div id="newuser">Make an account</div>
                     <div id="login"><i class="fas fa-snowboarding" style="padding-right: 5px;"></i><span id="login-text">Let's Do This!</span></div>
-                    <div class="convert-src">Use Locally</div>
+                    <div class="convert-src" id="ulac">Use Locally</div>
                 </div>
             </div>
         </div>

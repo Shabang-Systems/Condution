@@ -73,6 +73,16 @@
     "fetchmoretasks": "Fetch 'em tasks!",
     "muchempty": "Wow... Much empty!",
     "blk_smp": "Some more productivity?",
-    "blk_smf": "Some more filters?"
+    "blk_smf": "Some more filters?",
+    "nb_at": "add a task",
+    "nb_ap": "add a project",
+    "blk_adt": "Add a task?",
+    "welcome_auth_msg": "Welcome to Condution.",
+    "gretting_auth_normal": "Good to see you. Please sign in or tap Use Locally.",
+    "need_verify": "Verify your email, then proceed!",
+    "recover_password": "Recover Password",
+    "newuser": "Make an account",
+    "lds": "Let's do this!",
+    "ulac": "Use Locally"
 }
 
