@@ -37,6 +37,7 @@
 
     body {
         overflow-y: visible;
+        background-color: transparent;
         -webkit-overflow-scrolling: touch;
     }
 
@@ -3438,6 +3439,162 @@
                 padding: 4px 0 4px 10px;
                 transform: translateX(-1px);
             }
+
+/* == Full-Screen overlays == */
+
+z   /* IDs */
+    #missing-internet {
+        width: 100%; 
+        height: 100%;
+        position: absolute; 
+        z-index: 8000000; 
+        background-color:var(--background); 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        display: none; 
+        overflow: none;
+    }
+
+    #missing-internet-body {
+        margin-left: 20px;
+    }
+
+    #missing-internet-yn {
+        color: var(--content-normal-alt)
+    }
+
+    #missing-internet-action {
+        color: var(--content-normal-alt); font-weight: 300; font-size: 13px;
+    }
+
+    #missing-internet-action-button {
+        margin-left: 5px; text-decoration: underline; color: var(--content-normal-alt)
+    }
+
+    #missing-internet-mgs {
+        color: var(--content-normal-accent);
+    }
+
+    #setting-up {
+        width: 100%; height: 100%;position: absolute; z-index: 10000; background-color:var(--background); display: flex; justify-content: center; align-items: center; display:none;overflow: none;
+    }
+
+    #setting-up-hold {
+        color: var(--content-normal-alt); font-weight: 300; font-size: 13px;
+    }
+
+    #setting-up-body {
+        margin-left: 20px;
+    }
+
+    #onboarding {
+        width: 100%; height: 100%;position: absolute; z-index: 98080000; background-color:var(--background); display: flex; justify-content: center; padding-top: 40vh; overflow: hidden !important; display:none;
+    }
+
+    #onboarding-big-head {
+        color: var(--content-normal-accent); font-size: 20px; font-weight: 300
+    }
+
+    #onboarding-quick-things {
+        color: var(--content-normal-accent); font-size: 14px; margin-bottom: 10px
+    }
+
+    #onboarding-msg-0 {
+        color: var(--menu-text); font-size: 13px; display: none
+    }
+
+    #onboarding-msg-1 {
+        color: var(--menu-label); font-size: 15px; display:none
+    }
+
+    #onboarding-msg-2 {
+        color: var(--menu-text); font-size: 13px; display:none
+    }
+
+    #onboarding-msg-3 {
+        color: var(--decorative-light); font-size: 13px; display:none
+    }
+
+    #perspective-documentaion {
+        color: var(--task); font-weight: 600; font-size: 9px
+    }
+
+    #repeat-task-name {
+        color: var(--content-normal-accent); padding-left: 2px;
+    }
+
+    #repeat-advanced-weekly {
+        color:var(--content-normal-accent);font-size: 13px;
+    }
+
+    #repeat-advanced-monthly {
+        color:var(--content-normal-accent);font-size: 13px;
+    }
+
+    #convert-callout {
+        font-size: 20px; font-weight: 600; color: var(--content-normal-accent); margin-bottom:0
+    }
+
+    #convert-msg {
+        font-weight: 300; color: var(--content-normal-alt); font-size: 12px
+    }
+
+    #perspective-add {
+        float: right; display: inline-block
+    }
+
+    #project-add-toplevel {
+        float: right; display: inline-block
+    }
+
+    #ds-daterowfield {
+        display:none; transform: translateY(-1px)
+    }
+
+    #ds-at {
+        font-weight: 600; display: inline-block; font-size: 10px;
+    }
+
+    #completed-loading {
+        margin-bottom: 10px; margin-top: 10px; display: none
+    }
+
+    #completed-fm {
+        color: var(--decorative-light-alt); font-weight: 600; transform: translateY(-2px); padding-left: 5px
+    }
+
+    #completed-spinner {
+        transform: translateX(-3px); display:none
+    }
+
+    #completed-fmt {
+        color: var(--decorative-light-alt); font-weight: 600; font-size: 10px; transform: translateY(-2px); padding-left: 5px
+    }
+
+    #perspective-trash {
+        float: right; display: inline-block
+    }
+
+    #perspective-edit {
+        float: right; display: inline-block
+    }
+
+    #project-back {
+        display: inline-block; margin-right: 1px; margin-left: 2px;
+    }
+
+    #project-trash {
+        float: right; display: inline-block
+    }
+
+    #greeting-auth {
+        display: inline-block; padding-right: 10px;
+    }
+
+    #welcome-auth-msg {
+        color: var(--content-normal-alt)
+    }
 
 /* == Welcome == */
 
