@@ -127,3 +127,6 @@ resources/windows/splash
 # dist folders
 dist
 dist.zip
+
+secrets.json
+

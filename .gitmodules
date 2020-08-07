@@ -1,8 +1,3 @@
 [submodule "src/backend"]
 	path = src/backend
 	url = https://github.com/Shabang-Systems/CondutionEngine/
-	branch = alphaAPI-v0.0.1
-    ignore = dirty
-[submodule "pack"]
-	path = pack
-	url = https://github.com/Shabang-Systems/CondutionWeb
