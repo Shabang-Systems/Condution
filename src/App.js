@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Plugins } from '@capacitor/core';
+import $ from "jquery";
 
 import Auth from './Pages/Auth';
 import './App.css';
@@ -11,10 +12,35 @@ class App extends Component {
         super(props);
 
         this.state = {authMode: "none"};
+        if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+            $("body").removeClass();
+            $("body").addClass("condutiontheme-default-dark");
+        }
+        else {
+            $("body").removeClass();
+            $("body").addClass("condutiontheme-default-light");
+        }
+    }
+
+    componentDidMount() {
         Storage.get({key: 'condution_stotype'}).then((dbType) => {
             this.setState({authMode: dbType.value ? dbType.value : "none"});
         })
+
+
     }
+    /*if (window.matchMedia('(prefers-color-scheme:dark)').matches) {*/
+        //currentTheme = "condutiontheme-default-dark";
+        //$("body").removeClass();
+        //$("body").addClass(currentTheme);
+    //}
+    //else {
+        //currentTheme = "condutiontheme-default-light";
+        //$("body").removeClass();
+        //$("body").addClass(currentTheme);
+    /*}*/
+
+
 
     render() {
         // Check for onboarding here
