@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 // Firebase App (the core Firebase SDK) is always required and must be listed first
-import * as firebase from "firebase/app";
-
-// Add the Firebase products that you want to use
-import "firebase/auth";
-
 import $ from "jquery";
 
 import Menu from "./Components/Menu";
+import Today from "./Views/Today";
 
 import './Main.css';
 
@@ -37,7 +33,7 @@ class Main extends Component {
                     {(()=>{
                         switch (this.state.view) {
                             case "today":
-                                return <div>It's me, maaraio!</div>
+                                return <Today className="page" engine={this.props.engine} uid={this.props.uid}/>
                             case "completed":
                                 return <div>It's me, completed!</div>
                             case "perspective":
