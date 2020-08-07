@@ -47,7 +47,8 @@ We happen also to be a group of students from the silicon valley wanting to make
 Just kidding, we will add instructions for Firebase connection, buliding, and compiling soon.
 
 ## Contributing?
-We love contributions! You are welcome to contribute, just keep in mind that we prefer 4 spaces over tabs.
+We love contributions! You are welcome to contribute, just keep in mind that we prefer 4 spaces over tabs. Join the Discord(https://discord.gg/QgxUCyj), and we can help you help us! 
+We are also working to go international! Help us translate Condution into your language. Join Discord, and shoot us a message with the language you can help with, and we will get you started.
 
 ## Thank you!
 Thank you for supporting us on this project. We really hope that this will be something useful. 
