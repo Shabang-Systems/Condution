@@ -1,3 +1,92 @@
+/* == Menu + Menu Actions == */
+
+    /* Menu Wingdings */
+
+        /* Classes */
+
+            .menu-portion {
+                overflow-y: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .menu-label {
+                font-size: 14px;
+                color: var(--menu-label);
+                font-weight: 600;
+                padding: 7px 0 0 5px;
+                display: inline-block;
+            }
+
+            .menu-divider{
+                margin: 1px 0 1px 0;    
+                border: 0.3px var(--content-normal-alt) solid !important;
+            }
+
+            .menu-subicon {
+                display: inline;
+                float: right;
+                font-size: 10px;
+                vertical-align: middle;
+                text-align: center;
+                width: 17px;
+                height: 17px;
+                border-radius: 3px;
+                border: 1px solid var(--menu-semiaccent-background);
+                color: var(--menu-action);
+                cursor: pointer;
+                margin-right: 6px;
+                -webkit-transition-property: all;
+                -webkit-transition-duration: 200ms;
+                -webkit-transition-timing-function: ease-in-out;
+                transition-property: all;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+            }
+
+                .menu-subicon:hover {
+                    background-color: var(--menu-accent-background);
+                }
+        
+        /* IDs */
+
+            .sandwich {
+                position: inline-block;
+                color: var(--decorative-light-alt);
+                transform: translateY(1.5px);
+                font-size: 20px;
+            }
+
+                @media (max-width: 575px) { 
+                    .sandwich {
+                        display: inline-block !important;
+                    }
+                }
+
+                @media (min-width: 576px) { 
+                    .sandwich {
+                        display: none !important;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    .sandwich {
+                        display: none !important;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    .sandwich {
+                        display: none !important;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    .sandwich {
+                        display: none !important;
+                    }
+                }
+
+
 /* Menu Items */
 
         /* Classes */
@@ -221,7 +310,7 @@
             height: 100%;
             display: flex;
             /*grid-template-rows: 60px 30px auto auto;*/
-            color: var(--menu-background);
+            /*color: var(--menu-background);*/
             flex-direction: column;
         }
 
@@ -241,4 +330,43 @@
 
 
                 }
+
+    /* Logout */
+
+        /* IDs */
+
+            #logout {
+                bottom: 0;
+                width: 100%;
+                margin-top: auto;
+                color: var(--menu-text);
+                -webkit-transition-property: color, background-color;
+                -webkit-transition-duration: 200ms;
+                -webkit-transition-timing-function: ease-in-out;
+                transition-property: color, background-color;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                padding: 4px 0 4px 10px;
+                transform: translateX(-1px);
+                cursor: default;
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+            }
+            @media (max-width: 575px) {
+                #logout {
+                    font-size: 18px !important;
+                    transform: translateY(6px);
+                }
+            }
+
+            #logout:hover {
+                background-color: var(--menu-semiaccent-background);
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                padding: 4px 0 4px 10px;
+                transform: translateX(-1px);
+            }
+
 
