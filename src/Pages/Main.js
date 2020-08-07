@@ -7,6 +7,7 @@ import "firebase/auth";
 
 import $ from "jquery";
 
+import Menu from "./Components/Menu";
 
 import './Main.css';
 
@@ -26,8 +27,9 @@ class Main extends Component {
         return (
             <div id="content-wrapper">
                 <div id="left-menu">
+                    <Menu engine={this.props.engine} />
                 </div>
-                <div id="content-area" class="scrollable">
+                <div id="content-area" className="scrollable">
                 </div>
             </div>
       );

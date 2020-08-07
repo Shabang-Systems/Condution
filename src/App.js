@@ -74,9 +74,9 @@ class App extends Component {
             case "none":
                 return <Auth dispatch={this.centralDispatch}/>;
             case "firebase":
-                return <Main />;
+                return <Main engine={Engine}/>;
             case "json":
-                return <Main />;
+                return <Main engine={Engine}/>;
             default:
                 console.log(`CentralDispatch: Wut Esta ${this.state.authMode}`);
         }

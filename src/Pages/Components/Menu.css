@@ -1,0 +1,244 @@
+/* Menu Items */
+
+        /* Classes */
+
+            .today {
+                color: var(--menu-text);
+                /*transform: translateX(-4px);*/
+                cursor: default;
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                -webkit-transition-property: color, background-color;
+                -webkit-transition-duration: 200ms;
+                -webkit-transition-timing-function: ease-in-out;
+                transition-property: color, background-color;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                margin-bottom: 4px;
+                font-weight: 500;
+            }
+
+                @media (max-width: 575px) { 
+
+                    .today {
+                        padding: 8px 0 8px 10px;
+                        font-size: 20px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+
+                    .today {
+                        padding: 4px 0 4px 10px;
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                @media (min-width: 768px) { 
+
+                    .today {
+                        padding: 4px 0 4px 10px;
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                @media (min-width: 992px) { 
+
+                    .today {
+                        padding: 4px 0 4px 10px;
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                @media (min-width: 1200px) { 
+
+                    .today {
+                        padding: 4px 0 4px 10px;
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                .today:hover {
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    background-color: var(--menu-semiaccent-background);
+                }
+
+                .today-highlighted {
+                    background-color: var(--menu-accent-background) !important;
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 4px 0 4px 10px;
+                    color: var(--menu-accent) !important;
+                }
+
+
+
+            .menuitem {
+                margin: 2px 7px 5px 15px;
+                padding: 4px 5px 4px 10px;
+                color: var(--menu-text);
+                -webkit-transition-property: color, background-color;
+                -webkit-transition-duration: 200ms;
+                -webkit-transition-timing-function: ease-in-out;
+                transition-property: color, background-color;
+                transition-duration: 200ms;
+                transition-timing-function: ease-in-out;
+                cursor: default;
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+            }
+
+                @media (max-width: 575px) { 
+
+                    .menuitem {
+                        font-size: 17.5px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+
+                    .menuitem {
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                @media (min-width: 768px) { 
+
+                    .menuitem {
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                @media (min-width: 992px) { 
+
+                    .menuitem {
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                @media (min-width: 1200px) { 
+
+                    .menuitem {
+                        font-size: 16px;
+                    }
+
+
+                }
+
+                .mihov:hover {
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    background-color: var(--menu-semiaccent-background);
+                }
+
+                .menuitem-selected {
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    background-color: var(--menu-accent-background) !important;
+                    padding: 4px 5px 4px 10px;
+                    color: var(--menu-accent) !important;
+                }
+
+            .perspective {
+                padding: 4px 0 4px 10px;
+            }
+
+            .project {
+                white-space:nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+                @media (max-width: 575px) { 
+
+                    .project {
+                        padding: 5px 4px 5px 10px;
+                        font-size: 14px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+                    .project {
+                        padding: 2px 4px 2px 10px;
+                        font-size: 12px;
+                    }
+ 
+                }
+
+                @media (min-width: 768px) { 
+
+                     .project {
+                        padding: 2px 4px 2px 10px;
+                        font-size: 12px;
+                    }
+               }
+
+                @media (min-width: 992px) { 
+                    .project {
+                        padding: 2px 4px 2px 10px;
+                        font-size: 12px;
+                    }
+
+                }
+
+                @media (min-width: 1200px) { 
+                    .project {
+                        padding: 2px 4px 2px 10px;
+                        font-size: 12px;
+                    }
+
+                }
+
+    /* Da Menu */
+
+        /* Classes */
+
+        .menu-area{
+            height: 100%;
+            display: flex;
+            /*grid-template-rows: 60px 30px auto auto;*/
+            color: var(--menu-background);
+            flex-direction: column;
+        }
+
+                @media (max-width: 575px) { 
+
+                    .menu-area{
+                        padding-bottom: 15px;
+                    }
+
+                }
+
+                @media (min-width: 576px) { 
+
+                    .menu-area{
+                        padding-bottom: 0;
+                    }
+
+
+                }
+
