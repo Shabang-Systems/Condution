@@ -32,14 +32,21 @@ const initStorage = (payload, ...features) => {
 
     if (features.includes("sqlite")) {
         console.error("algobert come to the rescue!");
-        const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
+        console.error("algobert come to the rescue!");
+        console.error("algobert come to the rescue!");
+        console.error("algobert come to the rescue!");
+        console.error("algobert come to the rescue!");
+        console.error("algobert come to the rescue!");
+        console.error("algobert come to the rescue!");
+        // TODO: TODO: SQLITE 3!!
+        //const sqlite3 = require('sqlite3').verbose();   // see https://www.sqlitetutorial.net/sqlite-nodejs/connect/
         const { FilesystemDirectory, Plugins } = require('@capacitor/core');
         const { Device } = Plugins;
         loaders.push((async function() {
             const isMobile = (await Device.getInfo()).platform !== "web";
             const dbRoot = isMobile ? FilesystemDirectory.Data : process.resourcesPath;
             const dbPath = '/condution.db'; // TODO: use capacitor storage api
-            sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.error(e)});
+            //sqliteDB = new sqlite3.Database(dbRoot+dbPath, (e)=>{if(e) console.error(e)});
             return sqliteDB;
         })());
     } 
@@ -48,6 +55,7 @@ const initStorage = (payload, ...features) => {
         loaders.push((async function() {
             const dbRoot = FilesystemDirectory.Data;
             const dbPath = 'condution.json'; // TODO: use capacitor storage api
+            let contents;
             try {
                 contents = (await Filesystem.readFile({
                     path: dbPath,
@@ -246,7 +254,7 @@ const [cRef, flush] = (() => {
              * TODO: also make this work for single documents, not just collections
              */
 
-            docRefs = [];
+            let docRefs = [];
             for (const docID in pointer) 
                 docRefs.push({id: docID, data: ()=>Object.assign({}, pointer[docID]), exists: true}); // TODO TODO Better way to make JS objects immutable?
             return {docs: docRefs}
