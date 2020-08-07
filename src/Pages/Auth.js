@@ -11,6 +11,9 @@ import $ from "jquery";
 
 import './Auth.css';
 
+const autoBind = require('auto-bind/react');
+
+
 const { Storage } = Plugins;
 
 class Auth extends Component {
@@ -27,14 +30,23 @@ class Auth extends Component {
          */
 
         this.state = {authMode: 0};
+
+        autoBind(this);
     }
 
     doLogin() {
+        let view = this;
         firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
             if (firebase.auth().currentUser.emailVerified)
-                this.props.dispatch({service: "firebase", operation: "login"});
+                 view.props.dispatch({service: "firebase", operation: "login"});
             else
-                this.setState({authMode: 3});
+                view.setState({authMode: 3});
+        }).catch(function(error) {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(error);
+                $(".auth-upf").addClass("wrong");
         });
     }
 
@@ -49,7 +61,7 @@ class Auth extends Component {
 
     doLocal() {
         console.log("Doing local");
-        this.props.dispatch({service: "firebase", operation: "login"});
+        this.props.dispatch({service: "json", operation: "login"});
     }
 
     render() {
@@ -73,16 +85,13 @@ class Auth extends Component {
 
                         }
                     })()}</h3> 
-                    {(() => {
-                        if (this.state.authMode === 1) return <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder="What should we call you?" />
-                    })()}
+                    <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder="What should we call you?" style={{display: this.state.authMode === 1 ? "block" : "none"}}/>
                     <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder="Email" />
+                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" style={{display: this.state.authMode !== 2 ? "block" : "none"}}/>
                     {(() => {
-                        if (this.state.authMode !== 2) return <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" />
+                        if (this.state.authMode === 3) return <span id="need-verify">Verify your email, then tap proceed!</span>
                     })()}
-                    <br />
-                    <span id="need-verify">Verify your email, then proceed!</span>
-                    <span id="recover-password" onClick={()=>{
+                    <span id="recover-password" style={{display: this.state.authMode === 3 ? "none" : "block"}} onClick={()=>{
                             switch (this.state.authMode) {
                                 case 2:
                                     return this.setState({authMode: 0});

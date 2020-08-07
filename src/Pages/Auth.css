@@ -400,7 +400,7 @@
         #need-verify {
             color:var(--content-normal-accent);
             font-size: 12.5px;
-            display:none
+            /*display:none*/
         }
 
         #auth-content-wrapper{

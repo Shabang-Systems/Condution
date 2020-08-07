@@ -19,7 +19,7 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {authMode: "none"};
+        this.state = {authMode: "loader"};
         if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-dark");
@@ -47,6 +47,8 @@ class App extends Component {
         // Check for onboarding here
         // then continue
         switch (this.state.authMode) {
+            case "loader":
+                return <div>Quick and dirty loader</div>
             case "none":
                 return (
                     <Auth dispatch={this.centralDispatch} engine={this.engine}/>
