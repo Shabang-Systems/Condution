@@ -573,6 +573,7 @@
 
 
         #welcome-auth-msg {
+            color: var(--content-normal-alt);
             display: inline-block;
         }
 

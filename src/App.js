@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { Plugins } from '@capacitor/core';
 import $ from "jquery";
 
+import Engine from './backend/CondutionEngine';
+
+import * as firebase from "firebase/app";
+
+// Add the Firebase products that you want to use
+import "firebase/auth";
+import "firebase/firestore";
+
 import Auth from './Pages/Auth';
 import './App.css';
 
@@ -23,24 +31,17 @@ class App extends Component {
     }
 
     componentDidMount() {
+        this.engine = Engine.start({firebase}, "firebase", "json");
         Storage.get({key: 'condution_stotype'}).then((dbType) => {
             this.setState({authMode: dbType.value ? dbType.value : "none"});
         })
 
 
     }
-    /*if (window.matchMedia('(prefers-color-scheme:dark)').matches) {*/
-        //currentTheme = "condutiontheme-default-dark";
-        //$("body").removeClass();
-        //$("body").addClass(currentTheme);
-    //}
-    //else {
-        //currentTheme = "condutiontheme-default-light";
-        //$("body").removeClass();
-        //$("body").addClass(currentTheme);
-    /*}*/
 
-
+    centralDispatch(mode) {
+        console.log(`Dispatching ${mode.operation}`);
+    }
 
     render() {
         // Check for onboarding here
@@ -48,8 +49,9 @@ class App extends Component {
         switch (this.state.authMode) {
             case "none":
                 return (
-                    <Auth />
+                    <Auth dispatch={this.centralDispatch} engine={this.engine}/>
                 );
+
             case "firebase":
                 // now, verify firebase auth state
                 return (
@@ -57,12 +59,14 @@ class App extends Component {
                         baaah
                     </div>
                 );
+
             case "json":
                 return (
                     <div>
                         sooh
                     </div>
                 );
+
             default:
                 console.log(this.state.authMode);
         }
