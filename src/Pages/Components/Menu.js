@@ -44,7 +44,7 @@ class Menu extends Component {
          */
 
         // TODO: Call back the callback
-
+        this.props.dispatch(type, desc);
         this.setState({currentSelection: desc});
     }
 
