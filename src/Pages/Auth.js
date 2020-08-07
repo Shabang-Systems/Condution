@@ -51,16 +51,15 @@ class Auth extends Component {
     }
 
     doCreate() {
-        console.log("Doing create");
+        // TODO: actually create the account
         this.props.dispatch({service: "firebase", operation: "create"});
     }
 
     doRecover() {
-        console.log("Doing recover");
+        // TODO: actually recover the account
     }
 
     doLocal() {
-        console.log("Doing local");
         this.props.dispatch({service: "json", operation: "login"});
     }
 

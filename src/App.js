@@ -15,6 +15,8 @@ import './App.css';
 
 const { Storage } = Plugins;
 
+const autoBind = require('auto-bind/react');
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -28,6 +30,8 @@ class App extends Component {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-light");
         }
+
+        autoBind(this);
     }
 
     componentDidMount() {
@@ -35,12 +39,29 @@ class App extends Component {
         Storage.get({key: 'condution_stotype'}).then((dbType) => {
             this.setState({authMode: dbType.value ? dbType.value : "none"});
         })
-
-
     }
 
     centralDispatch(mode) {
-        console.log(`Dispatching ${mode.operation}`);
+        switch (mode.operation) {
+            case "login":
+                this.engine.use(mode.service);
+                Storage.set({key: 'condution_stotype', value: mode.service});
+                this.setState({authMode: mode.service});
+                break;
+            case "create":
+                this.engine.use(mode.service);
+                // TODO: do onboarding
+                // Here
+                // TODO: be done with onboarding
+                Storage.set({key: 'condution_stotype', value: mode.service});
+                this.setState({authMode: mode.service});
+                break;
+            case "logout":
+                Storage.set({key: 'condution_stotype', value: "none"});
+                firebase.auth().signOut();
+                this.setState({authMode: "none"});
+                break;
+        }
     }
 
     render() {
@@ -48,7 +69,7 @@ class App extends Component {
         // then continue
         switch (this.state.authMode) {
             case "loader":
-                return <div>Quick and dirty loader</div>
+                return <div>TODO Quick and dirty loader</div>
             case "none":
                 return (
                     <Auth dispatch={this.centralDispatch} engine={this.engine}/>
@@ -58,14 +79,14 @@ class App extends Component {
                 // now, verify firebase auth state
                 return (
                     <div>
-                        baaah
+                        I am firebase login
                     </div>
                 );
 
             case "json":
                 return (
                     <div>
-                        sooh
+                        I am JSON login
                     </div>
                 );
 
