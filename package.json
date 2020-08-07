@@ -12,6 +12,7 @@
     "bootstrap": "^4.5.2",
     "firebase": "^7.17.2",
     "jquery": "^3.5.1",
+    "moment-timezone": "^0.5.31",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1"
