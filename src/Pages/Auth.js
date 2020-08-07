@@ -36,17 +36,19 @@ class Auth extends Component {
 
     doLogin() {
         let view = this;
-        firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
-            if (firebase.auth().currentUser.emailVerified)
-                 view.props.dispatch({service: "firebase", operation: "login"});
-            else
-                view.setState({authMode: 3});
-        }).catch(function(error) {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(error);
-                $(".auth-upf").addClass("wrong");
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+            firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
+                if (firebase.auth().currentUser.emailVerified)
+                     view.props.dispatch({service: "firebase", operation: "login"});
+                else
+                    view.setState({authMode: 3});
+            }).catch(function(error) {
+                    // Handle Errors here.
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(error);
+                    $(".auth-upf").addClass("wrong");
+            });
         });
     }
 

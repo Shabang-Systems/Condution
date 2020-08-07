@@ -17,9 +17,17 @@ class Menu extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {currentSelection: "today"};
-
+        this.state = {currentSelection: "today", perspectives: [], projects: []};
         autoBind(this);
+    }
+
+    componentDidMount() {
+        let view = this;
+        (async function() {
+            let tlps = await view.props.engine.db.getTopLevelProjects(view.props.uid);
+            let psps = await view.props.engine.db.getPerspectives(view.props.uid);
+            view.setState({perspectives: psps[2], projects: tlps[2]});
+        })();
     }
 
     render() {
@@ -33,13 +41,17 @@ class Menu extends Component {
                     <span id="perspectives-text-name">Perspectives</span> <div className="menu-subicon" id="perspective-add"><i className="fas fa-plus"></i></div>
                 </span>
                 <div className="perspectives menu-portion scrollable">
-                    HERE!
+                    {this.state.perspectives.map((psp) => {
+                        return <div id={"perspective-"+psp.id} className="menuitem perspective mihov" key={psp.id}><i className="fa fa-layer-group"></i><span style={{paddingLeft:8}}>{psp.name}</span></div>
+                    })}
                 </div>
                 <span className="menu-label">
                     <span id="projects-text-name">Projects</span> <div className="menu-subicon" id="project-add-toplevel"><i className="fas fa-plus"></i></div>
                 </span>
                 <div className="projects menu-portion scrollable">
-                    HERE!
+                    {this.state.projects.map((proj) => {
+                        return <div key={proj.id} id={"project-"+proj.id} className="menuitem project mihov"><i className="fas fa-project-diagram"></i><span style={{paddingLeft:8, textOverflow: "ellipsis", overflow: "hidden"}}>{proj.name}</span></div>
+                    })}
                 </div>
                 <div id="logout"><i className="fas fa-snowboarding" style={{paddingRight: "5px"}}></i><span id="logout-text-name">Logout</span></div>
             </div>

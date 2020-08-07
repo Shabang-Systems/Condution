@@ -22,7 +22,7 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {authMode: "loader"};
+        this.state = {authMode: "loader", uid: ""};
         if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-dark");
@@ -36,18 +36,44 @@ class App extends Component {
     }
 
     componentDidMount() {
+        let view = this;
         Engine.start({firebase}, "firebase", "json");
+
+        // Handling cached dispatch
         Storage.get({key: 'condution_stotype'}).then((dbType) => {
-            this.setState({authMode: dbType.value ? dbType.value : "none"});
-        })
+            switch (dbType.value) {
+                case "firebase":
+                    firebase.auth().onAuthStateChanged(function(user) {
+                        Engine.use("firebase");
+                        view.setState({authMode: "firebase", uid: user.uid});
+                    })
+                    break;
+                case "json":
+                    Engine.use("json");
+                    this.setState({authMode: "json", uid:"hard-storage-user"});
+                    break;
+                default:
+                    this.setState({authMode: "none", uid:undefined});
+                    break;
+            }
+        });
     }
 
-    centralDispatch(mode) {
+    authDispatch(mode) {
         switch (mode.operation) {
             case "login":
                 Engine.use(mode.service);
                 Storage.set({key: 'condution_stotype', value: mode.service});
-                this.setState({authMode: mode.service});
+                let uid;
+                switch (mode.service) {
+                    case "firebase":
+                        uid = firebase.auth().currentUser.uid;
+                        break;
+                    default:
+                        uid = "hard-storage-user";
+                        break;
+                }
+                this.setState({authMode: mode.service, uid});
                 break;
             case "create":
                 Engine.use(mode.service);
@@ -72,13 +98,13 @@ class App extends Component {
             case "loader":
                 return <div>TODO Quick and dirty loader</div>
             case "none":
-                return <Auth dispatch={this.centralDispatch}/>;
+                return <Auth dispatch={this.authDispatch}/>;
             case "firebase":
-                return <Main engine={Engine}/>;
+                return <Main engine={Engine} uid={this.state.uid}/>;
             case "json":
-                return <Main engine={Engine}/>;
+                return <Main engine={Engine} uid={this.state.uid}/>;
             default:
-                console.log(`CentralDispatch: Wut Esta ${this.state.authMode}`);
+                console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
         }
     }
 }

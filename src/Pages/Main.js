@@ -27,7 +27,7 @@ class Main extends Component {
         return (
             <div id="content-wrapper">
                 <div id="left-menu">
-                    <Menu engine={this.props.engine} />
+                    <Menu engine={this.props.engine} uid={this.props.uid}/>
                 </div>
                 <div id="content-area" className="scrollable">
                 </div>
