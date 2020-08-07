@@ -1,0 +1,128 @@
+#content-wrapper {
+    margin: 0;
+    height: 100%;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: horizontal;
+}
+
+#content-area{
+    overflow-y: visible;
+    overflow-x: hidden;
+    width: 100%;
+    padding-top: max(15px, env(safe-area-inset-top));
+    /*margin-top: 10px;*/
+    -webkit-overflow-scrolling: touch;
+}
+
+
+    @media (max-width: 355px) { 
+        #content-area {
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-left: 0;
+        }
+    }
+
+    @media (min-width: 356px) { 
+        #content-area {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: 0;
+        }
+    }
+
+    @media (min-width: 576px) { 
+        #content-area {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: 200px;
+        }
+    }
+
+    @media (min-width: 768px) { 
+        #content-area {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: 200px;
+        }
+    }
+
+    @media (min-width: 992px) { 
+        #content-area {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: 220px;
+        }
+    }
+
+    @media (min-width: 1200px) { 
+        #content-area {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: 220px;
+        }
+    }
+
+
+#left-menu{
+    grid-column-start: 1;
+    grid-column-end: 1;
+    background-color: var(--menu-background);
+    padding: 0 10px 10px 10px;
+    overflow: hidden;
+    padding-top: max(25px, env(safe-area-inset-top));
+}
+
+    @media (max-width: 575px) { 
+        #left-menu{
+            position: fixed;
+            height: 100%;
+            z-index: 888808;
+            resize: none;
+            width: 250px;
+            left: -260px;
+        }
+    }
+
+    @media (min-width: 576px) { 
+        #left-menu{
+            position: fixed;
+            height: 100%;
+            z-index: 1;
+            width: 200px;
+            left: 0 !important;
+        }
+    }
+
+    @media (min-width: 768px) { 
+        #left-menu{
+            position:fixed;
+            height: 100%;
+            z-index: 1;
+            width: 200px;
+            left: 0 !important;
+        }
+    }
+
+    @media (min-width: 992px) { 
+        #left-menu{
+            position: fixed;
+            height: 100%;
+            z-index: 1;
+            width: 220px;
+            left: 0 !important;
+        }
+    }
+
+    @media (min-width: 1200px) { 
+        #left-menu{
+            position: fixed;
+            height: 100%;
+            z-index: 1;
+            width: 220px;
+            left: 0 !important;
+        }
+    }
+
+

@@ -3,6 +3,7 @@ import { Plugins } from '@capacitor/core';
 import $ from "jquery";
 
 import Engine from './backend/CondutionEngine';
+import Main from './Pages/Main';
 
 import * as firebase from "firebase/app";
 
@@ -35,7 +36,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.engine = Engine.start({firebase}, "firebase", "json");
+        Engine.start({firebase}, "firebase", "json");
         Storage.get({key: 'condution_stotype'}).then((dbType) => {
             this.setState({authMode: dbType.value ? dbType.value : "none"});
         })
@@ -44,12 +45,12 @@ class App extends Component {
     centralDispatch(mode) {
         switch (mode.operation) {
             case "login":
-                this.engine.use(mode.service);
+                Engine.use(mode.service);
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 this.setState({authMode: mode.service});
                 break;
             case "create":
-                this.engine.use(mode.service);
+                Engine.use(mode.service);
                 // TODO: do onboarding
                 // Here
                 // TODO: be done with onboarding
@@ -71,27 +72,13 @@ class App extends Component {
             case "loader":
                 return <div>TODO Quick and dirty loader</div>
             case "none":
-                return (
-                    <Auth dispatch={this.centralDispatch} engine={this.engine}/>
-                );
-
+                return <Auth dispatch={this.centralDispatch}/>;
             case "firebase":
-                // now, verify firebase auth state
-                return (
-                    <div>
-                        I am firebase login
-                    </div>
-                );
-
+                return <Main />;
             case "json":
-                return (
-                    <div>
-                        I am JSON login
-                    </div>
-                );
-
+                return <Main />;
             default:
-                console.log(this.state.authMode);
+                console.log(`CentralDispatch: Wut Esta ${this.state.authMode}`);
         }
     }
 }

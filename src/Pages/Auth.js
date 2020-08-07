@@ -74,7 +74,7 @@ class Auth extends Component {
                     </div>
                 </div>
                 <div id="authwall">
-                    <h1 id="greeting-auth">Hello</h1><span id="welcome-auth-msg">Welcome to Condution.</span>
+                    <h1 id="greeting-auth">TODO</h1><span id="welcome-auth-msg">Welcome to Condution.</span>
                     <h3 className="greeting-auth-subtitle" id="greeting-auth-normal">{(()=>{
                         switch (this.state.authMode) {
                             case 2:
@@ -86,7 +86,7 @@ class Auth extends Component {
                     })()}</h3> 
                     <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder="What should we call you?" style={{display: this.state.authMode === 1 ? "block" : "none"}}/>
                     <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder="Email" />
-                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" style={{display: this.state.authMode !== 2 ? "block" : "none"}}/>
+                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" style={{display: this.state.authMode !== 2 ? "block" : "none"}} onKeyPress={(event)=>{if (event.key === "Enter") this.doLogin()}}/>
                     {(() => {
                         if (this.state.authMode === 3) return <span id="need-verify">Verify your email, then tap proceed!</span>
                     })()}
