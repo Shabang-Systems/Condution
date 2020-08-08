@@ -27,7 +27,7 @@ class Task extends Component {
         super(props);
 
 
-        this.state = {name:"", desc:"", projectSelects:[], rightCarrotColor:"#cecece", disabletextbox: false, tagString: ""}
+        this.state = {name:"", desc:"", projectSelects:[], rightCarrotColor:"#cecece", disabletextbox: false, tagString: "", disabletextbox: ""}
         autoBind(this);
     }
 
@@ -154,7 +154,7 @@ class Task extends Component {
         }
         // The color of the carrot
         let rightCarrotColor =  $("body").css("--decorative-light");
-        this.setState({name, desc, projectSelects, rightCarrotColor, disabletextbox, tagString});
+        this.setState({name, desc, projectSelects, rightCarrotColor, disabletextbox, tagString,disabletextbox});
         // Set the dates, aaaand set the date change trigger
         $('#task-tag-' + this.props.id).val(this.state.tagString);
         $('#task-tag-' + this.props.id).tagsinput({

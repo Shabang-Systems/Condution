@@ -6,7 +6,6 @@
 * */
 
 var chrono = require('chrono-node');
-require("../../../node_modules/jquery-ui-dist/jquery-ui.min");
 
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
