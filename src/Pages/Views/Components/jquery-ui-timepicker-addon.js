@@ -1,4 +1,4 @@
-/*! jQuery Timepicker Addon - v1.6.3 - 2016-04-20
+Uj:q/*! jQuery Timepicker Addon - v1.6.3 - 2016-04-20
 * http://trentrichardson.com/examples/timepicker
 * Copyright (c) 2016 Trent Richardson; Licensed MIT 
 * Distributed along with the Condution Project
@@ -6,7 +6,6 @@
 * */
 
 var chrono = require('chrono-node');
-require("../../../node_modules/jquery-ui-dist/jquery-ui.min");
 
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {

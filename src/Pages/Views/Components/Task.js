@@ -5,7 +5,15 @@ import $ from "jquery";
 
 import './Task.css';
 
+window.jQuery = $;
+
 const autoBind = require('auto-bind/react');
+let chrono = require('chrono-node');
+
+require('bootstrap');
+require('typeahead.js');
+require('bootstrap-tagsinput');
+
 
 let moment = require('moment-timezone');
 
@@ -15,18 +23,33 @@ class Task extends Component {
         super(props);
 
 
-        //TODO TODO TODO USE STATES!
-        
         this.state = {name:"", desc:"", projectSelects:[], rightCarrotColor:"#cecece", disabletextbox: false, tagString: ""}
-
         autoBind(this);
     }
+
+    substringMatcher(strings) {
+        return function findMatches(q, cb) {
+            let matches, substrRegex;
+
+            matches = [];
+            substrRegex = new RegExp(q, 'i');
+            $.each(strings, function(i, str) {
+                if (substrRegex.test(str)) {
+                    matches.push(str);
+                }
+            });
+
+            cb(matches);
+        };
+    };
+
 
     async loadTask() {
         let taskObj = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.id);
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid);
         let possibleProjects = pPandT[0][0];
         let possibleTags = pPandT[1][0];
+        let possibleTagsRev = pPandT[1][1];
         let avalibility = await this.props.engine.db.getItemAvailability(this.props.uid);
         let view = this;
         let projectDB = await (async function() {
@@ -101,6 +124,7 @@ class Task extends Component {
         // Calculate due date
         let defer_current;
         let due_current;
+        let default_localizations = {}; // TODO TODO TODO TODO bring them strings back!
         if(isFloating) {
             if (defer) {
                 defer_current = moment(defer).tz(timezone).local(true).toDate();
@@ -118,9 +142,15 @@ class Task extends Component {
         }
         // The color of the carrot
         let rightCarrotColor =  $("body").css("--decorative-light");
-        let taskId = this.props.id;
         this.setState({name, desc, projectSelects, rightCarrotColor, disabletextbox, tagString});
-
+        // Set the dates, aaaand set the date change trigger
+        $('#task-tag-' + this.props.id).val(this.state.tagString);
+        $('#task-tag-' + this.props.id).tagsinput({
+            typeaheadjs: {
+                name: 'tags',
+                source: this.substringMatcher(possibleTagNames)
+            }
+        });
     }
 
     componentDidMount() {
@@ -133,12 +163,12 @@ class Task extends Component {
                 <div id={"task-display-"+this.props.id} className="task-display" style={{display:"block"}}>
                     <input type="checkbox" id={"task-check-"+this.props.id} className="task-check"/>
                     <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.id} htmlFor={"task-check-"+this.props.id} style={{fontFamily: "'Inter', sansSerif"}}>&zwnj;</label>
-                    <input className="task-name" id={"task-name-"+this.props.id} type="text" autoComplete="off" placeholder="${default_localizations.nt}" defaultValue="${name}" /> {/*This should not necsariy be editable TODO TODO*/}
+                    <input className="task-name" id={"task-name-"+this.props.id} type="text" autoComplete="off" placeholder="TODO: default_localization.nt" defaultValue={this.state.name} /> {/*This should not necsariy be editable TODO TODO*/}
                     <div className="task-trash task-subicon" id={"task-trash-"+this.props.id} style={{float: "right", display: "none"}}><i className="fas fa-trash"></i></div>
                     <div className="task-repeat task-subicon" id={"task-repeat-"+this.props.id} style={{float: "right", display: "none"}}><i className="fas fa-redo-alt"></i></div>
                 </div>
                 <div id={"task-edit-"+this.props.id} className="task-edit" style={{display:"none"}}>
-                    <textarea className="task-desc" id={"task-desc-"+this.props.id} type="text" autoComplete="off" placeholder="${default_localizations.desc}"></textarea>
+                    <textarea className="task-desc" id={"task-desc-"+this.props.id} type="text" autoComplete="off" placeholder="TODO: default_localization.desc" defaultValue={this.state.desc}></textarea>
                         <div className="task-tools task-tools-top" style={{marginBottom: 9}}>
                             <div className="task-tools-sub task-tools-toggles">
                                 <div className="label"><i className="fas fa-flag"></i></div>
@@ -154,10 +184,10 @@ class Task extends Component {
                                 </div>
                                 <div className="task-tools-sub task-tools-date">
                                     <div className="label"><i className="far fa-play-circle"></i></div>
-                                        <input className="task-defer textbox datebox" id={"task-defer-"+this.props.id} type="text" autoComplete="off" style={{marginRight: "10px"}} />
+                                        <input className="task-defer textbox datebox" id={"task-defer-"+this.props.id} type="datetime-local" autoComplete="off" style={{marginRight: "10px"}} />
                                     <i className="fas fa-caret-right" style={{color:"#434d5f", fontSize:13, marginRight: 5}}></i>
                                     <div className="label"><i className="far fa-stop-circle"></i></div>
-                                        <input className="task-due textbox datebox" id={"task-due-"+this.props.id} type="text" autoComplete="off" style={{marginRight: 20}} />
+                                        <input className="task-due textbox datebox" id={"task-due-"+this.props.id} type="datetime-local" autoComplete="off" style={{marginRight: 20}} />
                             </div>
                         </div>
                     <div className="task-tools task-tools-bottom">

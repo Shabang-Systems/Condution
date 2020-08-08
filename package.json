@@ -10,12 +10,18 @@
     "@testing-library/user-event": "^7.1.2",
     "auto-bind": "^4.0.0",
     "bootstrap": "^4.5.2",
+    "bootstrap-tagsinput": "^0.7.1",
+    "chrono": "^1.0.5",
+    "chrono-node": "^2.1.6",
     "firebase": "^7.17.2",
     "jquery": "^3.5.1",
+    "jquery-ui-dist": "^1.12.1",
     "moment-timezone": "^0.5.31",
+    "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "typeahead.js": "^0.11.1"
   },
   "scripts": {
     "start": "react-scripts start",
