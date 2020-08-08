@@ -480,6 +480,49 @@ class Task extends Component {
                 //setDates();
             });
         });
+
+        $(document).on("click", ".task", async function(e) {
+            if ($(this).attr('id') === "task-" + activeTask) {
+                e.stopImmediatePropagation();
+                return;
+            }
+            let activeTaskLeverage = 0;
+            if (activeTask) {
+                activeTaskLeverage = $("#task-"+activeTask).height()+40;
+                await taskManager.hideActiveTask();
+            }
+            if ($(e.target).hasClass('task-pseudocheck') || $(e.target).hasClass('task-check')) {
+                e.stopImmediatePropagation();
+                return;
+            } else {
+                let taskInfo = $(this).attr("id").split("-");
+                let task = taskInfo[taskInfo.length - 1];
+                activeTask = task;
+                //let mb = await ism;
+                $("#task-" + task).stop().animate({"background-color": interfaceUtil.gtc("--task-feature"), "padding": "10px", "margin": "15px 0 30px 0"}, 300);
+                $("#task-name"+task).addClass("task-name-bottom");
+                $("#quickadd").addClass("qa_bottom");
+                $("#quickaddmobile").addClass("quickaddmobile_bottom");
+                $("#convert").addClass("convert_bottom");
+                //if (await ism)
+                $("#task-name-" + task).prop("readonly", false);
+                $("#task-edit-" + activeTask).stop().slideDown(200);
+                $("#task-name-"+activeTask).addClass("task-name-bottom");
+                $("#task-trash-" + activeTask).css("display", "block");
+                $("#task-repeat-" + activeTask).css("display", "block");
+                $("#task-" + task).css({"box-shadow": "1px 1px 5px "+ interfaceUtil.gtc("--background-feature")});
+                pageIndex.dateLoaders[activeTask]();
+                sorters.project.option("disabled", true);
+                sorters.inbox.option("disabled", true);
+                if (await ism) {
+                    $(".page").addClass("pa-bottom");
+                    $("#task-name-" + task).blur();
+                }
+                /*}*/
+            }
+        });
+
+
     }
 
     componentDidMount() {
