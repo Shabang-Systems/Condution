@@ -1913,31 +1913,6 @@ let ui = function() {
                 }
             });
 
-            // Task project change
-            /*             $('#task-project-' + taskId).change(async function(e) {*/
-            //if (this.value in possibleProjectsRev) {
-            //let projId = possibleProjectsRev[this.value];
-            //if (project === undefined){
-            //activeTaskDeInboxed = true;
-            //} else {
-            //await E.db.dissociateTask(uid, taskId, projectID);
-            //}
-            //E.db.modifyTask(uid, taskId, {project:projId});
-            //await E.db.associateTask(uid, taskId, projId);
-            //projectID = projId;
-            //project = this.value;
-            //} else {
-            //E.db.modifyTask(uid, taskId, {project:""});
-            //this.value = ""
-            //if (project !== undefined) {
-            //activeTaskInboxed = true;
-            //await E.db.dissociateTask(uid, taskId, projectID);
-            //}
-            //project = undefined;
-            //projectID = "";
-            //}
-            /*});*/
-
             // Trashing a task
             $("#task-trash-" + taskId).click(function(e) {
                 if (project === undefined) activeTaskDeInboxed = true;
