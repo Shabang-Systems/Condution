@@ -27,7 +27,7 @@ class Task extends Component {
         super(props);
 
 
-        this.state = {name:"", desc:"", projectSelects:[], rightCarrotColor:"#cecece", disabletextbox: false, tagString: "", disabletextbox: ""}
+        this.state = {name:"", desc:"", projectSelects:[], rightCarrotColor:"#cecece", disabletextbox: false, tagString: "", disabletextbox: "", isOpen: false}
         autoBind(this);
     }
 
@@ -156,41 +156,41 @@ class Task extends Component {
         let rightCarrotColor =  $("body").css("--decorative-light");
         this.setState({name, desc, projectSelects, rightCarrotColor, disabletextbox, tagString,disabletextbox});
         // Set the dates, aaaand set the date change trigger
-        $('#task-tag-' + this.props.id).val(this.state.tagString);
-        $('#task-tag-' + this.props.id).tagsinput({
+        $('#task-tag-' + view.props.id).val(view.state.tagString);
+        $('#task-tag-' + view.props.id).tagsinput({
             typeaheadjs: {
                 name: 'tags',
-                source: this.substringMatcher(possibleTagNames)
+                source: view.substringMatcher(possibleTagNames)
             }
         });
         // Project Field 
-        $('#task-project-'+ this.props.id).select2({
+        $('#task-project-'+ view.props.id).select2({
             'width': $(window).width()<576 ? '88%' : '79%',
             searchInputPlaceholder: default_localizations.search_projects,
             placeholder: default_localizations.unsorted,
             allowClear: true
         });
-        $('#task-project-' + this.props.id).val(projectID)
-        $('#task-project-' + this.props.id).trigger('change');
-        $('#task-project-' + this.props.id).on('change', async function () {
-            let selection = $(this).select2("data")[0];
+        $('#task-project-' + view.props.id).val(projectID)
+        $('#task-project-' + view.props.id).trigger('change');
+        $('#task-project-' + view.props.id).on('change', async function () {
+            let selection = $(view).select2("data")[0];
             if (selection) {
                 let projectSelected = selection.text.split(":: ").join("");
                 let projId = selection.id;
                 if (project !== undefined) {
-                    await this.props.engine.db.dissociateTask(this.props.uid, this.props.id, projectID);
+                    await view.props.engine.db.dissociateTask(view.props.uid, view.props.id, projectID);
                 }
                 projectName = selection.value;
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {project:projId});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {project:projId});
                 projectID = projId;
                 project = projectSelected;
-                $('#task-project-' + this.props.id).val(project);
-                await this.props.engine.db.associateTask(this.props.uid, this.props.id, projId);
+                $('#task-project-' + view.props.id).val(project);
+                await view.props.engine.db.associateTask(view.props.uid, view.props.id, projId);
             } else {
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {project:""});
-                this.value = ""
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {project:""});
+                view.value = ""
                 if (project !== undefined) {
-                    await this.props.engine.db.dissociateTask(this.props.uid, this.props.id, projectID);
+                    await view.props.engine.db.dissociateTask(view.props.uid, view.props.id, projectID);
                 }
                 project = undefined;
                 projectID = "";
@@ -200,50 +200,50 @@ class Task extends Component {
         // Set overdue style!
         if (due_current) {
             if (new Date() > due_current) {
-                $('#task-pseudocheck-' + this.props.id).addClass("od");
-            } else if (this.daysBetween(new Date(), due_current) <= 1) {
-                $('#task-pseudocheck-' + this.props.id).addClass("ds");
+                $('#task-pseudocheck-' + view.props.id).addClass("od");
+            } else if (view.daysBetween(new Date(), due_current) <= 1) {
+                $('#task-pseudocheck-' + view.props.id).addClass("ds");
             }
         }
         if (defer_current) {
             if (new Date() < defer_current) {
-                $('#task-name-' + this.props.id).css("opacity", "0.3");
+                $('#task-name-' + view.props.id).css("opacity", "0.3");
             }
         }
         // Set avaliable Style
-        // if (!avalibility[this.props.id] && !sequentialOverride && !isComplete) {
-        if (!avalibility[this.props.id] && !isComplete) {
-            $('#task-name-' + this.props.id).css("opacity", "0.3");
+        // if (!avalibility[view.props.id] && !sequentialOverride && !isComplete) {
+        if (!avalibility[view.props.id] && !isComplete) {
+            $('#task-name-' + view.props.id).css("opacity", "0.3");
         }
         // Set flagged style
         if (isFlagged) {
-            $("#task-flagged-yes-"+this.props.id).button("toggle")
+            $("#task-flagged-yes-"+view.props.id).button("toggle")
         } else {
-            $("#task-flagged-no-"+this.props.id).button("toggle")
+            $("#task-flagged-no-"+view.props.id).button("toggle")
         }
         // Set floating style
         if (isFloating) {
-            $("#task-floating-yes-"+this.props.id).button("toggle")
+            $("#task-floating-yes-"+view.props.id).button("toggle")
         } else {
-            $("#task-floating-no-"+this.props.id).button("toggle")
+            $("#task-floating-no-"+view.props.id).button("toggle")
         }
         if (isComplete)
-            $("#task-check-" + this.props.id).click();
+            $("#task-check-" + view.props.id).click();
 
-        $('#task-check-'+this.props.id).change(function(e) {
-            if (this.checked) {
+        $('#task-check-'+view.props.id).change(function(e) {
+            if (view.checked) {
                 //TODO: hide active task callback
                 //taskManager.hideActiveTask();
-                $('#task-name-' + this.props.id).css("color", this.gtc("--task-checkbox"));
-                $('#task-name-' + this.props.id).css("text-decoration", "line-through");
-                $('#task-pseudocheck-' + this.props.id).css("opacity", "0.6");
-                $('#task-' + this.props.id).stop().animate({"margin": $(window).width()<576?"20px 0 20px 0":"5px 0 5px 0"}, 200);
+                $('#task-name-' + view.props.id).css("color", view.gtc("--task-checkbox"));
+                $('#task-name-' + view.props.id).css("text-decoration", "line-through");
+                $('#task-pseudocheck-' + view.props.id).css("opacity", "0.6");
+                $('#task-' + view.props.id).stop().animate({"margin": $(window).width()<576?"20px 0 20px 0":"5px 0 5px 0"}, 200);
                 // TODO: haptics
                 // Haptics.notification({type: HapticsNotificationType.SUCCESS});
-                $('#task-' + this.props.id).slideUp(300);
-                this.props.engine.db.completeTask(this.props.uid, this.props.id).then(function(e) {
+                $('#task-' + view.props.id).slideUp(300);
+                view.props.engine.db.completeTask(view.props.uid, view.props.id).then(function(e) {
                     if (project === undefined) {
-                        this.props.engine.db.getInboxTasks(this.props.uid).then(function(e){
+                        view.props.engine.db.getInboxTasks(view.props.uid).then(function(e){
                             let iC = e.length;
                             if (iC === 0) {
                                 $("#inbox-subhead").slideUp(300);
@@ -254,7 +254,7 @@ class Task extends Component {
                         });
                     }
                     //console.error(err);
-                    this.props.engine.db.modifyTask(this.props.uid, this.props.id, {completeDate: new Date()});
+                    view.props.engine.db.modifyTask(view.props.uid, view.props.id, {completeDate: new Date()});
                 });
                 if (repeat.rule !== "none" && due) {
                     let rRule = repeat.rule;
@@ -262,10 +262,10 @@ class Task extends Component {
                         if (defer) {
                             let defDistance = due-defer;
                             due.setDate(due.getDate() + 1);
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                         } else {
                             due.setDate(due.getDate() + 1);
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due});
                         }
 
                     } else if (rRule === "weekly") {
@@ -305,7 +305,7 @@ class Task extends Component {
                                 due.setDate(due.getDate()+7);
                                 defer.setDate(defer.getDate()+7);
                             }
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                         } else {
                             let rOn = repeat.on;
                             if (rOn) {
@@ -341,7 +341,7 @@ class Task extends Component {
                             } else {
                                 due.setDate(due.getDate()+7);
                             }
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due});
                         }
                     } else if (rRule === "monthly") {
                         if (defer) {
@@ -357,7 +357,7 @@ class Task extends Component {
                             } else {
                                 due.setMonth(due.getMonth()+1);
                             }
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                         } else {
                             let rOn = repeat.on;
                             if (rOn) {
@@ -370,16 +370,16 @@ class Task extends Component {
                             } else {
                                 due.setMonth(due.getMonth()+1);
                             }
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due});
                         }
                     } else if (rRule === "yearly") {
                         if (defer) {
                             let defDistance = due-defer;
                             due.setFullYear(due.getFullYear() + 1);
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
                         } else {
                             due.setFullYear(due.getFullYear() + 1);
-                            this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false, due:due});
+                            view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false, due:due});
                         }
 
                     }
@@ -389,99 +389,97 @@ class Task extends Component {
             } else {
                 // TODO: hide active task callback
                 //taskManager.hideActiveTask();
-                $('#task-name-' + this.props.id).css("color", this.gtc("--task-checkbox"));
-                $('#task-' + this.props.id).stop().animate({"margin": "5px 0 5px 0"}, 200);
+                $('#task-name-' + view.props.id).css("color", view.gtc("--task-checkbox"));
+                $('#task-' + view.props.id).stop().animate({"margin": "5px 0 5px 0"}, 200);
                 // TODO: haptics
                 //Haptics.notification({type: HapticsNotificationType.SUCCESS});
-                $('#task-' + this.props.id).slideUp(300);
-                this.props.engine.db.completeTask(this.props.uid, this.props.id).then(function(e) {
+                $('#task-' + view.props.id).slideUp(300);
+                view.props.engine.db.completeTask(view.props.uid, view.props.id).then(function(e) {
                 });
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isComplete: false});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isComplete: false});
                 //reloadPage(true);
             }
-            $("#task-trash-" + this.props.id).click(function(e) {
+            $("#task-trash-" + view.props.id).click(function(e) {
                 //if (project === undefined) activeTaskDeInboxed = true;
-                this.props.engine.db.deleteTask(this.props.uid, this.props.id).then(function() {
+                view.props.engine.db.deleteTask(view.props.uid, view.props.id).then(function() {
                     //hideActiveTask();
-                    $('#task-' + this.props.id).slideUp(150);
+                    $('#task-' + view.props.id).slideUp(150);
                     //reloadPage(true);
                 });
             });
 
             // Repeat popover
-            $("#task-repeat-" + this.props.id).click(function(e) {
+            $("#task-repeat-" + view.props.id).click(function(e) {
                 // TODO: show repeat
-                //showRepeat(this.props.id);
+                //showRepeat(view.props.id);
             });
 
             // Task name change
-            $("#task-name-" + this.props.id).change(function(e) {
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {name:this.value});
+            $("#task-name-" + view.props.id).change(function(e) {
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {name:view.value});
             });
 
             // Task discription change
-            $("#task-desc-" + this.props.id).change(function(e) {
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {desc:this.value});
+            $("#task-desc-" + view.props.id).change(function(e) {
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {desc:view.value});
             });
 
             // Task tag remove
-            $('#task-tag-' + this.props.id).on('itemRemoved', function(e) {
+            $('#task-tag-' + view.props.id).on('itemRemoved', function(e) {
                 let removedTag = possibleTagsRev[e.item];
                 tagIDs = tagIDs.filter(item => item !== removedTag);
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {tags:tagIDs});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {tags:tagIDs});
             });
 
             // Task tag add
-            $('#task-tag-' + this.props.id).on('itemAdded', function(e) {
+            $('#task-tag-' + view.props.id).on('itemAdded', function(e) {
                 let addedTag = possibleTagsRev[e.item];
                 if (!addedTag){
-                    this.props.engine.db.newTag(this.props.uid, e.item).then(function(addedTag) {
+                    view.props.engine.db.newTag(view.props.uid, e.item).then(function(addedTag) {
                         tagIDs.push(addedTag);
                         possibleTags[addedTag] = e.item;
                         possibleTags[e.item] = addedTag;
-                        this.props.engine.db.modifyTask(this.props.uid, this.props.id, {tags:tagIDs});
+                        view.props.engine.db.modifyTask(view.props.uid, view.props.id, {tags:tagIDs});
                     });
                 } else if (!(addedTag in tagIDs)){
                     tagIDs.push(addedTag);
-                    this.props.engine.db.modifyTask(this.props.uid, this.props.id, {tags:tagIDs});
+                    view.props.engine.db.modifyTask(view.props.uid, view.props.id, {tags:tagIDs});
                 }
             });
 
             // Remove flagged parameter
-            $("#task-flagged-no-" + this.props.id).change(function(e) {
+            $("#task-flagged-no-" + view.props.id).change(function(e) {
                 isFlagged = false;
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isFlagged: false});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isFlagged: false});
                 // TODO: Unflagged Style? So far flagged is
                 // just another filter for perspective selection
             });
 
             // Add flagged parameter
-            $("#task-flagged-yes-" + this.props.id).change(function(e) {
+            $("#task-flagged-yes-" + view.props.id).change(function(e) {
                 isFlagged = true;
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isFlagged: true});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isFlagged: true});
                 // TODO: Flagged Style?
             });
 
             // Remove floating parameter and calculate dates
-            $("#task-floating-no-" + this.props.id).change(function(e) {
+            $("#task-floating-no-" + view.props.id).change(function(e) {
                 isFloating = false;
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isFloating: false});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isFloating: false});
                 defer_current = defer;
                 due_current = due;
                 //setDates();
             });
 
             // Add floating parameter and calculate dates
-            $("#task-floating-yes-" + this.props.id).change(function(e) {
+            $("#task-floating-yes-" + view.props.id).change(function(e) {
                 isFloating = true;
-                this.props.engine.db.modifyTask(this.props.uid, this.props.id, {isFloating: true});
+                view.props.engine.db.modifyTask(view.props.uid, view.props.id, {isFloating: true});
                 defer_current = moment(defer).tz(timezone).local(true).toDate();
                 due_current = moment(due).tz(timezone).local(true).toDate();
                 //setDates();
             });
-
         });
-
     }
 
     componentDidMount() {
