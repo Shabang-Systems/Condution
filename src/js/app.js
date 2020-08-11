@@ -70,7 +70,7 @@
     //let default_localizations = {nt: "New Task", desc: "Description", lds: "Let's do this!", newuser: "Make an Account", rec_pswd: "Recover Password", greeting_auth_normal: "Good to see you. Please sign in or tap Use Locally.", lovely_email: "Check your inbox. A lovely email is awaiting you.", need_verify: "Verify your email, then proceed!", proceed: "Proceed!", remembered: "Remembered? Login", noworries: "No worries! Let's recover your password.", newuser: "Make an account", rec_pswd: "Recover Password", signupmsg: "Welcome aboard! By signing up, you agree to our", privacy: "Privacy Policy", and: "and", terms: "Terms", greetings_setA: ["Hey!", "G'day!", "Howdy!", "Yo!"], greetings_setB: ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"], include_avalibale: "Include: Avaliable", include_flagged: "Include: Flagged", include_remaining: "Include: Remaining", order_abd: "Order: ascend by due", order_dbd: "Order: descend by due", order_abe: "Order: ascend by defer", order_dbe: "Order: descend by defer", order_alpha: "Order: alphabetical", loading: "Loading", sync: "Sync!", welcome_aboard: "Welcome Aboard!", advanced: "Advanced...", b2b: "Back to Basic...", search_projects: "Search Projects...", unsorted: "Unsorted", m: "M", tu: "Tu", w: "W", th: "Th", f: "F", sa: "Sa", su: "Su", onboarding_content: undefined};
     let default_localizations = {};
 
-    let firebase_avaliable = false;
+    let firebase_avaliable = true;
 
     let do_INT = function(translations) {
 
@@ -229,13 +229,19 @@
     let translations;
     switch (langCode.value) {
         case "en-US":
+        case "en-us":
             translations = require(`./static/I18n/en-US.json`);
             break;
         case "zh-CN":
+        case "zh-cn":
         case "zh-HK":
+        case "zh-hk":
         case "zh-MO":
+        case "zh-mo":
         case "zh-SG":
+        case "zh-sg":
         case "zh-TW":
+        case "zh-tw":
             translations = require(`./static/I18n/zh-CN.json`);
             break;
         default:
@@ -3256,52 +3262,50 @@ window.addEventListener('devtoolschange', event => {
     } catch(e) {} finally {
     if (ret.value !== "done" && val !== "done") {
         presentWelcome();
-    } else {
-        if (dbType.value && dbType.value !== "firebase") {
-                await loadApp({uid: 'hard-storage-user', displayName: ''});
-                setInterval(() => {ui.update()}, 60 * 1000);
-                setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
-            }
+    }
+    if (dbType.value && dbType.value !== "firebase") {
+            await loadApp({uid: 'hard-storage-user', displayName: ''});
+            setInterval(() => {ui.update()}, 60 * 1000);
+            setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
+        }
 
-            firebase.auth().onAuthStateChanged(async function(user) {
-                if (dbType.value && dbType.value !== "firebase") {
-                    return;
-                }
-                if (user) {
-                    if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
-                        await loadApp(user);
-                        setInterval(() => {ui.update()}, 60 * 1000);
-                        setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
-                    } else {
-                        E.flush();
-                        // Generate auth UI
-                        if (!isNASuccess && !isAnomAuthInProgress) {
-                            // if not currently signing up
-                            $("#content-wrapper").fadeOut();
-                            $("#loading").fadeOut();
-                            $('#need-verify').html("Account unverified. Please check your email + sign in again.");
-                            firebase.auth().currentUser.sendEmailVerification();
-                            $('#recover-password').fadeOut();
-                            $('#need-verify').fadeIn();
-                            $("#authwall").fadeIn();
-                            $('#auth-left-menu').fadeIn();
-                            $("#auth-content-wrapper").fadeIn();
-                        }
-                    }
+        firebase.auth().onAuthStateChanged(async function(user) {
+            if (dbType.value && dbType.value !== "firebase") {
+                return;
+            }
+            if (user) {
+                if (user.emailVerified || (user.isAnonymous && !isAnomAuthInProgress)) {
+                    await loadApp(user);
+                    setInterval(() => {ui.update()}, 60 * 1000);
+                    setInterval(()=> {ipcRenderer.send("updatecheck")}, 60*60*1000);
                 } else {
                     E.flush();
                     // Generate auth UI
-                    $("#content-wrapper").fadeOut();
-                    $("#loading").fadeOut();
-                    $("#authwall").fadeIn();
-                    $('#need-verify').fadeOut();
-                    $('#auth-left-menu').fadeIn();
-                    $("#auth-content-wrapper").fadeIn();
-                    $(".auth-upf").val("");
+                    if (!isNASuccess && !isAnomAuthInProgress) {
+                        // if not currently signing up
+                        $("#content-wrapper").fadeOut();
+                        $("#loading").fadeOut();
+                        $('#need-verify').html("Account unverified. Please check your email + sign in again.");
+                        firebase.auth().currentUser.sendEmailVerification();
+                        $('#recover-password').fadeOut();
+                        $('#need-verify').fadeIn();
+                        $("#authwall").fadeIn();
+                        $('#auth-left-menu').fadeIn();
+                        $("#auth-content-wrapper").fadeIn();
+                    }
                 }
-            });
-    }
-
+            } else {
+                E.flush();
+                // Generate auth UI
+                $("#content-wrapper").fadeOut();
+                $("#loading").fadeOut();
+                $("#authwall").fadeIn();
+                $('#need-verify').fadeOut();
+                $('#auth-left-menu').fadeIn();
+                $("#auth-content-wrapper").fadeIn();
+                $(".auth-upf").val("");
+            }
+        });
     }
 })();
 
