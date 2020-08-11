@@ -72,7 +72,7 @@
 
     let firebase_avaliable = false;
 
-    let do_INT = function(charcode) {
+    let do_INT = function(translations) {
 
         // Geo-Based Blocking of Features
         getGeo().then(function(res) {
@@ -85,7 +85,6 @@
         });
 
         // Translation
-        let translations = require(`./static/I18n/${charcode}.json`);
         default_localizations.every_day = translations.repeat_every_text_day;
         default_localizations.every_week = translations.repeat_every_text_week;
         default_localizations.every_month = translations.repeat_every_text_month;
@@ -227,22 +226,24 @@
     }
 
     let langCode = await Device.getLanguageCode();
+    let translations;
     switch (langCode.value) {
         case "en-US":
-            do_INT("en-US");
+            translations = require(`./static/I18n/en-US.json`);
             break;
         case "zh-CN":
         case "zh-HK":
         case "zh-MO":
         case "zh-SG":
         case "zh-TW":
-            do_INT("zh-CN");
+            translations = require(`./static/I18n/zh-CN.json`);
             break;
         default:
             console.log(`Undefined langcode ${langCode.value}`);
-            do_INT("en-US");
+            translations = require(`./static/I18n/en-US.json`);
             break;
     }
+    do_INT(translations);
 
     let ism = isMobile();
     let isi = isiOS();
@@ -597,6 +598,7 @@ let presentWelcome = function() {
                     key: "condution_stotype",
                     value: "firebase"
                 });
+                $("#loading").fadeOut();
             });
         }
     });
