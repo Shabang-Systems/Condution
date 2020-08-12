@@ -218,7 +218,7 @@ async function getTopLevelProjects(userID) {
     });
 
     projectsSorted.sort((a,b) => a.sortOrder-b.sortOrder);
-    ret = [projectNameById, projectIdByName, projectsSorted];
+    let ret = [projectNameById, projectIdByName, projectsSorted];
     return ret;
 }
 
