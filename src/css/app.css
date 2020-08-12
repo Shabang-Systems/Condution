@@ -3417,7 +3417,7 @@
                 transition-duration: 200ms;
                 transition-timing-function: ease-in-out;
                 padding: 4px 0 4px 10px;
-                transform: translateX(-1px);
+                /*transform: translateX(-1px);*/
                 cursor: default;
                 -moz-border-radius: 5px;
                 -webkit-border-radius: 5px;
@@ -3428,17 +3428,29 @@
                     font-size: 18px !important;
                     transform: translateY(6px);
                 }
+
+
+                #logout:hover {
+                    background-color: var(--menu-semiaccent-background);
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 4px 0 4px 10px;
+                }
+
             }
 
-            #logout:hover {
-                background-color: var(--menu-semiaccent-background);
-                -moz-border-radius: 5px;
-                -webkit-border-radius: 5px;
-                border-radius: 5px;
-                padding: 4px 0 4px 10px;
-                transform: translateX(-1px);
-            }
+            @media (min-width: 576px) {
 
+                #logout:hover {
+                    background-color: var(--menu-semiaccent-background);
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 4px 0 4px 10px;
+                }
+
+            }
 /* == Welcome == */
 
     /* IDs */
