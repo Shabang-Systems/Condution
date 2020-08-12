@@ -22,7 +22,7 @@ const initStorage = (payload, ...features) => {
 
     if (features.includes("firebase")) {
         const obj = require("./../secrets.json");
-        payload.firebase.initializeApp(obj.dbkeys.deploy);
+        payload.firebase.initializeApp(obj.dbkeys.debug);
         [ firebaseDB, fsRef ] = [payload.firebase.firestore(), payload.firebase.firestore];
         firebaseDB.enablePersistence({synchronizeTabs: true}).catch(console.error);
         loaders.push(new Promise(function(resolve) {
