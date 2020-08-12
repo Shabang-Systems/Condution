@@ -430,19 +430,26 @@ async function getProjectStructure(userID, projectID, recursive=false) {
     // cache will catch all projects and only hit the db once
 
     let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
+    if (!project) {
+        console.log(projectID);
+        return { id: projectID, children: [], is_sequential: false, sortOrder: 0, parentProj: 0};
+    }
     for (let [itemID, type] of Object.entries(project.data().children)) {
         if (type === "task") {  // TODO: combine if statements
             let task = await getTaskInformation(userID, itemID);
-            if (!task.isComplete) {
-                children.push({type: "task", content: itemID, sortOrder: task.order});
+            if(task){
+                if (!task.isComplete) {
+                    children.push({type: "task", content: itemID, sortOrder: task.order});
+                }
             }
+           
         } else if (type === "project") {
             if (recursive) {
                 let project = await getProjectStructure(userID, itemID);
-                children.push({type: "project", content: project, is_sequential: project.is_sequential, sortOrder: project.sortOrder}); 
+                if(project) children.push({type: "project", content: project, is_sequential: project.is_sequential, sortOrder: project.sortOrder}); 
             } else {
                 let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === itemID)[0];
-                children.push({type: "project", content: {id: itemID}, is_sequential: project.data().is_sequential, sortOrder: project.data().order}); 
+                if(project) children.push({type: "project", content: {id: itemID}, is_sequential: project.data().is_sequential, sortOrder: project.data().order}); 
             }
         }
     }
