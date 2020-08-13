@@ -534,7 +534,6 @@ var chrono = require('chrono-node');
                 // IMPT: Don't remove this, this is a scrolling patch
                 this.$timeObj.click(function() {
                     $(this).prop("readonly", false);
-                    console.log($(this).prop("readonly"));
                 });
                 this.$timeObj.on("touchstart", function() {
                     $(this).prop("readonly", false);
