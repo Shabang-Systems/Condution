@@ -3043,7 +3043,7 @@ $(document).on("click", "#perspective-documentaion", async function(e) {
     await Browser.open({ url: 'https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2' });
 });
 
-Hammer($(".page")[0]).on('swiperight swipeleft', function (e) {
+Hammer($("html")[0]).on('swiperight swipeleft', function (e) {
     e.preventDefault();
     const { x } = interfaceUtil.getStartSwipe(e);
     //swipe right to open nav /* note the condition here */
