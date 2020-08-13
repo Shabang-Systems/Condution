@@ -238,7 +238,7 @@
     }
     do_INT(translations);
 
-    //let ism = isMobile();
+    //let ism = true;
     let ism = isMobile();
     let isi = isiOS();
 
