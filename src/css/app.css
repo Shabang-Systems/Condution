@@ -21,7 +21,6 @@
 
 /* == Globals and Misc Things == */
     html, body {
-        height: 100%;
         margin: 0;
         font-family: sans-serif;
         -ms-overflow-style: -ms-autohiding-scrollbar; 
@@ -32,10 +31,12 @@
     html {
         overflow-y: scroll;
         width: 100%;
+        min-height: 100%;
         -webkit-overflow-scrolling: touch;
     }
 
     body {
+        height: 100%;
         overflow-y: visible;
         -webkit-overflow-scrolling: touch;
     }
@@ -198,7 +199,8 @@
                 display: none;
                 margin: 1px;
                 margin-bottom: 50px;
-                height: 100%;
+                /*height: 100%;*/
+                /*TODO: do not DARE uncomment line 201. May scrolling bug hit you very hard! */
             }
 
                 .pa-bottom {

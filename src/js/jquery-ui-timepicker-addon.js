@@ -531,6 +531,20 @@ var chrono = require('chrono-node');
 				}
 
 				this.$timeObj = $tp.find('.ui_tpicker_time_input');
+                // IMPT: Don't remove this, this is a scrolling patch
+                this.$timeObj.click(function() {
+                    $(this).prop("readonly", false);
+                });
+                this.$timeObj.on("touchstart", function() {
+                    $(this).prop("readonly", false);
+                    $([document.documentElement, document.body]).animate({
+                    scrollTop: $(this).offset().top
+                    }, 1000);
+                });
+                this.$timeObj.blur(function() {
+                    $(this).prop("readonly", true);
+                });
+                this.$timeObj.prop("readonly", true);
 				this.$timeObj.change(function () {
 					var timeFormat = tp_inst.inst.settings.timeFormat;
 					var parsedTime = $.datepicker.parseTime(timeFormat, this.value, $.datepicker);
