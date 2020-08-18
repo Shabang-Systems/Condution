@@ -30,6 +30,7 @@ function createWindow () {
         e.preventDefault()
     });
 
+    // TODO TODO TODO UNCOMMENT THIS!!
     win.removeMenu();
     // and load the main of the app.
     win.loadFile('src/index.html');
