@@ -155,7 +155,7 @@
         $("#onboarding-name-3").val(translations.onboarding_sync_no);
         $("#onboarding-msg-3").html(translations.onboarding_msg_3);
         $("#perspective-build-callout").html(translations.perspective_build_callout);
-        $("#perspective-edit-name").val(translations.perspective_name_placeholder);
+        $("#perspective-edit-name").attr("placeholder", translations.perspective_name_placeholder);
         $("#pquery").attr("placeholder", translations.perspective_string_placeholder);
         $("#psp-include").html(translations.perspective_include);
         $("#psp-order").html(translations.perspective_order);
