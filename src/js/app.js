@@ -16,7 +16,7 @@
     require('mousetrap');
     require('bootstrap-tagsinput');
     require('select2')();
-    let {getGeo, getGeoByIp} = require('geoplugin');
+    //let {getGeo, getGeoByIp} = require('geoplugin');
     let moment = require('moment-timezone');
     let { Plugins, HapticsImpactStyle, HapticsNotificationType } = require('@capacitor/core');
     let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
@@ -74,9 +74,18 @@
 
     let do_INT = function(translations) {
 
+    const getGeo = () => {
+      return new Promise((resolve, reject) => {
+        fetch("https://ipapi.co/json/")
+          .then((response) => response.json())
+          .then(resolve)
+          .catch((err) => reject(err));
+      });
+    };
+
         // Geo-Based Blocking of Features
         getGeo().then(function(res) {
-            if (res.countryCode==="CN") {
+            if (res.country==="CN") {
                 $("#logout").hide();
                 firebase_avaliable = false;
             } else {
