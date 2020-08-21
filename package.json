@@ -7,7 +7,9 @@
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "express": "^4.17.1",
     "firebase": "^7.19.0",
+    "firebase-admin": "^9.1.1",
     "sqlite3": "^5.0.0"
   }
 }
