@@ -22,6 +22,10 @@
     let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
     let E = require('./backend/CondutionEngine');
 
+    // Key listeners for shift-select and alt-select
+    var pressedKeys = {};
+    window.onkeyup = function(e) { pressedKeys[e.keyCode] = false; }
+    window.onkeydown = function(e) { pressedKeys[e.keyCode] = true; }
    
     /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
      *
@@ -350,7 +354,9 @@ if (process.platform === "win32") {
 
 // Chapter 1: Utilities!
 const interfaceUtil = function() {
-    const Sortable = require('sortablejs');
+    //console.log(Sortable);
+    //console.log(Sortable.MultiDrag);
+    //Sortable.mount(new Multidrag());
 
     let getThemeColor = (colorName) => $("."+currentTheme).css(colorName);
 
@@ -2010,7 +2016,10 @@ let ui = function() {
         // inbox sorter
         let inboxSort = new interfaceUtil.Sortable($("#inbox")[0], {
             animation: 200,
+            multiDrag: true,
             swapThreshold: 0.10,
+            multiDragKey: "SHIFT",
+            selectedClass: "item-selected",
             delay: 100,
             delayOnTouchOnly: true,
             onStart: function(e) {
@@ -2023,31 +2032,63 @@ let ui = function() {
                 pageIndex.interfaceLocks.reloadLock = true;
             },
             onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
-                refresh().then(function() {
-                    if (oi<ni) {
-                        // handle task moved down
-                        for(let i=oi+1; i<=ni; i++) {
-                            // move each task down in order
-                            E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
-                        }
-                        // change the order of the moved task
-                        E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
-                    } else if (oi>ni) {
-                        // handle task moved up
-                        for(let i=oi-1; i>=ni; i--) {
-                            // move each task up in order
-                            E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
-                        }
-                        // change the order of the moved task
-                        E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
-                    }
+                console.log(e);
+                if (e.newIndicies.length === 0) {
+                    let oi = e.oldIndex;
+                    let ni = e.newIndex;
+                    refresh().then(function() {
+                        if (oi<ni) {
+                            // handle task moved down
+                            for(let i=oi+1; i<=ni; i++) {
 
-                });
-                $('#inbox').children().addClass("thov");
-                pageIndex.interfaceLocks.reloadLock = false;
-                //reloadPage(true);
+                                // move each task down in order
+                                E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
+                            }
+                            // change the order of the moved task
+                            E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                        } else if (oi>ni) {
+                            // handle task moved up
+                            for(let i=oi-1; i>=ni; i--) {
+                                // move each task up in order
+                                E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
+                            }
+                            // change the order of the moved task
+                            E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                        }
+
+                    });
+                    $('#inbox').children().addClass("thov");
+                    pageIndex.interfaceLocks.reloadLock = false;
+                    //reloadPage(true);
+                } else {
+                    refresh().then(function() {
+                        for (let i = 0; i < e.newIndicies.length; i++) {
+                            let oi = e.oldIndicies[i].index;
+                            let ni = e.newIndicies[i].index;
+                            if (oi<ni) {
+                                // handle task moved down
+                                for(let i=oi+1; i<=ni; i++) {
+
+                                    // move each task down in order
+                                    E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
+                                }
+                                // change the order of the moved task
+                                E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                            } else if (oi>ni) {
+                                // handle task moved up
+                                for(let i=oi-1; i>=ni; i--) {
+                                    // move each task up in order
+                                    E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
+                                }
+                                // change the order of the moved task
+                                E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
+                            }
+
+                            $('#inbox').children().addClass("thov");
+                            pageIndex.interfaceLocks.reloadLock = false;
+                        }
+                    });
+                }
             }
         });
 
@@ -2580,6 +2621,11 @@ let ui = function() {
     });
 
     $(document).on("click", ".task", async function(e) {
+        //console.log(pressedKeys["16"]);
+        if(pressedKeys["16"]) {
+            e.stopImmediatePropagation();
+            return; // User is multiselecting!
+        }
         if ($(this).attr('id') === "task-" + activeTask) {
             e.stopImmediatePropagation();
             return;

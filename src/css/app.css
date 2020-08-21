@@ -755,6 +755,11 @@
                     background-color: var(--task-feature) !important;
                 }
 
+
+            .item-selected {
+                background-color: var(--task-feature) !important;
+            }
+
             .task-display {
                 height: 30px;
             }
