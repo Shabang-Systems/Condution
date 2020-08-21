@@ -81,6 +81,7 @@ typings/
 # Nuxt.js build / generate output
 .nuxt
 dist
+dist_ios
 
 # Gatsby files
 .cache/
@@ -113,3 +114,16 @@ dist
 # Secrets
 secrets.json
 
+.env
+
+# Generated Icons
+resources/android/icon
+resources/android/splash
+resources/ios/icon
+resources/ios/splash
+resources/windows/icon
+resources/windows/splash
+
+# dist folders
+dist
+dist.zip
