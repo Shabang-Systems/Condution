@@ -3403,6 +3403,27 @@
                 pointer-events: none;
             }
 
+    /* Settings Button */
+
+        /* IDs */ 
+
+            #settings {
+                position: relative;
+                border-style: 1px solid;
+                z-index: 100;
+                bottom: 10px;
+                /*font-family: "SansSerif";*/
+                /*width: 30%;*/
+            }
+            
+            #settings:hover {
+                background-color: var(--menu-semiaccent-background);
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                border-radius: 5px;
+                padding: 4px 0 4px 10px;
+            }
+
     /* Logout */
 
         /* IDs */
@@ -3425,6 +3446,7 @@
                 -webkit-border-radius: 5px;
                 border-radius: 5px;
             }
+
             @media (max-width: 575px) {
                 #logout {
                     font-size: 18px !important;
