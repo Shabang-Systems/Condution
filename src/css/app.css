@@ -3446,7 +3446,9 @@
                 -webkit-border-radius: 5px;
                 border-radius: 5px;
             }
-
+            #logout-button {
+                /*width: 30%;*/
+            }
             @media (max-width: 575px) {
                 #logout {
                     font-size: 18px !important;
