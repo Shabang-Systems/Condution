@@ -15,7 +15,7 @@ function createWindow () {
         'webPreferences': {
             'nodeIntegration': true
         },
-        'titleBarStyle': 'hiddenInset',
+        'titleBarStyle': 'hiddenInset', // TODO customButtonsOnHover get's rid of the safe area
         'transparent': true,
         'show': false,
     });
