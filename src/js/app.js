@@ -3235,6 +3235,14 @@ $(document).keypress(async function(e) {
         $("#quickadd").focus();
     }
 });
+$(document).on("click", "#settings", function(e) {
+        e.stopPropagation();
+        console.log("ANSDFLJSDFHKLSDKJFLKSDFHSD")
+    });
+    $("#settings").mouseover( function(e) {
+        console.log(undefined)
+    });
+
 
 function warn() {
     console.log('%c', "height: 300px");
@@ -3305,3 +3313,4 @@ window.addEventListener('devtoolschange', event => {
 })();
 
 })();
+
