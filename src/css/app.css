@@ -3450,13 +3450,21 @@
                 /*width: 30%;*/
             }
             @media (max-width: 575px) {
+                #settings: hover {
+                    background-color: var(--menu-semiaccent-background);
+                    -moz-border-radius: 5px;
+                    -webkit-border-radius: 5px;
+                    border-radius: 5px;
+                    padding: 4px 0 4px 10px;
+                }
+
                 #logout {
                     font-size: 18px !important;
                     transform: translateY(6px);
                 }
 
 
-                #logout:hover {
+                #logout-button:hover {
                     background-color: var(--menu-semiaccent-background);
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
@@ -3468,12 +3476,14 @@
 
             @media (min-width: 576px) {
 
-                #logout:hover {
+                #logout-button:hover {
                     background-color: var(--menu-semiaccent-background);
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
                     border-radius: 5px;
                     padding: 4px 0 4px 10px;
+                    /*transform: translateX(-1px);*/
+
                 }
 
             }

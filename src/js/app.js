@@ -3235,13 +3235,15 @@ $(document).keypress(async function(e) {
         $("#quickadd").focus();
     }
 });
+
 $(document).on("click", "#settings", function(e) {
-        e.stopPropagation();
-        console.log("ANSDFLJSDFHKLSDKJFLKSDFHSD")
-    });
+    e.stopPropagation();
+    console.log("Logout button pressed") //TODO: Remove
+});
+
     $("#settings").mouseover( function(e) {
-        console.log(undefined)
-    });
+        console.log("Logout button moused over") //TODO: Remove
+});
 
 
 function warn() {
