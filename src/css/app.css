@@ -3415,6 +3415,8 @@
                 /*font-family: "SansSerif";*/
                 /*width: 30%;*/
                 padding-left: 10px;
+                padding-bottom: 4px;
+                margin-bottom: -9px;
             }
             
             #settings:hover {
@@ -3422,7 +3424,7 @@
                 -moz-border-radius: 5px;
                 -webkit-border-radius: 5px;
                 border-radius: 5px;
-                padding: 4px 0 0px 10px;
+                padding: 4px 0 4px 10px;
             }
 
     /* Logout */
