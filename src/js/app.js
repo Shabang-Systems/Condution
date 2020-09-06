@@ -2047,7 +2047,7 @@ let ui = function() {
                         let numMovement = e.items.length;
                         let taskIndexes = ([...Array(numMovement).keys()]).map(elem => elem+fi);
                         let indx = oi+directionality;
-                        for (let count=0; count<Math.abs(move); count++) {
+                        for (let count=Math.abs(move)-1; count>=0; count--) {
                             movement[inboxandDS[0][indx]] = ni - directionality*(count+1);
                             indx = indx + directionality;
                         }
