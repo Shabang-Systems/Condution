@@ -2032,28 +2032,42 @@ let ui = function() {
                 pageIndex.interfaceLocks.reloadLock = true;
             },
             onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
-                let move = ni-oi;
-                let directionality = move/Math.abs(move); // either -1 (move up) or 1 (move down)
+                console.log(e);
                 refresh().then(function() {
                     let movement = {};
                     // NW: up is broken down is not
                     if (e.item && e.items.length >= 1) {
                         // on Multidrag
+                        //let ni = e.newIndex;
+                        let move = e.newIndex-e.oldIndex;
+                        let directionality = move/Math.abs(move); // either -1 (move up) or 1 (move down)
+                        let oi = e.oldIndicies[directionality == 1 ? e.oldIndicies.length-1 : 0].index;
+                        //let ni = e.newIndicies[e.newIndicies.length-1].index;
+                        let ni = e.newIndicies[directionality == -1 ? e.newIndicies.length-1 : 0].index;
+                        let fi = e.oldIndicies[0].index;
+                        console.log(directionality);
                         let numMovement = e.items.length;
-                        let taskIndexes = ([...Array(numMovement).keys()]).map(elem => elem+oi-numMovement+1);
-                        let indx = ni;
+                        let taskIndexes = ([...Array(numMovement).keys()]).map(elem => elem+fi);
+                        console.log(taskIndexes);
+                        let indx = oi+directionality;
+                        console.log(indx, oi, directionality);
+                        console.log(move);
                         for (let count=0; count<Math.abs(move); count++) {
-                            movement[inboxandDS[0][indx]] = indx + numMovement*-1*directionality;
-                            indx = indx - directionality;
-
+                            movement[inboxandDS[0][indx]] = ni - directionality*(count+1);
+                            indx = indx + directionality;
+                            console.log(indx);
                         }
+                        console.log(movement);
                         for (let taskIndex of taskIndexes) {
                             movement[inboxandDS[0][taskIndex]] = taskIndex + move
                         }
+                        console.log(movement);
                     } else if (e.item && e.items.length === 0) {
                         // on SingleDrag
+                        let oi = e.oldIndex;
+                        let ni = e.newIndex;
+                        let move = ni-oi;
+                        let directionality = move/Math.abs(move); // either -1 (move up) or 1 (move down)
                         let numMovement = 1;
                         let taskIndexes = [e.oldIndex];
                         let indx = ni;
@@ -2067,7 +2081,7 @@ let ui = function() {
                         }
                     }
                     Promise.all(Object.keys(movement).map(async function(id) {
-                        await E.db.modifyTask(uid, id, {order: movement[id]});
+                        //await E.db.modifyTask(uid, id, {order: movement[id]});
                     }));
                 });
             }
