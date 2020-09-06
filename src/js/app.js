@@ -2032,90 +2032,44 @@ let ui = function() {
                 pageIndex.interfaceLocks.reloadLock = true;
             },
             onEnd: function(e) {
-                console.log(e);
                 let oi = e.oldIndex;
                 let ni = e.newIndex;
                 let move = ni-oi;
                 let directionality = move/Math.abs(move); // either -1 (move up) or 1 (move down)
-                if (e.item && e.items.length >= 1) {
-                    // on Multidrag
-                    let numMovement = e.items.length;
-                    let taskIndexes = ([...Array(e.items.length).keys()]).map(elem => elem+oi-1*directionality);
-                    // NWNWNWNWNWNW
-                    refresh().then(function() {
+                refresh().then(function() {
+                    let movement = {};
+                    // NW: up is broken down is not
+                    if (e.item && e.items.length >= 1) {
+                        // on Multidrag
+                        let numMovement = e.items.length;
+                        let taskIndexes = ([...Array(numMovement).keys()]).map(elem => elem+oi-numMovement+1);
                         let indx = ni;
-                        let movement = {};
                         for (let count=0; count<Math.abs(move); count++) {
                             movement[inboxandDS[0][indx]] = indx + numMovement*-1*directionality;
                             indx = indx - directionality;
 
                         }
                         for (let taskIndex of taskIndexes) {
-                            console.log(taskIndex, inboxandDS[0][taskIndex]);
                             movement[inboxandDS[0][taskIndex]] = taskIndex + move
                         }
-                        console.log(movement);
-                    });
-                } else if (e.item && e.items.length === 0) {
-                    // on SingleDrag
-                }
+                    } else if (e.item && e.items.length === 0) {
+                        // on SingleDrag
+                        let numMovement = 1;
+                        let taskIndexes = [e.oldIndex];
+                        let indx = ni;
+                        for (let count=0; count<Math.abs(move); count++) {
+                            movement[inboxandDS[0][indx]] = indx + numMovement*-1*directionality;
+                            indx = indx - directionality;
 
-/*                if (e.newIndicies.length === 0) {*/
-                    //let oi = e.oldIndex;
-                    //let ni = e.newIndex;
-                    //refresh().then(function() {
-                        //if (oi<ni) {
-                            //// handle task moved down
-                            //for(let i=oi+1; i<=ni; i++) {
-
-                                //// move each task down in order
-                                //E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
-                            //}
-                            //// change the order of the moved task
-                            //E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
-                        //} else if (oi>ni) {
-                            //// handle task moved up
-                            //for(let i=oi-1; i>=ni; i--) {
-                                //// move each task up in order
-                                //E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
-                            //}
-                            //// change the order of the moved task
-                            //E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
-                        //}
-
-                    //});
-                    //$('#inbox').children().addClass("thov");
-                    //pageIndex.interfaceLocks.reloadLock = false;
-                    ////reloadPage(true);
-                //} else {
-                    //refresh().then(function() {
-                        //for (let i = 0; i < e.newIndicies.length; i++) {
-                            //let oi = e.oldIndicies[i].index;
-                            //let ni = e.newIndicies[i].index;
-                            //if (oi<ni) {
-                                //// handle task moved down
-                                //for(let i=oi+1; i<=ni; i++) {
-
-                                    //// move each task down in order
-                                    //E.db.modifyTask(uid, inboxandDS[0][i], {order: i-1});
-                                //}
-                                //// change the order of the moved task
-                                //E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
-                            //} else if (oi>ni) {
-                                //// handle task moved up
-                                //for(let i=oi-1; i>=ni; i--) {
-                                    //// move each task up in order
-                                    //E.db.modifyTask(uid, inboxandDS[0][i], {order: i+1});
-                                //}
-                                //// change the order of the moved task
-                                //E.db.modifyTask(uid, inboxandDS[0][oi], {order: ni});
-                            //}
-
-                            //$('#inbox').children().addClass("thov");
-                            //pageIndex.interfaceLocks.reloadLock = false;
-                        //}
-                    /*});*/
-                //}
+                        }
+                        for (let taskIndex of taskIndexes) {
+                            movement[inboxandDS[0][taskIndex]] = taskIndex + move
+                        }
+                    }
+                    Promise.all(Object.keys(movement).map(async function(id) {
+                        await E.db.modifyTask(uid, id, {order: movement[id]});
+                    }));
+                });
             }
         });
 
