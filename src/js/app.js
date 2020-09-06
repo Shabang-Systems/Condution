@@ -2072,9 +2072,13 @@ let ui = function() {
                             movement[inboxandDS[0][taskIndex]] = taskIndex + move
                         }
                     }
+                    // Apply changes
                     Promise.all(Object.keys(movement).map(async function(id) {
                         await E.db.modifyTask(uid, id, {order: movement[id]});
-                    }));
+                    })).then(function() {
+                        $('#inbox').children().addClass("thov");
+                        pageIndex.interfaceLocks.reloadLock = false;
+                    });
                 });
             }
         });
@@ -2085,6 +2089,9 @@ let ui = function() {
             swapThreshold: 0.10,
             delay: 100,
             delayOnTouchOnly: true,
+            multiDrag: true,
+            multiDragKey: "SHIFT",
+            selectedClass: "item-selected",
             onStart: function(e) {
                 let itemEl = $(e.item);
                 $('#project-content').children().each(function() {
@@ -2095,60 +2102,72 @@ let ui = function() {
                 pageIndex.interfaceLocks.reloadLock = true;
             },
             onEnd: function(e) {
-                let oi = e.oldIndex;
-                let ni = e.newIndex;
-
                 E.db.getProjectStructure(uid, pageIndex.pageContentID).then(async function(nstruct) {
-                    if (oi<ni) {
-                        // handle item moved down
-                        for(let i=oi+1; i<=ni; i++) {
-                            let child = nstruct.children[i];
-                            // move the item down
-                            if (child.type === "task") {
-                                let id = child.content;
-                                E.db.modifyTask(uid, id, {order: i-1});
-                            } else if (child.type === "project") {
-                                let id = child.content.id;
-                                E.db.modifyProject(uid, id, {order: i-1});
-                            }
+                    let movement = {};
+                    // NW: up is broken down is not
+                    if (e.item && e.items.length >= 1) {
+                        // on Multidrag
+                        //let ni = e.newIndex;
+                        let move = e.newIndex-e.oldIndex;
+                        let directionality = move/Math.abs(move); // either -1 (move up) or 1 (move down)
+                        let oi = e.oldIndicies[directionality == 1 ? e.oldIndicies.length-1 : 0].index;
+                        //let ni = e.newIndicies[e.newIndicies.length-1].index;
+                        let ni = e.newIndicies[directionality == -1 ? e.newIndicies.length-1 : 0].index;
+                        let fi = e.oldIndicies[0].index;
+                        let numMovement = e.items.length;
+                        let taskIndexes = ([...Array(numMovement).keys()]).map(elem => elem+fi);
+                        let indx = oi+directionality;
+                        for (let count=Math.abs(move)-1; count>=0; count--) {
+                            let child = nstruct.children[indx];
+                            let childID = child.type === "project" ? child.content.id : child.content;
+                            movement[childID] = [ni - directionality*(count+1), child.type];
+                            indx = indx + directionality;
                         }
-                        // change the order of the moved item
-                        let moved = nstruct.children[oi];
-                        if (moved.type === "task") {
-                            let id = moved.content;
-                            E.db.modifyTask(uid, id, {order: ni});
-                        } else if (moved.type === "project") {
-                            let id = moved.content.id;
-                            E.db.modifyProject(uid, id, {order: ni});
-                        }
-                    } else if (oi>ni) {
-                        // handle item moved up
-                        for(let i=oi-1; i>=ni; i--) {
-                            let child = nstruct.children[i];
-                            // move the item up
-                            if (child.type === "task") {
-                                let id = child.content;
-                                E.db.modifyTask(uid, id, {order: i+1});
-                            } else if (child.type === "project") {
-                                let id = child.content.id;
-                                E.db.modifyProject(uid, id, {order: i+1});
-                            }
-                        }
-                        // change the order of the moved item
-                        let moved = nstruct.children[oi];
-                        if (moved.type === "task") {
-                            let id = moved.content;
-                            E.db.modifyTask(uid, id, {order: ni});
-                        } else if (moved.type === "project") {
-                            let id = moved.content.id;
+                        for (let taskIndex of taskIndexes) {
+                            let child = nstruct.children[taskIndex];
+                            let childID = child.type === "project" ? child.content.id : child.content;
+                            movement[childID] = [taskIndex + move, child.type];
 
-                            E.db.modifyProject(uid, id, {order: ni});
+                            //movement[inboxandDS[0][taskIndex]] = taskIndex + move
+                        }
+                    } else if (e.item && e.items.length === 0) {
+                        // on SingleDrag
+                        let oi = e.oldIndex;
+                        let ni = e.newIndex;
+                        let move = ni-oi;
+                        let directionality = move/Math.abs(move); // either -1 (move up) or 1 (move down)
+                        let numMovement = 1;
+                        let taskIndexes = [e.oldIndex];
+                        let indx = ni;
+                        for (let count=0; count<Math.abs(move); count++) {
+                            //movement[inboxandDS[0][indx]] = indx + numMovement*-1*directionality;
+                            //indx = indx - directionality;
+                            let child = nstruct.children[indx];
+                            let childID = child.type === "project" ? child.content.id : child.content;
+                            movement[childID] = [indx + numMovement*-1*directionality, child.type];
+                            indx = indx - directionality;
+
+                        }
+                        for (let taskIndex of taskIndexes) {
+                            let child = nstruct.children[indx];
+                            let childID = child.type === "project" ? child.content.id : child.content;
+                            movement[childID] = [taskIndex + move, child.type];
+                            //movement[inboxandDS[0][taskIndex]] = taskIndex + move
                         }
                     }
+                    // Apply changes
+                    Promise.all(Object.keys(movement).map(async function(content) {
+                        if (movement[content][1] === "task") {
+                            await E.db.modifyTask(uid, content, {order: movement[content][0]});
+                        } else if (movement[content][1] === "project") {
+                            await E.db.modifyProject(uid, content, {order: movement[content][0]});
+                        }
+                    })).then(function() {
+                        $('#project-content').children().addClass("thov");
+                        pageIndex.interfaceLocks.reloadLock = false;
+                    });
                 });
-                $('#project-content').children().addClass("thov");
-                pageIndex.interfaceLocks.reloadLock = false;
-                //reloadPage(true);
+               //reloadPage(true);
             }
         });
 
@@ -2542,6 +2561,11 @@ let ui = function() {
 
     // document action listeners!!
     $(document).on('click', '.menuitem', function(e) {
+        if(pressedKeys["16"]) {
+            //e.stopimmediatepropagation();
+            return; // User is multiselecting!
+        }
+
         interfaceUtil.newPHI();
         $("#"+activeMenu).removeClass('today-highlighted menuitem-selected');
         activeMenu = $(this).attr('id');
@@ -2610,7 +2634,7 @@ let ui = function() {
     $(document).on("click", ".task", async function(e) {
         //console.log(pressedKeys["16"]);
         if(pressedKeys["16"]) {
-            e.stopImmediatePropagation();
+            //e.stopimmediatepropagation();
             return; // User is multiselecting!
         }
         if ($(this).attr('id') === "task-" + activeTask) {
