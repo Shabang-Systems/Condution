@@ -2081,7 +2081,7 @@ let ui = function() {
                         }
                     }
                     Promise.all(Object.keys(movement).map(async function(id) {
-                        //await E.db.modifyTask(uid, id, {order: movement[id]});
+                        await E.db.modifyTask(uid, id, {order: movement[id]});
                     }));
                 });
             }
