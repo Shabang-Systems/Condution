@@ -8,6 +8,8 @@
 
 ***
 
+*This is Jack messing with Ionic. Not the actual Condution. But one day, one day, maybe we will merge them.*
+
 ## Those Download Buttons?
 👉 [**Direct Download**](https://condution.shabang.cf/#downloads) the latest version of Condution here! 👈 
 
