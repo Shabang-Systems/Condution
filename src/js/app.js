@@ -2866,6 +2866,14 @@ $(document).on("click", "#perspective-edit", function(e) {
     showPerspectiveEdit(pageIndex.pageContentID);
 });
 
+$(document).on("click", "#settings", async function(e) {
+    e.stopPropagation();
+    await constructSettingsBar();
+});
+    $("#settings").mouseover( function(e) {
+        console.log("Logout button moused over") //TODO: Remove
+});
+
 $("#quickadd").click(function(e) {
     $(this).stop().animate({"width": "280px"}, 500);
 });
@@ -3199,6 +3207,10 @@ let uid;
 let displayName;
 // TODO: actually set theme
 //let currentTheme = "condutiontheme-default";
+let constructSettingsBar = async function() {
+    $(".projects").empty();
+    $(".perspectives").empty();
+};
 
 let constructSidebar = async function() {
     let tlps = (await E.db.getTopLevelProjects(uid));
@@ -3213,6 +3225,7 @@ let constructSidebar = async function() {
         $(".perspectives").append(`<div id="perspective-${psp.id}" class="menuitem perspective mihov"><i class="fa fa-layer-group"></i><t style="padding-left:8px">${psp.name}</t></div>`)
     }
 };
+
 
 let setUser = function(usr) {
     user = usr;
@@ -3229,21 +3242,13 @@ return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage
 
 }();
 
-
 $(document).keypress(async function(e) {
     if (document.activeElement.tagName === "BODY" && !(await ism)) {
         $("#quickadd").focus();
     }
 });
 
-$(document).on("click", "#settings", function(e) {
-    e.stopPropagation();
-    console.log("Logout button pressed") //TODO: Remove
-});
 
-    $("#settings").mouseover( function(e) {
-        console.log("Logout button moused over") //TODO: Remove
-});
 
 
 function warn() {
