@@ -183,10 +183,11 @@ async function getInboxandDS(userID, avalibility) {
 }
 
 async function getTaskInformation(userID, taskID) {
-    return (await cRef("users", userID, "tasks").get()
+    let dat = (await cRef("users", userID, "tasks").get()
         .then(snap => snap.docs
             .filter(doc => doc.id === taskID))
-    )[0].data();
+    )[0]
+    if (dat) return dat.data();
 }
 
 async function removeParamFromTask(userID, taskID, paramName) {
