@@ -1,25 +1,35 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonText } from '@ionic/react';
 import React from 'react';
-import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 
 const Home = () => {
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Blank</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
-      </IonContent>
-    </IonPage>
+    return (
+        <IonPage>
+            <IonContent>
+              <IonSplitPane contentId="main" when="md">
+                <IonMenu contentId="main">
+                  <IonHeader>
+                    <IonToolbar>
+                      <IonTitle>Menu</IonTitle>
+                    </IonToolbar>
+                  </IonHeader>
+                    <IonContent>
+                    <IonList>
+                      <IonItem>Menu Item</IonItem>
+                      <IonItem>Menu Item</IonItem>
+                      <IonItem>Menu Item</IonItem>
+                      <IonItem>Menu Item</IonItem>
+                      <IonItem>Menu Item</IonItem>
+                    </IonList>
+                  </IonContent>
+                </IonMenu>
+
+                <IonContent id="main">
+                    <IonText>POOP!</IonText>
+                </IonContent>
+              </IonSplitPane>
+            </IonContent>
+        </IonPage>
   );
 };
 
