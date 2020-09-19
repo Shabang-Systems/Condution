@@ -500,6 +500,8 @@ async function loadApp(user) {
 
     $("#loading").fadeOut();
     $("#auth-content-wrapper").fadeOut();
+    
+    $("#settings-wrapper").hide();
     $("#content-wrapper").fadeIn();
 }
 
@@ -3208,8 +3210,9 @@ let displayName;
 // TODO: actually set theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
-    $(".projects").empty();
-    $(".perspectives").empty();
+    $("#special-tops").fadeOut();
+    $("#norm-wrapper").fadeOut();
+    $("#settings-wrapper").fadeIn();
 };
 
 let constructSidebar = async function() {
@@ -3247,8 +3250,6 @@ $(document).keypress(async function(e) {
         $("#quickadd").focus();
     }
 });
-
-
 
 
 function warn() {
