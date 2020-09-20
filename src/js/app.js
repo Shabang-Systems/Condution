@@ -22,7 +22,7 @@
     let { Haptics, Network, Browser, Storage, Device, App } = Plugins;
     let E = require('./backend/CondutionEngine');
 
-   
+
     /* TODO TODO AAAAAA AAAA READ ME AAAAA TODO TODO
      *
      * #$%^&* REEE***E*E**E*AAAD MEEEEEEE @#$%^&*
@@ -32,7 +32,7 @@
      * HAS CHANGED to be _slightly_ more complicated
      * 1. Remove all electron refrences
      * 2. Remove all electron.remote (IPC renderers)
-     * 3. Change directories on line for 
+     * 3. Change directories on line for
      *      jQuery UI
      *      jQuery Time Picker
      *      CondutionEngine
@@ -290,7 +290,7 @@ let dbType = await Storage.get({key: 'condution_stotype'});
     };
 })(window.jQuery);
 
-E.start({firebase}, "firebase", "json"); 
+E.start({firebase}, "firebase", "json");
 
 let dbReady = E.use(dbType.value ? dbType.value : "firebase") // TODO: should we default to firebase?
 
@@ -500,7 +500,7 @@ async function loadApp(user) {
 
     $("#loading").fadeOut();
     $("#auth-content-wrapper").fadeOut();
-    
+
     $("#settings-wrapper").hide();
     $("#content-wrapper").fadeIn();
 }
@@ -584,7 +584,7 @@ let presentWelcome = function() {
                 value: "done"
             });
 
-        }            
+        }
     });
     $('#onboarding-check-2').change(function(e) {
         if (this.checked) {
@@ -3018,8 +3018,8 @@ $("#quickadd").keydown(function(e) {
 /*});*/
 
 $(document).on("drop", ".project", function(e) {
-    let dropped = e.originalEvent.dataTransfer.getData('text').split("-"); 
-    let target = this.id.split("-"); 
+    let dropped = e.originalEvent.dataTransfer.getData('text').split("-");
+    let target = this.id.split("-");
 
     if (dropped[1] === target[1]) return;
     if (dropped[0] === "task") {
@@ -3027,7 +3027,7 @@ $(document).on("drop", ".project", function(e) {
             let ti = await E.db.getTaskInformation(uid, dropped[1]);
             if (ti.project !== "") {
                 if (ti.project === target[1]) return;
-                await E.db.dissociateTask(uid, dropped[1], ti.project); 
+                await E.db.dissociateTask(uid, dropped[1], ti.project);
             }
             await E.db.modifyTask(uid, dropped[1], {project:target[1]});
             await E.db.associateTask(uid, dropped[1], target[1]);
@@ -3039,7 +3039,7 @@ $(document).on("drop", ".project", function(e) {
             let ti = await E.db.getProjectStructure(uid, dropped[1]);
             if (ti.parentProj !== "") {
                 if (ti.parentProj === target[1]) return;
-                await E.db.dissociateProject(uid, dropped[1], ti.parentProj); 
+                await E.db.dissociateProject(uid, dropped[1], ti.parentProj);
             }
             await E.db.modifyProject(uid, dropped[1], {parent:target[1], top_level: false});
             await E.db.associateProject(uid, dropped[1], target[1]);
@@ -3088,11 +3088,11 @@ $(".sandwich").click(function(e) {
     interfaceUtil.menu.open();
 });
 
-$(document).click(function(e) { 
+$(document).click(function(e) {
     var $target = $(e.target);
     if(!$target.closest('#left-menu').length && !$target.closest('.sandwich').length) {
         interfaceUtil.menu.close();
-    }        
+    }
 });
 
 
@@ -3207,6 +3207,7 @@ interfaceUtil.newPHI();
 let user;
 let uid;
 let displayName;
+let set = false;
 // TODO: actually set theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
@@ -3220,10 +3221,19 @@ let constructSettingsBar = async function() {
         //}, { duration: 200, display: none, queue: false}).then(() => $("#norm-wrapper").hide());
 
     /*});*/
+    if (set == false) {
+	$("#special-tops").fadeOut();
+	$("#norm-wrapper").fadeOut();
+	$("#settings-wrapper").fadeIn();
+	set = true;
+    } else {
+	$("#settings-wrapper").fadeOut();
+	//TODO: wait this
+	$("#special-tops").fadeIn();
+	$("#norm-wrapper").fadeIn();
+	set = false
+    }
 
-    $("#special-tops").fadeOut();
-    $("#norm-wrapper").fadeOut();
-    $("#settings-wrapper").fadeIn();
 };
 
 let constructSidebar = async function() {
