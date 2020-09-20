@@ -3062,7 +3062,7 @@ $(document).on("dragstart", ".task", function(e) {
 });
 
 $(document).on("click", "#perspective-documentaion", async function(e) {
-    //require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2")
+    //require('electron').shell.openExternal("https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912/644267ccda4d2")
     await Browser.open({ url: 'https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2' });
 });
 
@@ -3227,19 +3227,22 @@ let constructSettingsBar = async function() {
 
     /*});*/
     if (set == false) {
-	prevPage = pageIndex.currentView;
-	$("#special-tops").fadeOut();
-	$("#norm-wrapper").fadeOut();
-	$("#settings-wrapper").delay(340).fadeIn();
+	    prevPage = pageIndex.currentView;
+	    $("#special-tops").fadeOut();
+	    $("#norm-wrapper").fadeOut();
+        $("#settings").html("<i class=\"fas fa-skiing\" style=\"padding-right: 5px;\"></i><span id=\"logout-text-name\">Save</span>");
+	    $("#settings-wrapper").delay(340).fadeIn();
         loadView("appearance-page", activeMenu.split("-")[1], true);
-	set = true;
+	    set = true;
     } else {
-	$("#settings-wrapper").fadeOut();
-	//TODO: wait this
-	$("#special-tops").delay(340).fadeIn();
-	$("#norm-wrapper").delay(340).fadeIn();
+
+        $("#settings").html("<i class=\"fas fa-cog\" style=\"padding-right: 5px;\"></i><span id=\"logout-text-name\">Settings</span>");
+        $("#settings-wrapper").fadeOut();
+        //TODO: wait this
+        $("#special-tops").delay(340).fadeIn();
+        $("#norm-wrapper").delay(340).fadeIn();
         loadView(prevPage, activeMenu.split("-")[1]);
-	set = false
+        set = false
     }
 
 };
