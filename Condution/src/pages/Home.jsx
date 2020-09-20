@@ -1,4 +1,6 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
+import { Redirect, Route } from 'react-router-dom';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline } from 'ionicons/icons';
 import React from 'react';
 import './Home.css';
@@ -16,24 +18,28 @@ const Home = () => {
                     */}
                     <br />
                     <IonContent>
+                        {/* === Built Ins == */}
                         <div className="menu-item menu-item-selected"><IonIcon icon={chevronForwardCircle} />Upcoming</div>
                         <div className="menu-item"><IonIcon icon={checkmarkCircle} />Completed</div>
+
+                        {/* === Perspectives == */}
                         <div className="menu-sublabel menu-decoration">Perspectives</div>
-                            <div className="menu-item"><IonIcon icon={filterOutline} />Chicken</div>
-                            <div className="menu-item"><IonIcon icon={filterOutline} />Noodle</div>
+                            {/* === Perspective Contents == */}
                             <div className="menu-item"><IonIcon icon={filterOutline} />Soup</div>
+
+                        {/* === Projects == */}
                         <div className="menu-sublabel menu-decoration">Projects</div>
-                            <div className="menu-item"><IonIcon icon={listOutline} />is a delicios</div>
-                            <div className="menu-item"><IonIcon icon={listOutline} />metal box</div>
-                            <div className="menu-item"><IonIcon icon={listOutline} />that eats</div>
-                            <div className="menu-item"><IonIcon icon={listOutline} />a lot of</div>
+                            {/* === Project Contents == */}
                             <div className="menu-item"><IonIcon icon={listOutline} />soup</div>
                     </IonContent>
                 </IonMenu>
 
                 <IonContent id="main">
-                    <IonText>POOP!</IonText>
-                        { /* <IonMenuButton></IonMenuButton>> */}
+                    <IonReactRouter>
+                        <IonRouterOutlet>
+                            {/*<Route path="/" component={Home} exact={true} />*/}
+                        </IonRouterOutlet>
+                    </IonReactRouter>
                 </IonContent>
               </IonSplitPane>
             </IonContent>
