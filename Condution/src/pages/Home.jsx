@@ -35,14 +35,13 @@ class Home extends Component {
                     <br />
                     <IonContent>
                         {/* === Built Ins == */}
-                        <div className="menu-item menu-item-selected"><IonIcon icon={chevronForwardCircle} />Upcoming</div>
-                        <div className="menu-item"><IonIcon icon={checkmarkCircle} />Completed</div>
+                        <div className="menu-item menu-item-selected" style={{fontSize: 18}} ><IonIcon icon={chevronForwardCircle} />Upcoming</div>
+                        <div className="menu-item" style={{fontSize: 18}}><IonIcon icon={checkmarkCircle} />Completed</div>
 
                         {/* === Perspectives == */}
                         <div className="menu-sublabel menu-decoration">Perspectives</div>
                             {/* === Perspective Contents == */}
                             {this.state.perspectives.map((psp) => {
-                                console.log(this.state.perspectives);
                                     return (<div className="menu-item" key={psp.id}><IonIcon icon={filterOutline} />{psp.name}</div>)
                             })}
 
