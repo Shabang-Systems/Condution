@@ -3,6 +3,14 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+    
+  --menu-background: #eaebed;
+  --menu-background-feature: #d9dadd;
+  --menu-background-accent: #c6c6c6;
+  --menu-background-decorative: #8e8e8e;
+  --menu-text: #414c5e;
+  --theme: #434d5f;
+
   --ion-background-color: #fafafa;
   /** primary **/
   --ion-color-primary: #3880ff;
@@ -84,6 +92,13 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
+  --menu-background: #232323;
+  --menu-background-feature: #2b2b2b;
+  --menu-background-accent: #303030;
+  --menu-background-decorative: #5e5d5d;
+  --menu-text: #caced8;
+  --theme: #434d5f;
+
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66,140,255;
     --ion-color-primary-contrast: #ffffff;
