@@ -5,6 +5,7 @@
      * think: a hover over the background should
      * be colored --background-feature */
     --background: #161616;
+    --ion-background-color: #161616;
     --background-feature: #212121;
     --background-feature-overlay: rgba(40,40,40,0.7);
 

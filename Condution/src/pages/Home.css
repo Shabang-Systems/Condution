@@ -1,10 +1,15 @@
 
+a {
+    text-decoration: none !important;
+}
+
 #main-split {
-    --side-max-width: 250px;
+    --side-max-width: 100px;
 }
 
 #main-menu {
     --background: var(--menu-background);
+    border: 0;
 }
 
 #main-menu ion-content {
@@ -16,13 +21,13 @@
 #menu-hero {
     padding: 10px;
     font-weight: 600;
-    box-shadow: 0px 1px 2px var(--menu-background-accent);
+    box-shadow: 0px 1px 2px var(--menu-semiaccent-background);
     color: var(--theme);
 }
 
 .menu-decoration {
     font-size: 11px;
-    color: var(--menu-background-decorative);
+    color: var(--menu-action);
 }
 
 .menu-sublabel {
@@ -46,12 +51,12 @@
     cursor: default;
 }
 
-.menu-item:hover {
-    background: var(--menu-background-feature);
+.menu-item:hover:not(.menu-item-selected) {
+    background: var(--menu-semiaccent-background);
 }
 
 .menu-item-selected {
-    background: var(--menu-background-accent);
+    background: var(--menu-accent-background);
 }
 
 ion-icon {
