@@ -2874,6 +2874,7 @@ $(document).on("click", "#perspective-edit", function(e) {
 
 $(document).on("click", "#settings", async function(e) {
     e.stopPropagation();
+    console.log(await E.db.getTasks(firebase.auth().currentUser.uid, true))
     await constructSettingsBar();
 });
     $("#settings").mouseover( function(e) {
