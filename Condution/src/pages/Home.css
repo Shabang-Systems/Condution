@@ -55,6 +55,17 @@ a {
     background: var(--menu-semiaccent-background);
 }
 
+#logout {
+    border-radius: 0;
+    padding: 10px;
+}
+
+#logout:hover {
+    background: var(--menu-accent-background);
+}
+
+
+
 .menu-item-selected {
     background: var(--menu-accent-background);
 }

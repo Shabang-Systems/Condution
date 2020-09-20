@@ -1,7 +1,7 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route, Link } from 'react-router-dom';
-import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline } from 'ionicons/icons';
+import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Home.css';
 
@@ -41,9 +41,22 @@ class Home extends Component {
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
         (async function() {
-            let tlp = await view.props.engine.db.getTopLevelProjects(view.props.uid);
-            let psp = await view.props.engine.db.getPerspectives(view.props.uid);
-            view.setState({projects: tlp[2], perspectives:psp[2]});
+            /*
+             * TODO TODO TODO
+             * very very very bad practice below
+             * shield your eyes
+             *
+             * Basically, database warms up slower
+             * than does this function gets called. so
+             * we wait 500ms 
+             *
+             */
+
+            setTimeout(async function() {
+                let tlp = await view.props.engine.db.getTopLevelProjects(view.props.uid);
+                let psp = await view.props.engine.db.getPerspectives(view.props.uid);
+                view.setState({projects: tlp[2], perspectives:psp[2]});
+            }, 500);
         })();
     }
 
@@ -80,6 +93,7 @@ class Home extends Component {
                                 return (<Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline} />{proj.name}</div></Link> )
                             })}
                     </IonContent>
+                    <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><IonIcon icon={bicycle} />Logout</div>
                 </IonMenu>
                 <IonContent id="main">
                         <IonRouterOutlet>

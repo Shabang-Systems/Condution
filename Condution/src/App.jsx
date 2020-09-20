@@ -127,9 +127,9 @@ class App extends Component {
             case "none":
                 return <Auth dispatch={this.authDispatch}/>;
             case "firebase":
-                return <Home engine={Engine} uid={this.state.uid}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch}/>;
             case "json":
-                return <Home engine={Engine} uid={this.state.uid}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch}/>;
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
         }
