@@ -3208,6 +3208,7 @@ let user;
 let uid;
 let displayName;
 let set = false;
+let prevPage;
 // TODO: actually set theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
@@ -3222,15 +3223,18 @@ let constructSettingsBar = async function() {
 
     /*});*/
     if (set == false) {
+	prevPage = pageIndex.currentView;
 	$("#special-tops").fadeOut();
 	$("#norm-wrapper").fadeOut();
-	$("#settings-wrapper").fadeIn();
+	$("#settings-wrapper").delay(340).fadeIn();
+        loadView("appearance-page", activeMenu.split("-")[1]);
 	set = true;
     } else {
 	$("#settings-wrapper").fadeOut();
 	//TODO: wait this
-	$("#special-tops").fadeIn();
-	$("#norm-wrapper").fadeIn();
+	$("#special-tops").delay(340).fadeIn();
+	$("#norm-wrapper").delay(340).fadeIn();
+        loadView(prevPage, activeMenu.split("-")[1]);
 	set = false
     }
 
