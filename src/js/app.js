@@ -294,6 +294,10 @@ E.start({firebase}, "firebase", "json");
 
 let dbReady = E.use(dbType.value ? dbType.value : "firebase") // TODO: should we default to firebase?
 
+
+
+
+
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
@@ -3214,7 +3218,7 @@ let uid;
 let displayName;
 let set = false;
 let prevPage;
-// TODO: actually set theme
+// TODO: actually set 	theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
 /*    $(function () {*/
@@ -3247,6 +3251,59 @@ let constructSettingsBar = async function() {
     }
 
 };
+
+
+
+
+$("#dark-select").click(function() {
+    console.log("eyyoooo");
+    $("#dark-select").css("border","2px solid #257270")
+    $("#light-select").css("border","0px solid #15f2fd")
+    $("#system-select").css("border","0px solid #15f2fd")
+    $("#sys-half").css("border-left","0px solid #257270")
+    currentTheme = "condutiontheme-default-dark";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+
+$("#system-select").click(function() {
+    console.log("jafkhasjdl")
+    if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+	currentTheme = "condutiontheme-default-dark";
+	$("#dark-select").css("border","0px solid #257270")
+	$("#light-select").css("border","0px solid #15f2fd")
+	$("#system-select").css("border-right","2px solid #257270")
+	$("#system-select").css("border-top","2px solid #257270")
+	$("#system-select").css("border-bottom","2px solid #257270")
+	$("#sys-half").css("border-left","2px solid #257270")
+    } else {
+	currentTheme = "condutiontheme-default-light";
+	$("#dark-select").css("border","0px solid #257270")
+	$("#light-select").css("border","0px solid #38C2E7")
+	$("#system-select").css("border-top","2px solid #38C2E7")
+	$("#system-select").css("border-bottom","2px solid #38C2E7")
+	$("#system-select").css("border-right","2px solid #38C2E7")
+	$("#sys-half").css("border-left","2px solid #38c2e7")
+
+    }
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+
+$("#light-select").click(function() {
+    console.log("noooooo");
+    $("#dark-select").css("border","0px solid #257270")
+    $("#light-select").css("border","2px solid #38C2E7")
+    $("#system-select").css("border","0px solid red")
+    $("#sys-half").css("border-left","0px solid #257270")
+    currentTheme = "condutiontheme-default-light";
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+});
+
+
 
 let constructSidebar = async function() {
     let tlps = (await E.db.getTopLevelProjects(uid));
