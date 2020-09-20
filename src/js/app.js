@@ -3210,6 +3210,17 @@ let displayName;
 // TODO: actually set theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
+/*    $(function () {*/
+        //$("#special-tops").animate({
+            //opacity: '0',
+        //}, { duration: 200, display: none, queue: false}).then(() => $("#special-tops").hide());
+
+        //$("#norm-wrapper").animate({
+            //opacity: '0',
+        //}, { duration: 200, display: none, queue: false}).then(() => $("#norm-wrapper").hide());
+
+    /*});*/
+
     $("#special-tops").fadeOut();
     $("#norm-wrapper").fadeOut();
     $("#settings-wrapper").fadeIn();
