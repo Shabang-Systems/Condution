@@ -2,10 +2,26 @@ import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuBu
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline } from 'ionicons/icons';
-import React from 'react';
+import React, { Component } from 'react';
 import './Home.css';
 
-const Home = () => {
+class Home extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {projects:[], perspectives:[]};
+    }
+
+    componentDidMount() {
+        let view = this;
+        (async function() {
+            let tlp = await view.props.engine.db.getTopLevelProjects(view.props.uid);
+            let psp = await view.props.engine.db.getPerspectives(view.props.uid);
+            view.setState({projects: tlp[2], perspectives:psp[2]});
+        })();
+    }
+
+    render() {
     return (
         <IonPage>
             <IonContent>
@@ -25,12 +41,18 @@ const Home = () => {
                         {/* === Perspectives == */}
                         <div className="menu-sublabel menu-decoration">Perspectives</div>
                             {/* === Perspective Contents == */}
-                            <div className="menu-item"><IonIcon icon={filterOutline} />Soup</div>
+                            {this.state.perspectives.map((psp) => {
+                                console.log(this.state.perspectives);
+                                    return (<div className="menu-item" key={psp.id}><IonIcon icon={filterOutline} />{psp.name}</div>)
+                            })}
+
 
                         {/* === Projects == */}
                         <div className="menu-sublabel menu-decoration">Projects</div>
                             {/* === Project Contents == */}
-                            <div className="menu-item"><IonIcon icon={listOutline} />soup</div>
+                            {this.state.projects.map((proj) => {
+                                    return ( <div className="menu-item" key={proj.id}><IonIcon icon={listOutline} />{proj.name}</div> )
+                            })}
                     </IonContent>
                 </IonMenu>
 
@@ -45,6 +67,7 @@ const Home = () => {
             </IonContent>
         </IonPage>
   );
+    }
 };
 
 export default Home;
