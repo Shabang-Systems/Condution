@@ -2462,7 +2462,7 @@ let ui = function() {
      * @param itemID: if project/perspective, supply str ID
      * @returns {undefined}
      */
-    let loadView = async function(viewName, itemID) {
+    let loadView = async function(viewName, itemID, fade = false) {
         // hide other views
         $("#content-area").children().each(function() {
             if ($(this).attr("id") != viewName) {
@@ -2507,7 +2507,11 @@ let ui = function() {
         }
 
         // bring it!
-        $("#"+viewName).show();
+        if (fade != false) {
+            $("#" + viewName).show();
+        } else {
+            $("#" + viewName).show();
+        }
 
         // tell everyone to bring it!
         pageIndex.currentView = viewName;
@@ -3227,7 +3231,7 @@ let constructSettingsBar = async function() {
 	$("#special-tops").fadeOut();
 	$("#norm-wrapper").fadeOut();
 	$("#settings-wrapper").delay(340).fadeIn();
-        loadView("appearance-page", activeMenu.split("-")[1]);
+        loadView("appearance-page", activeMenu.split("-")[1], true);
 	set = true;
     } else {
 	$("#settings-wrapper").fadeOut();
