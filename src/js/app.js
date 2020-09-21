@@ -3218,6 +3218,8 @@ let uid;
 let displayName;
 let set = false;
 let prevPage;
+let themeChanges = false;
+let startingTheme = currentTheme;
 // TODO: actually set 	theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
@@ -3256,7 +3258,6 @@ let constructSettingsBar = async function() {
 
 
 $("#dark-select").click(function() {
-    console.log("eyyoooo");
     $("#dark-select").css("border","2px solid #257270")
     $("#light-select").css("border","0px solid #15f2fd")
     $("#system-select").css("border","0px solid #15f2fd")
@@ -3264,36 +3265,47 @@ $("#dark-select").click(function() {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
     $("body").addClass(currentTheme);
+
+    if (startingTheme != currentTheme) { // Check if the theme is different than when the user went to the settings page.
+                                         // This is to be used later to save or not save on settings page close.
+        themeChanges = true;             // This is also true for the if statements for the other buttons.
+    } else {
+        themeChanges = false;
+    }
 });
 
 
 $("#system-select").click(function() {
-    console.log("jafkhasjdl")
     if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
-	currentTheme = "condutiontheme-default-dark";
-	$("#dark-select").css("border","0px solid #257270")
-	$("#light-select").css("border","0px solid #15f2fd")
-	$("#system-select").css("border-right","2px solid #257270")
-	$("#system-select").css("border-top","2px solid #257270")
-	$("#system-select").css("border-bottom","2px solid #257270")
-	$("#sys-half").css("border-left","2px solid #257270")
+        currentTheme = "condutiontheme-default-dark";
+        $("#dark-select").css("border","0px solid #257270")
+        $("#light-select").css("border","0px solid #15f2fd")
+        $("#system-select").css("border-right","2px solid #257270")
+        $("#system-select").css("border-top","2px solid #257270")
+        $("#system-select").css("border-bottom","2px solid #257270")
+        $("#sys-half").css("border-left","2px solid #257270")
     } else {
-	currentTheme = "condutiontheme-default-light";
-	$("#dark-select").css("border","0px solid #257270")
-	$("#light-select").css("border","0px solid #38C2E7")
-	$("#system-select").css("border-top","2px solid #38C2E7")
-	$("#system-select").css("border-bottom","2px solid #38C2E7")
-	$("#system-select").css("border-right","2px solid #38C2E7")
-	$("#sys-half").css("border-left","2px solid #38c2e7")
+        currentTheme = "condutiontheme-default-light";
+        $("#dark-select").css("border","0px solid #257270")
+        $("#light-select").css("border","0px solid #38C2E7")
+        $("#system-select").css("border-top","2px solid #38C2E7")
+        $("#system-select").css("border-bottom","2px solid #38C2E7")
+        $("#system-select").css("border-right","2px solid #38C2E7")
+        $("#sys-half").css("border-left","2px solid #38c2e7")
 
     }
     $("body").removeClass();
     $("body").addClass(currentTheme);
+
+    if (startingTheme != currentTheme) {
+        themeChanges = true;
+    } else {
+        themeChanges = false;
+    }
 });
 
 
 $("#light-select").click(function() {
-    console.log("noooooo");
     $("#dark-select").css("border","0px solid #257270")
     $("#light-select").css("border","2px solid #38C2E7")
     $("#system-select").css("border","0px solid red")
@@ -3301,6 +3313,12 @@ $("#light-select").click(function() {
     currentTheme = "condutiontheme-default-light";
     $("body").removeClass();
     $("body").addClass(currentTheme);
+
+    if (startingTheme != currentTheme) {
+        themeChanges = true;
+    } else {
+        themeChanges = false;
+    }
 });
 
 
