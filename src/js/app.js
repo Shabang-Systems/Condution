@@ -2878,7 +2878,7 @@ $(document).on("click", "#perspective-edit", function(e) {
 
 $(document).on("click", "#settings", async function(e) {
     e.stopPropagation();
-    console.log(await E.db.getTasks(firebase.auth().currentUser.uid, true))
+    console.log(await E.db.getTasks(firebase.auth().currentUser.uid, 1))
     await constructSettingsBar();
 });
     $("#settings").mouseover( function(e) {
@@ -3171,6 +3171,7 @@ $(document).on("click", "#quickaddmobile", async function(evt) {
             repeat: {rule: "none"},
             name: "",
         };
+
         E.db.newTask(uid, ntObject).then(function(ntID) {
             let activeTaskLeverage = 0;
             E.db.getInboxTasks(uid).then(function(e){
@@ -3223,16 +3224,6 @@ let startingTheme = currentTheme;
 // TODO: actually set 	theme
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
-/*    $(function () {*/
-        //$("#special-tops").animate({
-            //opacity: '0',
-        //}, { duration: 200, display: none, queue: false}).then(() => $("#special-tops").hide());
-
-        //$("#norm-wrapper").animate({
-            //opacity: '0',
-        //}, { duration: 200, display: none, queue: false}).then(() => $("#norm-wrapper").hide());
-
-    /*});*/
     if (set == false) {
 	    prevPage = pageIndex.currentView;
 	    $("#special-tops").fadeOut();
@@ -3242,8 +3233,13 @@ let constructSettingsBar = async function() {
         loadView("appearance-page", activeMenu.split("-")[1], true);
 	    set = true;
     } else {
-
         $("#settings").html("<i class=\"fas fa-cog\" style=\"padding-right: 5px;\"></i><span id=\"logout-text-name\">Settings</span>");
+        if (themeChanges == true) { // Taking current theme and shoving it in the database
+            console.log("changing the settings page stuff on the firebase");
+            oldSettings = await E.db.getTasks(firebase.auth().currentUser.uid, 1);
+            oldSettings.theme = currentTheme;
+            await E.db.getTasks(firebase.auth().currentUser.uid, 2, oldSettings);
+        }
         $("#settings-wrapper").fadeOut();
         //TODO: wait this
         $("#special-tops").delay(340).fadeIn();
