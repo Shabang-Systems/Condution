@@ -296,8 +296,6 @@ let dbReady = E.use(dbType.value ? dbType.value : "firebase") // TODO: should we
 
 
 
-
-
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
@@ -487,6 +485,9 @@ let status = Network.getStatus().then(status=>handleInternet(status.connected));
 
 async function loadApp(user) {
     await dbReady;
+    let themeFromeFirebase = E.db.getTasks(firebase.auth().currentUser.uid, 1).then(snap => snap.theme);
+
+    currentTheme = themeFromeFirebase;
     const startTime = Date.now();
     // User is signed in. Do user related things.
     // Check user's theme
@@ -3225,6 +3226,7 @@ let startingTheme = currentTheme;
 //let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
     if (set == false) {
+        startingTheme = currentTheme
 	    prevPage = pageIndex.currentView;
 	    $("#special-tops").fadeOut();
 	    $("#norm-wrapper").fadeOut();
@@ -3247,7 +3249,6 @@ let constructSettingsBar = async function() {
         loadView(prevPage, activeMenu.split("-")[1]);
         set = false
     }
-
 };
 
 
@@ -3293,7 +3294,7 @@ $("#system-select").click(function() {
     $("body").removeClass();
     $("body").addClass(currentTheme);
 
-    if (startingTheme != currentTheme) {
+    if (startingTheme != currentTheme) { // TODO fix system themes
         themeChanges = true;
     } else {
         themeChanges = false;
