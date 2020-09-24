@@ -95,7 +95,7 @@ class Home extends Component {
                                 return (<Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline} />{proj.name}</div></Link> )
                             })}
                     </IonContent>
-                    <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><IonIcon icon={bicycle} />Logout</div>
+                        <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                 </IonMenu>
                 <IonContent id="main">
                         <IonRouterOutlet>

@@ -24,6 +24,8 @@ import './themefiles/condutiontheme-default.css';
 import './themefiles/condutiontheme-default-dark.css';
 import './themefiles/condutiontheme-default-light.css';
 
+import './static/fa/scripts/all.min.css';
+
 /* Theme variables */
 import './theme/variables.css';
 

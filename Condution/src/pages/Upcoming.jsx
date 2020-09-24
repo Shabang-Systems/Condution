@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import './Upcoming.css';
 import './Pages.css';
 
+import Task from './Components/Task';
+
 const autoBind = require('auto-bind/react');
 
 class Upcoming extends Component {
@@ -11,7 +13,8 @@ class Upcoming extends Component {
         return (
             <IonPage>
                 <IonContent>
-                    Baam bamaba
+                    <Task />
+                    <Task />
                 </IonContent>
             </IonPage>
         )

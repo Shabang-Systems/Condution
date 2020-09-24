@@ -1,0 +1,17 @@
+.task {
+    border-width: 0px;
+    border-style: 0;
+    border-radius: 7px;
+    transition: background-color 0.3s;
+    margin: 6px 8px;
+    color: var(--task-textbox);
+}
+
+.task.collapsed {
+    /*--background: red;*/
+}
+
+.task.collapsed:hover {
+    background: var(--background-feature);
+}
+
