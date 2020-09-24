@@ -1,9 +1,11 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route, Link } from 'react-router-dom';
+import { Redirect, Route, Link, Switch } from 'react-router-dom';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Home.css';
+import Upcoming from './Upcoming';
+import Perspectives from './Perspectives';
 
 const autoBind = require('auto-bind/react');
 
@@ -99,7 +101,10 @@ class Home extends Component {
                         <IonRouterOutlet>
                             {/*<Route path="/" component={Home} exact={true} />*/}
                              <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
-                                
+                             <Switch>
+                                 <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} />} />
+                                 <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} />}  />
+                            </Switch>
                         </IonRouterOutlet>
                 </IonContent>
               </IonSplitPane>
