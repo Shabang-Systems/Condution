@@ -3,19 +3,50 @@
     border-style: 0;
     border-radius: 7px;
     transition: background-color 0.3s;
-    margin: 2px 8px;
+    /*margin: 2px 8px;*/
     color: var(--task-textbox);
 }
 
 .task.collapsed {
-    /*--background: red;*/
-    padding: 3px;
+}
+
+.task.expanded {
 }
 
 .task.collapsed:hover {
     background: var(--background-feature);
 }
 
+.task-desc {
+    font-size: 10pt;
+    font-weight:300;
+    background-color:inherit;
+    color: var(--task-textbox);
+    margin: 5px 5px 0 0;
+    padding: 2px 1px 0 5px;
+    border: 0px;
+    display: block;
+    width: 100%;
+    height: 40px;
+    resize: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 200ms;
+    -webkit-transition-timing-function: ease-in-out;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+}
+
+    .task-desc:focus{
+        background-color: var(--task-textbox-background);
+    }
+
+    .task-desc::placeholder{
+        color: var(--decorative-light-alt);
+    }
 
 .task-name {
     font-weight:400;
@@ -33,6 +64,10 @@
 
     .task-name::placeholder{
         color: var(--decorative-light-alt);
+    }
+
+    .task-name:focus{
+        background-color: var(--task-clickbox-background);
     }
 
     @media (max-width: 575px) { 

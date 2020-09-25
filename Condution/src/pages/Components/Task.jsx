@@ -17,30 +17,53 @@ class Task extends Component {
     }
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
+    closeTask = () => this.setState({expanded: false});
 
     render() {
         return (
             <OutsideClickHandler
-
-                      onOutsideClick={this.toggleTask}
+                onOutsideClick={this.closeTask}
             >
             <Spring
-                from={{taskHeight:0, background:"red"}}
-                to={{taskHeight:this.state.expanded?250:0, background:this.state.expanded?"blue":"red"}}
+                from={{
+                    taskHeight:38, 
+                    taskMargin: "2px 8px", 
+                    taskBackground:"", 
+                    taskPadding: 3,
+                    taskEditDisplay: "none",
+                    taskEditOpacity: 0,
+                }}
+                to={{
+                    taskHeight:this.state.expanded?100:38, 
+                    taskMargin:this.state.expanded?"15px 25px":"2px 8px", 
+                    taskBackground:this.state.expanded?"var(--task-feature)":"", 
+                    taskPadding: this.state.expanded?10:3,
+                    taskEditDisplay: this.state.expanded?"block":"none",
+                    taskEditOpacity: this.state.expanded?1:0,
+                }}
+                config={{
+                    tension: 200,
+                    friction: 20,
+                    mass: 1
+                }}
             >
             {animatedProps => {
                 return (
-                    <div className={"task "+(this.state.expanded?"expanded":"collapsed")} style={{height: animatedProps.taskHeight, background: animatedProps.background}}>
+                    <div className={"task "+(this.state.expanded?"expanded":"collapsed")} style={{height: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}}>
                         <div style={{display: "inline-block", transform: "translateY(-1px)"}}>
-                            <input type="checkbox" id={"task-check-"+this.props.id} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
-                            <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.id} htmlFor={"task-check-"+this.props.id}>&zwnj;</label>
+                            <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
+                            <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                         </div>
-                        <input value={"apple pie"} placeholder={"Task Name"} onChange={()=>{}} onClick={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" type="text" autoComplete="off" placeholder="Task Name"></input>
+                        <input value={"apple pie"} placeholder={"Task Name"} onChange={()=>{}} onClick={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
+                            <div className="task-edit" style={{display: animatedProps.taskEditDisplay, opacity: animatedProps.taskEditOpacity}}>
+                                <textarea placeholder="LOCALIZE:Description" className="task-desc">
+                                </textarea>
+                            </div>
                     </div>
                 )}
             } 
             </Spring>
-                    </OutsideClickHandler>
+        </OutsideClickHandler>
 
         )
     }

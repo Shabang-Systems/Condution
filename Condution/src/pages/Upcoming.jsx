@@ -13,7 +13,9 @@ class Upcoming extends Component {
         return (
             <IonPage>
                 <IonContent>
-                    <Task id={"thuanouh3o"} uid={this.props.uid} engine={this.props.engine}/>
+                    <Task tid={"thuanouh3o"} uid={this.props.uid} engine={this.props.engine}/>
+                    <Task tid={"aoeunt"} uid={this.props.uid} engine={this.props.engine}/>
+                    <Task tid={"aoenaoetuh"} uid={this.props.uid} engine={this.props.engine}/>
                 </IonContent>
             </IonPage>
         )
