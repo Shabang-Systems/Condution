@@ -3,15 +3,219 @@
     border-style: 0;
     border-radius: 7px;
     transition: background-color 0.3s;
-    margin: 6px 8px;
+    margin: 2px 8px;
     color: var(--task-textbox);
 }
 
 .task.collapsed {
     /*--background: red;*/
+    padding: 3px;
 }
 
 .task.collapsed:hover {
     background: var(--background-feature);
 }
+
+
+.task-name {
+    font-weight:400;
+    background-color:inherit;
+    color: var(--content-normal-alt);
+    padding: 10px 5px 10px 5px;
+    border: 0;
+    display: inline-block;
+    height: 30px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+    /*text-overflow: ellipsis;*/
+}
+
+    .task-name::placeholder{
+        color: var(--decorative-light-alt);
+    }
+
+    @media (max-width: 575px) { 
+        .task-name {
+            font-size: 13pt;
+            width:77%;
+        }
+
+        .task-name-bottom {
+            width:68% !important;
+        }
+    }
+
+    @media (min-width: 576px) { 
+        .task-name {
+            font-size: 12pt;
+            width: 89%;
+        }
+
+        .task-name-bottom {
+            width:80% !important;
+        }
+
+    }
+
+    @media (min-width: 768px) { 
+        .task-name {
+            font-size: 12pt;
+            width: 90%;
+        }
+
+        .task-name-bottom {
+            width:80% !important;
+        }
+
+    }
+
+    @media (min-width: 992px) { 
+        .task-name {
+            font-size: 12pt;
+            width: 95%;
+        }
+
+        .task-name-bottom {
+            width:88% !important;
+        }
+    }
+
+    @media (min-width: 1200px) { 
+        .task-name {
+            font-size: 12pt;
+            width: 85%;
+        }
+
+        .task-name-bottom {
+            width:90% !important;
+        }
+    }
+
+
+/* == Task Check == */
+
+.task-check:not(:checked),
+.task-check:checked {
+    position: absolute;
+    visibility: hidden;
+}
+
+.task-check:not(:checked) + label,
+.task-check:checked + label {
+    position: relative;
+    padding-left: 1.95em;
+    cursor: pointer;
+}
+
+/* checkbox aspect */
+.task-check:not(:checked) + label:before,
+.task-check:checked + label:before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 4.4px;
+    width: 1em; height: 1em;
+    border: 1px solid var(--task-checkbox);
+    border-radius: 4px;
+    /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
+}
+
+.task-check:not(:checked) + label.ds:before,
+.task-check:checked + label.ds:before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 4.4px;
+    width: 1em; height: 1em;
+    border: 1px solid var(--task-checkbox-ds);
+    background: var(--task-checkbox-ds-background);
+    border-radius: 4px;
+    /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
+}
+
+.task-check:not(:checked) + label.od:before,
+.task-check:checked + label.od:before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 4.4px;
+    width: 1em; height: 1em;
+    border: 1px solid var(--task-checkbox-od);
+    background: var(--task-checkbox-od-background);
+    border-radius: 4px;
+    /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
+}
+
+/* checked mark aspect */
+.task-check:not(:checked) + label:after,
+.task-check:checked + label:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900; /* Fix version 5.0.9 */
+    text-transform: text;           /* proposed */
+    content: '\f00c';
+    position: absolute;
+    top: .15em; 
+    left: .10em;
+    font-size: 9px;
+    line-height: 0.6;
+    color: var(--task-checkmark);
+    transition: transform 100ms;
+    transform: translate(8px, 9.5px) !important;
+}
+
+.task-check:not(:checked) + label.ds:after,
+.task-check:checked + label.ds:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900; /* Fix version 5.0.9 */
+    text-transform: text;           /* proposed */
+    content: '\f00c';
+    position: absolute;
+    top: .15em;
+    left: .10em;
+    font-size: 9px;
+    line-height: 0.6;
+    color: var(--task-checkmark-ds);
+    transition: transform 100ms;
+    transform: translate(8px, 9.5px) !important;
+}
+
+.task-check:not(:checked) + label.od:after,
+.task-check:checked + label.od:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900; /* Fix version 5.0.9 */
+    text-transform: text;           /* proposed */
+    content: '\f00c';
+    position: absolute;
+    top: .15em; 
+    left: .10em;
+    font-size: 9px;
+    line-height: 0.6;
+    color: var(--task-checkbox-od);
+    transition: transform 100ms;
+    transform: translate(8px, 9.5px) !important;
+}
+
+/* checked mark aspect changes */
+.task-check:not(:checked) + label:after {
+    opacity: 0;
+    transform: scale(0);
+}
+.task-check:checked + label:after {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* hover style just for information */
+label:hover:before {
+    background-color: var(--task-checkbox-feature) !important;
+}
+
+label.ds:hover:before {
+    background-color: var(--task-checkbox-ds-feature) !important;
+}
+
+label.od:hover:before {
+    background-color: var(--task-checkbox-od-feature) !important;
+}
+
+
 
