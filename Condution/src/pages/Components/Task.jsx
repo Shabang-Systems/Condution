@@ -6,6 +6,7 @@ import { Spring } from 'react-spring/renderprops'
 import OutsideClickHandler from 'react-outside-click-handler';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import * as chrono from 'chrono-node';
 
 
 const autoBind = require('auto-bind/react');
@@ -62,15 +63,35 @@ class Task extends Component {
                             <div className="task-edit" style={{display: animatedProps.taskEditDisplay, opacity: animatedProps.taskEditOpacity}}>
                                 <textarea placeholder="LOCALIZE:Description" className="task-desc">
                                 </textarea>
-                                    <DatePicker
-                                      selected={new Date()}
-                                      onChange={date => console.log(date)}
-                                      showTimeInput
-                                      isClearable
-                                      dateFormat="MM/dd/yyyy h:mm aa"
-                                      //customTimeInput={<ExampleCustomTimeInput />}
-                                      //customInput={<ExampleCustomTimeInput />}
-                                    />
+                                    {(() => {
+                                        const TimeInput = ({ value, onChange }) => {
+                                            if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
+                                            // TODO: calling complex string ops to fix an interface bug not a good idea?
+                                            return (
+                                                <input
+                                                    className=".task-timebox"
+                                                    defaultValue={value}
+                                                    onKeyPress={e => {
+                                                        let d = chrono.parseDate(e.target.value); //TODO bad?
+                                                        if (d && e.key === "Enter") {
+                                                            onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+                                                            this.value = "noetu";
+                                                        }
+                                                    }}
+                                                />
+                                            )};
+                                        return (
+                                            <DatePicker
+                                                selected={this.state.dueDate}
+                                                onChange={date => this.setState({dueDate: date})}
+                                                showTimeInput
+                                                isClearable
+                                                dateFormat="MM/dd/yyyy h:mm aa"
+                                                customTimeInput={<TimeInput />}
+                                                customInput={<input className="task-datebox" />}
+                                            />
+                                        )
+                                    })()}
                             </div>
                     </div>
                 )}

@@ -257,7 +257,7 @@ label.od:hover:before {
 }
 
 .react-datepicker__day--keyboard-selected {
-    background-color: var(--task-datepicker-selected) !important;
+    background-color: transparent !important;
 }
 
 .react-datepicker__day--selected {
@@ -281,6 +281,10 @@ label.od:hover:before {
     background-color: var(--task-datepicker-feature) !important;
 }
 
+.react-datepicker__triangle {
+    border-bottom-color: var(--task-datepicker-feature) !important;
+}
+
 .react-datepicker__current-month {
     color: var(--task-datepicker-elem-feature) !important;
 }
@@ -295,7 +299,22 @@ label.od:hover:before {
     transform: translateY(2px);
 }
 
+.react-datepicker__close-icon::after {
+    background-color: transparent !important;
+    color: var(--task-clickbox) !important;
+}
+
 button:focus {
     outline: 0 !important;
+}
+
+.task-datebox {
+    border: 0;
+    outline: 0;
+    border-radius: 3px;
+    font-size: 13px;
+    padding-left: 5px;
+    background-color: var(--task-clickbox-background);
+    color: var(--task-clickbox);
 }
 
