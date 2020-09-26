@@ -92,7 +92,7 @@ class Task extends Component {
                                                                 <input className="task-datebox" defaultValue={value} onChange={()=>{}} onKeyPress={e => {
                                                                     let d = chrono.parseDate(e.target.value);
                                                                     if (d) console.log(d);
-                                                                    if (d && e.key === "Enter") this.setState({dueDate: d});
+                                                                    if (d && e.key === "Enter") this.setState({deferDate: d});
                                                                 }} onFocus={(e) => {
                                                                     onClick();
                                                                     e.target.focus();
@@ -115,8 +115,8 @@ class Task extends Component {
                                                             )};
                                                         return (
                                                             <DatePicker
-                                                                selected={this.state.dueDate}
-                                                                onChange={date => this.setState({dueDate: date})}
+                                                                selected={this.state.deferDate}
+                                                                onChange={date => this.setState({deferDate: date})}
                                                                 showTimeInput
                                                                 isClearable
                                                                 dateFormat="MM/dd/yyyy h:mm aa"
@@ -158,7 +158,7 @@ class Task extends Component {
                                                             )};
                                                         return (
                                                             <DatePicker
-                                                                selected={this.state.deferDate}
+                                                                selected={this.state.dueDate}
                                                                 onChange={date => this.setState({dueDate: date})}
                                                                 showTimeInput
                                                                 isClearable
