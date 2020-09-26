@@ -7,6 +7,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
+import Select from 'react-select'
 
 
 const autoBind = require('auto-bind/react');
@@ -170,6 +171,15 @@ class Task extends Component {
                                                     })()}
                                                 </div>
                                             </div>
+
+                                            <Select 
+                                                options={[
+                                                    {value: "yah", label: "noh"},
+                                                    {value: "kyah", label: "pnoh"}
+                                                ]}
+                                                className='task-project'
+                                                classNamePrefix='task-project'
+                                            />
 
                                         </div>
                                     )

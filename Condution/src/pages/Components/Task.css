@@ -347,3 +347,34 @@ button:focus {
     color: var(--task-clickbox);
 }
 
+.task-project__control {
+    background-color: var(--task-clickbox-background) !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    height: 21px !important;
+}
+
+.css-1pahdxg-control {
+    box-shadow: 0 0 0 0 transparent !important;
+}
+
+.task-project__value-container, .task-project__indicators {
+    height: 21px !important;
+    font-size: 10px !important;
+}
+
+.task-project__indicator-separator {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+}
+
+.css-b8ldur-Input {
+    transform: translateY(-3.5px);
+}
+
+
+.task-project__menu {
+    background-color: red !important;
+}
+
