@@ -260,6 +260,11 @@ label.od:hover:before {
     background-color: transparent !important;
 }
 
+/**:focus {*/
+    /*border: 0;*/
+    /*outline: 0 !important;*/
+/*}*/
+
 .react-datepicker__day--selected {
     background-color: var(--task-datepicker-selected) !important;
 }

@@ -64,6 +64,19 @@ class Task extends Component {
                                 <textarea placeholder="LOCALIZE:Description" className="task-desc">
                                 </textarea>
                                     {(() => {
+                                        const DateInput = ({ value, onClick }) => { 
+                                            return (
+                                                <input className="task-datebox" defaultValue={value} onChange={()=>{}} onKeyPress={e => {
+                                                    let d = chrono.parseDate(e.target.value);
+                                                    if (d) console.log(d);
+                                                    if (d && e.key === "Enter") this.setState({dueDate: d});
+                                                }} onFocus={(e) => {
+                                                    onClick();
+                                                    e.target.focus();
+                                                }}
+                                                />
+                                            );
+                                        };
                                         const TimeInput = ({ value, onChange }) => {
                                             if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
                                             // TODO: calling complex string ops to fix an interface bug not a good idea?
@@ -73,10 +86,7 @@ class Task extends Component {
                                                     defaultValue={value}
                                                     onKeyPress={e => {
                                                         let d = chrono.parseDate(e.target.value); //TODO bad?
-                                                        if (d && e.key === "Enter") {
-                                                            onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
-                                                            this.value = "noetu";
-                                                        }
+                                                        if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
                                                     }}
                                                 />
                                             )};
@@ -88,7 +98,7 @@ class Task extends Component {
                                                 isClearable
                                                 dateFormat="MM/dd/yyyy h:mm aa"
                                                 customTimeInput={<TimeInput />}
-                                                customInput={<input className="task-datebox" />}
+                                                customInput={<DateInput />}
                                             />
                                         )
                                     })()}
