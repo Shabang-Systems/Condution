@@ -1,4 +1,4 @@
-import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonSegmentButton } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Task.css';
@@ -16,7 +16,7 @@ class Task extends Component {
         super(props);
         autoBind(this);
 
-        this.state = { expanded: false, dueDate: new Date()}
+        this.state = { expanded: false, dueDate: new Date(), deferDate: new Date()}
     }
 
     /* GOAL!! State updates trigger DB updates. No need to call DB updates manually. */
@@ -61,8 +61,12 @@ class Task extends Component {
                         </div>
                         <input value={"apple pie"} placeholder={"Task Name"} onChange={()=>{}} onClick={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
                             <div className="task-edit" style={{display: animatedProps.taskEditDisplay, opacity: animatedProps.taskEditOpacity}}>
-                                <textarea placeholder="LOCALIZE:Description" className="task-desc">
+                                <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 15}}>
                                 </textarea>
+
+
+                                <div style={{display: "inline-block", marginRight: 10}}>
+                                    <i class="far fa-play-circle" style={{transform: "translateY(1px)", marginRight: 10}}></i>
                                     {(() => {
                                         const DateInput = ({ value, onClick }) => { 
                                             return (
@@ -102,6 +106,51 @@ class Task extends Component {
                                             />
                                         )
                                     })()}
+                                </div>
+
+                                <div style={{display: "inline-block"}}>
+                                    <i class="far fa-stop-circle" style={{transform: "translateY(1px)", marginRight: 10, marginLeft: 10}}></i>
+                                    {(() => {
+                                        const DateInput = ({ value, onClick }) => { 
+                                            return (
+                                                <input className="task-datebox" defaultValue={value} onChange={()=>{}} onKeyPress={e => {
+                                                    let d = chrono.parseDate(e.target.value);
+                                                    if (d) console.log(d);
+                                                    if (d && e.key === "Enter") this.setState({dueDate: d});
+                                                }} onFocus={(e) => {
+                                                    onClick();
+                                                    e.target.focus();
+                                                }}
+                                                />
+                                            );
+                                        };
+                                        const TimeInput = ({ value, onChange }) => {
+                                            if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
+                                            // TODO: calling complex string ops to fix an interface bug not a good idea?
+                                            return (
+                                                <input
+                                                    className="task-timebox"
+                                                    defaultValue={value}
+                                                    onKeyPress={e => {
+                                                        let d = chrono.parseDate(e.target.value); //TODO bad?
+                                                        if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+                                                    }}
+                                                />
+                                            )};
+                                        return (
+                                            <DatePicker
+                                                selected={this.state.deferDate}
+                                                onChange={date => this.setState({dueDate: date})}
+                                                showTimeInput
+                                                isClearable
+                                                dateFormat="MM/dd/yyyy h:mm aa"
+                                                customTimeInput={<TimeInput />}
+                                                customInput={<DateInput />}
+                                            />
+                                        )
+                                    })()}
+                                </div>
+
                             </div>
                     </div>
                 )}
