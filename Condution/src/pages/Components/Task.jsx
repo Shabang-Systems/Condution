@@ -69,7 +69,7 @@ class Task extends Component {
                                             // TODO: calling complex string ops to fix an interface bug not a good idea?
                                             return (
                                                 <input
-                                                    className=".task-timebox"
+                                                    className="task-timebox"
                                                     defaultValue={value}
                                                     onKeyPress={e => {
                                                         let d = chrono.parseDate(e.target.value); //TODO bad?

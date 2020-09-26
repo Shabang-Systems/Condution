@@ -318,3 +318,14 @@ button:focus {
     color: var(--task-clickbox);
 }
 
+
+.task-timebox {
+    border: 0;
+    outline: 0;
+    border-radius: 3px;
+    font-size: 13px;
+    padding-left: 5px;
+    background-color: var(--task-clickbox-accent-background);
+    color: var(--task-clickbox);
+}
+
