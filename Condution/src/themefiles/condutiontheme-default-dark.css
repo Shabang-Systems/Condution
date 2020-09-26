@@ -38,6 +38,8 @@
     /* Task colors */
     --task: #90939a;
     --task-icon: #777777;
+    --task-flaggedRing: #ed9512;
+    --task-flagged: #f9c06b;
     --task-feature: #222323;
     --task-feature-alt: #777777;
     --task-textbox: #a9a9aa;

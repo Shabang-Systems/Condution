@@ -1,5 +1,8 @@
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
+h1, h2, h3, span, div {
+    font-family: 'Arial' !important;
+}
 
 textarea:focus, input:focus{
     outline: none;

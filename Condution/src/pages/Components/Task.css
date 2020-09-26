@@ -17,6 +17,15 @@
     background: var(--background-feature);
 }
 
+.task-icon {
+    border-radius: 50%;
+    border: 3px solid;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    transform: scale(0.55);
+}
+
 .task-desc {
     font-size: 10pt;
     font-weight:300;
@@ -258,6 +267,10 @@ label.od:hover:before {
 
 .react-datepicker__day--keyboard-selected {
     background-color: transparent !important;
+}
+
+.react-datepicker__day-name {
+    color: var(--task-datepicker-elem-feature) !important;
 }
 
 /**:focus {*/
