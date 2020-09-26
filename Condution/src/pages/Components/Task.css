@@ -251,5 +251,51 @@ label.od:hover:before {
     background-color: var(--task-checkbox-od-feature) !important;
 }
 
+/* == Le Pikr == */
+.react-datepicker {
+    background-color: var(--task-datepicker-background)!important;
+}
 
+.react-datepicker__day--keyboard-selected {
+    background-color: var(--task-datepicker-selected) !important;
+}
+
+.react-datepicker__day--selected {
+    background-color: var(--task-datepicker-selected) !important;
+}
+
+.react-datepicker__day {
+    color: var(--task-datepicker-action) !important;
+    transition: background-color 0.3s;
+}
+
+.react-datepicker-time__caption {
+    color: var(--task-datepicker-action) !important;
+}
+
+.react-datepicker__day:hover {
+    background-color: var(--task-datepicker-elem-feature) !important;
+}
+
+.react-datepicker__header {
+    background-color: var(--task-datepicker-feature) !important;
+}
+
+.react-datepicker__current-month {
+    color: var(--task-datepicker-elem-feature) !important;
+}
+
+.react-datepicker__navigation--next {
+    border-left-color: var(--task-datepicker-elem-feature) !important;
+    transform: translateY(2px);
+}
+
+.react-datepicker__navigation--previous {
+    border-right-color: var(--task-datepicker-elem-feature) !important;
+    transform: translateY(2px);
+}
+
+button:focus {
+    outline: 0 !important;
+}
 

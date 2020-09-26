@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import './Task.css';
 import { Spring } from 'react-spring/renderprops'
 import OutsideClickHandler from 'react-outside-click-handler';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const autoBind = require('auto-bind/react');
@@ -13,8 +15,10 @@ class Task extends Component {
         super(props);
         autoBind(this);
 
-        this.state = {expanded: false}
+        this.state = { expanded: false, dueDate: new Date()}
     }
+
+    /* GOAL!! State updates trigger DB updates. No need to call DB updates manually. */
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
     closeTask = () => this.setState({expanded: false});
@@ -34,7 +38,7 @@ class Task extends Component {
                     taskEditOpacity: 0,
                 }}
                 to={{
-                    taskHeight:this.state.expanded?100:38, 
+                    taskHeight:this.state.expanded?150:38, 
                     taskMargin:this.state.expanded?"15px 25px":"2px 8px", 
                     taskBackground:this.state.expanded?"var(--task-feature)":"", 
                     taskPadding: this.state.expanded?10:3,
@@ -58,6 +62,15 @@ class Task extends Component {
                             <div className="task-edit" style={{display: animatedProps.taskEditDisplay, opacity: animatedProps.taskEditOpacity}}>
                                 <textarea placeholder="LOCALIZE:Description" className="task-desc">
                                 </textarea>
+                                    <DatePicker
+                                      selected={new Date()}
+                                      onChange={date => console.log(date)}
+                                      showTimeInput
+                                      isClearable
+                                      dateFormat="MM/dd/yyyy h:mm aa"
+                                      //customTimeInput={<ExampleCustomTimeInput />}
+                                      //customInput={<ExampleCustomTimeInput />}
+                                    />
                             </div>
                     </div>
                 )}
