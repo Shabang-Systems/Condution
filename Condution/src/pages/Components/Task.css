@@ -334,6 +334,7 @@ button:focus {
     padding-left: 5px;
     background-color: var(--task-clickbox-background);
     color: var(--task-clickbox);
+    z-index: 20 !important;
 }
 
 
@@ -346,6 +347,40 @@ button:focus {
     background-color: var(--task-clickbox-accent-background);
     color: var(--task-clickbox);
 }
+
+.task-project {
+    display: inline-block;
+    transform: translateY(5px);
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-bottom: 15px;
+    margin-right: 30px;
+}
+
+    @media (max-width: 575px) {
+        .task-project {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 576px) { 
+        .task-project {
+            width: 50% !important;
+        }
+    }
+
+    @media (min-width: 768px) { 
+        .task-project {
+            width: 40% !important;
+        }
+    }
+
+    @media (min-width: 992px) { 
+        .task-project {
+            width: 30% !important;
+        }
+    }
+
 
 .task-project__control {
     background-color: var(--task-clickbox-background) !important;
@@ -361,7 +396,7 @@ button:focus {
 
 .task-project__value-container, .task-project__indicators {
     height: 21px !important;
-    font-size: 10px !important;
+    font-size: 13px !important;
 }
 
 .task-project__indicator-separator {
@@ -369,12 +404,42 @@ button:focus {
     margin-bottom: 5px !important;
 }
 
+.task-project__single-value {
+    color: var(--content-normal-alt) !important;
+}
+
 .css-b8ldur-Input {
     transform: translateY(-3.5px);
+    color: var(--content-normal-alt) !important;
 }
 
 
 .task-project__menu {
-    background-color: red !important;
+    background-color: var(--task-feature) !important;
+    color: var(--content-normal-alt) !important;
+    transform: translateY(-3.5px) !important;
+    font-size: 15px;
+    /*tran*/
 }
 
+/*.task-project__menu-list {*/
+    /*z-index: 2000000 !important;*/
+/*}*/
+
+.task-project__option {
+    height: 25px;
+    font-size: 14px !important;
+    padding-top: 2px !important;
+    padding-bottom: 0 !important;
+}
+
+.task-project__option--is-focused {
+    background-color: var(--task-textbox-background) !important;
+    color: var(--content-normal-alt) !important;
+}
+
+.task-project__option--is-selected{
+    background-color: var(--task-feature-alt) !important;
+    color: var(--content-normal-alt) !important;
+
+}

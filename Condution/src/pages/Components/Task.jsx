@@ -18,6 +18,7 @@ class Task extends Component {
         autoBind(this);
 
         this.state = { expanded: false, dueDate: new Date(), deferDate: new Date()}
+        this.me = React.createRef();
     }
 
     /* GOAL!! State updates trigger DB updates. No need to call DB updates manually. */
@@ -29,6 +30,7 @@ class Task extends Component {
         return (
             <OutsideClickHandler
                 onOutsideClick={this.closeTask}
+                
             >
             <Spring
                 from={{
@@ -53,7 +55,7 @@ class Task extends Component {
             >
             {animatedProps => {
                 return (
-                    <div className={"task "+(this.state.expanded?"expanded":"collapsed")} style={{minHeight: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}}>
+                    <div className={"task "+(this.state.expanded?"expanded":"collapsed")} style={{minHeight: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}} ref={this.me}>
                         <div style={{display: "inline-block", transform: "translateY(-1px)"}}>
                             <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
                             <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
@@ -81,10 +83,24 @@ class Task extends Component {
                                             <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 10}}>
                                             </textarea>
 
-
-                                            <div className="task-icon" style={{borderColor: "var(--task-icon)"}}><a className="fas fa-flag" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
-                                            <div className="task-icon" style={{borderColor: "var(--task-icon)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
                                             <div style={{display: "inline-block"}}>
+                                                <div className="task-icon" style={{borderColor: "var(--task-icon)"}}><a className="fas fa-flag" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                <div className="task-icon" style={{borderColor: "var(--task-icon)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                            </div>
+                                            <Select 
+                                                options={[
+                                                    {value: "yah", label: "noh"},
+                                                    {value: "kyah", label: "pnoh"}
+                                                ]}
+                                                className='task-project'
+                                                classNamePrefix='task-project'
+                                                isClearable
+                                                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                                                menuPortalTarget={this.me.current}
+                                            />
+
+                                            <div style={{display: "inline-block"}}>
+
                                                 <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                     <i className="far fa-play-circle" style={{transform: "translateY(1px)", marginRight: 10, color: "var(--task-icon)"}}></i>
                                                     {(() => {
@@ -171,15 +187,6 @@ class Task extends Component {
                                                     })()}
                                                 </div>
                                             </div>
-
-                                            <Select 
-                                                options={[
-                                                    {value: "yah", label: "noh"},
-                                                    {value: "kyah", label: "pnoh"}
-                                                ]}
-                                                className='task-project'
-                                                classNamePrefix='task-project'
-                                            />
 
                                         </div>
                                     )
