@@ -9,13 +9,38 @@ import Task from './Components/Task';
 const autoBind = require('auto-bind/react');
 
 class Upcoming extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {inbox: [], dueSoon: []};
+
+        this.props.gruntman.registerRefresher(this.refresh);
+
+        autoBind(this);
+    }
+
+    async refresh() {
+        let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
+        let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
+        this.setState({inbox: pandt[0], dueSoon: pandt[1]});
+    }
+
+    componentDidMount() {
+        this.refresh();
+    }
+    
     render() {
         return (
             <IonPage>
                 <IonContent>
-                    <Task tid={"thuanouh3o"} uid={this.props.uid} engine={this.props.engine}/>
-                    <Task tid={"aoeunt"} uid={this.props.uid} engine={this.props.engine}/>
-                    <Task tid={"aoenaoetuh"} uid={this.props.uid} engine={this.props.engine}/>
+                    {this.state.inbox.map(id => (
+                        <Task tid={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                    ))}
+                    <hr />
+                    {this.state.dueSoon.map(id => (
+                        <Task tid={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                    ))}
+
                 </IonContent>
             </IonPage>
         )

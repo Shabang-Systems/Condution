@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
+const { parseFromTimeZone } = require('date-fns-timezone')
 
 
 const autoBind = require('auto-bind/react');
@@ -17,11 +18,22 @@ class Task extends Component {
         super(props);
         autoBind(this);
 
-        this.state = { expanded: false, dueDate: new Date(), deferDate: new Date()}
+        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: []}
         this.me = React.createRef();
     }
 
     /* GOAL!! State updates trigger DB updates. No need to call DB updates manually. */
+
+    async loadTask() {
+        let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
+        this.setState({name: taskInfo.name, desc: taskInfo.desc, project: taskInfo.project, tags: taskInfo.tags, isFloating: taskInfo.isFloating, isFlagged: taskInfo.isFlagged, dueDate: (taskInfo.due ? (taskInfo.isFloating ? new Date(taskInfo.due.seconds*1000) : parseFromTimeZone((new Date(taskInfo.due.seconds*1000)).toISOString(), {timeZone: taskInfo.timezone})): undefined), deferDate: (taskInfo.defer? (taskInfo.isFloating ? new Date(taskInfo.defer.seconds*1000) : parseFromTimeZone((new Date(taskInfo.defer.seconds*1000)).toISOString(), {timeZone: taskInfo.timezone})): undefined)});
+        //console.log(taskInfo.defer);
+        //console.log((new Date(taskInfo.defer.seconds)).toISOString());
+    }
+
+    componentDidMount() {
+        this.loadTask();    
+    }
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
     closeTask = () => this.setState({expanded: false});
@@ -61,7 +73,7 @@ class Task extends Component {
                                 <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
                                 <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
-                            <input value={"apple pie"} placeholder={"Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
+                            <input value={this.state.name} placeholder={"LOCALIZE: Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
 
                                 <Spring
                                     from={{
@@ -69,24 +81,26 @@ class Task extends Component {
                                         taskEditOpacity: 0,
                                     }}
                                     to={{
-                                        taskEditDisplay: animatedProps.doEdit > 0.6?"block":"none",
-                                        taskEditOpacity: animatedProps.doEdit > 0.6?1:0,
+                                        taskEditDisplay: animatedProps.doEdit > 0.5?"block":"none",
+                                        taskEditOpacity: animatedProps.doEdit > 0.5?1:0,
                                     }}
                                     config={{
-                                        tension: 200,
-                                        friction: 25,
+                                        tension: 20,
+                                        friction: 7,
                                         mass: 1
                                     }}
                                 >
                                     {animatedEditProps => {
                                         return (
                                             <div className="task-edit" style={{display: animatedEditProps.taskEditDisplay, opacity: animatedEditProps.taskEditOpacity}}>
-                                                <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 10}}>
+                                                <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 10}} defaultValue={this.state.desc}>
+                                                    
                                                 </textarea>
 
                                                 <div style={{display: "inline-block", marginBottom: 6}}>
-                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)"}}><a className="fas fa-flag" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
-                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                    <div className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                    {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
 
 

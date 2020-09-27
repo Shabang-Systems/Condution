@@ -102,8 +102,8 @@ class Home extends Component {
                             {/*<Route path="/" component={Home} exact={true} />*/}
                              <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
                              <Switch>
-                                 <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} />} />
-                                 <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  />}  />
+                                 <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                 <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  />}  />
                             </Switch>
                         </IonRouterOutlet>
                 </IonContent>

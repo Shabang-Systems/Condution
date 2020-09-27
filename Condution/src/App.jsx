@@ -3,6 +3,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonMenu } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
+import Gruntman from './gruntman';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -123,15 +124,16 @@ class App extends Component {
     render() {
         // Check for onboarding here
         // then continue
+        let grunt = new Gruntman(Engine);
         switch (this.state.authMode) {
             case "loader":
                 return <div>TODO Quick and dirty loader</div>
             case "none":
                 return <Auth dispatch={this.authDispatch}/>;
             case "firebase":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={grunt}/>;
             case "json":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={grunt}/>;
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
         }
