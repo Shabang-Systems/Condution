@@ -85,8 +85,8 @@ class Task extends Component {
                                                 </textarea>
 
                                                 <div style={{display: "inline-block", marginBottom: 6}}>
-                                                    <div className="task-icon" style={{borderColor: "var(--task-icon)"}}><a className="fas fa-flag" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
-                                                    <div className="task-icon" style={{borderColor: "var(--task-icon)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)"}}><a className="fas fa-flag" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
                                                 </div>
 
 
