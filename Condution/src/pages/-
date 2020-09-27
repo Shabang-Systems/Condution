@@ -354,13 +354,13 @@ button:focus {
 
     @media (max-width: 575px) {
         .task-project-container {
-            width: 110% !important;
+            width: 94% !important;
         }
     }
 
     @media (min-width: 576px) { 
         .task-project-container {
-            width: 110% !important;
+            width: 100% !important;
         }
     }
 
@@ -384,7 +384,7 @@ button:focus {
     margin-right: 20px;
     margin-bottom: 15px;
     margin-right: 30px;
-    width: 75%;
+    width: 79%;
 }
 
 
@@ -495,13 +495,13 @@ button:focus {
 }
     @media (max-width: 575px) {
         .task-tag-container {
-            width: 110% !important;
+            width: 94% !important;
         }
     }
 
     @media (min-width: 576px) { 
         .task-tag-container {
-            width: 110% !important;
+            width: 100% !important;
         }
     }
 
@@ -526,7 +526,7 @@ button:focus {
     margin-right: 20px;
     margin-bottom: 15px;
     margin-right: 30px;
-    width: 75%;
+    width: 79%;
 }
 
 

@@ -93,7 +93,7 @@ class Task extends Component {
                                                 <div style={{display: "inline-block", marginBottom: 8}}>
 
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
-                                                        <i className="far fa-play-circle" style={{transform: "translateY(1px)", marginRight: 10, color: "var(--task-icon)"}}></i>
+                                                        <i className="fas fa-play" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -136,7 +136,7 @@ class Task extends Component {
                                                     </div>
 
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
-                                                        <i className="far fa-stop-circle" style={{transform: "translateY(1px)", marginRight: 10, color: "var(--task-icon)"}}></i>
+                                                        <i className="fas fa-stop" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -179,29 +179,35 @@ class Task extends Component {
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <Select 
-                                                        options={[
-                                                            {value: "yah", label: "noh"},
-                                                            {value: "kyah", label: "pnoh"}
-                                                        ]}
-                                                        className='task-project'
-                                                        classNamePrefix='task-select'
-                                                        isClearable
-                                                        styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
-                                                        menuPortalTarget={this.me.current}
-                                                    />
-                                                    <Select 
-                                                        options={[
-                                                            {value: "yah", label: "noh"},
-                                                            {value: "kyah", label: "pnoh"}
-                                                        ]}
-                                                        className='task-tag'
-                                                        classNamePrefix='task-select'
-                                                        isClearable
-                                                        isMulti
-                                                        styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
-                                                        menuPortalTarget={this.me.current}
-                                                    />
+                                                    <span className="task-project-container">
+                                                        <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5}}></i>
+                                                        <Select 
+                                                            options={[
+                                                                {value: "yah", label: "noh"},
+                                                                {value: "kyah", label: "pnoh"}
+                                                            ]}
+                                                            className='task-project'
+                                                            classNamePrefix='task-select'
+                                                            isClearable
+                                                            styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                            menuPortalTarget={this.me.current}
+                                                        />
+                                                    </span>
+                                                    <span className="task-tag-container">
+                                                        <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13}}></i>
+                                                        <Select 
+                                                            options={[
+                                                                {value: "yah", label: "noh"},
+                                                                {value: "kyah", label: "pnoh"}
+                                                            ]}
+                                                            className='task-tag'
+                                                            classNamePrefix='task-select'
+                                                            isClearable
+                                                            isMulti
+                                                            styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                            menuPortalTarget={this.me.current}
+                                                        />
+                                                    </span>
                                                 </div>
                                             </div>
                                         )
