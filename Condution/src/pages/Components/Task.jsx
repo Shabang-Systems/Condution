@@ -50,14 +50,14 @@ class Task extends Component {
                     }}
                     config={{
                         tension: 200,
-                        friction: 20,
+                        friction: 25,
                         mass: 1
                     }}
                 >
                 {animatedProps => {
                     return (
                         <div className={"task "+(this.state.expanded?"expanded":"collapsed")} ref={this.me} style={{minHeight: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}}>
-                            <div style={{display: "inline-block", transform: "translateY(-1px)"}}>
+                            <div style={{display: "inline-block", transform: "translateY(-2px)"}}>
                                 <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
                                 <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
@@ -74,7 +74,7 @@ class Task extends Component {
                                     }}
                                     config={{
                                         tension: 200,
-                                        friction: 20,
+                                        friction: 25,
                                         mass: 1
                                     }}
                                 >
