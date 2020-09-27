@@ -29,8 +29,7 @@ class Upcoming extends Component {
         /*possibleTagsRev = pPandT[1][1];*/
         let projectList = [];
         let tagsList = [];
-        for (let pid in pPandT[0][0]) 
-            projectList.push({value: pid, label: pPandT[0][0][pid]});
+
         for (let pid in pPandT[1][0]) 
             tagsList.push({value: pid, label: pPandT[1][0][pid]});
         let views = this;
@@ -42,6 +41,18 @@ class Upcoming extends Component {
             }
             return pdb;
         }());
+
+        let buildSelectString = function(p, level) {
+            if (!level)
+                level = ""
+            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
+            if (p.children)
+                for (let e of p.children)
+                    if (e.type === "project")
+                        buildSelectString(e.content, level+":: ");
+        };
+        projectDB.map(proj=>buildSelectString(proj));
+        console.log(projectList);
 
         this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
     }
