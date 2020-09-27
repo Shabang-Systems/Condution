@@ -359,19 +359,19 @@ button:focus {
 
     @media (max-width: 575px) {
         .task-project {
-            width: 50% !important;
+            width: 94% !important;
         }
     }
 
     @media (min-width: 576px) { 
         .task-project {
-            width: 50% !important;
+            width: 80% !important;
         }
     }
 
     @media (min-width: 768px) { 
         .task-project {
-            width: 40% !important;
+            width: 30% !important;
         }
     }
 
@@ -495,25 +495,25 @@ button:focus {
 
     @media (max-width: 575px) {
         .task-tag {
-            width: 50% !important;
+            width: 94% !important;
         }
     }
 
     @media (min-width: 576px) { 
         .task-tag {
-            width: 50% !important;
+            width: 80% !important;
         }
     }
 
     @media (min-width: 768px) { 
         .task-tag {
-            width: 40% !important;
+            width: 50% !important;
         }
     }
 
     @media (min-width: 992px) { 
         .task-tag {
-            width: 30% !important;
+            width: 50% !important;
         }
     }
 

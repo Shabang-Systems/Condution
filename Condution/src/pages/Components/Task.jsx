@@ -84,23 +84,13 @@ class Task extends Component {
                                                 <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 10}}>
                                                 </textarea>
 
-                                                <div style={{display: "inline-block"}}>
+                                                <div style={{display: "inline-block", marginBottom: 6}}>
                                                     <div className="task-icon" style={{borderColor: "var(--task-icon)"}}><a className="fas fa-flag" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
                                                     <div className="task-icon" style={{borderColor: "var(--task-icon)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
                                                 </div>
-                                                <Select 
-                                                    options={[
-                                                        {value: "yah", label: "noh"},
-                                                        {value: "kyah", label: "pnoh"}
-                                                    ]}
-                                                    className='task-project'
-                                                    classNamePrefix='task-select'
-                                                    isClearable
-                                                    styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
-                                                    menuPortalTarget={this.me.current}
-                                                />
 
-                                                <div style={{display: "inline-block"}}>
+
+                                                <div style={{display: "inline-block", marginBottom: 8}}>
 
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                         <i className="far fa-play-circle" style={{transform: "translateY(1px)", marginRight: 10, color: "var(--task-icon)"}}></i>
@@ -188,19 +178,31 @@ class Task extends Component {
                                                         })()}
                                                     </div>
                                                 </div>
-                                                <Select 
-                                                    options={[
-                                                        {value: "yah", label: "noh"},
-                                                        {value: "kyah", label: "pnoh"}
-                                                    ]}
-                                                    className='task-tag'
-                                                    classNamePrefix='task-select'
-                                                    isClearable
-                                                    isMulti
-                                                    styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
-                                                    menuPortalTarget={this.me.current}
-                                                />
-
+                                                <div>
+                                                    <Select 
+                                                        options={[
+                                                            {value: "yah", label: "noh"},
+                                                            {value: "kyah", label: "pnoh"}
+                                                        ]}
+                                                        className='task-project'
+                                                        classNamePrefix='task-select'
+                                                        isClearable
+                                                        styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                        menuPortalTarget={this.me.current}
+                                                    />
+                                                    <Select 
+                                                        options={[
+                                                            {value: "yah", label: "noh"},
+                                                            {value: "kyah", label: "pnoh"}
+                                                        ]}
+                                                        className='task-tag'
+                                                        classNamePrefix='task-select'
+                                                        isClearable
+                                                        isMulti
+                                                        styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                        menuPortalTarget={this.me.current}
+                                                    />
+                                                </div>
                                             </div>
                                         )
                                     }}
