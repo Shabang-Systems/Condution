@@ -18,7 +18,7 @@ class Task extends Component {
         super(props);
         autoBind(this);
 
-        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: []}
+        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true}
         this.me = React.createRef();
     }
 
@@ -55,8 +55,18 @@ class Task extends Component {
                     ): undefined
             )
         });
-        //console.log(taskInfo.defer);
-        //console.log((new Date(taskInfo.defer.seconds)).toISOString());
+        this.calculateTaskStyle();
+    }
+
+    calculateTaskStyle() {
+        if (this.state.dueDate)
+            if (this.state.dueDate-(new Date()) < 0) 
+                this.setState({decoration: "od"});
+            else if (this.state.dueDate-(new Date()) < 24*60*60*1000) 
+                this.setState({decoration: "ds"});
+        if (this.state.deferDate)
+            if (this.state.deferDate-(new Date()) > 0) 
+                this.setState({availability: false});
     }
 
     componentDidMount() {
@@ -99,7 +109,7 @@ class Task extends Component {
                         <div className={"task "+(this.state.expanded?"expanded":"collapsed")} ref={this.me} style={{minHeight: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}}>
                             <div style={{display: "inline-block", transform: "translateY(-2px)"}}>
                                 <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
-                                <label className={"task-pseudocheck"} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
                             <input value={this.state.name} placeholder={"LOCALIZE: Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
 
