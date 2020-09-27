@@ -320,6 +320,7 @@ label.od:hover:before {
 .react-datepicker__close-icon::after {
     background-color: transparent !important;
     color: var(--task-clickbox) !important;
+    transform: translateY(2px) !important;
 }
 
 button:focus {
@@ -330,11 +331,12 @@ button:focus {
     border: 0;
     outline: 0;
     border-radius: 3px;
-    font-size: 13px;
+    font-size: 12px;
     padding-left: 5px;
     background-color: var(--task-clickbox-background);
     color: var(--task-clickbox);
     z-index: 20 !important;
+    width: 150px !important;
 }
 
 
