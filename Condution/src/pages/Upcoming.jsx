@@ -12,7 +12,7 @@ class Upcoming extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {inbox: [], dueSoon: []};
+        this.state = {inbox: [], dueSoon: [], possibleProjects:{}, possibleTags:{}, possibleProjectsRev:{}, possibleTagsRev:{}, availability: []};
 
         this.props.gruntman.registerRefresher(this.refresh);
 
@@ -22,11 +22,16 @@ class Upcoming extends Component {
     async refresh() {
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
         let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
-        this.setState({inbox: pandt[0], dueSoon: pandt[1]});
+        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid);
+/*        possibleProjects = pPandT[0][0];*/
+        //possibleTags = pPandT[1][0];
+        //possibleProjectsRev = pPandT[0][1];
+        /*possibleTagsRev = pPandT[1][1];*/
+        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail});
     }
 
-    componentDidMount() {
-        this.refresh();
+    async componentDidMount() {
+        await this.refresh();
     }
     
     render() {
@@ -34,11 +39,11 @@ class Upcoming extends Component {
             <IonPage>
                 <IonContent>
                     {this.state.inbox.map(id => (
-                        <Task tid={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                        <Task tid={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]}/>
                     ))}
                     <hr />
                     {this.state.dueSoon.map(id => (
-                        <Task tid={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                        <Task tid={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]}/>
                     ))}
 
                 </IonContent>

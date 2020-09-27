@@ -67,10 +67,12 @@ class Task extends Component {
         if (this.state.deferDate)
             if (this.state.deferDate-(new Date()) > 0) 
                 this.setState({availability: false});
+        else if (this.props.availability === false)
+                this.setState({availability: false});
     }
 
-    componentDidMount() {
-        this.loadTask();    
+    async componentDidMount() {
+        await this.loadTask();    
     }
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
@@ -107,11 +109,11 @@ class Task extends Component {
                 {animatedProps => {
                     return (
                         <div className={"task "+(this.state.expanded?"expanded":"collapsed")} ref={this.me} style={{minHeight: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}}>
-                            <div style={{display: "inline-block", transform: "translateY(-2px)"}}>
-                                <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
+                            <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
+                                <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}} style={{opacity: this.state.availability?1:0.35}}/>
                                 <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
-                            <input value={this.state.name} placeholder={"LOCALIZE: Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
+                            <input value={this.state.name} placeholder={"LOCALIZE: Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name" style={{opacity: this.state.availability?1:0.35}}></input>
 
                                 <Spring
                                     from={{
