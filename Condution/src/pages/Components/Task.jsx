@@ -223,6 +223,7 @@ class Task extends Component {
                                                             isClearable
                                                             styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
                                                             menuPortalTarget={this.me.current}
+                                                            value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                         />
                                                     </span>
                                                     <span className="task-tag-container">
@@ -235,6 +236,7 @@ class Task extends Component {
                                                             isMulti
                                                             styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
                                                             menuPortalTarget={this.me.current}
+                                                            value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
                                                         />
                                                     </span>
                                                 </div>
