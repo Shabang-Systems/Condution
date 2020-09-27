@@ -55,10 +55,6 @@ class Task extends Component {
                     ): undefined
             )
         });
-        this.calculateTaskStyle();
-    }
-
-    calculateTaskStyle() {
         if (this.state.dueDate)
             if (this.state.dueDate-(new Date()) < 0) 
                 this.setState({decoration: "od"});
@@ -91,14 +87,16 @@ class Task extends Component {
                         taskMargin: "2px 8px", 
                         taskBackground:"", 
                         taskPadding: 3,
-                        doEdit: 0
+                        taskEditOpacity: 0,
+                        taskEditMaxHeight: 0,
                     }}
                     to={{
-                        taskHeight:this.state.expanded?145:38, 
+                        taskHeight:this.state.expanded?38:38, 
                         taskMargin:this.state.expanded?"15px 25px":"2px 8px", 
                         taskBackground:this.state.expanded?"var(--task-feature)":"", 
                         taskPadding: this.state.expanded?10:3,
-                        doEdit: this.state.expanded?1:0
+                        taskEditOpacity: this.state.expanded?1:0,
+                        taskEditMaxHeight: this.state.expanded?300:0,
                     }}
                     config={{
                         tension: 200,
@@ -115,24 +113,7 @@ class Task extends Component {
                             </div>
                             <input value={this.state.name} placeholder={"LOCALIZE: Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name" style={{opacity: this.state.availability?1:0.35}}></input>
 
-                                <Spring
-                                    from={{
-                                        taskEditDisplay: "none",
-                                        taskEditOpacity: 0,
-                                    }}
-                                    to={{
-                                        taskEditDisplay: animatedProps.doEdit > 0.5?"block":"none",
-                                        taskEditOpacity: animatedProps.doEdit > 0.5?1:0,
-                                    }}
-                                    config={{
-                                        tension: 20,
-                                        friction: 7,
-                                        mass: 1
-                                    }}
-                                >
-                                    {animatedEditProps => {
-                                        return (
-                                            <div className="task-edit" style={{display: animatedEditProps.taskEditDisplay, opacity: animatedEditProps.taskEditOpacity}}>
+                                            <div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
                                                 <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 10}} defaultValue={this.state.desc}>
                                                     
                                                 </textarea>
@@ -236,10 +217,7 @@ class Task extends Component {
                                                     <span className="task-project-container">
                                                         <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5}}></i>
                                                         <Select 
-                                                            options={[
-                                                                {value: "yah", label: "noh"},
-                                                                {value: "kyah", label: "pnoh"}
-                                                            ]}
+                                                            options={this.props.datapack[1]}
                                                             className='task-project'
                                                             classNamePrefix='task-select'
                                                             isClearable
@@ -250,10 +228,7 @@ class Task extends Component {
                                                     <span className="task-tag-container">
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13}}></i>
                                                         <Select 
-                                                            options={[
-                                                                {value: "yah", label: "noh"},
-                                                                {value: "kyah", label: "pnoh"}
-                                                            ]}
+                                                            options={this.props.datapack[0]}
                                                             className='task-tag'
                                                             classNamePrefix='task-select'
                                                             isClearable
@@ -264,9 +239,6 @@ class Task extends Component {
                                                     </span>
                                                 </div>
                                             </div>
-                                        )
-                                    }}
-                                </Spring>
                         </div>
                     )}
                 } 
