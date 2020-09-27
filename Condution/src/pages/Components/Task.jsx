@@ -94,7 +94,7 @@ class Task extends Component {
                                                         {value: "kyah", label: "pnoh"}
                                                     ]}
                                                     className='task-project'
-                                                    classNamePrefix='task-project'
+                                                    classNamePrefix='task-select'
                                                     isClearable
                                                     styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
                                                     menuPortalTarget={this.me.current}
@@ -188,6 +188,18 @@ class Task extends Component {
                                                         })()}
                                                     </div>
                                                 </div>
+                                                <Select 
+                                                    options={[
+                                                        {value: "yah", label: "noh"},
+                                                        {value: "kyah", label: "pnoh"}
+                                                    ]}
+                                                    className='task-tag'
+                                                    classNamePrefix='task-select'
+                                                    isClearable
+                                                    isMulti
+                                                    styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                    menuPortalTarget={this.me.current}
+                                                />
 
                                             </div>
                                         )
