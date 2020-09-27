@@ -417,11 +417,34 @@ button:focus {
 .task-project__menu {
     background-color: var(--task-feature) !important;
     color: var(--content-normal-alt) !important;
-    transform: translateY(-3.5px) !important;
+    /*transform: translateY(-3.5px) !important;*/
     font-size: 15px;
-    /*tran*/
 }
 
+
+    @media (max-width: 575px) {
+        .task-project__menu {
+            /* This space intentionally left blank */
+        }
+    }
+
+    @media (min-width: 576px) { 
+        .task-project__menu {
+            transform: translateX(-272px) translateY(-3px) !important;
+        }
+    }
+
+    @media (min-width: 768px) { 
+        .task-project__menu {
+            transform: translateX(-272px) translateY(-3px) !important;
+        }
+    }
+
+    @media (min-width: 992px) { 
+        .task-project__menu {
+            transform: translateX(-272px) translateY(-3px) !important;
+        }
+    }
 /*.task-project__menu-list {*/
     /*z-index: 2000000 !important;*/
 /*}*/
@@ -443,3 +466,6 @@ button:focus {
     color: var(--content-normal-alt) !important;
 
 }
+
+
+ 
