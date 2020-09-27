@@ -26,7 +26,35 @@ class Task extends Component {
 
     async loadTask() {
         let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
-        this.setState({name: taskInfo.name, desc: taskInfo.desc, project: taskInfo.project, tags: taskInfo.tags, isFloating: taskInfo.isFloating, isFlagged: taskInfo.isFlagged, dueDate: (taskInfo.due ? (taskInfo.isFloating ? new Date(taskInfo.due.seconds*1000) : parseFromTimeZone((new Date(taskInfo.due.seconds*1000)).toISOString(), {timeZone: taskInfo.timezone})): undefined), deferDate: (taskInfo.defer? (taskInfo.isFloating ? new Date(taskInfo.defer.seconds*1000) : parseFromTimeZone((new Date(taskInfo.defer.seconds*1000)).toISOString(), {timeZone: taskInfo.timezone})): undefined)});
+        this.setState({
+            name: taskInfo.name,
+            desc: taskInfo.desc, 
+            project: taskInfo.project, 
+            tags: taskInfo.tags, 
+            isFloating: taskInfo.isFloating, 
+            isFlagged: taskInfo.isFlagged, 
+            dueDate: (
+                taskInfo.due ? 
+                    (taskInfo.isFloating ? 
+                        new Date(taskInfo.due.seconds*1000) : 
+                        parseFromTimeZone(
+                            (new Date(taskInfo.due.seconds*1000)).toISOString(), 
+                            {timeZone: taskInfo.timezone}
+                        )
+                    ):
+                undefined
+            ), 
+            deferDate: (
+                taskInfo.defer ? 
+                    (taskInfo.isFloating ? 
+                        new Date(taskInfo.defer.seconds*1000) : 
+                            parseFromTimeZone(
+                                (new Date(taskInfo.defer.seconds*1000)).toISOString(), 
+                                {timeZone: taskInfo.timezone}
+                            )
+                    ): undefined
+            )
+        });
         //console.log(taskInfo.defer);
         //console.log((new Date(taskInfo.defer.seconds)).toISOString());
     }
@@ -71,7 +99,7 @@ class Task extends Component {
                         <div className={"task "+(this.state.expanded?"expanded":"collapsed")} ref={this.me} style={{minHeight: animatedProps.taskHeight, margin: animatedProps.taskMargin, background:animatedProps.taskBackground, padding: animatedProps.taskPadding}}>
                             <div style={{display: "inline-block", transform: "translateY(-2px)"}}>
                                 <input type="checkbox" id={"task-check-"+this.props.tid} className="task-check" onChange={()=>{console.log("OMOOB!")}}/>
-                                <label className="task-pseudocheck" id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                <label className={"task-pseudocheck"} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
                             <input value={this.state.name} placeholder={"LOCALIZE: Task Name"} onChange={()=>{}} onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} className="task-name" readOnly={false} type="text" autoComplete="off" placeholder="LOCALIZE: Task Name"></input>
 
