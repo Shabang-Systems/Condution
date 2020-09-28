@@ -299,9 +299,21 @@ class Task extends Component {
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" defaultValue={value} onChange={()=>{}} onKeyPress={e => {
-                                                                        let d = chrono.parseDate(e.target.value);
-                                                                        if (d && e.key === "Enter") this.setState({deferDate: d});
+                                                                    <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+                                                                        this.props.gruntman.registerScheduler(() => {
+                                                                            let d = chrono.parseDate(e.target.value);
+                                                                            if (d) this.setState({deferDate: d});
+                                                                            if (d)
+                                                                                if (this.state.deferDate-(new Date()) > 0) 
+                                                                                    this.setState({availability: false});
+                                                                                else if (this.props.availability === false)
+                                                                                    this.setState({availability: false});
+                                                                            if (d)
+                                                                                this.props.gruntman.do(
+                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                                )
+                                                                        }, `task-defer-${this.props.tid}-update`)
                                                                     }} onFocus={(e) => {
                                                                         onClick();
                                                                         e.target.focus();
