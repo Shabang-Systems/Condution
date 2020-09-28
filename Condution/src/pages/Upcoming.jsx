@@ -82,6 +82,7 @@ class Upcoming extends Component {
                         </div>
                         */}
 
+
                         <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span></div>
                         </div>
                         <div className="datebar" style={{display: "inline-block"}}>
