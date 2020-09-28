@@ -78,13 +78,13 @@ class Home extends Component {
                     <br />
                     <IonContent>
                         {/* === Built Ins == */}
-                        <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon icon={chevronForwardCircle} />Upcoming</div></Link>
-                            <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon icon={checkmarkCircle} />Completed</div></Link>
+                        <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div></Link>
+                            <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div></Link>
                         {/* === Perspectives == */}
                         <div className="menu-sublabel menu-decoration">Perspectives</div>
                             {/* === Perspective Contents == */}
                             {this.state.perspectives.map((psp) => {
-                                return (<Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><IonIcon icon={filterOutline} />{psp.name}</div></Link>)
+                                return (<Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}>{/*<IonIcon icon={filterOutline} />*/}<i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div></Link>)
                             })}
 
 
@@ -92,8 +92,13 @@ class Home extends Component {
                         <div className="menu-sublabel menu-decoration">Projects</div>
                             {/* === Project Contents == */}
                             {this.state.projects.map((proj) => {
-                                return (<Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline} />{proj.name}</div></Link> )
-                            })}
+                                return (
+
+				    <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}>
+					<div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}>
+					    <IonIcon icon={listOutline} />
+				    {/*<i className="fas fa-sitemap" style={{paddingRight: 2, fontSize: 14}}></i> */}{proj.name}</div></Link> )                            })}
+
                     </IonContent>
                         <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                 </IonMenu>
