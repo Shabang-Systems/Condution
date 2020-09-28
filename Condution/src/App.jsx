@@ -42,6 +42,7 @@ import "firebase/auth";
 import "firebase/firestore";
 
 import Auth from './pages/Auth';
+import Loader from './pages/Loader';
 
 const { Storage } = Plugins;
 
@@ -127,7 +128,7 @@ class App extends Component {
         let grunt = new Gruntman(Engine);
         switch (this.state.authMode) {
             case "loader":
-                return <div>TODO Quick and dirty loader</div>
+                return <Loader />
             case "none":
                 return <Auth dispatch={this.authDispatch}/>;
             case "firebase":
@@ -136,6 +137,7 @@ class App extends Component {
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={grunt}/>;
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
+                return <Loader isError={true} error={this.state.authMode}/>
         }
     }
 }
