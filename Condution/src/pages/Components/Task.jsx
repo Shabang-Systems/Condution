@@ -2,7 +2,7 @@ import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, Ion
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Task.css';
-import { Spring, animated } from 'react-spring/renderprops'
+import { Spring, animated, Keyframes } from 'react-spring/renderprops'
 import OutsideClickHandler from 'react-outside-click-handler';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,13 +13,56 @@ const { parseFromTimeZone } = require('date-fns-timezone')
 
 const autoBind = require('auto-bind/react');
 
+const AnimationFactory = Keyframes.Spring({
+    hide: {
+        from: {
+            taskHeight:38, 
+            taskMargin:"15px 25px", 
+            taskBackground:"var(--task-feature)", 
+            taskPadding: 10,
+            taskEditOpacity: 1,
+            taskEditMaxHeight: 300,
+        },
+        to: {
+            taskHeight:38, 
+            taskMargin: "2px 8px", 
+            taskBackground:"", 
+            taskPadding: 3,
+            taskEditOpacity: 0,
+            taskEditMaxHeight: 0,
+        },
+        reset: false
+
+    },
+    show: {
+        to: {
+            taskHeight:38, 
+            taskMargin:"15px 25px", 
+            taskBackground:"var(--task-feature)", 
+            taskPadding: 10,
+            taskEditOpacity: 1,
+            taskEditMaxHeight: 300,
+        },
+        from: {
+            taskHeight:38, 
+            taskMargin: "2px 8px", 
+            taskBackground:"", 
+            taskPadding: 3,
+            taskEditOpacity: 0,
+            taskEditMaxHeight: 0,
+        },
+        reset: false
+    }
+})
+
 class Task extends Component {
     constructor(props) {
         super(props);
         autoBind(this);
 
-        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true}
+        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false}
         this.me = React.createRef();
+
     }
 
 
@@ -32,6 +75,7 @@ class Task extends Component {
             tags: taskInfo.tags, 
             isFloating: taskInfo.isFloating, 
             isFlagged: taskInfo.isFlagged, 
+            isComplete: taskInfo.isComplete, 
             dueDate: (
                 taskInfo.due ? 
                     (taskInfo.isFloating ? 
@@ -89,31 +133,18 @@ class Task extends Component {
     }
 
     render() {
+
         return (
             <OutsideClickHandler
                 onOutsideClick={this.closeTask}
             >
             <div>
-                <Spring
+                <AnimationFactory
 
                     native 
 
-                    from={{
-                        taskHeight:38, 
-                        taskMargin: "2px 8px", 
-                        taskBackground:"", 
-                        taskPadding: 3,
-                        taskEditOpacity: 0,
-                        taskEditMaxHeight: 0,
-                    }}
-                    to={{
-                        taskHeight:this.state.expanded?38:38, 
-                        taskMargin:this.state.expanded?"15px 25px":"2px 8px", 
-                        taskBackground:this.state.expanded?"var(--task-feature)":"", 
-                        taskPadding: this.state.expanded?10:3,
-                        taskEditOpacity: this.state.expanded?1:0,
-                        taskEditMaxHeight: this.state.expanded?300:0,
-                    }}
+                    state={this.state.expanded?"show":"hide"}
+
                     config={{
                         tension: 200,
                         friction: 25,
@@ -374,7 +405,7 @@ class Task extends Component {
                         </animated.div>
                     )}
                 } 
-                </Spring>
+                </AnimationFactory>
             </div>
         </OutsideClickHandler>
 
