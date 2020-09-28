@@ -49,10 +49,19 @@ class Gruntman {
         this.schedulers = {
         } // util function onChange fixer-upper
         this.updateLock = false;
+        this.updateInterval = undefined;
     }
 
-    lockUpdates = () => this.updateLock = true;
-    unlockUpdates = () => { this.updateLock = false; this.refresher(); console.log("aoeu!")}
+    lockUpdates() { 
+        this.updateLock = true; 
+        clearTimeout(this.updateInterval);
+        this.updateInterval = undefined;
+    }
+
+    unlockUpdates() { 
+        this.updateLock = false; 
+        this.updateInterval = setTimeout(this.refresher, 500);
+    }
 
     registerRefresher(r) {
         /*

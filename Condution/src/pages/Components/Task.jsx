@@ -352,6 +352,9 @@ class Task extends Component {
                                                             styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
+                                                            onChange={(e) => {
+                                                                console.log(e)
+                                                            }}
                                                         />
                                                     </span>
                                                 </div>
