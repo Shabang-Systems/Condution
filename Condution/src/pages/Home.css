@@ -49,6 +49,8 @@ a {
     color: var(--menu-text);
     transition: background-color 0.5s;
     cursor: default;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
 }
 
 .menu-item:hover:not(.menu-item-selected) {
