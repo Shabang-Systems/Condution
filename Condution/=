@@ -130,15 +130,15 @@ class Task extends Component {
                                     placeholder={"LOCALIZE: Task Name"} 
                                     onChange={
                                         (e)=>{
-                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
+                                            let va = e;
+                                            this.props.gruntman.registerScheduler(() => {console.log(va);this.props.gruntman.do(
                                                 "task.update", 
                                                 {
                                                     uid: this.props.uid, 
                                                     tid: this.props.tid, 
                                                     query:{name: e.target.value}
                                                 }
-                                            ), `task-name-${this.props.tid}-update`)
+                                            )}, `task-name-${this.props.tid}-update`)
                                         }
                                     } 
                                     onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} 

@@ -22,16 +22,11 @@ class Gruntman {
     constructor(engine) {
         this.e = engine;
         this.refresher = ()=>{};
-        this.refreshersToRefresh = {
-            task: {
-                update: ["view"]
-            }
-        }; // type:action:refreshers to refresh
         this.doers = {
             task: {
                 update: async function (options) {
-                    let tInfo = await this.e.db.getTaskInformation(options.uid, options.tid);
-                    await this.e.db.modifyTask(options.uid, options.tid, options.query)
+                    let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
+                    await engine.db.modifyTask(options.uid, options.tid, options.query)
 
                     return {uid: options.uid, tid: options.tid, tInfo};
                 }
@@ -51,6 +46,8 @@ class Gruntman {
                 update: true,
             }
         }
+        this.schedulers = {
+        } // util function onChange fixer-upper
     }
 
     registerRefresher(r) {
@@ -60,6 +57,12 @@ class Gruntman {
         
         this.refresher = r;
 
+    }
+
+    registerScheduler(callback, identifier, wait=500) {
+        if (this.schedulers[identifier])
+            clearTimeout(this.schedulers[identifier]); // clear the timeout
+        this.schedulers[identifier] = setTimeout(callback, wait);
     }
 
     async do(actionName, options, isUndo) {
@@ -74,10 +77,8 @@ class Gruntman {
         let nodes = actionName.split(".");
 
         let action = this.doers;
-        let refresher = this.refreshersToRefresh;
         while (nodes.length > 0) {
             action = action[nodes.shift()];
-            refresher = refresher[nodes.shift()];
         }
 
         if (isUndo) this.undolog.push(actionID);

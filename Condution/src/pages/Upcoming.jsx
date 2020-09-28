@@ -14,12 +14,13 @@ class Upcoming extends Component {
 
         this.state = {inbox: [], dueSoon: [], possibleProjects:{}, possibleTags:{}, possibleProjectsRev:{}, possibleTagsRev:{}, availability: [], projectSelects:[], tagSelects: [], projectDB: {}};
 
-        this.props.gruntman.registerRefresher(this.refresh);
+        this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
         autoBind(this);
     }
 
     async refresh() {
+        console.log(this);
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
         let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid);
@@ -52,7 +53,6 @@ class Upcoming extends Component {
                         buildSelectString(e.content, level+":: ");
         };
         projectDB.map(proj=>buildSelectString(proj));
-        console.log(projectList);
 
         this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
     }
