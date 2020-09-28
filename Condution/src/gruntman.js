@@ -1,3 +1,6 @@
+const { parseFromTimeZone } = require('date-fns-timezone')
+
+
 class Gruntman {
     
     /* 
@@ -41,6 +44,160 @@ class Gruntman {
                         await engine.db.associateTask(options.uid, options.tid, options.project);
 
                     return {uid: options.uid, tid: options.tid, tInfo};
+                },
+                update__complete: async function (options) {
+                    await engine.db.modifyTask(options.uid, options.tid, {isComplete: true, completeDate: new Date()})
+                    let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
+                    let due = (
+                        taskInfo.due ? 
+                            (taskInfo.isFloating ? 
+                                new Date(taskInfo.due.seconds*1000) : 
+                                parseFromTimeZone(
+                                    (new Date(taskInfo.due.seconds*1000)).toISOString(), 
+                                    {timeZone: taskInfo.timezone}
+                                )
+                            ):
+                        undefined
+                    ); 
+                    let defer = (
+                        taskInfo.defer ? 
+                            (taskInfo.isFloating ? 
+                                new Date(taskInfo.defer.seconds*1000) : 
+                                    parseFromTimeZone(
+                                        (new Date(taskInfo.defer.seconds*1000)).toISOString(), 
+                                       {timeZone: taskInfo.timezone}
+                                    )
+                            ): undefined
+                    );
+                    let repeat = taskInfo.repeat;
+                    if (repeat.rule !== "none" && due) {
+                        let rRule = repeat.rule;
+                        if (rRule === "daily") {
+                            if (defer) {
+                                let defDistance = due-defer;
+                                due.setDate(due.getDate() + 1);
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            } else {
+                                due.setDate(due.getDate() + 1);
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
+                            }
+
+                        } else if (rRule === "weekly2") {
+                            if (defer) {
+                                let rOn = repeat.on;
+                                let current = "";
+                                let defDistance = due-defer;
+                                if (rOn) {
+                                    while (!rOn.includes(current)) {
+                                        due.setDate(due.getDate() + 1);
+                                        let dow = due.getDay();
+                                        switch (dow) {
+                                            case 1:
+                                                current = "M";
+                                                break;
+                                            case 2:
+                                                current = "T";
+                                                break;
+                                            case 3:
+                                                current = "W";
+                                                break;
+                                            case 4:
+                                                current = "Th";
+                                                break;
+                                            case 5:
+                                                current = "F";
+                                                break;
+                                            case 6:
+                                                current = "S";
+                                                break;
+                                            case 7:
+                                                current = "Su";
+                                                break;
+                                        }
+                                    }
+                                } else {
+                                    due.setDate(due.getDate()+7);
+                                    defer.setDate(defer.getDate()+7);
+                                }
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            } else {
+                                let rOn = repeat.on;
+                                if (rOn) {
+                                    let current = "";
+                                    while (!rOn.includes(current)) {
+                                        due.setDate(due.getDate() + 1);
+                                        let dow = due.getDay();
+                                        switch (dow) {
+                                            case 1:
+                                                current = "M";
+                                                break;
+                                            case 2:
+                                                current = "T";
+                                                break;
+                                            case 3:
+                                                current = "W";
+                                                break;
+                                            case 4:
+                                                current = "Th";
+                                                break;
+                                            case 5:
+                                                current = "F";
+                                                break;
+                                            case 6:
+                                                current = "S";
+                                                break;
+                                            case 7:
+                                                current = "Su";
+                                                break;
+                                        }
+                                    }
+                                } else {
+                                    due.setDate(due.getDate()+7);
+                                }
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
+                            }
+                        } else if (rRule === "monthly") {
+                            if (defer) {
+                                let rOn = repeat.on;
+                                let dow = due.getDate();
+                                let oDow = due.getDate();
+                                let defDistance = due-defer;
+                                if (rOn) {
+                                    while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
+                                        due.setDate(due.getDate() + 1);
+                                        dow = due.getDate();
+                                    }
+                                } else {
+                                    due.setMonth(due.getMonth()+1);
+                                }
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            } else {
+                                let rOn = repeat.on;
+                                if (rOn) {
+                                    let dow = due.getDate();
+                                    let oDow = due.getDate();
+                                    while ((!rOn.includes(dow.toString()) && !(rOn.includes("Last") && (new Date(due.getFullYear(), due.getMonth(), due.getDate()).getDate() === new Date(due.getFullYear(), due.getMonth()+1, 0).getDate()))) || (oDow === dow)) {
+                                        due.setDate(due.getDate() + 1);
+                                        dow = due.getDate();
+                                    }
+                                } else {
+                                    due.setMonth(due.getMonth()+1);
+                                }
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
+                            }
+                        } else if (rRule === "yearly") {
+                            if (defer) {
+                                let defDistance = due-defer;
+                                due.setFullYear(due.getFullYear() + 1);
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            } else {
+                                due.setFullYear(due.getFullYear() + 1);
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
+                            }
+
+                        }
+                    }
+                    return {message: "Todo TODO TODO Todo: undo pack?"}
                 }
             },
             project: {

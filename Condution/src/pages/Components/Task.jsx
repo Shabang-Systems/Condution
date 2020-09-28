@@ -82,8 +82,8 @@ const AnimationFactory = Keyframes.Spring({
                 taskPosition: "absolute",
             },
             config: {
-                tension: 100,
-                friction: 10,
+                tension: 800,
+                friction: 50,
                 mass: 1
             },
         }
@@ -201,7 +201,17 @@ class Task extends Component {
                                     type="checkbox" 
                                     id={"task-check-"+this.props.tid} 
                                     className="task-check" 
-                                    onChange={()=>{this.setState({isComplete: !this.state.isComplete})}} 
+                                    onChange={()=>{
+                                        if (this.state.isComplete)
+                                            this.setState({isComplete: false})
+                                        else if (!this.state.isComplete) {
+                                            this.props.gruntman.lockUpdates();
+                                            this.setState({isComplete: true})
+                                                                                                          this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid})
+                                            setTimeout(this.props.gruntman.unlockUpdates, 1000) //TODO wait for animation to finish before state update??
+
+                                        }
+                                    }} 
                                     style={{opacity: this.state.availability?1:0.35}}
                                 />
                                 <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
