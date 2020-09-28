@@ -14,6 +14,8 @@ class Upcoming extends Component {
 
         this.state = {inbox: [], dueSoon: [], possibleProjects:{}, possibleTags:{}, possibleProjectsRev:{}, possibleTagsRev:{}, availability: [], projectSelects:[], tagSelects: [], projectDB: {}};
 
+        this.updatePrefix = this.random();
+
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
         autoBind(this);
@@ -53,23 +55,28 @@ class Upcoming extends Component {
         };
         projectDB.map(proj=>buildSelectString(proj));
 
+        this.updatePrefix = this.random();
+
         this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
     }
 
     async componentDidMount() {
         await this.refresh();
     }
+
+    random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
+
     
     render() {
         return (
             <IonPage>
                 <IonContent>
                     {this.state.inbox.map(id => (
-                        <Task tid={id} key={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
                     <hr />
                     {this.state.dueSoon.map(id => (
-                        <Task tid={id} key={id} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
 
                 </IonContent>

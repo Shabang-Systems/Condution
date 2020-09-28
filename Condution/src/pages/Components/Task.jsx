@@ -97,7 +97,6 @@ class Task extends Component {
 
         this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false}
         this.me = React.createRef();
-
     }
 
 
@@ -207,9 +206,9 @@ class Task extends Component {
                                         else if (!this.state.isComplete) {
                                             this.props.gruntman.lockUpdates();
                                             this.setState({isComplete: true})
-                                                                                                          this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid})
-                                            setTimeout(this.props.gruntman.unlockUpdates, 1000) //TODO wait for animation to finish before state update??
-
+                                                                                                                              this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+                                             //TODO wait for animation to finish before state update??
+                                            this.props.gruntman.unlockUpdates(1000)
                                         }
                                     }} 
                                     style={{opacity: this.state.availability?1:0.35}}

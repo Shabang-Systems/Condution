@@ -245,19 +245,16 @@ class Gruntman {
         this.updateInterval = undefined;
     }
 
-    unlockUpdates() { 
+    unlockUpdates(interval=500) { 
         this.updateLock = false; 
-        this.updateInterval = setTimeout(this.refresher, 500);
+        this.updateInterval = setTimeout(this.refresher, interval);
     }
 
-    registerRefresher(r) {
-        /*
-         * @param refresher: refresher function to refresh what you registered
-         */
-        
-        this.refresher = r;
+    /*
+     * @param refresher: refresher function to refresh what you registered
+     */
 
-    }
+    registerRefresher = (r) => this.refresher = r;
 
     registerScheduler(callback, identifier, wait=500) {
         if (this.schedulers[identifier])
@@ -265,7 +262,7 @@ class Gruntman {
         this.schedulers[identifier] = setTimeout(callback, wait);
     }
 
-    async do(actionName, options, isUndo) {
+    async do(actionName, options, bypassUpdates, isUndo) {
         /*
          * @param actionName => action directive like task.edit or project.create
          * @param options => options
@@ -288,10 +285,8 @@ class Gruntman {
 
         this.taskLog[actionID] = [actionName, resources];
 
-        if (!this.updateLock)
+        if (!this.updateLock && !bypassUpdates)
             this.refresher();
-
-        console.log(this.taskLog);
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
