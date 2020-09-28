@@ -327,7 +327,7 @@ class Task extends Component {
                                                 </div>
                                                 <div>
                                                     <span className="task-project-container">
-                                                        <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5}}></i>
+                                                        <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
                                                         <Select 
                                                             options={this.props.datapack[1]}
                                                             className='task-project'
@@ -345,7 +345,7 @@ class Task extends Component {
                                                         />
                                                     </span>
                                                     <span className="task-tag-container">
-                                                        <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13}}></i>
+                                                        <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
                                                         <Select 
                                                             options={this.props.datapack[0]}
                                                             className='task-tag'
@@ -356,7 +356,16 @@ class Task extends Component {
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
                                                             onChange={(e) => {
-                                                                console.log(e)
+                                                                let tagIDs = e?e.map(a=>a.value):[];
+                                                                this.setState({tags: tagIDs});
+                                                                this.props.gruntman.do(
+                                                                    "task.update", 
+                                                                    {
+                                                                        uid: this.props.uid, 
+                                                                        tid: this.props.tid, 
+                                                                        query:{tags: tagIDs}
+                                                                    }
+                                                                )
                                                             }}
                                                         />
                                                     </span>
