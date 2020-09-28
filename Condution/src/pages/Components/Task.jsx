@@ -2,7 +2,7 @@ import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, Ion
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Task.css';
-import { Spring } from 'react-spring/renderprops'
+import { Spring, animated } from 'react-spring/renderprops'
 import OutsideClickHandler from 'react-outside-click-handler';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -95,6 +95,9 @@ class Task extends Component {
             >
             <div>
                 <Spring
+
+                    native 
+
                     from={{
                         taskHeight:38, 
                         taskMargin: "2px 8px", 
@@ -119,7 +122,7 @@ class Task extends Component {
                 >
                 {animatedProps => {
                     return (
-                        <div 
+                        <animated.div 
                             className={"task "+(this.state.expanded?"expanded":"collapsed")} 
                             ref={this.me} 
                             style={{
@@ -162,7 +165,7 @@ class Task extends Component {
                                     placeholder="LOCALIZE: Task Name" 
                                     style={{opacity: this.state.availability?1:0.35}} />
 
-                                            <div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
+                                            <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
                                                 <textarea 
                                                     placeholder="LOCALIZE:Description" 
                                                     className="task-desc" 
@@ -358,8 +361,8 @@ class Task extends Component {
                                                         />
                                                     </span>
                                                 </div>
-                                            </div>
-                        </div>
+                                            </animated.div>
+                        </animated.div>
                     )}
                 } 
                 </Spring>
