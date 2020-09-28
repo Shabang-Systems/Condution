@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
+import Repeat from './Repeat';
 const { parseFromTimeZone } = require('date-fns-timezone')
 
 
@@ -95,9 +96,12 @@ class Task extends Component {
         super(props);
         autoBind(this);
 
-        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false}
+        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false, showRepeat: false}
         this.me = React.createRef();
+        this.repeater = React.createRef();
     }
+
+    showRepeat() {this.setState({showRepeat: true})}
 
 
     async loadTask() {
@@ -162,8 +166,13 @@ class Task extends Component {
     openTask = () => this.setState({expanded: true});
 
     detectOutsideClick(e) {
+
         if (this.me.current.contains(e.target))
             return; //click inside
+
+        if (this.repeater.current)
+            if (this.repeater.current.contains(e.target))
+                return; //click inside
 
         //otherwise,
         this.closeTask();
@@ -204,6 +213,7 @@ class Task extends Component {
                                 position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
+                            <Repeat reference={this.repeater} isShown={this.state.showRepeat} />
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
                                 <input 
                                     type="checkbox" 
@@ -280,7 +290,7 @@ class Task extends Component {
                                                         this.setState({isFlagged: !this.state.isFlagged});
 
                                                     }} ></a></div>
-                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
+                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
                                                         this.props.gruntman.do(
                                                             "task.update", 
                                                             { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
@@ -288,6 +298,8 @@ class Task extends Component {
                                                         this.setState({isFloating: !this.state.isFloating});
 
                                                     }} ></a></div>
+                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-redo" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, 0px)", cursor: "pointer"}} onClick={this.showRepeat} ></a></div>
+
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
 
