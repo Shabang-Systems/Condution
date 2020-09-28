@@ -3,7 +3,7 @@ import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, Ion
 import React, { Component } from 'react';
 import './Task.css';
 import { Spring, animated, Keyframes } from 'react-spring/renderprops'
-import OutsideClickHandler from 'react-outside-click-handler';
+//import OutsideClickHandler from 'react-outside-click-handler';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
@@ -150,13 +150,24 @@ class Task extends Component {
 
     async componentDidMount() {
         await this.loadTask();    
+        document.addEventListener('mousedown', this.detectOutsideClick, false);
     }
+
+    componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false);
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
 
     closeTask = () => this.setState({expanded: false});
 
     openTask = () => this.setState({expanded: true});
+
+    detectOutsideClick(e) {
+        if (this.me.current.contains(e.target))
+            return; //click inside
+
+        //otherwise,
+        this.closeTask();
+    }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.expanded !== this.state.expanded && this.state.expanded === true)
@@ -169,9 +180,7 @@ class Task extends Component {
     render() {
 
         return (
-            <OutsideClickHandler
-                onOutsideClick={this.closeTask}
-            >
+
             <div>
                 <AnimationFactory
 
@@ -292,7 +301,6 @@ class Task extends Component {
                                                                 return (
                                                                     <input className="task-datebox" defaultValue={value} onChange={()=>{}} onKeyPress={e => {
                                                                         let d = chrono.parseDate(e.target.value);
-                                                                        if (d) console.log(d);
                                                                         if (d && e.key === "Enter") this.setState({deferDate: d});
                                                                     }} onFocus={(e) => {
                                                                         onClick();
@@ -343,11 +351,27 @@ class Task extends Component {
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" defaultValue={value} onChange={()=>{}} onKeyPress={e => {
-                                                                        let d = chrono.parseDate(e.target.value);
-                                                                        if (d) console.log(d);
-                                                                        if (d && e.key === "Enter") this.setState({dueDate: d});
-                                                                    }} onFocus={(e) => {
+                                                                    <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+                                                                        this.props.gruntman.registerScheduler(() => {
+                                                                            let d = chrono.parseDate(e.target.value);
+                                                                            if (d) this.setState({dueDate: d});
+                                                                            if (d)
+                                                                                if (d-(new Date()) < 0) 
+                                                                                    this.setState({decoration: "od"});
+                                                                                else if (d-(new Date()) < 24*60*60*1000) 
+                                                                                    this.setState({decoration: "ds"});
+                                                                                else
+                                                                                    this.setState({decoration: ""});
+
+                                                                            if (d)
+                                                                                this.props.gruntman.do(
+                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                                )
+
+                                                                        }, `task-due-${this.props.tid}-update`)
+                                                                    }
+                                                                    } onFocus={(e) => {
                                                                         onClick();
                                                                         e.target.focus();
                                                                     }}
@@ -448,7 +472,6 @@ class Task extends Component {
                 } 
                 </AnimationFactory>
             </div>
-        </OutsideClickHandler>
 
         )
     }

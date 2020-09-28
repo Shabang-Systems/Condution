@@ -239,6 +239,7 @@ class Gruntman {
     }
 
     lockUpdates() { 
+        console.log("locking updates!")
         this.updateLock = true; 
         if (this.updateInterval)
             clearTimeout(this.updateInterval);
@@ -246,6 +247,7 @@ class Gruntman {
     }
 
     unlockUpdates(interval=500) { 
+        console.log("unlocking updates!")
         this.updateLock = false; 
         this.updateInterval = setTimeout(this.refresher, interval);
     }
