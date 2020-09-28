@@ -150,7 +150,25 @@ class Task extends Component {
                                     style={{opacity: this.state.availability?1:0.35}} />
 
                                             <div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
-                                                <textarea placeholder="LOCALIZE:Description" className="task-desc" style={{marginBottom: 10}} defaultValue={this.state.desc}>
+                                                <textarea 
+                                                    placeholder="LOCALIZE:Description" 
+                                                    className="task-desc" 
+                                                    style={{marginBottom: 10}} 
+                                                    defaultValue={this.state.desc}
+                                                    onChange={
+                                                        (e)=>{
+                                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+                                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
+                                                                "task.update", 
+                                                                {
+                                                                    uid: this.props.uid, 
+                                                                    tid: this.props.tid, 
+                                                                    query:{desc: e.target.value}
+                                                                }
+                                                            ), `task-desc-${this.props.tid}-update`)
+                                                        }
+                                                    }
+                                                        >
                                                     
                                                 </textarea>
 
