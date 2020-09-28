@@ -15,7 +15,6 @@ const autoBind = require('auto-bind/react');
 
 const AnimationFactory = Keyframes.Spring({
     hide: {
-
         to: {
             taskHeight:38, 
             taskMargin: "2px 8px", 
@@ -23,6 +22,16 @@ const AnimationFactory = Keyframes.Spring({
             taskPadding: 3,
             taskEditOpacity: 0,
             taskEditMaxHeight: 0,
+            taskOpacity: 1,
+            taskNameDecoration: "",
+            taskPosition: "",
+            taskDisplay: "",
+            taskMaxHeight: 40,
+        },
+        config: {
+            tension: 200,
+            friction: 25,
+            mass: 1
         },
         reset: false
 
@@ -34,18 +43,51 @@ const AnimationFactory = Keyframes.Spring({
             taskBackground:"var(--task-feature)", 
             taskPadding: 10,
             taskEditOpacity: 1,
+            taskDisplay: "",
+            taskOpacity: 1,
             taskEditMaxHeight: 300,
+            taskNameDecoration: "",
+            taskPosition: "",
+            taskMaxHeight: 500,
         },
-        from: {
-            taskHeight:38, 
-            taskMargin: "2px 8px", 
-            taskBackground:"", 
-            taskPadding: 3,
-            taskEditOpacity: 0,
-            taskEditMaxHeight: 0,
+        config: {
+            tension: 200,
+            friction: 25,
+            mass: 1
         },
         reset: false
-    }
+    },
+    complete: [
+        {
+            to: {
+                taskMargin: "14px 8px", 
+                taskNameDecoration: "line-through",
+                taskOpacity: 1,
+                taskPosition: "",
+            },
+            config: {
+                tension: 200,
+                friction: 25,
+                mass: 1
+            },
+
+        }, 
+        {
+            to: {
+                taskMaxHeight: 0,
+                taskHeight:0, 
+                taskOpacity: 0,
+                taskMargin: "0px 8px", 
+                taskPadding: 0,
+                taskPosition: "absolute",
+            },
+            config: {
+                tension: 100,
+                friction: 10,
+                mass: 1
+            },
+        }
+    ],
 })
 
 class Task extends Component {
@@ -136,13 +178,7 @@ class Task extends Component {
 
                     native 
 
-                    state={this.state.expanded?"show":"hide"}
-
-                    config={{
-                        tension: 200,
-                        friction: 25,
-                        mass: 1
-                    }}
+                    state={this.state.isComplete?"complete":(this.state.expanded?"show":"hide")}
                 >
                 {animatedProps => {
                     return (
@@ -151,8 +187,13 @@ class Task extends Component {
                             ref={this.me} 
                             style={{
                                 minHeight: animatedProps.taskHeight, 
+                                maxHeight: animatedProps.taskMaxHeight, 
                                 margin: animatedProps.taskMargin, 
                                 background:animatedProps.taskBackground, 
+                                opacity:animatedProps.taskOpacity, 
+                                overflow: "hidden",
+                                display: animatedProps.taskDisplay,
+                                position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
@@ -160,12 +201,12 @@ class Task extends Component {
                                     type="checkbox" 
                                     id={"task-check-"+this.props.tid} 
                                     className="task-check" 
-                                    onChange={()=>{console.log("OMOOB!")}} 
+                                    onChange={()=>{this.setState({isComplete: !this.state.isComplete})}} 
                                     style={{opacity: this.state.availability?1:0.35}}
                                 />
                                 <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
-                                <input 
+                                <animated.input 
                                     defaultValue={this.state.name} 
                                     placeholder={"LOCALIZE: Task Name"} 
                                     onChange={
@@ -187,7 +228,7 @@ class Task extends Component {
                                     type="text" 
                                     autoComplete="off" 
                                     placeholder="LOCALIZE: Task Name" 
-                                    style={{opacity: this.state.availability?1:0.35}} />
+                                    style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}} />
 
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
                                                 <textarea 
