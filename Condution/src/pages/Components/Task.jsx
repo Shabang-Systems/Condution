@@ -214,7 +214,7 @@ class Task extends Component {
                                 position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
-                            <Repeat reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
+                            <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
                                 <input 
                                     type="checkbox" 

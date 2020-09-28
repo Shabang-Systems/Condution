@@ -1,7 +1,7 @@
-import { IonModal} from '@ionic/react';
+import { IonModal, IonContent } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
-import './Task.css';
+import './Repeat.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
@@ -19,8 +19,11 @@ class Repeat extends Component {
     render() {
 
         return (
-            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}}>
-                
+            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="task-repeat">
+                <IonContent fullscreen>
+                    TODO TODO
+                    <div>aoeu: {this.props.tid}</div>
+                </IonContent>
             </IonModal>
         )
     }
