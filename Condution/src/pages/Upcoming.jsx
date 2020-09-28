@@ -75,10 +75,12 @@ class Upcoming extends Component {
                         <div style={{display: "inline-block"}}>
                         <IonMenuToggle><i class="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
+                        {/*
                         <div className="greeting-datewidget">
                             <div style={{display: "inline-block"}} className="greeting-date">13</div>
                             <div style={{display: "inline-block"}} className="greeting-datename">Wed</div>
                         </div>
+                        */}
 
                         <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span></div>
                         </div>

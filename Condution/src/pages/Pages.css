@@ -40,7 +40,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    align-items: baseline;
+    align-items:flex-end;
 }
 
 #greeting {
