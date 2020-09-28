@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Upcoming.css';
@@ -71,6 +71,16 @@ class Upcoming extends Component {
         return (
             <IonPage>
                 <IonContent>
+                    <IonMenuToggle><i class="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
+
+                    <div className="greeting-datewidget">
+                        <div style={{display: "inline-block"}} className="greeting-date">13</div>
+                        <div style={{display: "inline-block"}} className="greeting-datename">Wed</div>
+                    </div>
+
+                    <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span></div>
+
+                    <div style={{marginLeft: 10, marginRight: 10}}>
                     {this.state.inbox.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
@@ -78,6 +88,7 @@ class Upcoming extends Component {
                     {this.state.dueSoon.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
+                    </div>
 
                 </IonContent>
             </IonPage>

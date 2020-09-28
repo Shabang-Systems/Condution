@@ -1,0 +1,42 @@
+.page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--content-normal-alt);
+    border-radius: 5px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 15px;
+    padding-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    transform: translateY(1px);
+}
+
+.greeting-container {
+    padding-left: 10px;
+    margin-left: 10px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: var(--decorative-light-accent);
+}
+
+.greeting-datewidget {
+    display: inline-block;
+    transform: translateY(1px);
+}
+
+.greeting-date {
+    font-weight: 800;
+    color: var(--decorative-light-accent);
+    margin-right: 5px;
+}
+
+.greeting-datename {
+    font-weight: 200;
+    color: var(--decorative-light-accent);
+}
+
+#greeting {
+    font-weight: 600;
+}
+

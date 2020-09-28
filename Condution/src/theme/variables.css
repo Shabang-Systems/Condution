@@ -8,6 +8,10 @@ textarea:focus, input:focus{
     outline: none;
 }
 
+body {
+    padding-top: max(15px, env(safe-area-inset-top));
+}
+
 /** Ionic CSS Variables **/
 :root {
     
