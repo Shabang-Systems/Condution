@@ -299,6 +299,9 @@ class Task extends Component {
                                                                                 this.setState({decoration: "ds"});
                                                                             else
                                                                                 this.setState({decoration: ""});
+                                                                        else
+                                                                            this.setState({decoration: ""});
+
 
                                                                         this.props.gruntman.do(
                                                                             "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
