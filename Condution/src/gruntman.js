@@ -29,7 +29,36 @@ class Gruntman {
                     await engine.db.modifyTask(options.uid, options.tid, options.query)
 
                     return {uid: options.uid, tid: options.tid, tInfo};
+                },
+                update__project:  async function (options) {
+                    let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
+                    await engine.db.modifyTask(options.uid, options.tid, {project: options.project})
+
+                    if (options.oldProject)
+                        await engine.db.dissociateTask(options.uid, options.tid, options.oldProject);
+
+                    if (options.project !== "")
+                        await engine.db.associateTask(options.uid, options.tid, options.project);
+
+                    return {uid: options.uid, tid: options.tid, tInfo};
                 }
+            },
+            project: {
+                associate:  async function (options) {
+                    //await engine.db.modifyTask(options.uid, options.tid, options.query)
+                    await engine.db.associateTask(options.uid, options.tid, options.pid);
+
+
+                    return {uid: options.uid, tid: options.tid};
+                },
+                dissociate:  async function (options) {
+                    //await engine.db.modifyTask(options.uid, options.tid, options.query)
+                    await engine.db.dissociateTask(options.uid, options.tid, options.pid);
+
+
+                    return {uid: options.uid, tid: options.tid};
+                }
+
             }
         } // type:action:functionaction (return resources)
         this.undoers = {
@@ -104,6 +133,8 @@ class Gruntman {
 
         if (!this.updateLock)
             this.refresher();
+
+        console.log(this.taskLog);
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}

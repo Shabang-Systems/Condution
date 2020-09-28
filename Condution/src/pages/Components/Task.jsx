@@ -402,10 +402,8 @@ class Task extends Component {
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
+                                                                this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.project, project: (e?e.value:"")})
                                                                 this.setState({project:(e?e.value:"")});
-                                                                this.props.gruntman.do(
-                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{project: (e?e.value:"")}}
-                                                                )
                                                             }}
                                                         />
                                                     </span>
