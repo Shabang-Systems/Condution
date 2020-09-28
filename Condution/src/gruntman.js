@@ -48,7 +48,11 @@ class Gruntman {
         }
         this.schedulers = {
         } // util function onChange fixer-upper
+        this.updateLock = false;
     }
+
+    lockUpdates = () => this.updateLock = true;
+    unlockUpdates = () => { this.updateLock = false; this.refresher(); console.log("aoeu!")}
 
     registerRefresher(r) {
         /*
@@ -88,7 +92,8 @@ class Gruntman {
 
         this.taskLog[actionID] = [actionName, resources];
 
-        this.refresher();
+        if (!this.updateLock)
+            this.refresher();
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}

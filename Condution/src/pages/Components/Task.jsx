@@ -80,6 +80,14 @@ class Task extends Component {
 
     openTask = () => this.setState({expanded: true});
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.expanded !== this.state.expanded && this.state.expanded === true)
+            this.props.gruntman.lockUpdates();
+        else if (prevState.expanded !== this.state.expanded && this.state.expanded === false)
+            this.props.gruntman.unlockUpdates();
+
+    }
+
     render() {
         return (
             <OutsideClickHandler
@@ -326,9 +334,9 @@ class Task extends Component {
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
-                                                                this.setState({project:e.value});
+                                                                this.setState({project:(e?e.value:"")});
                                                                 this.props.gruntman.do(
-                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{project: e.value}}
+                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{project: (e?e.value:"")}}
                                                                 )
                                                             }}
                                                         />
