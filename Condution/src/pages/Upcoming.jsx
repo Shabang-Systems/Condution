@@ -20,7 +20,6 @@ class Upcoming extends Component {
     }
 
     async refresh() {
-        console.log(this);
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
         let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid);

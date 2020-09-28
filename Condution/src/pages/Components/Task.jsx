@@ -22,7 +22,6 @@ class Task extends Component {
         this.me = React.createRef();
     }
 
-    /* GOAL!! State updates trigger DB updates. No need to call DB updates manually. */
 
     async loadTask() {
         let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
@@ -55,6 +54,10 @@ class Task extends Component {
                     ): undefined
             )
         });
+        this.refreshDecorations();
+    }
+
+    refreshDecorations() {
         if (this.state.dueDate)
             if (this.state.dueDate-(new Date()) < 0) 
                 this.setState({decoration: "od"});
@@ -173,8 +176,22 @@ class Task extends Component {
                                                 </textarea>
 
                                                 <div style={{display: "inline-block", marginBottom: 6}}>
-                                                    <div className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
-                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>
+                                                    <div className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFlagged: !this.state.isFlagged}}
+                                                        )
+                                                        this.setState({isFlagged: !this.state.isFlagged});
+
+                                                    }} ></a></div>
+                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
+                                                        )
+                                                        this.setState({isFloating: !this.state.isFloating});
+
+                                                    }} ></a></div>
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
 
@@ -213,9 +230,19 @@ class Task extends Component {
                                                             return (
                                                                 <DatePicker
                                                                     selected={this.state.deferDate}
-                                                                    onChange={date => this.setState({deferDate: date})}
+                                                                    onChange={date => {
+                                                                        this.setState({deferDate: date});
+
+                                                                        if (date-(new Date()) > 0 || !this.props.availability) 
+                                                                            this.setState({availability: false});
+                                                                        else 
+                                                                            this.setState({availability: true});
+
+                                                                        this.props.gruntman.do(
+                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                        )
+                                                                    }}
                                                                     showTimeInput
-                                                                    isClearable
                                                                     dateFormat="MM/dd/yyyy h:mm aa"
                                                                     customTimeInput={<TimeInput />}
                                                                     customInput={<DateInput />}
@@ -262,6 +289,21 @@ class Task extends Component {
                                                                     dateFormat="MM/dd/yyyy h:mm aa"
                                                                     customTimeInput={<TimeInput />}
                                                                     customInput={<DateInput />}
+                                                                    onChange={date => {
+                                                                        this.setState({dueDate: date});
+
+                                                                        if (date)
+                                                                            if (date-(new Date()) < 0) 
+                                                                                this.setState({decoration: "od"});
+                                                                            else if (date-(new Date()) < 24*60*60*1000) 
+                                                                                this.setState({decoration: "ds"});
+                                                                            else
+                                                                                this.setState({decoration: ""});
+
+                                                                        this.props.gruntman.do(
+                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                        )
+                                                                    }}
                                                                 />
                                                             )
                                                         })()}
