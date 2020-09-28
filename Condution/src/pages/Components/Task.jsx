@@ -102,6 +102,7 @@ class Task extends Component {
     }
 
     showRepeat() {this.setState({showRepeat: true})}
+    hideRepeat() {this.setState({showRepeat: false})}
 
 
     async loadTask() {
@@ -213,7 +214,7 @@ class Task extends Component {
                                 position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
-                            <Repeat reference={this.repeater} isShown={this.state.showRepeat} />
+                            <Repeat reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
                                 <input 
                                     type="checkbox" 

@@ -19,7 +19,7 @@ class Repeat extends Component {
     render() {
 
         return (
-            <IonModal ref={this.props.reference} isOpen={this.props.isShown}>
+            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}}>
                 
             </IonModal>
         )
