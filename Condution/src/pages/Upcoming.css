@@ -1,0 +1,12 @@
+.datebar {
+    background-color: var(--decorative-light);
+    font-family: "Comic Sans MS", cursive, sans-serif !important;	
+    margin: 10px 30px;
+    height: 50px;
+    flex-grow: 2;
+    border-radius: 5px;
+      display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
