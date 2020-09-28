@@ -54,7 +54,8 @@ class Gruntman {
 
     lockUpdates() { 
         this.updateLock = true; 
-        clearTimeout(this.updateInterval);
+        if (this.updateInterval)
+            clearTimeout(this.updateInterval);
         this.updateInterval = undefined;
     }
 
