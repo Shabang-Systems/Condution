@@ -75,13 +75,15 @@ class Task extends Component {
     }
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
+
     closeTask = () => this.setState({expanded: false});
+
+    openTask = () => this.setState({expanded: true});
 
     render() {
         return (
             <OutsideClickHandler
                 onOutsideClick={this.closeTask}
-                
             >
             <div>
                 <Spring
@@ -144,7 +146,7 @@ class Task extends Component {
                                             ), `task-name-${this.props.tid}-update`)
                                         }
                                     } 
-                                    onFocus={()=>{ if(!this.state.expanded) this.toggleTask() }} 
+                                    onFocus={()=>{ if(!this.state.expanded) this.openTask() }} 
                                     className="task-name" 
                                     readOnly={false} 
                                     type="text" 
@@ -323,6 +325,12 @@ class Task extends Component {
                                                             styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
+                                                            onChange={(e)=>{
+                                                                this.setState({project:e.value});
+                                                                this.props.gruntman.do(
+                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{project: e.value}}
+                                                                )
+                                                            }}
                                                         />
                                                     </span>
                                                     <span className="task-tag-container">
