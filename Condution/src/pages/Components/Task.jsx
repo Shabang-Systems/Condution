@@ -15,14 +15,7 @@ const autoBind = require('auto-bind/react');
 
 const AnimationFactory = Keyframes.Spring({
     hide: {
-        from: {
-            taskHeight:38, 
-            taskMargin:"15px 25px", 
-            taskBackground:"var(--task-feature)", 
-            taskPadding: 10,
-            taskEditOpacity: 1,
-            taskEditMaxHeight: 300,
-        },
+
         to: {
             taskHeight:38, 
             taskMargin: "2px 8px", 
