@@ -43,6 +43,20 @@
     align-items:flex-end;
 }
 
+.page-label {
+    font-weight: 600;
+    color: var(--decorative-light-accent);
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.count-badge {
+    color: var(--content-normal-accent);
+    border: 1px solid var(--content-normal-accent);
+    background-color: transparent;
+    transform: translate(5px, 6px);
+}
+
 #greeting {
     font-weight: 600;
 }

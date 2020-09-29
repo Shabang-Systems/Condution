@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Upcoming.css';
@@ -89,12 +89,15 @@ class Upcoming extends Component {
                             The datebar.
                         </div>
                     </div>
-
+                    
                     <div style={{marginLeft: 10, marginRight: 10}}>
+
+                    <div class="page-label">Unsorted <IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+
                     {this.state.inbox.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
-                    <hr />
+                    <div class="page-label">Due Soon <IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
                     {this.state.dueSoon.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
