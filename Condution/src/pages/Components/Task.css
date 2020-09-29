@@ -430,6 +430,7 @@ button:focus {
 
 .css-b8ldur-Input {
     transform: translateY(-3.5px);
+    /*border: 20px;*/
     color: var(--content-normal-alt) !important;
 }
 
@@ -543,5 +544,6 @@ button:focus {
     width: 75%;
 }
 
+    
 
 
