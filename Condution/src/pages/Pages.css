@@ -51,9 +51,11 @@
 }
 
 .count-badge {
+    width: 23px;
     color: var(--content-normal-accent);
     border: 1px solid var(--content-normal-accent);
-    background-color: transparent;
+    /*background-color: transparent;*/
+    background-color: var(--task-feature) !important;
     transform: translate(5px, 6px);
 }
 
