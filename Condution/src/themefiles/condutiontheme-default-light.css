@@ -70,7 +70,8 @@
 
     /* Special accent */
     --special: #dadeae;
-    --quickadd: #c04f40;
+    --special-alt: #E2E6B3; /*TODO: fix this color jack */
+    --quickadd: #c04f40; 
     --quickadd-feature: #bf3b2a;
     --quickadd-text: #eaeaea;
     --quickadd-success: #b1dcbf;
