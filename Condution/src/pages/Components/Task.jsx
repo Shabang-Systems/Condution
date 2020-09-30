@@ -219,7 +219,7 @@ class Task extends Component {
                                 position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
-                <ReactTooltip effect="solid" offset={{top: 3}} delayShow={300} backgroundColor="black" className="tooltips" />
+                <ReactTooltip effect="float" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                             <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
                                 <input 
