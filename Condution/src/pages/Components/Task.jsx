@@ -457,7 +457,7 @@ class Task extends Component {
                                                 </div>
                                                 <div>
                                                     <span className="task-project-container">
-                                                        <i className="fas fa-list-ul" data-tip="LOCALIZE: Project" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
+                                                        <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
                                                         <Select 
                                                             options={this.props.datapack[1]}
                                                             className='task-project'
@@ -473,7 +473,7 @@ class Task extends Component {
                                                         />
                                                     </span>
                                                     <span className="task-tag-container">
-                                                        <i className="fas fa-tags" data-tip="LOCCALIZE: Tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
+                                                        <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
                                                         <Select 
                                                             options={this.props.datapack[0]}
                                                             className='task-tag'
