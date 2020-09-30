@@ -492,6 +492,7 @@ button:focus {
     color: var(--content-normal-alt) !important;
     height: 18px !important;
     transform: translateY(-2px);
+    transition: 0.3s;
     /*border: 1px solid green !important;*/
 }
 
@@ -566,6 +567,12 @@ button:focus {
     width: 75%;
 }
 
-    
+.tooltips {
+    /*background-color: var(--decorative-light) !important; */
+    /*background-color: black !important;*/
+    /*background-color: red !important; */
+
+
+}
 
 

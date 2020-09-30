@@ -219,7 +219,7 @@ class Task extends Component {
                                 position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
-                <ReactTooltip />
+                <ReactTooltip effect="solid" offset={{top: 3}} delayShow={300} backgroundColor="black" className="tooltips" />
                             <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
                                 <input 
@@ -306,7 +306,7 @@ class Task extends Component {
                                                         this.setState({isFloating: !this.state.isFloating});
 
                                                     }} ></a></div>
-                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-redo"  data-tip="LOCALIZE: Repeat" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, 0px)", cursor: "pointer"}} onClick={this.showRepeat} ></a></div>
+                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-redo"  data-tip="LOCALIZE: Repeat"  style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, 0px)", cursor: "pointer"}} onClick={this.showRepeat} ></a></div>
 
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
@@ -315,7 +315,7 @@ class Task extends Component {
                                                 <div style={{display: "inline-block", marginBottom: 8}}>
 
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
-                                                        <i className="fas fa-play" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -379,7 +379,7 @@ class Task extends Component {
                                                     </div>
 
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
-                                                        <i className="fas fa-stop" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -457,7 +457,7 @@ class Task extends Component {
                                                 </div>
                                                 <div>
                                                     <span className="task-project-container">
-                                                        <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
+                                                        <i className="fas fa-list-ul" data-tip="LOCALIZE: Project" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
                                                         <Select 
                                                             options={this.props.datapack[1]}
                                                             className='task-project'
@@ -473,7 +473,7 @@ class Task extends Component {
                                                         />
                                                     </span>
                                                     <span className="task-tag-container">
-                                                        <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
+                                                        <i className="fas fa-tags" data-tip="LOCCALIZE: Tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
                                                         <Select 
                                                             options={this.props.datapack[0]}
                                                             className='task-tag'
