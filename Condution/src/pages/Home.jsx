@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import './Home.css';
 import Upcoming from './Upcoming';
 import Perspectives from './Perspectives';
+import ReactTooltip from 'react-tooltip';
+
 
 const autoBind = require('auto-bind/react');
 
@@ -66,6 +68,7 @@ class Home extends Component {
     return (
     <IonPage>
         <IonReactRouter>
+            <ReactTooltip />
             <IonContent>
               <IonSplitPane id="main-split" contentId="main" when="sm">
                 <IonMenu id="main-menu" contentId="main">
