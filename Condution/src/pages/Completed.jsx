@@ -88,6 +88,9 @@ class Completed extends Component {
 
 
 
+		    <div className="fetch-more">
+			Fetch more... 
+		    </div>
                 </IonContent>
             </IonPage>
         )

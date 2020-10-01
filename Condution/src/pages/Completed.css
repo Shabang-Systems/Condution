@@ -1,0 +1,9 @@
+.fetch-more {
+    /*border: 1px solid red;*/
+    font-size: 12px;
+    color: var(--task-datepicker-elems);
+    padding-left: 17px;
+    font-weight: bold;
+
+
+}
