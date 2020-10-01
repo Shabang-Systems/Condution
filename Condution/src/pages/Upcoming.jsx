@@ -92,7 +92,7 @@ class Upcoming extends Component {
                     
                     <div style={{marginLeft: 10, marginRight: 10}}>
 
-                    <div class="page-label">Unsorted <IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                    <div class="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
 
                     {this.state.inbox.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>

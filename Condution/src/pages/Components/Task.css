@@ -61,7 +61,7 @@
     font-weight:400;
     background-color:inherit;
     color: var(--content-normal-alt);
-    padding: 10px 5px 10px 5px;
+    padding: 13px 5px 10px 5px;
     border: 0;
     display: inline-block;
     height: 30px;
@@ -157,7 +157,7 @@
 .task-check:checked + label:before {
     content: '';
     position: absolute;
-    left: 6px; top: 4.4px;
+    left: 6px; top: 24%; /* more precise than pixel values */
     width: 1em; height: 1em;
     border: 1px solid var(--task-checkbox);
     border-radius: 4px;
@@ -568,6 +568,7 @@ button:focus {
 }
 
 .tooltips {
+    z-index: 10000;
     /*background-color: var(--decorative-light) !important; */
     /*background-color: black !important;*/
     /*background-color: red !important; */

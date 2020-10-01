@@ -5,6 +5,7 @@ import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicy
 import React, { Component } from 'react';
 import './Home.css';
 import Upcoming from './Upcoming';
+import Completed from './Completed';
 import Perspectives from './Perspectives';
 import ReactTooltip from 'react-tooltip';
 
@@ -82,9 +83,13 @@ class Home extends Component {
                     <IonContent>
                         {/* === Built Ins == */}
                         <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div></Link>
+
+
                             <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div></Link>
+
                         {/* === Perspectives == */}
                         <div className="menu-sublabel menu-decoration">Perspectives</div>
+
                             {/* === Perspective Contents == */}
                             {this.state.perspectives.map((psp) => {
                                 return (<Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}>{/*<IonIcon icon={filterOutline} />*/}<i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div></Link>)
@@ -110,7 +115,11 @@ class Home extends Component {
                             {/*<Route path="/" component={Home} exact={true} />*/}
                              <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
                              <Switch>
+
                                  <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+
+                                 <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+
                                  <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  />}  />
                             </Switch>
                         </IonRouterOutlet>
