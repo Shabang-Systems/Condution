@@ -1,23 +1,38 @@
+// A whole lotta imports
+
+// Ionic components
 import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
+
+// Like, your heart and soul
 import React, { Component } from 'react';
-import './Task.css';
+
+// React Spring animation packages
 import { Spring, animated, Keyframes } from 'react-spring/renderprops'
-//import OutsideClickHandler from 'react-outside-click-handler';
+
+// Cool components 
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
+
+// Our very own repeat UI
 import Repeat from './Repeat';
+
+// Our very own CSS
+import './Task.css';
+
+// Oooips
 import ReactTooltip from 'react-tooltip';
 
-
+// FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
 
-
+// autobind those functions
 const autoBind = require('auto-bind/react');
 
+// Our very own custom animatinos
 const AnimationFactory = Keyframes.Spring({
+    // Open->close animation
     hide: {
         to: {
             taskHeight:38, 
@@ -40,6 +55,7 @@ const AnimationFactory = Keyframes.Spring({
         reset: false
 
     },
+    // Close->open animation
     show: {
         to: {
             taskHeight:38, 
