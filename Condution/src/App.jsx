@@ -1,9 +1,8 @@
+/* Global Imports */
 import React, { Component } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, IonMenu } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
-import Gruntman from './gruntman';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -21,31 +20,65 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
+/* Themefiles */
 import './themefiles/condutiontheme-default.css';
 import './themefiles/condutiontheme-default-dark.css';
 import './themefiles/condutiontheme-default-light.css';
 
+/* Font awesome */
 import './static/fa/scripts/all.min.css';
 
 /* Theme variables */
 import './theme/variables.css';
 
+/* Capacitor core plugins + jQuery */
 import { Plugins } from '@capacitor/core';
 import $ from "jquery";
 
+/* Our Lovley Core Engine */
 import Engine from './backend/CondutionEngine';
+import Gruntman from './gruntman';
 
+/* Firebase */
 import * as firebase from "firebase/app";
 
+/* Auth and store modules */
 import "firebase/auth";
 import "firebase/firestore";
 
+/* Views that we need */
 import Auth from './pages/Auth';
 import Loader from './pages/Loader';
+import Home from './pages/Home';
 
+/* AutoBind */
+const autoBind = require('auto-bind/react');
+
+/* Storage Plugins */
 const { Storage } = Plugins;
 
-const autoBind = require('auto-bind/react');
+
+/* 
+ * Hello human, good morning.
+ *
+ * Hope you are doing well. Thanks (why are you) visiting App.jsx?
+ *
+ * I manage global routing, auth handling, and all that jazz.
+ * You should not touch me to change the interface.
+ * But I guess I change the interface. So.
+ *
+ * I kind of change the interface?
+ *
+ * Anyways, I return one of Loader, Auth, or Home depending on auth state.
+ *
+ * And check for the auth state to determine which one to return
+ *
+ * It's not really a poem, isn't it.
+ *
+ * @Jemoka
+ *
+ */
+
 
 class App extends Component {
     constructor(props) {
