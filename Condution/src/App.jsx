@@ -121,7 +121,7 @@ class App extends Component {
                     firebase.auth().onAuthStateChanged(function(user) {
                         // If we have one, shift the engine into firebase mode
                         Engine.use("firebase");
-                        // Set the authmode as "firebase" and supply the UID
+                        // Load the authenticated state, set authmode as "firebase" and supply the UID
                         view.setState({authMode: "firebase", uid: user.uid});
                     })
                     break;
@@ -129,7 +129,7 @@ class App extends Component {
                 case "json":
                     // Shift the engine into json mode
                     Engine.use("json");
-                    // Set the authmode as "json" and supply "hard-storage-user" as UID
+                    // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
                 // If there is nothing, well, set the authmode as "none"
@@ -140,20 +140,29 @@ class App extends Component {
         });
     }
 
+    // authDispatch handles the dispatching of auth operations. {login, create, and logout}
     authDispatch(mode) {
         switch (mode.operation) {
+            // operation mode login
             case "login":
+                // shift the engine into whatever mode we just logged into
                 Engine.use(mode.service);
+                // write the login state into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
+                // get the UID
                 let uid;
                 switch (mode.service) {
+                    // if its firebase
                     case "firebase":
+                        // set the UID as the UID
                         uid = firebase.auth().currentUser.uid;
                         break;
                     default:
+                        // set the UID as "hard-storage-user"
                         uid = "hard-storage-user";
                         break;
                 }
+                // load the authenicated state and supply the UID
                 this.setState({authMode: mode.service, uid});
                 break;
             case "create":
