@@ -165,17 +165,24 @@ class App extends Component {
                 // load the authenicated state and supply the UID
                 this.setState({authMode: mode.service, uid});
                 break;
+            // operation mode create
             case "create":
+                // setthe engine as whatever service
                 Engine.use(mode.service);
                 // TODO: do onboarding
                 // Here
                 // TODO: be done with onboarding
+                // Set the storage type and write it into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
+                // load the authenicated state and TODO supply the UID
                 this.setState({authMode: mode.service});
                 break;
             case "logout":
+                // Set the storage type to nada and write it into cookies
                 Storage.set({key: 'condution_stotype', value: "none"});
+                // Sign out if we are signed in
                 firebase.auth().signOut();
+                // Load the auth view
                 this.setState({authMode: "none"});
                 break;
         }
@@ -184,16 +191,21 @@ class App extends Component {
     render() {
         // Check for onboarding here
         // then continue
+        // Get a gruntman instance
         let grunt = new Gruntman(Engine);
+        // Which authmode?
         switch (this.state.authMode) {
+            // if we are at the first-paint load mode, do this:
             case "loader":
                 return <Loader />
+            // if we did not authenticate yet, load the auth view:
             case "none":
                 return <Auth dispatch={this.authDispatch}/>;
+            // if we did auth, load it up and get the party going
             case "firebase":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={grunt}/>;
             case "json":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={grunt}/>;
+            // wut esta this auth mode? load the loader with an error
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
                 return <Loader isError={true} error={this.state.authMode}/>
