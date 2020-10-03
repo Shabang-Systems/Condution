@@ -127,7 +127,9 @@ class App extends Component {
                     break;
                 // If its json
                 case "json":
+                    // Shift the engine into json mode
                     Engine.use("json");
+                    // Set the authmode as "json" and supply "hard-storage-user" as UID
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
                 // If there is nothing, well, set the authmode as "none"
