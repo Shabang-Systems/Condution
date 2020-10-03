@@ -84,7 +84,10 @@ class App extends Component {
     constructor(props) {
         super(props);
 
+        // We start with setting our state. We don't know our user's UID (duh)
         this.state = {authMode: "loader", uid: ""};
+        
+        // We also set the theme based on the user's media query
         if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-dark");
@@ -93,28 +96,41 @@ class App extends Component {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-light");
         }
-
+        
+        // And AutoBind any and all functions
         autoBind(this);
     }
 
     componentDidMount() {
+        // This IS in fact the view
         let view = this;
+
+        // Light the fire, kick the tires an instance 
+        // of {firebase}, and initializing the firebase 
+        // and json engines
         Engine.start({firebase}, "firebase", "json");
 
 
-        // Handling cached dispatch
+        // ==Handling cached dispatch==
+        // So, do we have a condution_stotype? 
         Storage.get({key: 'condution_stotype'}).then((dbType) => {
             switch (dbType.value) {
+                // If its firebase 
                 case "firebase":
+                    // Check if we actually has a user
                     firebase.auth().onAuthStateChanged(function(user) {
+                        // If we have one, shift the engine into firebase mode
                         Engine.use("firebase");
+                        // Set the authmode as "firebase" and supply the UID
                         view.setState({authMode: "firebase", uid: user.uid});
                     })
                     break;
+                // If its json
                 case "json":
                     Engine.use("json");
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
+                // If there is nothing, well, set the authmode as "none"
                 default:
                     this.setState({authMode: "none", uid:undefined});
                     break;
