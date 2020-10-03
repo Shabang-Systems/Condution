@@ -32,10 +32,9 @@ class Completed extends Component {
     }
 
     async refresh() {
-	let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
-	let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
+	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
 
-	this.setState({taskList: pandt[1]});
+	this.setState({taskList: tasksToday});
 
 
     }
@@ -70,7 +69,9 @@ class Completed extends Component {
 		    </div>
 		{this.state.taskList.map(id => (
 		    <Task 
+			
 			tid={id} 
+			startingCompleted={true}
 			key={id+"-"+this.updatePrefix} 
 			uid={this.props.uid} 
 			engine={this.props.engine} 

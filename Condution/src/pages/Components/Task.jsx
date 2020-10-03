@@ -99,7 +99,7 @@ class Task extends Component {
         super(props);
         autoBind(this);
 
-        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false, showRepeat: false}
+        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false, showRepeat: false, startingCompleted: this.props.startingCompleted}
         this.me = React.createRef();
         this.repeater = React.createRef();
     }
@@ -200,7 +200,23 @@ class Task extends Component {
 
                     native 
 
-                    state={this.state.isComplete?"complete":(this.state.expanded?"show":"hide")}
+                    state={
+			this.state.isComplete? 
+			    (this.state.startingCompleted?
+				(("complete"), (this.setState({isComplete: false})))
+
+				:"complete"):(this.state.expanded?"show":"hide")}
+
+
+
+
+// if complete, if starting complete, show. if complete, if starting uncomplete, complete. 
+// if not complete, if expanded, show. if not complete, if not expanded, hide. 
+
+
+
+
+
                 >
                 {animatedProps => {
                     return (
@@ -227,17 +243,28 @@ class Task extends Component {
                                     id={"task-check-"+this.props.tid} 
                                     className="task-check" 
                                     onChange={()=>{
+					console.log("changed")
                                         if (this.state.isComplete)
                                             this.setState({isComplete: false})
+					    this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+					    if (this.props.startingComplete) {
+						console.log("completing while starting  coplete")
+					    }
+
                                         else if (!this.state.isComplete) {
                                             this.props.gruntman.lockUpdates();
                                             this.setState({isComplete: true})
-                                                                                                                              this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+					    this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+					    if (!this.props.startingComplete) {
+						console.log("completing while starting not coplete")
+					    }
+
+
                                              //TODO wait for animation to finish before state update??
                                             this.props.gruntman.unlockUpdates(1000)
                                         }
                                     }} 
-                                    style={{opacity: this.state.availability?1:0.35}}
+				    style={{opacity: this.state.availability?1:0.35}}
                                 />
                                 <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
 
