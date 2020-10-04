@@ -505,11 +505,6 @@ class Task extends Component {
                                                                         this.setState({deferDate: date});
 
                                                                         // No longer needed. State updates handle decoration udpates. Kept here for decorative purposes:
-                                                                        //if (date-(new Date()) > 0 || !this.props.availability) 
-                                                                            //this.setState({availability: false});
-                                                                        //else 
-                                                                            /*this.setState({availability: true});*/
-
                                                                         // and hit the DB too!
                                                                         this.props.gruntman.do(
                                                                             "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
@@ -530,18 +525,14 @@ class Task extends Component {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
                                                                     <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                        // Register a scheduler to deal with React's onChange
+                                                                        // Search for the word FANCYCHANGE to read my spheal on this
+                                                                        // Search for the word DATEHANDLING for what the heck the code actually does
+ 
                                                                         e.persist(); //https://reactjs.org/docs/events.html#event-pooling
                                                                         this.props.gruntman.registerScheduler(() => {
                                                                             let d = chrono.parseDate(e.target.value);
                                                                             if (d) this.setState({dueDate: d});
-                                                                            if (d)
-                                                                                if (d-(new Date()) < 0) 
-                                                                                    this.setState({decoration: "od"});
-                                                                                else if (d-(new Date()) < 24*60*60*1000) 
-                                                                                    this.setState({decoration: "ds"});
-                                                                                else
-                                                                                    this.setState({decoration: ""});
-
                                                                             if (d)
                                                                                 this.props.gruntman.do(
                                                                                     "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
@@ -557,6 +548,7 @@ class Task extends Component {
                                                                 );
                                                             };
                                                             const TimeInput = ({ value, onChange }) => {
+                                                                // IDK why this is needed, but it is. Sometimes it decides that it will drop the final 0?
                                                                 if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
                                                                 // TODO: calling complex string ops to fix an interface bug not a good idea?
                                                                 return (
@@ -564,7 +556,10 @@ class Task extends Component {
                                                                         className="task-timebox"
                                                                         defaultValue={value}
                                                                         onKeyPress={e => {
+                                                                            // Search for TIMEHANDLING for notes on time handling.
+                                                                            // But anyway, on change, parse the time
                                                                             let d = chrono.parseDate(e.target.value); //TODO bad?
+                                                                            // ...and throw away the date 
                                                                             if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
                                                                         }}
                                                                     />
@@ -579,19 +574,10 @@ class Task extends Component {
                                                                     customTimeInput={<TimeInput />}
                                                                     customInput={<DateInput />}
                                                                     onChange={date => {
+                                                                        // If the calendar got a new date, set it
                                                                         this.setState({dueDate: date});
 
-                                                                        if (date)
-                                                                            if (date-(new Date()) < 0) 
-                                                                                this.setState({decoration: "od"});
-                                                                            else if (date-(new Date()) < 24*60*60*1000) 
-                                                                                this.setState({decoration: "ds"});
-                                                                            else
-                                                                                this.setState({decoration: ""});
-                                                                        else
-                                                                            this.setState({decoration: ""});
-
-
+                                                                        // and hit the DB too!
                                                                         this.props.gruntman.do(
                                                                             "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
                                                                         )
