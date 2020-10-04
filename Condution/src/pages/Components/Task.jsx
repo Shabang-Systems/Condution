@@ -588,8 +588,11 @@ class Task extends Component {
                                                     </div>
                                                 </div>
                                                 <div>
+                                                    {/* Task project container */}
                                                     <span className="task-project-container">
+                                                        {/* Icon */}
                                                         <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
+                                                        {/* Project select */}
                                                         <Select 
                                                             options={this.props.datapack[1]}
                                                             className='task-project'
@@ -599,13 +602,19 @@ class Task extends Component {
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
+                                                                {/* :point up: filter for only options with this project and set that to be the value */}
+                                                                {/* Actually update the project */}
                                                                 this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.project, project: (e?e.value:"")})
+                                                                {/* And set the state, too! */}
                                                                 this.setState({project:(e?e.value:"")});
                                                             }}
                                                         />
                                                     </span>
+                                                    {/* Task tag container */}
                                                     <span className="task-tag-container">
+                                                        {/* Icon */}
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
+                                                        {/* Tag select */}
                                                         <Select 
                                                             options={this.props.datapack[0]}
                                                             className='task-tag'
@@ -616,14 +625,14 @@ class Task extends Component {
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
                                                             onChange={(e) => {
-                                                                let tagIDs = e?e.map(a=>a.value):[];
-                                                                this.setState({tags: tagIDs});
+                                                                let tagIDs = e?e.map(a=>a.value):[]; // find the correct tags sets, or set it to an empty set
+                                                                this.setState({tags: tagIDs}); // set the state
                                                                 this.props.gruntman.do(
                                                                     "task.update", 
                                                                     {
                                                                         uid: this.props.uid, 
                                                                         tid: this.props.tid, 
-                                                                        query:{tags: tagIDs}
+                                                                        query:{tags: tagIDs} // set a taskID
                                                                     }
                                                                 )
                                                             }}
