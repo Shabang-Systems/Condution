@@ -30,6 +30,19 @@ const { parseFromTimeZone } = require('date-fns-timezone')
 // autobind those functions
 const autoBind = require('auto-bind/react');
 
+/*
+ *
+ * Hello human,
+ *
+ * I am a task.
+ *
+ * You seriously are reading the help poem about this?
+ *
+ * @jemoka
+ *
+ */
+
+
 // Our very own custom animatinos
 const AnimationFactory = Keyframes.Spring({
     // Open->close animation
@@ -338,7 +351,8 @@ class Task extends Component {
                                             e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 
                                             // Register a scheduler to watch for more changes
-                                            // because dang react calls onChange on every freaking chang
+                                            // because dang react calls onChange on every freaking change
+                                            // TODO TODO destruct all schedulers on view change
                                             this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
                                                 "task.update", 
                                                 {
