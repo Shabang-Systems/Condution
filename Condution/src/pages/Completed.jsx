@@ -35,6 +35,7 @@ class Completed extends Component {
 	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
 
 	this.setState({taskList: tasksYesterday});
+        console.log();
 
 
     }

@@ -135,7 +135,7 @@ class Task extends Component {
             availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
             isComplete: false, // are we completed?
             showRepeat: false, // is our repeat UI shown?
-            startingCompleted: this.props.startingCompleted // @Enquiererer?
+            startingCompleted: this.props.startingCompleted // disable immediate onComplete animation for completed
         }
 
         this.me = React.createRef(); // who am I? what am I?
@@ -234,37 +234,32 @@ class Task extends Component {
     }
 
 
-    // ready fro this?
+    // ready fo this?
+    
     render() {
 
         return (
+            <div>
 
-            <div >
+                {/*animation factory to orchistrate animations*/}
 
                 <AnimationFactory
 
-                    native 
+                    native  
 
-                    state={
-			this.state.isComplete? 
-			    (this.state.startingCompleted?
-				(("complete"), (this.setState({isComplete: false})))
+                    state = {
+                        this.state.isComplete?  // if we are complete
+                            (this.state.startingCompleted? this.state.expanded?"show":"hide":"complete") : // if we are staring completed, no need to show that the task is completed again. Otherwise, do play the complete animation
+                            (this.state.expanded?"show":"hide")} // if we are not complete, open/close as usual
 
-				:"complete"):(this.state.expanded?"show":"hide")}
-
-
-
-
-// if complete, if starting complete, show. if complete, if starting uncomplete, complete. 
-// if not complete, if expanded, show. if not complete, if not expanded, hide. 
-
-
-
-
+                        // In hux's words
+                        // if complete, if starting complete, show. if complete, if starting uncomplete, complete. 
+                        // if not complete, if expanded, show. if not complete, if not expanded, hide. 
 
                 >
                 {animatedProps => {
                     return (
+                        // Actual task container, now
                         <animated.div 
                             className={"task "+(this.state.expanded?"expanded":"collapsed")} 
  
@@ -280,46 +275,70 @@ class Task extends Component {
                                 position: animated.taskPosition,
                                 padding: animatedProps.taskPadding}}
                         >
-                <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+
+                            {/* Chapter 0: Utility Components */}
+
+                            {/* Gotta get those on hover tips */}
+                            <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+                            {/* And load up + hide a repeat UI, too! */}
                             <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
+
+                            {/* Chapter 1: Task Checkmark */}
+                            {/* Who could have thought so much code goes into a checkbox? */}
                             <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
+                                {/* First, an invisible checkmark */}
                                 <input 
                                     type="checkbox" 
                                     id={"task-check-"+this.props.tid} 
                                     className="task-check" 
                                     onChange={()=>{
-					console.log("changed")
+                                        // If we are uncompleting a task (that is, currently task is complete) 
                                         if (this.state.isComplete)
+                                            // Well, first, uncomplete it
                                             this.setState({isComplete: false})
-					    this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
-					    if (this.props.startingComplete) {
-						console.log("completing while starting  coplete")
-					    }
+                                            // Update the database, registering a gruntman action while you are at it.
+                                            this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+                                            // Whatever this is
+                                            if (this.props.startingComplete) {
+                                                console.log("completing while starting complete")
+                                            }
 
+                                        // If we are completing a task (that is, currently task is incomplete)
                                         else if (!this.state.isComplete) {
+                                            // Lock updates so that animation could finish
                                             this.props.gruntman.lockUpdates();
+                                            // Complete it
                                             this.setState({isComplete: true})
-					    this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
-					    if (!this.props.startingComplete) {
-						console.log("completing while starting not coplete")
-					    }
-
+                                            // Update the database, registering a gruntman action while you are at it.
+                                            this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+                                            // Hux?
+                                            if (!this.props.startingComplete) {
+                                                console.log("completing while starting not coplete")
+                                            }
 
                                              //TODO wait for animation to finish before state update??
                                             this.props.gruntman.unlockUpdates(1000)
                                         }
                                     }} 
-				    style={{opacity: this.state.availability?1:0.35}}
+                                    style={{opacity: this.state.availability?1:0.35}}
                                 />
-                                <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
 
+                                {/* Oh yeah, that checkmark above you can't actually see */}
+                                {/* Here's what the user actually clicks on, the label! */}
+                                <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                             </div>
+
+                                {/* The animated input box */}
                                 <animated.input 
                                     defaultValue={this.state.name} 
                                     placeholder={"LOCALIZE: Task Name"} 
                                     onChange={
                                         (e)=>{
+                                            // If somebody dares to do the complicated action of task name change
                                             e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+
+                                            // Register a scheduler to watch for more changes
+                                            // because dang react calls onChange on every freaking chang
                                             this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
                                                 "task.update", 
                                                 {
