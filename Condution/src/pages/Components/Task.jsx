@@ -77,6 +77,7 @@ const AnimationFactory = Keyframes.Spring({
         },
         reset: false
     },
+    // Incomplete->complete animation
     complete: [
         {
             to: {
@@ -110,22 +111,48 @@ const AnimationFactory = Keyframes.Spring({
     ],
 })
 
+// Aww sheat, here we go
 class Task extends Component {
+
     constructor(props) {
+        // Invoke React's constructor
         super(props);
+
+        // Bind it good!
         autoBind(this);
 
-        this.state = { expanded: false, deferDate: undefined, dueDate: undefined, name: "", desc: "", isFlagged: false, isFloating: false, project:"", tags: [], decoration: "", availability: true, isComplete: false, showRepeat: false, startingCompleted: this.props.startingCompleted}
-        this.me = React.createRef();
-        this.repeater = React.createRef();
+        this.state = { 
+            expanded: false, // are we expanded?
+            deferDate: undefined, // what's our defer date?
+            dueDate: undefined, // what's our due date?
+            name: "", // what's our name string?
+            desc: "",  // what's our description string?
+            isFlagged: false, // are we flagged?
+            isFloating: false, // are we floating? or eating jello?
+            project:"", // what's our project ID?
+            tags: [], // what are the IDs of our tags?
+            decoration: "",  // are we "od" "ds" or just just good ol' ""?
+            availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
+            isComplete: false, // are we completed?
+            showRepeat: false, // is our repeat UI shown?
+            startingCompleted: this.props.startingCompleted // @Enquiererer?
+        }
+
+        this.me = React.createRef(); // who am I? what am I?
+        this.repeater = React.createRef(); // what's my repeater?
     }
 
-    showRepeat() {this.setState({showRepeat: true})}
-    hideRepeat() {this.setState({showRepeat: false})}
+    showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
+    hideRepeat() {this.setState({showRepeat: false})} // util func for hiding repeat
 
 
+    // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
+
+        // Obviously we need this
         let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
+
+
         this.setState({
             name: taskInfo.name,
             desc: taskInfo.desc, 

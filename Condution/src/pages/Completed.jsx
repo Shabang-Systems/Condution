@@ -67,6 +67,8 @@ class Completed extends Component {
             </div>*/}
                         </div>
                     </div>
+                    <div style={{marginLeft: 10, marginRight: 10}}>
+
 		{this.state.taskList.map(id => (
 		    <Task 
 			
@@ -91,6 +93,7 @@ class Completed extends Component {
 
 		    <div className="fetch-more">
 			Fetch more... 
+		    </div>
 		    </div>
                 </IonContent>
             </IonPage>
