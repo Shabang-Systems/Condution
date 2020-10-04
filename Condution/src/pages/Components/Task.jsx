@@ -347,6 +347,9 @@ class Task extends Component {
                                     placeholder={"LOCALIZE: Task Name"} 
                                     onChange={
                                         (e)=>{
+                                            // THIS. REFER TO THIS. YOU ARE HERE. STOP SEARCHING.
+                                            // :point down: is FANCYCHANGE
+                                            
                                             // If somebody dares to do the complicated action of task name change
                                             e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 
@@ -354,16 +357,19 @@ class Task extends Component {
                                             // because dang react calls onChange on every freaking change
                                             // TODO TODO destruct all schedulers on view change
                                             this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                                "task.update", 
+                                                "task.update", // the scheduler actually updates the task
                                                 {
                                                     uid: this.props.uid, 
                                                     tid: this.props.tid, 
-                                                    query:{name: e.target.value}
+                                                    query:{name: e.target.value} // setting the name to the name
                                                 }
-                                            ), `task-name-${this.props.tid}-update`)
+                                            ), `task-name-${this.props.tid}-update`) // and we will schedule it as this
                                         }
                                     } 
-                                    onFocus={()=>{ if(!this.state.expanded) this.openTask() }} 
+                                    onFocus={()=>{ 
+                                         // open the task if its not open already
+                                        if(!this.state.expanded) this.openTask() 
+                                    }} 
                                     className="task-name" 
                                     readOnly={false} 
                                     type="text" 
@@ -371,7 +377,9 @@ class Task extends Component {
                                     placeholder="LOCALIZE: Task Name" 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}} />
 
+                                            {/* Task edit. The thing that slides open on edit. */}
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
+                                                {/* First, task description field */}
                                                 <textarea 
                                                     placeholder="LOCALIZE:Description" 
                                                     className="task-desc" 
@@ -379,6 +387,8 @@ class Task extends Component {
                                                     defaultValue={this.state.desc}
                                                     onChange={
                                                         (e)=>{
+                                                            // Register a scheduler to deal with React's onChange
+                                                            // Search for the word FANCYCHANGE to read my spheal on this
                                                             e.persist(); //https://reactjs.org/docs/events.html#event-pooling
                                                             this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
                                                                 "task.update", 
@@ -391,26 +401,37 @@ class Task extends Component {
                                                         }
                                                     }
                                                         >
-                                                    
                                                 </textarea>
 
+                                                {/* Task icon set. TODO delete task */}
                                                 <div style={{display: "inline-block", marginBottom: 6}}>
-                                                    <div   className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a  data-tip="LOCALIZE: Flagged" className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
+                                                    {/* Flagged icon */}
+                                                    <div className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a  data-tip="LOCALIZE: Flagged" className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
+                                                        // On change, set the flagged state to the opposite of whatever it is
+                                                        // Both on the db...
                                                         this.props.gruntman.do(
                                                             "task.update", 
                                                             { uid: this.props.uid, tid: this.props.tid, query:{isFlagged: !this.state.isFlagged}}
                                                         )
+                                                        // And the task!
                                                         this.setState({isFlagged: !this.state.isFlagged});
 
                                                     }} ></a></div>
+
+                                                    {/* Floating icon */}
                                                     <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a data-tip="LOCALIZE: Floating" className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)", cursor: "pointer"}} onClick={()=>{
+                                                        // On change, set the floating state to the opposite of whatever it is
+                                                        // Both on the db... TODO flush the timezone too?
                                                         this.props.gruntman.do(
                                                             "task.update", 
                                                             { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
                                                         )
+                                                        // And the task!
                                                         this.setState({isFloating: !this.state.isFloating});
 
                                                     }} ></a></div>
+
+                                                    {/* Repeat icon that, on click, shows repeat */}
                                                     <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-redo"  data-tip="LOCALIZE: Repeat"  style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, 0px)", cursor: "pointer"}} onClick={this.showRepeat} ></a></div>
 
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
