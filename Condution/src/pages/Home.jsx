@@ -147,16 +147,21 @@ class Home extends Component {
                     <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                 </IonMenu>
                 <IonContent id="main">
+                        {/* The actual page */}
                         <IonRouterOutlet>
-                            {/*<Route path="/" component={Home} exact={true} />*/}
+                            {/* / => /upcoming */}
                              <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
+                            {/* and the perspective switch */}
                              <Switch>
-
+                                {/* upcoming renders upcoming */}
                                  <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
+                                {/* completed renders completed */}
                                  <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
+                                {/* perspective renders perspectives */}
                                  <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  />}  />
+                                {/* TODO projects */}
                             </Switch>
                         </IonRouterOutlet>
                 </IonContent>
