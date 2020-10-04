@@ -40,8 +40,8 @@ class Completed extends Component {
 
     }
 
-    async componentDidMount() {
-        await this.refresh();
+    componentDidMount() {
+        this.refresh();
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
