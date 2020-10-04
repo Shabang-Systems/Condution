@@ -187,38 +187,38 @@ class Task extends Component {
     }
 
     refreshDecorations() {
-        if (this.state.dueDate)
-            if (this.state.dueDate-(new Date()) < 0) 
-                this.setState({decoration: "od"});
-            else if (this.state.dueDate-(new Date()) < 24*60*60*1000) 
-                this.setState({decoration: "ds"});
-        if (this.state.deferDate)
-            if (this.state.deferDate-(new Date()) > 0) 
-                this.setState({availability: false});
-        else if (this.props.availability === false)
-                this.setState({availability: false});
+        if (this.state.dueDate) // if we gotta due date
+            if (this.state.dueDate-(new Date()) < 0) // and this kid has not done his homework
+                this.setState({decoration: "od"}); // give 'em a red badge
+            else if (this.state.dueDate-(new Date()) < 24*60*60*1000) // or if this kid has not done his homework a day earlier
+                this.setState({decoration: "ds"}); // give 'em an orange badge
+        if (this.state.deferDate) // if we gotta defer date
+            if (this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
+                this.setState({availability: false}); // tell 'em it's not avaliable
+        else if (this.props.availability === false) // or if my props make me disabled
+                this.setState({availability: false}); // well then you gotta follow them props, no?
     }
 
     async componentDidMount() {
-        await this.loadTask();    
-        document.addEventListener('mousedown', this.detectOutsideClick, false);
+        await this.loadTask(); // load the task when we mount   
+        document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
     }
 
-    componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false);
+    componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false); // remove the listener... no memory leaks plez
 
-    toggleTask = () => this.setState(state => ({expanded: !state.expanded}));
+    toggleTask = () => this.setState(state => ({expanded: !state.expanded})); // util function to toggl a task
 
-    closeTask = () => this.setState({expanded: false});
+    closeTask = () => this.setState({expanded: false}); // util function to close a task
 
-    openTask = () => this.setState({expanded: true});
+    openTask = () => this.setState({expanded: true}); // util function to open a task
 
     detectOutsideClick(e) {
 
-        if (this.me.current.contains(e.target))
+        if (this.me.current.contains(e.target)) // if we are clicking me
             return; //click inside
 
-        if (this.repeater.current)
-            if (this.repeater.current.contains(e.target))
+        if (this.repeater.current) // if our repeater is a thing that mounted
+            if (this.repeater.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
 
         //otherwise,
@@ -226,13 +226,15 @@ class Task extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.expanded !== this.state.expanded && this.state.expanded === true)
-            this.props.gruntman.lockUpdates();
-        else if (prevState.expanded !== this.state.expanded && this.state.expanded === false)
-            this.props.gruntman.unlockUpdates();
+        if (prevState.expanded !== this.state.expanded && this.state.expanded === true) // if we opened a task for updating
+            this.props.gruntman.lockUpdates(); // tell gruntman to chill
+        else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) // if we closed a task
+            this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
 
     }
 
+
+    // ready fro this?
     render() {
 
         return (
