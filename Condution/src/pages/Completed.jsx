@@ -52,21 +52,21 @@ class Completed extends Component {
                 <IonContent>
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
-			    <IonMenuToggle>
-				<i class="fas fa-bars" 
-				style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
-			    </IonMenuToggle> 
-			    <h1 className="page-title">
-				<i style={{paddingRight: 10}} 
-				className="fas fa-check-circle">
-				</i>
-				Completed
-			    </h1> 
-			<div className="greeting-container">
+                            <IonMenuToggle>
+                                <i class="fas fa-bars" 
+                                    style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+                            </IonMenuToggle> 
+                            <h1 className="page-title">
+                                <i style={{paddingRight: 10}} 
+                                    className="fas fa-check-circle">
+                                </i>
+                                Completed
+                            </h1> 
+            {/*<div className="greeting-container">
 			    <span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span>
-			    </div>
-			</div>
-		    </div>
+            </div>*/}
+                        </div>
+                    </div>
 		{this.state.taskList.map(id => (
 		    <Task 
 			
