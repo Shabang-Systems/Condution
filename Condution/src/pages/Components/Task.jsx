@@ -128,7 +128,7 @@ class Task extends Component {
             name: "", // what's our name string?
             desc: "",  // what's our description string?
             isFlagged: false, // are we flagged?
-            isFloating: false, // are we floating? or eating jello?
+            isFloating: false, // are we floating? or just eating jello?
             project:"", // what's our project ID?
             tags: [], // what are the IDs of our tags?
             decoration: "",  // are we "od" "ds" or just just good ol' ""?
@@ -149,41 +149,41 @@ class Task extends Component {
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
 
-        // Obviously we need this
+        // Obviously we need this, the task info
         let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
 
-
+        // Setting state to update the rest of them elements
         this.setState({
-            name: taskInfo.name,
-            desc: taskInfo.desc, 
-            project: taskInfo.project, 
-            tags: taskInfo.tags, 
-            isFloating: taskInfo.isFloating, 
-            isFlagged: taskInfo.isFlagged, 
-            isComplete: taskInfo.isComplete, 
+            name: taskInfo.name, // Set name field
+            desc: taskInfo.desc, // Set task description
+            project: taskInfo.project,  // Set project ID
+            tags: taskInfo.tags, // Set tag ID array
+            isFloating: taskInfo.isFloating, // Set isFloating bool
+            isFlagged: taskInfo.isFlagged, // Set is Flagged bool
+            isComplete: taskInfo.isComplete, // Set is complete style
             dueDate: (
-                taskInfo.due ? 
-                    (taskInfo.isFloating ? 
-                        new Date(taskInfo.due.seconds*1000) : 
-                        parseFromTimeZone(
+                taskInfo.due ? // If we have a due date
+                    (taskInfo.isFloating ? // and if we are floating
+                        new Date(taskInfo.due.seconds*1000) : // then the due date in just... the due date
+                        parseFromTimeZone( // otherwise, we stringify the date to remove timezone info
                             (new Date(taskInfo.due.seconds*1000)).toISOString(), 
-                            {timeZone: taskInfo.timezone}
+                            {timeZone: taskInfo.timezone} // and cast it to the right time zone
                         )
                     ):
-                undefined
+                undefined 
             ), 
             deferDate: (
-                taskInfo.defer ? 
-                    (taskInfo.isFloating ? 
-                        new Date(taskInfo.defer.seconds*1000) : 
-                            parseFromTimeZone(
+                taskInfo.defer ? // If we have a defer date
+                    (taskInfo.isFloating ?  // and if we are floating
+                        new Date(taskInfo.defer.seconds*1000) : // then the defer date is just... the defer date
+                            parseFromTimeZone( // otherwise, we stringify the date to remove timezone info
                                 (new Date(taskInfo.defer.seconds*1000)).toISOString(), 
-                                {timeZone: taskInfo.timezone}
+                                {timeZone: taskInfo.timezone} // and cast it to the right time zone
                             )
                     ): undefined
             )
         });
-        this.refreshDecorations();
+        this.refreshDecorations(); // flush and generate them decorations!
     }
 
     refreshDecorations() {
