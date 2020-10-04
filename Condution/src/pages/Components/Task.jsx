@@ -205,9 +205,14 @@ class Task extends Component {
                 this.setState({decoration: "od"}); // give 'em a red badge
             else if (this.state.dueDate-(new Date()) < 24*60*60*1000) // or if this kid has not done his homework a day earlier
                 this.setState({decoration: "ds"}); // give 'em an orange badge
+            else 
+                this.setState({decoration: ""}); // give 'em an nothing badge
+
         if (this.state.deferDate) // if we gotta defer date
             if (this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
                 this.setState({availability: false}); // tell 'em it's not avaliable
+            else if (this.props.availability === true) //  otherwise, if this thing's avaliable
+                this.setState({availability: true}); // set it to be so!
         else if (this.props.availability === false) // or if my props make me disabled
                 this.setState({availability: false}); // well then you gotta follow them props, no?
     }
@@ -239,6 +244,11 @@ class Task extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        // flush styles
+        if (prevState.deferDate !== this.state.deferDate) // if we updated the defer date
+            this.refreshDecorations();
+        if (prevState.dueDate !== this.state.dueDate) // if we updated the due date
+            this.refreshDecorations();
         if (prevState.expanded !== this.state.expanded && this.state.expanded === true) // if we opened a task for updating
             this.props.gruntman.lockUpdates(); // tell gruntman to chill
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) // if we closed a task
@@ -438,24 +448,27 @@ class Task extends Component {
                                                 </div>
 
 
+                                                {/* Task date set */}
                                                 <div style={{display: "inline-block", marginBottom: 8}}>
 
+                                                    {/* Defer date container */}
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
+                                                        {/* The. Defer. Date. */}
                                                         <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {(() => {
+                                                            {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
                                                                     <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                        // Register a scheduler to deal with React's onChange
+                                                                        // Search for the word FANCYCHANGE to read my spheal on this
+                                                                        // DATEHANDLING is here too. If you are looking for that, stop searching
+     
                                                                         e.persist(); //https://reactjs.org/docs/events.html#event-pooling
                                                                         this.props.gruntman.registerScheduler(() => {
-                                                                            let d = chrono.parseDate(e.target.value);
-                                                                            if (d) this.setState({deferDate: d});
-                                                                            if (d)
-                                                                                if (this.state.deferDate-(new Date()) > 0) 
-                                                                                    this.setState({availability: false});
-                                                                                else if (this.props.availability === false)
-                                                                                    this.setState({availability: false});
-                                                                            if (d)
+                                                                            let d = chrono.parseDate(e.target.value); // NLP that date!
+                                                                            if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
+                                                                            if (d) // and update the database too!
                                                                                 this.props.gruntman.do(
                                                                                     "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
                                                                                 )
@@ -468,6 +481,7 @@ class Task extends Component {
                                                                 );
                                                             };
                                                             const TimeInput = ({ value, onChange }) => {
+                                                                // IDK why this is needed, but it is. Sometimes it decides that it will drop the final 0?
                                                                 if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
                                                                 // TODO: calling complex string ops to fix an interface bug not a good idea?
                                                                 return (
@@ -475,8 +489,11 @@ class Task extends Component {
                                                                         className="task-timebox"
                                                                         defaultValue={value}
                                                                         onKeyPress={e => {
+                                                                            // TIMEHANDLING is here. If you are searching for that, it's here.
+                                                                            // But anyway, on change, parse the time
                                                                             let d = chrono.parseDate(e.target.value); //TODO bad?
-                                                                            if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+                                                                            // ...and throw away the date 
+                                                                            if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds()); // TODO make this with the onChange API
                                                                         }}
                                                                     />
                                                                 )};
@@ -484,13 +501,16 @@ class Task extends Component {
                                                                 <DatePicker
                                                                     selected={this.state.deferDate}
                                                                     onChange={date => {
+                                                                        // If the calendar got a new date, set it
                                                                         this.setState({deferDate: date});
 
-                                                                        if (date-(new Date()) > 0 || !this.props.availability) 
-                                                                            this.setState({availability: false});
-                                                                        else 
-                                                                            this.setState({availability: true});
+                                                                        // No longer needed. State updates handle decoration udpates. Kept here for decorative purposes:
+                                                                        //if (date-(new Date()) > 0 || !this.props.availability) 
+                                                                            //this.setState({availability: false});
+                                                                        //else 
+                                                                            /*this.setState({availability: true});*/
 
+                                                                        // and hit the DB too!
                                                                         this.props.gruntman.do(
                                                                             "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
                                                                         )
