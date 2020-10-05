@@ -1,4 +1,4 @@
-let dbObj = require("./ObjectManager");
+import dbObj from "./ObjectManager";
 
 const perspectiveHandler = function(){
     let cgs = {
@@ -169,5 +169,5 @@ const perspectiveHandler = function(){
     return {calc: getPerspectiveFromString};
 }();
 
-module.exports = perspectiveHandler;
+export default perspectiveHandler;
 

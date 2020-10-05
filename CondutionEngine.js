@@ -1,7 +1,7 @@
-let dbFuncs = require("./src/ObjectManager");
-let pspObj = require("./src/PerspectiveManager");
-let dbRefObj = require("./src/DBManager");
+import dbFuncs from "./src/ObjectManager"
+import pspObj from "./src/PerspectiveManager"
+import dbRefObj from "./src/DBManager"
 
 
-module.exports = {start:dbRefObj.__init__, use:dbRefObj.useDb, db: dbFuncs, perspective: pspObj, flush: dbRefObj.flush};
+export default {start:dbRefObj.__init__, use:dbRefObj.useDb, db: dbFuncs, perspective: pspObj, flush: dbRefObj.flush};
 

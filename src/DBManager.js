@@ -488,5 +488,5 @@ const [cRef, flush] = (() => {
     return [dispatch, flush];
 })();
 
-module.exports = {__init__:initStorage, cRef, flush, useDb};
+export default {__init__:initStorage, cRef, flush, useDb};
 
