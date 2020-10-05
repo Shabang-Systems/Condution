@@ -217,8 +217,8 @@ class Task extends Component {
                 this.setState({availability: false}); // well then you gotta follow them props, no?
     }
 
-    async componentDidMount() {
-        await this.loadTask(); // load the task when we mount   
+    componentDidMount() {
+        this.loadTask(); // load the task when we mount   
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
     }
 
@@ -232,8 +232,9 @@ class Task extends Component {
 
     detectOutsideClick(e) {
 
-        if (this.me.current.contains(e.target)) // if we are clicking me
-            return; //click inside
+        if (this.me.current) // if we are mounted
+            if (this.me.current.contains(e.target)) // if we are clicking me
+                return; //click inside
 
         if (this.repeater.current) // if our repeater is a thing that mounted
             if (this.repeater.current.contains(e.target)) // and we are clicking inside that
