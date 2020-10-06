@@ -20,8 +20,8 @@
 .task-icon {
     border-radius: 50%;
     border: 3px solid;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     display: inline-block;
     transform: scale(0.55);
 }
@@ -407,6 +407,14 @@ button:focus {
     font-size: 13px !important;
 }
 
+.task-select__value-container--is-multi {
+    /*transform: translateY(2px);*/
+}
+
+.task-select__value-container--is-multi .css-b8ldur-Input {
+    /*transform: translateY(-3px);*/
+}
+
 .css-tlfecz-indicatorContainer {
     padding: 0 !important;
     padding-left: 5px !important;
@@ -429,7 +437,7 @@ button:focus {
 }
 
 .css-b8ldur-Input {
-    transform: translateY(-3.5px);
+    /*transform: translateY(-3.5px);*/
     color: var(--content-normal-alt) !important;
 }
 
@@ -504,7 +512,7 @@ button:focus {
 
 .task-select__multi-value__label {
     color: var(--content-normal-alt) !important;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .task-select__multi-value__remove {

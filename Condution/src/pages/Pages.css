@@ -16,7 +16,6 @@
     padding-left: 10px;
     margin-left: 10px;
     font-size: 13px;
-    margin-bottom: 10px;
     color: var(--decorative-light-accent);
 }
 
@@ -41,6 +40,7 @@
     flex-wrap: wrap;
     width: 100%;
     align-items:flex-end;
+    margin-bottom: 10px;
 }
 
 .page-label {
@@ -51,12 +51,12 @@
 }
 
 .count-badge {
-    width: 23px;
+    /*width: 23px;*/
     color: var(--content-normal-accent);
     border: 1px solid var(--content-normal-accent);
     /*background-color: transparent;*/
     background-color: var(--task-feature) !important;
-    transform: translate(5px, 6px);
+    transform: translate(8px, 6px);
 }
 
 #greeting {

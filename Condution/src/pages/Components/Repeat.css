@@ -1,1 +1,16 @@
+.repeat-header {
+    background-color: var(--background-feature);
+    padding: 17px;
+}
+
+.repeat-close {
+    float: right;
+    color: var(--decorative-light-alt);
+    transition: color 0.5s;
+}
+
+.repeat-close:hover {
+    color: var(--decorative-light-accent);
+    cursor: pointer;
+}
 

@@ -1,15 +1,28 @@
+// A whole lotta imports
+
+// Ionic components
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
+import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
+
+// Routing
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
-import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
+
+// Like, your heart and soul
 import React, { Component } from 'react';
-import './Home.css';
+
+// Cool components that we need
 import Upcoming from './Upcoming';
 import Completed from './Completed';
 import Perspectives from './Perspectives';
+
+// Our very own CSS
+import './Home.css';
+
+// Tootips
 import ReactTooltip from 'react-tooltip';
 
-
+// autobind those functions
 const autoBind = require('auto-bind/react');
 
 /* 
@@ -29,17 +42,25 @@ const autoBind = require('auto-bind/react');
  *
  */
 
+// Welp. The Home.
 class Home extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {projects:[], perspectives:[], itemSelected:{item:"upcoming", id:undefined}};
+        this.state = {
+            projects:[], // list of top level projects
+            perspectives:[], // list of perspectives
+            itemSelected:{item:"upcoming", id:undefined} // so what did we actually select
+        };
 
+        // AutoBind!
         autoBind(this);
     }
 
     componentDidMount() {
+        // This is, indeed, the view
         let view = this;
+        // Get the current URI to set which view is selected
         let uri = (new URL(document.URL)).pathname.split("/");
         if (uri[1] === "")
             this.setState({itemSelected:{item:"upcoming", id:""}});
@@ -58,6 +79,8 @@ class Home extends Component {
              */
 
             setTimeout(async function() {
+                // Load the top level projects and perspectives
+                // to set into the state and to add to the menu
                 let tlp = await view.props.engine.db.getTopLevelProjects(view.props.uid);
                 let psp = await view.props.engine.db.getPerspectives(view.props.uid);
                 view.setState({projects: tlp[2], perspectives:psp[2]});
@@ -68,31 +91,42 @@ class Home extends Component {
     render() {
     return (
     <IonPage>
+        {/* The central router that controls the routing of views */}
         <IonReactRouter>
+            {/* OoIp */}
             <ReactTooltip />
+            {/* App container */}
             <IonContent>
+                {/* Menu pane to control mobile view splitting */}
               <IonSplitPane id="main-split" contentId="main" when="sm">
+                {/* The left: menu! */}
                 <IonMenu id="main-menu" contentId="main">
-                    {/*
-                    <div id="menu-hero">
-                        Condution <span id="version-number" className="menu-decoration">v1.0.0</span>
-                    </div>
-                    */}
-                        
                     <br />
                     <IonContent>
-                        {/* === Built Ins == */}
-                        <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div></Link>
+                        {/* === Built Ins: upcoming + completed == */}
+                        {/* Upcoming button + link */}
+                        <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}> {/* Link to trigger router */}
+                            {/* Upcoming button */}
+                            <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div>
+                        </Link>
 
-
-                            <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}><div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div></Link>
+                        {/* Completed button + link */}
+                            <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}> {/* Link to trigger router */}
+                                {/* Completed button */}
+                                <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div>
+                            </Link>
 
                         {/* === Perspectives == */}
                         <div className="menu-sublabel menu-decoration">Perspectives</div>
 
-                            {/* === Perspective Contents == */}
+                            {/* === Perspective button + link == */}
                             {this.state.perspectives.map((psp) => {
-                                return (<Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}><div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}>{/*<IonIcon icon={filterOutline} />*/}<i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div></Link>)
+                                return (
+                                    <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}> {/* Link to trigger router */}
+                                        {/* Perspective button */}
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
+                                    </Link>
+                                )
                             })}
 
 
@@ -101,26 +135,33 @@ class Home extends Component {
                             {/* === Project Contents == */}
                             {this.state.projects.map((proj) => {
                                 return (
-
-				    <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}>
-					<div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}>
-					    <IonIcon icon={listOutline} />
-				    {/*<i className="fas fa-sitemap" style={{paddingRight: 2, fontSize: 14}}></i> */}{proj.name}</div></Link> )                            })}
+                                    <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}> {/* Link to trigger router */}
+                                    {/* Perspective button */}
+                                    <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link> 
+                                )                            
+                            })}
 
                     </IonContent>
-                        <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
+
+                    {/* Logout button */}
+                    <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                 </IonMenu>
                 <IonContent id="main">
+                        {/* The actual page */}
                         <IonRouterOutlet>
-                            {/*<Route path="/" component={Home} exact={true} />*/}
+                            {/* / => /upcoming */}
                              <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
+                            {/* and the perspective switch */}
                              <Switch>
-
+                                {/* upcoming renders upcoming */}
                                  <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
+                                {/* completed renders completed */}
                                  <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
+                                {/* perspective renders perspectives */}
                                  <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  />}  />
+                                {/* TODO projects */}
                             </Switch>
                         </IonRouterOutlet>
                 </IonContent>

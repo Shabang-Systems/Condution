@@ -51,8 +51,10 @@ import Auth from './pages/Auth';
 import Loader from './pages/Loader';
 import Home from './pages/Home';
 
+
 /* AutoBind */
 const autoBind = require('auto-bind/react');
+
 
 /* Storage Plugins */
 const { Storage } = Plugins;

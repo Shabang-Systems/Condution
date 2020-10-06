@@ -25,10 +25,7 @@ class Upcoming extends Component {
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
         let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid);
-/*        possibleProjects = pPandT[0][0];*/
-        //possibleTags = pPandT[1][0];
-        //possibleProjectsRev = pPandT[0][1];
-        /*possibleTagsRev = pPandT[1][1];*/
+
         let projectList = [];
         let tagsList = [];
 
@@ -57,11 +54,12 @@ class Upcoming extends Component {
 
         this.updatePrefix = this.random();
 
+
         this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
     }
 
-    async componentDidMount() {
-        await this.refresh();
+    componentDidMount() {
+        this.refresh();
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -73,7 +71,7 @@ class Upcoming extends Component {
                 <IonContent>
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
-                        <IonMenuToggle><i class="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
+                        <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
                         {/*
                         <div className="greeting-datewidget">
@@ -92,12 +90,12 @@ class Upcoming extends Component {
                     
                     <div style={{marginLeft: 10, marginRight: 10}}>
 
-                    <div class="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                    <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
 
                     {this.state.inbox.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
-                    <div class="page-label">Due Soon <IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                    <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
                     {this.state.dueSoon.map(id => (
                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                     ))}
