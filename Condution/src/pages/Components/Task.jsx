@@ -306,7 +306,7 @@ class Task extends Component {
                             {/* Gotta get those on hover tips */}
                             <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                             {/* And load up + hide a repeat UI, too! */}
-                            <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat}/>
+                            <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
 
                             {/* Chapter 1: Task Checkmark */}
                             {/* Who could have thought so much code goes into a checkbox? */}
