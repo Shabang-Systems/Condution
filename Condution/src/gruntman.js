@@ -26,6 +26,12 @@ class Gruntman {
         this.e = engine;
         this.refresher = ()=>{};
         this.doers = {
+            tag: {
+                create: async function (options) {
+                    let newTag = await engine.db.newTag(options.uid, options.name);
+                    return {uid: options.uid, id: newTag};
+                }
+            }, 
             task: {
                 update: async function (options) {
                     let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
@@ -262,13 +268,12 @@ class Gruntman {
         this.schedulers[identifier] = setTimeout(callback, wait);
     }
 
-    async do(actionName, options, bypassUpdates, isUndo) {
+    async do(actionName, options, bypassUpdates, isUndo, unsafe_FORCE_UPDATES) {
         /*
          * @param actionName => action directive like task.edit or project.create
          * @param options => options
          *
          */
-
         let actionID = this.random();
 
         let nodes = actionName.split(".");
@@ -287,6 +292,11 @@ class Gruntman {
 
         if (!this.updateLock && !bypassUpdates)
             this.refresher();
+        
+        if (unsafe_FORCE_UPDATES)
+            this.refresher();
+
+        return await resources;
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}

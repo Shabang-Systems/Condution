@@ -14,6 +14,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable';
 
 // Our very own repeat UI
 import Repeat from './Repeat';
@@ -148,9 +149,9 @@ class Task extends Component {
             availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
             isComplete: false, // are we completed?
             showRepeat: false, // is our repeat UI shown?
-            startingCompleted: this.props.startingCompleted // disable immediate onComplete animation for completed
+            startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
+            possibleTags: this.props.datapack[0] // tags will need to be dynamically added, so
         }
-
         this.me = React.createRef(); // who am I? what am I?
         this.repeater = React.createRef(); // what's my repeater?
     }
@@ -616,7 +617,7 @@ class Task extends Component {
                                                         {/* Icon */}
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
                                                         {/* Tag select */}
-                                                        <Select 
+                                                        <CreatableSelect
                                                             options={this.props.datapack[0]}
                                                             className='task-tag'
                                                             classNamePrefix='task-select'
@@ -625,17 +626,35 @@ class Task extends Component {
                                                             styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
-                                                            onChange={(e) => {
-                                                                let tagIDs = e?e.map(a=>a.value):[]; // find the correct tags sets, or set it to an empty set
-                                                                this.setState({tags: tagIDs}); // set the state
-                                                                this.props.gruntman.do(
-                                                                    "task.update", 
-                                                                    {
-                                                                        uid: this.props.uid, 
-                                                                        tid: this.props.tid, 
-                                                                        query:{tags: tagIDs} // set a taskID
-                                                                    }
-                                                                )
+                                                            onChange={(newValue, actionMeta) => {
+                                                                let view = this;
+                                                                let tids = newValue?newValue.map(async function (e) { // for each tag
+                                                                    if (e.__isNew__) { // if it's a new tag
+                                                                        let tagID = (await view.props.gruntman.do( // create it!
+                                                                            "tag.create",
+                                                                            {
+                                                                                uid: view.props.uid,
+                                                                                name: e.label,
+                                                                            }, 
+                                                                        )).id;
+                                                                        let originalTags = view.state.possibleTags; // get tags
+                                                                        originalTags.push({label: e.label, value: tagID}); // add our new tag
+                                                                        view.setState({possibleTags: originalTags}); // sax-a-boom!
+                                                                        return tagID;
+                                                                    } else
+                                                                        return e.value;
+                                                                }):[]; // find the correct tags sets, or set it to an empty set
+                                                                Promise.all(tids).then(tagIDs => {
+                                                                    this.setState({tags: tagIDs}); // set the state
+                                                                    this.props.gruntman.do(
+                                                                        "task.update", 
+                                                                        {
+                                                                            uid: this.props.uid, 
+                                                                            tid: this.props.tid, 
+                                                                            query:{tags: tagIDs} // set a taskID
+                                                                        }
+                                                                    )
+                                                                });
                                                             }}
                                                         />
                                                     </span>
