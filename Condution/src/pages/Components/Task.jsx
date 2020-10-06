@@ -197,6 +197,7 @@ class Task extends Component {
                     ): undefined
             )
         });
+
         this.refreshDecorations(); // flush and generate them decorations!
     }
 
@@ -272,15 +273,40 @@ class Task extends Component {
 
                     native  
 
-                    state = {
-                        this.state.isComplete?  // if we are complete
-                            (this.state.startingCompleted? this.state.expanded?"show":"hide":"complete") : // if we are staring completed, no need to show that the task is completed again. Otherwise, do play the complete animation
-                            (this.state.expanded?"show":"hide")} // if we are not complete, open/close as usual
+///////////////////////
 
-                        // In hux's words
-                        // if complete, if starting complete, show. if complete, if starting uncomplete, complete. 
-                        // if not complete, if expanded, show. if not complete, if not expanded, hide. 
+                    //state = {
+                    //    this.state.isComplete?  // if we are complete
+                    //        (this.state.startingCompleted? this.state.expanded?"show":"hide":"complete") : // if we are staring completed, no need to show that the task is completed again. Otherwise, do play the complete animation
+                    //        (this.state.expanded?"show":"hide")} // if we are not complete, open/close as usual
 
+                    //    // In hux's words
+                    //    // if complete, if starting complete, show. if complete, if starting uncomplete, complete. 
+                    //    // if not complete, if expanded, show. if not complete, if not expanded, hide. 
+
+///////////////////////
+	   
+
+		state = {
+		    this.state.isComplete? // if we are complete 
+			(this.state.startingCompleted? // and we start complete 
+			    (this.state.expanded? // and we are expanded 
+				"show":"hide") // show, otherwise, hide 
+			    :"complete") // if we are complete,  and don't start completed, complete. 
+			: // if we arnt complete, 
+			(this.state.startingCompleted? // and we start complete 
+			    "complete": // then complete 
+				(this.state.expanded? "show":"hide"))} // if we are incomplete, and we start incomplete, then show or hide based on expanded 
+
+
+
+
+
+
+	    
+
+
+	    
                 >
                 {animatedProps => {
                     return (
@@ -317,6 +343,8 @@ class Task extends Component {
                                     id={"task-check-"+this.props.tid} 
                                     className="task-check" 
                                     onChange={()=>{
+					console.log(this.state.isComplete)
+
                                         // If we are uncompleting a task (that is, currently task is complete) 
                                         if (this.state.isComplete)
                                             // Well, first, uncomplete it
@@ -324,9 +352,9 @@ class Task extends Component {
                                             // Update the database, registering a gruntman action while you are at it.
                                             this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
                                             // Whatever this is
-                                            if (this.props.startingComplete) {
-                                                console.log("completing while starting complete")
-                                            }
+					    if (this.props.startingComplete) {
+						console.log("uncompleting")
+					    }
 
                                         // If we are completing a task (that is, currently task is incomplete)
                                         else if (!this.state.isComplete) {
@@ -338,12 +366,13 @@ class Task extends Component {
                                             this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
                                             // Hux?
                                             if (!this.props.startingComplete) {
-                                                console.log("completing while starting not coplete")
+                                                console.log("completing")
                                             }
 
                                              //TODO wait for animation to finish before state update??
                                             this.props.gruntman.unlockUpdates(1000)
                                         }
+					console.log(this.state.isComplete)
                                     }} 
                                     style={{opacity: this.state.availability?1:0.35}}
                                 />

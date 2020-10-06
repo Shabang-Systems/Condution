@@ -34,7 +34,7 @@ class Completed extends Component {
     async refresh() {
 	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
 
-	this.setState({taskList: tasksToday});
+	this.setState({taskList: tasksWeek});
 
 
     }
