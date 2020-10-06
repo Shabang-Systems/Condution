@@ -52,6 +52,7 @@
 
 .count-badge {
     /*width: 23px;*/
+    padding: 5px 8px 5px 8px; /* bottom left top right*/
     color: var(--content-normal-accent);
     border: 1px solid var(--content-normal-accent);
     /*background-color: transparent;*/
