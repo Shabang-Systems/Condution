@@ -408,11 +408,11 @@ button:focus {
 }
 
 .task-select__value-container--is-multi {
-    transform: translateY(2px);
+    /*transform: translateY(2px);*/
 }
 
 .task-select__value-container--is-multi .css-b8ldur-Input {
-    transform: translateY(-3px);
+    /*transform: translateY(-3px);*/
 }
 
 .css-tlfecz-indicatorContainer {
@@ -512,7 +512,7 @@ button:focus {
 
 .task-select__multi-value__label {
     color: var(--content-normal-alt) !important;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .task-select__multi-value__remove {
