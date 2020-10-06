@@ -20,8 +20,8 @@
 .task-icon {
     border-radius: 50%;
     border: 3px solid;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     display: inline-block;
     transform: scale(0.55);
 }

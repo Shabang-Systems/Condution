@@ -57,7 +57,7 @@ class Repeat extends Component {
                 <IonContent fullscreen>
                     <div className="repeat-header">
                         <b>Repeat</b> {this.state.name}
-                        <a className="repeat-close"><i class="fa fa-times"></i></a>
+                        <a className="repeat-close" onClick={this.props.onDidDismiss}><i class="fa fa-times"></i></a>
                     </div>
                 </IonContent>
             </IonModal>
