@@ -150,7 +150,8 @@ class Task extends Component {
             isComplete: false, // are we completed?
             showRepeat: false, // is our repeat UI shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
-            possibleTags: this.props.datapack[0] // tags will need to be dynamically added, so
+            possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
+            initialRenderDone: false // wait for data to load to make animation decisions
         }
         this.me = React.createRef(); // who am I? what am I?
         this.repeater = React.createRef(); // what's my repeater?
@@ -195,7 +196,8 @@ class Task extends Component {
                                 {timeZone: taskInfo.timezone} // and cast it to the right time zone
                             )
                     ): undefined
-            )
+            ),
+            initialRenderDone: true
         });
 
         this.refreshDecorations(); // flush and generate them decorations!
@@ -286,15 +288,18 @@ class Task extends Component {
 
 ///////////////////////
 	   
-
 		state = {
-		    this.state.isComplete? // if we are complete 
+            this.state.initialRenderDone ?
+		    (this.state.isComplete? // if we are complete 
 			(this.state.startingCompleted? // and we start complete 
 			    (this.state.expanded? // and we are expanded 
 				"show":"hide") // show, otherwise, hide 
 			    :"complete") // if we are complete,  and don't start completed, complete. 
 			: // if we arnt complete, 
-            (this.state.expanded? "show":"hide")} // if we are incomplete, and we start incomplete, then show or hide based on expanded 
+			this.state.startingCompleted ?  // and we start complete 
+                "complete" :
+                (this.state.expanded? "show":"hide")):"hide"
+        } // if we are incomplete, and we start incomplete, then show or hide based on expanded 
 
                 >
                 {animatedProps => {
@@ -331,20 +336,19 @@ class Task extends Component {
                                     type="checkbox" 
                                     id={"task-check-"+this.props.tid} 
                                     className="task-check" 
+                                    defaultChecked={this.props.startingCompleted}
                                     onChange={()=>{
-					console.log(this.state.isComplete)
 
                                         // If we are uncompleting a task (that is, currently task is complete) 
-                                        if (this.state.isComplete)
+                                        if (this.state.isComplete) {
+                                            this.props.gruntman.lockUpdates();
                                             // Well, first, uncomplete it
                                             this.setState({isComplete: false})
                                             // Update the database, registering a gruntman action while you are at it.
-                                            this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+                                            this.props.gruntman.do("task.update__uncomplete", { uid: this.props.uid, tid: this.props.tid}, true)
                                             // Whatever this is
-					    if (this.props.startingComplete) {
-						console.log("uncompleting")
-					    }
-
+                                            this.props.gruntman.unlockUpdates(1000)
+                                        }
                                         // If we are completing a task (that is, currently task is incomplete)
                                         else if (!this.state.isComplete) {
                                             // Lock updates so that animation could finish
@@ -353,15 +357,9 @@ class Task extends Component {
                                             this.setState({isComplete: true})
                                             // Update the database, registering a gruntman action while you are at it.
                                             this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
-                                            // Hux?
-                                            if (!this.props.startingComplete) {
-                                                console.log("completing")
-                                            }
-
                                              //TODO wait for animation to finish before state update??
                                             this.props.gruntman.unlockUpdates(1000)
                                         }
-					console.log(this.state.isComplete)
                                     }} 
                                     style={{opacity: this.state.availability?1:0.35}}
                                 />
