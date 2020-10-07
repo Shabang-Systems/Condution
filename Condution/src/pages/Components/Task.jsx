@@ -294,19 +294,8 @@ class Task extends Component {
 				"show":"hide") // show, otherwise, hide 
 			    :"complete") // if we are complete,  and don't start completed, complete. 
 			: // if we arnt complete, 
-			(this.state.startingCompleted? // and we start complete 
-			    "complete": // then complete 
-				(this.state.expanded? "show":"hide"))} // if we are incomplete, and we start incomplete, then show or hide based on expanded 
+            (this.state.expanded? "show":"hide")} // if we are incomplete, and we start incomplete, then show or hide based on expanded 
 
-
-
-
-
-
-	    
-
-
-	    
                 >
                 {animatedProps => {
                     return (
