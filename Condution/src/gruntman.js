@@ -51,6 +51,11 @@ class Gruntman {
 
                     return {uid: options.uid, tid: options.tid, tInfo};
                 },
+                update__uncomplete: async function (options) {
+                    let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
+                    await engine.db.modifyTask(options.uid, options.tid, {isComplete: false, completeDate: new Date()});
+                    return {uid: options.uid, tid: options.tid, taskInfo};
+                },
                 update__complete: async function (options) {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: true, completeDate: new Date()})
                     let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
