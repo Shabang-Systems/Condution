@@ -34,7 +34,7 @@ class Completed extends Component {
     async refresh() {
 	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
 
-	this.setState({taskList: tasksToday});
+	this.setState({taskList: [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]});
 
 
     }
@@ -42,6 +42,12 @@ class Completed extends Component {
     componentDidMount() {
         this.refresh();
     }
+    
+    handleFetchMore() {
+	console.log(this.state.taskList[1])
+
+    }
+
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
@@ -69,7 +75,7 @@ class Completed extends Component {
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10}}>
 
-		{this.state.taskList.map(id => (
+		{this.state.taskList.length? this.state.taskList[0].map(id => (
 		    <Task 
 			
 			tid={id} 
@@ -86,12 +92,30 @@ class Completed extends Component {
 				    this.state.possibleTags, 
 				    this.state.possibleTagsRev]}
 		    />
-		))}
+		)) : ""}
+
+		<p> Yesterday </p> 
+		{this.state.taskList.length? this.state.taskList[2].map(id => (
+		    <Task 
+			
+			tid={id} 
+			startingCompleted={true}
+			key={id+"-"+this.updatePrefix} 
+			uid={this.props.uid} 
+			engine={this.props.engine} 
+			gruntman={this.props.gruntman} 
+			availability={this.state.availability[id]} 
+			datapack={[this.state.tagSelects,
+				    this.state.projectSelects, 
+				    this.state.possibleProjects, 
+				    this.state.possibleProjectsRev, 
+				    this.state.possibleTags, 
+				    this.state.possibleTagsRev]}
+		    />
+		)) : ""}
 
 
-
-
-		    <div className="fetch-more">
+		    <div className="fetch-more" onClick={this.handleFetchMore}>
 			Fetch more... 
 		    </div>
 		    </div>
