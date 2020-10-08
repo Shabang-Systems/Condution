@@ -408,7 +408,7 @@ button:focus {
 }
 
 .task-select__value-container--is-multi {
-    transform: translateY(3px);
+    /*transform: translateY(3px);*/
 }
 
 .task-select__value-container--is-multi .css-b8ldur-Input {
@@ -499,7 +499,7 @@ button:focus {
     background-color: var(--special) !important;
     color: var(--content-normal-alt) !important;
     height: 18px !important;
-    transform: translateY(-2px);
+    /*transform: translateY(-2px);*/
     transition: 0.3s;
     /*border: 1px solid green !important;*/
 }
