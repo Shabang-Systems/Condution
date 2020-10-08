@@ -81,7 +81,7 @@ class Completed extends Component {
 
 		{this.state.taskList.length? 
 		    
-		    [<p>Today</p>,
+		    [<div class="page-label">LOCALIZE: Today</div>,
 		    this.state.taskList[0].map(id => (
 		    <Task 
 			
@@ -103,7 +103,7 @@ class Completed extends Component {
 
 		{this.state.tasksShown? 
 		    (this.state.taskList.length && this.state.taskList[1].length)?
-			[<p>Yesterday</p>,
+			[<div class="page-label">LOCALIZE: Yesterday</div>,
 			this.state.taskList[1].map(id => (
 			    <Task 
 				
@@ -124,7 +124,7 @@ class Completed extends Component {
 		    ))] : this.handleFetchMore : ""}
 
 		{(this.state.tasksShown >= 2)? 
-		    [<p>This Week</p>,
+		    [<div class="page-label">LOCALIZE: This Week</div>,
 		    this.state.taskList.length? this.state.taskList[2].map(id => (
 			<Task 
 			    
@@ -145,7 +145,7 @@ class Completed extends Component {
 		    )) : ""] : ""}
 
 		{(this.state.tasksShown >= 3)? 
-		    [<p>Even Before</p>,
+		    [<div class="page-label">LOCALIZE: Even Before</div>,
 		    this.state.taskList.length? this.state.taskList[3].map(id => (
 			<Task 
 			    
