@@ -46,6 +46,7 @@ class Completed extends Component {
     
     handleFetchMore() {
 	this.setState({tasksShown: this.state.tasksShown+1})
+	console.log("handled fetch")
 
 	console.log(this.state.tasksShown)
 
@@ -78,8 +79,10 @@ class Completed extends Component {
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10}}>
 
-		<p>Today</p>
-		{this.state.taskList.length? this.state.taskList[0].map(id => (
+		{this.state.taskList.length? 
+		    
+		    [<p>Today</p>,
+		    this.state.taskList[0].map(id => (
 		    <Task 
 			
 			tid={id} 
@@ -96,28 +99,29 @@ class Completed extends Component {
 				    this.state.possibleTags, 
 				    this.state.possibleTagsRev]}
 		    />
-		)) : ""}
+		))] : ""}
 
 		{this.state.tasksShown? 
-		    [<p>Yesterday</p>,
-		    this.state.taskList.length? this.state.taskList[1].map(id => (
-			<Task 
-			    
-			    tid={id} 
-			    startingCompleted={true}
-			    key={id+"-"+this.updatePrefix} 
-			    uid={this.props.uid} 
-			    engine={this.props.engine} 
-			    gruntman={this.props.gruntman} 
-			    availability={this.state.availability[id]} 
-			    datapack={[this.state.tagSelects,
-					this.state.projectSelects, 
-					this.state.possibleProjects, 
-					this.state.possibleProjectsRev, 
-					this.state.possibleTags, 
-					this.state.possibleTagsRev]}
-			/>
-		    )) : ""] : ""}
+		    (this.state.taskList.length && this.state.taskList[1].length)?
+			[<p>Yesterday</p>,
+			this.state.taskList[1].map(id => (
+			    <Task 
+				
+				tid={id} 
+				startingCompleted={true}
+				key={id+"-"+this.updatePrefix} 
+				uid={this.props.uid} 
+				engine={this.props.engine} 
+				gruntman={this.props.gruntman} 
+				availability={this.state.availability[id]} 
+				datapack={[this.state.tagSelects,
+					    this.state.projectSelects, 
+					    this.state.possibleProjects, 
+					    this.state.possibleProjectsRev, 
+					    this.state.possibleTags, 
+					    this.state.possibleTagsRev]}
+			    />
+		    ))] : this.handleFetchMore : ""}
 
 		{(this.state.tasksShown >= 2)? 
 		    [<p>This Week</p>,
@@ -141,7 +145,7 @@ class Completed extends Component {
 		    )) : ""] : ""}
 
 		{(this.state.tasksShown >= 3)? 
-		    [<p>This Week</p>,
+		    [<p>Even Before</p>,
 		    this.state.taskList.length? this.state.taskList[3].map(id => (
 			<Task 
 			    
@@ -160,28 +164,6 @@ class Completed extends Component {
 					this.state.possibleTagsRev]}
 			/>
 		    )) : ""] : ""}
-
-		{(this.state.tasksShown >= 4)? 
-		    [<p>Even Before</p>,
-		    this.state.taskList.length? this.state.taskList[4].map(id => (
-			<Task 
-			    
-			    tid={id} 
-			    startingCompleted={true}
-			    key={id+"-"+this.updatePrefix} 
-			    uid={this.props.uid} 
-			    engine={this.props.engine} 
-			    gruntman={this.props.gruntman} 
-			    availability={this.state.availability[id]} 
-			    datapack={[this.state.tagSelects,
-					this.state.projectSelects, 
-					this.state.possibleProjects, 
-					this.state.possibleProjectsRev, 
-					this.state.possibleTags, 
-					this.state.possibleTagsRev]}
-			/>
-		    )) : ""] : ""}
-
 
 		    <div className="fetch-more" onClick={this.handleFetchMore}>
 			Fetch more... 
