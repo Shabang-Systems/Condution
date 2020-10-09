@@ -45,13 +45,22 @@
     padding: 4px 7px;
     margin-left: 3px;
     margin-right: 3px;
+    width: 100px;
+    --background:  var(--task-textbox-background);
+    display: inline-block;
+    font-size: 15px;
 }
 
-.repeat-select__option {
-    background-color: var(--task-textbox-background);
+.select-icon {
+    display: none !important;
+}
+
+.select-interface-option {
+    --background: var(--task-textbox-background);
     color: var(--task-textbox);
     transition: background-color 0.3s;
 }
+
 
 .repeat-select__option:hover {
     background-color: var(--task-clickbox-accent-background);
@@ -67,6 +76,8 @@
 
 .dropdown-menu {
     background-color: var(--task-textbox-background);
+    z-index: 100;
+    position: absolute;
 }
 
 .repeat-rule-selector {
@@ -77,4 +88,9 @@
     border: 0;
     outline: 0;
 }
+
+.dropdown-toggle::after {
+    border: 0 !important;
+}
+
 

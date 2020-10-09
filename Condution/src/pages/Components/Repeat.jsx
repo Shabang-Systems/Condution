@@ -1,4 +1,4 @@
-import { IonModal, IonContent } from '@ionic/react';
+import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
@@ -81,33 +81,12 @@ class Repeat extends Component {
                         <div className="repeat-rule-selector">
                             <i className="repeat-label fa fa-redo"></i>
                             <span className="repeat-label">Repeat</span>
-                            <Dropdown style={{display: "inline-block"}}>
-                              <Dropdown.Toggle className="repeat-select">
-                                  {(() => {
-                                      // This looks stupid, but its for localization
-                                      switch (this.state.rule) {
-                                          case "none":
-                                              return "none";
-                                          case "daily":
-                                              return "daily";
-                                          case "weekly2": // we stuffed up last time the weekly rule
-                                              return "weekly";
-                                          case "monthly":
-                                              return "monthly";
-                                          case "yearly":
-                                              return "yearly";
-                                      }
-                                  })()}
-                              </Dropdown.Toggle>
-
-                              <Dropdown.Menu>
-                                <Dropdown.Item className="repeat-select__option">None</Dropdown.Item>
-                                <Dropdown.Item className="repeat-select__option">Weekly</Dropdown.Item>
-                                <Dropdown.Item className="repeat-select__option">Monthly</Dropdown.Item>
-                                <Dropdown.Item className="repeat-select__option">Yearly</Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
-                            <a style={{marginLeft: 10, color: "var(--content-normal-alt)", float: "right"}}><i className="far fa-caret-square-down"></i></a>
+                                <IonSelect className="repeat-select" interface="popover">
+                                    <IonSelectOption className="repeat-select__option">None</IonSelectOption>
+                                    <IonSelectOption className="repeat-select__option">Weekly</IonSelectOption>
+                                    <IonSelectOption className="repeat-select__option">Monthly</IonSelectOption>
+                                    <IonSelectOption className="repeat-select__option">Yearly</IonSelectOption>
+                                </IonSelect>
                         </div>
                     </div>
                     <div style={{margin: "10px 20px", color: "var(--content-normal-alt)"}}>

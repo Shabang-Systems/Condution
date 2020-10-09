@@ -244,6 +244,9 @@ class Task extends Component {
             if (this.repeater.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
 
+        if (this.state.showRepeat) // if we are showing our repeat
+            return; //click inside
+
         //otherwise,
         this.closeTask();
     }
