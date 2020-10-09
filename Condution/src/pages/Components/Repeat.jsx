@@ -83,11 +83,12 @@ class Repeat extends Component {
                                 <i className="repeat-label fa fa-redo"></i>
                                 <span className="repeat-label">Repeat</span>
                             </span>
-                            <IonSelect className="repeat-select" interface="popover">
-                                <IonSelectOption className="repeat-select__option">None</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option">Weekly</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option">Monthly</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option">Yearly</IonSelectOption>
+                            <IonSelect className="repeat-select" interface="popover" value={this.state.rule}>
+                                <IonSelectOption className="repeat-select__option" value="none">None</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="daily">Daily</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="weekly2">Weekly</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="monthly">Monthly</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="yearly">Yearly</IonSelectOption>
                             </IonSelect>
                         </div>
                     </div>
