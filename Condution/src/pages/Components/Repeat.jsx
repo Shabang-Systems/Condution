@@ -75,7 +75,7 @@ class Repeat extends Component {
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%"}}><b>Repeat</b> <div className="repeat-task-name">{this.state.name}</div></span>
                         {/* Close button */}
-                        <a className="repeat-close" onClick={this.props.onDidDismiss}><i class="fa fa-times"></i></a>
+                        <a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
                     </div>
                     <div>
                         <div className="repeat-basic-row">
@@ -85,7 +85,17 @@ class Repeat extends Component {
                                 <span className="repeat-label">Repeat</span>
                             </span>
                             {/* The big select, force iOS style */}
-                            <IonSelect className="repeat-select" interface="popover" value={this.state.rule} mode="ios">
+                            <IonSelect className="repeat-select" interface="popover" value={this.state.rule} mode="ios" onIonChange={e=>{
+                                    // Set the repeat
+                                    this.props.gruntman.do(
+                                        "task.update", 
+                                        { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: e.detail.value}}}
+                                    )
+
+                                    // Set the state too!
+                                    this.setState({rule: e.detail.value, advanced: false, on: undefined});
+ 
+                                }}>
                                 <IonSelectOption className="repeat-select__option" value="none">None</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="daily">Daily</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="weekly2">Weekly</IonSelectOption>
