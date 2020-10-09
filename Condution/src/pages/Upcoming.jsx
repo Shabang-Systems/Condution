@@ -68,12 +68,12 @@ class Upcoming extends Component {
     render() {
         return (
             <IonPage>
-                <IonContent>
+                <div className="page-content">
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
-                        <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
+                            <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
-                        {/*
+                                {/*
                         <div className="greeting-datewidget">
                             <div style={{display: "inline-block"}} className="greeting-date">13</div>
                             <div style={{display: "inline-block"}} className="greeting-datename">Wed</div>
@@ -81,27 +81,27 @@ class Upcoming extends Component {
                         */}
 
 
-                        <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span></div>
-                        </div>
-                        <div className="datebar" style={{display: "inline-block"}}>
-                            The datebar.
-                        </div>
-                    </div>
-                    
-                    <div style={{marginLeft: 10, marginRight: 10}}>
+                            <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span></div>
+                                </div>
+                                    <div className="datebar" style={{display: "inline-block"}}>
+                                        The datebar.
+                                        </div>
+                                            </div>
 
-                    <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                                <div style={{marginLeft: 10, marginRight: 10}}>
 
-                    {this.state.inbox.map(id => (
-                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                    ))}
-                    <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
-                    {this.state.dueSoon.map(id => (
-                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                    ))}
-                    </div>
+                                                    <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
 
-                </IonContent>
+                                                        {this.state.inbox.map(id => (
+                                                            <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                                        ))}
+                                                                <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                                                                    {this.state.dueSoon.map(id => (
+                                                                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                                                    ))}
+                                                                            </div>
+
+                                                                                </div>
             </IonPage>
         )
     }

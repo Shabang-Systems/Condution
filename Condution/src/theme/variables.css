@@ -10,11 +10,9 @@ textarea:focus, input:focus{
 
 body {
     padding-top: max(15px, env(safe-area-inset-top));
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
 }
 
-*::-webkit-scrollbar {
+* ::-webkit-scrollbar {
     display: none;
 }
 
