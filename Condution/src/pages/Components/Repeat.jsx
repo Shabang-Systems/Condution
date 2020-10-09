@@ -64,7 +64,7 @@ class Repeat extends Component {
                       case "weekly2":
                           return "task-repeat__default";
                       case "monthly":
-                          return "task-repeat__default";
+                          return (this.state.advanced ? "task-repeat__advanced-monthly" : "task-repeat__default");
                       case "yearly":
                           return "task-repeat__default";
                   }
@@ -103,10 +103,35 @@ class Repeat extends Component {
                                 <IonSelectOption className="repeat-select__option" value="yearly">Yearly</IonSelectOption>
                             </IonSelect>
                             </div>
-                            <i style={{color: "var(--decorative-light-alt)", float: "right"}} className="fas fa-caret-down"></i>
+                                <a style={{color: "var(--decorative-light-alt)", float: "right", cursor: "pointer"}} className={"fas " + (this.state.advanced ? "fa-caret-up":"fa-caret-down")} onClick={()=> {
+                                    if (this.state.advanced) {
+                                        this.props.gruntman.do(
+                                            "task.update", 
+                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule}}}
+                                        ) // undo advanced 
+                                        this.setState({rule: this.state.rule, advanced: false, on: undefined}); // set the state too!
+                                    } else {
+                                        this.props.gruntman.do(
+                                            "task.update", 
+                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: []}}}
+                                        ) // do advanced 
+                                        this.setState({rule: this.state.rule, advanced: true, on: []}); // set the state too!
+                                    }
+                                }}></a>
                         </div>
                     </div>
                     <div style={{margin: "10px 20px", color: "var(--content-normal-alt)"}}>
+                        {(()=>{
+                            if (this.state.advanced)
+                                switch (this.state.rule) {
+                                    case "monthly":
+                                        return (
+                                            <div>
+                                                I am a month grid
+                                            </div>
+                                        );
+                                }
+                        })()}
                     </div>
                 </div>
             </IonModal>

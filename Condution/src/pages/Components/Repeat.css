@@ -8,6 +8,10 @@
     --height: 110px; 
 }
 
+.task-repeat__advanced-monthly {
+    --height: 310px; 
+}
+
 .repeat-task-name {
     white-space: nowrap;
     overflow: hidden;
