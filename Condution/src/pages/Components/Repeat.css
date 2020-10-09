@@ -14,3 +14,24 @@
     cursor: pointer;
 }
 
+.repeat-select {
+    background-color: var(--task-textbox-background);
+    border: 0;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 1px;
+}
+
+.repeat-select:hover {
+    background-color: var(--clickbox-accent-background);
+}
+
+.repeat-select__option {
+    background-color: orange;
+}
+
+.repeat-select:focus {
+    border: 0;
+    outline: 0;
+}
+

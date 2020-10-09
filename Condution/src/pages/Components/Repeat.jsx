@@ -1,4 +1,5 @@
 import { IonModal, IonContent } from '@ionic/react';
+import { Dropdown } from 'react-bootstrap';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Repeat.css';
@@ -55,9 +56,26 @@ class Repeat extends Component {
         return (
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="task-repeat">
                 <IonContent fullscreen>
+                    {/* Header */}
                     <div className="repeat-header">
+                        {/* Repeat name */}
                         <b>Repeat</b> {this.state.name}
+                        {/* Close button */}
                         <a className="repeat-close" onClick={this.props.onDidDismiss}><i class="fa fa-times"></i></a>
+                    </div>
+                    <div>
+                        Repeat rule: 
+                        <Dropdown>
+                          <Dropdown.Toggle className="repeat-select">
+                            Dropdown Button
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                 </IonContent>
             </IonModal>
