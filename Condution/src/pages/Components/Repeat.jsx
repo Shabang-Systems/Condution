@@ -73,7 +73,7 @@ class Repeat extends Component {
                     {/* Header */}
                     <div className="repeat-header">
                         {/* Repeat name */}
-                        <span style={{display: "flex", alignItems: "center"}}><b>Repeat</b> <div className="repeat-task-name">{this.state.name}</div></span>
+                        <span style={{display: "flex", alignItems: "center", width: "100%"}}><b>Repeat</b> <div className="repeat-task-name">{this.state.name}</div></span>
                         {/* Close button */}
                         <a className="repeat-close" onClick={this.props.onDidDismiss}><i class="fa fa-times"></i></a>
                     </div>
@@ -83,7 +83,8 @@ class Repeat extends Component {
                                 <i className="repeat-label fa fa-redo"></i>
                                 <span className="repeat-label">Repeat</span>
                             </span>
-                            <IonSelect className="repeat-select" interface="popover" value={this.state.rule}>
+                            {/* The big select, force iOS style */}
+                            <IonSelect className="repeat-select" interface="popover" value={this.state.rule} mode="ios">
                                 <IonSelectOption className="repeat-select__option" value="none">None</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="daily">Daily</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="weekly2">Weekly</IonSelectOption>

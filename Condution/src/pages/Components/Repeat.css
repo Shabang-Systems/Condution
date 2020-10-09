@@ -59,15 +59,16 @@
 
 .select-interface-option {
     --background: var(--task-textbox-background);
-    color: var(--task-textbox);
+    --color: var(--task-textbox);
     transition: background-color 0.3s;
+    --border-color: transparent !important;
 }
 
 
-.repeat-select__option:hover {
-    background-color: var(--task-clickbox-accent-background);
-    color: var(--task-textbox);
-}
+/*.repeat-select__option:hover {*/
+    /*background-color: var(--task-clickbox-accent-background);*/
+    /*color: var(--task-textbox);*/
+/*}*/
 
 .repeat-label {
     color: var(--decorative-light-alt);
