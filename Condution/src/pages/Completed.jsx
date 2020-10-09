@@ -46,7 +46,7 @@ class Completed extends Component {
     
     handleFetchMore() {
 	this.setState({tasksShown: this.state.tasksShown+1})
-	console.log("handled fetch")
+	//console.log("handled fetch")
 
 	console.log(this.state.tasksShown)
 
@@ -59,6 +59,7 @@ class Completed extends Component {
     render() {
         return (
             <IonPage>
+                <IonContent>
                 <div className="page-content">
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
@@ -77,99 +78,103 @@ class Completed extends Component {
             </div>*/}
                 </div>
                     </div>
-                        <div style={{marginLeft: 10, marginRight: 10}}>
 
-                            {this.state.taskList.length? 
 
-                                [<div class="page-label">LOCALIZE: Today</div>,
-                                    this.state.taskList[0].map(id => (
-                                        <Task 
 
-                                            tid={id} 
-                                            startingCompleted={true}
-                                            key={id+"-"+this.updatePrefix} 
-                                            uid={this.props.uid} 
-                                            engine={this.props.engine} 
-                                            gruntman={this.props.gruntman} 
-                                            availability={this.state.availability[id]} 
-                                            datapack={[this.state.tagSelects,
-                                                this.state.projectSelects, 
-                                                this.state.possibleProjects, 
-                                                this.state.possibleProjectsRev, 
-                                                this.state.possibleTags, 
-                                                this.state.possibleTagsRev]}
-                                        />
-                                    ))] : ""}
 
-                                            {this.state.tasksShown? 
-                                                    (this.state.taskList.length && this.state.taskList[1].length)?
-                                                    [<div class="page-label">LOCALIZE: Yesterday</div>,
-                                                        this.state.taskList[1].map(id => (
-                                                            <Task 
+		{this.state.taskList.length? 
+		    
+		    [<div class="page-label">LOCALIZE: Today</div>,
+		    this.state.taskList[0].map(id => (
+		    <Task 
+			
+			tid={id} 
+			startingCompleted={true}
+			key={id+"-"+this.updatePrefix} 
+			uid={this.props.uid} 
+			engine={this.props.engine} 
+			gruntman={this.props.gruntman} 
+			availability={this.state.availability[id]} 
+			datapack={[this.state.tagSelects,
+				    this.state.projectSelects, 
+				    this.state.possibleProjects, 
+				    this.state.possibleProjectsRev, 
+				    this.state.possibleTags, 
+				    this.state.possibleTagsRev]}
+		    />
+		))] : ""}
 
-                                                                tid={id} 
-                                                                startingCompleted={true}
-                                                                key={id+"-"+this.updatePrefix} 
-                                                                uid={this.props.uid} 
-                                                                engine={this.props.engine} 
-                                                                gruntman={this.props.gruntman} 
-                                                                availability={this.state.availability[id]} 
-                                                                datapack={[this.state.tagSelects,
-                                                                    this.state.projectSelects, 
-                                                                    this.state.possibleProjects, 
-                                                                    this.state.possibleProjectsRev, 
-                                                                    this.state.possibleTags, 
-                                                                    this.state.possibleTagsRev]}
-                                                            />
-                                                        ))] : this.handleFetchMore : ""}
 
-                                                                {(this.state.tasksShown >= 2)? 
-                                                                        [<div class="page-label">LOCALIZE: This Week</div>,
-                                                                            this.state.taskList.length? this.state.taskList[2].map(id => (
-                                                                                <Task 
 
-                                                                                    tid={id} 
-                                                                                    startingCompleted={true}
-                                                                                    key={id+"-"+this.updatePrefix} 
-                                                                                    uid={this.props.uid} 
-                                                                                    engine={this.props.engine} 
-                                                                                    gruntman={this.props.gruntman} 
-                                                                                    availability={this.state.availability[id]} 
-                                                                                    datapack={[this.state.tagSelects,
-                                                                                        this.state.projectSelects, 
-                                                                                        this.state.possibleProjects, 
-                                                                                        this.state.possibleProjectsRev, 
-                                                                                        this.state.possibleTags, 
-                                                                                        this.state.possibleTagsRev]}
-                                                                                />
-                                                                            )) : ""] : ""}
+	    {/* {this.state.tasksShown? 
+		    (this.state.taskList.length && this.state.taskList[1].length)?
+			[<div class="page-label">LOCALIZE: Yesterday</div>,
+			this.state.taskList[1].map(id => (
+			    <Task 
+				
+				tid={id} 
+				startingCompleted={true}
+				key={id+"-"+this.updatePrefix} 
+				uid={this.props.uid} 
+				engine={this.props.engine} 
+				gruntman={this.props.gruntman} 
+				availability={this.state.availability[id]} 
+				datapack={[this.state.tagSelects,
+					    this.state.projectSelects, 
+					    this.state.possibleProjects, 
+					    this.state.possibleProjectsRev, 
+					    this.state.possibleTags, 
+					    this.state.possibleTagsRev]}
+			    />
+		    ))] : this.handleFetchMore : ""}
 
-                                                                                    {(this.state.tasksShown >= 3)? 
-                                                                                            [<div class="page-label">LOCALIZE: Even Before</div>,
-                                                                                                this.state.taskList.length? this.state.taskList[3].map(id => (
-                                                                                                    <Task 
+		{(this.state.tasksShown >= 2)? 
+		    [<div class="page-label">LOCALIZE: This Week</div>,
+		    this.state.taskList.length? this.state.taskList[2].map(id => (
+			<Task 
+			    
+			    tid={id} 
+			    startingCompleted={true}
+			    key={id+"-"+this.updatePrefix} 
+			    uid={this.props.uid} 
+			    engine={this.props.engine} 
+			    gruntman={this.props.gruntman} 
+			    availability={this.state.availability[id]} 
+			    datapack={[this.state.tagSelects,
+					this.state.projectSelects, 
+					this.state.possibleProjects, 
+					this.state.possibleProjectsRev, 
+					this.state.possibleTags, 
+					this.state.possibleTagsRev]}
+			/>
+		    )) : ""] : ""}
 
-                                                                                                        tid={id} 
-                                                                                                        startingCompleted={true}
-                                                                                                        key={id+"-"+this.updatePrefix} 
-                                                                                                        uid={this.props.uid} 
-                                                                                                        engine={this.props.engine} 
-                                                                                                        gruntman={this.props.gruntman} 
-                                                                                                        availability={this.state.availability[id]} 
-                                                                                                        datapack={[this.state.tagSelects,
-                                                                                                            this.state.projectSelects, 
-                                                                                                            this.state.possibleProjects, 
-                                                                                                            this.state.possibleProjectsRev, 
-                                                                                                            this.state.possibleTags, 
-                                                                                                            this.state.possibleTagsRev]}
-                                                                                                    />
-                                                                                                )) : ""] : ""}
+		{(this.state.tasksShown >= 3)? 
+		    [<div class="page-label">LOCALIZE: Even Before</div>,
+		    this.state.taskList.length? this.state.taskList[3].map(id => (
+			<Task 
+			    
+			    tid={id} 
+			    startingCompleted={true}
+			    key={id+"-"+this.updatePrefix} 
+			    uid={this.props.uid} 
+			    engine={this.props.engine} 
+			    gruntman={this.props.gruntman} 
+			    availability={this.state.availability[id]} 
+			    datapack={[this.state.tagSelects,
+					this.state.projectSelects, 
+					this.state.possibleProjects, 
+					this.state.possibleProjectsRev, 
+					this.state.possibleTags, 
+					this.state.possibleTagsRev]}
+			/>
+		    )) : ""] : ""} */}
 
-                                                                                                        <div className="fetch-more" onClick={this.handleFetchMore}>
-                                                                                                            Fetch more... 
-                                                                                                            </div>
-                                                                                                                </div>
-                                                                                                                    </div>
+		    <div className="fetch-more" onClick={this.handleFetchMore}>
+			Fetch more... 
+		    </div>
+		    </div>
+                </IonContent>
             </IonPage>
         )
     }
