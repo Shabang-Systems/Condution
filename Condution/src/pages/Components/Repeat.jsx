@@ -54,30 +54,66 @@ class Repeat extends Component {
 
     render() {
         return (
-            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="task-repeat">
-                <IonContent fullscreen>
+            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass={"task-repeat "+(()=>{
+                // Different repeat modes require different height modals
+                 switch (this.state.rule) {
+                      case "none":
+                          return "task-repeat__default";
+                      case "daily":
+                          return "task-repeat__default";
+                      case "weekly2":
+                          return "task-repeat__default";
+                      case "monthly":
+                          return "task-repeat__default";
+                      case "yearly":
+                          return "task-repeat__default";
+                  }
+            })()}>
+                <div>
                     {/* Header */}
                     <div className="repeat-header">
                         {/* Repeat name */}
-                        <b>Repeat</b> {this.state.name}
+                        <b>Repeat</b> <div className="repeat-task-name">{this.state.name}</div>
                         {/* Close button */}
                         <a className="repeat-close" onClick={this.props.onDidDismiss}><i class="fa fa-times"></i></a>
                     </div>
                     <div>
-                        Repeat rule: 
-                        <Dropdown>
-                          <Dropdown.Toggle className="repeat-select">
-                            Dropdown Button
-                          </Dropdown.Toggle>
+                        <div className="repeat-rule-selector">
+                            <i className="repeat-label fa fa-redo"></i>
+                            <span className="repeat-label">Repeat</span>
+                            <Dropdown style={{display: "inline-block"}}>
+                              <Dropdown.Toggle className="repeat-select">
+                                  {(() => {
+                                      // This looks stupid, but its for localization
+                                      switch (this.state.rule) {
+                                          case "none":
+                                              return "none";
+                                          case "daily":
+                                              return "daily";
+                                          case "weekly2": // we stuffed up last time the weekly rule
+                                              return "weekly";
+                                          case "monthly":
+                                              return "monthly";
+                                          case "yearly":
+                                              return "yearly";
+                                      }
+                                  })()}
+                              </Dropdown.Toggle>
 
-                          <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
+                              <Dropdown.Menu>
+                                <Dropdown.Item className="repeat-select__option">None</Dropdown.Item>
+                                <Dropdown.Item className="repeat-select__option">Weekly</Dropdown.Item>
+                                <Dropdown.Item className="repeat-select__option">Monthly</Dropdown.Item>
+                                <Dropdown.Item className="repeat-select__option">Yearly</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                            <a style={{marginLeft: 10, color: "var(--content-normal-alt)", float: "right"}}><i className="far fa-caret-square-down"></i></a>
+                        </div>
                     </div>
-                </IonContent>
+                    <div style={{margin: "10px 20px", color: "var(--content-normal-alt)"}}>
+                        
+                    </div>
+                </div>
             </IonModal>
         )
     }
