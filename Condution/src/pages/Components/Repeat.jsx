@@ -79,14 +79,16 @@ class Repeat extends Component {
                     </div>
                     <div>
                         <div className="repeat-rule-selector">
-                            <i className="repeat-label fa fa-redo"></i>
-                            <span className="repeat-label">Repeat</span>
-                                <IonSelect className="repeat-select" interface="popover">
-                                    <IonSelectOption className="repeat-select__option">None</IonSelectOption>
-                                    <IonSelectOption className="repeat-select__option">Weekly</IonSelectOption>
-                                    <IonSelectOption className="repeat-select__option">Monthly</IonSelectOption>
-                                    <IonSelectOption className="repeat-select__option">Yearly</IonSelectOption>
-                                </IonSelect>
+                            <span>
+                                <i className="repeat-label fa fa-redo"></i>
+                                <span className="repeat-label">Repeat</span>
+                            </span>
+                            <IonSelect className="repeat-select" interface="popover">
+                                <IonSelectOption className="repeat-select__option">None</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option">Weekly</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option">Monthly</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option">Yearly</IonSelectOption>
+                            </IonSelect>
                         </div>
                     </div>
                     <div style={{margin: "10px 20px", color: "var(--content-normal-alt)"}}>
