@@ -98,7 +98,7 @@ class Home extends Component {
             {/* App container */}
             <IonContent>
                 {/* Menu pane to control mobile view splitting */}
-              <IonSplitPane id="main-split" contentId="main" when="sm">
+              <IonSplitPane id="main-split" contentId="main" when="md">
                 {/* The left: menu! */}
                 <IonMenu id="main-menu" contentId="main">
                     <br />
