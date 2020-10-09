@@ -78,7 +78,8 @@ class Repeat extends Component {
                         <a className="repeat-close" onClick={this.props.onDidDismiss}><i class="fa fa-times"></i></a>
                     </div>
                     <div>
-                        <div className="repeat-rule-selector">
+                        <div className="repeat-basic-row">
+                            <div className="repeat-rule-selector">
                             <span>
                                 <i className="repeat-label fa fa-redo"></i>
                                 <span className="repeat-label">Repeat</span>
@@ -91,10 +92,11 @@ class Repeat extends Component {
                                 <IonSelectOption className="repeat-select__option" value="monthly">Monthly</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="yearly">Yearly</IonSelectOption>
                             </IonSelect>
+                            </div>
+                            <i style={{color: "var(--decorative-light-alt)", float: "right"}} className="fas fa-caret-down"></i>
                         </div>
                     </div>
                     <div style={{margin: "10px 20px", color: "var(--content-normal-alt)"}}>
-                        
                     </div>
                 </div>
             </IonModal>

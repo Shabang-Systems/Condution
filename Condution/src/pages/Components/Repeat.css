@@ -83,8 +83,15 @@
     position: absolute;
 }
 
-.repeat-rule-selector {
+.repeat-basic-row {
     padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.repeat-rule-selector {
     display: flex;
     align-items: center;
 }
