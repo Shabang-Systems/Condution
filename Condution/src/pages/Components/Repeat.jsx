@@ -62,7 +62,7 @@ class Repeat extends Component {
                       case "daily":
                           return "task-repeat__default";
                       case "weekly2":
-                          return "task-repeat__default";
+                          return (this.state.advanced ? "task-repeat__advanced-weekly" : "task-repeat__default");
                       case "monthly":
                           return (this.state.advanced ? "task-repeat__advanced-monthly" : "task-repeat__default");
                       case "yearly":
@@ -127,6 +127,35 @@ class Repeat extends Component {
                         {(()=>{
                             if (this.state.advanced)
                                 switch (this.state.rule) {
+                                    case "weekly2":
+                                        return (
+                                            <div className="repeat-weekgrid">
+                                                {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}
+                                                {/* ["originalString", "localizedString"] <= localize in this way */}
+                                                {[["M", "M"], ["T", "T"], ["W", "W"], ["Th", "Th"], ["F", "F"], ["S", "S"], ["Su", "Su"]].map(e => <a className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
+                                                    if (this.state.on.includes(e[0])) {
+                                                        let oldOn = this.state.on;
+                                                        let newOn = oldOn.filter(elem=>elem!==e[0]);
+                                                        // toggle it off
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
+                                                        )
+                                                        this.setState({on: newOn});
+                                                    } else  {
+                                                        let oldOn = this.state.on;
+                                                        oldOn.push(e[0]);
+                                                        let newOn = oldOn;
+                                                        // toggle it on
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
+                                                        )
+                                                        this.setState({on: newOn});
+                                                    }
+                                                }}>{e[1]}</a>)}
+                                            </div>
+                                        )
                                     case "monthly":
                                         return (
                                             <div className="repeat-dategrid">
@@ -135,7 +164,6 @@ class Repeat extends Component {
                                                     if (this.state.on.includes(e.toLowerCase())) {
                                                         let oldOn = this.state.on;
                                                         let newOn = oldOn.filter(elem=>elem!==e.toLowerCase());
-                                                        console.log(e, newOn);
                                                         // toggle it off
                                                         this.props.gruntman.do(
                                                             "task.update", 

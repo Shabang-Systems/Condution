@@ -12,6 +12,12 @@
     --height: 310px; 
 }
 
+
+.task-repeat__advanced-weekly {
+    --height: 160px; 
+}
+
+
 .repeat-task-name {
     white-space: nowrap;
     overflow: hidden;
@@ -136,6 +142,34 @@
 
 .repeat-dategrid-number-selected {
     background: var(--task-clickbox-accent-background) !important;
+    border: 2px solid var(--task-clickbox-background);
 }
+
+.repeat-weekgrid {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.repeat-weekgrid-number {
+    min-height: 32px;
+    min-width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    transition: background 0.3s;
+    border: 2px dashed var(--task-clickbox-background);
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.repeat-weekgrid-number:hover {
+    background: var(--task-clickbox-background);
+}
+
+.repeat-weekgrid-number-selected {
+    background: var(--task-clickbox-accent-background) !important;
+    border: 2px solid var(--task-clickbox-background);
+} 
 
 

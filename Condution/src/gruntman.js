@@ -121,7 +121,7 @@ class Gruntman {
                                             case 6:
                                                 current = "S";
                                                 break;
-                                            case 7:
+                                            case 0:
                                                 current = "Su";
                                                 break;
                                         }
@@ -157,7 +157,7 @@ class Gruntman {
                                             case 6:
                                                 current = "S";
                                                 break;
-                                            case 7:
+                                            case 0:
                                                 current = "Su";
                                                 break;
                                         }
