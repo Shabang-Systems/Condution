@@ -130,7 +130,7 @@ class Repeat extends Component {
                                     case "monthly":
                                         return (
                                             <div className="repeat-dategrid">
-                                                {/* Why, you ask? Because numbers may not be numbers in outher countires */}
+                                                {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}
                                                 {["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "Last"].map(e => <a className={"repeat-dategrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e.toLowerCase()) ? "repeat-dategrid-number-selected":""); else return ""})()} onClick={()=>{
                                                     if (this.state.on.includes(e.toLowerCase())) {
                                                         let oldOn = this.state.on;
