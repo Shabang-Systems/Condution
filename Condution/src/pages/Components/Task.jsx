@@ -432,12 +432,12 @@ class Task extends Component {
                                                         }
                                                     }
                                                         >
-                                                </textarea>
+                                               </textarea>
 
                                                 {/* Task icon set. TODO delete task */}
                                                 <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
                                                     {/* Flagged icon */}
-                                                    <div className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a  data-tip="LOCALIZE: Flagged" className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)", cursor: "pointer"}} onClick={()=>{
+                                                    <a data-tip="LOCALIZE: Flagged" className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
                                                         // On change, set the flagged state to the opposite of whatever it is
                                                         // Both on the db...
                                                         this.props.gruntman.do(
@@ -447,10 +447,10 @@ class Task extends Component {
                                                         // And the task!
                                                         this.setState({isFlagged: !this.state.isFlagged});
 
-                                                    }} ></a></div>
+                                                    }}><a  className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></a></a>
 
                                                     {/* Floating icon */}
-                                                    <div className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)"}}><a data-tip="LOCALIZE: Floating" className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)", cursor: "pointer"}} onClick={()=>{
+                                                    <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
                                                         // On change, set the floating state to the opposite of whatever it is
                                                         // Both on the db... TODO flush the timezone too?
                                                         this.props.gruntman.do(
@@ -460,10 +460,10 @@ class Task extends Component {
                                                         // And the task!
                                                         this.setState({isFloating: !this.state.isFloating});
 
-                                                    }} ></a></div>
+                                                    }}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></a></a>
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-redo"  data-tip="LOCALIZE: Repeat"  style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)", cursor: "pointer"}} onClick={this.showRepeat} ></a></div>
+                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><a className="fas fa-redo" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></a></a>
 
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
