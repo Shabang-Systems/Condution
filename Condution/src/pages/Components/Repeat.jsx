@@ -103,7 +103,9 @@ class Repeat extends Component {
                                 <IonSelectOption className="repeat-select__option" value="yearly">Yearly</IonSelectOption>
                             </IonSelect>
                             </div>
-                                <a style={{color: "var(--decorative-light-alt)", float: "right", cursor: "pointer"}} className={"fas " + (this.state.advanced ? "fa-caret-up":"fa-caret-down")} onClick={()=> {
+                                {
+                                    
+                                <a style={{color: "var(--decorative-light-alt)", float: "right", cursor: "pointer", display: ["weekly2", "monthly"].includes(this.state.rule) ? "inline" : "none" }} className={"fas " + (this.state.advanced ? "fa-caret-down":"fa-caret-up")} onClick={()=> {
                                     if (this.state.advanced) {
                                         this.props.gruntman.do(
                                             "task.update", 
@@ -118,6 +120,7 @@ class Repeat extends Component {
                                         this.setState({rule: this.state.rule, advanced: true, on: []}); // set the state too!
                                     }
                                 }}></a>
+                                }
                         </div>
                     </div>
                     <div style={{margin: "10px 20px", color: "var(--content-normal-alt)"}}>
@@ -126,8 +129,31 @@ class Repeat extends Component {
                                 switch (this.state.rule) {
                                     case "monthly":
                                         return (
-                                            <div>
-                                                I am a month grid
+                                            <div className="repeat-dategrid">
+                                                {/* Why, you ask? Because numbers may not be numbers in outher countires */}
+                                                {["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "Last"].map(e => <a className={"repeat-dategrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e.toLowerCase()) ? "repeat-dategrid-number-selected":""); else return ""})()} onClick={()=>{
+                                                    if (this.state.on.includes(e.toLowerCase())) {
+                                                        let oldOn = this.state.on;
+                                                        let newOn = oldOn.filter(elem=>elem!==e.toLowerCase());
+                                                        console.log(e, newOn);
+                                                        // toggle it off
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
+                                                        )
+                                                        this.setState({on: newOn});
+                                                    } else  {
+                                                        let oldOn = this.state.on;
+                                                        oldOn.push(e.toLowerCase());
+                                                        let newOn = oldOn;
+                                                        // toggle it on
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
+                                                        )
+                                                        this.setState({on: newOn});
+                                                    }
+                                                }}>{e}</a>)}
                                             </div>
                                         );
                                 }
@@ -137,6 +163,8 @@ class Repeat extends Component {
             </IonModal>
         )
     }
+
+
 }
 
 export default Repeat;

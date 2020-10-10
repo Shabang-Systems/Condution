@@ -109,4 +109,33 @@
     border: 0 !important;
 }
 
+.repeat-dategrid {
+    display: flex;
+    flex-wrap: wrap;
+    height: 180px;
+}
+
+.repeat-dategrid-number {
+    margin: 5px;
+    padding: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    min-height: 32px;
+    min-width: 32px;
+    border: 2px dashed var(--task-clickbox-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.repeat-dategrid-number:hover {
+    background: var(--task-clickbox-background);
+}
+
+.repeat-dategrid-number-selected {
+    background: var(--task-clickbox-accent-background) !important;
+}
+
 
