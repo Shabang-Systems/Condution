@@ -34,6 +34,19 @@ class Completed extends Component {
 
     async refresh() {
 	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
+	let full = [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] 
+	//for (const cat in full) {
+	//    for (const task in cat) {
+	//        console.log(task)
+	//    }
+	//}
+	full.forEach(cat => {
+	    console.log("new cat")
+	    cat.forEach(task => {
+		console.log(task)
+	    })
+	});
+
 
 	this.setState({taskList: [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]});
 
