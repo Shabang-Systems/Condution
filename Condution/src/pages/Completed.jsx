@@ -8,12 +8,18 @@ import Task from './Components/Task';
 
 const autoBind = require('auto-bind/react');
 
+function TaskObject(type, contents) {
+    this.type = type;
+    this.contents = contents;
+}
+
 class Completed extends Component {
     constructor(props) {
         super(props);
 
 	this.state = {taskList: [], 
 	    tasksShown: 0, 
+	    taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"],
 	    possibleProjects:{}, 
 	    possibleTags:{}, 
 	    possibleProjectsRev:{}, 
@@ -32,28 +38,29 @@ class Completed extends Component {
         autoBind(this);
     }
 
+
+
     async refresh() {
+	let taskArr = [];
 	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
-	let full = [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] 
-	//for (const cat in full) {
-	//    for (const task in cat) {
-	//        console.log(task)
-	//    }
-	//}
-	full.forEach(cat => {
-	    console.log("new cat")
+	let full = await this.props.engine.db.getCompletedTasks(this.props.uid);
+	
+
+	full.forEach((cat, i) => {
+	    taskArr.push(new TaskObject("label", this.state.taskCats[i]))
 	    cat.forEach(task => {
-		console.log(task)
+		taskArr.push(new TaskObject("task", task))
 	    })
 	});
 
+	console.log(taskArr)
 
 	this.setState({taskList: [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]});
 
 
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.refresh();
     }
     
