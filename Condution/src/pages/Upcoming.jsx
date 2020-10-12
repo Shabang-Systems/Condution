@@ -6,6 +6,8 @@ import './Pages.css';
 
 import Task from './Components/Task';
 
+import Datebar from './Components/Datebar';
+
 const autoBind = require('auto-bind/react');
 
 class Upcoming extends Component {
@@ -83,9 +85,7 @@ class Upcoming extends Component {
 
                             <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
                         </div>
-                        <div className="datebar" style={{display: "inline-block"}}>
-                            The datebar.
-                        </div>
+                        <Datebar />
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10}}>
                         <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
