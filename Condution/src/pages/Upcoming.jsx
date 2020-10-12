@@ -81,27 +81,23 @@ class Upcoming extends Component {
                         */}
 
 
-                            <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span></div>
-                                </div>
-                                    <div className="datebar" style={{display: "inline-block"}}>
-                                        The datebar.
-                                        </div>
-                                            </div>
-
-                                                <div style={{marginLeft: 10, marginRight: 10}}>
-
-                                                    <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
-
-                                                        {this.state.inbox.map(id => (
-                                                            <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                                                        ))}
-                                                                <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
-                                                                    {this.state.dueSoon.map(id => (
-                                                                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                                                                    ))}
-                                                                            </div>
-
-                                                                                </div>
+                            <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
+                        </div>
+                        <div className="datebar" style={{display: "inline-block"}}>
+                            The datebar.
+                        </div>
+                    </div>
+                    <div style={{marginLeft: 10, marginRight: 10}}>
+                        <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                        {this.state.inbox.map(id => (
+                            <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                        ))}
+                        <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                        {this.state.dueSoon.map(id => (
+                            <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                        ))}
+                    </div>
+                </div>
             </IonPage>
         )
     }

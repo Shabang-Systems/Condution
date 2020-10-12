@@ -3,7 +3,7 @@
 }
 
 .page-title {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--content-normal-alt);
     border-radius: 5px;
@@ -11,8 +11,7 @@
     padding-left: 10px;
     padding-right: 15px;
     padding-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 10px;
     transform: translateY(1px);
 }
 
@@ -54,6 +53,7 @@
     color: var(--decorative-light-accent);
     margin-left: 10px;
     margin-top: 10px;
+    display: flex;
 }
 
 .count-badge {
@@ -63,10 +63,6 @@
     border: 1px solid var(--content-normal-accent);
     /*background-color: transparent;*/
     background-color: var(--task-feature) !important;
-    transform: translate(8px, 6px);
-}
-
-#greeting {
-    font-weight: 600;
+    transform: translate(8px);
 }
 

@@ -3,6 +3,9 @@
 // Ionic components
 import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton } from '@ionic/react';
 
+// Detect whether is mobile
+import { getPlatforms } from '@ionic/react';
+
 // Like, your heart and soul
 import React, { Component } from 'react';
 
@@ -397,12 +400,15 @@ class Task extends Component {
                                             ), `task-name-${this.props.tid}-update`) // and we will schedule it as this
                                         }
                                     } 
-                                    onFocus={()=>{ 
+                                    onFocus={(e)=>{ 
                                          // open the task if its not open already
-                                        if(!this.state.expanded) this.openTask() 
+                                        if(!this.state.expanded) { 
+                                            this.openTask(); // open the task
+                                            if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs
+                                        }
                                     }} 
                                     className="task-name" 
-                                    readOnly={false} 
+                                    readOnly={()=>(getPlatforms().includes("mobile") ? !this.state.expanded : false)} 
                                     type="text" 
                                     autoComplete="off" 
                                     placeholder="LOCALIZE: Task Name" 
