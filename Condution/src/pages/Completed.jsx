@@ -18,7 +18,8 @@ class Completed extends Component {
         super(props);
 
 	this.state = {taskList: [], 
-	    tasksShown: 0, 
+	    tasksShown: 1, 
+	    labelBump: 0,
 	    taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"],
 	    possibleProjects:{}, 
 	    possibleTags:{}, 
@@ -54,8 +55,13 @@ class Completed extends Component {
 	});
 
 	console.log(taskArr)
+	// loop through render function 10*tasksShown
+	    // in the render, if type is a label, 
+		// render a p and a task with the next item, then incriment the i
+		// else, render a task 
 
-	this.setState({taskList: [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]});
+	this.setState({taskList: taskArr});
+	//this.setState({taskList: [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]});
 
 
     }
@@ -72,6 +78,9 @@ class Completed extends Component {
 
     }
 
+    handleLabel(content) {
+
+    }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
@@ -100,8 +109,27 @@ class Completed extends Component {
                     </div>
 
 
+	    {this.state.taskList.slice(0,10*this.state.tasksShown+this.state.labelBump).map((content, i) => (
+		<div>
+		{(content.type == "label")? 
+			<p>"yeeets"</p>: <p>{content.type}</p>
+		    }
+		    
+		    
+		</div>
+	    ))}
 
 
+
+
+
+
+
+
+
+
+
+	    {/*
 		{this.state.taskList.length? 
 		    
 		    [<div class="page-label">LOCALIZE: Today</div>,
@@ -123,72 +151,9 @@ class Completed extends Component {
 				    this.state.possibleTagsRev]}
 		    />
 		))] : ""}
+		*/}
 
 
-
-	    {/* {this.state.tasksShown? 
-		    (this.state.taskList.length && this.state.taskList[1].length)?
-			[<div class="page-label">LOCALIZE: Yesterday</div>,
-			this.state.taskList[1].map(id => (
-			    <Task 
-				
-				tid={id} 
-				startingCompleted={true}
-				key={id+"-"+this.updatePrefix} 
-				uid={this.props.uid} 
-				engine={this.props.engine} 
-				gruntman={this.props.gruntman} 
-				availability={this.state.availability[id]} 
-				datapack={[this.state.tagSelects,
-					    this.state.projectSelects, 
-					    this.state.possibleProjects, 
-					    this.state.possibleProjectsRev, 
-					    this.state.possibleTags, 
-					    this.state.possibleTagsRev]}
-			    />
-		    ))] : this.handleFetchMore : ""}
-
-		{(this.state.tasksShown >= 2)? 
-		    [<div class="page-label">LOCALIZE: This Week</div>,
-		    this.state.taskList.length? this.state.taskList[2].map(id => (
-			<Task 
-			    
-			    tid={id} 
-			    startingCompleted={true}
-			    key={id+"-"+this.updatePrefix} 
-			    uid={this.props.uid} 
-			    engine={this.props.engine} 
-			    gruntman={this.props.gruntman} 
-			    availability={this.state.availability[id]} 
-			    datapack={[this.state.tagSelects,
-					this.state.projectSelects, 
-					this.state.possibleProjects, 
-					this.state.possibleProjectsRev, 
-					this.state.possibleTags, 
-					this.state.possibleTagsRev]}
-			/>
-		    )) : ""] : ""}
-
-		{(this.state.tasksShown >= 3)? 
-		    [<div class="page-label">LOCALIZE: Even Before</div>,
-		    this.state.taskList.length? this.state.taskList[3].map(id => (
-			<Task 
-			    
-			    tid={id} 
-			    startingCompleted={true}
-			    key={id+"-"+this.updatePrefix} 
-			    uid={this.props.uid} 
-			    engine={this.props.engine} 
-			    gruntman={this.props.gruntman} 
-			    availability={this.state.availability[id]} 
-			    datapack={[this.state.tagSelects,
-					this.state.projectSelects, 
-					this.state.possibleProjects, 
-					this.state.possibleProjectsRev, 
-					this.state.possibleTags, 
-					this.state.possibleTagsRev]}
-			/>
-		    )) : ""] : ""} */}
 
 		    <div className="fetch-more" onClick={this.handleFetchMore}>
 			Fetch more... 
