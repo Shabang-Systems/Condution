@@ -40,7 +40,6 @@ class Completed extends Component {
     }
 
 
-
     async refresh() {
 	let taskArr = [];
 	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
@@ -61,7 +60,6 @@ class Completed extends Component {
 		// else, render a task 
 
 	this.setState({taskList: taskArr});
-	//this.setState({taskList: [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore]});
 
 
     }
@@ -112,48 +110,29 @@ class Completed extends Component {
 	    {this.state.taskList.slice(0,10*this.state.tasksShown+this.state.labelBump).map((content, i) => (
 		<div>
 		{(content.type == "label")? 
-			<p>"yeeets"</p>: <p>{content.type}</p>
-		    }
+		    (this.state.taskList[i+1].type == "label")?
+			"" :
+			<p className="page-label" >{content.contents}</p> : 
+			<Task 
+			    tid={content.contents} 
+			    startingCompleted={true}
+			    key={content.contents+"-"+this.updatePrefix} 
+			    uid={this.props.uid} 
+			    engine={this.props.engine} 
+			    gruntman={this.props.gruntman} 
+			    availability={this.state.availability[content.contents]} 
+			    datapack={[this.state.tagSelects,
+					this.state.projectSelects, 
+					this.state.possibleProjects, 
+					this.state.possibleProjectsRev, 
+					this.state.possibleTags, 
+					this.state.possibleTagsRev]}
+			/>
+		}
 		    
 		    
 		</div>
 	    ))}
-
-
-
-
-
-
-
-
-
-
-
-	    {/*
-		{this.state.taskList.length? 
-		    
-		    [<div class="page-label">LOCALIZE: Today</div>,
-		    this.state.taskList[0].map(id => (
-		    <Task 
-			
-			tid={id} 
-			startingCompleted={true}
-			key={id+"-"+this.updatePrefix} 
-			uid={this.props.uid} 
-			engine={this.props.engine} 
-			gruntman={this.props.gruntman} 
-			availability={this.state.availability[id]} 
-			datapack={[this.state.tagSelects,
-				    this.state.projectSelects, 
-				    this.state.possibleProjects, 
-				    this.state.possibleProjectsRev, 
-				    this.state.possibleTags, 
-				    this.state.possibleTagsRev]}
-		    />
-		))] : ""}
-		*/}
-
-
 
 		    <div className="fetch-more" onClick={this.handleFetchMore}>
 			Fetch more... 
@@ -166,4 +145,29 @@ class Completed extends Component {
 }
 
 export default Completed;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

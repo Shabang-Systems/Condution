@@ -4,7 +4,17 @@
     font-size: 12px;
     color: var(--task-datepicker-elems);
     padding-left: 17px;
+    margin-bottom: 20px;
     font-weight: bold;
+
+}
+
+
+.fetch-more:hover {
+    color: var(--task-checkmark)
+ 
+
+
 
 }
 
