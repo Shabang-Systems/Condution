@@ -1222,13 +1222,13 @@ let ui = function() {
 
         // Actions
         $(".repeat-daterow-weekname").on("click", function(e) {
-            if (repeatWeekDays.includes($(this).html())) {
+            if (repeatWeekDays.includes($(this).attr("id"))) {
                 $(this).stop().animate({"background-color": interfaceUtil.gtc("--background-feature")});
-                repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).html());
+                repeatWeekDays = repeatWeekDays.filter(i => i !== $(this).attr("id"));
                 E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             } else {
                 $(this).stop().animate({"background-color": interfaceUtil.gtc("--decorative-light")});
-                repeatWeekDays.push($(this).html());
+                repeatWeekDays.push($(this).attr("id"));
                 E.db.modifyTask(uid, tid, {repeat: {rule: "weekly", on: repeatWeekDays}});
             }
         });
@@ -1265,7 +1265,7 @@ let ui = function() {
                 } else if (ti.repeat.rule === "weekly") {
                     if (ti.repeat.on) {
                         $("#repeat-daterow").children().each(function(e) {
-                            if (ti.repeat.on.includes($(this).html())) {
+                            if (ti.repeat.on.includes($(this).attr("id"))) {
                                 $(this).stop().animate({"background-color": interfaceUtil.gtc("--decorative-light")});
                             }
                         });
