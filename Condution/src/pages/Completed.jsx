@@ -1,27 +1,40 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge } from '@ionic/react'; //to prune
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
+// IMPORTS
+import { IonContent, IonPage, IonMenuToggle } from '@ionic/react'; 
 import React, { Component } from 'react';
 import './Completed.css';
 import './Pages.css';
-
 import Task from './Components/Task';
+const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
-const autoBind = require('auto-bind/react');
+/*
+ 
+Sometimes we complete.
 
+This is not always correct,
+
+so we have this page! 
+
+@enquirer
+
+*/
+
+// construtor for rendered object
 function TaskObject(type, contents) {
-    this.type = type;
-    this.contents = contents;
+    this.type = type; // set the type to the type (label or task)
+    this.contents = contents; // set the contents to the contents (title or id)
 }
 
+
+// define the main component!
 class Completed extends Component {
     constructor(props) {
         super(props);
 
-	this.state = {taskList: [], 
-	    tasksShown: 1, 
-	    labelBump: 0,
-	    taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"],
-	    possibleProjects:{}, 
+	this.state = {
+	    taskList: [], // the objects we render
+	    tasksShown: 1, // track the number of times we have fetched more
+	    taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+	    possibleProjects:{}, // see jacks comments in upcoming 
 	    possibleTags:{}, 
 	    possibleProjectsRev:{}, 
 	    possibleTagsRev:{}, 
@@ -41,43 +54,26 @@ class Completed extends Component {
 
 
     async refresh() {
-	let taskArr = [];
-	let [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore] = await this.props.engine.db.getCompletedTasks(this.props.uid);
-	let full = await this.props.engine.db.getCompletedTasks(this.props.uid);
-	
+	let taskArr = []; // define temp array
+	let full = await this.props.engine.db.getCompletedTasks(this.props.uid); // get the tasks from the database 
 
+	// loop through the tasks, converting to objects and inserting labels between each cat
 	full.forEach((cat, i) => {
-	    taskArr.push(new TaskObject("label", this.state.taskCats[i]))
-	    cat.forEach(task => {
-		taskArr.push(new TaskObject("task", task))
+	    taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
+	    cat.forEach(task => { // this loops through each cat
+		taskArr.push(new TaskObject("task", task)) // convert each task to an object then push it to the temp arr
 	    })
 	});
-
-	console.log(taskArr)
-	// loop through render function 10*tasksShown
-	    // in the render, if type is a label, 
-		// render a p and a task with the next item, then incriment the i
-		// else, render a task 
-
-	this.setState({taskList: taskArr});
-
-
+	this.setState({taskList: taskArr}); // once we finish, set the state
     }
 
     async componentDidMount() {
-        this.refresh();
+        this.refresh(); // refresh when the component mounts
     }
     
     handleFetchMore() {
-	this.setState({tasksShown: this.state.tasksShown+1})
-	//console.log("handled fetch")
-
-	console.log(this.state.tasksShown)
-
-    }
-
-    handleLabel(content) {
-
+	this.setState({tasksShown: this.state.tasksShown+1}) // increment tasksShown by one whenever fetch more is clicked
+	// this renders 10 more items 
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -105,12 +101,13 @@ class Completed extends Component {
             </div>*/}
                 </div>
                     </div>
-
-
-	    {this.state.taskList.slice(0,10*this.state.tasksShown+this.state.labelBump).map((content, i) => (
+	    {/* loop through the taskList ten times, multiplyed by the times we have fetched more */}
+	    {/* if the cat is empty or the final item rendered is a label, don't render it */}
+	    {/* otherwise, render a task */}
+	    {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
 		<div>
-		{(content.type == "label")? 
-		    (this.state.taskList[i+1].type == "label")?
+		{(content.type == "label")?  
+		    (this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
 			"" :
 			<p className="page-label" >{content.contents}</p> : 
 			<Task 
@@ -129,12 +126,9 @@ class Completed extends Component {
 					this.state.possibleTagsRev]}
 			/>
 		}
-		    
-		    
 		</div>
 	    ))}
-
-		    <div className="fetch-more" onClick={this.handleFetchMore}>
+		    <div className="fetch-more" onClick={this.handleFetchMore}> {/* define the fetch more button */}
 			Fetch more... 
 		    </div>
 		    </div>
@@ -145,29 +139,3 @@ class Completed extends Component {
 }
 
 export default Completed;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
