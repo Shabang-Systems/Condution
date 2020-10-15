@@ -8,13 +8,13 @@ const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
 /*
  
-Sometimes we complete.
-
-This is not always correct,
-
-so we have this page! 
-
-@enquirer
+ * Sometimes we complete.
+ *
+ * This is not always correct,
+ *
+ * so we have this page! 
+ *
+ * @enquirer
 
 */
 
@@ -70,7 +70,6 @@ class Completed extends Component {
 
     async componentDidMount() {
         this.refresh(); // refresh when the component mounts
-	console.log("refreshed")
     }
 
 
