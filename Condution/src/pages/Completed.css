@@ -1,5 +1,5 @@
 
-.fetch-more {
+.fetch-more { /* fetch more css */ 
     /*border: 1px solid red;*/
     font-size: 12px;
     color: var(--task-datepicker-elems);
@@ -10,20 +10,20 @@
 
 }
 
-
-.fetch-more:hover {
+.fetch-more:hover { /* fetch more on hover */
     color: var(--task-checkmark)
- 
-
-
-
 }
 
+.loader {
+    animation: phase 1.2s infinite; /* define animation time */
+}
 
-
-
-
-
+/* keyframes */
+@keyframes phase {
+  0% {opacity: 0.7}
+  50% {opacity: 0.3}
+  100% {opacity: 0.7}
+}
 
 
 

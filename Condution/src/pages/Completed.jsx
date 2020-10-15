@@ -34,7 +34,7 @@ class Completed extends Component {
 	    taskList: [], // the objects we render
 	    tasksShown: 1, // track the number of times we have fetched more
 	    taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
-	    rendering: false, // define whether or not the element is rendering 
+	    rendering: true, // define whether or not the element is rendering 
 	    possibleProjects:{}, // see jacks comments in upcoming 
 	    possibleTags:{}, 
 	    possibleProjectsRev:{}, 
@@ -66,23 +66,32 @@ class Completed extends Component {
 	    })
 	});
 	this.setState({taskList: taskArr}); // once we finish, set the state
+	this.setState({rendering: false}); // also set rendering to false. 
+	// This is a hacky solution instead of creating an entirely new async function.
     }
 
     async componentDidMount() {
         this.refresh(); // refresh when the component mounts
     }
-
-
      
     handleFetchMore() {
-	this.setState({tasksShown: this.state.tasksShown+1, rendering: true}, 
-	    async () => { 
-		this.setState({rendering: false})
-	    }) 
+	this.setState({rendering: true}) // trigger loading screen
+	const loader =  setTimeout(() => { // set a timeout to set the rendering to false 
+	    this.setState({rendering: false})
 
-	// increment tasksShown by one whenever fetch more is clicked
-	// this renders 10 more items 
+	}, 2);
+
+	const updateTasks =  setTimeout(() => { // set another timeout for the actual task update
+	    this.setState({tasksShown: this.state.tasksShown+1}) 
+	    // increment tasksShown by one whenever fetch more is clicked
+	    // this renders 10 more items 
+	    this.setState({rendering: false}) // set rendering to false
+	}, 1)
+
+	// disclaimer: I do not understand how this works. I was just messing around trying to debug and this happened to work.
+	// if it ain't broke, dont fix it? 
     }
+
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
@@ -112,6 +121,8 @@ class Completed extends Component {
                         {/* loop through the taskList ten times, multiplyed by the times we have fetched more */}
                         {/* if the cat is empty or the final item rendered is a label, don't render it */}
                         {/* otherwise, render a task */}
+                        {/* for the fetch more, if we are currently rendering, render a loading animation. */}
+			{/* Otherwise, render a fetch more.*/}
                         {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
                             <div style={{marginLeft: 10, marginRight: 10}}>
                                 {(content.type == "label")?  
@@ -137,13 +148,12 @@ class Completed extends Component {
                                         </div>
                         ))}
 
-                                            {this.state.rendering?
-                                                    <p>loading</p> :
-                                                    <div className="fetch-more" onClick={this.handleFetchMore}> {/* define the fetch more button */}
-                                                        Fetch more... 
-                                                        </div> }
-                                                            </div>
-                                                                </div>
+			<div className="fetch-more" > 
+			{/* define the fetch more button */}
+			    {this.state.rendering? <p className="loader" >Loading...</p> : <p onClick={this.handleFetchMore}>Fetch more...</p>}
+			</div> 
+		    </div>
+		</div>
             </IonPage>
         )
     }
