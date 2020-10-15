@@ -24,7 +24,6 @@ function TaskObject(type, contents) {
     this.contents = contents; // set the contents to the contents (title or id)
 }
 
-
 // define the main component!
 class Completed extends Component {
     constructor(props) {
@@ -45,14 +44,10 @@ class Completed extends Component {
 	    projectDB: {}
 	};
 
-
         this.updatePrefix = this.random();
-
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
-
         autoBind(this);
     }
-
 
     async refresh() {
 	let taskArr = []; // define temp array
@@ -92,9 +87,7 @@ class Completed extends Component {
 	// if it ain't broke, dont fix it? 
     }
 
-
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
-
     
     render() {
         return (
@@ -113,40 +106,37 @@ class Completed extends Component {
                                                     </i>
                                                         Completed
                                                         </h1> 
-                                                            {/*<div className="greeting-container">
-                <span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span>
-            </div>*/}
-                </div>
-                    </div>
-                        {/* loop through the taskList ten times, multiplyed by the times we have fetched more */}
-                        {/* if the cat is empty or the final item rendered is a label, don't render it */}
-                        {/* otherwise, render a task */}
-                        {/* for the fetch more, if we are currently rendering, render a loading animation. */}
-			{/* Otherwise, render a fetch more.*/}
-                        {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
-                            <div style={{marginLeft: 10, marginRight: 10}}>
-                                {(content.type == "label")?  
-                                    (this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
-                                    "" :
-                                    <p className="page-label" style={{marginBottom:0}}>{content.contents}</p> : 
-                                    <Task 
-                                        tid={content.contents} 
-                                        startingCompleted={true}
-                                        key={content.contents+"-"+this.updatePrefix} 
-                                        uid={this.props.uid} 
-                                        engine={this.props.engine} 
-                                        gruntman={this.props.gruntman} 
-                                        availability={this.state.availability[content.contents]} 
-                                        datapack={[this.state.tagSelects,
-                                            this.state.projectSelects, 
-                                            this.state.possibleProjects, 
-                                            this.state.possibleProjectsRev, 
-                                            this.state.possibleTags, 
-                                            this.state.possibleTagsRev]}
-                                    />
-                                }
-                                        </div>
-                        ))}
+			    </div>
+			</div>
+			    {/* loop through the taskList ten times, multiplyed by the times we have fetched more */}
+			    {/* if the cat is empty or the final item rendered is a label, don't render it */}
+			    {/* otherwise, render a task */}
+			    {/* for the fetch more, if we are currently rendering, render a loading animation. */}
+			    {/* Otherwise, render a fetch more.*/}
+			    {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
+				<div style={{marginLeft: 10, marginRight: 10}}>
+				    {(content.type == "label")?  
+					(this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
+					"" :
+					<p className="page-label" style={{marginBottom:0}}>{content.contents}</p> : 
+					<Task 
+					    tid={content.contents} 
+					    startingCompleted={true}
+					    key={content.contents+"-"+this.updatePrefix} 
+					    uid={this.props.uid} 
+					    engine={this.props.engine} 
+					    gruntman={this.props.gruntman} 
+					    availability={this.state.availability[content.contents]} 
+					    datapack={[this.state.tagSelects,
+						this.state.projectSelects, 
+						this.state.possibleProjects, 
+						this.state.possibleProjectsRev, 
+						this.state.possibleTags, 
+						this.state.possibleTagsRev]}
+					/>
+				    }
+				</div>
+			    ))}
 
 			<div className="fetch-more" > 
 			{/* define the fetch more button */}
