@@ -114,11 +114,11 @@ class Completed extends Component {
 	    {/* if the cat is empty or the final item rendered is a label, don't render it */}
 	    {/* otherwise, render a task */}
 	    {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
-		<div>
+		<div style={{marginLeft: 10, marginRight: 10}}>
 		{(content.type == "label")?  
 		    (this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
 			"" :
-			<p className="page-label" >{content.contents}</p> : 
+			<p className="page-label" style={{marginBottom:0}}>{content.contents}</p> : 
 			<Task 
 			    tid={content.contents} 
 			    startingCompleted={true}
