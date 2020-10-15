@@ -1,8 +1,49 @@
+
 .fetch-more {
     /*border: 1px solid red;*/
     font-size: 12px;
     color: var(--task-datepicker-elems);
     padding-left: 17px;
+    margin-bottom: 25px;
     font-weight: bold;
+    transition-duration: 0.3s;
 
 }
+
+
+.fetch-more:hover {
+    color: var(--task-checkmark)
+ 
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
