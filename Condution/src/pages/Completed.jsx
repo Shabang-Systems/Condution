@@ -1,6 +1,6 @@
 // IMPORTS
 import { IonContent, IonPage, IonMenuToggle } from '@ionic/react'; 
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import './Completed.css';
 import './Pages.css';
 import Task from './Components/Task';
@@ -34,6 +34,7 @@ class Completed extends Component {
 	    taskList: [], // the objects we render
 	    tasksShown: 1, // track the number of times we have fetched more
 	    taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+	    rendering: false, // define whether or not the element is rendering 
 	    possibleProjects:{}, // see jacks comments in upcoming 
 	    possibleTags:{}, 
 	    possibleProjectsRev:{}, 
@@ -69,10 +70,18 @@ class Completed extends Component {
 
     async componentDidMount() {
         this.refresh(); // refresh when the component mounts
+	console.log("refreshed")
     }
-    
+
+
+     
     handleFetchMore() {
-	this.setState({tasksShown: this.state.tasksShown+1}) // increment tasksShown by one whenever fetch more is clicked
+	this.setState({tasksShown: this.state.tasksShown+1, rendering: true}, 
+	    async () => { 
+		this.setState({rendering: false})
+	    }) 
+
+	// increment tasksShown by one whenever fetch more is clicked
 	// this renders 10 more items 
     }
 
@@ -128,9 +137,12 @@ class Completed extends Component {
 		}
 		</div>
 	    ))}
+	    
+		    {this.state.rendering?
+			    <p>loading</p> :
 		    <div className="fetch-more" onClick={this.handleFetchMore}> {/* define the fetch more button */}
 			Fetch more... 
-		    </div>
+		    </div> }
 		    </div>
                 </IonContent>
             </IonPage>
