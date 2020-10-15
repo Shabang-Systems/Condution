@@ -6,6 +6,7 @@
     padding-left: 17px;
     margin-bottom: 25px;
     font-weight: bold;
+    cursor: pointer;
     transition-duration: 0.3s;
 
 }
@@ -15,7 +16,7 @@
 }
 
 .loader {
-    animation: phase 1.2s infinite; /* define animation time */
+    animation: phase 1.6s infinite; /* define animation time */
 }
 
 /* keyframes */
