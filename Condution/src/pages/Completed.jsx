@@ -90,60 +90,60 @@ class Completed extends Component {
     render() {
         return (
             <IonPage>
-                <IonContent>
-                <div className="page-content">
-                    <div className="header-container">
-                        <div style={{display: "inline-block"}}>
-                            <IonMenuToggle>
-                                <i class="fas fa-bars" 
-                                    style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
-                                    </IonMenuToggle> 
-                                        <h1 className="page-title">
-                                            <i style={{paddingRight: 10}} 
-                                                className="fas fa-check-circle">
-                                                </i>
-                                                    Completed
-                                                    </h1> 
-                                                        {/*<div className="greeting-container">
+                <div style={{overflow: "scroll"}}>
+                    <div className="page-content">
+                        <div className="header-container">
+                            <div style={{display: "inline-block"}}>
+                                <IonMenuToggle>
+                                    <i class="fas fa-bars" 
+                                        style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+                                        </IonMenuToggle> 
+                                            <h1 className="page-title">
+                                                <i style={{paddingRight: 10}} 
+                                                    className="fas fa-check-circle">
+                                                    </i>
+                                                        Completed
+                                                        </h1> 
+                                                            {/*<div className="greeting-container">
                 <span id="greeting">Bontehu</span>, <span id="greeting-name">Supergod Jones.</span>
             </div>*/}
                 </div>
                     </div>
-	    {/* loop through the taskList ten times, multiplyed by the times we have fetched more */}
-	    {/* if the cat is empty or the final item rendered is a label, don't render it */}
-	    {/* otherwise, render a task */}
-	    {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
-		<div style={{marginLeft: 10, marginRight: 10}}>
-		{(content.type == "label")?  
-		    (this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
-			"" :
-			<p className="page-label" style={{marginBottom:0}}>{content.contents}</p> : 
-			<Task 
-			    tid={content.contents} 
-			    startingCompleted={true}
-			    key={content.contents+"-"+this.updatePrefix} 
-			    uid={this.props.uid} 
-			    engine={this.props.engine} 
-			    gruntman={this.props.gruntman} 
-			    availability={this.state.availability[content.contents]} 
-			    datapack={[this.state.tagSelects,
-					this.state.projectSelects, 
-					this.state.possibleProjects, 
-					this.state.possibleProjectsRev, 
-					this.state.possibleTags, 
-					this.state.possibleTagsRev]}
-			/>
-		}
-		</div>
-	    ))}
-	    
-		    {this.state.rendering?
-			    <p>loading</p> :
-		    <div className="fetch-more" onClick={this.handleFetchMore}> {/* define the fetch more button */}
-			Fetch more... 
-		    </div> }
-		    </div>
-                </IonContent>
+                        {/* loop through the taskList ten times, multiplyed by the times we have fetched more */}
+                        {/* if the cat is empty or the final item rendered is a label, don't render it */}
+                        {/* otherwise, render a task */}
+                        {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
+                            <div style={{marginLeft: 10, marginRight: 10}}>
+                                {(content.type == "label")?  
+                                    (this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
+                                    "" :
+                                    <p className="page-label" style={{marginBottom:0}}>{content.contents}</p> : 
+                                    <Task 
+                                        tid={content.contents} 
+                                        startingCompleted={true}
+                                        key={content.contents+"-"+this.updatePrefix} 
+                                        uid={this.props.uid} 
+                                        engine={this.props.engine} 
+                                        gruntman={this.props.gruntman} 
+                                        availability={this.state.availability[content.contents]} 
+                                        datapack={[this.state.tagSelects,
+                                            this.state.projectSelects, 
+                                            this.state.possibleProjects, 
+                                            this.state.possibleProjectsRev, 
+                                            this.state.possibleTags, 
+                                            this.state.possibleTagsRev]}
+                                    />
+                                }
+                                        </div>
+                        ))}
+
+                                            {this.state.rendering?
+                                                    <p>loading</p> :
+                                                    <div className="fetch-more" onClick={this.handleFetchMore}> {/* define the fetch more button */}
+                                                        Fetch more... 
+                                                        </div> }
+                                                            </div>
+                                                                </div>
             </IonPage>
         )
     }
