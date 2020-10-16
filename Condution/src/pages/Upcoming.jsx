@@ -8,13 +8,24 @@ import Task from './Components/Task';
 
 import Datebar from './Components/Datebar';
 
-const autoBind = require('auto-bind/react');
+const autoBind = require('auto-bind/react'); // autobind things! 
 
-class Upcoming extends Component {
+class Upcoming extends Component { // define the component
     constructor(props) {
         super(props);
 
-        this.state = {inbox: [], dueSoon: [], possibleProjects:{}, possibleTags:{}, possibleProjectsRev:{}, possibleTagsRev:{}, availability: [], projectSelects:[], tagSelects: [], projectDB: {}};
+        this.state = {
+	    inbox: [], // define the inbox
+	    dueSoon: [], // whats due soon? 
+	    possibleProjects:{}, // what are the possible projects? 
+	    possibleTags:{},  // what are the possible tags?
+	    possibleProjectsRev:{}, 
+	    possibleTagsRev:{}, 
+	    availability: [],  // whats available
+	    projectSelects:[], 
+	    tagSelects: [], 
+	    projectDB: {}
+	};
 
         this.updatePrefix = this.random();
 
@@ -24,12 +35,12 @@ class Upcoming extends Component {
     }
 
     async refresh() {
-        let avail = await this.props.engine.db.getItemAvailability(this.props.uid)
-        let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail)
-        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid);
+        let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
+        let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail) // get inbox and due soon 
+        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
 
-        let projectList = [];
-        let tagsList = [];
+        let projectList = []; // define the project list
+        let tagsList = []; // define the tag list
 
         for (let pid in pPandT[1][0]) 
             tagsList.push({value: pid, label: pPandT[1][0][pid]});
