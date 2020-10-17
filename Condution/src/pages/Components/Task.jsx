@@ -453,7 +453,7 @@ class Task extends Component {
                                                         // And the task!
                                                         this.setState({isFlagged: !this.state.isFlagged});
 
-                                                    }}><a  className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></a></a>
+                                                    }}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Floating icon */}
                                                     <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
@@ -466,10 +466,10 @@ class Task extends Component {
                                                         // And the task!
                                                         this.setState({isFloating: !this.state.isFloating});
 
-                                                    }}><a className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></a></a>
+                                                    }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><a className="fas fa-redo" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></a></a>
+                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
 
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
