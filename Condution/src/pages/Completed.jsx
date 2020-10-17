@@ -53,6 +53,9 @@ class Completed extends Component {
 	let taskArr = []; // define temp array
 	let full = await this.props.engine.db.getCompletedTasks(this.props.uid); // get the tasks from the database 
 
+    let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
+    let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
+
 	// loop through the tasks, converting to objects and inserting labels between each cat
 	full.forEach((cat, i) => {
 	    taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
@@ -60,7 +63,33 @@ class Completed extends Component {
 		taskArr.push(new TaskObject("task", task)) // convert each task to an object then push it to the temp arr
 	    })
 	});
-	this.setState({taskList: taskArr}); // once we finish, set the state
+
+        let projectList = []; // define the project list
+        let tagsList = []; // define the tag list
+
+        for (let pid in pPandT[1][0]) 
+            tagsList.push({value: pid, label: pPandT[1][0][pid]});
+        let views = this;
+        let projectDB = await (async function() {
+            let pdb = [];
+            let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
+            for (let key in topLevels) {
+                pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
+            }
+            return pdb;
+        }());
+
+        let buildSelectString = function(p, level) {
+            if (!level)
+                level = ""
+            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
+            if (p.children)
+                for (let e of p.children)
+                    if (e.type === "project")
+                        buildSelectString(e.content, level+":: ");
+        };
+        projectDB.map(proj=>buildSelectString(proj));
+	this.setState({taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB}); // once we finish, set the state
 	this.setState({rendering: false}); // also set rendering to false. 
 	// This is a hacky solution instead of creating an entirely new async function.
     }
