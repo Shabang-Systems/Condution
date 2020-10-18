@@ -90,7 +90,7 @@ class Completed extends Component {
         };
         projectDB.map(proj=>buildSelectString(proj));
 	this.setState({taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB}); // once we finish, set the state
-	this.setState({rendering: false}); // also set rendering to false. 
+	// also set rendering to false. 
 	// This is a hacky solution instead of creating an entirely new async function.
     }
 

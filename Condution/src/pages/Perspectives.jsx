@@ -38,8 +38,51 @@ class Perspectives extends Component {
 	let possiblePerspectives = await this.props.engine.db.getPerspectives(this.props.uid); // get all possible perspectives
 	let perspectiveObject = possiblePerspectives[0][this.props.id] // get the one we want based on page id 
 	let taskList = await this.props.engine.perspective.calc(this.props.uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord) // then get the tasks from that perspective
-	this.setState({taskList: taskList})
 	console.log(this.state.taskList)
+
+
+	let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
+	let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
+
+
+        let projectList = []; // define the project list
+        let tagsList = []; // define the tag list
+
+        for (let pid in pPandT[1][0]) 
+            tagsList.push({value: pid, label: pPandT[1][0][pid]});
+        let views = this;
+        let projectDB = await (async function() {
+            let pdb = [];
+            let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
+            for (let key in topLevels) {
+                pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
+            }
+            return pdb;
+        }());
+
+        let buildSelectString = function(p, level) {
+            if (!level)
+                level = ""
+            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
+            if (p.children)
+                for (let e of p.children)
+                    if (e.type === "project")
+                        buildSelectString(e.content, level+":: ");
+        };
+
+        projectDB.map(proj=>buildSelectString(proj));
+	
+	this.setState({
+	    taskList: taskList, 
+	    possibleProjects: pPandT[0][0], 
+	    possibleTags: pPandT[1][0], 
+	    possibleProjectsRev: pPandT[0][1], 
+	    possibleTagsRev: pPandT[1][1], 
+	    availability: avail, 
+	    projectSelects: projectList, 
+	    tagSelects: tagsList, 
+	    projectDB
+	}); // once we finish, set the state
 
     }
 
