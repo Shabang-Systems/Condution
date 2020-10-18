@@ -87,9 +87,17 @@ class Perspectives extends Component {
     }
 
     componentDidMount() {
-	this.refresh()
-
+        this.refresh()
     }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        // flush styles
+        if (prevProps.id !== this.props.id) // if we updated the defer date
+            this.refresh(); // switching between perspectives are a prop update and not a rerender
+                            // so we want to refresh the perspective that's rendered
+    }
+
+
 
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
