@@ -22,8 +22,20 @@
     outline: 0;
     background: transparent;
     border: 0;
-
+    transition: background 0.3s;
+    padding: 5px;
+    border-radius: 3px;
 }
+
+.editable-title:hover {
+    background: var(--task-clickbox-background);
+}
+
+.editable-title:focus {
+    background: var(--task-clickbox-background);
+}
+
+
 
 .greeting-container {
     padding-left: 10px;
