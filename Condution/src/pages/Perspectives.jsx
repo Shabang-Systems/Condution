@@ -8,6 +8,24 @@ import Task from './Components/Task';
 
 const autoBind = require('auto-bind/react');
 
+
+/* 
+ * To sort, we give our tasks tags
+ *
+ * We can also give them flags
+ * 
+ * With perspectives we filter,
+ *
+ * To keep our tasks in kilter,
+ *
+ * Then refactor the code if it lags!
+ *
+ *
+ * @enquirer
+ *
+ */
+
+
 class Perspectives extends Component {
 
     constructor(props) {
@@ -104,23 +122,25 @@ class Perspectives extends Component {
         return (
             <IonPage>
                 <IonContent>
+		    {/* Input, begin */}
 	           <input className="task-datebox" defaultValue={this.state.perspectiveName} 
 			onChange={(e)=>{ // define the name onchange
 			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 			    this.props.gruntman.registerScheduler(() => { 
 			    // Register a scheduler to deal with React's onChange
 			    // check out the FANCYCHANGE in task.jsx
-			       this.props.gruntman.do(
+			       this.props.gruntman.do( // call a gruntman function
 				   "perspective.update__name", { 
-					uid: this.props.uid, 
+					uid: this.props.uid, // pass it the things vvv
 					id: this.props.id, 
 					name: e.target.value
 				   }
-			       ).then(this.props.menuRefresh)
-			   }, `perspective.this.${this.props.id}-update`)
+			       ).then(this.props.menuRefresh) // call the homebar refresh
+			   }, `perspective.this.${this.props.id}-update`) // give it a custom id
 		       }} 
                     />
-
+		    {/* Input, end */}
+		    {/* Task, begin */}
 	            {this.state.taskList.map(id => (
                         <Task 
 			tid={id}
@@ -139,9 +159,7 @@ class Perspectives extends Component {
 			]}
 			/>
 		    ))}
-
-
-
+		    {/* Task, end */}
                 </IonContent>
             </IonPage>
         )

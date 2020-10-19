@@ -85,7 +85,6 @@ class Home extends Component {
 	let psp = await this.props.engine.db.getPerspectives(this.props.uid);
 
 	this.setState({projects: tlp[2], perspectives:psp[2]});
-	console.log("home reloaded")
 
     }
 
