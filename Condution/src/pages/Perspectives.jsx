@@ -8,6 +8,24 @@ import Task from './Components/Task';
 
 const autoBind = require('auto-bind/react');
 
+
+/* 
+ * To sort, we give our tasks tags
+ *
+ * We can also give them flags
+ * 
+ * With perspectives we filter,
+ *
+ * To keep our tasks in kilter,
+ *
+ * Then refactor the code if it lags!
+ *
+ *
+ * @enquirer
+ *
+ */
+
+
 class Perspectives extends Component {
 
     constructor(props) {
@@ -107,20 +125,21 @@ class Perspectives extends Component {
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
                             <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>
+
 	           <input className="task-datebox" defaultValue={this.state.perspectiveName} 
 			onChange={(e)=>{ // define the name onchange
 			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 			    this.props.gruntman.registerScheduler(() => { 
 			    // Register a scheduler to deal with React's onChange
 			    // check out the FANCYCHANGE in task.jsx
-			       this.props.gruntman.do(
+			       this.props.gruntman.do( // call a gruntman function
 				   "perspective.update__name", { 
-					uid: this.props.uid, 
+					uid: this.props.uid, // pass it the things vvv
 					id: this.props.id, 
 					name: e.target.value
 				   }
-			       ).then(this.props.menuRefresh)
-			   }, `perspective.this.${this.props.id}-update`)
+			       ).then(this.props.menuRefresh) // call the homebar refresh
+			   }, `perspective.this.${this.props.id}-update`) // give it a custom id
 		       }} 
                     />
             </h1> 
@@ -132,6 +151,7 @@ class Perspectives extends Component {
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10}}>
                         </div>
+
 
 
 	            {this.state.taskList.map(id => (
@@ -152,6 +172,7 @@ class Perspectives extends Component {
 			]}
 			/>
 		    ))}
+
 
 
 
