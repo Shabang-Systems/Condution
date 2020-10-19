@@ -2,8 +2,8 @@ const { parseFromTimeZone } = require('date-fns-timezone')
 
 
 class Gruntman {
-    
-    /* 
+
+    /*
      * Hello human,
      * good afternoon.
      * I am gruntman.
@@ -31,7 +31,7 @@ class Gruntman {
                     let newTag = await engine.db.newTag(options.uid, options.name);
                     return {uid: options.uid, id: newTag};
                 }
-            }, 
+            },
             task: {
                 update: async function (options) {
                     let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
@@ -56,26 +56,26 @@ class Gruntman {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: false, completeDate: new Date()});
                     return {uid: options.uid, tid: options.tid, taskInfo};
                 },
-                update__complete: async function (options) {
+		update__complete: async function (options) {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: true, completeDate: new Date()})
                     let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
                     let due = (
-                        taskInfo.due ? 
-                            (taskInfo.isFloating ? 
-                                new Date(taskInfo.due.seconds*1000) : 
+                        taskInfo.due ?
+                            (taskInfo.isFloating ?
+                                new Date(taskInfo.due.seconds*1000) :
                                 parseFromTimeZone(
-                                    (new Date(taskInfo.due.seconds*1000)).toISOString(), 
+                                    (new Date(taskInfo.due.seconds*1000)).toISOString(),
                                     {timeZone: taskInfo.timezone}
                                 )
                             ):
                         undefined
-                    ); 
+                    );
                     let defer = (
-                        taskInfo.defer ? 
-                            (taskInfo.isFloating ? 
-                                new Date(taskInfo.defer.seconds*1000) : 
+                        taskInfo.defer ?
+                            (taskInfo.isFloating ?
+                                new Date(taskInfo.defer.seconds*1000) :
                                     parseFromTimeZone(
-                                        (new Date(taskInfo.defer.seconds*1000)).toISOString(), 
+                                        (new Date(taskInfo.defer.seconds*1000)).toISOString(),
                                        {timeZone: taskInfo.timezone}
                                     )
                             ): undefined
@@ -217,17 +217,31 @@ class Gruntman {
                     await engine.db.associateTask(options.uid, options.tid, options.pid);
 
 
-                    return {uid: options.uid, tid: options.tid};
+		    return {uid: options.uid, tid: options.tid};
                 },
                 dissociate:  async function (options) {
                     //await engine.db.modifyTask(options.uid, options.tid, options.query)
                     await engine.db.dissociateTask(options.uid, options.tid, options.pid);
 
 
-                    return {uid: options.uid, tid: options.tid};
+		    return {uid: options.uid, tid: options.tid};
                 }
 
-            }
+            },
+	    perspective: {
+		update__name: async function (options) { // update the perspective name!
+		    let possiblePerspectives = await engine.db.getPerspectives(options.uid);
+		    // get all possible perspectives
+		    let perspectiveObject = possiblePerspectives[0][options.id]
+		    // get the one we want based on page id
+
+		    // modify the perspective
+		    await engine.db.modifyPerspective(options.uid, options.id, {name: options.name});
+
+		    // return what we need to undo
+		    return {perspectiveObject, uid: options.uid}
+		}
+	    },
         } // type:action:functionaction (return resources)
         this.undoers = {
             task: {
@@ -249,15 +263,15 @@ class Gruntman {
         this.updateInterval = undefined;
     }
 
-    lockUpdates() { 
-        this.updateLock = true; 
+    lockUpdates() {
+        this.updateLock = true;
         if (this.updateInterval)
             clearTimeout(this.updateInterval);
         this.updateInterval = undefined;
     }
 
-    unlockUpdates(interval=500) { 
-        this.updateLock = false; 
+    unlockUpdates(interval=500) {
+        this.updateLock = false;
         this.updateInterval = setTimeout(this.refresher, interval);
     }
 
@@ -297,7 +311,7 @@ class Gruntman {
 
         if (!this.updateLock && !bypassUpdates)
             this.refresher();
-        
+
         if (unsafe_FORCE_UPDATES)
             this.refresher();
 

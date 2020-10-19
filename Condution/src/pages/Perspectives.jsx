@@ -126,7 +126,7 @@ class Perspectives extends Component {
                         <div style={{display: "inline-block"}}>
                             <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>
 
-                             <input className="task-datebox" defaultValue={this.state.perspectiveName} 
+	           <input className="name-input" defaultValue={this.state.perspectiveName} 
 			onChange={(e)=>{ // define the name onchange
 			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 			    this.props.gruntman.registerScheduler(() => { 
