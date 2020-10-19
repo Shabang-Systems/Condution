@@ -87,10 +87,6 @@ class Perspectives extends Component {
 
     }
 
-    handleNameChange(e) {
-	console.log(e.target.value)
-    }
-
     componentDidMount() {
         this.refresh()
     }
@@ -113,20 +109,18 @@ class Perspectives extends Component {
                    // Register a scheduler to deal with React's onChange
                    // Search for the word FANCYCHANGE to read my spheal on this
                    // DATEHANDLING is here too. If you are looking for that, stop searching
-			{/* 
+			 
 			   e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 			   this.props.gruntman.registerScheduler(() => {
-			       let d = chrono.parseDate(e.target.value); // NLP that date!
-			       if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
-				   if (d) // and update the database too!
-				   this.props.gruntman.do(
-				       "task.update", 
-				       { uid: this.props.uid, 
-					tid: this.props.tid, 
-					query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-				   )
-			   }, `perspective.this.-defer-${this.props.tid}-update`)
-			//*/}
+			       this.props.gruntman.do(
+				   "perspective.update__name", { 
+					uid: this.props.uid, 
+					id: this.props.id, 
+					name: e.target.value
+				   }
+			       )
+			   }, `perspective.this.${this.props.id}-update`)
+			    console.log("changed!")
 			   }} 
 
                     />
