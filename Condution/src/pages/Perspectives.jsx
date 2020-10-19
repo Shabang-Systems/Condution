@@ -15,6 +15,7 @@ class Perspectives extends Component {
 
         this.state = {
 	    taskList: [],
+	    perspectiveName: "",
 	    possibleProjects:{}, // see jacks comments in upcoming 
 	    possibleTags:{}, 
 	    possibleProjectsRev:{}, 
@@ -38,7 +39,6 @@ class Perspectives extends Component {
 	let possiblePerspectives = await this.props.engine.db.getPerspectives(this.props.uid); // get all possible perspectives
 	let perspectiveObject = possiblePerspectives[0][this.props.id] // get the one we want based on page id 
 	let taskList = await this.props.engine.perspective.calc(this.props.uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord) // then get the tasks from that perspective
-	console.log(this.state.taskList)
 
 
 	let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
@@ -74,6 +74,7 @@ class Perspectives extends Component {
 	
 	this.setState({
 	    taskList: taskList, 
+	    perspectiveName: perspectiveObject.name,
 	    possibleProjects: pPandT[0][0], 
 	    possibleTags: pPandT[1][0], 
 	    possibleProjectsRev: pPandT[0][1], 
@@ -84,6 +85,10 @@ class Perspectives extends Component {
 	    projectDB
 	}); // once we finish, set the state
 
+    }
+
+    handleNameChange(e) {
+	console.log(e.target.value)
     }
 
     componentDidMount() {
@@ -97,16 +102,35 @@ class Perspectives extends Component {
                             // so we want to refresh the perspective that's rendered
     }
 
-
-
-
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
     render() {
-        //console.log(this.props.id);
         return (
             <IonPage>
                 <IonContent>
+	           <input className="task-datebox" defaultValue={this.state.perspectiveName} 
+			onChange={(e)=>{
+                   // Register a scheduler to deal with React's onChange
+                   // Search for the word FANCYCHANGE to read my spheal on this
+                   // DATEHANDLING is here too. If you are looking for that, stop searching
+			{/* 
+			   e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+			   this.props.gruntman.registerScheduler(() => {
+			       let d = chrono.parseDate(e.target.value); // NLP that date!
+			       if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
+				   if (d) // and update the database too!
+				   this.props.gruntman.do(
+				       "task.update", 
+				       { uid: this.props.uid, 
+					tid: this.props.tid, 
+					query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+				   )
+			   }, `perspective.this.-defer-${this.props.tid}-update`)
+			//*/}
+			   }} 
+
+                    />
+
 	            {this.state.taskList.map(id => (
                         <Task 
 			tid={id}
@@ -125,6 +149,8 @@ class Perspectives extends Component {
 			]}
 			/>
 		    ))}
+
+
 
                 </IonContent>
             </IonPage>
