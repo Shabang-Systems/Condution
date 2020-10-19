@@ -105,24 +105,20 @@ class Perspectives extends Component {
             <IonPage>
                 <IonContent>
 	           <input className="task-datebox" defaultValue={this.state.perspectiveName} 
-			onChange={(e)=>{
-                   // Register a scheduler to deal with React's onChange
-                   // Search for the word FANCYCHANGE to read my spheal on this
-                   // DATEHANDLING is here too. If you are looking for that, stop searching
-			 
-			   e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-			   this.props.gruntman.registerScheduler(() => {
+			onChange={(e)=>{ // define the name onchange
+			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+			    this.props.gruntman.registerScheduler(() => { 
+			    // Register a scheduler to deal with React's onChange
+			    // check out the FANCYCHANGE in task.jsx
 			       this.props.gruntman.do(
 				   "perspective.update__name", { 
 					uid: this.props.uid, 
 					id: this.props.id, 
 					name: e.target.value
 				   }
-			       )
+			       ).then(this.props.menuRefresh)
 			   }, `perspective.this.${this.props.id}-update`)
-			    console.log("changed!")
-			   }} 
-
+		       }} 
                     />
 
 	            {this.state.taskList.map(id => (

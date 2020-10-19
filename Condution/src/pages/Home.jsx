@@ -59,34 +59,38 @@ class Home extends Component {
 
     componentDidMount() {
         // This is, indeed, the view
-        let view = this;
         // Get the current URI to set which view is selected
         let uri = (new URL(document.URL)).pathname.split("/");
         if (uri[1] === "")
             this.setState({itemSelected:{item:"upcoming", id:""}});
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
-        (async function() {
-            /*
-             * TODO TODO TODO
-             * very very very bad practice below
-             * shield your eyes
-             *
-             * Basically, database warms up slower
-             * than does this function gets called. so
-             * we wait 500ms 
-             *
-             */
-
-            setTimeout(async function() {
-                // Load the top level projects and perspectives
-                // to set into the state and to add to the menu
-                let tlp = await view.props.engine.db.getTopLevelProjects(view.props.uid);
-                let psp = await view.props.engine.db.getPerspectives(view.props.uid);
-                view.setState({projects: tlp[2], perspectives:psp[2]});
-            }, 500);
-        })();
+	/*
+	 * TODO TODO TODO
+	 * very very very bad practice below
+	 * shield your eyes
+	 *
+	 * Basically, database warms up slower
+	 * than does this function gets called. so
+	 * we wait 500ms 
+	 *
+	 */
+	const refreshTimer = setTimeout(() => {this.refresh()}, 500);
     }
+
+    async refresh() {
+	// Load the top level projects and perspectives
+	// to set into the state and to add to the menu
+	let tlp = await this.props.engine.db.getTopLevelProjects(this.props.uid);
+	let psp = await this.props.engine.db.getPerspectives(this.props.uid);
+
+	this.setState({projects: tlp[2], perspectives:psp[2]});
+	console.log("home reloaded")
+
+    }
+
+
+
 
     render() {
     return (
@@ -160,7 +164,7 @@ class Home extends Component {
                                  <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
                                 {/* perspective renders perspectives */}
-                                 <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  />}  />
+                                 <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
                                 {/* TODO projects */}
                             </Switch>
                         </IonRouterOutlet>
