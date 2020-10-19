@@ -15,6 +15,16 @@
     transform: translateY(1px);
 }
 
+.editable-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--content-normal-alt);
+    outline: 0;
+    background: transparent;
+    border: 0;
+
+}
+
 .greeting-container {
     padding-left: 10px;
     margin-left: 10px;

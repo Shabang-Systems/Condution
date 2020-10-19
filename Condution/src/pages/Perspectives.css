@@ -1,1 +1,12 @@
 /* Perspectives CSS!*/
+
+.perspective-icon {
+    border-radius: 50%;
+    border: 3px solid;
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+    transform: scale(0.9);
+}
+
+

@@ -124,9 +124,9 @@ class Perspectives extends Component {
                 <div className="page-content">
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
-                            <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>
+                            <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-layer-group"></i>
 
-                             <input className="task-datebox" defaultValue={this.state.perspectiveName} 
+                             <input className="editable-title" defaultValue={this.state.perspectiveName} 
 			onChange={(e)=>{ // define the name onchange
 			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 			    this.props.gruntman.registerScheduler(() => { 
@@ -145,7 +145,11 @@ class Perspectives extends Component {
             </h1> 
 
 
-                            <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
+                <div className="greeting-container" style={{marginLeft: 11, marginTop: 7}}>
+                    <a onClick={()=>console.log("HUX!")} className="perspective-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer"}}><i className="fas fa-edit" style={{margin: 3, color: "var(--task-textbox)", fontSize: 10, transform: "translate(2px, -2px)"}} ></i></a>
+                    <a onClick={()=>console.log("HUX!")} className="perspective-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer", marginLeft: 5}}><i className="fas fa-trash" style={{margin: 3, color: "var(--task-textbox)", fontSize: 10, transform: "translate(2px, -2px)"}} ></i></a>
+
+                </div>
                         </div>
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10}}>
