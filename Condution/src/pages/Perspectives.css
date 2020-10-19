@@ -2,15 +2,24 @@
 
 .perspective-icon {
     border-radius: 50%;
+    /*padding: 20px;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*text-align: center;*/
     border: 3px solid;
     height: 25px;
     width: 25px;
     display: inline-block;
     transform: scale(0.9);
+    transform: translateX(-4px);
+}
 
+.idk { /* this is just for debugging dont @ me */
 
-.name-input {
-    background: 
+    /*border: 1px solid red;*/
+    width: 100%;
+
 }
 
 

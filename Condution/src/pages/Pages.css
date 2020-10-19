@@ -13,7 +13,10 @@
     padding-top: 10px;
     margin: 10px;
     transform: translateY(1px);
+    /*border: 1px solid red;*/
+    width: 100%;
 }
+
 
 .editable-title {
     font-size: 15px;
@@ -21,10 +24,11 @@
     color: var(--content-normal-alt);
     outline: 0;
     background: transparent;
-    border: 0;
+    border: 0px solid red;
     transition: background 0.3s;
     padding: 5px;
     border-radius: 3px;
+    width: 95%;
 }
 
 .editable-title:hover {

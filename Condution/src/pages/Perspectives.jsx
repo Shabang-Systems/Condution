@@ -122,39 +122,64 @@ class Perspectives extends Component {
         return (
             <IonPage>
                 <div className="page-content">
-                    <div className="header-container">
-                        <div style={{display: "inline-block"}}>
-                            <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-layer-group"></i>
+                    <div className="header-container" className="idk">
+                        <div style={{display: "inline-block"}} className="idk">
+			    <div> 
+				<IonMenuToggle>
+				    <i className="fas fa-bars" 
+					style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+				</IonMenuToggle> 
+				<h1 className="page-title">
+				    <i style={{paddingRight: 10}} 
+					className="fas fa-layer-group">
+				    </i>
+				     <input className="editable-title" 
+					defaultValue={this.state.perspectiveName} 
+					onChange={(e)=>{ // define the name onchange
+					    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+					    this.props.gruntman.registerScheduler(() => { 
+					    // Register a scheduler to deal with React's onChange
+					    // check out the FANCYCHANGE in task.jsx
+					   this.props.gruntman.do( // call a gruntman function
+					       "perspective.update__name", { 
+						    uid: this.props.uid, // pass it the things vvv
+						    id: this.props.id, 
+						    name: e.target.value
+					       }
+					   ).then(this.props.menuRefresh) // call the homebar refresh
+				       }, `perspective.this.${this.props.id}-update`) // give it a custom id
+				   }} 
+				/>
+				</h1> 
+				<div className="greeting-container" style={{marginLeft: 11, marginTop: 7}}>
+				    <a 
+					onClick={()=>console.log("HUX!")} 
+					className="perspective-icon" 
+					style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer"}}>
+					    <i className="fas fa-edit" 
+						style={{margin: 3, color: "var(--task-textbox)", 
+						fontSize: 10, 
+						transform: "translate(2px, -2px)"}} 
+					    ></i>
+				    </a>
 
-                             <input className="editable-title" defaultValue={this.state.perspectiveName} 
-			onChange={(e)=>{ // define the name onchange
-			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-			    this.props.gruntman.registerScheduler(() => { 
-			    // Register a scheduler to deal with React's onChange
-			    // check out the FANCYCHANGE in task.jsx
-			       this.props.gruntman.do( // call a gruntman function
-				   "perspective.update__name", { 
-					uid: this.props.uid, // pass it the things vvv
-					id: this.props.id, 
-					name: e.target.value
-				   }
-			       ).then(this.props.menuRefresh) // call the homebar refresh
-			   }, `perspective.this.${this.props.id}-update`) // give it a custom id
-		       }} 
-                    />
-            </h1> 
+				    <a 
+					onClick={()=>console.log("HUX!")} 
+					className="perspective-icon" 
+					style={{borderColor: "var(--task-checkbox-feature-alt)", 
+					cursor: "pointer", marginLeft: 5}}>
+					<i className="fas fa-trash"
+					    style={{margin: 3, color: "var(--task-textbox)", 
+					    fontSize: 10, transform: "translate(2px, -2px)"}}>
+					</i>
+				    </a>
 
-
-                <div className="greeting-container" style={{marginLeft: 11, marginTop: 7}}>
-                    <a onClick={()=>console.log("HUX!")} className="perspective-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer"}}><i className="fas fa-edit" style={{margin: 3, color: "var(--task-textbox)", fontSize: 10, transform: "translate(2px, -2px)"}} ></i></a>
-                    <a onClick={()=>console.log("HUX!")} className="perspective-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer", marginLeft: 5}}><i className="fas fa-trash" style={{margin: 3, color: "var(--task-textbox)", fontSize: 10, transform: "translate(2px, -2px)"}} ></i></a>
-
-                </div>
-                        </div>
+				</div> 
+			    </div>
+			</div>
                     </div>
+	    
                     <div style={{marginLeft: 10, marginRight: 10}}>
-
-
 
 	            {this.state.taskList.map(id => (
                         <Task 
@@ -175,11 +200,8 @@ class Perspectives extends Component {
 			/>
 		    ))}
 
-
-                        </div>
-                        </div>
-
-
+		    </div>
+		</div>
             </IonPage>
         )
     }
