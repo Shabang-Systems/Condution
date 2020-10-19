@@ -3,10 +3,12 @@ import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuBu
 import React, { Component } from 'react';
 import './Perspectives.css'
 import './Pages.css';
+import ReactTooltip from 'react-tooltip';
 
 import Task from './Components/Task';
 
 const autoBind = require('auto-bind/react');
+
 
 
 /* 
@@ -151,9 +153,12 @@ class Perspectives extends Component {
 				   }} 
 				/>
 				</h1> 
+				<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+
 				<div className="greeting-container" style={{marginLeft: 11, marginTop: 7}}>
 				    <a 
 					onClick={()=>console.log("HUX!")} 
+					data-tip="LOCALIZE: Edit"
 					className="perspective-icon" 
 					style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer"}}>
 					    <i className="fas fa-edit" 
@@ -165,6 +170,7 @@ class Perspectives extends Component {
 
 				    <a 
 					onClick={()=>console.log("HUX!")} 
+					data-tip="LOCALIZE: Delete"
 					className="perspective-icon" 
 					style={{borderColor: "var(--task-checkbox-feature-alt)", 
 					cursor: "pointer", marginLeft: 5}}>
