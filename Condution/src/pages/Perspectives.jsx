@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Perspectives.css'
@@ -103,7 +103,10 @@ class Perspectives extends Component {
     render() {
         return (
             <IonPage>
-                <IonContent>
+                <div className="page-content">
+                    <div className="header-container">
+                        <div style={{display: "inline-block"}}>
+                            <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>
 	           <input className="task-datebox" defaultValue={this.state.perspectiveName} 
 			onChange={(e)=>{ // define the name onchange
 			    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
@@ -120,6 +123,16 @@ class Perspectives extends Component {
 			   }, `perspective.this.${this.props.id}-update`)
 		       }} 
                     />
+            </h1> 
+
+
+                            <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
+                        </div>
+                    </div>
+                    </div>
+                    <div style={{marginLeft: 10, marginRight: 10}}>
+                        </div>
+
 
 	            {this.state.taskList.map(id => (
                         <Task 
@@ -142,7 +155,6 @@ class Perspectives extends Component {
 
 
 
-                </IonContent>
             </IonPage>
         )
     }
