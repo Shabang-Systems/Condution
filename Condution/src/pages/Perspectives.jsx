@@ -6,6 +6,7 @@ import './Pages.css';
 import ReactTooltip from 'react-tooltip';
 
 import Task from './Components/Task';
+import PerspectiveEdit from './Components/PerspectiveEditor';
 
 const autoBind = require('auto-bind/react');
 
@@ -36,6 +37,7 @@ class Perspectives extends Component {
         this.state = {
 	    taskList: [],
 	    perspectiveName: "",
+	    showEdit: false, // are we showing 
 	    possibleProjects:{}, // see jacks comments in upcoming 
 	    possibleTags:{}, 
 	    possibleProjectsRev:{}, 
@@ -54,6 +56,9 @@ class Perspectives extends Component {
         // AutoBind!
         autoBind(this);
     }
+    showEdit() {this.setState({showEdit: true})} // util func for showing repeat
+    hideEdit() {this.setState({showEdit: false})} // util func for hiding repeat
+
 
     async refresh() {
 	let possiblePerspectives = await this.props.engine.db.getPerspectives(this.props.uid); // get all possible perspectives
@@ -124,8 +129,8 @@ class Perspectives extends Component {
         return (
             <IonPage>
                 <div className="page-content">
-                    <div className="header-container" className="idk">
-                        <div style={{display: "inline-block"}} className="idk">
+                    <div className="header-container" >
+                        <div style={{display: "inline-block"}}>
 			    <div> 
 				<IonMenuToggle>
 				    <i className="fas fa-bars" 
