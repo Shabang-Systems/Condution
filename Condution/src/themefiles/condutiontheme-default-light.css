@@ -4,8 +4,8 @@
     /* These two colors should lightly contrast 
      * think: a hover over the background should
      * be colored --background-feature */
-    --background: #f4f4f4;
-    --ion-background-color: #f4f4f4;
+    --background: #fafafa;
+    --ion-background-color: #fafafa;
     --background-feature: #e5e7ea;
     --background-feature-overlay: rgba(229,231,234,0.7);
 
