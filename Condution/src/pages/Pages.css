@@ -14,7 +14,7 @@
     margin: 10px;
     transform: translateY(1px);
     /*border: 1px solid red;*/
-    width: 100%;
+    /*width: 100%;*/ /* IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
 }
 
 
@@ -28,7 +28,7 @@
     transition: background 0.3s;
     padding: 5px;
     border-radius: 3px;
-    width: 95%;
+    /*width: 95%;*/ /* IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
 }
 
 .editable-title:hover {
