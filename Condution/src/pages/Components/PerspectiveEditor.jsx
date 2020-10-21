@@ -35,8 +35,9 @@ class PerspectiveEdit extends Component {
                     <div className="repeat-header">
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%"}}><b>Let&#39;s build</b> <div className="repeat-task-name">{this.state.name}</div></span>
-                        {/* Close button */}
-                        <a className="repeat-close"><i className="fa fa-times"></i></a>
+                        {/* Close button */} 
+			<a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
+
                     </div>
                 </div>
             </IonModal>

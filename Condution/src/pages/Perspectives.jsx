@@ -52,7 +52,7 @@ class Perspectives extends Component {
 	
         this.updatePrefix = this.random();
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
-	this.repeater = React.createRef(); // what's my repeater?
+	this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
 
 
         // AutoBind!
@@ -132,7 +132,7 @@ class Perspectives extends Component {
     render() {
         return (
             <IonPage>
-		<PerspectiveEdit reference={this.repeater} isShown={this.state.showEdit} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+		<PerspectiveEdit reference={this.repeater} isShown={this.state.showEdit} onDidDismiss={this.hideEdit} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
 
                 <div className="page-content">
                     <div className="header-container" >
