@@ -61,7 +61,10 @@ class Perspectives extends Component {
     showEdit() {
 	this.setState({showEdit: true})
 	console.log(this.state.showEdit)} // util func for showing repeat
-    hideEdit() {this.setState({showEdit: false})} // util func for hiding repeat
+    hideEdit() {
+	this.setState({showEdit: false});
+	console.log("hidden!")
+    } // util func for hiding repeat
 
 
     async refresh() {
@@ -116,9 +119,15 @@ class Perspectives extends Component {
 
     }
 
+    updateName(name) {
+	this.setState({perspectiveName: name})
+	console.log(this.state.perspectiveName)
+    }
+
     componentDidMount() {
         this.refresh()
     }
+
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
@@ -130,9 +139,23 @@ class Perspectives extends Component {
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
     render() {
+	console.log(this.state.perspectiveName)
         return (
             <IonPage>
-		<PerspectiveEdit reference={this.repeater} isShown={this.state.showEdit} onDidDismiss={this.hideEdit} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+		<PerspectiveEdit 
+		    reference={this.repeater} 
+		    isShown={this.state.showEdit} 
+		    onDidDismiss={this.hideEdit}
+		    uid={this.props.uid} 
+		    engine={this.props.engine} 
+		    gruntman={this.props.gruntman}
+		    uid={this.props.uid}
+		    id={this.props.id}
+		    perspectiveName={this.state.perspectiveName}
+		    menuRefresh={this.props.menuRefresh}
+		    updateName={this.updateName}
+		    
+		/>
 
                 <div className="page-content">
                     <div className="header-container" >

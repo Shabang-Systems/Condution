@@ -73,7 +73,10 @@ class Repeat extends Component {
                     {/* Header */}
                     <div className="repeat-header">
                         {/* Repeat name */}
-                        <span style={{display: "flex", alignItems: "center", width: "100%"}}><b>Repeat</b> <div className="repeat-task-name">{this.state.name}</div></span>
+                        <span style={{display: "flex", alignItems: "center", width: "100%"}}>
+			    <b className="bold-prefix" >Repeat</b> 
+			    <div className="repeat-task-name">{this.state.name}</div>
+			</span>
                         {/* Close button */}
                         <a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
                     </div>

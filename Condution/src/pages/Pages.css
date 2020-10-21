@@ -17,6 +17,12 @@
     /*width: 100%;*/ /* IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
 }
 
+.bold-prefix {
+    color: var(--content-normal-accent);
+
+
+}
+
 
 .editable-title {
     font-size: 15px;
