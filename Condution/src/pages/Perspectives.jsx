@@ -60,10 +60,9 @@ class Perspectives extends Component {
     }
     showEdit() {
 	this.setState({showEdit: true})
-	console.log(this.state.showEdit)} // util func for showing repeat
+    } // util func for showing repeat
     hideEdit() {
 	this.setState({showEdit: false});
-	console.log("hidden!")
     } // util func for hiding repeat
 
 
@@ -119,10 +118,21 @@ class Perspectives extends Component {
 
     }
 
-    updateName(name) {
-	this.setState({perspectiveName: name})
-	console.log(this.state.perspectiveName)
-    }
+    updateName(e) {
+	e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+	this.props.gruntman.registerScheduler(() => { 
+	// Register a scheduler to deal with React's onChange
+	// check out the FANCYCHANGE in task.jsx
+	    this.props.gruntman.do( // call a gruntman function
+	       "perspective.update__name", { 
+		    uid: this.props.uid, // pass it the things vvv
+		    id: this.props.id, 
+		    name: e.target.value
+	       }
+	   ).then(this.props.menuRefresh) // call the homebar refresh
+       }, `perspective.this.${this.props.id}-update`) // give it a custom id
+	this.setState({perspectiveName: e.target.value})
+   } 
 
     componentDidMount() {
         this.refresh()
@@ -139,7 +149,6 @@ class Perspectives extends Component {
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
     render() {
-	console.log(this.state.perspectiveName)
         return (
             <IonPage>
 		<PerspectiveEdit 
@@ -171,21 +180,9 @@ class Perspectives extends Component {
 				    </i>
 				     <input className="editable-title" 
 					defaultValue={this.state.perspectiveName} 
-					onChange={(e)=>{ // define the name onchange
-					    e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-					    this.props.gruntman.registerScheduler(() => { 
-					    // Register a scheduler to deal with React's onChange
-					    // check out the FANCYCHANGE in task.jsx
-					   this.props.gruntman.do( // call a gruntman function
-					       "perspective.update__name", { 
-						    uid: this.props.uid, // pass it the things vvv
-						    id: this.props.id, 
-						    name: e.target.value
-					       }
-					   ).then(this.props.menuRefresh) // call the homebar refresh
-				       }, `perspective.this.${this.props.id}-update`) // give it a custom id
-				   }} 
-				/>
+					onChange={(e)=> {this.updateName(e)}}
+					value={this.state.perspectiveName} // TODO: jack this is hecka hacky
+				    />
 				</h1> 
 				<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
 

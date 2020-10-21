@@ -18,6 +18,7 @@ class PerspectiveEdit extends Component {
         autoBind(this);
 
         this.state = {
+	    inputEvent: ""
         }
     }
 
@@ -32,8 +33,12 @@ class PerspectiveEdit extends Component {
 		ref={this.props.reference} 
 		isOpen={this.props.isShown} 
 		onWillPresent={() => {this.props.gruntman.lockUpdates();}}
-		onDidDismiss={() => {this.props.gruntman.unlockUpdates(); console.log("dissmisal");
-		    if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} > 
+		onDidDismiss={() => {
+		    this.props.gruntman.unlockUpdates(); 
+		    this.props.updateName(this.state.inputEvent);
+		    if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}
+		} 
+	    > 
 
                 <div>
                     {/* Header */}
@@ -43,22 +48,7 @@ class PerspectiveEdit extends Component {
 			    <b className="bold-prefix" >Let&#39;s build</b> 
 				<input className="editable-title" 
 				    defaultValue={this.props.perspectiveName} 
-				    onChange={(e)=>{ // define the name onchange
-					this.props.updateName(e.target.value)
-					console.log(this.props.perspectiveName)
-					e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-					this.props.gruntman.registerScheduler(() => { 
-					// Register a scheduler to deal with React's onChange
-					// check out the FANCYCHANGE in task.jsx
-					   this.props.gruntman.do( // call a gruntman function
-					       "perspective.update__name", { 
-						    uid: this.props.uid, // pass it the things vvv
-						    id: this.props.id, 
-						    name: e.target.value
-					       }
-					   ).then(this.props.menuRefresh) // call the homebar refresh
-				       }, `perspective.this.${this.props.id}-update`) // give it a custom id
-				   }} 
+				    onChange={(e)=> {this.props.updateName(e); this.setState({inputEvent: e})}}
 				/>
 
 
