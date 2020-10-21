@@ -28,23 +28,7 @@ class PerspectiveEdit extends Component {
 
     render() {
         return (
-            <IonModal>
-
-	    {/*ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass={"task-repeat "+(()=>{
-                // Different repeat modes require different height modals
-                 switch (this.state.rule) {
-                      case "none":
-                          return "task-repeat__default";
-                      case "daily":
-                          return "task-repeat__default";
-                      case "weekly2":
-                          return (this.state.advanced ? "task-repeat__advanced-weekly" : "task-repeat__default");
-                      case "monthly":
-                          return (this.state.advanced ? "task-repeat__advanced-monthly" : "task-repeat__default");
-                      case "yearly":
-                          return "task-repeat__default";
-                  }
-            })()} > */}
+            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}}> 
 
                 <div>
                     {/* Header */}

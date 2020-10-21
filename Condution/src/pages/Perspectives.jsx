@@ -52,11 +52,15 @@ class Perspectives extends Component {
 	
         this.updatePrefix = this.random();
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
+	this.repeater = React.createRef(); // what's my repeater?
+
 
         // AutoBind!
         autoBind(this);
     }
-    showEdit() {this.setState({showEdit: true})} // util func for showing repeat
+    showEdit() {
+	this.setState({showEdit: true})
+	console.log(this.state.showEdit)} // util func for showing repeat
     hideEdit() {this.setState({showEdit: false})} // util func for hiding repeat
 
 
@@ -128,6 +132,8 @@ class Perspectives extends Component {
     render() {
         return (
             <IonPage>
+		<PerspectiveEdit reference={this.repeater} isShown={this.state.showEdit} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+
                 <div className="page-content">
                     <div className="header-container" >
                         <div style={{display: "inline-block"}}>
@@ -162,7 +168,7 @@ class Perspectives extends Component {
 
 				<div className="greeting-container" style={{marginLeft: 11, marginTop: 7}}>
 				    <a 
-					onClick={()=>console.log("HUX!")} 
+					onClick={this.showEdit} 
 					data-tip="LOCALIZE: Edit"
 					className="perspective-icon" 
 					style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer"}}>
