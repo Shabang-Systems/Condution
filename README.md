@@ -64,14 +64,14 @@ After cloning the package (with Submodules!), you need to add a lovely file into
         "deploy": {
             "apiKey": "...",
             "authDomain": "...",
-				    ...
-			 	    "appId": "..."
+            ...
+            "appId": "..."
         },
         "debug": {
             "apiKey": "...",
             "authDomain": "...",
-				    ...
-			 	    "appId": "..."
+            ...
+            "appId": "..."
         }
     }
 }
