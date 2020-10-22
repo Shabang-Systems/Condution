@@ -3,6 +3,7 @@ import { Dropdown } from 'react-bootstrap';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Repeat.css';
+import '../Perspectives.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
@@ -38,6 +39,7 @@ class PerspectiveEdit extends Component {
 		    this.props.updateName(this.state.inputEvent);
 		    if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}
 		} 
+		cssClass={"perspective-modal"}
 	    > 
 
                 <div>
@@ -51,13 +53,15 @@ class PerspectiveEdit extends Component {
 				    onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
 				/>
 
-
 			    <div className="repeat-task-name">{this.state.name}</div>
 			</span>
                         {/* Close button */} 
 			<a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
 
                     </div>
+		    <div className="build-input">
+			<input className="editable-title"></input>
+		    </div>
                 </div>
             </IonModal>
         )

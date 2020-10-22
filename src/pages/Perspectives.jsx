@@ -119,18 +119,21 @@ class Perspectives extends Component {
     }
 
     updateName(e) {
-	this.props.gruntman.registerScheduler(() => { 
-	// Register a scheduler to deal with React's onChange
-	// check out the FANCYCHANGE in task.jsx
-	    this.props.gruntman.do( // call a gruntman function
-	       "perspective.update__name", { 
-		    uid: this.props.uid, // pass it the things vvv
-		    id: this.props.id, 
-		    name: e.target.value
-	       }
-	   ).then(this.props.menuRefresh) // call the homebar refresh
-       }, `perspective.this.${this.props.id}-update`) // give it a custom id
-	this.setState({perspectiveName: e.target.value})
+	if (e) {
+	    this.props.gruntman.registerScheduler(() => { 
+	    // Register a scheduler to deal with React's onChange
+	    // check out the FANCYCHANGE in task.jsx
+		this.props.gruntman.do( // call a gruntman function
+		   "perspective.update__name", { 
+			uid: this.props.uid, // pass it the things vvv
+			id: this.props.id, 
+			name: e.target.value
+		   }
+	       ).then(this.props.menuRefresh) // call the homebar refresh
+	   }, `perspective.this.${this.props.id}-update`) // give it a custom id
+	    console.log("e", e.target.value)
+	    this.setState({perspectiveName: e.target.value})
+	} else { console.log(e)}
    } 
 
     componentDidMount() {
