@@ -44,7 +44,8 @@
   "scripts": {
     "electron:run": "electron .",
     "ionic:dist": "ionic build --prod",
-    "ionic:runios": "ionic capacitor run ios -l --external"
+    "ionic:runios": "ionic capacitor run ios -l --external",
+    "ionic:rundroid": "ionic capacitor run android -l --external"
   },
   "eslintConfig": {
     "extends": "react-app"
