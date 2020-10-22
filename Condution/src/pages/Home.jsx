@@ -152,6 +152,8 @@ class Home extends Component {
                 <IonContent id="main">
                         {/* The actual page */}
                         <IonRouterOutlet>
+                            {/* empty => /upcoming*/}
+                            <Route render={() => <Redirect to="/upcoming"/>}/>
                             {/* / => /upcoming */}
                              <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
                             {/* and the perspective switch */}
