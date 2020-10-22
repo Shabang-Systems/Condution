@@ -98,3 +98,24 @@
     transform: translate(8px);
 }
 
+.page-invis-drag.normal {
+    display: none;
+}
+
+.page-invis-drag.windows {
+    display: none;
+}
+
+.page-invis-drag.darwin {
+    display: block;
+    position: absolute;
+    height: 40px;
+    width: 100%;
+    -webkit-app-region: drag;
+}
+
+.page-content.darwin {
+    padding-top: 20px;
+}
+
+

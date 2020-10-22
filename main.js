@@ -10,7 +10,7 @@ function createWindow () {
     let win = new BrowserWindow({
         'width': 950,
         'height': 650,
-        'minWidth': 950,
+        'minWidth': 400,
         'minHeight': 650,
         'title': "Condution",
         'webPreferences': {

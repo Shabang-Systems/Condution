@@ -162,26 +162,7 @@ class Home extends Component {
                                                                                                             {/* Logout button */}
                                                                                                             <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                                                                                                                 </IonMenu>
-                                                                                                                                                                                                                        <IonPage id="main" className={(()=>{
-                                                                                                                        if (!isPlatform("electron")) // if we are not running electron
-                                                                                                                            return "normal"; // normal windowing proceeds
-                                                                                                                        else if (window.navigator.platform.includes("Mac")){ // macos
-                                                                                                                            return "darwin"; // frameless setup
-                                                                                                                        }
-                                                                                                                        else if (process.platform === "win32") // windows
-                                                                                                                            return "windows"; // non-frameless
-
-                                                                                                                    })()}>
-                                                                                                                                                                                                                                    <div id="page-header" className={(()=>{
-                                                                                                                        if (!isPlatform("electron")) // if we are not running electron
-                                                                                                                            return "normal"; // normal windowing proceeds
-                                                                                                                        else if (window.navigator.platform.includes("Mac")){ // macos
-                                                                                                                            return "darwin"; // frameless setup
-                                                                                                                        }
-                                                                                                                        else if (process.platform === "win32") // windows
-                                                                                                                            return "windows"; // non-frameless
-
-                                                                                                                    })()}></div>
+                                                                                                                                                                                                                        <IonPage id="main">
                                                                                                                         {/* The actual page */}
                                                                                                                         <IonRouterOutlet>
                                                                                                                             {/* empty => /upcoming*/}

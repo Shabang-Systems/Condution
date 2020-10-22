@@ -81,7 +81,26 @@ class Upcoming extends Component { // define the component
     render() {
         return (
             <IonPage>
-                <div className="page-content">
+                <div className={"page-invis-drag " + (()=>{
+                    if (!isPlatform("electron")) // if we are not running electron
+                        return "normal"; // normal windowing proceeds
+                    else if (window.navigator.platform.includes("Mac")){ // macos
+                        return "darwin"; // frameless setup
+                    }
+                    else if (process.platform === "win32") // windows
+                        return "windows"; // non-frameless
+
+                })()}>&nbsp;</div>
+                <div className={"page-content " + (()=>{
+                    if (!isPlatform("electron")) // if we are not running electron
+                        return "normal"; // normal windowing proceeds
+                    else if (window.navigator.platform.includes("Mac")){ // macos
+                        return "darwin"; // frameless setup
+                    }
+                    else if (process.platform === "win32") // windows
+                        return "windows"; // non-frameless
+
+                })()}>
                     <div className="header-container">
                         <div style={{display: "inline-block"}}>
                             <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 

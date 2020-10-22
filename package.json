@@ -48,6 +48,19 @@
     "ionic:runios": "ionic capacitor run ios -l --external",
     "ionic:rundroid": "ionic capacitor run android -l --external"
   },
+  "postinstall": {
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shabang-Systems/Condution.git"
+  },
+  "author": "Shabang Systems, and the Condution Authors",
+  "license": " LGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Shabang-Systems/Condution/issues"
+  },
+  "homepage": "https://www.condution.com",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -67,5 +80,5 @@
     "@capacitor/cli": "2.4.1",
     "electron": "^10.1.4"
   },
-  "description": "Tasks? Done. That was easy."
+  "description": "Tasks? Done. That was quick."
 }
