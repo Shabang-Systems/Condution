@@ -41,7 +41,7 @@ We are Shabang, a software development company aiming to design innovative solut
 
 We happen also to be a group of students from the silicon valley wanting to make this world slightly better with technology.
 
-## Developing Building
+## Developing n' Building
 Thanks for developing with us! Our preferred package manager is [yarn](https://yarnpkg.com/). If you don't know what that is, teach yourself the ways of the [Soydev](https://www.urbandictionary.com/define.php?term=Soydev).
 
 We assume here that you have `node` 12+ installed. If you don't, [do it](https://nodejs.org/en/). When we use `$ROOT` in these docs, we mean the root of the repository.
