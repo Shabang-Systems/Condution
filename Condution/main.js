@@ -2,7 +2,7 @@ const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu } = re
 const { autoUpdater } = require("electron-updater");
 autoUpdater.checkForUpdatesAndNotify();
 const path = require('path');
-
+const isDev = require('electron-is-dev');
 
 
 function createWindow () {
@@ -34,7 +34,11 @@ function createWindow () {
     // TODO TODO TODO UNCOMMENT THIS!!
     win.removeMenu();
     // and load the main of the app.
-    win.loadURL(`file://${path.join(__dirname, './build/index.html')}`);
+    if (isDev)
+        win.loadURL(`http://localhost:8100`);
+    else
+        win.loadURL(`file://${path.join(__dirname, './build/index.html')}`);
+
     
     nativeTheme.addListener("updated", function() {
         if(nativeTheme.shouldUseDarkColors) {

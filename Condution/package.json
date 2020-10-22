@@ -23,6 +23,7 @@
     "bootstrap": "^4.5.2",
     "chrono-node": "^2.1.8",
     "date-fns-timezone": "^0.1.4",
+    "electron-is-dev": "^1.2.0",
     "electron-updater": "^4.3.5",
     "firebase": "^7.23.0",
     "ionicons": "^5.0.0",
@@ -42,10 +43,7 @@
   },
   "scripts": {
     "electron:run": "electron .",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "ionic:dist": "ionic build --prod"
   },
   "eslintConfig": {
     "extends": "react-app"
