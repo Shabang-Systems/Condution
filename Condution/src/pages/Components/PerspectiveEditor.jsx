@@ -45,10 +45,10 @@ class PerspectiveEdit extends Component {
                     <div className="repeat-header">
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%"}}>
-			    <b className="bold-prefix" >Let&#39;s build</b> 
+			    <b className="bold-prefix" >Let&#39;s build &nbsp;</b> 
 				<input className="editable-title" 
 				    defaultValue={this.props.perspectiveName} 
-				    onChange={(e)=> {this.props.updateName(e); this.setState({inputEvent: e})}}
+				    onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
 				/>
 
 

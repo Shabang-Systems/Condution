@@ -119,7 +119,6 @@ class Perspectives extends Component {
     }
 
     updateName(e) {
-	e.persist(); //https://reactjs.org/docs/events.html#event-pooling
 	this.props.gruntman.registerScheduler(() => { 
 	// Register a scheduler to deal with React's onChange
 	// check out the FANCYCHANGE in task.jsx
@@ -179,8 +178,7 @@ class Perspectives extends Component {
 					className="fas fa-layer-group">
 				    </i>
 				     <input className="editable-title" 
-					defaultValue={this.state.perspectiveName} 
-					onChange={(e)=> {this.updateName(e)}}
+					onChange={(e)=> {e.persist(); this.updateName(e)}}
 					value={this.state.perspectiveName} // TODO: jack this is hecka hacky
 				    />
 				</h1> 
