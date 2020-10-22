@@ -41,10 +41,63 @@ We are Shabang, a software development company aiming to design innovative solut
 
 We happen also to be a group of students from the silicon valley wanting to make this world slightly better with technology.
 
-## Building
-*Given that you are a codey child, you should be able to figure it out ;)*
+## Developing Building
+Thanks for developing with us! Our preferred package manager is [yarn](https://yarnpkg.com/). If you don't know what that is, teach yourself the ways of the [Soydev](https://www.urbandictionary.com/define.php?term=Soydev).
 
-Just kidding, we will add instructions for Firebase connection, buliding, and compiling soon.
+We assume here that you have `node` 12+ installed. If you don't, [do it](https://nodejs.org/en/). When we use `$ROOT` in these docs, we mean the root of the repository.
+
+### First, a quick note on cloning.
+
+Begin by cloning the project at [https://github.com/Shabang-Systems/Condution](https://github.com/Shabang-Systems/Condution). 
+
+The default branch should be the main development branch, and the branch `master` is the currently released version.
+
+**This package has ubmodules! When you clone, make sure to clone submodules along with it by either `git clone --recursive` or, after you clone, `git submodule init` then `git submodule update`.**
+
+### Firebase Connection
+
+After cloning the package (with Submodules!), you need to add a lovely file into `$ROOT/src/backend/` called `secrets.json`. It contains your Firebase key objects (to power the Engine), which you need to gather following [these instructions](https://firebase.google.com/docs/web/setup#config-object). Here's an example `secrets.json`:
+
+```jsx
+{
+    "dbkeys": {
+        "deploy": {
+            "apiKey": "...",
+            "authDomain": "...",
+				    ...
+			 	    "appId": "..."
+        },
+        "debug": {
+            "apiKey": "...",
+            "authDomain": "...",
+				    ...
+			 	    "appId": "..."
+        }
+    }
+}
+```
+
+We use two different Firebase projects for debug and deploy respectively. If you are only debugging, no need to include a different set of keys for deploy.
+
+### The Yarn CLI
+
+`secrets.json` in, you are ready to Conduct (verb: to write Condution)! Get all of the necessary project dependencies by issuing the command `yarn` in `$ROOT`. Just `yarn`.
+
+You probably also need the Ionic CLI tools, which you could install by running `npm install -g @ionic/cli`.
+
+With everything installed, execute your favourite CLI command to get started!
+
+```markdown
+`yarn` \
+   `ionic:dist` — builds optimized web version/build folder
+   `ionic:runios` — runs the dev server + ios hooks
+   `ionic:rundroid` — runs the dev server + android hooks
+   `electron:run` — runs electrn hooks only. you need to start the dev server with any of :point_up_2:
+```
+
+The actual build command has not been written yet for v1.0, but it's probably going to be `yarn platform:build` or something to that effect.
+
+Good luck! Let us know if you have any questions [on the Discord](https://discord.gg/3hS7yv3) or [in the issues](https://github.com/Shabang-Systems/Condution/issues).
 
 ## Contributing?
 We love contributions! You are welcome to contribute, just keep in mind that we prefer 4 spaces over tabs.
