@@ -2,7 +2,7 @@
   "appId": "io.ionic.starter",
   "appName": "Condution",
   "bundledWebRuntime": false,
-  "npmClient": "npm",
+  "npmClient": "yarn",
   "webDir": "build",
   "plugins": {
     "SplashScreen": {
@@ -12,6 +12,8 @@
   "cordova": {},
   "server": {
     "url": "http://100.110.48.21:8100",
-    "cleartext": true
+    "cleartext": true,
+    "originalUrl": "http://100.110.48.21:8100",
+    "originalCleartext": true
   }
 }
