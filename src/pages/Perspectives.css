@@ -16,6 +16,39 @@
 }
 
 
+.perspective-modal {
+    --height: 160px;
+
+}
+
+.build-input {
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 150px;
+    border-radius: 3px;
+    /*background: transparent;*/
+    /*color: var(--*/
+    border: 1px solid var(--decorative-light-alt);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
