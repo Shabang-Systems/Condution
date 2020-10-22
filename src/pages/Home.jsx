@@ -111,12 +111,12 @@ class Home extends Component {
                             <br />
                                 <IonContent id="menu-content" className={(()=>{
                                     if (!isPlatform("electron")) // if we are not running electron
-                                        return "menu-normal"; // normal windowing proceeds
+                                        return "normal"; // normal windowing proceeds
                                     else if (window.navigator.platform.includes("Mac")){ // macos
-                                        return "menu-darwin"; // frameless setup
+                                        return "darwin"; // frameless setup
                                     }
                                     else if (process.platform === "win32") // windows
-                                        return "menu-windows"; // non-frameless
+                                        return "windows"; // non-frameless
 
                                 })()}>
                                     {/* === Built Ins: upcoming + completed == */}
@@ -162,7 +162,26 @@ class Home extends Component {
                                                                                                             {/* Logout button */}
                                                                                                             <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                                                                                                                 </IonMenu>
-                                                                                                                    <IonContent id="main">
+                                                                                                                                                                                                                        <IonPage id="main" className={(()=>{
+                                                                                                                        if (!isPlatform("electron")) // if we are not running electron
+                                                                                                                            return "normal"; // normal windowing proceeds
+                                                                                                                        else if (window.navigator.platform.includes("Mac")){ // macos
+                                                                                                                            return "darwin"; // frameless setup
+                                                                                                                        }
+                                                                                                                        else if (process.platform === "win32") // windows
+                                                                                                                            return "windows"; // non-frameless
+
+                                                                                                                    })()}>
+                                                                                                                                                                                                                                    <div id="page-header" className={(()=>{
+                                                                                                                        if (!isPlatform("electron")) // if we are not running electron
+                                                                                                                            return "normal"; // normal windowing proceeds
+                                                                                                                        else if (window.navigator.platform.includes("Mac")){ // macos
+                                                                                                                            return "darwin"; // frameless setup
+                                                                                                                        }
+                                                                                                                        else if (process.platform === "win32") // windows
+                                                                                                                            return "windows"; // non-frameless
+
+                                                                                                                    })()}></div>
                                                                                                                         {/* The actual page */}
                                                                                                                         <IonRouterOutlet>
                                                                                                                             {/* empty => /upcoming*/}
@@ -174,18 +193,18 @@ class Home extends Component {
                                                                                                                                         {/* upcoming renders upcoming */}
                                                                                                                                         <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
-                                                                                                                                            {/* completed renders completed */}
-                                                                                                                                            <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                                                                                                                        {/* completed renders completed */}
+                                                                                                                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
-                                                                                                                                                {/* perspective renders perspectives */}
-                                                                                                                                                <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
+                                                                                                                                        {/* perspective renders perspectives */}
+                                                                                                                                        <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
                                                                                                                                                     {/* TODO projects */}
-                                                                                                                                                    </Switch>
-                                                                                                                                                        </IonRouterOutlet>
-                                                                                                                                                            </IonContent>
-                                                                                                                                                                </IonSplitPane>
-                                                                                                                                                                    </IonContent>
-                                                                                                                                                                        </Router>
+                                                                                                                                    </Switch>
+                                                                                                                                </IonRouterOutlet>
+                                                                                                                            </IonPage>
+                                                                                                                        </IonSplitPane>
+                                                                                                                </IonContent>
+                                                                                                            </Router>
     </IonPage>
   );
     }

@@ -76,9 +76,25 @@ ion-icon {
     margin-right: 5px;
 }
 
-#menu-content.menu-darwin {
+#menu-content.darwin {
     --padding-top: 15px;
 }
+
+#main.darwin {
+    --padding-top: 15px !important;
+}
+
+#page-header.darwin {
+    height: 30px;
+    -webkit-app-region: drag;
+    position: fixed;
+}
+
+#page-header.normal {
+    display: none;
+}
+
+
 
 
 
