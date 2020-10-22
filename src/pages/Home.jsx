@@ -52,7 +52,6 @@ class Home extends Component {
             perspectives:[], // list of perspectives
             itemSelected:{item:"upcoming", id:undefined} // so what did we actually select
         };
-
         // AutoBind!
         autoBind(this);
     }
@@ -96,7 +95,7 @@ class Home extends Component {
 
 
     render() {
-        const Router = isPlatform("electron") ? IonReactHashRouter : IonReactHashRouter; // Router workaround for electron
+        const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
     return (
     <IonPage>
         {/* The central router that controls the routing of views */}
@@ -110,7 +109,16 @@ class Home extends Component {
                         {/* The left: menu! */}
                         <IonMenu id="main-menu" contentId="main">
                             <br />
-                                <IonContent>
+                                <IonContent id="menu-content" className={(()=>{
+                                    if (!isPlatform("electron")) // if we are not running electron
+                                        return "menu-normal"; // normal windowing proceeds
+                                    else if (window.navigator.platform.includes("Mac")){ // macos
+                                        return "menu-darwin"; // frameless setup
+                                    }
+                                    else if (process.platform === "win32") // windows
+                                        return "menu-windows"; // non-frameless
+
+                                })()}>
                                     {/* === Built Ins: upcoming + completed == */}
                                     {/* Upcoming button + link */}
                                     <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}> {/* Link to trigger router */}

@@ -35,7 +35,6 @@ class Upcoming extends Component { // define the component
     }
 
     async refresh() {
-	console.log("datapack: ", this.props.datapack)
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
         let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail) // get inbox and due soon 
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags

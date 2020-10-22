@@ -67,7 +67,6 @@ a {
 }
 
 
-
 .menu-item-selected {
     background: var(--menu-accent-background);
 }
@@ -76,5 +75,10 @@ ion-icon {
     transform: translateY(2.5px);
     margin-right: 5px;
 }
+
+#menu-content.menu-darwin {
+    --padding-top: 15px;
+}
+
 
 
