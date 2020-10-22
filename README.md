@@ -52,7 +52,7 @@ Begin by cloning the project at [https://github.com/Shabang-Systems/Condution](h
 
 The default branch should be the main development branch, and the branch `master` is the currently released version.
 
-**This package has ubmodules! When you clone, make sure to clone submodules along with it by either `git clone --recursive` or, after you clone, `git submodule init` then `git submodule update`.**
+**This package has submodules! When you clone, make sure to clone submodules along with it by either `git clone --recursive` or, after you clone, `git submodule init` then `git submodule update`.**
 
 ### Firebase Connection
 
