@@ -2,7 +2,10 @@
   "name": "Condution",
   "version": "1.0.0",
   "private": true,
+  "main": "main.js",
+  "homepage": "./",
   "dependencies": {
+    "@capacitor-community/electron": "^1.2.3",
     "@capacitor/core": "2.4.1",
     "@capacitor/ios": "^2.4.1",
     "@ionic/react": "^5.0.7",
@@ -20,6 +23,7 @@
     "bootstrap": "^4.5.2",
     "chrono-node": "^2.1.8",
     "date-fns-timezone": "^0.1.4",
+    "electron-updater": "^4.3.5",
     "firebase": "^7.23.0",
     "ionicons": "^5.0.0",
     "jquery": "^3.5.1",
@@ -37,6 +41,7 @@
     "typescript": "3.8.3"
   },
   "scripts": {
+    "electron:run": "electron .",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -58,7 +63,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "2.4.1"
+    "@capacitor/cli": "2.4.1",
+    "electron": "^10.1.4"
   },
   "description": "Tasks? Done. That was easy."
 }
