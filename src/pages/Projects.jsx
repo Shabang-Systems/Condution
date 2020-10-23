@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import './Upcoming.css';
 import './Pages.css';
 
+import ReactTooltip from 'react-tooltip';
+
 import Task from './Components/Task';
 
 import Datebar from './Components/Datebar';
@@ -63,8 +65,6 @@ class Projects extends Component { // define the component
         projectDB.map(proj=>buildSelectString(proj));
 
         this.updatePrefix = this.random();
-
-
         this.setState({possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
     }
 
@@ -98,23 +98,60 @@ class Projects extends Component { // define the component
                         return "windows"; // non-frameless
 
                 })()}>
-                    <div className="header-container">
+
+                    <div className="header-container" >
                         <div style={{display: "inline-block"}}>
-                            <IonMenuToggle>
-                                <i class="fas fa-bars" 
-                                    style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
-                            </IonMenuToggle> 
-                            <h1 className="page-title">
-                                <i style={{paddingRight: 10}} 
-                                    className="fas fa-check-circle">
-                                </i>
-                                Completed
-                            </h1> 
+                            <div> 
+                                <IonMenuToggle>
+                                    <i className="fas fa-bars" 
+                                        style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+                                </IonMenuToggle> 
+                                <h1 className="page-title">
+                                    <i style={{paddingRight: 10}} 
+                                        className="fas fa-tasks">
+                                    </i>
+                                    <input className="editable-title" 
+                                        onChange={(e)=> {e.persist(); this.updateName(e)}}
+                                        value={this.state.perspectiveName} // TODO: jack this is hecka hacky
+                                    />
+                                </h1> 
+                                <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+
+                                <div className="greeting-container" style={{marginLeft: 5, marginTop: 7}}>
+                                    <a 
+                                        onClick={()=>console.log("HUX!")} 
+                                        data-tip="LOCALIZE: Sequencial/Paralellel"
+                                        className="perspective-icon" 
+                                        style={{borderColor: "var(--task-checkbox-feature-alt)", 
+                                            cursor: "pointer", marginLeft: 5}}>
+                                        <i className="fas fa-arrows-alt-h"
+                                            style={{margin: 3, color: "var(--task-textbox)", 
+                                                fontSize: 13, transform: "translate(0.5px, -1px)"}}>
+                                        </i>
+                                    </a>
+                                    <a 
+                                        onClick={()=>console.log("HUX!")} 
+                                        data-tip="LOCALIZE: Delete"
+                                        className="perspective-icon" 
+                                        style={{borderColor: "var(--task-checkbox-feature-alt)", 
+                                            cursor: "pointer", marginLeft: 5}}>
+                                        <i className="fas fa-trash"
+                                            style={{margin: 3, color: "var(--task-textbox)", 
+                                                fontSize: 10, transform: "translate(2px, -2px)"}}>
+                                        </i>
+                                    </a>
+
+                                </div> 
+                            </div>
                         </div>
                     </div>
 
-                    THIS!
+                    <div style={{marginLeft: 10, marginRight: 10}}>
+
+                        by pressing down a special key // it plays a little melody
+                    </div>
                 </div>
+
             </IonPage>
         )
     }
