@@ -24,6 +24,7 @@ import '@ionic/react/css/display.css';
 import './themefiles/condutiontheme-default.css';
 import './themefiles/condutiontheme-default-dark.css';
 import './themefiles/condutiontheme-default-light.css';
+import './themefiles/condutiontheme-micah-ocean.css';
 
 /* Font awesome */
 import './static/fa/scripts/all.min.css';
@@ -90,6 +91,11 @@ class App extends Component {
         this.state = {authMode: "loader", uid: ""};
         
         // We also set the theme based on the user's media query
+
+        $("body").removeClass();
+        $("body").addClass("condutiontheme-micah-ocean");
+
+        /* TODO: Uncomment before merge
         if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-dark");
@@ -98,7 +104,10 @@ class App extends Component {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-light");
         }
-        
+        */
+
+
+
         // And AutoBind any and all functions
         autoBind(this);
     }
