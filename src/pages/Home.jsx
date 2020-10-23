@@ -15,6 +15,7 @@ import React, { Component } from 'react';
 import Upcoming from './Upcoming';
 import Completed from './Completed';
 import Perspectives from './Perspectives';
+import Projects from './Projects';
 
 // Our very own CSS
 import './Home.css';
@@ -186,6 +187,9 @@ class Home extends Component {
 
                                                     {/* perspective renders perspectives */}
                                                     <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
+
+                                                    {/* project renders perspectives */}
+                                                    <Route path="/projects/:id" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
                                                     {/* TODO projects */}
                                                 </Switch>
                                             </IonRouterOutlet>
