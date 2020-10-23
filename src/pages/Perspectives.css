@@ -21,34 +21,42 @@
 
 }
 
+.build-input-edit {
+    font-size: 15px;
+    font-weight: 589;
+    color: var(--content-normal-alt);
+    color: var();
+    outline: 0;
+    background: transparent;
+    border: 0px solid red;
+    transition: background 0.3s;
+    padding: 5px;
+    border-radius: 3px;
+    width: 100%;
+
+}
+
+
+.build-input-edit:hover {
+    background: var(--menu-semiaccent-background);
+}
+
+.build-input-edit:focus {
+    background: var(--background-feature);
+}
+
+
 .build-input {
     margin-left: 10px;
     margin-top: 10px;
     margin-right: 150px;
     border-radius: 3px;
-    /*background: transparent;*/
-    /*color: var(--*/
+    background: transparent;
+    /*[>color: var(--<]*/
+
     border: 1px solid var(--decorative-light-alt);
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

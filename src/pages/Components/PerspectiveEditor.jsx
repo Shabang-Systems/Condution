@@ -4,7 +4,6 @@ import { Dropdown } from 'react-bootstrap';
 import React, { Component } from 'react';
 import './Repeat.css';
 import '../Perspectives.css';
-//import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
@@ -60,7 +59,7 @@ class PerspectiveEdit extends Component {
 
                     </div>
 		    <div className="build-input">
-			<input className="editable-title"></input>
+			<input className="build-input-edit"></input>
 		    </div>
                 </div>
             </IonModal>
