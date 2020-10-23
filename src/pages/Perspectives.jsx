@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Perspectives.css'
@@ -167,8 +167,27 @@ class Perspectives extends Component {
 		    updateName={this.updateName}
 		    
 		/>
+                <div className={"page-invis-drag " + (()=>{
+                    if (!isPlatform("electron")) // if we are not running electron
+                        return "normal"; // normal windowing proceeds
+                    else if (window.navigator.platform.includes("Mac")){ // macos
+                        return "darwin"; // frameless setup
+                    }
+                    else if (process.platform === "win32") // windows
+                        return "windows"; // non-frameless
 
-                <div className="page-content">
+                })()}>&nbsp;</div>
+                <div className={"page-content " + (()=>{
+                    if (!isPlatform("electron")) // if we are not running electron
+                        return "normal"; // normal windowing proceeds
+                   else if (window.navigator.platform.includes("Mac")){ // macos
+                        return "darwin"; // frameless setup
+                    }
+                    else if (process.platform === "win32") // windows
+                        return "windows"; // non-frameless
+
+                })()}>
+ 
                     <div className="header-container" >
                         <div style={{display: "inline-block"}}>
 			    <div> 

@@ -1,5 +1,5 @@
 // IMPORTS
-import { IonContent, IonPage, IonMenuToggle } from '@ionic/react'; 
+import { IonContent, IonPage, IonMenuToggle, isPlatform } from '@ionic/react'; 
 import React, { Component, useEffect } from 'react';
 import './Completed.css';
 import './Pages.css';
@@ -122,7 +122,27 @@ class Completed extends Component {
         return (
             <IonPage>
                 <div style={{overflow: "scroll"}}>
-                    <div className="page-content">
+                <div className={"page-invis-drag " + (()=>{
+                    if (!isPlatform("electron")) // if we are not running electron
+                        return "normal"; // normal windowing proceeds
+                    else if (window.navigator.platform.includes("Mac")){ // macos
+                        return "darwin"; // frameless setup
+                    }
+                    else if (process.platform === "win32") // windows
+                        return "windows"; // non-frameless
+
+                })()}>&nbsp;</div>
+                <div className={"page-content " + (()=>{
+                    if (!isPlatform("electron")) // if we are not running electron
+                        return "normal"; // normal windowing proceeds
+                    else if (window.navigator.platform.includes("Mac")){ // macos
+                        return "darwin"; // frameless setup
+                    }
+                    else if (process.platform === "win32") // windows
+                        return "windows"; // non-frameless
+
+                })()}>
+
                         <div className="header-container">
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle>
