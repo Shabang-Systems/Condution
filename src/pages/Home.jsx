@@ -68,26 +68,26 @@ class Home extends Component {
             this.setState({itemSelected:{item:hash[1], id:hash[2]}});
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
-	/*
-	 * TODO TODO TODO
-	 * very very very bad practice below
-	 * shield your eyes
-	 *
-	 * Basically, database warms up slower
-	 * than does this function gets called. so
-	 * we wait 500ms 
-	 *
-	 */
-	const refreshTimer = setTimeout(() => {this.refresh()}, 500);
+        /*
+         * TODO TODO TODO
+         * very very very bad practice below
+         * shield your eyes
+         *
+         * Basically, database warms up slower
+         * than does this function gets called. so
+         * we wait 500ms 
+         *
+         */
+        const refreshTimer = setTimeout(() => {this.refresh()}, 500);
     }
 
     async refresh() {
-	// Load the top level projects and perspectives
-	// to set into the state and to add to the menu
-	let tlp = await this.props.engine.db.getTopLevelProjects(this.props.uid);
-	let psp = await this.props.engine.db.getPerspectives(this.props.uid);
+        // Load the top level projects and perspectives
+        // to set into the state and to add to the menu
+        let tlp = await this.props.engine.db.getTopLevelProjects(this.props.uid);
+        let psp = await this.props.engine.db.getPerspectives(this.props.uid);
 
-	this.setState({projects: tlp[2], perspectives:psp[2]});
+        this.setState({projects: tlp[2], perspectives:psp[2]});
 
     }
 
@@ -96,19 +96,19 @@ class Home extends Component {
 
     render() {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
-    return (
-    <IonPage>
-        {/* The central router that controls the routing of views */}
-        <Router>
-            {/* OoIp */}
-            <ReactTooltip />
-                {/* App container */}
-                <IonContent noBounce>
-                    {/* Menu pane to control mobile view splitting */}
-                    <IonSplitPane id="main-split" contentId="main" when="md">
-                        {/* The left: menu! */}
-                        <IonMenu id="main-menu" contentId="main">
-                            <br />
+        return (
+            <IonPage>
+                {/* The central router that controls the routing of views */}
+                <Router>
+                    {/* OoIp */}
+                    <ReactTooltip />
+                    {/* App container */}
+                    <IonContent noBounce>
+                        {/* Menu pane to control mobile view splitting */}
+                        <IonSplitPane id="main-split" contentId="main" when="md">
+                            {/* The left: menu! */}
+                            <IonMenu id="main-menu" contentId="main">
+                                <br />
                                 <IonContent id="menu-content" className={(()=>{
                                     if (!isPlatform("electron")) // if we are not running electron
                                         return "normal"; // normal windowing proceeds
@@ -124,70 +124,70 @@ class Home extends Component {
                                     <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}> {/* Link to trigger router */}
                                         {/* Upcoming button */}
                                         <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div>
-                                            </Link>
+                                    </Link>
 
-                                                {/* Completed button + link */}
-                                                <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}> {/* Link to trigger router */}
-                                                    {/* Completed button */}
-                                                    <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div>
-                                                        </Link>
+                                    {/* Completed button + link */}
+                                    <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}> {/* Link to trigger router */}
+                                        {/* Completed button */}
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div>
+                                    </Link>
 
-                                                            {/* === Perspectives == */}
-                                                            <div className="menu-sublabel menu-decoration">Perspectives</div>
+                                    {/* === Perspectives == */}
+                                    <div className="menu-sublabel menu-decoration">Perspectives</div>
 
-                                                                {/* === Perspective button + link == */}
+                                    {/* === Perspective button + link == */}
                                                                 {this.state.perspectives.map((psp) => {
                                                                     return (
                                                                         <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}> {/* Link to trigger router */}
                                                                             {/* Perspective button */}
                                                                             <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
-                                                                                </Link>
+                                                                        </Link>
                                                                     )
                                                                 })}
 
 
-                                                                                    {/* === Projects == */}
-                                                                                    <div className="menu-sublabel menu-decoration">Projects</div>
-                                                                                        {/* === Project Contents == */}
-                                                                                        {this.state.projects.map((proj) => {
-                                                                                            return (
-                                                                                                <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}> {/* Link to trigger router */}
-                                                                                                    {/* Perspective button */}
-                                                                                                    <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link> 
-                                                                                            )                            
-                                                                                        })}
+                                    {/* === Projects == */}
+                                    <div className="menu-sublabel menu-decoration">Projects</div>
+                                    {/* === Project Contents == */}
+                                    {this.state.projects.map((proj) => {
+                                        return (
+                                            <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}> {/* Link to trigger router */}
+                                                {/* Perspective button */}
+                                                <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link> 
+                                        )                            
+                                    })}
 
-                                                                                                        </IonContent>
+                                </IonContent>
 
-                                                                                                            {/* Logout button */}
-                                                                                                            <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
-                                                                                                                </IonMenu>
-                                                                                                                                                                                                                        <IonPage id="main">
-                                                                                                                        {/* The actual page */}
-                                                                                                                        <IonRouterOutlet>
-                                                                                                                            {/* empty => /upcoming*/}
-                                                                                                                            <Route render={() => <Redirect to="/upcoming"/>}/>
-                                                                                                                                {/* / => /upcoming */}
-                                                                                                                                <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
-                                                                                                                                    {/* and the perspective switch */}
-                                                                                                                                    <Switch>
-                                                                                                                                        {/* upcoming renders upcoming */}
-                                                                                                                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                {/* Logout button */}
+                                <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
+                            </IonMenu>
+                            <IonPage id="main">
+                                {/* The actual page */}
+                                <IonRouterOutlet>
+                                    {/* empty => /upcoming*/}
+                                    <Route render={() => <Redirect to="/upcoming"/>}/>
+                                    {/* / => /upcoming */}
+                                    <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
+                                    {/* and the perspective switch */}
+                                    <Switch>
+                                        {/* upcoming renders upcoming */}
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
-                                                                                                                                        {/* completed renders completed */}
-                                                                                                                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        {/* completed renders completed */}
+                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
-                                                                                                                                        {/* perspective renders perspectives */}
-                                                                                                                                        <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
-                                                                                                                                                    {/* TODO projects */}
-                                                                                                                                    </Switch>
-                                                                                                                                </IonRouterOutlet>
-                                                                                                                            </IonPage>
-                                                                                                                        </IonSplitPane>
-                                                                                                                </IonContent>
-                                                                                                            </Router>
-    </IonPage>
-  );
+                                        {/* perspective renders perspectives */}
+                                        <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
+                                        {/* TODO projects */}
+                                    </Switch>
+                                </IonRouterOutlet>
+                            </IonPage>
+                        </IonSplitPane>
+                    </IonContent>
+                </Router>
+            </IonPage>
+        );
     }
 };
 
