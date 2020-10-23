@@ -4,60 +4,63 @@
     /* These two colors should lightly contrast 
      * think: a hover over the background should
      * be colored --background-feature */
-    --background: red;
-    --ion-background-color: red;
-    --background-feature: #e5e7ea;
-    --background-feature-overlay: rgba(229,231,234,0.7);
+    --background: #035A6D;
+    --ion-background-color:#01434F;
+    --background-feature: #060607;
+    --background-feature-overlay: rgba(230, 59, 102, 0.7);
 
     /* Content */
-    /* These are the mail colors. Make them mainly
+    /* These are the main colors. Make them mainly
      * to be bold and clear. Also make them kind of related 
      * to one main color */
-    --content-normal: #eaeaea;
-    --content-normal-alt: #434d5f;
-    --content-normal-accent: #1a283d;
+    --content-normal: #6228e9;
+    --content-normal-alt: #9dcbce;
+    --content-normal-accent: #13aacc;
 
     /* Decorative */
-    --decorative-light: #cecece;
-    --decorative-light-alt: #838384;
-    --decorative-light-accent: #374559;
+    --decorative-light: #e01a1a;
+    --decorative-light-alt: #5c942e; /*'add description' text*/
+    --decorative-light-accent: #c7c4d6;
 
     /* Menu colors */
     /* These colors should all in different
      * degrees contrast the --menu-background
      * think: a selected item over the background */
-    --menu-background: #eaebed;
-    --menu-semiaccent-background: #e5e7ea;
-    --menu-accent-background: #e1e2e5;
-    --menu-text: #414c5e;
+    --menu-background: #035A6D;
+    --menu-semiaccent-background: #035A6D;
+    --menu-accent-background: #b2e0bc;
+    --menu-text: #93a7c2;
     --menu-accent: #323c4f;
     --menu-label: #1a283d;
-    --menu-action: #90939a;
+    --menu-action: #a0c0eb;
 
     /* Task colors */
     --task: #90939a;
-    --task-icon: #777777;
-    --task-flagged: #ed9512;
-    --task-flaggedRing: #f9c06b;
-    --task-feature: #efefef;
+    --task-icon: #b3c9b2;
+    --task-flagged: #79bed3;
+    --task-flaggedRing: #79bed3;
+    --task-feature: #313749;
     --task-feature-alt: #dbdbdd;
-    --task-textbox: #434d5f;
-    --task-textbox-background: #e8e8e8;
-    --task-clickbox-background: #e8e8e8;
+    --task-textbox: #7ed4a2;
+    --task-textbox-background: #79bed3;
+    --task-clickbox-background: #2a4a61;
     --task-clickbox-accent-background: #d1d1d1;
     --task-clickbox: #2d2d2d;
-    --task-checkbox: #ccc;
-    --task-checkbox-feature: #e0e0e0;
-    --task-checkbox-feature-alt: #c5d0ef;
-    --task-checkbox-ds: #f8974a;
+    --task-checkbox: rgb(111, 214, 192);
+    --task-checkbox-feature: #3fade0;
+    --task-checkbox-feature-alt: #4366c7;
+
+    --task-checkbox-ds: #77c997;
     --task-checkbox-ds-feature: #f5c09d;
-    --task-checkbox-ds-background: #f4eae4;
-    --task-checkbox-od: #c04f40;
-    --task-checkbox-od-feature: #ed938c;
-    --task-checkbox-od-background: #f7d7d5;
-    --task-checkmark: #2b3749;
-    --task-checkmark-ds: #f4721a;
-    --task-checkmark-od: #d32f19;
+    --task-checkbox-ds-background: #3d19dd;
+    
+    --task-checkbox-od: #e9a6f1;
+    --task-checkbox-od-feature: #ce99d8;
+    --task-checkbox-od-background: #6c4c70;
+    
+    --task-checkmark: #241774;
+    --task-checkmark-ds: #d0ff00;
+    --task-checkmark-od: #c9cca3;
 
     /* Datepicker colors */
     --task-datepicker-elems: grey;
