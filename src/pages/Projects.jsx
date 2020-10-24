@@ -17,6 +17,7 @@ class Projects extends Component { // define the component
         super(props);
 
         this.state = {
+            name: '', // project name
             possibleProjects:{}, // what are the possible projects? 
             possibleTags:{},  // what are the possible tags?
             possibleProjectsRev:{}, 
@@ -73,7 +74,7 @@ class Projects extends Component { // define the component
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, false));
-        this.setState({possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject});
+        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject});
     }
 
     componentDidMount() {
@@ -120,7 +121,7 @@ class Projects extends Component { // define the component
                                     </i>
                                     <input className="editable-title" 
                                         onChange={(e)=> {e.persist(); this.updateName(e)}}
-                                        value={this.state.perspectiveName} // TODO: jack this is hecka hacky
+                                        value={this.state.name} // TODO: jack this is hecka hacky
                                     />
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
@@ -134,7 +135,7 @@ class Projects extends Component { // define the component
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className="fas fa-arrows-alt-h"
                                             style={{margin: 3, color: "var(--task-textbox)", 
-                                                fontSize: 13, transform: "translate(0.5px, -1px)"}}>
+                                                fontSize: 13, transform: "translate(0.25px, -1px)"}}>
                                         </i>
                                     </a>
                                     <a 
