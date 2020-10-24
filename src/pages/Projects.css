@@ -6,9 +6,13 @@
     /* margin: 2px 8px; */
     color: var(--task-textbox) !important;
     width: 100%;
+    height: 38px;
     display: block;
     margin: 2px 8px;
     padding: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .subproject:hover {
