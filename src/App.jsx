@@ -98,6 +98,9 @@ class App extends Component {
             $("body").removeClass();
             $("body").addClass("condutiontheme-default-light");
         }
+
+        // Make ourselves a nice gruntman
+        this.gruntman = new Gruntman(Engine);
         
         // And AutoBind any and all functions
         autoBind(this);
@@ -122,7 +125,7 @@ class App extends Component {
                     // Check if we actually has a user
                     firebase.auth().onAuthStateChanged(function(user) {
                         // If we have one, shift the engine into firebase mode
-                        Engine.use("firebase");
+                        Engine.use("firebase", view.gruntman.getCurrentRefresher);
                         // Load the authenticated state, set authmode as "firebase" and supply the UID
                         view.setState({authMode: "firebase", uid: user.uid});
                     })
@@ -130,7 +133,7 @@ class App extends Component {
                 // If its json
                 case "json":
                     // Shift the engine into json mode
-                    Engine.use("json");
+                    Engine.use("json", view.gruntman.getCurrentRefresher);
                     // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
@@ -148,7 +151,7 @@ class App extends Component {
             // operation mode login
             case "login":
                 // shift the engine into whatever mode we just logged into
-                Engine.use(mode.service);
+                Engine.use(mode.service, this.gruntman.getCurrentRefresher);
                 // write the login state into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 // get the UID
@@ -170,7 +173,7 @@ class App extends Component {
             // operation mode create
             case "create":
                 // setthe engine as whatever service
-                Engine.use(mode.service);
+                Engine.use(mode.service, this.gruntman.getCurrentRefresher);
                 // TODO: do onboarding
                 // Here
                 // TODO: be done with onboarding
@@ -193,8 +196,6 @@ class App extends Component {
     render() {
         // Check for onboarding here
         // then continue
-        // Get a gruntman instance
-        let grunt = new Gruntman(Engine);
         // Which authmode?
         switch (this.state.authMode) {
             // if we are at the first-paint load mode, do this:
@@ -206,7 +207,7 @@ class App extends Component {
             // if we did auth, load it up and get the party going
             case "firebase":
             case "json":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={grunt}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman}/>;
             // wut esta this auth mode? load the loader with an error
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);

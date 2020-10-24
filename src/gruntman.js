@@ -1,5 +1,7 @@
 const { parseFromTimeZone } = require('date-fns-timezone')
 
+/* AutoBind */
+const autoBind = require('auto-bind/react');
 
 class Gruntman {
 
@@ -278,6 +280,9 @@ class Gruntman {
         } // util function onChange fixer-upper
         this.updateLock = false;
         this.updateInterval = undefined;
+         
+        // And AutoBind any and all functions
+        autoBind(this);
     }
 
     lockUpdates() {
@@ -290,6 +295,10 @@ class Gruntman {
     unlockUpdates(interval=500) {
         this.updateLock = false;
         this.updateInterval = setTimeout(this.refresher, interval);
+    }
+
+    getCurrentRefresher() {
+        return this.refresher;
     }
 
     /*
