@@ -125,7 +125,7 @@ class App extends Component {
                     // Check if we actually has a user
                     firebase.auth().onAuthStateChanged(function(user) {
                         // If we have one, shift the engine into firebase mode
-                        Engine.use("firebase", view.gruntman.getCurrentRefresher);
+                        Engine.use("firebase", view.gruntman.requestRefresh);
                         // Load the authenticated state, set authmode as "firebase" and supply the UID
                         view.setState({authMode: "firebase", uid: user.uid});
                     })
@@ -133,7 +133,7 @@ class App extends Component {
                 // If its json
                 case "json":
                     // Shift the engine into json mode
-                    Engine.use("json", view.gruntman.getCurrentRefresher);
+                    Engine.use("json", view.gruntman.requestRefresh);
                     // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
@@ -151,7 +151,7 @@ class App extends Component {
             // operation mode login
             case "login":
                 // shift the engine into whatever mode we just logged into
-                Engine.use(mode.service, this.gruntman.getCurrentRefresher);
+                Engine.use(mode.service, this.gruntman.requestRefresh);
                 // write the login state into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 // get the UID
@@ -173,7 +173,7 @@ class App extends Component {
             // operation mode create
             case "create":
                 // setthe engine as whatever service
-                Engine.use(mode.service, this.gruntman.getCurrentRefresher);
+                Engine.use(mode.service, this.gruntman.requestRefresh);
                 // TODO: do onboarding
                 // Here
                 // TODO: be done with onboarding

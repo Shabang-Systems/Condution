@@ -27,6 +27,11 @@ class Gruntman {
     constructor(engine) {
         this.e = engine;
         this.refresher = ()=>{};
+        this.callbackRefresherReleased = true; // prevent live callback merge conflicts
+        this.conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
+        this.releaseTimeout = undefined;
+
+
         this.doers = {
             tag: {
                 create: async function (options) {
@@ -292,23 +297,27 @@ class Gruntman {
         this.updateInterval = undefined;
     }
 
-    unlockUpdates(interval=500) {
+    unlockUpdates(interval=580) {
         this.updateLock = false;
         this.updateInterval = setTimeout(this.refresher, interval);
     }
 
-    getCurrentRefresher() {
-        if (!this.updateLock)
-            return this.refresher;
-        else
-            return ()=>{};
+    requestRefresh() {
+        if (!this.updateLock && this.callbackRefresherReleased)
+            this.refresher();
     }
 
     /*
      * @param refresher: refresher function to refresh what you registered
      */
 
-    registerRefresher = (r) => this.refresher = r;
+    registerRefresher(r) { 
+        this.refresher = r;
+        // lock updates every time a new page loads to prevent MeRGE Conflicts
+        if(this.releaseTimeout) clearTimeout(this.releaseTimeout);
+        this.callbackRefresherReleased= false;
+        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution); 
+    }
 
     registerScheduler(callback, identifier, wait=500) {
         if (this.schedulers[identifier])
@@ -322,6 +331,12 @@ class Gruntman {
          * @param options => options
          *
          */
+
+        // Lock updates every time cacheRef is called to prevent mErGE ConFLIcTS 
+        if(this.releaseTimeout) clearTimeout(this.releaseTimeout);
+        this.callbackRefresherReleased= false;
+        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution); 
+
         let actionID = this.random();
 
         let nodes = actionName.split(".");

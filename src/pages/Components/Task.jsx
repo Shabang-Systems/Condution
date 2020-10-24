@@ -263,7 +263,7 @@ class Task extends Component {
         if (prevState.expanded !== this.state.expanded && this.state.expanded === true) // if we opened a task for updating
             this.props.gruntman.lockUpdates(); // tell gruntman to chill
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) // if we closed a task
-            this.props.gruntman.unlockUpdates(650); // tell gruntman to... grunt!
+            this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
 
     }
 
