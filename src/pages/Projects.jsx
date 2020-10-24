@@ -1,7 +1,7 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
-import './Upcoming.css';
+import './Projects.css';
 import './Pages.css';
 
 import ReactTooltip from 'react-tooltip';
@@ -205,7 +205,9 @@ class Projects extends Component { // define the component
                                     />
                                 )
                             else if (item.type === "project")
-                                return (<div>{this.state.possibleProjects[item.content.id]}</div>)
+                                return (
+                                    <a className="subproject"><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></a>
+                                )
                         })}
                     </div>
                 </div>
