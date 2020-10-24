@@ -24,7 +24,8 @@ class Projects extends Component { // define the component
             availability: [],  // whats available
             projectSelects:[], 
             tagSelects: [], 
-            projectDB: {}
+            projectDB: {},
+            currentProject: {children:[]}
         };
 
         this.updatePrefix = this.random();
@@ -32,6 +33,13 @@ class Projects extends Component { // define the component
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
         autoBind(this);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        // flush styles
+        if (prevProps.id !== this.props.id) // if we updated the defer date
+            this.refresh(); // switching between perspectives are a prop update and not a rerender
+                            // so we want to refresh the perspective that's rendered
     }
 
     async refresh() {
@@ -63,9 +71,9 @@ class Projects extends Component { // define the component
                         buildSelectString(e.content, level+":: ");
         };
         projectDB.map(proj=>buildSelectString(proj));
-
         this.updatePrefix = this.random();
-        this.setState({possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
+        let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, false));
+        this.setState({possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject});
     }
 
     componentDidMount() {
@@ -147,8 +155,27 @@ class Projects extends Component { // define the component
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10}}>
-
-                        by pressing down a special key // it plays a little melody
+                        {this.state.currentProject.children.map(item => {
+                            if (item.type === "task")
+                                return (
+                                    <Task 
+                                        tid={item.content}
+                                        key={item.content+"-"+this.updatePrefix} 
+                                        uid={this.props.uid} 
+                                        engine={this.props.engine} 
+                                        gruntman={this.props.gruntman} 
+                                        availability={this.state.availability[item.content]} 
+                                        datapack={[
+                                            this.state.tagSelects, 
+                                            this.state.projectSelects, 
+                                            this.state.possibleProjects, 
+                                            this.state.possibleProjectsRev, 
+                                            this.state.possibleTags, 
+                                            this.state.possibleTagsRev
+                                        ]}
+                                    />
+                                )
+                        })}
                     </div>
                 </div>
 
