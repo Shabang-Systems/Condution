@@ -43,7 +43,7 @@ class PerspectiveEdit extends Component {
 
                 <div>
                     {/* Header */}
-                    <div className="repeat-header">
+                    <div className="perspective-header">
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%"}}>
 			    <b className="bold-prefix" >Let&#39;s build &nbsp;</b> 

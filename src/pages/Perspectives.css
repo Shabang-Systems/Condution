@@ -17,9 +17,23 @@
 
 
 .perspective-modal {
-    --height: 160px;
+    --height: 140px;
+    --width: 460px;
 
 }
+
+
+
+.perspective-header {
+    background-color: var(--background-feature);
+    padding: 12px;
+    color: var(--decorative-light-alt);
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+
+}
+
 
 .build-input-edit {
     font-size: 15px;
