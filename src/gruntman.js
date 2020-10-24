@@ -223,6 +223,17 @@ class Gruntman {
                     // return what we need to undo
                     return {projectName, uid: options.uid}
                 },
+                update__pstate: async function (options) { // update the perspective name!
+                    let currentProject = await engine.db.getProjectStructure(options.uid, options.id, false); // get current project info
+                    // get all possible perspectives
+                    let is_sequential = currentProject;
+                    // get the one we want based on page id
+
+                    // modify the perspective
+                    await engine.db.modifyProject(options.uid, options.id, {is_sequential: options.is_sequential});
+                    // return what we need to undo
+                    return {is_sequential, uid: options.uid}
+                },
                 associate:  async function (options) {
                     //await engine.db.modifyTask(options.uid, options.tid, options.query)
                     await engine.db.associateTask(options.uid, options.tid, options.pid);

@@ -220,7 +220,7 @@ class Task extends Component {
                 this.setState({availability: false}); // tell 'em it's not avaliable
             else if (this.props.availability === true) //  otherwise, if this thing's avaliable
                 this.setState({availability: true}); // set it to be so!
-        else if (this.props.availability === false) // or if my props make me disabled
+        else if (!this.props.availability) // or if my props make me disabled
                 this.setState({availability: false}); // well then you gotta follow them props, no?
     }
 
