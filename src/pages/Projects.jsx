@@ -40,7 +40,7 @@ class Projects extends Component { // define the component
         // flush styles
         if (prevProps.id !== this.props.id) // if we updated the defer date
             this.refresh(); // switching between perspectives are a prop update and not a rerender
-                            // so we want to refresh the perspective that's rendered
+        // so we want to refresh the perspective that's rendered
     }
 
     async refresh() {
@@ -138,6 +138,7 @@ class Projects extends Component { // define the component
                                     <input className="editable-title" 
                                         onChange={(e)=> {e.persist(); this.updateName(e)}}
                                         value={this.state.name} // TODO: jack this is hecka hacky
+                                        style={{transform: "transformY(-2px)"}}
                                     />
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
