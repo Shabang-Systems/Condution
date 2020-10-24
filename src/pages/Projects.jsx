@@ -43,9 +43,7 @@ class Projects extends Component { // define the component
         // flush styles
         if (prevProps.id !== this.props.id) // if we updated the defer date
             this.refresh(); // switching between perspectives are a prop update and not a rerender
-        // so we want to refresh the perspective that's rendered
-        if (prevProps.id !== this.props.id) // if we updated the defer date
-            console.log(this.props.id);
+        // so we want to refresh the project that's rendered
     }
 
     async refresh() {
@@ -210,7 +208,7 @@ class Projects extends Component { // define the component
                                 )
                             else if (item.type === "project")
                                 return (
-                                    <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}} onClick={()=>{this.props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
+                                    <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}} onClick={()=>{this.props.paginate("projects", item.content.id);this.props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
                                 )
                         })}
                     </div>
