@@ -7,6 +7,7 @@ let storageType;
 let sqliteDB;
 let memoryDB;
 let firebaseDB, fsRef;
+let getCurrentRefresher;
 
 const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
 const { Device, Filesystem } = Plugins;
@@ -80,8 +81,9 @@ const initStorage = (payload, ...features) => {
     return readiness;
 };
 
-const useDb = (db) => {
+const useDb = (db, refrsherGenerator=()=>{return ()=>{}}) => {
     storageType = db;
+    getCurrentRefresher = refrsherGenerator; // generate fresh refresher
     return readiness;
 };
 
@@ -185,6 +187,7 @@ const [cRef, flush] = (() => {
                     error: console.trace,
                     next: (snap) => {
                         cache.set(TODOstring, snap);
+                        getCurrentRefresher()();
                     }
                 })
             );
