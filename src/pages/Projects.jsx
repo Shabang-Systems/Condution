@@ -83,6 +83,22 @@ class Projects extends Component { // define the component
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
+    updateName(e) {
+        if (e) {
+            this.props.gruntman.registerScheduler(() => { 
+                // Register a scheduler to deal with React's onChange
+                // check out the FANCYCHANGE in task.jsx
+                this.props.gruntman.do( // call a gruntman function
+                    "project.update__name", { 
+                        uid: this.props.uid, // pass it the things vvv
+                        id: this.props.id, 
+                        name: e.target.value
+                    }
+                ).then(this.props.menuRefresh) // call the homebar refresh
+            }, `project.this.${this.props.id}-update`) // give it a custom id
+            this.setState({name: e.target.value})
+        } else { console.log(e)}
+    } 
 
     render() {
         return (

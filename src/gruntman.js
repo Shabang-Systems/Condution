@@ -212,21 +212,27 @@ class Gruntman {
                 }
             },
             project: {
+                update__name: async function (options) { // update the perspective name!
+                    let possibleProjects = await engine.db.getProjectsandTags(options.uid);
+                    // get all possible perspectives
+                    let projectName = possibleProjects[0][0][options.id]
+                    // get the one we want based on page id
+
+                    // modify the perspective
+                    await engine.db.modifyProject(options.uid, options.id, {name: options.name});
+                    // return what we need to undo
+                    return {projectName, uid: options.uid}
+                },
                 associate:  async function (options) {
                     //await engine.db.modifyTask(options.uid, options.tid, options.query)
                     await engine.db.associateTask(options.uid, options.tid, options.pid);
-
-
-		    return {uid: options.uid, tid: options.tid};
+                    return {uid: options.uid, tid: options.tid};
                 },
                 dissociate:  async function (options) {
                     //await engine.db.modifyTask(options.uid, options.tid, options.query)
                     await engine.db.dissociateTask(options.uid, options.tid, options.pid);
-
-
-		    return {uid: options.uid, tid: options.tid};
+                    return {uid: options.uid, tid: options.tid};
                 }
-
             },
 	    perspective: {
 		update__name: async function (options) { // update the perspective name!
