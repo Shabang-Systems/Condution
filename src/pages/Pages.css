@@ -12,6 +12,7 @@
     padding-right: 15px;
     padding-top: 10px;
     margin: 10px;
+    transform: translateY(-0.5px);
     /*border: 1px solid red;*/
     /*width: 100%;*/ /* IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
 }

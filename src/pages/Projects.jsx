@@ -140,7 +140,7 @@ class Projects extends Component { // define the component
                                         if (this.state.parent !== "")
                                             return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.parent);this.props.history.push(`/projects/${this.state.parent}`)}} />
                                     })()}
-                                    <i style={{paddingRight: 10}} 
+                                    <i style={{paddingRight: 4}} 
                                         className="fas fa-tasks">
                                     </i>
                                     <input className="editable-title" 
