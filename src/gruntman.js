@@ -298,9 +298,9 @@ class Gruntman {
     }
 
     getCurrentRefresher() {
-        //if (!this.updateLock)
-            //return this.refresher;
-        //else
+        if (!this.updateLock)
+            return this.refresher;
+        else
             return ()=>{};
     }
 
