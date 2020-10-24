@@ -7,10 +7,7 @@ let storageType;
 let sqliteDB;
 let memoryDB;
 let firebaseDB, fsRef;
-let getCurrentRefresher;
-let refresherReleased = true; // prevent live callback merge conflicts
-let conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
-let releaseTimeout = undefined;
+let requestRefresh;
 
 const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
 const { Device, Filesystem } = Plugins;
@@ -84,9 +81,9 @@ const initStorage = (payload, ...features) => {
     return readiness;
 };
 
-const useDb = (db, refrsherGenerator=()=>{return ()=>{}}) => {
+const useDb = (db, refresher=()=>{}) => {
     storageType = db;
-    getCurrentRefresher = refrsherGenerator; // generate fresh refresher
+    requestRefresh = refresher; // generate fresh refresher
     return readiness;
 };
 
@@ -190,8 +187,7 @@ const [cRef, flush] = (() => {
                     error: console.trace,
                     next: (snap) => {
                         cache.set(TODOstring, snap);
-                        if (refresherReleased)
-                            getCurrentRefresher()();
+                        requestRefresh();
                     }
                 })
             );
@@ -451,10 +447,6 @@ const [cRef, flush] = (() => {
          */
         //console.log(getFirebaseRef(path));
         
-        // Lock updates every time cacheRef is called to prevent mErGE ConFLIcTS 
-        refresherReleased = false;
-        clearTimeout(releaseTimeout);
-        releaseTimeout = setTimeout(()=>{refresherReleased=true; releaseTimeout=undefined}, conflictResolution); 
         
         return Object.assign(
             getFirebaseRef(path),               //  default methods from firebase reference
