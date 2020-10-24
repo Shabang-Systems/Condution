@@ -25,4 +25,17 @@
     margin-right: 14px;
 }
 
+.backbutton {
+    margin-right: 3px;
+    transition: background-color 0.3s;
+    padding: 5px;
+    transform: translateX(-5px);
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.backbutton:hover {
+    background: var(--background-feature);
+}
+
 

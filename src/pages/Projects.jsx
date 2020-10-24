@@ -28,6 +28,7 @@ class Projects extends Component { // define the component
             projectSelects:[], 
             tagSelects: [], 
             projectDB: {},
+            parent: "",
             is_sequential: false,
             currentProject: {children:[]}
         };
@@ -77,7 +78,7 @@ class Projects extends Component { // define the component
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, false));
-        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential});
+        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj});
     }
 
     componentDidMount() {
@@ -135,6 +136,10 @@ class Projects extends Component { // define the component
                                         style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
+                                    {(()=> {
+                                        if (this.state.parent !== "")
+                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.parent);this.props.history.push(`/projects/${this.state.parent}`)}} />
+                                    })()}
                                     <i style={{paddingRight: 10}} 
                                         className="fas fa-tasks">
                                     </i>
@@ -145,7 +150,6 @@ class Projects extends Component { // define the component
                                     />
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
-
                                 <div className="greeting-container" style={{marginLeft: 5, marginTop: 7}}>
                                     <a 
                                         onClick={()=> {
