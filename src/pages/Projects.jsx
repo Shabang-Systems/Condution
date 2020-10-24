@@ -26,7 +26,8 @@ class Projects extends Component { // define the component
             projectSelects:[], 
             tagSelects: [], 
             projectDB: {},
-            currentProject: {children:[], is_sequential: false}
+            is_sequential: false,
+            currentProject: {children:[]}
         };
 
         this.updatePrefix = this.random();
@@ -74,8 +75,7 @@ class Projects extends Component { // define the component
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, false));
-        console.log(avail);
-        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject});
+        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential});
     }
 
     componentDidMount() {
@@ -147,22 +147,23 @@ class Projects extends Component { // define the component
                                 <div className="greeting-container" style={{marginLeft: 5, marginTop: 7}}>
                                     <a 
                                         onClick={()=> {
-                                            this.props.gruntman.do( // call a gruntman function
-                                                "project.update__pstate", { 
-                                                    uid: this.props.uid, // pass it the things vvv
-                                                    id: this.props.id, 
-                                                    is_sequential: !this.state.currentProject.is_sequential
-                                                }
-                                            );
-                                            this.refresh();
+                                            this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
+                                                this.props.gruntman.do( // call a gruntman function
+                                                    "project.update__pstate", { 
+                                                        uid: this.props.uid, // pass it the things vvv
+                                                        id: this.props.id, 
+                                                        is_sequential: this.state.is_sequential
+                                                    }
+                                                );
+                                            }); // change the icon
                                         }} 
                                         data-tip="LOCALIZE: Sequencial/Paralellel"
                                         className="perspective-icon" 
                                         style={{borderColor: "var(--task-checkbox-feature-alt)", 
                                             cursor: "pointer", marginLeft: 5}}>
-                                        <i className={this.state.currentProject.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
+                                        <i className={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
                                             style={{margin: 3, color: "var(--task-textbox)", 
-                                                fontSize: 13, transform: this.state.currentProject.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
+                                                fontSize: 13, transform: this.state.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
                                         </i>
                                     </a>
                                     <a 
