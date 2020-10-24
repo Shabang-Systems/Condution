@@ -215,6 +215,10 @@ class Projects extends Component { // define the component
                                     <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}} onClick={()=>{this.props.paginate("projects", item.content.id);this.props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
                                 )
                         })}
+                        <div style={{marginTop: 10}}>
+                            <a className="newbutton"><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Task</div></div></a>
+                            <a className="newbutton"><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Subproject</div></div></a>
+                        </div>
                     </div>
                 </div>
 
