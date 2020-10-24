@@ -8,6 +8,8 @@ let sqliteDB;
 let memoryDB;
 let firebaseDB, fsRef;
 let getCurrentRefresher;
+let refresherReleased = true; // prevent live callback merge conflicts
+let conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
 
 const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
 const { Device, Filesystem } = Plugins;
@@ -187,7 +189,8 @@ const [cRef, flush] = (() => {
                     error: console.trace,
                     next: (snap) => {
                         cache.set(TODOstring, snap);
-                        getCurrentRefresher()();
+                        if (refresherReleased)
+                            getCurrentRefresher()();
                     }
                 })
             );
@@ -446,6 +449,11 @@ const [cRef, flush] = (() => {
          * @return  wrapper A wrapper object around the expected reference.
          */
         //console.log(getFirebaseRef(path));
+        
+        // Lock updates every time cacheRef is called to prevent mErGE ConFLIcTS 
+        refresherReleased = false;
+        setTimeout(()=>refresherReleased=true, conflictResolution); 
+        
         return Object.assign(
             getFirebaseRef(path),               //  default methods from firebase reference
             { get: () => cachedRead(path) }     //  read on get, read from cache if available
