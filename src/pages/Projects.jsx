@@ -8,6 +8,8 @@ import ReactTooltip from 'react-tooltip';
 
 import Task from './Components/Task';
 
+import { withRouter } from "react-router";
+
 import Datebar from './Components/Datebar';
 
 const autoBind = require('auto-bind/react'); // autobind things! 
@@ -42,6 +44,8 @@ class Projects extends Component { // define the component
         if (prevProps.id !== this.props.id) // if we updated the defer date
             this.refresh(); // switching between perspectives are a prop update and not a rerender
         // so we want to refresh the perspective that's rendered
+        if (prevProps.id !== this.props.id) // if we updated the defer date
+            console.log(this.props.id);
     }
 
     async refresh() {
@@ -206,7 +210,7 @@ class Projects extends Component { // define the component
                                 )
                             else if (item.type === "project")
                                 return (
-                                    <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
+                                    <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}} onClick={()=>{this.props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
                                 )
                         })}
                     </div>
@@ -217,5 +221,5 @@ class Projects extends Component { // define the component
     }
 }
 
-export default Projects;
+export default withRouter(Projects);
 

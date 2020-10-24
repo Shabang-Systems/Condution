@@ -52,13 +52,12 @@ class Home extends Component {
             projects:[], // list of top level projects
             perspectives:[], // list of perspectives
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
-            sends:{to:undefined, id:undefined} // use pagination callback to issue redirects
         };
         // AutoBind!
         autoBind(this);
     }
 
-    paginate = (to, id) => this.setState({sends:{to, id}, itemSelected:{item:to ,id}})
+    paginate = (to, id) => this.setState({itemSelected:{item:to ,id}})
 
     componentDidMount() {
         // This is, indeed, the view
@@ -83,6 +82,11 @@ class Home extends Component {
          *
          */
         const refreshTimer = setTimeout(() => {this.refresh()}, 500);
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.to !== this.state.to && this.state.to !== undefined)
+             this.setState({sends:{to:undefined, id:undefined}})
     }
 
     async refresh() {
@@ -167,34 +171,27 @@ class Home extends Component {
                             </IonMenu>
                             <IonPage id="main">
                                 {/* The actual page */}
-                                {(() => {
-                                    if (this.state.sends.to)
-                                        return this.setState({sends:{to:undefined, id:undefined}}), <Redirect to={`/${this.state.sends.to}`+(()=>this.state.sends.id?`\${this.state.sends.id}`:"")()} />
-                                    else
-                                        return (
-                                            <IonRouterOutlet>
-                                                {/* empty => /upcoming*/}
-                                                <Route render={() => <Redirect to="/upcoming"/>}/>
-                                                {/* / => /upcoming */}
-                                                <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
-                                                {/* and the perspective switch */}
-                                                <Switch>
-                                                    {/* upcoming renders upcoming */}
-                                                    <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                <IonRouterOutlet>
+                                    {/* empty => /upcoming*/}
+                                    <Route render={() => <Redirect to="/upcoming"/>}/>
+                                    {/* / => /upcoming */}
+                                    <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
+                                    {/* and the perspective switch */}
+                                    <Switch>
+                                        {/* upcoming renders upcoming */}
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
-                                                    {/* completed renders completed */}
-                                                    <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        {/* completed renders completed */}
+                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
-                                                    {/* perspective renders perspectives */}
-                                                    <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
+                                        {/* perspective renders perspectives */}
+                                        <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
 
-                                                    {/* project renders perspectives */}
-                                                    <Route path="/projects/:id" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
-                                                    {/* TODO projects */}
-                                                </Switch>
-                                            </IonRouterOutlet>
-                                        )
-                                    })()}
+                                        {/* project renders perspectives */}
+                                        <Route path="/projects/:id" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} />}  />
+                                        {/* TODO projects */}
+                                    </Switch>
+                                </IonRouterOutlet>
                             </IonPage>
                         </IonSplitPane>
                     </IonContent>
