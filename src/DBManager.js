@@ -10,6 +10,7 @@ let firebaseDB, fsRef;
 let getCurrentRefresher;
 let refresherReleased = true; // prevent live callback merge conflicts
 let conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
+let releaseTimeout = undefined;
 
 const { FilesystemDirectory, FilesystemEncoding, Plugins } = require('@capacitor/core');
 const { Device, Filesystem } = Plugins;
@@ -452,7 +453,8 @@ const [cRef, flush] = (() => {
         
         // Lock updates every time cacheRef is called to prevent mErGE ConFLIcTS 
         refresherReleased = false;
-        setTimeout(()=>refresherReleased=true, conflictResolution); 
+        clearTimeout(releaseTimeout);
+        releaseTimeout = setTimeout(()=>{refresherReleased=true; releaseTimeout=undefined}, conflictResolution); 
         
         return Object.assign(
             getFirebaseRef(path),               //  default methods from firebase reference
