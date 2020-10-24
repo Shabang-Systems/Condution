@@ -204,6 +204,8 @@ class Projects extends Component { // define the component
                                         ]}
                                     />
                                 )
+                            else if (item.type === "project")
+                                return (<div>{this.state.possibleProjects[item.content.id]}</div>)
                         })}
                     </div>
                 </div>
