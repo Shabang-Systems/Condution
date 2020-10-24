@@ -206,7 +206,7 @@ class Projects extends Component { // define the component
                                 )
                             else if (item.type === "project")
                                 return (
-                                    <a className="subproject"><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
+                                    <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
                                 )
                         })}
                     </div>
