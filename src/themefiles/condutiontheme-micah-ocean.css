@@ -13,7 +13,7 @@
     /* These are the main colors. Make them mainly
      * to be bold and clear. Also make them kind of related 
      * to one main color */
-    --content-normal: #625ca0;
+    --content-normal: #1a98b4;
     --content-normal-alt: #9dcbce;
     --content-normal-accent: #13aacc;
 
@@ -83,7 +83,7 @@
     --quickadd-placeholder: #e2c0bc;
 
     /* Other Things */
-    --auth-background: url(./static/auth-background.jpg);
+    --auth-background: url(./static/auth-background-ocean.jpg);
 }
 
 
