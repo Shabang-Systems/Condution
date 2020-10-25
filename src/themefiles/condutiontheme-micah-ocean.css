@@ -6,21 +6,21 @@
      * be colored --background-feature */
     --background: #035A6D;
     --ion-background-color:#01434F;
-    --background-feature: #060607;
+    --background-feature: #313749;
     --background-feature-overlay: rgba(230, 59, 102, 0.7);
 
     /* Content */
     /* These are the main colors. Make them mainly
      * to be bold and clear. Also make them kind of related 
      * to one main color */
-    --content-normal: #a29dce;
+    --content-normal: #625ca0;
     --content-normal-alt: #9dcbce;
     --content-normal-accent: #13aacc;
 
     /* Decorative */
     --decorative-light: #e01a1a;
-    --decorative-light-alt: #5c942e; /*'add description' text*/
-    --decorative-light-accent: #c7c4d6;
+    --decorative-light-alt: #749db4; /*'add description' text*/
+    --decorative-light-accent: #b3b5cc;
 
     /* Menu colors */
     /* These colors should all in different
@@ -28,11 +28,11 @@
      * think: a selected item over the background */
     --menu-background: #035A6D;
     --menu-semiaccent-background: #035A6D;
-    --menu-accent-background: #b2e0bc;
-    --menu-text: #93a7c2;
+    --menu-accent-background: #9fdaac;
+    --menu-text: #7fa3d1;
     --menu-accent: #323c4f;
     --menu-label: #1a283d;
-    --menu-action: #a0c0eb;
+    --menu-action: rgb(198, 209, 224);
 
     /* Task colors */
     --task: #90939a;
@@ -40,14 +40,14 @@
     --task-flagged: #79bed3;
     --task-flaggedRing: #79bed3;
     --task-feature: #313749;
-    --task-feature-alt: #dbdbdd;
+    --task-feature-alt: #3B8172;
     --task-textbox: #7ed4a2;
-    --task-textbox-background: #79bed3;
-    --task-clickbox-background: #2a4a61;
-    --task-clickbox-accent-background: #d1d1d1;
-    --task-clickbox: #2d2d2d;
+    --task-textbox-background: #245261;
+    --task-clickbox-background: #233b4e;
+    --task-clickbox-accent-background: #464fa5;
+    --task-clickbox: #bee1e2;
     --task-checkbox: rgb(111, 214, 192);
-    --task-checkbox-feature: #3fade0;
+    --task-checkbox-feature: #2d7ea3;
     --task-checkbox-feature-alt: #4366c7;
 
     --task-checkbox-ds: #77c997;
@@ -59,7 +59,7 @@
     --task-checkbox-od-background: #6c4c70;
     
     --task-checkmark: #241774;
-    --task-checkmark-ds: #d0ff00;
+    --task-checkmark-ds: #134e4e;
     --task-checkmark-od: #c9cca3;
 
     /* Datepicker colors */
@@ -72,8 +72,8 @@
     --task-datepicker-action: #656e7a;
 
     /* Special accent */
-    --special: #dadeae;
-    --special-alt: #E2E6B3; /*TODO: fix this color jack */
+    --special: #3b8172;
+    --special-alt: #2a5e52; /*TODO: fix this color jack */
     --chuck-norris: #chucknorris;
     --quickadd: #c04f40; 
     --quickadd-feature: #bf3b2a;
