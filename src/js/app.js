@@ -295,7 +295,6 @@ E.start({firebase}, "firebase", "json");
 let dbReady = E.use(dbType.value ? dbType.value : "firebase") // TODO: should we default to firebase?
 
 
-
 if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
     currentTheme = "condutiontheme-default-dark";
     $("body").removeClass();
@@ -501,6 +500,12 @@ async function loadApp(user) {
         $("#quickadd").show();
     }
     await ui.constructSidebar();
+
+    await ui.loadTheme();
+
+
+
+
     await ui.load("upcoming-page");
 
     $("#loading").fadeOut();
@@ -2475,6 +2480,8 @@ let ui = function() {
             }
         });
 
+
+
         //// clear all contentboxes
         $("#inbox").empty();
         $("#due-soon").empty();
@@ -3223,7 +3230,7 @@ let prevPage;
 let themeChanges = false;
 let startingTheme = currentTheme;
 // TODO: actually set 	theme
-//let currentTheme = "condutiontheme-default";
+let currentTheme = "condutiontheme-default";
 let constructSettingsBar = async function() {
     if (set == false) {
         startingTheme = currentTheme
@@ -3318,7 +3325,16 @@ $("#light-select").click(function() {
     }
 });
 
-
+let loadTheme = async function() {
+        //// load preferred theme
+        console.log(currentTheme);
+        let settingsObject = (await E.db.getTasks(uid, 1));
+        console.log(settingsObject.theme)
+        currentTheme = settingsObject.theme;
+        console.log(currentTheme);
+    $("body").removeClass();
+    $("body").addClass(currentTheme);
+}
 
 let constructSidebar = async function() {
     let tlps = (await E.db.getTopLevelProjects(uid));
@@ -3346,7 +3362,7 @@ let setUser = function(usr) {
     }
 };
 
-return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar};
+return {user:{set: setUser, get: () => user}, load: loadView, update: reloadPage, constructSidebar: constructSidebar, loadTheme: loadTheme};
 
 }();
 
