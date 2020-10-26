@@ -98,8 +98,13 @@ ion-icon {
     --padding-bottom: 30px;
 }
 
-
-
-
-
+.add {
+    float: right;
+    transform: translateY(-2px);
+    padding: 5px;
+    border-radius: 1px;
+    transition: background 1s;
+    display: inline-block;
+    cursor: pointer;
+}
 
