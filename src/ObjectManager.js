@@ -433,7 +433,6 @@ async function getProjectStructure(userID, projectID, recursive=false) {
 
     let project =  (await cRef("users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === projectID)[0];
     if (!project) {
-        console.log(projectID);
         return { id: projectID, children: [], is_sequential: false, sortOrder: 0, parentProj: 0};
     }
     for (let [itemID, type] of Object.entries(project.data().children)) {
