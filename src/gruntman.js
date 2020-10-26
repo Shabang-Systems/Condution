@@ -254,6 +254,13 @@ class Gruntman {
                     engine.db.associateProject(options.uid, npid, options.parent); // associate the two
                     return {uid: options.uid, pid: npid}
                 },
+                delete: async function (options) {
+                    await engine.db.deleteProject(options.uid, options.pid);
+                    if (options.parent)
+                        engine.db.dissociateProject(options.uid, options.pid, options.parent);
+
+                    return {uid: options.uid, TODO: "TODO"} // TODO: how do we undelete a project?
+                },
                 update__name: async function (options) { // update the perspective name!
                     let possibleProjects = await engine.db.getProjectsandTags(options.uid);
                     // get all possible perspectives

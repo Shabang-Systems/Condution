@@ -181,14 +181,26 @@ class Projects extends Component { // define the component
                                         </i>
                                     </a>
                                     <a 
-                                        onClick={()=>console.log("HUX!")} 
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
+                                        onClick={()=>{
+                                            this.props.gruntman.do( // call a gruntman function
+                                                "project.delete", { 
+                                                    uid: this.props.uid, // pass it the things vvv
+                                                    pid: this.props.id, 
+                                                    parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
+                                                }
+                                            ).then(()=>{
+                                                this.props.menuRefresh(); // refresh menubar
+                                                this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+                                            }) // call the homebar refresh
+                                        }}
                                         style={{borderColor: "var(--task-checkbox-feature-alt)", 
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className="fas fa-trash"
                                             style={{margin: 3, color: "var(--task-textbox)", 
-                                                fontSize: 10, transform: "translate(2px, -2px)"}}>
+                                                fontSize: 10, transform: "translate(2px, -2px)"}}
+                                        >
                                         </i>
                                     </a>
 
@@ -249,7 +261,7 @@ class Projects extends Component { // define the component
                                     },
                                 )).pid;
                                 this.props.history.push(`/projects/${npid}/do`);
-                            }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Subproject</div></div></a>
+                            }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Project</div></div></a>
                         </div>
                     </div>
                 </div>
