@@ -154,7 +154,7 @@ class Home extends Component {
 
 
                                     {/* === Projects == */}
-                                    <div className="menu-sublabel menu-decoration">Projects</div>
+                                    <div className="menu-sublabel menu-decoration">Projects <i className="fa fa-plus" style={{float:"right", right: 4}}></i></div>
                                     {/* === Project Contents == */}
                                     {this.state.projects.map((proj) => {
                                         return (
