@@ -5,7 +5,7 @@
     transition: background-color 0.3s;
     /* margin: 2px 8px; */
     color: var(--task-textbox) !important;
-    width: 99%;
+    width: 98%;
     height: 38px;
     display: block;
     margin: 2px 8px;
@@ -27,7 +27,7 @@
     transition: background-color 0.3s;
     /* margin: 2px 8px; */
     color: var(--decorative-light-alt) !important;
-    width: 100%;
+    width: 98%;
     display: block;
     height: 33px;
     margin: 2px 8px;

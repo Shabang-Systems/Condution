@@ -30,12 +30,15 @@ class Projects extends Component { // define the component
             projectDB: {},
             parent: "",
             is_sequential: false,
-            currentProject: {children:[]}
+            currentProject: {children:[]},
+            activeTask: ""
         };
 
         this.updatePrefix = this.random();
 
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
+
+        this.activeTask = React.createRef();
 
         autoBind(this);
     }
@@ -44,7 +47,6 @@ class Projects extends Component { // define the component
         // flush styles
         if (prevProps.id !== this.props.id) // if we updated the defer date
             this.refresh(); // switching between perspectives are a prop update and not a rerender
-        // so we want to refresh the project that's rendered
     }
 
     async refresh() {
@@ -200,6 +202,8 @@ class Projects extends Component { // define the component
                                         engine={this.props.engine} 
                                         gruntman={this.props.gruntman} 
                                         availability={this.state.availability[item.content]} 
+                                        startOpen={this.state.activeTask === item.content}
+                                        ref={this.state.activeTask===item.content ? this.activeTask : undefined}
                                         datapack={[
                                             this.state.tagSelects, 
                                             this.state.projectSelects, 
@@ -216,7 +220,22 @@ class Projects extends Component { // define the component
                                 )
                         })}
                         <div style={{marginTop: 10}}>
-                            <a className="newbutton"><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Task</div></div></a>
+                            <a className="newbutton" onClick={()=>{
+                                this.props.gruntman.do( // call a gruntman function
+                                    "task.create", { 
+                                        uid: this.props.uid, // pass it the things vvv
+                                        pid: this.props.id, 
+                                    },
+                                    true // bypass updates to manually do it + make it quicker
+                                ).then((result)=>{
+                                    console.log("READY!");
+                                    let cProject = this.state.currentProject; // get current project
+                                    let avail = this.state.availability; // get current availibilty
+                                    avail[result.tid] = true; // set the current one to be available, temporarily so that people could write in it
+                                    cProject.children.push({type: "task", content:result.tid}); // add our new task
+                                    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current.openTask() ) // wosh!
+                                }) // call the homebar refresh
+                            }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Task</div></div></a>
                             <a className="newbutton"><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Subproject</div></div></a>
                         </div>
                     </div>

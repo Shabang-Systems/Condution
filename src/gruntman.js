@@ -40,6 +40,31 @@ class Gruntman {
                 }
             },
             task: {
+                create: async function (options) {
+                    let ntObject = {
+                        desc: "",
+                        isFlagged: false,
+                        isFloating: false,
+                        isComplete: false,
+                        project: options.pid?options.pid:"",
+                        tags: [],
+                        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        repeat: {rule: "none"},
+                        name: "",
+                    };
+                    
+                    if (options.due)
+                        ntObject.due = options.due
+                    if (options.defer)
+                        ntObject.defer = options.defer
+
+                    let ntID = await engine.db.newTask(options.uid, ntObject)
+
+                    if (options.pid && options.pid != "")
+                        engine.db.associateTask(options.uid, ntID, options.pid);
+
+                    return {uid: options.uid, tid: ntID};
+                },
                 update: async function (options) {
                     let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
                     await engine.db.modifyTask(options.uid, options.tid, options.query)
@@ -348,7 +373,7 @@ class Gruntman {
 
         if (isUndo) this.undolog.push(actionID);
         else this.backlog.push(actionID);
-
+    
         let resources = await action(options);
 
         this.taskLog[actionID] = [actionName, resources];
