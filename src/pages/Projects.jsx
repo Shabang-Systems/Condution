@@ -40,6 +40,8 @@ class Projects extends Component { // define the component
 
         this.activeTask = React.createRef();
 
+        this.name = React.createRef();
+
         autoBind(this);
     }
 
@@ -47,6 +49,9 @@ class Projects extends Component { // define the component
         // flush styles
         if (prevProps.id !== this.props.id) // if we updated the defer date
             this.refresh(); // switching between perspectives are a prop update and not a rerender
+
+        if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
+            this.name.current.focus(); // focus the name
     }
 
     async refresh() {
@@ -149,6 +154,7 @@ class Projects extends Component { // define the component
                                         onChange={(e)=> {e.persist(); this.updateName(e)}}
                                         value={this.state.name} // TODO: jack this is hecka hacky
                                         style={{transform: "transformY(-2px)"}}
+                                        ref={this.name}
                                     />
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
@@ -228,7 +234,6 @@ class Projects extends Component { // define the component
                                     },
                                     true // bypass updates to manually do it + make it quicker
                                 ).then((result)=>{
-                                    console.log("READY!");
                                     let cProject = this.state.currentProject; // get current project
                                     let avail = this.state.availability; // get current availibilty
                                     avail[result.tid] = true; // set the current one to be available, temporarily so that people could write in it
@@ -236,7 +241,15 @@ class Projects extends Component { // define the component
                                     this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current.openTask() ) // wosh!
                                 }) // call the homebar refresh
                             }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Task</div></div></a>
-                            <a className="newbutton"><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Subproject</div></div></a>
+                            <a className="newbutton" onClick={async function() {
+                                let npid = (await this.props.gruntman.do( // call a gruntman function
+                                    "project.create", { 
+                                        uid: this.props.uid, // pass it the things vvv
+                                        parent: this.props.id, 
+                                    },
+                                )).pid;
+                                this.props.history.push(`/projects/${npid}/do`);
+                            }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Subproject</div></div></a>
                         </div>
                     </div>
                 </div>

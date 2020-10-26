@@ -94,6 +94,11 @@ ion-icon {
     display: none;
 }
 
+#main {
+    --padding-bottom: 30px;
+}
+
+
 
 
 

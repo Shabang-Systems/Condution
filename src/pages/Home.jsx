@@ -188,7 +188,7 @@ class Home extends Component {
                                         <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
 
                                         {/* project renders perspectives */}
-                                        <Route path="/projects/:id" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} />}  />
+                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create}/>}  />
                                         {/* TODO projects */}
                                     </Switch>
                                 </IonRouterOutlet>

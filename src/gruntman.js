@@ -244,6 +244,16 @@ class Gruntman {
                 }
             },
             project: {
+                create: async function (options) { // create project
+                    let projObj = {
+                        name: "",
+                        top_level: options.parent === undefined,
+                        is_sequential: false,
+                    };
+                    let npid = options.parent ? await engine.db.newProject(options.uid, projObj, options.parent) : await engine.db.newProject(options.uid, projObj) // make a project... with or without a parent
+                    engine.db.associateProject(options.uid, npid, options.parent); // associate the two
+                    return {uid: options.uid, pid: npid}
+                },
                 update__name: async function (options) { // update the perspective name!
                     let possibleProjects = await engine.db.getProjectsandTags(options.uid);
                     // get all possible perspectives
