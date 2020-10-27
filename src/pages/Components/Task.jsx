@@ -423,278 +423,278 @@ class Task extends Component {
                                 {/* Task edit. The thing that slides open on edit. */}
                                 {(() => {
                                     if (this.state.haveBeenExpanded===true)
-                                    return(
-                                <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
-                                    {/* First, task description field */}
-                                    <textarea 
-                                        placeholder="LOCALIZE:Description" 
-                                        className="task-desc" 
-                                        style={{marginBottom: 10}} 
-                                        defaultValue={this.state.desc}
-                                        onChange={
-                                            (e)=>{
-                                                // Register a scheduler to deal with React's onChange
-                                                // Search for the word FANCYCHANGE to read my spheal on this
-                                                e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                                    "task.update", 
-                                                    {
-                                                        uid: this.props.uid, 
-                                                        tid: this.props.tid, 
-                                                        query:{desc: e.target.value}
-                                                    }
-                                                ), `task-desc-${this.props.tid}-update`)
-                                            }
-                                        }
-                                    >
-                                    </textarea>
-
-                                    {/* Task icon set. TODO delete task */}
-                                    <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
-                                        {/* Flagged icon */}
-                                        <a data-tip="LOCALIZE: Flagged" className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
-                                            // On change, set the flagged state to the opposite of whatever it is
-                                            // Both on the db...
-                                            this.props.gruntman.do(
-                                                "task.update", 
-                                                { uid: this.props.uid, tid: this.props.tid, query:{isFlagged: !this.state.isFlagged}}
-                                            )
-                                            // And the task!
-                                            this.setState({isFlagged: !this.state.isFlagged});
-
-                                        }}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
-
-                                        {/* Floating icon */}
-                                        <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
-                                            // On change, set the floating state to the opposite of whatever it is
-                                            // Both on the db... TODO flush the timezone too?
-                                            this.props.gruntman.do(
-                                                "task.update", 
-                                                { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
-                                            )
-                                            // And the task!
-                                            this.setState({isFloating: !this.state.isFloating});
-
-                                        }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
-
-                                        {/* Repeat icon that, on click, shows repeat */}
-                                        <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
-
-                                        {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
-                                    </div>
-
-
-                                    {/* Task date set */}
-                                    <div style={{display: "inline-block", marginBottom: 8}}>
-
-                                        {/* Defer date container */}
-                                        <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
-                                            {/* The. Defer. Date. */}
-                                            <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
-                                            {(() => {
-                                                {/* The. Defer. Date. Input. */}
-                                                const DateInput = ({ value, onClick }) => { 
-                                                    return (
-                                                        <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                        return(
+                                            <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
+                                                {/* First, task description field */}
+                                                <textarea 
+                                                    placeholder="LOCALIZE:Description" 
+                                                    className="task-desc" 
+                                                    style={{marginBottom: 10}} 
+                                                    defaultValue={this.state.desc}
+                                                    onChange={
+                                                        (e)=>{
                                                             // Register a scheduler to deal with React's onChange
                                                             // Search for the word FANCYCHANGE to read my spheal on this
-                                                            // DATEHANDLING is here too. If you are looking for that, stop searching
-
                                                             e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                            this.props.gruntman.registerScheduler(() => {
-                                                                let d = chrono.parseDate(e.target.value); // NLP that date!
-                                                                if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
-                                                                if (d) // and update the database too!
-                                                                    this.props.gruntman.do(
-                                                                        "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                    )
-                                                            }, `task-defer-${this.props.tid}-update`)
-                                                        }} onFocus={(e) => {
-                                                            onClick();
-                                                            e.target.focus();
-                                                        }}
-                                                        />
-                                                    );
-                                                };
-                                                const TimeInput = ({ value, onChange }) => {
-                                                    // IDK why this is needed, but it is. Sometimes it decides that it will drop the final 0?
-                                                    if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
-                                                    // TODO: calling complex string ops to fix an interface bug not a good idea?
-                                                    return (
-                                                        <input
-                                                            className="task-timebox"
-                                                            defaultValue={value}
-                                                            onKeyPress={e => {
-                                                                // TIMEHANDLING is here. If you are searching for that, it's here.
-                                                                // But anyway, on change, parse the time
-                                                                let d = chrono.parseDate(e.target.value); //TODO bad?
-                                                                // ...and throw away the date 
-                                                                if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds()); // TODO make this with the onChange API
-                                                            }}
-                                                        />
-                                                    )};
-                                                return (
-                                                    <DatePicker
-                                                        selected={this.state.deferDate}
-                                                        onChange={date => {
-                                                            // If the calendar got a new date, set it
-                                                            this.setState({deferDate: date});
-
-                                                            // No longer needed. State updates handle decoration udpates. Kept here for decorative purposes:
-                                                            // and hit the DB too!
-                                                            this.props.gruntman.do(
-                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                            )
-                                                        }}
-                                                        showTimeInput
-                                                        dateFormat="MM/dd/yyyy h:mm aa"
-                                                        customTimeInput={<TimeInput />}
-                                                        customInput={<DateInput />}
-                                                    />
-                                                )
-                                            })()}
-                                        </div>
-
-                                        <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
-                                            <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
-                                            {(() => {
-                                                const DateInput = ({ value, onClick }) => { 
-                                                    return (
-                                                        <input className="task-datebox" defaultValue={value} onChange={(e)=>{
-                                                            // Register a scheduler to deal with React's onChange
-                                                            // Search for the word FANCYCHANGE to read my spheal on this
-                                                            // Search for the word DATEHANDLING for what the heck the code actually does
-
-                                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                            this.props.gruntman.registerScheduler(() => {
-                                                                let d = chrono.parseDate(e.target.value);
-                                                                if (d) this.setState({dueDate: d});
-                                                                if (d)
-                                                                    this.props.gruntman.do(
-                                                                        "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                    )
-
-                                                            }, `task-due-${this.props.tid}-update`)
-                                                        }
-                                                            } onFocus={(e) => {
-                                                                onClick();
-                                                                e.target.focus();
-                                                            }}
-                                                        />
-                                                    );
-                                                };
-                                                const TimeInput = ({ value, onChange }) => {
-                                                    // IDK why this is needed, but it is. Sometimes it decides that it will drop the final 0?
-                                                    if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
-                                                    // TODO: calling complex string ops to fix an interface bug not a good idea?
-                                                    return (
-                                                        <input
-                                                            className="task-timebox"
-                                                            defaultValue={value}
-                                                            onKeyPress={e => {
-                                                                // Search for TIMEHANDLING for notes on time handling.
-                                                                // But anyway, on change, parse the time
-                                                                let d = chrono.parseDate(e.target.value); //TODO bad?
-                                                                // ...and throw away the date 
-                                                                if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
-                                                            }}
-                                                        />
-                                                    )};
-                                                return (
-                                                    <DatePicker
-                                                        selected={this.state.dueDate}
-                                                        onChange={date => this.setState({dueDate: date})}
-                                                        showTimeInput
-                                                        isClearable
-                                                        dateFormat="MM/dd/yyyy h:mm aa"
-                                                        customTimeInput={<TimeInput />}
-                                                        customInput={<DateInput />}
-                                                        onChange={date => {
-                                                            // If the calendar got a new date, set it
-                                                            this.setState({dueDate: date});
-
-                                                            // and hit the DB too!
-                                                            this.props.gruntman.do(
-                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                            )
-                                                        }}
-                                                    />
-                                                )
-                                            })()}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        {/* Task project container */}
-                                        <span className="task-project-container">
-                                            {/* Icon */}
-                                            <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
-                                            {/* Project select */}
-                                            <Select 
-                                                options={this.props.datapack[1]}
-                                                className='task-project'
-                                                classNamePrefix='task-select'
-                                                isClearable
-                                                styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
-                                                menuPortalTarget={this.me.current}
-                                                value={this.props.datapack[1].filter(option => option.value === this.state.project)}
-                                                onChange={(e)=>{
-                                                    {/* :point up: filter for only options with this project and set that to be the value */}
-                                                    {/* Actually update the project */}
-                                                    this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.project, project: (e?e.value:"")})
-                                                    {/* And set the state, too! */}
-                                                    this.setState({project:(e?e.value:"")});
-                                                }}
-                                            />
-                                        </span>
-                                        {/* Task tag container */}
-                                        <span className="task-tag-container">
-                                            {/* Icon */}
-                                            <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
-                                            {/* Tag select */}
-                                            <CreatableSelect
-                                                options={this.props.datapack[0]}
-                                                className='task-tag'
-                                                classNamePrefix='task-select'
-                                                isClearable
-                                                isMulti
-                                                styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
-                                                menuPortalTarget={this.me.current}
-                                                value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
-                                                onChange={(newValue, actionMeta) => {
-                                                    let view = this;
-                                                    let tids = newValue?newValue.map(async function (e) { // for each tag
-                                                        if (e.__isNew__) { // if it's a new tag
-                                                            let tagID = (await view.props.gruntman.do( // create it!
-                                                                "tag.create",
+                                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
+                                                                "task.update", 
                                                                 {
-                                                                    uid: view.props.uid,
-                                                                    name: e.label,
-                                                                }, 
-                                                            )).id;
-                                                            let originalTags = view.state.possibleTags; // get tags
-                                                            originalTags.push({label: e.label, value: tagID}); // add our new tag
-                                                            view.setState({possibleTags: originalTags}); // sax-a-boom!
-                                                            return tagID;
-                                                        } else
-                                                            return e.value;
-                                                    }):[]; // find the correct tags sets, or set it to an empty set
-                                                    Promise.all(tids).then(tagIDs => {
-                                                        this.setState({tags: tagIDs}); // set the state
+                                                                    uid: this.props.uid, 
+                                                                    tid: this.props.tid, 
+                                                                    query:{desc: e.target.value}
+                                                                }
+                                                            ), `task-desc-${this.props.tid}-update`)
+                                                        }
+                                                    }
+                                                >
+                                                </textarea>
+
+                                                {/* Task icon set. TODO delete task */}
+                                                <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
+                                                    {/* Flagged icon */}
+                                                    <a data-tip="LOCALIZE: Flagged" className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
+                                                        // On change, set the flagged state to the opposite of whatever it is
+                                                        // Both on the db...
                                                         this.props.gruntman.do(
                                                             "task.update", 
-                                                            {
-                                                                uid: this.props.uid, 
-                                                                tid: this.props.tid, 
-                                                                query:{tags: tagIDs} // set a taskID
-                                                            }
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFlagged: !this.state.isFlagged}}
                                                         )
-                                                    });
-                                                }}
-                                            />
-                                        </span>
-                                    </div>
-                                </animated.div>
-                                    )
+                                                        // And the task!
+                                                        this.setState({isFlagged: !this.state.isFlagged});
+
+                                                    }}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+
+                                                    {/* Floating icon */}
+                                                    <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-flaggedRing)":"var(--task-checkbox-feature-alt)", cursor: "pointer"}} onClick={()=>{
+                                                        // On change, set the floating state to the opposite of whatever it is
+                                                        // Both on the db... TODO flush the timezone too?
+                                                        this.props.gruntman.do(
+                                                            "task.update", 
+                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
+                                                        )
+                                                        // And the task!
+                                                        this.setState({isFloating: !this.state.isFloating});
+
+                                                    }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-flagged)" : "var(--task-textbox)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+
+                                                    {/* Repeat icon that, on click, shows repeat */}
+                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
+
+                                                    {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
+                                                </div>
+
+
+                                                {/* Task date set */}
+                                                <div style={{display: "inline-block", marginBottom: 8}}>
+
+                                                    {/* Defer date container */}
+                                                    <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
+                                                        {/* The. Defer. Date. */}
+                                                        <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        {(() => {
+                                                            {/* The. Defer. Date. Input. */}
+                                                            const DateInput = ({ value, onClick }) => { 
+                                                                return (
+                                                                    <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                        // Register a scheduler to deal with React's onChange
+                                                                        // Search for the word FANCYCHANGE to read my spheal on this
+                                                                        // DATEHANDLING is here too. If you are looking for that, stop searching
+
+                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+                                                                        this.props.gruntman.registerScheduler(() => {
+                                                                            let d = chrono.parseDate(e.target.value); // NLP that date!
+                                                                            if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
+                                                                            if (d) // and update the database too!
+                                                                                this.props.gruntman.do(
+                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                                )
+                                                                        }, `task-defer-${this.props.tid}-update`)
+                                                                    }} onFocus={(e) => {
+                                                                        onClick();
+                                                                        e.target.focus();
+                                                                    }}
+                                                                    />
+                                                                );
+                                                            };
+                                                            const TimeInput = ({ value, onChange }) => {
+                                                                // IDK why this is needed, but it is. Sometimes it decides that it will drop the final 0?
+                                                                if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
+                                                                // TODO: calling complex string ops to fix an interface bug not a good idea?
+                                                                return (
+                                                                    <input
+                                                                        className="task-timebox"
+                                                                        defaultValue={value}
+                                                                        onKeyPress={e => {
+                                                                            // TIMEHANDLING is here. If you are searching for that, it's here.
+                                                                            // But anyway, on change, parse the time
+                                                                            let d = chrono.parseDate(e.target.value); //TODO bad?
+                                                                            // ...and throw away the date 
+                                                                            if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds()); // TODO make this with the onChange API
+                                                                        }}
+                                                                    />
+                                                                )};
+                                                            return (
+                                                                <DatePicker
+                                                                    selected={this.state.deferDate}
+                                                                    onChange={date => {
+                                                                        // If the calendar got a new date, set it
+                                                                        this.setState({deferDate: date});
+
+                                                                        // No longer needed. State updates handle decoration udpates. Kept here for decorative purposes:
+                                                                        // and hit the DB too!
+                                                                        this.props.gruntman.do(
+                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                        )
+                                                                    }}
+                                                                    showTimeInput
+                                                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                                                    customTimeInput={<TimeInput />}
+                                                                    customInput={<DateInput />}
+                                                                />
+                                                            )
+                                                        })()}
+                                                    </div>
+
+                                                    <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
+                                                        <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        {(() => {
+                                                            const DateInput = ({ value, onClick }) => { 
+                                                                return (
+                                                                    <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                        // Register a scheduler to deal with React's onChange
+                                                                        // Search for the word FANCYCHANGE to read my spheal on this
+                                                                        // Search for the word DATEHANDLING for what the heck the code actually does
+
+                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
+                                                                        this.props.gruntman.registerScheduler(() => {
+                                                                            let d = chrono.parseDate(e.target.value);
+                                                                            if (d) this.setState({dueDate: d});
+                                                                            if (d)
+                                                                                this.props.gruntman.do(
+                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                                )
+
+                                                                        }, `task-due-${this.props.tid}-update`)
+                                                                    }
+                                                                        } onFocus={(e) => {
+                                                                            onClick();
+                                                                            e.target.focus();
+                                                                        }}
+                                                                    />
+                                                                );
+                                                            };
+                                                            const TimeInput = ({ value, onChange }) => {
+                                                                // IDK why this is needed, but it is. Sometimes it decides that it will drop the final 0?
+                                                                if (value.slice(value.length-2, value.length) === ":0") value = value + "0";
+                                                                // TODO: calling complex string ops to fix an interface bug not a good idea?
+                                                                return (
+                                                                    <input
+                                                                        className="task-timebox"
+                                                                        defaultValue={value}
+                                                                        onKeyPress={e => {
+                                                                            // Search for TIMEHANDLING for notes on time handling.
+                                                                            // But anyway, on change, parse the time
+                                                                            let d = chrono.parseDate(e.target.value); //TODO bad?
+                                                                            // ...and throw away the date 
+                                                                            if (d && e.key === "Enter") onChange(d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds());
+                                                                        }}
+                                                                    />
+                                                                )};
+                                                            return (
+                                                                <DatePicker
+                                                                    selected={this.state.dueDate}
+                                                                    onChange={date => this.setState({dueDate: date})}
+                                                                    showTimeInput
+                                                                    isClearable
+                                                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                                                    customTimeInput={<TimeInput />}
+                                                                    customInput={<DateInput />}
+                                                                    onChange={date => {
+                                                                        // If the calendar got a new date, set it
+                                                                        this.setState({dueDate: date});
+
+                                                                        // and hit the DB too!
+                                                                        this.props.gruntman.do(
+                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                                        )
+                                                                    }}
+                                                                />
+                                                            )
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    {/* Task project container */}
+                                                    <span className="task-project-container">
+                                                        {/* Icon */}
+                                                        <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
+                                                        {/* Project select */}
+                                                        <Select 
+                                                            options={this.props.datapack[1]}
+                                                            className='task-project'
+                                                            classNamePrefix='task-select'
+                                                            isClearable
+                                                            styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                            menuPortalTarget={this.me.current}
+                                                            value={this.props.datapack[1].filter(option => option.value === this.state.project)}
+                                                            onChange={(e)=>{
+                                                                {/* :point up: filter for only options with this project and set that to be the value */}
+                                                                {/* Actually update the project */}
+                                                                this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.project, project: (e?e.value:"")})
+                                                                {/* And set the state, too! */}
+                                                                this.setState({project:(e?e.value:"")});
+                                                            }}
+                                                        />
+                                                    </span>
+                                                    {/* Task tag container */}
+                                                    <span className="task-tag-container">
+                                                        {/* Icon */}
+                                                        <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
+                                                        {/* Tag select */}
+                                                        <CreatableSelect
+                                                            options={this.props.datapack[0]}
+                                                            className='task-tag'
+                                                            classNamePrefix='task-select'
+                                                            isClearable
+                                                            isMulti
+                                                            styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                            menuPortalTarget={this.me.current}
+                                                            value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
+                                                            onChange={(newValue, actionMeta) => {
+                                                                let view = this;
+                                                                let tids = newValue?newValue.map(async function (e) { // for each tag
+                                                                    if (e.__isNew__) { // if it's a new tag
+                                                                        let tagID = (await view.props.gruntman.do( // create it!
+                                                                            "tag.create",
+                                                                            {
+                                                                                uid: view.props.uid,
+                                                                                name: e.label,
+                                                                            }, 
+                                                                        )).id;
+                                                                        let originalTags = view.state.possibleTags; // get tags
+                                                                        originalTags.push({label: e.label, value: tagID}); // add our new tag
+                                                                        view.setState({possibleTags: originalTags}); // sax-a-boom!
+                                                                        return tagID;
+                                                                    } else
+                                                                        return e.value;
+                                                                }):[]; // find the correct tags sets, or set it to an empty set
+                                                                Promise.all(tids).then(tagIDs => {
+                                                                    this.setState({tags: tagIDs}); // set the state
+                                                                    this.props.gruntman.do(
+                                                                        "task.update", 
+                                                                        {
+                                                                            uid: this.props.uid, 
+                                                                            tid: this.props.tid, 
+                                                                            query:{tags: tagIDs} // set a taskID
+                                                                        }
+                                                                    )
+                                                                });
+                                                            }}
+                                                        />
+                                                    </span>
+                                                </div>
+                                            </animated.div>
+                                        )
                                 })()}
                             </animated.div>
                         )}
