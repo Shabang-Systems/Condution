@@ -29,7 +29,7 @@ class Upcoming extends Component { // define the component
 
         this.updatePrefix = this.random();
 
-        this.pageRef = React.createRef();
+        this.pageRef = React.createRef(); // reference to this page used for hiding scrollbar
 
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
@@ -75,19 +75,21 @@ class Upcoming extends Component { // define the component
 
     componentDidMount() {
         this.refresh();
+
+        // Jack and the Misadventures of Hiding the Scrollbar
         const content = this.pageRef.current;
         const styles = document.createElement('style');
         styles.textContent = `
-* ::-webkit-scrollbar {
-    display: none;
-}
+            .scroll-y::-webkit-scrollbar {
+                display: none;
+            }
         `;
         content.shadowRoot.appendChild(styles);
+        console.log(content);
     }
 
     componentWillUnmount() {
         this.props.gruntman.halt();
-        //this.infinite.current.removeEventListener('ionInfinite');
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -158,7 +160,7 @@ class Upcoming extends Component { // define the component
     }
 }
 
-        // Hiding scrollbar, a journey
+// Hiding scrollbar, a journey
 
 
 
