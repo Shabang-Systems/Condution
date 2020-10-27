@@ -193,6 +193,7 @@ class Projects extends Component { // define the component
                                             ).then(()=>{
                                                 this.props.menuRefresh(); // refresh menubar
                                                 this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+                                                this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);
                                             }) // call the homebar refresh
                                         }}
                                         style={{borderColor: "var(--task-checkbox-feature-alt)", 

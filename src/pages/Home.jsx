@@ -165,6 +165,7 @@ class Home extends Component {
                                                 },
                                             )).pid;
                                             history.push(`/projects/${npid}/do`);
+                                            this.paginate("projects", npid);
                                             this.refresh();
                                         }).bind(this)();
 
