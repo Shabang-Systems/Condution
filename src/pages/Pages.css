@@ -91,15 +91,15 @@
 }
 
 .count-badge {
-    width: 20px;
-    height: 20px;
-    padding: 3px 3px 5px 3px; /* bottom left top right*/
-    font-size: 11px;
+    /*width: 20px;*/
+    /*height: 20px;*/
+    padding: 5px 5px 5px 5px; /* top right bottom left */
+    font-size: 12px;
     color: var(--content-normal-accent);
-    border: 1px solid var(--content-normal-accent);
+    border: 1.5px solid var(--content-normal-accent);
     /*background-color: transparent;*/
     background-color: var(--task-feature) !important;
-    transform: translate(8px);
+    transform: translate(5px, -1px) scale(0.9);
 }
 
 .page-invis-drag.normal {
