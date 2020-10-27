@@ -7,7 +7,7 @@ import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicy
 // Routing
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, createHashHistory } from 'history';
 
 // Like, your heart and soul
 import React, { Component } from 'react';
@@ -26,7 +26,7 @@ import ReactTooltip from 'react-tooltip';
 
 // autobind those functions
 const autoBind = require('auto-bind/react');
-const history = createBrowserHistory();
+const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory();
 
 /* 
  *
