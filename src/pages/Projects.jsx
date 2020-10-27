@@ -90,6 +90,8 @@ class Projects extends Component { // define the component
 
     componentDidMount() {
         this.refresh();
+        if (this.props.options === "do") // if we are trying to create
+            this.name.current.focus(); // focus the name
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -193,6 +195,7 @@ class Projects extends Component { // define the component
                                             ).then(()=>{
                                                 this.props.menuRefresh(); // refresh menubar
                                                 this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+                                                this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);
                                             }) // call the homebar refresh
                                         }}
                                         style={{borderColor: "var(--task-checkbox-feature-alt)", 

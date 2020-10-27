@@ -7,7 +7,7 @@ import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicy
 // Routing
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { createBrowserHistory, createHashHistory } from 'history';
 
 // Like, your heart and soul
 import React, { Component } from 'react';
@@ -26,7 +26,7 @@ import ReactTooltip from 'react-tooltip';
 
 // autobind those functions
 const autoBind = require('auto-bind/react');
-const history = createBrowserHistory();
+const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory();
 
 /* 
  *
@@ -156,19 +156,20 @@ class Home extends Component {
 
 
                                     {/* === Projects == */}
-                                    <div className="menu-sublabel menu-decoration">Projects <i onClick={()=>{
-                                        
-                                        (async function() {
+                                    <div className="menu-sublabel menu-decoration">Projects <a onClick={()=>{
+                                        let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
                                             let npid = (await this.props.gruntman.do(
                                                 "project.create", {
                                                     uid: this.props.uid,
                                                 },
                                             )).pid;
                                             history.push(`/projects/${npid}/do`);
+                                            this.paginate("projects", npid);
                                             this.refresh();
-                                        }).bind(this)();
+                                        }).bind(this);
+                                        f();
 
-                                    }} className="fa fa-plus add"></i></div>
+                                    }} className="fa fa-plus add"></a></div>
                                     {/* === Project Contents == */}
                                     {this.state.projects.map((proj) => {
                                         return (
