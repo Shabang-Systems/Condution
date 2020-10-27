@@ -45,7 +45,7 @@ class PerspectiveEdit extends Component {
                     {/* Header */}
                     <div className="perspective-header">
                         {/* Repeat name */}
-                        <span style={{display: "flex", alignItems: "center", width: "100%"}}>
+                        <span style={{display: "inline-block", alignItems: "center", width: "100%"}}>
 			    <b className="bold-prefix" >Let&#39;s build &nbsp;</b> 
 				<input className="editable-title" 
 				    defaultValue={this.props.perspectiveName} 
@@ -58,9 +58,27 @@ class PerspectiveEdit extends Component {
 			<a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
 
                     </div>
+
+
 		    <div className="build-input">
 			<input className="build-input-edit"></input>
 		    </div>
+
+
+	            <div className="perspective-basic-row">
+			<span style={{marginBottom: 0}}>
+			    <i className="repeat-label fa fa-redo"></i>
+			    <span className="perspective-label">Include</span>
+			</span>
+
+			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
+			    <IonSelectOption className="repeat-select__option" value="none">Remaining</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="daily">Available</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly2">Flagged</IonSelectOption>
+			</IonSelect>
+
+		    </div> 
+
                 </div>
             </IonModal>
         )

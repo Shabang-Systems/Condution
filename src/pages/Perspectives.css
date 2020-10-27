@@ -17,8 +17,13 @@
 
 
 .perspective-modal {
-    --height: 140px;
-    --width: 460px;
+    --height: 148px;
+    --max-height: 248px;
+    /*--width: 460px;*/
+    --width: 80%;
+    --max-width: 500px;
+    --ion-backdrop-opacity: 0.5;
+
 
 }
 
@@ -39,7 +44,6 @@
     font-size: 15px;
     font-weight: 589;
     color: var(--content-normal-alt);
-    color: var();
     outline: 0;
     background: transparent;
     border: 0px solid red;
@@ -63,14 +67,51 @@
 .build-input {
     margin-left: 10px;
     margin-top: 10px;
-    margin-right: 150px;
+    margin-right: 10px;
     border-radius: 3px;
     background: transparent;
     /*[>color: var(--<]*/
 
     border: 1px solid var(--decorative-light-alt);
 
+}
 
+.perspective-select {
+
+    background-color: var(--content-normal) !important;
+    color: var(--content-normal-alt) !important;
+    box-shadow: 0 0 0 0 transparent !important;
+    border: 0;
+    border-radius: 3px;
+    padding: 4px 7px;
+    margin-left: 3px;
+    margin-right: 0px;
+    --background:  var(--task-textbox-background);
+    font-size: 15px;
+    transition: 0.3s;
+
+}
+
+.perspective-select:hover {
+    background-color: var(--decorative-light) !important;
+
+}
+
+
+.perspective-basic-row {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    /*justify-content: space-between;*/
+
+}
+
+
+.perspective-label {
+    color: var(--decorative-light-alt);
+    font-size: 14px;
+    /*transform: translateY(1px);*/
+    margin-right: 10px;
 }
 
 
