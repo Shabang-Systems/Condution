@@ -1,7 +1,7 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
-import './Upcoming.css';
+import './Upcoming.scss';
 import './Pages.css';
 
 import Task from './Components/Task';
@@ -15,19 +15,21 @@ class Upcoming extends Component { // define the component
         super(props);
 
         this.state = {
-	    inbox: [], // define the inbox
-	    dueSoon: [], // whats due soon? 
-	    possibleProjects:{}, // what are the possible projects? 
-	    possibleTags:{},  // what are the possible tags?
-	    possibleProjectsRev:{}, 
-	    possibleTagsRev:{}, 
-	    availability: [],  // whats available
-	    projectSelects:[], 
-	    tagSelects: [], 
-	    projectDB: {}
-	};
+            inbox: [], // define the inbox
+            dueSoon: [], // whats due soon? 
+            possibleProjects:{}, // what are the possible projects? 
+            possibleTags:{},  // what are the possible tags?
+            possibleProjectsRev:{}, 
+            possibleTagsRev:{}, 
+            availability: [],  // whats available
+            projectSelects:[], 
+            tagSelects: [], 
+            projectDB: {}
+        };
 
         this.updatePrefix = this.random();
+
+        this.pageRef = React.createRef();
 
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
@@ -73,41 +75,52 @@ class Upcoming extends Component { // define the component
 
     componentDidMount() {
         this.refresh();
+        const content = this.pageRef.current;
+        const styles = document.createElement('style');
+        styles.textContent = `
+* ::-webkit-scrollbar {
+    display: none;
+}
+        `;
+        content.shadowRoot.appendChild(styles);
     }
 
     componentWillUnmount() {
         this.props.gruntman.halt();
+        //this.infinite.current.removeEventListener('ionInfinite');
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
-    
+
     render() {
         return (
             <IonPage>
-                <div className={"page-invis-drag " + (()=>{
-                    if (!isPlatform("electron")) // if we are not running electron
-                        return "normal"; // normal windowing proceeds
-                    else if (window.navigator.platform.includes("Mac")){ // macos
-                        return "darwin"; // frameless setup
-                    }
-                    else if (process.platform === "win32") // windows
-                        return "windows"; // non-frameless
+                <IonContent ref={this.pageRef}>
 
-                })()}>&nbsp;</div>
-                <div className={"page-content " + (()=>{
-                    if (!isPlatform("electron")) // if we are not running electron
-                        return "normal"; // normal windowing proceeds
-                    else if (window.navigator.platform.includes("Mac")){ // macos
-                        return "darwin"; // frameless setup
-                    }
-                    else if (process.platform === "win32") // windows
-                        return "windows"; // non-frameless
+                    <div className={"page-invis-drag " + (()=>{
+                        if (!isPlatform("electron")) // if we are not running electron
+                            return "normal"; // normal windowing proceeds
+                        else if (window.navigator.platform.includes("Mac")){ // macos
+                            return "darwin"; // frameless setup
+                        }
+                        else if (process.platform === "win32") // windows
+                            return "windows"; // non-frameless
 
-                })()}>
-                    <div className="header-container">
-                        <div style={{display: "inline-block"}}>
-                            <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
+                    })()}>&nbsp;</div>
+                    <div className={"page-content " + (()=>{
+                        if (!isPlatform("electron")) // if we are not running electron
+                            return "normal"; // normal windowing proceeds
+                        else if (window.navigator.platform.includes("Mac")){ // macos
+                            return "darwin"; // frameless setup
+                        }
+                        else if (process.platform === "win32") // windows
+                            return "windows"; // non-frameless
+
+                    })()}>
+                        <div className="header-container">
+                            <div style={{display: "inline-block"}}>
+                                <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
                                 {/*
                         <div className="greeting-datewidget">
@@ -117,25 +130,37 @@ class Upcoming extends Component { // define the component
                         */}
 
 
-                            <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
+                                <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
+                            </div>
+                            <Datebar />
                         </div>
-                        <Datebar />
+                        <div style={{marginLeft: 10, marginRight: 10}}>
+                            <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                            {this.state.inbox.map(id => (
+                                <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                            ))}
+                            <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                            {this.state.dueSoon.map(id => (
+                                <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                            ))}
+                        </div>
                     </div>
-                    <div style={{marginLeft: 10, marginRight: 10}}>
-                        <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
-                        {this.state.inbox.map(id => (
-                            <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                        ))}
-                        <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
-                        {this.state.dueSoon.map(id => (
-                            <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                        ))}
-                    </div>
-                </div>
+                    <IonInfiniteScroll onIonInfinite={(e)=>{
+                        console.log(e);
+                    }}>
+                        <IonInfiniteScrollContent
+                            loadingText="Loading more good doggos...">
+                        </IonInfiniteScrollContent>
+                    </IonInfiniteScroll>
+                </IonContent>
             </IonPage>
         )
     }
 }
+
+        // Hiding scrollbar, a journey
+
+
 
 export default Upcoming;
 
