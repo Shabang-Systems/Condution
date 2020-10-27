@@ -66,7 +66,7 @@ class PerspectiveEdit extends Component {
 
 
 	            <div className="perspective-basic-row">
-			<span style={{marginBottom: 0}}>
+			<span>
 			    <i className="repeat-label fa fa-redo"></i>
 			    <span className="perspective-label">Include</span>
 			</span>
@@ -76,6 +76,21 @@ class PerspectiveEdit extends Component {
 			    <IonSelectOption className="repeat-select__option" value="daily">Available</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="weekly2">Flagged</IonSelectOption>
 			</IonSelect>
+
+			<span style={{marginLeft: "20px"}}>
+			    <i className="repeat-label fa fa-redo"></i>
+			    <span className="perspective-label">Order</span>
+			</span>
+
+			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
+			    <IonSelectOption className="repeat-select__option" value="none">Ascend by Due</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="daily">Descend by Due</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly2">Ascend by Defer</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly3">Descend by Defer</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly3">Alphabetical</IonSelectOption>
+			</IonSelect>
+			<p>Help</p>
+
 
 		    </div> 
 
