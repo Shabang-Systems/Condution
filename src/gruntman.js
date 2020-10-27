@@ -251,7 +251,9 @@ class Gruntman {
                         is_sequential: false,
                     };
                     let npid = options.parent ? await engine.db.newProject(options.uid, projObj, options.parent) : await engine.db.newProject(options.uid, projObj) // make a project... with or without a parent
-                    engine.db.associateProject(options.uid, npid, options.parent); // associate the two
+                    if (options.parent) {
+                        engine.db.associateProject(options.uid, npid, options.parent);
+                    }// associate the two
                     return {uid: options.uid, pid: npid}
                 },
                 delete: async function (options) {
