@@ -154,8 +154,9 @@ class Task extends Component {
             showRepeat: false, // is our repeat UI shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
-            initialRenderDone: false // wait for data to load to make animation decisions
+            haveBeenExpanded: false // did we render the edit part yet? optimization
         }
+        this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
         this.repeater = React.createRef(); // what's my repeater?
     }
@@ -199,10 +200,10 @@ class Task extends Component {
                         {timeZone: taskInfo.timezone} // and cast it to the right time zone
                     )
                 ): undefined
-            ),
-            initialRenderDone: true
+            )
         });
         this.refreshDecorations(); // flush and generate them decorations!
+        this.initialRenderDone = true;
     }
 
     refreshDecorations() {
@@ -234,7 +235,12 @@ class Task extends Component {
 
     closeTask = () => this.setState({expanded: false}); // util function to close a task
 
-    openTask = () => this.setState({expanded: true}); // util function to open a task
+    openTask() {
+        if (this.state.haveBeenExpanded)
+            this.setState({expanded: true});
+        else 
+            this.setState({haveBeenExpanded: true}, this.setState({expanded: true}));
+    }// util function to open a task
 
     detectOutsideClick(e) {
 
@@ -295,7 +301,7 @@ class Task extends Component {
                     ///////////////////////
 
                     state = {
-                        this.state.initialRenderDone ?
+                        this.initialRenderDone ?
                             (this.state.isComplete? // if we are complete 
                                 (this.state.startingCompleted? // and we start complete 
                                     (this.state.expanded? // and we are expanded 
@@ -415,6 +421,9 @@ class Task extends Component {
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}} />
 
                                 {/* Task edit. The thing that slides open on edit. */}
+                                {(() => {
+                                    if (this.state.haveBeenExpanded===true)
+                                    return(
                                 <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
                                     {/* First, task description field */}
                                     <textarea 
@@ -685,6 +694,8 @@ class Task extends Component {
                                         </span>
                                     </div>
                                 </animated.div>
+                                    )
+                                })()}
                             </animated.div>
                         )}
                     } 
