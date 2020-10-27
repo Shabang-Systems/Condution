@@ -91,8 +91,10 @@
 }
 
 .count-badge {
-    /*width: 23px;*/
-    padding: 5px 8px 5px 8px; /* bottom left top right*/
+    width: 20px;
+    height: 20px;
+    padding: 3px 3px 5px 3px; /* bottom left top right*/
+    font-size: 11px;
     color: var(--content-normal-accent);
     border: 1px solid var(--content-normal-accent);
     /*background-color: transparent;*/
