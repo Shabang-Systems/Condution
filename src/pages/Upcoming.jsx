@@ -149,9 +149,10 @@ class Upcoming extends Component { // define the component
                     </div>
                     <IonInfiniteScroll onIonInfinite={(e)=>{
                         console.log(e);
+                        setTimeout(()=>e.target.complete(), 500);
                     }}>
                         <IonInfiniteScrollContent
-                            loadingText="Loading more good doggos...">
+                            loadingText="TODO: Consuming Plantains Voratiously">
                         </IonInfiniteScrollContent>
                     </IonInfiniteScroll>
                 </IonContent>
