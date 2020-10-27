@@ -154,7 +154,7 @@ class Task extends Component {
             showRepeat: false, // is our repeat UI shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
-            haveBeenExpanded: false // did we render the edit part yet? optimization
+            haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false) // did we render the edit part yet? optimization
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -239,8 +239,14 @@ class Task extends Component {
         if (this.state.haveBeenExpanded)
             this.setState({expanded: true});
         else 
-            this.setState({haveBeenExpanded: true}, this.setState({expanded: true}));
+            this.setState({haveBeenExpanded: true}, ()=>this.setState({expanded: true}));
     }// util function to open a task
+
+    _explode() {
+        // You should probably be calling openTask()
+        this.initialRenderDone = true;
+        this.setState({haveBeenExpanded: true}, ()=>this.setState({expanded: true}));
+    }
 
     detectOutsideClick(e) {
 
@@ -701,6 +707,7 @@ class Task extends Component {
                     } 
                 </AnimationFactory>
             </div >
+
 
         )
     }

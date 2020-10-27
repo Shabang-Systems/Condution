@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "main": "main.js",
-  "homepage": ".",
+  "homepage": "./",
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/core": "2.4.1",

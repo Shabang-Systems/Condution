@@ -257,7 +257,7 @@ class Projects extends Component { // define the component
                                     let avail = this.state.availability; // get current availibilty
                                     avail[result.tid] = true; // set the current one to be available, temporarily so that people could write in it
                                     cProject.children.push({type: "task", content:result.tid}); // add our new task
-                                    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current.openTask() ) // wosh!
+                                    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
                                 }) // call the homebar refresh
                             }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Task</div></div></a>
                             <a className="newbutton" onClick={async function() {
