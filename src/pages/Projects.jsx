@@ -90,6 +90,8 @@ class Projects extends Component { // define the component
 
     componentDidMount() {
         this.refresh();
+        if (this.props.options === "do") // if we are trying to create
+            this.name.current.focus(); // focus the name
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
