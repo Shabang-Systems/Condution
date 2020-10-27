@@ -334,6 +334,15 @@ class Gruntman {
         autoBind(this);
     }
 
+    halt() {
+        for (let key in this.schedulers) 
+            clearTimeout(this.schedulers[key])
+        this.refresher = ()=>{};
+        if (this.updateInterval)
+            clearTimeout(this.updateInterval);
+        this.updateInterval = undefined;
+    }
+
     lockUpdates() {
         this.updateLock = true;
         if (this.updateInterval)

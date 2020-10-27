@@ -49,6 +49,10 @@ class Completed extends Component {
         autoBind(this);
     }
 
+    componentWillUnmount() {
+        this.props.gruntman.halt();
+    }
+
     async refresh() {
 	let taskArr = []; // define temp array
 	let full = await this.props.engine.db.getCompletedTasks(this.props.uid); // get the tasks from the database 

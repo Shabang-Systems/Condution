@@ -45,6 +45,10 @@ class Projects extends Component { // define the component
         autoBind(this);
     }
 
+    componentWillUnmount() {
+        this.props.gruntman.halt();
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
         if (prevProps.id !== this.props.id) // if we updated the defer date

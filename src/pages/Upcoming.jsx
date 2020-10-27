@@ -75,6 +75,10 @@ class Upcoming extends Component { // define the component
         this.refresh();
     }
 
+    componentWillUnmount() {
+        this.props.gruntman.halt();
+    }
+
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 
     

@@ -65,6 +65,9 @@ class Perspectives extends Component {
         this.setState({showEdit: false});
     } // util func for hiding repeat
 
+    componentWillUnmount() {
+        this.props.gruntman.halt();
+    }
 
     async refresh() {
         let possiblePerspectives = await this.props.engine.db.getPerspectives(this.props.uid); // get all possible perspectives
