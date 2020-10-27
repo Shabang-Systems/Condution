@@ -7,6 +7,7 @@ import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicy
 // Routing
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
 // Like, your heart and soul
 import React, { Component } from 'react';
@@ -25,6 +26,7 @@ import ReactTooltip from 'react-tooltip';
 
 // autobind those functions
 const autoBind = require('auto-bind/react');
+const history = createBrowserHistory();
 
 /* 
  *
@@ -106,7 +108,7 @@ class Home extends Component {
         return (
             <IonPage>
                 {/* The central router that controls the routing of views */}
-                <Router>
+                <Router history={history}>
                     {/* OoIp */}
                     <ReactTooltip />
                     {/* App container */}
@@ -154,7 +156,19 @@ class Home extends Component {
 
 
                                     {/* === Projects == */}
-                                    <div className="menu-sublabel menu-decoration">Projects <i className="fa fa-plus add"></i></div>
+                                    <div className="menu-sublabel menu-decoration">Projects <i onClick={()=>{
+                                        
+                                        (async function() {
+                                            let npid = (await this.props.gruntman.do(
+                                                "project.create", {
+                                                    uid: this.props.uid,
+                                                },
+                                            )).pid;
+                                            history.push(`/projects/${npid}/do`);
+                                            this.refresh();
+                                        }).bind(this)();
+
+                                    }} className="fa fa-plus add"></i></div>
                                     {/* === Project Contents == */}
                                     {this.state.projects.map((proj) => {
                                         return (
