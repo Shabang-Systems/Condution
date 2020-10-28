@@ -29,7 +29,6 @@ class PerspectiveEdit extends Component {
     }
 
     handleQueryChange(e) {
-	console.log(e, "yeeerte")
 	if (e) {
 	    this.props.gruntman.registerScheduler(() => { 
 		 //Register a scheduler to deal with React's onChange
@@ -42,19 +41,10 @@ class PerspectiveEdit extends Component {
 		    }
 		)
 	    }, `perspective.this.${this.props.id}-update`) // give it a custom id
-            console.log("e", e.target.value)
             //this.setState({perspectiveName: e.target.value})
         } else {console.log(e)}
 
 
-
-    }
-
-    sendToBackend() {
-
-    }
-
-    componentDidUpdate() {
 
     }
 
@@ -117,7 +107,7 @@ class PerspectiveEdit extends Component {
 			<IonSelect 
 			    className="perspective-select" 
 			    interface="popover" 
-			    value={"remain"} // TODO: make a database hit 
+			    value={this.props.avail} // TODO: make a database hit 
 			    mode="ios" 
 			    onIonChange={e=>{
 				this.props.gruntman.do( // call a gruntman function
@@ -141,7 +131,21 @@ class PerspectiveEdit extends Component {
 			</span>
 
 			<IonSelect 
-			    className="perspective-select" interface="popover" value={"duas"} mode="ios" >
+			    className="perspective-select" 
+			    interface="popover" 
+			    value={this.props.tord} 
+			    mode="ios" 
+			    onIonChange={e=>{
+				this.props.gruntman.do( // call a gruntman function
+				    "perspective.update__perspective", { 
+					uid: this.props.uid, // pass it the things 
+					id: this.props.id, 
+					payload: {tord: e.detail.value}
+				    }
+				)
+			    }}
+			>
+
 			    <IonSelectOption className="repeat-select__option" value="duas">Ascend by Due</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="duds">Descend by Due</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="deas">Ascend by Defer</IonSelectOption>

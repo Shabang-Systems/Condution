@@ -38,6 +38,8 @@ class Perspectives extends Component {
             taskList: [],
             perspectiveName: "",
 	    perspectiveQuery: {}, 
+	    perspectiveAvail: {}, 
+	    perspectiveTord: {}, 
             showEdit: false, // are we showing 
             possibleProjects:{}, // see jacks comments in upcoming 
             possibleTags:{}, 
@@ -111,6 +113,8 @@ class Perspectives extends Component {
             taskList: taskList, 
             perspectiveName: perspectiveObject.name,
 	    perspectiveQuery: perspectiveObject.query, 
+	    perspectiveAvail: perspectiveObject.avail, 
+	    perspectiveTord: perspectiveObject.tord, 
             possibleProjects: pPandT[0][0], 
             possibleTags: pPandT[1][0], 
             possibleProjectsRev: pPandT[0][1], 
@@ -136,7 +140,6 @@ class Perspectives extends Component {
                     }
                 ).then(this.props.menuRefresh) // call the homebar refresh
             }, `perspective.this.${this.props.id}-update`) // give it a custom id
-            console.log("e", e.target.value)
             this.setState({perspectiveName: e.target.value})
         } else {console.log(e)}
     } 
@@ -168,6 +171,8 @@ class Perspectives extends Component {
                     id={this.props.id}
                     perspectiveName={this.state.perspectiveName}
 		    query={this.state.perspectiveQuery}
+		    avail={this.state.perspectiveAvail}
+		    tord={this.state.perspectiveTord}
                     menuRefresh={this.props.menuRefresh}
                     updateName={this.updateName}
 

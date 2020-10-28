@@ -1,3 +1,4 @@
+
 {
   "appId": "io.ionic.starter",
   "appName": "Condution",
@@ -11,8 +12,9 @@
   },
   "cordova": {},
   "server": {
+    "url": "http://10.0.1.2:8100",
     "cleartext": true,
     "originalCleartext": true,
-    "url": "http://100.110.48.21:8100"
   }
 }
+
