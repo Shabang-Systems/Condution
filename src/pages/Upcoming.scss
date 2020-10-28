@@ -12,6 +12,10 @@
 
 .timeline-box {
     display: flex;
+    position: sticky;
+    top: 0;
+    background: var(--background);
+    z-index: 10;
 }
 
 .timeline-line {
@@ -26,6 +30,7 @@
     margin-top: 5px;
     color: var(--decorative-light);
     text-align: right;
+    font-weight: 200
 }
 
 .timeline-weekname {

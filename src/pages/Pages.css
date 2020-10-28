@@ -6,6 +6,7 @@
 }
 
 .page-title {
+
     font-size: 15px;
     font-weight: 600;
     color: var(--content-normal-alt);
@@ -86,6 +87,10 @@
 }
 
 .page-label {
+    position: sticky;
+    top: 0;
+    background: var(--background);
+    z-index: 2;
     font-weight: 600;
     color: var(--decorative-light-accent);
     margin-left: 10px;
