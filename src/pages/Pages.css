@@ -83,12 +83,11 @@
     flex-wrap: wrap;
     width: 100%;
     align-items:flex-end;
-    margin-bottom: 10px;
 }
 
 @media (max-width: 575px) {
     .header-container {
-        padding-bottom: 10px;
+        padding-bottom: 5px;
     }
 }
 
