@@ -17,6 +17,7 @@ import Upcoming from './Upcoming';
 import Completed from './Completed';
 import Perspectives from './Perspectives';
 import Projects from './Projects';
+import ABTIB from './Components/FloatingActionButton';
 
 // Our very own CSS
 import './Home.css';
@@ -185,6 +186,8 @@ class Home extends Component {
                                 <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                             </IonMenu>
                             <IonPage id="main">
+                                {/* the add button to inbox button*/}
+                                <ABTIB />
                                 {/* The actual page */}
                                 <IonRouterOutlet>
                                     {/* empty => /upcoming*/}
