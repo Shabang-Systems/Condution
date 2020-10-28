@@ -88,12 +88,14 @@
 @media (max-width: 575px) {
     .header-container {
         padding-bottom: 5px;
+        margin-bottom: 15px;
     }
 }
 
 @media (min-width: 576px) { 
     .header-container {
         padding-bottom: 2px;
+        margin-bottom: 2px;
     }
 }
 
