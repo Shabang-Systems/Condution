@@ -35,8 +35,6 @@ class Upcoming extends Component { // define the component
 
         this.updatePrefix = this.random();
 
-        this.pageRef = React.createRef(); // reference to this page used for hiding scrollbar
-
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
         autoBind(this);
@@ -110,15 +108,15 @@ class Upcoming extends Component { // define the component
     componentDidMount() {
         this.refresh();
 
-        // Jack and the Misadventures of Hiding the Scrollbar
-        const content = this.pageRef.current;
-        const styles = document.createElement('style');
-        styles.textContent = `
-            .scroll-y::-webkit-scrollbar {
-                display: none;
-            }
-        `;
-        content.shadowRoot.appendChild(styles);
+        //// Jack and the Misadventures of Hiding the Scrollbar
+        //const content = this.pageRef.current;
+        //const styles = document.createElement('style');
+        //styles.textContent = `
+            //.scroll-y::-webkit-scrollbar {
+                //display: none;
+            //}
+        //`;
+        {/*content.shadowRoot.appendChild(styles);*/}
     }
 
     componentWillUnmount() {
@@ -131,7 +129,7 @@ class Upcoming extends Component { // define the component
     render() {
         return (
             <IonPage>
-                <IonContent ref={this.pageRef}>
+                <div style={{overflow: "visible"}}>
 
                     <div className={"page-invis-drag " + (()=>{
                         if (!isPlatform("electron")) // if we are not running electron
@@ -169,7 +167,7 @@ class Upcoming extends Component { // define the component
                             </div>
                             <Datebar />
                         </div>
-                        <div style={{marginLeft: 10, marginRight: 10}}>
+                        <div style={{marginLeft: 10, marginRight: 10, overflow: "scroll"}}>
                             <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                             {this.state.inbox.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
@@ -178,15 +176,16 @@ class Upcoming extends Component { // define the component
                             {this.state.dueSoon.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
+                            <div className="page-label">Due Later</div>
                             {this.state.timeline.map(timelineItem => {
                                 if (timelineItem.type === "task")
                                     return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                 else if (timelineItem.type === "label")
-                                    return <div className="page-label">{timelineItem.content.toString()}</div>
+                                    return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
                             })}
                         </div>
                     </div>
-                </IonContent>
+                </div>
             </IonPage>
         )
     }

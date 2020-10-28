@@ -10,4 +10,33 @@
   min-width: 200px;
 }
 
+.timeline-box {
+    display: flex;
+}
+
+.timeline-line {
+    height: 1px;
+    transform: translateY(2px);
+    background: var(--background-feature);
+    margin-left: 10px;
+}
+
+.timeline-text {
+    margin-left: 10px;
+    margin-top: 5px;
+    color: var(--decorative-light);
+    text-align: right;
+}
+
+.timeline-weekname {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.timeline-line-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+    flex-grow: 1;
+}
 

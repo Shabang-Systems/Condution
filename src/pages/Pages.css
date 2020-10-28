@@ -1,6 +1,8 @@
 .page-content {
-    overflow-y: scroll;
-    padding-bottom: 20px;
+    display: flex;
+    flex-direction:column;
+    width: 100%;
+    height: 100vh;
 }
 
 .page-title {
@@ -114,9 +116,12 @@
 .page-invis-drag.darwin {
     display: block;
     position: absolute;
-    height: 40px;
+    z-index: 1000;
+    height: 35px;
     width: 100%;
     -webkit-app-region: drag;
+    background: var(--background) !important;
+    width: 100%;
 }
 
 .page-content.darwin {
