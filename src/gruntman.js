@@ -52,7 +52,7 @@ class Gruntman {
                         repeat: {rule: "none"},
                         name: "",
                     };
-                    
+
                     if (options.due)
                         ntObject.due = options.due
                     if (options.defer)
@@ -263,24 +263,24 @@ class Gruntman {
 
                     return {uid: options.uid, TODO: "TODO"} // TODO: how do we undelete a project?
                 },
-                update__name: async function (options) { // update the perspective name!
+                update__name: async function (options) { // update the project name!
                     let possibleProjects = await engine.db.getProjectsandTags(options.uid);
-                    // get all possible perspectives
+                    // get all possible project
                     let projectName = possibleProjects[0][0][options.id]
                     // get the one we want based on page id
 
-                    // modify the perspective
+                    // modify the project
                     await engine.db.modifyProject(options.uid, options.id, {name: options.name});
                     // return what we need to undo
                     return {projectName, uid: options.uid}
                 },
-                update__pstate: async function (options) { // update the perspective name!
+                update__pstate: async function (options) { // update the project name!
                     let currentProject = await engine.db.getProjectStructure(options.uid, options.id, false); // get current project info
-                    // get all possible perspectives
+                    // get all possible project
                     let is_sequential = currentProject;
                     // get the one we want based on page id
 
-                    // modify the perspective
+                    // modify the project
                     await engine.db.modifyProject(options.uid, options.id, {is_sequential: options.is_sequential});
                     // return what we need to undo
                     return {is_sequential, uid: options.uid}
@@ -297,18 +297,19 @@ class Gruntman {
                 }
             },
 	    perspective: {
-		update__name: async function (options) { // update the perspective name!
+		update__perspective: async function (options) { // update the perspective name!
 		    let possiblePerspectives = await engine.db.getPerspectives(options.uid);
 		    // get all possible perspectives
 		    let perspectiveObject = possiblePerspectives[0][options.id]
 		    // get the one we want based on page id
 
 		    // modify the perspective
-		    await engine.db.modifyPerspective(options.uid, options.id, {name: options.name});
+		    await engine.db.modifyPerspective(options.uid, options.id, options.payload);
 
 		    // return what we need to undo
 		    return {perspectiveObject, uid: options.uid}
 		}
+
 	    },
         } // type:action:functionaction (return resources)
         this.undoers = {
@@ -329,13 +330,13 @@ class Gruntman {
         } // util function onChange fixer-upper
         this.updateLock = false;
         this.updateInterval = undefined;
-         
+
         // And AutoBind any and all functions
         autoBind(this);
     }
 
     halt() {
-        for (let key in this.schedulers) 
+        for (let key in this.schedulers)
             clearTimeout(this.schedulers[key])
         this.refresher = ()=>{};
         if (this.updateInterval)
@@ -364,12 +365,12 @@ class Gruntman {
      * @param refresher: refresher function to refresh what you registered
      */
 
-    registerRefresher(r) { 
+    registerRefresher(r) {
         this.refresher = r;
         // lock updates every time a new page loads to prevent MeRGE Conflicts
         if(this.releaseTimeout) clearTimeout(this.releaseTimeout);
         this.callbackRefresherReleased= false;
-        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution); 
+        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution);
     }
 
     registerScheduler(callback, identifier, wait=500) {
@@ -385,10 +386,10 @@ class Gruntman {
          *
          */
 
-        // Lock updates every time cacheRef is called to prevent mErGE ConFLIcTS 
+        // Lock updates every time cacheRef is called to prevent mErGE ConFLIcTS
         if(this.releaseTimeout) clearTimeout(this.releaseTimeout);
         this.callbackRefresherReleased= false;
-        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution); 
+        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution);
 
         let actionID = this.random();
 
@@ -401,7 +402,7 @@ class Gruntman {
 
         if (isUndo) this.undolog.push(actionID);
         else this.backlog.push(actionID);
-    
+
         let resources = await action(options);
 
         this.taskLog[actionID] = [actionName, resources];
