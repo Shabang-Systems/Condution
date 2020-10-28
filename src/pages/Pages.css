@@ -86,15 +86,28 @@
     margin-bottom: 10px;
 }
 
+@media (max-width: 575px) {
+    .header-container {
+        padding-bottom: 10px;
+    }
+}
+
+@media (min-width: 576px) { 
+    .header-container {
+        padding-bottom: 2px;
+    }
+}
+
 .page-label {
     position: sticky;
-    top: 0;
+    top: -1px;
     background: var(--background);
     z-index: 2;
     font-weight: 600;
     color: var(--decorative-light-accent);
     margin-left: 10px;
     margin-top: 10px;
+    padding-bottom: 5px;
     display: flex;
 }
 

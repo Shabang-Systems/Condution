@@ -6,8 +6,6 @@ import './Pages.css';
 
 import Task from './Components/Task';
 
-import Datebar from './Components/Datebar';
-
 const autoBind = require('auto-bind/react'); // autobind things! 
 
 
@@ -165,7 +163,6 @@ class Upcoming extends Component { // define the component
 
                                 <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
                             </div>
-                            <Datebar />
                         </div>
                         <div style={{marginLeft: 10, marginRight: 10, overflow: "scroll"}}>
                             <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
@@ -176,7 +173,6 @@ class Upcoming extends Component { // define the component
                             {this.state.dueSoon.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
-                            <div className="page-label">Due Later</div>
                             {this.state.timeline.map(timelineItem => {
                                 if (timelineItem.type === "task")
                                     return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
