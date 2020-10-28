@@ -114,7 +114,22 @@ class PerspectiveEdit extends Component {
 			    <span className="perspective-label">Include</span>
 			</span>
 
-			<IonSelect className="perspective-select" interface="popover" value={"remain"} mode="ios" >
+			<IonSelect 
+			    className="perspective-select" 
+			    interface="popover" 
+			    value={"remain"} // TODO: make a database hit 
+			    mode="ios" 
+			    onIonChange={e=>{
+				this.props.gruntman.do( // call a gruntman function
+				    "perspective.update__perspective", { 
+					uid: this.props.uid, // pass it the things vvv
+					id: this.props.id, 
+					payload: {avail: e.detail.value}
+				    }
+				)
+			    }}
+			>
+
 			    <IonSelectOption className="repeat-select__option" value="remain">Remaining</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="Available">Available</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="flagged">Flagged</IonSelectOption>
@@ -125,7 +140,8 @@ class PerspectiveEdit extends Component {
 			    <span className="perspective-label">Order</span>
 			</span>
 
-			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
+			<IonSelect 
+			    className="perspective-select" interface="popover" value={"duas"} mode="ios" >
 			    <IonSelectOption className="repeat-select__option" value="duas">Ascend by Due</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="duds">Descend by Due</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="deas">Ascend by Defer</IonSelectOption>
