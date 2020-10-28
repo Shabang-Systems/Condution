@@ -15,7 +15,7 @@ import * as chrono from 'chrono-node';
  *
  */
 
-const defaultValue = "Add button to inbox ^-^";
+const defaultValue = "Add button to inbox";
 
 function handleABTIBInput(value) {
     console.log('abtib reportin to handle input ^-^');
