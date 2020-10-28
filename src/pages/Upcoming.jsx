@@ -10,9 +10,14 @@ import Datebar from './Components/Datebar';
 
 const autoBind = require('auto-bind/react'); // autobind things! 
 
+
 class Upcoming extends Component { // define the component
     constructor(props) {
         super(props);
+
+        let tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate()+1);
+
 
         this.state = {
             inbox: [], // define the inbox
@@ -25,6 +30,7 @@ class Upcoming extends Component { // define the component
             projectSelects:[], 
             tagSelects: [], 
             projectDB: {},
+            timeline: [],
         };
 
         this.updatePrefix = this.random();
@@ -70,8 +76,35 @@ class Upcoming extends Component { // define the component
 
         this.updatePrefix = this.random();
 
+        let timeline = await this.props.engine.db.selectTasksInRange(this.props.uid, new Date(), new Date(2100, 1, 1), true);
+        
+                            //timeline.push({type: "label", content: timelineRenderedUntil});
+                        //for (let task of fTasks)
+                            //timeline.push({type:"task", content:task});
 
-        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB});
+                        //this.setState({timelineRenderedUntil, timelineSoFar: timeline});
+        // Date same date check https://stackoverflow.com/questions/4428327/checking-if-two-dates-have-the-same-date-info
+        
+        Date.prototype.isSameDateAs = function(pDate) {
+          return (
+            this.getFullYear() === pDate.getFullYear() &&
+            this.getMonth() === pDate.getMonth() &&
+            this.getDate() === pDate.getDate()
+          );
+        }
+
+        let refrenceDate = new Date();
+        let tcontent = [];
+        for (let task of timeline) {
+            let due = new Date(task[1].due.seconds*1000);
+            if (!due.isSameDateAs(refrenceDate)) {
+                tcontent.push({type:"label", content: due});
+                refrenceDate = due;
+            }
+            tcontent.push({type:"task", content: task[0]});
+        }
+
+        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent});
     }
 
     componentDidMount() {
@@ -145,19 +178,14 @@ class Upcoming extends Component { // define the component
                             {this.state.dueSoon.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
+                            {this.state.timeline.map(timelineItem => {
+                                if (timelineItem.type === "task")
+                                    return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                else if (timelineItem.type === "label")
+                                    return <div className="page-label">{timelineItem.content.toString()}</div>
+                            })}
                         </div>
                     </div>
-                    <IonInfiniteScroll onIonInfinite={(e)=>{
-{/*                        let tomorrow = new Date();*/}
-                        //tomorrow.setDate(tomorrow.getDate()+1);
-                        //let fTasks = this.props.engine.db.selectTasksInRange(this.props.uid, tomorrow);
-                        //fTasks = fTasks.filter(x => !pandt[0].includes(x));
-                        {/*setTimeout(()=>e.target.complete(), 500);*/}
-                    }}>
-                        <IonInfiniteScrollContent
-                            loadingText="TODO: Consuming Plantains Voratiously">
-                        </IonInfiniteScrollContent>
-                    </IonInfiniteScroll>
                 </IonContent>
             </IonPage>
         )
