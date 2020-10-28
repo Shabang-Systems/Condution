@@ -148,12 +148,11 @@ class Upcoming extends Component { // define the component
                         </div>
                     </div>
                     <IonInfiniteScroll onIonInfinite={(e)=>{
-                        console.log(e);
-        let tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate()+1);
-        let fTasks = this.props.engine.db.selectTasksInRange(this.props.uid, tomorrow);
-        fTasks = fTasks.filter(x => !pandt[0].includes(x));
-                        setTimeout(()=>e.target.complete(), 500);
+{/*                        let tomorrow = new Date();*/}
+                        //tomorrow.setDate(tomorrow.getDate()+1);
+                        //let fTasks = this.props.engine.db.selectTasksInRange(this.props.uid, tomorrow);
+                        //fTasks = fTasks.filter(x => !pandt[0].includes(x));
+                        {/*setTimeout(()=>e.target.complete(), 500);*/}
                     }}>
                         <IonInfiniteScrollContent
                             loadingText="TODO: Consuming Plantains Voratiously">
