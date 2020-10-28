@@ -165,15 +165,20 @@ class Upcoming extends Component { // define the component
                                 <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
                             </div>
                         </div>
-                        <div style={{marginLeft: 10, marginRight: 10, overflow: "scroll"}}>
+                        <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                            <div>
                             <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                             {this.state.inbox.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
+                            </div>
+                            <div>
                             <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
                             {this.state.dueSoon.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
+                            </div>
+                            <div>
                             {
                                 (()=>{
                                     if (this.state.timelineShown)
@@ -187,6 +192,8 @@ class Upcoming extends Component { // define the component
                                         return <a onClick={()=>this.setState({timelineShown: true})} style={{marginLeft: 15,marginTop: 10, display: "inline-block", fontWeight: 600, fontSize: 13, color: "var(--decorative-light-alt)", cursor: "pointer"}}><i class="fas fa-calendar-week" style={{paddingRight: 5}}></i> Show Timeline</a>
                                 })()
                             }
+                            </div>
+                            <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
                 </div>

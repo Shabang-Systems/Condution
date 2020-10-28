@@ -103,9 +103,9 @@
 
 .page-label {
     background: var(--background);
-    top: 0;
+    top: -1px;
     position: sticky;
-    z-index: 2;
+    z-index: 1;
     font-weight: 600;
     color: var(--decorative-light-accent);
     margin-left: 10px;
@@ -123,7 +123,7 @@
     border: 1.5px solid var(--content-normal-accent);
     /*background-color: transparent;*/
     background-color: var(--task-feature) !important;
-    transform: translate(5px, -1px) scale(0.9);
+    transform: translate(5px) scale(0.9);
 }
 
 .page-invis-drag.normal {

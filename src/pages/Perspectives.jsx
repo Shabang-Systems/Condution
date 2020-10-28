@@ -246,7 +246,7 @@ class Perspectives extends Component {
                         </div>
                     </div>
 
-                    <div style={{marginLeft: 10, marginRight: 10, overflow: "scroll"}}>
+                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
 
                         {this.state.taskList.map(id => (
                             <Task 

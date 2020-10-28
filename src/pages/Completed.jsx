@@ -125,7 +125,7 @@ class Completed extends Component {
     render() {
         return (
             <IonPage>
-                <div style={{overflow: "scroll"}}>
+                <div style={{overflowY: "scroll"}}>
                     <div className={"page-invis-drag " + (()=>{
                         if (!isPlatform("electron")) // if we are not running electron
                             return "normal"; // normal windowing proceeds

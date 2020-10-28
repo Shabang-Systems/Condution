@@ -216,7 +216,7 @@ class Projects extends Component { // define the component
                         </div>
                     </div>
 
-                    <div style={{marginLeft: 10, marginRight: 10, overflow: "scroll"}}>
+                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         {this.state.currentProject.children.map(item => {
                             if (item.type === "task")
                                 return (
