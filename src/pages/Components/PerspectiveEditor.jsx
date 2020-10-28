@@ -87,9 +87,15 @@ class PerspectiveEdit extends Component {
 			    <IonSelectOption className="repeat-select__option" value="daily">Descend by Due</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="weekly2">Ascend by Defer</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="weekly3">Descend by Defer</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="weekly3">Alphabetical</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly4">Alphabetical</IonSelectOption>
 			</IonSelect>
-			<p>Help</p>
+			<i 
+			    className="far fa-question-circle" 
+			    style={{
+				marginLeft: "auto",
+				fontSize: "18px",
+				color: "var(--content-normal-accent)"}}
+			></i>
 
 
 		    </div> 
