@@ -37,6 +37,7 @@ class Perspectives extends Component {
         this.state = {
             taskList: [],
             perspectiveName: "",
+	    perspectiveQuery: {}, 
             showEdit: false, // are we showing 
             possibleProjects:{}, // see jacks comments in upcoming 
             possibleTags:{}, 
@@ -109,6 +110,7 @@ class Perspectives extends Component {
         this.setState({
             taskList: taskList, 
             perspectiveName: perspectiveObject.name,
+	    perspectiveQuery: perspectiveObject.query, 
             possibleProjects: pPandT[0][0], 
             possibleTags: pPandT[1][0], 
             possibleProjectsRev: pPandT[0][1], 
@@ -136,7 +138,7 @@ class Perspectives extends Component {
             }, `perspective.this.${this.props.id}-update`) // give it a custom id
             console.log("e", e.target.value)
             this.setState({perspectiveName: e.target.value})
-        } else { console.log(e)}
+        } else {console.log(e)}
     } 
 
     componentDidMount() {
@@ -163,9 +165,9 @@ class Perspectives extends Component {
                     uid={this.props.uid} 
                     engine={this.props.engine} 
                     gruntman={this.props.gruntman}
-                    uid={this.props.uid}
                     id={this.props.id}
                     perspectiveName={this.state.perspectiveName}
+		    query={this.state.perspectiveQuery}
                     menuRefresh={this.props.menuRefresh}
                     updateName={this.updateName}
 
