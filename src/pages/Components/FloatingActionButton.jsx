@@ -42,7 +42,7 @@ function ABTIB(props) {
     }
     onBlur={
         (event) => {
-            event.target.value = defaultValue;
+            event.target.value = defaultValue + ((Math.random()*128 < 1) ? " ^-^" : "");
         }
     } />;
 }
