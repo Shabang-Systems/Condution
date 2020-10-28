@@ -269,6 +269,7 @@ class Projects extends Component { // define the component
                                 )).pid;
                                 this.props.history.push(`/projects/${npid}/do`);
                             }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Project</div></div></a>
+                            <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
                 </div>

@@ -266,7 +266,7 @@ class Perspectives extends Component {
                                 ]}
                             />
                         ))}
-
+                        <div className="bottom-helper">&nbsp;</div>
                     </div>
                 </div>
             </IonPage>
