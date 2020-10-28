@@ -161,24 +161,25 @@ async function dueTasks(userID, available, wrt) {
     return dsDocs.map(doc => doc.id);
 }
 
-async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new Date(2100, 1, 1)), param="due") {
-    let maxT = max;
-    let minT = min;
-    maxT.setHours(23, 59, 59, 999);
-    minT.setHours(0, 0, 0, 0);
+async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new Date(2100, 1, 1)), returnFull=false) {
+/*    let maxT = max;*/
+    //let minT = min;
+    //maxT.setHours(23, 59, 59, 999);
+    /*minT.setHours(0, 0, 0, 0);*/
     let tasks = await cRef("users", userID, "tasks")
                     .get()
                     .then(snap => snap.docs
                         .filter(doc =>
                             (doc.data().due ?
                                 (doc.data().defer ?
-                                    (new Date(doc.data().due.seconds*1000))<maxT && (new Date(doc.data().defer.seconds*1000)) > minT
+                                    (new Date(doc.data().due.seconds*1000))<max && (new Date(doc.data().due.seconds*1000)) > min && (new Date()>(new Date(doc.data().defer.seconds*1000)))
                                 : false) 
                                 : false)
                         )
+                        .filter(doc => !doc.data().isComplete)
                         .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
                     ).catch(console.error);
-    return tasks.map(doc => doc.id);
+    return returnFull ? tasks.map(doc => [doc.id, doc.data()]):tasks.map(doc => doc.id);
 }
 
 async function getDSRow(userID, avaliable) {
