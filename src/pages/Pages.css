@@ -1,6 +1,7 @@
 .page-content {
     display: flex;
     flex-direction:column;
+    justify-content: flex-start;
     width: 100%;
     height: 100vh;
 }
@@ -84,6 +85,7 @@
     width: 100%;
     align-items:flex-end;
     margin-bottom: 10px;
+    flex-shrink: 0;
 }
 
 @media (max-width: 575px) {
@@ -101,6 +103,8 @@
 
 .page-label {
     background: var(--background);
+    top: 0;
+    position: sticky;
     z-index: 2;
     font-weight: 600;
     color: var(--decorative-light-accent);
