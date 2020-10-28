@@ -129,10 +129,10 @@ class Perspectives extends Component {
                 // Register a scheduler to deal with React's onChange
                 // check out the FANCYCHANGE in task.jsx
                 this.props.gruntman.do( // call a gruntman function
-                    "perspective.update__name", { 
+                    "perspective.update__perspective", { 
                         uid: this.props.uid, // pass it the things vvv
                         id: this.props.id, 
-                        name: e.target.value
+                        payload: {name: e.target.value}
                     }
                 ).then(this.props.menuRefresh) // call the homebar refresh
             }, `perspective.this.${this.props.id}-update`) // give it a custom id

@@ -1,0 +1,15 @@
+#abtib {
+    width: 350px;
+    height: 2em;
+    z-index: 10000;
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    border: 0px;
+    border-radius: 10px;
+    background-color: var(--quickadd);
+    color: var(--quickadd-text);
+    padding-top: 5px;
+    padding-left: 10px;
+}
+

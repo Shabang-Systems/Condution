@@ -30,20 +30,20 @@ class PerspectiveEdit extends Component {
 
     handleQueryChange(e) {
 	console.log(e, "yeeerte")
-	        if (e) {
-            this.props.gruntman.registerScheduler(() => { 
-                // Register a scheduler to deal with React's onChange
-                // check out the FANCYCHANGE in task.jsx
-                this.props.gruntman.do( // call a gruntman function
-                    "perspective.update__name", { 
-                        uid: this.props.uid, // pass it the things vvv
-                        id: this.props.id, 
-                        name: e.target.value
-                    }
-                ).then(this.props.menuRefresh) // call the homebar refresh
-            }, `perspective.this.${this.props.id}-update`) // give it a custom id
+	if (e) {
+	    this.props.gruntman.registerScheduler(() => { 
+		 //Register a scheduler to deal with React's onChange
+		 //check out the FANCYCHANGE in task.jsx
+		this.props.gruntman.do( // call a gruntman function
+		    "perspective.update__perspective", { 
+			uid: this.props.uid, // pass it the things vvv
+			id: this.props.id, 
+			payload: {query: e.target.value}
+		    }
+		)
+	    }, `perspective.this.${this.props.id}-update`) // give it a custom id
             console.log("e", e.target.value)
-            this.setState({perspectiveName: e.target.value})
+            //this.setState({perspectiveName: e.target.value})
         } else {console.log(e)}
 
 
@@ -101,7 +101,7 @@ class PerspectiveEdit extends Component {
 			    <input 
 				className="build-input-edit"
 				defaultValue={this.props.query}
-				onChange={(e)=> {this.handleQueryChange(e)}}
+				onChange={(e)=> {e.persist(); this.handleQueryChange(e)}}
 
 			    >
 			    </input> 
@@ -114,10 +114,25 @@ class PerspectiveEdit extends Component {
 			    <span className="perspective-label">Include</span>
 			</span>
 
-			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
-			    <IonSelectOption className="repeat-select__option" value="none">Remaining</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="daily">Available</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="weekly2">Flagged</IonSelectOption>
+			<IonSelect 
+			    className="perspective-select" 
+			    interface="popover" 
+			    value={"remain"} // TODO: make a database hit 
+			    mode="ios" 
+			    onIonChange={e=>{
+				this.props.gruntman.do( // call a gruntman function
+				    "perspective.update__perspective", { 
+					uid: this.props.uid, // pass it the things vvv
+					id: this.props.id, 
+					payload: {avail: e.detail.value}
+				    }
+				)
+			    }}
+			>
+
+			    <IonSelectOption className="repeat-select__option" value="remain">Remaining</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="Available">Available</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="flagged">Flagged</IonSelectOption>
 			</IonSelect>
 
 			<span style={{marginLeft: "25px"}}>
@@ -125,12 +140,13 @@ class PerspectiveEdit extends Component {
 			    <span className="perspective-label">Order</span>
 			</span>
 
-			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
-			    <IonSelectOption className="repeat-select__option" value="none">Ascend by Due</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="daily">Descend by Due</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="weekly2">Ascend by Defer</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="weekly3">Descend by Defer</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="weekly4">Alphabetical</IonSelectOption>
+			<IonSelect 
+			    className="perspective-select" interface="popover" value={"duas"} mode="ios" >
+			    <IonSelectOption className="repeat-select__option" value="duas">Ascend by Due</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="duds">Descend by Due</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="deas">Ascend by Defer</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="deds">Descend by Defer</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="alph">Alphabetical</IonSelectOption>
 			</IonSelect>
 			<div className="help-icon" onClick={this.handleHelp}>
 			    <i 
