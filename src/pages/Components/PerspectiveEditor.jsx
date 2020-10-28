@@ -18,13 +18,51 @@ class PerspectiveEdit extends Component {
         autoBind(this);
 
         this.state = {
-	    inputEvent: ""
+	    inputEvent: "",
+
+
         }
     }
 
     componentDidMount() {
 
     }
+
+    handleQueryChange(e) {
+	console.log(e, "yeeerte")
+	        if (e) {
+            this.props.gruntman.registerScheduler(() => { 
+                // Register a scheduler to deal with React's onChange
+                // check out the FANCYCHANGE in task.jsx
+                this.props.gruntman.do( // call a gruntman function
+                    "perspective.update__name", { 
+                        uid: this.props.uid, // pass it the things vvv
+                        id: this.props.id, 
+                        name: e.target.value
+                    }
+                ).then(this.props.menuRefresh) // call the homebar refresh
+            }, `perspective.this.${this.props.id}-update`) // give it a custom id
+            console.log("e", e.target.value)
+            this.setState({perspectiveName: e.target.value})
+        } else {console.log(e)}
+
+
+
+    }
+
+    sendToBackend() {
+
+    }
+
+    componentDidUpdate() {
+
+    }
+
+    handleHelp() {
+	alert("lmao u thought")
+	console.log("no one is here to help. grow up.")
+    }
+
 
 
     render() {
@@ -58,16 +96,21 @@ class PerspectiveEdit extends Component {
 			<a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
 
                     </div>
+			<div className="build-input">
+			    <span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span>
+			    <input 
+				className="build-input-edit"
+				defaultValue={this.props.query}
+				onChange={(e)=> {this.handleQueryChange(e)}}
 
-
-		    <div className="build-input">
-			<input className="build-input-edit"></input>
-		    </div>
+			    >
+			    </input> 
+			</div>
 
 
 	            <div className="perspective-basic-row">
 			<span>
-			    <i className="repeat-label fa fa-redo"></i>
+			    <i className="repeat-label fas fa-exchange-alt"></i>
 			    <span className="perspective-label">Include</span>
 			</span>
 
@@ -77,8 +120,8 @@ class PerspectiveEdit extends Component {
 			    <IonSelectOption className="repeat-select__option" value="weekly2">Flagged</IonSelectOption>
 			</IonSelect>
 
-			<span style={{marginLeft: "20px"}}>
-			    <i className="repeat-label fa fa-redo"></i>
+			<span style={{marginLeft: "25px"}}>
+			    <i className="repeat-label fas fa-sort-amount-down-alt"></i>
 			    <span className="perspective-label">Order</span>
 			</span>
 
@@ -87,9 +130,13 @@ class PerspectiveEdit extends Component {
 			    <IonSelectOption className="repeat-select__option" value="daily">Descend by Due</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="weekly2">Ascend by Defer</IonSelectOption>
 			    <IonSelectOption className="repeat-select__option" value="weekly3">Descend by Defer</IonSelectOption>
-			    <IonSelectOption className="repeat-select__option" value="weekly3">Alphabetical</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly4">Alphabetical</IonSelectOption>
 			</IonSelect>
-			<p>Help</p>
+			<div className="help-icon" onClick={this.handleHelp}>
+			    <i 
+				className="far fa-question-circle" 
+			    ></i>
+			</div>
 
 
 		    </div> 
