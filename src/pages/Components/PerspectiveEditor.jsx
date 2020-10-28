@@ -45,7 +45,7 @@ class PerspectiveEdit extends Component {
                     {/* Header */}
                     <div className="perspective-header">
                         {/* Repeat name */}
-                        <span style={{display: "flex", alignItems: "center", width: "100%"}}>
+                        <span style={{display: "inline-block", alignItems: "center", width: "100%"}}>
 			    <b className="bold-prefix" >Let&#39;s build &nbsp;</b> 
 				<input className="editable-title" 
 				    defaultValue={this.props.perspectiveName} 
@@ -58,9 +58,42 @@ class PerspectiveEdit extends Component {
 			<a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
 
                     </div>
+
+
 		    <div className="build-input">
 			<input className="build-input-edit"></input>
 		    </div>
+
+
+	            <div className="perspective-basic-row">
+			<span>
+			    <i className="repeat-label fa fa-redo"></i>
+			    <span className="perspective-label">Include</span>
+			</span>
+
+			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
+			    <IonSelectOption className="repeat-select__option" value="none">Remaining</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="daily">Available</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly2">Flagged</IonSelectOption>
+			</IonSelect>
+
+			<span style={{marginLeft: "20px"}}>
+			    <i className="repeat-label fa fa-redo"></i>
+			    <span className="perspective-label">Order</span>
+			</span>
+
+			<IonSelect className="perspective-select" interface="popover" value={"none"} mode="ios" >
+			    <IonSelectOption className="repeat-select__option" value="none">Ascend by Due</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="daily">Descend by Due</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly2">Ascend by Defer</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly3">Descend by Defer</IonSelectOption>
+			    <IonSelectOption className="repeat-select__option" value="weekly3">Alphabetical</IonSelectOption>
+			</IonSelect>
+			<p>Help</p>
+
+
+		    </div> 
+
                 </div>
             </IonModal>
         )
