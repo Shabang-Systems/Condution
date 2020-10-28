@@ -161,7 +161,28 @@ async function dueTasks(userID, available, wrt) {
     return dsDocs.map(doc => doc.id);
 }
 
+async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new Date(2100, 1, 1)), param="due") {
+    let maxT = max;
+    let minT = min;
+    maxT.setHours(23, 59, 59, 999);
+    minT.setHours(0, 0, 0, 0);
+    let tasks = await cRef("users", userID, "tasks")
+                    .get()
+                    .then(snap => snap.docs
+                        .filter(doc =>
+                            (doc.data().due ?
+                                (doc.data().defer ?
+                                    (new Date(doc.data().due.seconds*1000))<maxT && (new Date(doc.data().defer.seconds*1000)) > minT
+                                : false) 
+                                : false)
+                        )
+                        .sort((a,b) => a.data().due.seconds - b.data().due.seconds)
+                    ).catch(console.error);
+    return tasks.map(doc => doc.id);
+}
+
 async function getDSRow(userID, avaliable) {
+    console.warn("DEPERCATED: use instead selectTasksInRange");
     let ibt = await getInboxTasks(userID);
     let d = new Date();
     let dsTasks = [];
@@ -794,5 +815,5 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard};
 
