@@ -196,6 +196,7 @@ class Completed extends Component {
                             {/* define the fetch more button */}
                             {this.state.rendering? <p className="loader" >Loading...</p> : <p onClick={this.handleFetchMore}>Fetch more...</p>}
                         </div> 
+                    <div className="bottom-helper">&nbsp;</div>
                     </div>
                     </div>
                 </div>

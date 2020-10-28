@@ -149,4 +149,22 @@
     padding-top: 16px;
 }
 
+.bottom-helper {
+    height: 100px;
+}
+
+
+@media (max-width: 575px) {
+    .bottom-helper {
+        height: 200px;
+    }
+}
+
+@media (min-width: 576px) { 
+    .bottom-helper {
+        height: 100px;
+    }
+}
+
+
 

@@ -128,7 +128,7 @@ class Upcoming extends Component { // define the component
     render() {
         return (
             <IonPage>
-                <div style={{overflow: "visible"}}>
+                <div style={{overflow: "none"}}>
 
                     <div className={"page-invis-drag " + (()=>{
                         if (!isPlatform("electron")) // if we are not running electron
