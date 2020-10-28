@@ -24,7 +24,7 @@ class Upcoming extends Component { // define the component
             availability: [],  // whats available
             projectSelects:[], 
             tagSelects: [], 
-            projectDB: {}
+            projectDB: {},
         };
 
         this.updatePrefix = this.random();
@@ -40,6 +40,7 @@ class Upcoming extends Component { // define the component
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
         let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail) // get inbox and due soon 
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
+
 
         let projectList = []; // define the project list
         let tagsList = []; // define the tag list
@@ -85,7 +86,6 @@ class Upcoming extends Component { // define the component
             }
         `;
         content.shadowRoot.appendChild(styles);
-        console.log(content);
     }
 
     componentWillUnmount() {
@@ -149,6 +149,10 @@ class Upcoming extends Component { // define the component
                     </div>
                     <IonInfiniteScroll onIonInfinite={(e)=>{
                         console.log(e);
+        let tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate()+1);
+        let fTasks = this.props.engine.db.selectTasksInRange(this.props.uid, tomorrow);
+        fTasks = fTasks.filter(x => !pandt[0].includes(x));
                         setTimeout(()=>e.target.complete(), 500);
                     }}>
                         <IonInfiniteScrollContent
