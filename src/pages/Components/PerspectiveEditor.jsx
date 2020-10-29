@@ -135,7 +135,7 @@ class PerspectiveEdit extends Component {
                             >
 
                                 <IonSelectOption className="repeat-select__option" value="remain">Remaining</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="Available">Available</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="avail">Available</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="flagged">Flagged</IonSelectOption>
                             </IonSelect>
                         </span>

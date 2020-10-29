@@ -170,6 +170,9 @@ class Perspectives extends Component {
         if (prevProps.id !== this.props.id) // if we updated the defer date
             this.refresh(); // switching between perspectives are a prop update and not a rerender
         // so we want to refresh the perspective that's rendered
+        if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
+            this.setState({showEdit: true});
+
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
