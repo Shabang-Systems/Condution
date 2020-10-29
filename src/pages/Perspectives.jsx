@@ -167,8 +167,28 @@ class Perspectives extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
-        if (prevProps.id !== this.props.id) // if we updated the defer date
+        if (prevProps.id !== this.props.id) { // if we updated the defer date
+            this.setState({
+                taskList: [], // what tasks should we display? 
+                perspectiveName: "", // whats the perspective name? 
+                perspectiveQuery: "", // whats the perspective query (whats in the text box)?
+                perspectiveAvail: {}, // whats the perspective availability? 
+                perspectiveTord: {},  // whats the perspective ordering?
+                // not truth or dare. jack doent even know what that is! ^^ 
+                showEdit: this.props.options === "do", // are we showing? on do, we are.
+                possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
+                possibleTags:{}, 
+                possibleProjectsRev:{}, 
+                possibleTagsRev:{}, 
+                availability: [], 
+                projectSelects:[], 
+                tagSelects: [], 
+                projectDB: {}
+
+            });
+
             this.refresh(); // switching between perspectives are a prop update and not a rerender
+        }
         // so we want to refresh the perspective that's rendered
         if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
             this.setState({showEdit: true});

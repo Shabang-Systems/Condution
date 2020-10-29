@@ -62,7 +62,7 @@ class PerspectiveEdit extends Component {
     }
 
     handleHelp() { // TODO TODO TODO: jack what do u want here? 
-        alert("lmao u thought")
+        alert("You really think we have documentation ready? I mean, if they are there, they are at docs.condution.com")
         console.log("no one is here to help. grow up.")
     }
 
@@ -91,6 +91,7 @@ class PerspectiveEdit extends Component {
                                 defaultValue={this.props.perspectiveName} 
                                 onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
                                 style={{minWidth: 0}}
+                                placeholder="Tap to set name"
                             />
 
                             <div className="repeat-task-name">{this.state.name}</div>
