@@ -1,7 +1,6 @@
 #abtib {
-    width: 250px;
     height: 2em;
-    z-index: 10000;
+    z-index: 2;
     position: fixed;
     bottom: 2em;
     right: 2em;
@@ -9,7 +8,12 @@
     border-radius: 10px;
     background-color: var(--quickadd);
     color: var(--quickadd-text);
-    padding-top: 5px;
-    padding-left: 10px;
+    padding: 10px;
+    font-size: 15px;
 }
+
+#abtib::placeholder {
+    color: var(--quickadd-placeholder);
+}
+
 

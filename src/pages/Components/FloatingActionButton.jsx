@@ -1,7 +1,8 @@
 //import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './FloatingActionButton.css';
 import * as chrono from 'chrono-node';
+import {useSpring, animated} from 'react-spring'
 
 
 /*
@@ -17,7 +18,7 @@ import * as chrono from 'chrono-node';
  *
  */
 
-const defaultValue = "Add button to inbox";
+const defaultValue = "Add something to the inbox?";
 
 function handleABTIBInput(value) {
     console.log('abtib reportin to handle input ^-^');
@@ -27,26 +28,34 @@ function handleABTIBInput(value) {
 }
 
 function ABTIB(props) {
-    return <input id="abtib" readOnly={false} type="text" defaultValue={defaultValue}
-    onClick={
-        (event) => {
-            event.target.value = "";
-        }
-    }
-    onKeyUp={
-        (event) => {
-            if (event.key === 'Enter') {
-                handleABTIBInput(event.target.value);
-                // TODO: trigger complete animation
+    const [isExpanded, setisExpanded] = useState(false);
+    const [isSaving, setisSaving] = useState(false);
+    const anim = useSpring({to: (isSaving ? [{width: 280, color:"var(--quickadd-success-text)", backgroundColor: "var(--quickadd-success)", config: {duration: 500}}, {width: 250, color:"var(--quickadd-text)", backgroundColor: "var(--quickadd)"}] : {width: isExpanded ? 280:250, color:"var(--quickadd-text)", backgroundColor: "var(--quickadd)"})})
+
+    return <animated.input id="abtib" readOnly={false} type="text" defaultValue={""} style={anim}
+        onClick={
+            (event) => {
                 event.target.value = "";
+                setisExpanded(true);
             }
         }
-    }
-    onBlur={
-        (event) => {
-            event.target.value = defaultValue + ((Math.random()*128 < 1) ? " ^-^" : "");
+        onBlur={e=>{
+            setisExpanded(false);
+            setisSaving(false);
+        }}
+        onKeyUp={
+            (event) => {
+                if (event.key === 'Enter') {
+                    console.log(event.target.value);
+                    setisSaving(true);
+                    // TODO: trigger complete animation
+                    event.target.value = "";
+                    //event.target.blur();
+                }
+            }
         }
-    } />;
+        placeholder={ defaultValue + ((Math.random()*128 < 1) ? " ^-^" : "")}
+     />;
 }
 
 export default ABTIB;
