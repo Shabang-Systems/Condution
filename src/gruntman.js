@@ -308,8 +308,13 @@ class Gruntman {
 
 		    // return what we need to undo
 		    return {perspectiveObject, uid: options.uid}
-		}
+		},
 
+		delete__perspective: async function (options) { // update the perspective name!
+		    console.log("perspective delete gruntman func")
+		    // TODO: is this it? @jack
+		    await engine.db.deletePerspective(options.uid, options.id);
+		}
 	    },
         } // type:action:functionaction (return resources)
         this.undoers = {
