@@ -178,25 +178,27 @@ class Upcoming extends Component { // define the component
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
                             </div>
-                            <div className="timeline-button">
-				<a 
-				    onClick={()=>
-					this.setState({timelineShown: !this.state.timelineShown})} 
-					// for some reason, css classes don't work, so we have to style here
-					// @jack?
-					style={{
-					    marginLeft: 15,
-					    marginTop: 10, 
-					    display: "inline-block", 
-					    fontWeight: 600, 
-					    fontSize: 13, 
-					    //color: "var(--decorative-light-alt)", 
-					    cursor: "pointer"}}
-				>
-				    <i 
-					class="fas fa-calendar-week" 
-					style={{paddingRight: 5}}
-				    ></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
+			    <div>
+				<div className="timeline-button">
+				    <a 
+					onClick={()=>
+					    this.setState({timelineShown: !this.state.timelineShown})} 
+					    // for some reason, css classes don't work, so we have to style here
+					    // @jack?
+					    style={{
+						marginLeft: 15,
+						marginTop: 10, 
+						display: "inline-block", 
+						fontWeight: 600, 
+						fontSize: 13, 
+						//color: "var(--decorative-light-alt)", 
+						cursor: "pointer"}}
+				    >
+					<i 
+					    class="fas fa-calendar-week" 
+					    style={{paddingRight: 5}}
+					></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
+				</div> 
                             {
                                 (()=>{
                                     if (this.state.timelineShown)
@@ -210,7 +212,7 @@ class Upcoming extends Component { // define the component
                                         })
                                 })()
                             }
-                            </div>
+			    </div>
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
