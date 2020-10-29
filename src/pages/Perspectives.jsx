@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import './Perspectives.css'
 import './Pages.css';
 import ReactTooltip from 'react-tooltip';
+import { withRouter } from "react-router";
 
 import Task from './Components/Task';
 import PerspectiveEdit from './Components/PerspectiveEditor';
@@ -144,6 +145,22 @@ class Perspectives extends Component {
         } else {console.log(e)}
     } 
 
+
+    handleDelete() {
+	console.log("hux")
+	this.props.gruntman.do( // call a gruntman function
+	    "perspective.delete__perspective", { 
+		uid: this.props.uid, // pass it the things vvv
+		id: this.props.id, 
+		//parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
+	    }
+	).then(()=>{
+	    this.props.menuRefresh(); // refresh menubar
+	    this.props.history.push("/upcoming/"); // go back
+	    this.props.paginate("upcoming");
+	}) // call the homebar refresh
+    }
+
     componentDidMount() {
         this.refresh()
     }
@@ -198,7 +215,7 @@ class Perspectives extends Component {
 
                 })()}>
 
-                    <div className="header-container" >
+		    <div className="header-container" >
                         <div style={{display: "inline-block"}}>
                             <div> 
                                 <IonMenuToggle>
@@ -230,7 +247,7 @@ class Perspectives extends Component {
                                     </a>
 
                                     <a 
-                                        onClick={()=>console.log("HUX!")} 
+                                        onClick={this.handleDelete} 
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
                                         style={{borderColor: "var(--task-checkbox-feature-alt)", 
@@ -274,5 +291,5 @@ class Perspectives extends Component {
     }
 }
 
-export default Perspectives;
+export default withRouter(Perspectives);
 
