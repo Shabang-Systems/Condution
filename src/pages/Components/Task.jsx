@@ -640,7 +640,10 @@ class Task extends Component {
                                                             className='task-project'
                                                             classNamePrefix='task-select'
                                                             isClearable
-                                                            styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                            styles={{
+                                                                // Fixes the overlapping problem of the component
+                                                                menuPortal: provided => ({ ...provided, zIndex: "9999 !important" })
+                                                            }}
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{

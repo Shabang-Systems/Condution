@@ -80,6 +80,7 @@
 }
 
 .header-container {
+    background: var(--background);
     display: flex;
     flex-wrap: wrap;
     width: 100%;

@@ -14,7 +14,7 @@
     display: flex;
     position: sticky;
     background: var(--background);
-    z-index: 10;
+    z-index: 1;
     top: -1px;
 }
 
@@ -27,6 +27,7 @@
 
 .timeline-text {
     margin-left: 10px;
+    margin-right: 5px;
     margin-top: 5px;
     color: var(--decorative-light);
     text-align: right;
