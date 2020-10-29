@@ -10,6 +10,23 @@ import Select from 'react-select'
 
 const autoBind = require('auto-bind/react');
 
+
+/* 
+ * perspectives are amazing 
+ *
+ * dab on them haters 
+ *
+ * I just said the cringiest thing ever
+ *
+ * oh my god huxley i swear to god 
+ *
+ * i will rebase your commits 
+ *
+ *
+ * - @zbuster05, recorded by @enquirer
+ *
+ */
+
 class PerspectiveEdit extends Component {
     constructor(props) {
         super(props);
@@ -20,36 +37,27 @@ class PerspectiveEdit extends Component {
         }
     }
 
-    componentDidMount() {
-
-    }
-
     handleQueryChange(e) {
-	if (e) {
+	if (e) { // if the event is defined 
 	    this.props.gruntman.registerScheduler(() => { 
 		 //Register a scheduler to deal with React's onChange
 		 //check out the FANCYCHANGE in task.jsx
 		this.props.gruntman.do( // call a gruntman function
 		    "perspective.update__perspective", { 
-			uid: this.props.uid, // pass it the things vvv
-			id: this.props.id, 
-			payload: {query: e.target.value}
+			// pass it the things 
+			uid: this.props.uid, // pass it the uid 
+			id: this.props.id,  // pass it the perspective id 
+			payload: {query: e.target.value} // pass it the action, updating the query
 		    }
 		)
 	    }, `perspective.this.${this.props.id}-update`) // give it a custom id
-            //this.setState({perspectiveName: e.target.value})
         } else {console.log(e)}
-
-
-
     }
 
-    handleHelp() {
+    handleHelp() { // TODO TODO TODO: jack what do u want here? 
 	alert("lmao u thought")
 	console.log("no one is here to help. grow up.")
     }
-
-
 
     render() {
         return (
@@ -108,9 +116,9 @@ class PerspectiveEdit extends Component {
 			    onIonChange={e=>{
 				this.props.gruntman.do( // call a gruntman function
 				    "perspective.update__perspective", { 
-					uid: this.props.uid, // pass it the things vvv
-					id: this.props.id, 
-					payload: {avail: e.detail.value}
+					uid: this.props.uid, // pass it the user id 
+					id: this.props.id,  // pass it the perspective id
+					payload: {avail: e.detail.value} // set the availability 
 				    }
 				)
 			    }}
@@ -134,7 +142,7 @@ class PerspectiveEdit extends Component {
 			    onIonChange={e=>{
 				this.props.gruntman.do( // call a gruntman function
 				    "perspective.update__perspective", { 
-					uid: this.props.uid, // pass it the things 
+					uid: this.props.uid, // pass it the things, you know the drill 
 					id: this.props.id, 
 					payload: {tord: e.detail.value}
 				    }

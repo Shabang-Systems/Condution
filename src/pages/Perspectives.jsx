@@ -43,7 +43,7 @@ class Perspectives extends Component {
 	    perspectiveTord: {},  // whats the perspective ordering?
 	    // not truth or dare. jack doent even know what that is! ^^ 
             showEdit: false, // are we showing 
-            possibleProjects:{}, // stuff for tasks to work: see jacks comments in upcoming 
+            possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
             possibleTags:{}, 
             possibleProjectsRev:{}, 
             possibleTagsRev:{}, 
@@ -177,7 +177,6 @@ class Perspectives extends Component {
         return (
             <IonPage>
 		{/* the perspective editor! */}
-		{/* pass*/}
                 <PerspectiveEdit 
                     reference={this.repeater} 
                     isShown={this.state.showEdit} 
