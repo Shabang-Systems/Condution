@@ -4,6 +4,12 @@ h1, h2, h3, span, div {
     font-family: 'Arial' !important;
 }
 
+html{
+    margin:0;
+    padding:0;
+    overflow: hidden;
+}
+
 textarea:focus, input:focus{
     outline: none;
 }

@@ -441,6 +441,10 @@ button:focus {
     color: var(--content-normal-alt) !important;
 }
 
+.css-*{
+    z-index: 1000 !important;
+    position:relative;
+}
 
 .task-select__menu {
     background-color: var(--task-feature) !important;

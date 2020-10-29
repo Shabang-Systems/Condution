@@ -128,7 +128,7 @@ class Upcoming extends Component { // define the component
     render() {
         return (
             <IonPage>
-                <div style={{overflow: "none"}}>
+                <div style={{overflow: "hidden"}}>
 
                     <div className={"page-invis-drag " + (()=>{
                         if (!isPlatform("electron")) // if we are not running electron
@@ -150,7 +150,7 @@ class Upcoming extends Component { // define the component
                             return "windows"; // non-frameless
 
                     })()}>
-                        <div className="header-container">
+                        <div className="header-container" onTouchMove={(e)=>e.preventDefault()}>
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
@@ -165,7 +165,7 @@ class Upcoming extends Component { // define the component
                                 <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
                             </div>
                         </div>
-                        <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                        <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
                             <div>
                             <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                             {this.state.inbox.map(id => (
