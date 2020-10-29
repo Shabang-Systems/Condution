@@ -666,7 +666,7 @@ class Task extends Component {
                                                             classNamePrefix='task-select'
                                                             isClearable
                                                             isMulti
-                                                            styles={{ menu: base => ({ ...base, zIndex: 9999 }) }}
+                                                            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                                                             menuPortalTarget={this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
                                                             onChange={(newValue, actionMeta) => {
