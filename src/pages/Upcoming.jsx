@@ -184,10 +184,10 @@ class Upcoming extends Component { // define the component
 					onClick={()=>
 					    this.setState({timelineShown: !this.state.timelineShown})} 
 					    // for some reason, css classes don't work, so we have to style here
-					    // @jack?
+					    // @jack? why don't they? well, styling here's fine anyways. most likely b/c they are overrode by className=timeline-button
 					    style={{
 						marginLeft: 15,
-						marginTop: 10, 
+						marginTop: 20, 
 						display: "inline-block", 
 						fontWeight: 600, 
 						fontSize: 13, 
