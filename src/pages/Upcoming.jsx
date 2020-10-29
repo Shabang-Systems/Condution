@@ -178,7 +178,25 @@ class Upcoming extends Component { // define the component
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
                             </div>
-                            <div>
+                            <div className="timeline-button">
+				<a 
+				    onClick={()=>
+					this.setState({timelineShown: !this.state.timelineShown})} 
+					// for some reason, css classes don't work, so we have to style here
+					// @jack?
+					style={{
+					    marginLeft: 15,
+					    marginTop: 10, 
+					    display: "inline-block", 
+					    fontWeight: 600, 
+					    fontSize: 13, 
+					    //color: "var(--decorative-light-alt)", 
+					    cursor: "pointer"}}
+				>
+				    <i 
+					class="fas fa-calendar-week" 
+					style={{paddingRight: 5}}
+				    ></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
                             {
                                 (()=>{
                                     if (this.state.timelineShown)
@@ -187,9 +205,9 @@ class Upcoming extends Component { // define the component
                                                 return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                                     else if (timelineItem.type === "label")
                                                 return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
+
+
                                         })
-                                    else
-                                        return <a onClick={()=>this.setState({timelineShown: true})} style={{marginLeft: 15,marginTop: 10, display: "inline-block", fontWeight: 600, fontSize: 13, color: "var(--decorative-light-alt)", cursor: "pointer"}}><i class="fas fa-calendar-week" style={{paddingRight: 5}}></i> Show Timeline</a>
                                 })()
                             }
                             </div>

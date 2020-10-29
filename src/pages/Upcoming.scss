@@ -46,3 +46,12 @@
     flex-grow: 1;
 }
 
+.timeline-button {
+    color: var(--decorative-light-alt); 
+    transition: 0.3s;
+}
+
+.timeline-button:hover {
+    color: var(--task-textbox); 
+}
+
