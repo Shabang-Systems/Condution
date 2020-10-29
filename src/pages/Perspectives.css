@@ -15,18 +15,42 @@
     transform: translateX(-4px);
 }
 
+.pbuilder-pname {
+    background: var(--task-clickbox-background);
+    flex-grow: 1;
+}
+
+.pbuilder-pname:hover {
+    background: var(--task-clickbox-accent-background);
+}
+
+.pbuilder-pname:focus {
+    background: var(--task-clickbox-accent-background);
+}
+
+
 
 .perspective-modal {
-    --height: 148px;
-    --max-height: 248px;
+    /*--height: 148px;*/
+    --max-height: 200px;
+    --height: 200px;
     /*--width: 460px;*/
     --width: 80%;
     --max-width: 500px;
     --ion-backdrop-opacity: 0.5;
-
-
 }
 
+@media (max-width: 585px) {
+    .perspective-modal {
+        --height: 230px;
+    }
+}
+
+@media (min-width: 585px) { 
+    .perspective-modal {
+        --height: 165px;
+    }
+}
 
 
 .perspective-header {
@@ -42,8 +66,9 @@
 
 .build-input-edit {
     font-size: 15px;
-    font-weight: 589;
+    font-weight: 600;
     color: var(--content-normal-alt);
+    font-family: "Courier New", Courier, monospace;
     outline: 0;
     background: transparent;
     border: 0px solid red;
@@ -89,8 +114,26 @@
     --background:  var(--task-textbox-background);
     font-size: 15px;
     transition: 0.3s;
+    min-width: 115px;
+    display: inline-block;
 
 }
+
+.perspective-select::part(icon) {
+    display: none;
+}
+
+.pbasic-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+
+
+/*.select-icon {*/
+    /*display: none !important*/
+/*}*/
 
 .perspective-select:hover {
     background-color: var(--decorative-light) !important;
@@ -102,6 +145,7 @@
     padding: 10px 20px;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     /*justify-content: space-between;*/
 
 }
@@ -114,10 +158,12 @@
 }
 
 .help-icon {
-    margin-left: auto;
+    margin-left: 15px;
     font-size: 18px;
     color: var(--content-normal-accent);
     transition: 0.2s;
+    transform: translate(9px, 1px);
+    cursor: pointer;
 }
 
 .help-icon:hover {

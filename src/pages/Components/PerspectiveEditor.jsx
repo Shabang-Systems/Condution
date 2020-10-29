@@ -84,18 +84,19 @@ class PerspectiveEdit extends Component {
                     {/* Header */}
                     <div className="perspective-header">
                         {/* Repeat name */}
-                        <span style={{display: "inline-block", alignItems: "center", width: "100%"}}>
+                        <span style={{display: "flex", alignItems: "center", width: "100%", whiteSpace: "nowrap"}}>
                             <b className="bold-prefix" >Let&#39;s build &nbsp;</b> 
-                            <input className="editable-title" 
+                            <input className="editable-title pbuilder-pname" 
                                 ref={this.name}
                                 defaultValue={this.props.perspectiveName} 
                                 onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
+                                style={{minWidth: 0}}
                             />
 
                             <div className="repeat-task-name">{this.state.name}</div>
                         </span>
                         {/* Close button */} 
-                        <a className="repeat-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
+                        <a className="repeat-close" onClick={this.props.onDidDismiss} style={{transform: "translate(-10px, 3px)"}}><i className="fa fa-times"></i></a>
 
                     </div>
                     <div className="build-input">
@@ -104,71 +105,75 @@ class PerspectiveEdit extends Component {
                             className="build-input-edit"
                             defaultValue={this.props.query}
                             onChange={(e)=> {e.persist(); this.handleQueryChange(e)}}
-
+                            placeholder="LOCALIZE: perspective query"
                         >
                         </input> 
                     </div>
 
 
                     <div className="perspective-basic-row">
-                        <span>
-                            <i className="repeat-label fas fa-exchange-alt"></i>
-                            <span className="perspective-label">Include</span>
+                        <span className="pbasic-container" style={{marginRight: "25px"}}>
+                            <span>
+                                <i className="repeat-label fas fa-exchange-alt"></i>
+                                <span className="perspective-label">Include</span>
+                            </span>
+
+                            <IonSelect 
+                                className="perspective-select" 
+                                interface="popover" 
+                                value={this.props.avail} // TODO: make a database hit 
+                                mode="ios" 
+                                onIonChange={e=>{
+                                    this.props.gruntman.do( // call a gruntman function
+                                        "perspective.update__perspective", { 
+                                            uid: this.props.uid, // pass it the user id 
+                                            id: this.props.id,  // pass it the perspective id
+                                            payload: {avail: e.detail.value} // set the availability 
+                                        }
+                                    )
+                                }}
+                            >
+
+                                <IonSelectOption className="repeat-select__option" value="remain">Remaining</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="Available">Available</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="flagged">Flagged</IonSelectOption>
+                            </IonSelect>
                         </span>
 
-                        <IonSelect 
-                            className="perspective-select" 
-                            interface="popover" 
-                            value={this.props.avail} // TODO: make a database hit 
-                            mode="ios" 
-                            onIonChange={e=>{
-                                this.props.gruntman.do( // call a gruntman function
-                                    "perspective.update__perspective", { 
-                                        uid: this.props.uid, // pass it the user id 
-                                        id: this.props.id,  // pass it the perspective id
-                                        payload: {avail: e.detail.value} // set the availability 
-                                    }
-                                )
-                            }}
-                        >
+                        <span className="pbasic-container">
+                            <span>
+                                <i className="repeat-label fas fa-sort-amount-down-alt"></i>
+                                <span className="perspective-label">Order</span>
+                            </span>
 
-                            <IonSelectOption className="repeat-select__option" value="remain">Remaining</IonSelectOption>
-                            <IonSelectOption className="repeat-select__option" value="Available">Available</IonSelectOption>
-                            <IonSelectOption className="repeat-select__option" value="flagged">Flagged</IonSelectOption>
-                        </IonSelect>
+                            <IonSelect 
+                                className="perspective-select" 
+                                interface="popover" 
+                                value={this.props.tord} 
+                                mode="ios" 
+                                onIonChange={e=>{
+                                    this.props.gruntman.do( // call a gruntman function
+                                        "perspective.update__perspective", { 
+                                            uid: this.props.uid, // pass it the things, you know the drill 
+                                            id: this.props.id, 
+                                            payload: {tord: e.detail.value}
+                                        }
+                                    )
+                                }}
+                            >
 
-                        <span style={{marginLeft: "25px"}}>
-                            <i className="repeat-label fas fa-sort-amount-down-alt"></i>
-                            <span className="perspective-label">Order</span>
+                                <IonSelectOption className="repeat-select__option" value="duas">Ascend by Due</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="duds">Descend by Due</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="deas">Ascend by Defer</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="deds">Descend by Defer</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="alph">Alphabetical</IonSelectOption>
+                            </IonSelect>
+                            <div className="help-icon" onClick={this.handleHelp}>
+                                <i 
+                                    className="far fa-question-circle" 
+                                ></i>
+                            </div>
                         </span>
-
-                        <IonSelect 
-                            className="perspective-select" 
-                            interface="popover" 
-                            value={this.props.tord} 
-                            mode="ios" 
-                            onIonChange={e=>{
-                                this.props.gruntman.do( // call a gruntman function
-                                    "perspective.update__perspective", { 
-                                        uid: this.props.uid, // pass it the things, you know the drill 
-                                        id: this.props.id, 
-                                        payload: {tord: e.detail.value}
-                                    }
-                                )
-                            }}
-                        >
-
-                            <IonSelectOption className="repeat-select__option" value="duas">Ascend by Due</IonSelectOption>
-                            <IonSelectOption className="repeat-select__option" value="duds">Descend by Due</IonSelectOption>
-                            <IonSelectOption className="repeat-select__option" value="deas">Ascend by Defer</IonSelectOption>
-                            <IonSelectOption className="repeat-select__option" value="deds">Descend by Defer</IonSelectOption>
-                            <IonSelectOption className="repeat-select__option" value="alph">Alphabetical</IonSelectOption>
-                        </IonSelect>
-                        <div className="help-icon" onClick={this.handleHelp}>
-                            <i 
-                                className="far fa-question-circle" 
-                            ></i>
-                        </div>
 
 
                     </div> 
