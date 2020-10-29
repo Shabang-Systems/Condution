@@ -154,15 +154,15 @@ class Upcoming extends Component { // define the component
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
-                                {/*
-                        <div className="greeting-datewidget">
-                            <div style={{display: "inline-block"}} className="greeting-date">13</div>
-                            <div style={{display: "inline-block"}} className="greeting-datename">Wed</div>
-                        </div>
-                        */}
+                                    
+                            <div className="greeting-datewidget">
+                                <div style={{display: "inline-block"}} className="greeting-date">{(new Date()).getDate()}</div>
+                                <div style={{display: "inline-block"}} className="greeting-datename">{new Date().toLocaleString('en-us', {  weekday: 'long' })}</div>
+                            </div>
+                            
 
 
-                                <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Supergod Jones.</span></div>
+                                <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Robin Smith</span></div>
                             </div>
                         </div>
                         <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>

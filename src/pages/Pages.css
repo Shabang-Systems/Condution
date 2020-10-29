@@ -65,7 +65,8 @@
 
 .greeting-datewidget {
     display: inline-block;
-    transform: translateY(1px);
+    transform: translateX(-5px);
+    font-size: 13px;
 }
 
 .greeting-date {
