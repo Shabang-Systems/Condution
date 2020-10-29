@@ -36,13 +36,14 @@ class Perspectives extends Component {
         super(props);
 
         this.state = {
-            taskList: [],
-            perspectiveName: "",
-	    perspectiveQuery: {}, 
-	    perspectiveAvail: {}, 
-	    perspectiveTord: {}, 
+            taskList: [], // what tasks should we display? 
+            perspectiveName: "", // whats the perspective name? 
+	    perspectiveQuery: {}, // whats the perspective query (whats in the text box)?
+	    perspectiveAvail: {}, // whats the perspective availability? 
+	    perspectiveTord: {},  // whats the perspective ordering?
+	    // not truth or dare. jack doent even know what that is! ^^ 
             showEdit: false, // are we showing 
-            possibleProjects:{}, // see jacks comments in upcoming 
+            possibleProjects:{}, // stuff for tasks to work: see jacks comments in upcoming 
             possibleTags:{}, 
             possibleProjectsRev:{}, 
             possibleTagsRev:{}, 
@@ -70,7 +71,7 @@ class Perspectives extends Component {
     } // util func for hiding repeat
 
     componentWillUnmount() {
-        this.props.gruntman.halt();
+        this.props.gruntman.halt(); // when we unmount, halt gruntman? idk what this does  
     }
 
     async refresh() {
@@ -86,7 +87,7 @@ class Perspectives extends Component {
         let projectList = []; // define the project list
         let tagsList = []; // define the tag list
 
-        for (let pid in pPandT[1][0]) 
+        for (let pid in pPandT[1][0]) // tag nd project stuff 
             tagsList.push({value: pid, label: pPandT[1][0][pid]});
         let views = this;
         let projectDB = await (async function() {
@@ -111,60 +112,57 @@ class Perspectives extends Component {
         projectDB.map(proj=>buildSelectString(proj));
 
         this.setState({
-            taskList: taskList, 
-            perspectiveName: perspectiveObject.name,
-	    perspectiveQuery: perspectiveObject.query, 
-	    perspectiveAvail: perspectiveObject.avail, 
-	    perspectiveTord: perspectiveObject.tord, 
-            possibleProjects: pPandT[0][0], 
-            possibleTags: pPandT[1][0], 
-            possibleProjectsRev: pPandT[0][1], 
-            possibleTagsRev: pPandT[1][1], 
-            availability: avail, 
-            projectSelects: projectList, 
-            tagSelects: tagsList, 
-            projectDB
+            taskList: taskList,                           // set the tasklist, 
+            perspectiveName: perspectiveObject.name,     // set the perspective name 
+	    perspectiveQuery: perspectiveObject.query,  // set the perspective query 
+	    perspectiveAvail: perspectiveObject.avail, // set the perspective avail 
+	    perspectiveTord: perspectiveObject.tord,  // set the perspective tord 
+            possibleProjects: pPandT[0][0],	     // set the project stuff
+            possibleTags: pPandT[1][0],		    // set the tag stuff  
+            possibleProjectsRev: pPandT[0][1],	   // set more projects stuff  
+            possibleTagsRev: pPandT[1][1],	  // set more tags stuff  
+            availability: avail,		 // set the avail
+            projectSelects: projectList,	// set the project list  
+            tagSelects: tagsList,	       // set the tag list
+            projectDB 			      // and the project db 
         }); // once we finish, set the state
-
     }
 
     updateName(e) {
-        if (e) {
-            this.props.gruntman.registerScheduler(() => { 
+        if (e) { // if the name if defined, 
+            this.props.gruntman.registerScheduler(() => {
                 // Register a scheduler to deal with React's onChange
                 // check out the FANCYCHANGE in task.jsx
                 this.props.gruntman.do( // call a gruntman function
                     "perspective.update__perspective", { 
-                        uid: this.props.uid, // pass it the things vvv
-                        id: this.props.id, 
-                        payload: {name: e.target.value}
+			// pass it the things 
+                        uid: this.props.uid, // the user id 
+                        id: this.props.id,  // the perspective id 
+                        payload: {name: e.target.value} // the action, setting name to the new value 
                     }
                 ).then(this.props.menuRefresh) // call the homebar refresh
             }, `perspective.this.${this.props.id}-update`) // give it a custom id
-            this.setState({perspectiveName: e.target.value})
+            this.setState({perspectiveName: e.target.value}) // set the perspectiveName
         } else {console.log(e)}
     } 
 
 
     handleDelete() {
-	console.log("hux")
 	this.props.gruntman.do( // call a gruntman function
 	    "perspective.delete__perspective", { 
-		uid: this.props.uid, // pass it the things vvv
-		id: this.props.id, 
-		//parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
+		uid: this.props.uid, // pass it the user id 
+		id: this.props.id, // and the current id 
 	    }
 	).then(()=>{
 	    this.props.menuRefresh(); // refresh menubar
 	    this.props.history.push("/upcoming/"); // go back
-	    this.props.paginate("upcoming");
+	    this.props.paginate("upcoming"); // idk man 
 	}) // call the homebar refresh
     }
 
     componentDidMount() {
         this.refresh()
     }
-
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
@@ -178,6 +176,8 @@ class Perspectives extends Component {
     render() {
         return (
             <IonPage>
+		{/* the perspective editor! */}
+		{/* pass*/}
                 <PerspectiveEdit 
                     reference={this.repeater} 
                     isShown={this.state.showEdit} 

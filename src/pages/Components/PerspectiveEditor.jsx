@@ -8,8 +8,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
-
-
 const autoBind = require('auto-bind/react');
 
 class PerspectiveEdit extends Component {
@@ -18,9 +16,7 @@ class PerspectiveEdit extends Component {
         autoBind(this);
 
         this.state = {
-	    inputEvent: "",
-
-
+	    inputEvent: "", // define our input event for the perspective title 
         }
     }
 
