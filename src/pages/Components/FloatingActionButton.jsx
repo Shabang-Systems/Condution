@@ -6,12 +6,14 @@ import * as chrono from 'chrono-node';
 
 /*
  * Hello human,
- * I don't know why I am doing front end.
- * I don't see the orange floating unicorns I was promised.
- * I don't get to add the add a button to the inbox button i wanted.
- * But I guess they thought the name was too long so heres abtib ^-^
+ * You know I'm not Jack because my pen has no nib
+ * You know I'm not Huxley because I can't adlib
+ * If I said I could do frqnt end, I'd be telling a fib
+ * And now, as punishment, I've lost a rib
+ * But alas, here is abtib ^-^
  *
- * @Exr0n
+ * ~~@Exr0n~~
+ * @Ex-rib
  *
  */
 
