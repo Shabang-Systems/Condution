@@ -649,7 +649,7 @@ class Task extends Component {
                                                             onChange={(e)=>{
                                                                 {/* :point up: filter for only options with this project and set that to be the value */}
                                                                 {/* Actually update the project */}
-                                                                this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.project, project: (e?e.value:"")})
+                                                                this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.state.project===""?undefined:this.state.project, project: (e?e.value:"")})
                                                                 {/* And set the state, too! */}
                                                                 this.setState({project:(e?e.value:"")});
                                                             }}

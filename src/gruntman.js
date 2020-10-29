@@ -88,29 +88,29 @@ class Gruntman {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: false, completeDate: new Date()});
                     return {uid: options.uid, tid: options.tid, taskInfo};
                 },
-		update__complete: async function (options) {
+                update__complete: async function (options) {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: true, completeDate: new Date()})
                     let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
                     let due = (
                         taskInfo.due ?
-                            (taskInfo.isFloating ?
-                                new Date(taskInfo.due.seconds*1000) :
-                                parseFromTimeZone(
-                                    (new Date(taskInfo.due.seconds*1000)).toISOString(),
-                                    {timeZone: taskInfo.timezone}
-                                )
-                            ):
+                        (taskInfo.isFloating ?
+                            new Date(taskInfo.due.seconds*1000) :
+                            parseFromTimeZone(
+                                (new Date(taskInfo.due.seconds*1000)).toISOString(),
+                                {timeZone: taskInfo.timezone}
+                            )
+                        ):
                         undefined
                     );
                     let defer = (
                         taskInfo.defer ?
-                            (taskInfo.isFloating ?
-                                new Date(taskInfo.defer.seconds*1000) :
-                                    parseFromTimeZone(
-                                        (new Date(taskInfo.defer.seconds*1000)).toISOString(),
-                                       {timeZone: taskInfo.timezone}
-                                    )
-                            ): undefined
+                        (taskInfo.isFloating ?
+                            new Date(taskInfo.defer.seconds*1000) :
+                            parseFromTimeZone(
+                                (new Date(taskInfo.defer.seconds*1000)).toISOString(),
+                                {timeZone: taskInfo.timezone}
+                            )
+                        ): undefined
                     );
                     let repeat = taskInfo.repeat;
                     if (repeat.rule !== "none" && due) {
@@ -296,26 +296,36 @@ class Gruntman {
                     return {uid: options.uid, tid: options.tid};
                 }
             },
-	    perspective: {
-		update__perspective: async function (options) { // update the perspective name!
-		    let possiblePerspectives = await engine.db.getPerspectives(options.uid);
-		    // get all possible perspectives
-		    let perspectiveObject = possiblePerspectives[0][options.id]
-		    // get the one we want based on page id
+            perspective: {
+                create: async function(options) {
+                    let pObj = {
+                        name: "",
+                        avail: "remain",
+                        tord: "duds",
+                        query: ""
+                    }
+                    let npspid = await engine.db.newPerspective(options.uid, pObj);
+                    return {uid: options.uid, pid: npspid};
+                },
+                update__perspective: async function (options) { // update the perspective name!
+                    let possiblePerspectives = await engine.db.getPerspectives(options.uid);
+                    // get all possible perspectives
+                    let perspectiveObject = possiblePerspectives[0][options.id]
+                    // get the one we want based on page id
 
-		    // modify the perspective
-		    await engine.db.modifyPerspective(options.uid, options.id, options.payload);
+                    // modify the perspective
+                    await engine.db.modifyPerspective(options.uid, options.id, options.payload);
 
-		    // return what we need to undo
-		    return {perspectiveObject, uid: options.uid}
-		},
+                    // return what we need to undo
+                    return {perspectiveObject, uid: options.uid}
+                },
 
-		delete__perspective: async function (options) { // update the perspective name!
-		    console.log("perspective delete gruntman func")
-		    // TODO: is this it? @jack
-		    await engine.db.deletePerspective(options.uid, options.id);
-		}
-	    },
+                delete__perspective: async function (options) { // update the perspective name!
+                    console.log("perspective delete gruntman func")
+                    // TODO: is this it? @jack
+                    await engine.db.deletePerspective(options.uid, options.id);
+                }
+            },
         } // type:action:functionaction (return resources)
         this.undoers = {
             task: {

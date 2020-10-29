@@ -143,17 +143,30 @@ class Home extends Component {
                                     </Link>
 
                                     {/* === Perspectives == */}
-                                    <div className="menu-sublabel menu-decoration">Perspectives</div>
+                                    <div className="menu-sublabel menu-decoration">Perspectives <a onClick={()=>{
+                                        let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+                                            let npid = (await this.props.gruntman.do(
+                                                "perspective.create", {
+                                                    uid: this.props.uid,
+                                                },
+                                            )).pid;
+                                            history.push(`/perspectives/${npid}/do`);
+                                            this.paginate("perspectives", npid);
+                                            this.refresh();
+                                        }).bind(this);
+                                        f();
+
+                                    }} className="fa fa-plus add"></a></div>
 
                                     {/* === Perspective button + link == */}
-                                                                {this.state.perspectives.map((psp) => {
-                                                                    return (
-                                                                        <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}> {/* Link to trigger router */}
-                                                                            {/* Perspective button */}
-                                                                            <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
-                                                                        </Link>
-                                                                    )
-                                                                })}
+                                    {this.state.perspectives.map((psp) => {
+                                        return (
+                                            <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}> {/* Link to trigger router */}
+                                                {/* Perspective button */}
+                                                <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
+                                            </Link>
+                                        )
+                                    })}
 
 
                                     {/* === Projects == */}
@@ -203,7 +216,7 @@ class Home extends Component {
                                         <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
                                         {/* perspective renders perspectives */}
-                                        <Route path="/perspectives/:id" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} />}  />
+                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create}/>}  />
 
                                         {/* project renders perspectives */}
                                         <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create}/>}  />

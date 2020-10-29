@@ -38,11 +38,11 @@ class Perspectives extends Component {
         this.state = {
             taskList: [], // what tasks should we display? 
             perspectiveName: "", // whats the perspective name? 
-	    perspectiveQuery: {}, // whats the perspective query (whats in the text box)?
+	    perspectiveQuery: "", // whats the perspective query (whats in the text box)?
 	    perspectiveAvail: {}, // whats the perspective availability? 
 	    perspectiveTord: {},  // whats the perspective ordering?
 	    // not truth or dare. jack doent even know what that is! ^^ 
-            showEdit: false, // are we showing 
+            showEdit: this.props.options === "do", // are we showing? on do, we are.
             possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
             possibleTags:{}, 
             possibleProjectsRev:{}, 
@@ -148,16 +148,17 @@ class Perspectives extends Component {
 
 
     handleDelete() {
-	this.props.gruntman.do( // call a gruntman function
-	    "perspective.delete__perspective", { 
-		uid: this.props.uid, // pass it the user id 
-		id: this.props.id, // and the current id 
-	    }
-	).then(()=>{
-	    this.props.menuRefresh(); // refresh menubar
-	    this.props.history.push("/upcoming/"); // go back
-	    this.props.paginate("upcoming"); // idk man 
-	}) // call the homebar refresh
+        this.props.history.push("/upcoming"); // go back
+        this.props.paginate("upcoming"); // idk man 
+        this.props.gruntman.do( // call a gruntman function
+            "perspective.delete__perspective", { 
+                uid: this.props.uid, // pass it the user id 
+                id: this.props.id, // and the current id 
+            }
+        ).then(()=>{
+            this.props.menuRefresh(); // refresh menubar
+
+        }) // call the homebar refresh
     }
 
     componentDidMount() {
@@ -186,12 +187,12 @@ class Perspectives extends Component {
                     gruntman={this.props.gruntman}
                     id={this.props.id}
                     perspectiveName={this.state.perspectiveName}
-		    query={this.state.perspectiveQuery}
-		    avail={this.state.perspectiveAvail}
-		    tord={this.state.perspectiveTord}
+                    query={this.state.perspectiveQuery}
+                    avail={this.state.perspectiveAvail}
+                    tord={this.state.perspectiveTord}
                     menuRefresh={this.props.menuRefresh}
                     updateName={this.updateName}
-
+                    startHighlighted={this.props.options === "do"}
                 />
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
