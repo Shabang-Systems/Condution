@@ -71,8 +71,7 @@ class Auth extends Component {
         let view = this;
         let problem = false;
         firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
-            $('#need-verify').html(error.message);
-            view.setState({showExtra: true});
+            view.setState({showExtra: true}, ()=>$('#need-verify').html(error.message));
             problem=true;
         }).then(function() {
             if (!problem) {
@@ -96,9 +95,9 @@ class Auth extends Component {
         let problem = false;
         let view = this;
         firebase.auth().sendPasswordResetEmail($("#email").val()).catch(function(error) {
+            view.setState({showExtra: true});
             $('#need-verify').html(error.message);
             problem=true;
-            view.setState({showExtra: true});
         }).then(function() {
             if (!problem) {
                 view.setState({authMode: 5});
@@ -149,6 +148,9 @@ class Auth extends Component {
                                 case 4:
                                     this.dispatchCreate();
                                     break;
+                                case 5: 
+                                    this.doLogin();
+                                    break;
                             }
                         }
                     }}/>
@@ -186,18 +188,18 @@ class Auth extends Component {
                     <div id="auth-actiongroup">
                         <div id="newuser" onClick={()=>{
                             switch (this.state.authMode) {
-                                case 0:
-                                    return this.setState({authMode: 1});
                                 case 1:
                                     return this.setState({authMode: 0});
+                                default:
+                                    return this.setState({authMode: 1});
 
                             }
                         }}>{(()=>{
                             switch (this.state.authMode) {
-                                case 0:
-                                    return "Make an account";
                                 case 1:
                                     return "Log in";
+                                default:
+                                    return "Make an account";
 
                             }
                         })()}</div>
@@ -220,13 +222,16 @@ class Auth extends Component {
                             <i className="fas fa-snowboarding" style={{paddingRight: "5px"}}></i><span id="login-text">{(() => {
                                 switch(this.state.authMode) {
                                     case 0:
+                                    case 3:
                                         return "Let's Do This!";
                                     case 1:
                                         return "Verify Email!";
                                     case 2:
                                         return "Let's Recover!";
                                     case 4:
-                                        return "Proceed!"
+                                        return "Proceed!";
+                                    case 5:
+                                        return "Proceed!";
                                 }
                             })()}</span>
                         </div>
