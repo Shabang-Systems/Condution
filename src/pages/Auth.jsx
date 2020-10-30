@@ -27,6 +27,7 @@ class Auth extends Component {
     constructor(props) {
         super(props);
 
+        let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
 
         /*
          * mode 0 = login in progress, 
@@ -36,7 +37,10 @@ class Auth extends Component {
          *
          */
 
-        this.state = {authMode: 0};
+        this.state = {
+            authMode: 0,
+            greeting: greetings[Math.floor(Math.random() * greetings.length)]
+        };
 
         autoBind(this);
     }
@@ -83,7 +87,7 @@ class Auth extends Component {
                     </div>
                 </div>
                 <div id="authwall">
-                    <h1 id="greeting-auth">TODO</h1><span id="welcome-auth-msg">Welcome to Condution.</span>
+                    <h1 id="greeting-auth">{this.state.greeting}</h1><span id="welcome-auth-msg">Welcome to Condution.</span>
                     <h3 className="greeting-auth-subtitle" id="greeting-auth-normal">{(()=>{
                         switch (this.state.authMode) {
                             case 2:
