@@ -16,6 +16,7 @@ class Upcoming extends Component { // define the component
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate()+1);
 
+        let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
 
         this.state = {
             inbox: [], // define the inbox
@@ -29,7 +30,8 @@ class Upcoming extends Component { // define the component
             tagSelects: [], 
             projectDB: {},
             timeline: [],
-            timelineShown: false
+            timelineShown: false,
+            greeting: greetings[Math.floor(Math.random() * greetings.length)]
         };
 
         this.updatePrefix = this.random();
@@ -126,6 +128,7 @@ class Upcoming extends Component { // define the component
 
 
     render() {
+
         return (
             <IonPage>
                 <div style={{overflow: "hidden"}}>
@@ -162,7 +165,7 @@ class Upcoming extends Component { // define the component
                             
 
 
-                                <div className="greeting-container"><span id="greeting">Bontehu</span>, <span id="greeting-name" style={{fontWeight: 600}}>Robin Smith</span></div>
+                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600}}>{this.props.displayName}</span></div>
                             </div>
                         </div>
                         <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>

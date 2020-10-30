@@ -210,7 +210,7 @@ class Home extends Component {
                                     {/* and the perspective switch */}
                                     <Switch>
                                         {/* upcoming renders upcoming */}
-                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} />} />
 
                                         {/* completed renders completed */}
                                         <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />

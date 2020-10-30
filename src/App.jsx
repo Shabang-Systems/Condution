@@ -87,7 +87,7 @@ class App extends Component {
         super(props);
 
         // We start with setting our state. We don't know our user's UID (duh)
-        this.state = {authMode: "loader", uid: ""};
+        this.state = {authMode: "loader", uid: "", displayName: ""};
         
         // We also set the theme based on the user's media query
         if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
@@ -127,7 +127,7 @@ class App extends Component {
                         // If we have one, shift the engine into firebase mode
                         Engine.use("firebase", view.gruntman.requestRefresh);
                         // Load the authenticated state, set authmode as "firebase" and supply the UID
-                        view.setState({authMode: "firebase", uid: user.uid});
+                        view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
                     })
                     break;
                 // If its json
@@ -156,19 +156,22 @@ class App extends Component {
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 // get the UID
                 let uid;
+                let name;
                 switch (mode.service) {
                     // if its firebase
                     case "firebase":
                         // set the UID as the UID
                         uid = firebase.auth().currentUser.uid;
+                        name = firebase.auth().currentUser.displayName
                         break;
                     default:
                         // set the UID as "hard-storage-user"
                         uid = "hard-storage-user";
+                        name = ""
                         break;
                 }
                 // load the authenicated state and supply the UID
-                this.setState({authMode: mode.service, uid});
+                this.setState({authMode: mode.service, uid, displayName: name});
                 break;
             // operation mode create
             case "create":
@@ -188,7 +191,7 @@ class App extends Component {
                 // Sign out if we are signed in
                 firebase.auth().signOut();
                 // Load the auth view
-                this.setState({authMode: "none"});
+                this.setState({authMode: "none", name: ""});
                 break;
         }
     }
@@ -207,7 +210,7 @@ class App extends Component {
             // if we did auth, load it up and get the party going
             case "firebase":
             case "json":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName}/>;
             // wut esta this auth mode? load the loader with an error
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
