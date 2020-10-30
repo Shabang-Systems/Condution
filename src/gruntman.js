@@ -50,7 +50,7 @@ class Gruntman {
                         tags: [],
                         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
                         repeat: {rule: "none"},
-                        name: "",
+                        name: options.name?options.name:"",
                     };
 
                     if (options.due)

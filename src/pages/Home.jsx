@@ -200,7 +200,7 @@ class Home extends Component {
                             </IonMenu>
                             <IonPage id="main">
                                 {/* the add button to inbox button*/}
-                                <ABTIB />
+                                <ABTIB uid={this.props.uid} gruntman={this.props.gruntman} />
                                 {/* The actual page */}
                                 <IonRouterOutlet>
                                     {/* empty => /upcoming*/}

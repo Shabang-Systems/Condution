@@ -30,7 +30,7 @@ function handleABTIBInput(value) {
 function ABTIB(props) {
     const [isExpanded, setisExpanded] = useState(false);
     const [isSaving, setisSaving] = useState(false);
-    const anim = useSpring({to: (isSaving ? [{width: 280, color:"var(--quickadd-success-text)", backgroundColor: "var(--quickadd-success)", config: {duration: 500}}, {width: 250, color:"var(--quickadd-text)", backgroundColor: "var(--quickadd)"}] : {width: isExpanded ? 280:250, color:"var(--quickadd-text)", backgroundColor: "var(--quickadd)"})})
+    const anim = useSpring({to: (isSaving ? {width: 280, color:"var(--quickadd-successtext)", backgroundColor: "var(--quickadd-success)"} : {width: isExpanded ? 280:250, color:"var(--quickadd-text)", backgroundColor: "var(--quickadd)"})})
 
     return <animated.input id="abtib" readOnly={false} type="text" defaultValue={""} style={anim}
         onClick={
@@ -42,15 +42,47 @@ function ABTIB(props) {
         onBlur={e=>{
             setisExpanded(false);
             setisSaving(false);
+            e.target.value = "";
         }}
         onKeyUp={
             (event) => {
                 if (event.key === 'Enter') {
-                    console.log(event.target.value);
+                    event.persist(); //https://reactjs.org/docs/events.html#event-pooling
                     setisSaving(true);
-                    // TODO: trigger complete animation
-                    event.target.value = "";
-                    //event.target.blur();
+                    let taskName = event.target.value;
+                    let dateInfo = chrono.parse(taskName);
+                    let due = undefined;
+                    let defer = undefined;
+                    if (dateInfo.length > 0) {
+                        // we got a date!
+                        if (dateInfo[0].end) {
+                            // both start (defer) and end (due)
+                            // get end (due) date
+                            due = dateInfo[0].end.date();
+                            defer = dateInfo[0].start.date();
+                            // strip the due date string
+                            taskName = taskName.replace(dateInfo[0].text, "").trim();
+
+                        }
+                        else {
+                            // only start (due)
+                            due = dateInfo[0].start.date();
+                            // strip the due date string
+                            taskName = taskName.replace(dateInfo[0].text, "").trim();
+                        }
+                    }
+                    let npobj = { 
+                            uid: props.uid, // pass it the things vvv
+                            pid: "",
+                            due,
+                            defer,
+                            name: taskName
+                    };
+                    props.gruntman.do( // call a gruntman function
+                        "task.create", npobj,
+                    ).then(()=>{
+                        event.target.blur();
+                    });
                 }
             }
         }
