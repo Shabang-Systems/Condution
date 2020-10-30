@@ -106,14 +106,14 @@ class App extends Component {
         autoBind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // This IS in fact the view
         let view = this;
 
         // Light the fire, kick the tires an instance 
         // of {firebase}, and initializing the firebase 
         // and json engines
-        Engine.start({firebase}, "firebase", "json");
+        await Engine.start({firebase}, "firebase", "json");
 
 
         // ==Handling cached dispatch==
