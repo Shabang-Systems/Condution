@@ -107,14 +107,14 @@ class App extends Component {
         autoBind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // This IS in fact the view
         let view = this;
 
         // Light the fire, kick the tires an instance 
         // of {firebase}, and initializing the firebase 
         // and json engines
-        Engine.start({firebase}, "firebase", "json");
+        await Engine.start({firebase}, "firebase", "json");
 
 
         // ==Handling cached dispatch==
@@ -148,6 +148,8 @@ class App extends Component {
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
     authDispatch(mode) {
+        let uid;
+        let name;
         switch (mode.operation) {
             // operation mode login
             case "login":
@@ -156,8 +158,7 @@ class App extends Component {
                 // write the login state into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 // get the UID
-                let uid;
-                let name;
+
                 switch (mode.service) {
                     // if its firebase
                     case "firebase":
@@ -178,13 +179,28 @@ class App extends Component {
             case "create":
                 // setthe engine as whatever service
                 Engine.use(mode.service, this.gruntman.requestRefresh);
+                Storage.set({key: 'condution_stotype', value: mode.service});
+                switch (mode.service) {
+                    // if its firebase
+                    case "firebase":
+                        // set the UID as the UID
+                        uid = firebase.auth().currentUser.uid;
+                        name = firebase.auth().currentUser.displayName
+                        break;
+                    default:
+                        // set the UID as "hard-storage-user"
+                        uid = "hard-storage-user";
+                        name = ""
+                        break;
+                }
+
                 // TODO: do onboarding
                 // Here
+                console.log("I would be onboarding, but... alas.");
                 // TODO: be done with onboarding
                 // Set the storage type and write it into cookies
-                Storage.set({key: 'condution_stotype', value: mode.service});
                 // load the authenicated state and TODO supply the UID
-                this.setState({authMode: mode.service});
+                this.setState({authMode: mode.service, uid, displayName: name});
                 break;
             case "logout":
                 // Set the storage type to nada and write it into cookies

@@ -59,7 +59,6 @@ class Completed extends Component {
 
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-
         // loop through the tasks, converting to objects and inserting labels between each cat
         full.forEach((cat, i) => {
             taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
@@ -167,30 +166,30 @@ class Completed extends Component {
                         {/* for the fetch more, if we are currently rendering, render a loading animation. */}
                         {/* Otherwise, render a fetch more.*/}
                         <div style={{overflowY: "scroll"}}>
-                        {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
-                            <div style={{marginLeft: 10, marginRight: 10}}>
-                                {(content.type == "label")?  
-                                        (this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1)? 
-                                        "" :
-                                        <p className="page-label" style={{marginBottom:0}}>{content.contents}</p> : 
-                                        <Task 
-                                            tid={content.contents} 
-                                            startingCompleted={true}
-                                            key={content.contents+"-"+this.updatePrefix} 
-                                            uid={this.props.uid} 
-                                            engine={this.props.engine} 
-                                            gruntman={this.props.gruntman} 
-                                            availability={this.state.availability[content.contents]} 
-                                            datapack={[this.state.tagSelects,
-                                                this.state.projectSelects, 
-                                                this.state.possibleProjects, 
-                                                this.state.possibleProjectsRev, 
-                                                this.state.possibleTags, 
-                                                this.state.possibleTagsRev]}
-                                        />
-                                }
-                            </div>
-                        ))}
+                            {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
+                                <div style={{marginLeft: 10, marginRight: 10}}>
+                                    {(content.type == "label")?  
+                                            (this.state.taskList[i+1] ? 
+                                                ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
+                                                "" : <p className="page-label" style={{marginBottom:0}}>{content.contents}</p>) : "") : 
+                                                <Task 
+                                                    tid={content.contents} 
+                                                    startingCompleted={true}
+                                                    key={content.contents+"-"+this.updatePrefix} 
+                                                    uid={this.props.uid} 
+                                                    engine={this.props.engine} 
+                                                    gruntman={this.props.gruntman} 
+                                                    availability={this.state.availability[content.contents]} 
+                                                    datapack={[this.state.tagSelects,
+                                                        this.state.projectSelects, 
+                                                        this.state.possibleProjects, 
+                                                        this.state.possibleProjectsRev, 
+                                                        this.state.possibleTags, 
+                                                        this.state.possibleTagsRev]}
+                                                />
+                                    }
+                                </div>
+                            ))}
 
                         <div className="fetch-more" > 
                             {/* define the fetch more button */}
