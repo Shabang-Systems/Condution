@@ -84,10 +84,12 @@ class Auth extends Component {
     }
 
     dispatchCreate() {
-        if (firebase.auth().currentUser.emailVerified)
-            this.props.dispatch({service: "firebase", operation: "create"});
-        else
-            $('#need-verify').html("Please double-check that you tapped the verification link in your email.");
+        firebase.auth().currentUser.reload().then(()=>{;
+            if (firebase.auth().currentUser.emailVerified)
+                this.props.dispatch({service: "firebase", operation: "create"});
+            else
+                $('#need-verify').html("Please double-check that you tapped the verification link in your email.");
+        });
     }
 
     doRecover() {
@@ -132,7 +134,24 @@ class Auth extends Component {
                     })()}</h3> 
                     <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder="What should we call you?" style={{display: this.state.authMode === 1 ? "block" : "none"}}/>
                     <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder="Email" />
-                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" style={{display: this.state.authMode !== 2 ? "block" : "none"}} onKeyPress={(event)=>{if (event.key === "Enter") this.doLogin()}}/>
+                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" style={{display: this.state.authMode !== 2 ? "block" : "none"}} onKeyPress={(event)=>{
+                        if (event.key === "Enter") {
+                            switch (this.state.authMode) {
+                                case 0:
+                                    this.doLogin();
+                                    break;
+                                case 1:
+                                    this.doCreate();
+                                    break;
+                                case 2:
+                                    this.doRecover();
+                                    break;
+                                case 4:
+                                    this.dispatchCreate();
+                                    break;
+                            }
+                        }
+                    }}/>
                     {(() => {
                         if (this.state.authMode === 3 || this.state.authMode ===  4 || this.state.authMode === 5 || this.state.showExtra) return <span id="need-verify">
                             {(()=>{
