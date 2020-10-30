@@ -18,6 +18,7 @@ import Completed from './Completed';
 import Perspectives from './Perspectives';
 import Projects from './Projects';
 import ABTIB from './Components/FloatingActionButton';
+import Keybinds from './Components/KeybindManager';
 
 // Our very own CSS
 import './Home.css';
@@ -108,6 +109,7 @@ class Home extends Component {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
             <IonPage>
+		<Keybinds />
                 {/* The central router that controls the routing of views */}
                 <Router history={history}>
                     {/* OoIp */}
