@@ -273,6 +273,11 @@ label.od:hover:before {
     color: var(--task-datepicker-elem-feature) !important;
 }
 
+
+.react-datepicker-popper {
+    z-index: 100;
+}
+
 /**:focus {*/
     /*border: 0;*/
     /*outline: 0 !important;*/
