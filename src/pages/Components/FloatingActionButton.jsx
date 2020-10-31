@@ -30,9 +30,34 @@ function handleABTIBInput(value) {
 function ABTIB(props) {
     const [isExpanded, setisExpanded] = useState(false);
     const [isSaving, setisSaving] = useState(false);
-    const anim = useSpring({to: (isSaving ? {width: 280, color:"var(--quickadd-successtext)", backgroundColor: "var(--quickadd-success)"} : {width: isExpanded ? 280:250, color:"var(--quickadd-text)", backgroundColor: "var(--quickadd)"})})
 
-    return <animated.input id="abtib" readOnly={false} type="text" defaultValue={""} style={anim}
+    const anim = useSpring({
+	to: 
+	    (isSaving ? 
+		{
+		    width: 280, 
+		    color:"var(--quickadd-successtext)", 
+		    backgroundColor: "var(--quickadd-success)"
+		} 
+
+		: 
+
+		{
+		    width: isExpanded ? 280:250, 
+		    color:"var(--quickadd-text)", 
+		    backgroundColor: "var(--quickadd)"
+		}
+	    )
+    })
+
+    return <animated.input 
+		id="abtib" 
+		readOnly={false} 
+		type="text" 
+		defaultValue={""} 
+		style={anim} 
+		className="attib"
+
         onClick={
             (event) => {
                 event.target.value = "";
