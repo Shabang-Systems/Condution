@@ -293,19 +293,6 @@ class Task extends Component {
 
                     native  
 
-                    ///////////////////////
-
-                    //state = {
-                    //    this.state.isComplete?  // if we are complete
-                    //        (this.state.startingCompleted? this.state.expanded?"show":"hide":"complete") : // if we are staring completed, no need to show that the task is completed again. Otherwise, do play the complete animation
-                    //        (this.state.expanded?"show":"hide")} // if we are not complete, open/close as usual
-
-                    //    // In hux's words
-                    //    // if complete, if starting complete, show. if complete, if starting uncomplete, complete. 
-                    //    // if not complete, if expanded, show. if not complete, if not expanded, hide. 
-
-                    ///////////////////////
-
                     state = {
                         this.initialRenderDone ?
                             (this.state.isComplete? // if we are complete 

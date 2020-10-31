@@ -45,7 +45,9 @@ function ABTIB(props) {
 		{
 		    width: isExpanded ? 280:250, 
 		    color:"var(--quickadd-text)", 
-		    backgroundColor: "var(--quickadd)"
+		    //color:"var(--quickadd-successtext)", 
+		    backgroundColor: "var(--quickadd)",
+		    //backgroundColor: "var(--quickadd-success)"
 		}
 	    )
     })
