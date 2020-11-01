@@ -8,22 +8,34 @@ const SortableTaskList = (props)=>{
 
     let [activelyDragging, setActivelyDragging] = useState([]); // we are actively dragging...
 
-    const getAnimationDestinationFromIndex = (activeIndex, y) => (indx) => {
-        return activeIndex === indx ? {y, zIndex:1000, marginTopBottom: 10, config: {tension: 100, friction: 2, mass: 1, clamp: true}} : {y: 0, zIndex:0, marginTopBottom: 0}; // if the index is the one that's being dragged, move up by howevermuch needed
+    const getAnimationDestinationFromIndex = (activeIndex, y, currentOrder) => (indx) => {
+        return activeIndex === indx ?  {
+            y: y+currentOrder[indx]*40,  // task order * height of task + cursor movement => on drag position
+            zIndex:1000, 
+            marginTopBottom: 10, 
+            config: {tension: 100, friction: 2, mass: 1, clamp: true}
+        } : {
+            y: currentOrder[indx]*40,  // task order * height of task => correct position
+            zIndex:0, 
+            marginTopBottom: 0
+        }; // if the index is the one that's being dragged, move up by howevermuch needed
     }
 
+    // the order!
+    let order = props.list.map((_, i)=>i); // we start with just [0,1,2...]
+
     //const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
-    const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0))
+    const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order))
 
     // Set the drag hook and define component movement based on gesture data
     const bind = useDrag(({ args: [index], down, movement: [_, my] , first, last}) => {
-        set(getAnimationDestinationFromIndex(index, down?my:0)) // set the animation function
+        set(getAnimationDestinationFromIndex(index, down?my:0, order)) // set the animation function
         if (Math.abs(my) > 10 && !activelyDragging.includes(index))// if we are actually dragging + draged more than 10 px
             setActivelyDragging([...activelyDragging, index]);
         if (last) {// if we are done dragging
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             // TODO probably should also calculate positions + hit the DB
-            set(getAnimationDestinationFromIndex(-1, 0)) // reset animations
+            set(getAnimationDestinationFromIndex(-1, 0, order)) // reset animations
         }
     })
 
