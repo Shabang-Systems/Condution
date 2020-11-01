@@ -4,18 +4,36 @@ import { useSprings, animated, interpolate } from 'react-spring'
 
 import Task from './Task';
 
+/*
+ *
+ * Hello human,
+ * good afternoon.
+ *
+ * I am clumsy sortable!
+ *
+ * Use me to sort things
+ * and make sortable task lists
+ *
+ * TODO => put actual documentation here
+ *
+ * So there.
+ *
+ * @jemoka
+ *
+ */
+
 const SortableTaskList = (props)=>{
 
     let [activelyDragging, setActivelyDragging] = useState([]); // we are actively dragging...
 
     const getAnimationDestinationFromIndex = (activeIndex, y, currentOrder) => (indx) => {
         return activeIndex === indx ?  {
-            y: y+currentOrder[indx]*40,  // task order * height of task + cursor movement => on drag position
+            y: (currentOrder[indx]-indx)*40 + y, // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
             zIndex:1000, 
             marginTopBottom: 10, 
             config: {tension: 100, friction: 2, mass: 1, clamp: true}
         } : {
-            y: currentOrder[indx]*40,  // task order * height of task => correct position
+            y: (currentOrder[indx]-indx)*40,  // number of tasks the index is out of place * height of task => correct adjustment to position
             zIndex:0, 
             marginTopBottom: 0
         }; // if the index is the one that's being dragged, move up by howevermuch needed
