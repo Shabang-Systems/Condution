@@ -137,7 +137,12 @@ class Upcoming extends Component { // define the component
         //`;
         {/*content.shadowRoot.appendChild(styles);*/}
         var el = document.getElementById("inbox");
-        var sortable = Sortable.create(el);
+        var sortable = Sortable.create(el, {
+            animation: 200,
+            swapThreshold: 0.10,
+            delay: 100,
+            delayOnTouchOnly: true,
+        });
     }
 
     componentWillUnmount() {
