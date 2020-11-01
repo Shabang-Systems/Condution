@@ -1,6 +1,7 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
+import { Sortable, MultiDrag, Swap, OnSpill, AutoScroll } from "sortablejs";
 import './Upcoming.scss';
 import './Pages.css';
 
@@ -135,6 +136,8 @@ class Upcoming extends Component { // define the component
             //}
         //`;
         {/*content.shadowRoot.appendChild(styles);*/}
+        var el = document.getElementById("inbox");
+        var sortable = Sortable.create(el);
     }
 
     componentWillUnmount() {
@@ -188,9 +191,11 @@ class Upcoming extends Component { // define the component
                         <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
                             <div>
                             <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                <div id="inbox">
                             {this.state.inbox.map(id => (
                                 <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             ))}
+                                </div>
                             </div>
                             <div>
                             <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
