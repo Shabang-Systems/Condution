@@ -76,7 +76,7 @@
     }
 
     .task-name:focus{
-        background-color: var(--task-clickbox-background);
+        background-color: var(--background-feature);
     }
 
     @media (max-width: 575px) { 
