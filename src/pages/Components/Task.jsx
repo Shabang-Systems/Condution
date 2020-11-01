@@ -346,7 +346,7 @@ class Task extends Component {
                                     <input 
                                         type="checkbox" 
                                         id={"task-check-"+this.props.tid} 
-                                        className="task-check" 
+                                        className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
 
@@ -413,8 +413,8 @@ class Task extends Component {
                                             if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs
                                         }
                                     }} 
-                                    className="task-name" 
-                                    readOnly={()=>(getPlatforms().includes("mobile") ? !this.state.expanded : false)} 
+                                    className={"task-name "+(this.state.expanded?"":"no-select")} 
+                                    readOnly={(!this.state.expanded)} 
                                     type="text" 
                                     autoComplete="off" 
                                     placeholder="LOCALIZE: Task Name" 

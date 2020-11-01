@@ -4,6 +4,12 @@ h1, h2, h3, span, div {
     font-family: 'Arial' !important;
 }
 
+div, .no-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
 html{
     margin:0;
     padding:0;
