@@ -123,7 +123,7 @@ class PerspectiveEdit extends Component {
                                 className="perspective-select" 
                                 interface="popover" 
                                 value={this.props.avail} // TODO: make a database hit 
-                                mode="ios" 
+                                mode="ios"
                                 onIonChange={e=>{
                                     this.props.gruntman.do( // call a gruntman function
                                         "perspective.update__perspective", { 
