@@ -196,7 +196,7 @@ class Home extends Component {
                                 </IonContent>
 
                                 {/* Logout button */}
-                                <div className="menu-item" id="logout" onClick={()=>(this.props.dispatch({operation: "logout"}))}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
+                                <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
                             </IonMenu>
                             <IonPage id="main">
                                 {/* the add button to inbox button*/}
