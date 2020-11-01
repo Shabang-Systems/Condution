@@ -8,6 +8,23 @@ import Task from './Components/Task';
 
 const autoBind = require('auto-bind/react'); // autobind things! 
 
+/* 
+ * The lack of a poem here is scathing
+ * so I thought
+ * I'd contribute.
+ *
+ * The homepage needs no introduction
+ * For it explains itself in production.
+ *
+ * But alas,
+ * I still write this.
+ *
+ * What for?
+ *
+ * @Jemoka
+ *
+ */
+
 
 class Upcoming extends Component { // define the component
     constructor(props) {
