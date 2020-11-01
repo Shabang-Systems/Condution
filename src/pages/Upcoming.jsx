@@ -1,7 +1,6 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
-import { Sortable, MultiDrag, Swap, OnSpill, AutoScroll } from "sortablejs";
 import './Upcoming.scss';
 import './Pages.css';
 
@@ -136,13 +135,6 @@ class Upcoming extends Component { // define the component
             //}
         //`;
         {/*content.shadowRoot.appendChild(styles);*/}
-        var el = document.getElementById("inbox");
-        var sortable = Sortable.create(el, {
-            animation: 200,
-            swapThreshold: 0.10,
-            delay: 100,
-            delayOnTouchOnly: true,
-        });
     }
 
     componentWillUnmount() {
