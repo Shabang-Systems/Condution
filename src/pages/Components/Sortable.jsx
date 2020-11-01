@@ -6,10 +6,10 @@ import Task from './Task';
 
 const SortableTaskList = (props)=>{
 
-    let activelyDragging = []; // we are actively dragging...
+    let [activelyDragging, setActivelyDragging] = useState([]); // we are actively dragging...
 
     const getAnimationDestinationFromIndex = (activeIndex, y) => (indx) => {
-        return activeIndex === indx ? {y, zIndex:1000, marginTopBottom: 10, config: {tension: 150, friction: 2, mass: 1, clamp: true}} : {y: 0, zIndex:0, marginTopBottom: 0}; // if the index is the one that's being dragged, move up by howevermuch needed
+        return activeIndex === indx ? {y, zIndex:1000, marginTopBottom: 10, config: {tension: 100, friction: 2, mass: 1, clamp: true}} : {y: 0, zIndex:0, marginTopBottom: 0}; // if the index is the one that's being dragged, move up by howevermuch needed
     }
 
     //const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
@@ -18,10 +18,10 @@ const SortableTaskList = (props)=>{
     // Set the drag hook and define component movement based on gesture data
     const bind = useDrag(({ args: [index], down, movement: [_, my] , first, last}) => {
         set(getAnimationDestinationFromIndex(index, down?my:0)) // set the animation function
-        if (Math.abs(my) > 10 && !activelyDragging.includes(index)) // if we are actually dragging + draged more than 10 px
-            activelyDragging.push(index); // we are dragging
+        if (Math.abs(my) > 10 && !activelyDragging.includes(index))// if we are actually dragging + draged more than 10 px
+            setActivelyDragging([...activelyDragging, index]);
         if (last) {// if we are done dragging
-            setTimeout(()=>activelyDragging.pop(activelyDragging.indexOf(index)), 100); // wait for the lovely event bubble and say we are done
+            setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             // TODO probably should also calculate positions + hit the DB
             set(getAnimationDestinationFromIndex(-1, 0)) // reset animations
         }
@@ -32,6 +32,7 @@ const SortableTaskList = (props)=>{
         return (
             <animated.div 
                 {...bind(i)} 
+                className={activelyDragging.includes(i) ? "drag-envelope dragging" : "drag-envelope"}
                 style={{
                     borderRadius: 7,
                     position: "relative",

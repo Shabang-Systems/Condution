@@ -13,6 +13,10 @@
 .task.expanded {
 }
 
+.drag-envelope.dragging .task.collapsed {
+    background: var(--background-feature);
+}
+
 .task.collapsed:hover {
     background: var(--background-feature);
 }
