@@ -12,25 +12,25 @@ class Keybinds extends Component {
 
     // define the bindings! 2d array of keybind and function 
     bindings = [
-	["command+shift+j", this.stuffur] // stufferify it!
+        ["command+shift+j", this.stuffur] // stufferify it!
     ]
 
     stuffur() { // stuficatin function 
-	console.log("stuffer")
+        console.log("stuffer")
     }
 
     // loop through and bind all our things!
     componentDidMount() {
-	this.bindings.map(combo => {
-	    Mousetrap.bind(...combo)
-	})
+        this.bindings.map(combo => {
+            Mousetrap.bind(...combo)
+        })
     }
 
     // loop through and unbind all our things!
     componentWillUnmount() { 
-	this.bindings.map(combo => {
-	    Mousetrap.unbind(...combo)
-	})
+        this.bindings.map(combo => {
+            Mousetrap.unbind(...combo)
+        })
     }
 
     render() { return null }
