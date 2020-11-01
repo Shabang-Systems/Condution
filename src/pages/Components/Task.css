@@ -75,9 +75,9 @@
         color: var(--decorative-light-alt);
     }
 
-    .task-name:focus{
-        background-color: var(--background-feature);
-    }
+/*    .task-name:focus{*/
+        /*background-color: var(--background-feature);*/
+    /*}*/
 
     @media (max-width: 575px) { 
         .task-name {

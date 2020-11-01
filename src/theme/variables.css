@@ -8,7 +8,13 @@ div, .no-select {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
   user-select: none; /* Standard syntax */
+
 }
+
+.no-select::selection {
+  background: transparent; /* WebKit/Blink Browsers */
+}
+
 
 html{
     margin:0;
