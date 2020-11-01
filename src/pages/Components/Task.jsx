@@ -311,10 +311,7 @@ class Task extends Component {
                         return (
                             // Actual task container, now
                             <animated.div 
-                                onClick={(e)=> {
-                                    if(!this.state.expanded) 
-                                        this.openTask(); // open the task
-                                }}
+
                                 className={"task "+(this.state.expanded?"expanded":"collapsed")} 
 
                                 ref={this.me} 
@@ -406,7 +403,7 @@ class Task extends Component {
                                     onFocus={(e)=>{ 
                                         // open the task if its not open already
                                         if(!this.state.expanded) { 
-                                            //this.openTask(); // open the task
+                                            this.openTask(); // open the task
                                             if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs
                                         }
                                     }} 

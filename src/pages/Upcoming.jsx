@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import './Upcoming.scss';
 import './Pages.css';
 
+import SortableTaskList from './Components/Sortable';
+
 import Task from './Components/Task';
 
 const autoBind = require('auto-bind/react'); // autobind things! 
@@ -187,54 +189,50 @@ class Upcoming extends Component { // define the component
                         </div>
                         <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
                             <div>
-                            <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
-                                <div id="inbox">
-                            {this.state.inbox.map(id => (
-                                <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                            ))}
-                                </div>
+                                <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             </div>
                             <div>
-                            <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
-                            {this.state.dueSoon.map(id => (
-                                <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                            ))}
+                                <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                                {this.state.dueSoon.map(id => (
+                                    <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                ))}
                             </div>
-			    <div>
-				<div className="timeline-button">
-				    <a 
-					onClick={()=>
-					    this.setState({timelineShown: !this.state.timelineShown})} 
-					    // for some reason, css classes don't work, so we have to style here
-					    // @jack? why don't they? well, styling here's fine anyways. most likely b/c they are overrode by className=timeline-button
-					    style={{
-						marginLeft: 15,
-						marginTop: 20, 
-						display: "inline-block", 
-						fontWeight: 600, 
-						fontSize: 13, 
-						//color: "var(--decorative-light-alt)", 
-						cursor: "pointer"}}
-				    >
-					<i 
-					    class="fas fa-calendar-week" 
-					    style={{paddingRight: 5}}
-					></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
-				</div> 
-                            {
-                                (()=>{
-                                    if (this.state.timelineShown)
-                                        return this.state.timeline.map(timelineItem => {
-                                            if (timelineItem.type === "task")
-                                                return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                                                    else if (timelineItem.type === "label")
-                                                return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
+                            <div>
+                                <div className="timeline-button">
+                                    <a 
+                                        onClick={()=>
+                                                this.setState({timelineShown: !this.state.timelineShown})} 
+                                        // for some reason, css classes don't work, so we have to style here
+                                        // @jack? why don't they? well, styling here's fine anyways. most likely b/c they are overrode by className=timeline-button
+                                        style={{
+                                            marginLeft: 15,
+                                            marginTop: 20, 
+                                            display: "inline-block", 
+                                            fontWeight: 600, 
+                                            fontSize: 13, 
+                                            //color: "var(--decorative-light-alt)", 
+                                            cursor: "pointer"}}
+                                    >
+                                        <i 
+                                            class="fas fa-calendar-week" 
+                                            style={{paddingRight: 5}}
+                                        ></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
+                                </div> 
+                                {
+                                    (()=>{
+                                        if (this.state.timelineShown)
+                                            return this.state.timeline.map(timelineItem => {
+                                                if (timelineItem.type === "task")
+                                                    return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                                        else if (timelineItem.type === "label")
+                                                    return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
 
 
-                                        })
-                                })()
-                            }
-			    </div>
+                                            })
+                                    })()
+                                }
+                            </div>
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
