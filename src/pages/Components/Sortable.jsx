@@ -12,7 +12,7 @@ const SortableTaskList = (props)=>{
   })
 
     return props.list.map(id => {
-        return <Task tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} />
+        return <animated.div {...bind()} style={{x, y}} onDragStart={(e)=>e.stopPropagation()}><Task tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} /></animated.div>
     });
 }
 

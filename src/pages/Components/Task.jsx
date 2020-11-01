@@ -159,6 +159,7 @@ class Task extends Component {
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
         this.repeater = React.createRef(); // what's my repeater?
+        this.checkbox = React.createRef(); // what's my pseudocheck
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -311,7 +312,11 @@ class Task extends Component {
                         return (
                             // Actual task container, now
                             <animated.div 
-
+                                onClick={(e)=>{
+                                    if(!this.state.expanded && e.target !== this.checkbox.current) { 
+                                        this.openTask(); // open the task
+                                    }
+                                }}
                                 className={"task "+(this.state.expanded?"expanded":"collapsed")} 
 
                                 ref={this.me} 
@@ -372,7 +377,7 @@ class Task extends Component {
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
@@ -400,10 +405,11 @@ class Task extends Component {
                                             ), `task-name-${this.props.tid}-update`) // and we will schedule it as this
                                         }
                                     } 
+
                                     onFocus={(e)=>{ 
                                         // open the task if its not open already
                                         if(!this.state.expanded) { 
-                                            this.openTask(); // open the task
+                                            //this.openTask(); // open the task
                                             if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs
                                         }
                                     }} 
