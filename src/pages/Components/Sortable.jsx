@@ -42,11 +42,11 @@ const SortableTaskList = (props)=>{
 
     const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder) => (indx) => {
         return activeIndex === indx ?  {
-            y: (currentOrder.indexOf(indx)-indx)*40 + mY-((currentOrder.indexOf(indx)-indx)*40), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
+            y: (currentOrder.indexOf(indx)-indx)*41 + mY-((currentOrder.indexOf(indx)-indx)*41), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
             zIndex:1000, 
             config: {tension: 100, friction: 2, mass: 1, clamp: true}
         } : {
-            y: (currentOrder.indexOf(indx)-indx)*40,  // number of tasks the index is out of place * height of task => correct adjustment to position
+            y: (currentOrder.indexOf(indx)-indx)*41,  // number of tasks the index is out of place * height of task => correct adjustment to position
             zIndex:0, 
         }; // if the index is the one that's being dragged, move up by howevermuch needed
     }
@@ -65,7 +65,7 @@ const SortableTaskList = (props)=>{
                 setActivelyDragging([...activelyDragging, index]);
         }
 
-        let moveBy = Math.floor(movementY/40) // the amount of tasks the active task moved over
+        let moveBy = Math.floor(movementY/41) // the amount of tasks the active task moved over
         moveBy = moveBy <= -index ? -index : (moveBy >= (props.list.length-index) ? props.list.length-1 : moveBy); // clip moveby by the total task it could possibly move over
 
         if (Math.abs(moveBy) > 0 && moveBy!==moveApplied.current) {

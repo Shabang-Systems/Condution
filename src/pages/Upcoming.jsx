@@ -215,7 +215,7 @@ class Upcoming extends Component { // define the component
                                             cursor: "pointer"}}
                                     >
                                         <i 
-                                            class="fas fa-calendar-week" 
+                                            className="fas fa-calendar-week" 
                                             style={{paddingRight: 5}}
                                         ></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
                                 </div> 

@@ -286,7 +286,7 @@ class Task extends Component {
     render() {
 
         return (
-            <div ref={this.props.ref ? this.props.ref : null}>
+            <div>
 
                 {/*animation factory to orchistrate animations*/}
 

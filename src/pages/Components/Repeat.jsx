@@ -135,7 +135,7 @@ class Repeat extends Component {
                                             <div className="repeat-weekgrid">
                                                 {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}
                                                 {/* ["originalString", "localizedString"] <= localize in this way */}
-                                                {[["M", "M"], ["T", "T"], ["W", "W"], ["Th", "Th"], ["F", "F"], ["S", "S"], ["Su", "Su"]].map(e => <a className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
+                                                {[["M", "M"], ["T", "T"], ["W", "W"], ["Th", "Th"], ["F", "F"], ["S", "S"], ["Su", "Su"]].map(e => <a key={e} className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
                                                     if (this.state.on.includes(e[0])) {
                                                         let oldOn = this.state.on;
                                                         let newOn = oldOn.filter(elem=>elem!==e[0]);
@@ -163,7 +163,7 @@ class Repeat extends Component {
                                         return (
                                             <div className="repeat-dategrid">
                                                 {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}
-                                                {["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "Last"].map(e => <a className={"repeat-dategrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e.toLowerCase()) ? "repeat-dategrid-number-selected":""); else return ""})()} onClick={()=>{
+                                                {["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "Last"].map(e => <a key={e} className={"repeat-dategrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e.toLowerCase()) ? "repeat-dategrid-number-selected":""); else return ""})()} onClick={()=>{
                                                     if (this.state.on.includes(e.toLowerCase())) {
                                                         let oldOn = this.state.on;
                                                         let newOn = oldOn.filter(elem=>elem!==e.toLowerCase());
