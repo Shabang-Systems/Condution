@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDrag } from 'react-use-gesture'
 import { useSprings, animated, interpolate } from 'react-spring'
 
@@ -24,7 +24,19 @@ import Task from './Task';
 
 const SortableTaskList = (props)=>{
 
-    let [activelyDragging, setActivelyDragging] = useState([]); // we are actively dragging...
+    const [activelyDragging, setActivelyDragging] = useState([]); // we are actively dragging...
+
+    const order = useRef();
+    const moveApplied = useRef();
+    const currentIndex = useRef();
+
+    // the order!
+    useEffect(() => {
+        order.current = props.list.map((_, i)=>i); // we start with just [0,1,2...]
+        moveApplied.current = 0; // moves applied
+        currentIndex.current = 0; // currentIndex
+    }, [props.list, props.uid]);
+
 
     const getAnimationDestinationFromIndex = (activeIndex, y, currentOrder) => (indx) => {
         return activeIndex === indx ?  {
@@ -39,40 +51,43 @@ const SortableTaskList = (props)=>{
         }; // if the index is the one that's being dragged, move up by howevermuch needed
     }
 
-    // the order!
-    let order = props.list.map((_, i)=>i); // we start with just [0,1,2...]
-    let moveApplied = 0; // moves applied
-    let currentIndex = 0; // currentIndex
 
     //const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
-    const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order))
+    const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order.current))
 
     // Set the drag hook and define component movement based on gesture data
     const bind = useDrag(({ args: [index], down, movement: [_, movementY] , first, last}) => {
-        let moveBy = Math.floor(movementY/40) // the amount of tasks the active task moved over
-        moveBy = moveBy <= -index ? -index : (moveBy >= (props.list.length-index) ? props.list.length-1 : moveBy); // clip moveby by the total task it could possibly move over
-        if (first)
-            currentIndex = index;
 
-        if (Math.abs(moveBy) > 0 && moveBy!==moveApplied) {
-            // @enquierer crushing @jemoka's hopes and dreams
-            let newIndex = index+moveBy;
-            order.splice(currentIndex, 1); // splice element out
-            order.splice(newIndex, 0, index); // splice the index in, noting that we just took something out
-            console.log(currentIndex, newIndex, moveBy, moveApplied, order);
-            moveApplied = moveBy;
-            currentIndex = newIndex;
+        if (first) {
+            currentIndex.current = index;
+
+            if (!activelyDragging.includes(index))
+                setActivelyDragging([...activelyDragging, index]);
         }
 
-        set(getAnimationDestinationFromIndex(index, down?movementY:0, order)) // set the animation function
-        if (Math.abs(movementY) > 10 && !activelyDragging.includes(index))// if we are actually dragging + draged more than 10 px
-            setActivelyDragging([...activelyDragging, index]);
+        let moveBy = Math.floor(movementY/40) // the amount of tasks the active task moved over
+        moveBy = moveBy <= -index ? -index : (moveBy >= (props.list.length-index) ? props.list.length-1 : moveBy); // clip moveby by the total task it could possibly move over
+
+        if (Math.abs(moveBy) > 0 && moveBy!==moveApplied.current) {
+            // @enquierer crushing @jemoka's hopes and dreams
+            let newIndex = index+moveBy;
+            order.current.splice(currentIndex.current, 1); // splice element out
+            order.current.splice(newIndex, 0, index); // splice the index in, noting that we just took something out
+            console.log(currentIndex.current, newIndex, moveBy, order.current);
+            moveApplied.current = moveBy;
+            currentIndex.current = newIndex;
+        }
+
+        set(getAnimationDestinationFromIndex(index, down?movementY:0, order.current)) // set the animation function
+
         if (last) {// if we are done dragging
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             // TODO probably should also calculate positions + hit the DB
-            set(getAnimationDestinationFromIndex(-1, 0, order)) // reset animations
+            set(getAnimationDestinationFromIndex(-1, 0, order.current)) // reset animations
         }
-    })
+
+
+    }, {delay:500})
 
     return props.list.map((id, i) => {
         let anim = springs[i];
