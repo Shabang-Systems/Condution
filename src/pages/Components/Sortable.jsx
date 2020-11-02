@@ -46,9 +46,14 @@ const SortableTaskList = (props)=>{
     const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order))
 
     // Set the drag hook and define component movement based on gesture data
-    const bind = useDrag(({ args: [index], down, movement: [_, my] , first, last}) => {
-        set(getAnimationDestinationFromIndex(index, down?my:0, order)) // set the animation function
-        if (Math.abs(my) > 10 && !activelyDragging.includes(index))// if we are actually dragging + draged more than 10 px
+    const bind = useDrag(({ args: [index], down, movement: [_, movementY] , first, last}) => {
+        let moveBy = Math.floor(movementY/40) // the amount of tasks the active task moved over
+
+        moveBy = moveBy <= -index ? -index : (moveBy >= (props.list.length-index) ? props.list.length-1 : moveBy); // clip moveby by the total task it could possibly move over
+
+        console.log(moveBy);
+        set(getAnimationDestinationFromIndex(index, down?movementY:0, order)) // set the animation function
+        if (Math.abs(movementY) > 10 && !activelyDragging.includes(index))// if we are actually dragging + draged more than 10 px
             setActivelyDragging([...activelyDragging, index]);
         if (last) {// if we are done dragging
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
