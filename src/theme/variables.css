@@ -1,5 +1,25 @@
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
+
+
+/*.alert-checkbox-label.sc-ion-alert-md,*/
+/*.alert-checkbox-label.sc-ion-alert-ios {*/
+/*   white-space: normal;*/
+/*   width: 5px;*/
+/*   border: 1px solid red;*/
+/*}*/
+/*.alert-tappable.alert-checkbox {*/
+/*   height: auto;*/
+/*   contain: content;*/
+/*   width: 5px;*/
+/*   border: 1px solid red;*/
+/*}*/
+
+.popover-content.sc-ion-popover-ios {
+    min-width: 204px;
+}
+
+
 h1, h2, h3, span, div {
     font-family: 'Arial' !important;
 }
@@ -273,4 +293,6 @@ textarea:focus, input:focus{
 
     --ion-card-background: #1e1e1e;
   }
+
+
 }
