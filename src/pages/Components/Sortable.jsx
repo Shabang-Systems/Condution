@@ -31,6 +31,8 @@ const SortableTaskList = (props)=>{
 
     let order = props.list.map((_, i)=>i);
 
+    let objRefs = props.list.map(_ => React.createRef());
+
     // initialize presistant refs
     useEffect(() => {
         moveApplied.current = 0; // moves applied
@@ -84,7 +86,7 @@ const SortableTaskList = (props)=>{
         }
 
 
-    }, {delay:500})
+    }, {delay:500, filterTaps: true})
 
     return props.list.map((id, i) => {
         let anim = springs[i];
@@ -105,7 +107,7 @@ const SortableTaskList = (props)=>{
                     }
                 }}
             >
-                <Task tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} />
+                <Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} />
             </animated.div>
     )
     });
