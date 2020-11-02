@@ -41,6 +41,8 @@ const SortableTaskList = (props)=>{
 
     // the order!
     let order = props.list.map((_, i)=>i); // we start with just [0,1,2...]
+    let moveApplied = 0; // moves applied
+    let currentIndex = 0; // currentIndex
 
     //const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
     const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order))
@@ -48,10 +50,20 @@ const SortableTaskList = (props)=>{
     // Set the drag hook and define component movement based on gesture data
     const bind = useDrag(({ args: [index], down, movement: [_, movementY] , first, last}) => {
         let moveBy = Math.floor(movementY/40) // the amount of tasks the active task moved over
-
         moveBy = moveBy <= -index ? -index : (moveBy >= (props.list.length-index) ? props.list.length-1 : moveBy); // clip moveby by the total task it could possibly move over
+        if (first)
+            currentIndex = index;
 
-        console.log(moveBy);
+        if (Math.abs(moveBy) > 0 && moveBy!==moveApplied) {
+            // @enquierer crushing @jemoka's hopes and dreams
+            let newIndex = index+moveBy;
+            order.splice(currentIndex, 1); // splice element out
+            order.splice(newIndex, 0, index); // splice the index in, noting that we just took something out
+            console.log(currentIndex, newIndex, moveBy, moveApplied, order);
+            moveApplied = moveBy;
+            currentIndex = newIndex;
+        }
+
         set(getAnimationDestinationFromIndex(index, down?movementY:0, order)) // set the animation function
         if (Math.abs(movementY) > 10 && !activelyDragging.includes(index))// if we are actually dragging + draged more than 10 px
             setActivelyDragging([...activelyDragging, index]);
