@@ -33,6 +33,20 @@ class Gruntman {
 
 
         this.doers = {
+            macro: {
+                applyOrder: async function (options) {
+                    // TODO undo handler?
+                    if (options.items.length !== options.order.length) 
+                        console.error("Length of items and order length must be the same!")
+                    options.items.map(async function (e,i) {
+                        if (e.type === "task") 
+                            await engine.db.modifyTask(options.uid, e.content, {order: options.order[i]});
+                        else if (e.type === "project")
+                            await engine.db.modifyProject(options.uid, e.content, {order: options.order[i]});
+                    });
+                    return {uid:options.uid}; // TODO HANDLE UNDO
+                }
+            },
             tag: {
                 create: async function (options) {
                     let newTag = await engine.db.newTag(options.uid, options.name);

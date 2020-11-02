@@ -65,6 +65,9 @@ const SortableTaskList = (props)=>{
 
             if (!activelyDragging.includes(index))
                 setActivelyDragging([...activelyDragging, index]);
+
+            if (props.onSortStart)
+                props.onSortStart({sorted: index, sortedID: props.list[index]});
         }
 
         let moveBy = Math.floor(movementY/41) // the amount of tasks the active task moved over
@@ -85,6 +88,10 @@ const SortableTaskList = (props)=>{
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             // TODO probably should also calculate positions + hit the DB
             set(getAnimationDestinationFromIndex(-1, 0, order.current)) // reset animations
+
+            if (props.onSortEnd)
+                props.onSortEnd({sorted: index, sortedID: props.list[index], newOrder: order.current, movementY, moveBy});
+
         }
 
 
