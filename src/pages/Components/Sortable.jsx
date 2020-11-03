@@ -33,29 +33,30 @@ const SortableTaskList = (props)=>{
 
     let objRefs = props.list.map(_ => React.createRef());
 
-    const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder) => (indx) => {
+    const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder, noAnim) => (indx) => {
         return activeIndex === indx ?  {
-            y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41 + mY-((currentOrder.indexOf(indx)-indx)*41), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
-            zIndex:1000, 
-            config: {tension: 100, friction: 2, mass: 1, clamp: true}
+                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41 + mY-((currentOrder.indexOf(indx)-indx)*41), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
+                zIndex:1000, 
+                config: {tension: 100, friction: 2, mass: 1, clamp: true},
+            immediate:noAnim
         } : {
-            y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41,  // number of tasks the index is out of place * height of task => correct adjustment to position
-            zIndex:0, 
+                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41,  // number of tasks the index is out of place * height of task => correct adjustment to position
+                zIndex:0, 
+            immediate:noAnim
         }; // if the index is the one that's being dragged, move up by howevermuch needed
     }
 
 
     //const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
-    const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order.current))
+    const [springs, set, stop] = useSprings(props.list.length, getAnimationDestinationFromIndex(-1, 0, order.current, true))
 
     // initialize presistant refs
     useEffect(() => {
         order.current = props.list.map((_, i)=>i);
         moveApplied.current = 0; // moves applied
         currentIndex.current = 0; // currentIndex
-        set(getAnimationDestinationFromIndex(-1, 0, order.current)) // initialize the animation function
+        set(getAnimationDestinationFromIndex(-1, 0, order.current, true)) // initialize the animation function
     }, [props.list, props.uid]);
-
 
     // Set the drag hook and define component movement based on gesture data
     const bind = useDrag( (async function ({ args: [index], down, movement: [_, movementY] , first, last}) {
@@ -86,11 +87,13 @@ const SortableTaskList = (props)=>{
 
         if (last) {// if we are done dragging
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
-            // TODO probably should also calculate positions + hit the DB
-            //order.current = props.list.map((_, i)=>i);
-            //moveApplied.current = 0; // moves applied
-            //currentIndex.current = 0; // currentIndex
-            //set(getAnimationDestinationFromIndex(-1, 0, order.current)) // reset animations
+            await props.gruntman.do( // call a gruntman function
+                "macro.applyOrder", { 
+                    uid: props.uid, // pass it the things vvv
+                    order: order.current, 
+                    items: props.list.map(i=>{return {type:"task", content:i}}),
+                }
+            );
 
             if (props.onSortEnd)
                 props.onSortEnd({sorted: index, sortedID: props.list[index], newOrder: order.current, movementY, moveBy, list:props.list});

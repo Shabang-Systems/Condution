@@ -190,15 +190,7 @@ class Upcoming extends Component { // define the component
                         <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
                             <div>
                                 <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
-                                <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} onSortEnd={(async function (e){
-                                    await this.props.gruntman.do( // call a gruntman function
-                                        "macro.applyOrder", { 
-                                            uid: this.props.uid, // pass it the things vvv
-                                            order: e.newOrder, 
-                                            items: this.state.inbox.map(i=>{return {type:"task", content:i}}),
-                                        }
-                                    );
-                                }).bind(this)}/>
+                                <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             </div>
                             <div>
                                 <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
