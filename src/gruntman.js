@@ -38,12 +38,14 @@ class Gruntman {
                     // TODO undo handler?
                     if (options.items.length !== options.order.length) 
                         console.error("Length of items and order length must be the same!")
-                    options.items.map(async function (e,i) {
-                        if (e.type === "task") 
-                            await engine.db.modifyTask(options.uid, e.content, {order: options.order[i]});
-                        else if (e.type === "project")
-                            await engine.db.modifyProject(options.uid, e.content, {order: options.order[i]});
-                    });
+                    await Promise.all(options.order.map((e,i) => {
+                        let item = options.items[e];
+                        if (item.type === "task") 
+                            return engine.db.modifyTask(options.uid, item.content, {order: i});
+                        else if (item.type === "project")
+                            return engine.db.modifyProject(options.uid, item.content, {order: i});
+                            //await engine.db.modifyProject(options.uid, e.content, {order: options.order[i]});
+                    }));
                     return {uid:options.uid}; // TODO HANDLE UNDO
                 }
             },

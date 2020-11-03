@@ -58,7 +58,7 @@ const SortableTaskList = (props)=>{
 
 
     // Set the drag hook and define component movement based on gesture data
-    const bind = useDrag(({ args: [index], down, movement: [_, movementY] , first, last}) => {
+    const bind = useDrag( (async function ({ args: [index], down, movement: [_, movementY] , first, last}) {
 
         if (first) {
             currentIndex.current = index;
@@ -67,7 +67,7 @@ const SortableTaskList = (props)=>{
                 setActivelyDragging([...activelyDragging, index]);
 
             if (props.onSortStart)
-                props.onSortStart({sorted: index, sortedID: props.list[index]});
+                props.onSortStart({sorted: index, sortedID: props.list[index], list: props.list});
         }
 
         let moveBy = Math.floor(movementY/41) // the amount of tasks the active task moved over
@@ -81,21 +81,24 @@ const SortableTaskList = (props)=>{
             moveApplied.current = moveBy;
             currentIndex.current = newIndex;
         }
-        set(getAnimationDestinationFromIndex(index, down?movementY:0, order.current)) // set the animation function
+        set(getAnimationDestinationFromIndex(index, movementY, order.current)) // set the animation function
 
 
         if (last) {// if we are done dragging
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             // TODO probably should also calculate positions + hit the DB
-            set(getAnimationDestinationFromIndex(-1, 0, order.current)) // reset animations
+            //order.current = props.list.map((_, i)=>i);
+            //moveApplied.current = 0; // moves applied
+            //currentIndex.current = 0; // currentIndex
+            //set(getAnimationDestinationFromIndex(-1, 0, order.current)) // reset animations
 
             if (props.onSortEnd)
-                props.onSortEnd({sorted: index, sortedID: props.list[index], newOrder: order.current, movementY, moveBy});
+                props.onSortEnd({sorted: index, sortedID: props.list[index], newOrder: order.current, movementY, moveBy, list:props.list});
 
         }
 
 
-    }, {delay:500, filterTaps: true})
+    }).bind(this), {delay:500, filterTaps: true})
 
     return props.list.map((id, i) => {
         let anim = springs[i];
