@@ -1,26 +1,42 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
+import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
+import { Redirect, Route, Link, Switch } from 'react-router-dom';
+import { createBrowserHistory, createHashHistory } from 'history';
+import { withRouter } from "react-router";
+
+
 const autoBind = require('auto-bind/react');
+
 
 class Keybinds extends Component {
     constructor(props) {
         super(props);
+	//this.stuffur = this.stuffur.bind(this);
         autoBind(this);
 
-        this.state = {}
+        this.state = {
+	    test: "yy"
+
+	}
+
+	//this.keybindRef = React.createRef()
+
     }
 
     // define the bindings! 2d array of keybind and function 
     bindings = [
-        ["command+shift+j", this.stuffur] // stufferify it!
+	["command+shift+j", () => {
+	    console.log(this); 
+	    this.props.history.push("/upcoming"); 
+	    this.props.paginate("upcoming"); 
+	}] // nav to upcoming keybind!
     ]
 
-    stuffur() { // stuficatin function 
-        console.log("stuffer")
-    }
 
     // loop through and bind all our things!
     componentDidMount() {
+	console.log(this)
         this.bindings.map(combo => {
             Mousetrap.bind(...combo)
         })
@@ -37,5 +53,5 @@ class Keybinds extends Component {
 
 }
 
-export default Keybinds;
+export default withRouter(Keybinds);
 

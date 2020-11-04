@@ -109,9 +109,9 @@ class Home extends Component {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
             <IonPage>
-		<Keybinds />
                 {/* The central router that controls the routing of views */}
                 <Router history={history}>
+		    <Keybinds paginate={this.paginate} ref={this.keybindRef} />
                     {/* OoIp */}
                     <ReactTooltip />
                     {/* App container */}
