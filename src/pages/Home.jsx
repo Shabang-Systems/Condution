@@ -115,6 +115,7 @@ class Home extends Component {
 			paginate={this.paginate} 
 			ref={this.keybindRef} 
 			perspectives={this.state.perspectives}
+			projects={this.state.projects}
 		    />
                     {/* OoIp */}
                     <ReactTooltip />

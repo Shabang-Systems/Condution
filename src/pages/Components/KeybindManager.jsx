@@ -33,8 +33,8 @@ class Keybinds extends Component {
         autoBind(this);
 
         this.state = {
-	    test: "yy"
-
+	    sidebar_list: [],
+	    prop_store: ""
 	}
 
 	//this.keybindRef = React.createRef()
@@ -43,9 +43,9 @@ class Keybinds extends Component {
 
     // define the bindings! 2d array of keybind and function 
     bindings = [
-	["command+shift+j", ()=>{this.switch_to_upcoming(this)}], // nav to upcoming keybind!
-	["command+alt+3", ()=>{this.test(this, 0)}], // nav to upcoming keybind!
-	["command+alt+4", ()=>{this.test(this, 1)}] // nav to upcoming keybind!
+	["alt+1", ()=>{this.switch_to_upcoming(this)}], // nav to upcoming keybind
+	["alt+3", ()=>{this.perspective_switcher(this, 0)}], // nav to perspective 1 keybind
+	["alt+4", ()=>{this.perspective_switcher(this, 1)}] // nav to perspective 2 keybind
     ]
 
     switch_to_upcoming(that){
@@ -56,20 +56,28 @@ class Keybinds extends Component {
     }
 
 
-    test(that, num){
-	const pid = that.props.perspectives[num].id
-	//console.log(that.props.perspectives)
-	console.log(that.props.perspectives[num].id)
-	that.props.history.push(`/perspectives/${pid}/do`);
-	that.props.paginate("perspectives", pid);
+    perspective_switcher(that, num){
+	//const pid = that.props.perspectives[num].id
+	//console.log(that.props.perspectives[num].id)
+	//that.props.history.push(`/perspectives/${pid}`);
+	//that.props.paginate("perspectives", pid);
+	
 
+	console.log(this.state.sidebar_list)
 
     }
 
+    componentDidUpdate(){
+	console.log(this.props)
+	if (this.state.prop_store != this.props) {
+	    this.setState({sidebar_list: [this.props.perspectives.map(o => ['perspectives', o.id])], prop_store: this.props})
+	}
+    }
 
     // loop through and bind all our things!
     componentDidMount() {
-	console.log(this)
+	this.setState({prop_store: this.props})
+
         this.bindings.map(combo => {
             Mousetrap.bind(...combo)
         })
