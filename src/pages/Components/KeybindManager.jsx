@@ -16,11 +16,13 @@ class Keybinds extends Component {
 
         this.state = {
 	    sidebar_list: [],
-	    prop_store: ""
+	    sidebar_index: 0,
+	    prop_store: ''
 	}
     }
 
     // define the bindings! 2d array of keybind and function 
+    // TODO TODO: for some reason binding works now, so replace that later? 
     bindings = [
 	["alt+1", ()=>{this.sidebar_switcher(this, 0)}], // nav to upcoming keybind
 	["alt+2", ()=>{this.sidebar_switcher(this, 1)}], // nav to completed keybind
@@ -30,14 +32,22 @@ class Keybinds extends Component {
 	["alt+6", ()=>{this.sidebar_switcher(this, 5)}], // nav to item 6 keybind
 	["alt+7", ()=>{this.sidebar_switcher(this, 6)}], // nav to item 7 keybind
 	["alt+8", ()=>{this.sidebar_switcher(this, 7)}], // nav to item 8 keybind
-	["alt+9", ()=>{this.sidebar_switcher(this, 'l')}], // nav to last item keybind
+	["alt+9", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
+	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav to item 8 keybind
+	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav to item 8 keybind
     ]
 
     sidebar_switcher(that, num){
-	// set our location to index in sidebar, unless you pass it 'l' which switches to the last item 
-	const loca = (num == 'l')? this.state.sidebar_list[this.state.sidebar_list.length-1] : this.state.sidebar_list[num];
+	const loca = this.state.sidebar_list[num]; // set our location to index in sidebar
 	that.props.history.push(`/${loca[0]}/${loca[1]}`) // push to the history
 	that.props.paginate(...loca); // paginate-ify it!
+	this.setState({sidebar_index: num})
+    }
+
+    sidebar_incrimentor(that, num) {
+	if (this.state.sidebar_list[this.state.sidebar_index+num]) {
+	    this.sidebar_switcher(that, this.state.sidebar_index+num)
+	}
     }
 
     componentDidUpdate(){
@@ -54,6 +64,10 @@ class Keybinds extends Component {
 		prop_store: this.props //  and update the props 
 	    })
 	}
+	//if (!this.state.sidebar_index) {
+	    //this.setState({sidebar_index: side
+
+	//}
     }
 
     // loop through and bind all our things!
