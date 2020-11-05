@@ -160,6 +160,7 @@ class Task extends Component {
         this.me = React.createRef(); // who am I? what am I?
         this.repeater = React.createRef(); // what's my repeater?
         this.checkbox = React.createRef(); // what's my pseudocheck
+        this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -272,8 +273,9 @@ class Task extends Component {
             this.refreshDecorations();
         if (prevState.dueDate !== this.state.dueDate) // if we updated the due date
             this.refreshDecorations();
-        if (prevState.expanded !== this.state.expanded && this.state.expanded === true) // if we opened a task for updating
+        if (prevState.expanded !== this.state.expanded && this.state.expanded === true) {// if we opened a task for updating
             this.props.gruntman.lockUpdates(); // tell gruntman to chill
+        }
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) // if we closed a task
             this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
@@ -313,7 +315,7 @@ class Task extends Component {
                             // Actual task container, now
                             <animated.div 
                                 onClick={(e)=>{
-                                    if(!this.state.expanded && e.target !== this.checkbox.current && !this.props.freeze) { 
+                                    if(!this.state.expanded && e.target !== this.checkbox.current && e.target !== this.actualCheck.current && !this.props.freeze && !(this.state.isComplete&&!this.stae.startingCompleted)) { 
                                         this.openTask(); // open the task
                                     }
                                 }}
@@ -345,6 +347,8 @@ class Task extends Component {
                                     {/* First, an invisible checkmark */}
                                     <input 
                                         type="checkbox" 
+
+     ref={this.actualCheck}
                                         id={"task-check-"+this.props.tid} 
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
