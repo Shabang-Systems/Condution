@@ -111,7 +111,11 @@ class Home extends Component {
             <IonPage>
                 {/* The central router that controls the routing of views */}
                 <Router history={history}>
-		    <Keybinds paginate={this.paginate} ref={this.keybindRef} />
+		    <Keybinds 
+			paginate={this.paginate} 
+			ref={this.keybindRef} 
+			perspectives={this.state.perspectives}
+		    />
                     {/* OoIp */}
                     <ReactTooltip />
                     {/* App container */}
