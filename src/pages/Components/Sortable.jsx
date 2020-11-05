@@ -61,7 +61,7 @@ const SortableTaskList = (props)=>{
     }, [props.list, props.uid]);
 
     // Set the drag hook and define component movement based on gesture data
-    const bind = useDrag( (async function ({ args: [index], down, movement: [_, movementY] , first, last}) {
+    const bind = useDrag( (async function ({ args: [index], down, movement: [_, movementY] , first, last, tap}) {
 
         if (first) {
             currentIndex.current = index;
@@ -84,7 +84,10 @@ const SortableTaskList = (props)=>{
             moveApplied.current = moveBy;
             currentIndex.current = newIndex;
         }
-        set(getAnimationDestinationFromIndex(index, movementY, order.current, false, down)) // set the animation function
+
+        if (!tap) {
+            set(getAnimationDestinationFromIndex(index, movementY, order.current, false, down)) // set the animation function
+        }
 
 
         if (last) {// if we are done dragging
@@ -105,7 +108,7 @@ const SortableTaskList = (props)=>{
         }
 
 
-    }).bind(this), {delay:500, filterTaps: true})
+    }).bind(this), {drag:{delay:100}, filterTaps: true})
 
     return props.list.map((id, i) => {
         let anim = springs[i];
