@@ -24,6 +24,8 @@ import Task from './Task';
 
 const SortableTaskList = (props)=>{
 
+    const itemHeight = 42; // height of single item to calculate animation
+
     const [activelyDragging, setActivelyDragging] = useState([]); // we are actively dragging...
 
     const order = useRef();
@@ -35,12 +37,12 @@ const SortableTaskList = (props)=>{
 
     const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder, noAnim, down) => (indx) => {
         return activeIndex === indx ?  {
-                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41 + (down ? mY-((currentOrder.indexOf(indx)-indx)*41):0), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
+                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*itemHeight + (down ? mY-((currentOrder.indexOf(indx)-indx)*itemHeight):0), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
                 zIndex:1000, 
                 config: {tension: 100, friction: 2, mass: 1, clamp: true},
             immediate:noAnim
         } : {
-                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41,  // number of tasks the index is out of place * height of task => correct adjustment to position
+                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*itemHeight,  // number of tasks the index is out of place * height of task => correct adjustment to position
                 zIndex:0, 
             immediate:noAnim
         }; // if the index is the one that's being dragged, move up by howevermuch needed
@@ -71,7 +73,7 @@ const SortableTaskList = (props)=>{
                 props.onSortStart({sorted: index, sortedID: props.list[index], list: props.list});
         }
 
-        let moveBy = Math.floor(movementY/41) // the amount of tasks the active task moved over
+        let moveBy = Math.floor(movementY/itemHeight) // the amount of tasks the active task moved over
         moveBy = moveBy <= -index ? -index : (moveBy >= (props.list.length-index) ? props.list.length-1 : moveBy); // clip moveby by the total task it could possibly move over
 
         if (Math.abs(moveBy) > 0 && moveBy!==moveApplied.current) {
