@@ -33,9 +33,9 @@ const SortableTaskList = (props)=>{
 
     let objRefs = props.list.map(_ => React.createRef());
 
-    const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder, noAnim) => (indx) => {
+    const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder, noAnim, down) => (indx) => {
         return activeIndex === indx ?  {
-                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41 + mY-((currentOrder.indexOf(indx)-indx)*41), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
+                y: ((currentOrder.indexOf(indx) !== -1 ? currentOrder.indexOf(indx) : indx)-indx)*41 + (down ? mY-((currentOrder.indexOf(indx)-indx)*41):0), // number of tasks the index is out of place * height of task + cursor movement => correct dragged position offset
                 zIndex:1000, 
                 config: {tension: 100, friction: 2, mass: 1, clamp: true},
             immediate:noAnim
@@ -82,11 +82,13 @@ const SortableTaskList = (props)=>{
             moveApplied.current = moveBy;
             currentIndex.current = newIndex;
         }
-        set(getAnimationDestinationFromIndex(index, movementY, order.current)) // set the animation function
+        set(getAnimationDestinationFromIndex(index, movementY, order.current, false, down)) // set the animation function
 
 
         if (last) {// if we are done dragging
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
+            moveApplied.current = 0; // moves applied
+            currentIndex.current = 0; // currentIndex
             await props.gruntman.do( // call a gruntman function
                 "macro.applyOrder", { 
                     uid: props.uid, // pass it the things vvv
