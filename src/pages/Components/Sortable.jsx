@@ -85,9 +85,10 @@ const SortableTaskList = (props)=>{
             currentIndex.current = newIndex;
         }
 
-        if (!tap) {
+        //if (!tap) { // TODO THIS LINE IS EVIL
             set(getAnimationDestinationFromIndex(index, movementY, order.current, false, down)) // set the animation function
-        }
+        //} // TODO CANNOT UNCOMMENT, OR YOU RISK BREAKING THE DATEPICKER
+        // As to why something in Sortable checking for taps breaks the datepicker, I blame Chuck Norris. Why not?
 
 
         if (last) {// if we are done dragging
