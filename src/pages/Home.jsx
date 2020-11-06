@@ -2,7 +2,7 @@
 
 // Ionic components
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform } from '@ionic/react';
-import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
+import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
 
 // Routing
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
@@ -14,6 +14,7 @@ import React, { Component } from 'react';
 
 // Cool components that we need
 import Upcoming from './Upcoming';
+import Calendar from './Calendar';
 import Completed from './Completed';
 import Perspectives from './Perspectives';
 import Projects from './Projects';
@@ -134,11 +135,18 @@ class Home extends Component {
                                         <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div>
                                     </Link>
 
+                                    {/* Calendar button + link */}
+                                    <Link to="/calendar" onClick={()=>this.setState({itemSelected:{item:"calendar", id:undefined}})}> {/* Link to trigger router */}
+                                        {/* Calendar button */}
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "calendar" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={calendar} />Calendar</div>
+                                    </Link>
+
                                     {/* Completed button + link */}
                                     <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}> {/* Link to trigger router */}
                                         {/* Completed button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={checkmarkCircle} />Completed</div>
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={checkmarkCircle} />Completed</div>
                                     </Link>
+
 
                                     {/* === Perspectives == */}
                                     <div className="menu-sublabel menu-decoration">Perspectives <a onClick={()=>{
@@ -209,6 +217,8 @@ class Home extends Component {
                                     <Switch>
                                         {/* upcoming renders upcoming */}
                                         <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} />} />
+                                        {/* completed renders completed */}
+                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
                                         {/* completed renders completed */}
                                         <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
