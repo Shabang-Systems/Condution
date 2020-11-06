@@ -148,6 +148,7 @@ class App extends Component {
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
     authDispatch(mode) {
+        // TODO: that's a state machine! @zbuster05
         let uid;
         let name;
         switch (mode.operation) {

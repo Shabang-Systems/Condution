@@ -14,7 +14,7 @@ function Loader(props) {
                     <i>Like, why are you reading this?</i> <br />
 
                     If there is something here [{props.error}], <br />
-                        then talk to Jack or something. <br />
+                then talk to Jack or something. Or fix it. <br />
                     INTERNAL USE ONLY. DO NOT DISTRIBUTE.
             </div>
             <div style={{marginLeft: 20, maxWidth: 500}}>
