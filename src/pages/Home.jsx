@@ -61,7 +61,7 @@ class Home extends Component {
         autoBind(this);
     }
 
-    paginate = (to, id) => this.setState({itemSelected:{item:to ,id}})
+    paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
 
     componentDidMount() {
         // This is, indeed, the view
@@ -75,17 +75,8 @@ class Home extends Component {
             this.setState({itemSelected:{item:hash[1], id:hash[2]}});
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
-        /*
-         * TODO TODO TODO
-         * very very very bad practice below
-         * shield your eyes
-         *
-         * Basically, database warms up slower
-         * than does this function gets called. so
-         * we wait 500ms 
-         *
-         */
-        const refreshTimer = setTimeout(() => {this.refresh()}, 500);
+
+        this.refresh()
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
