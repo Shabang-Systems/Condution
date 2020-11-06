@@ -22,6 +22,9 @@ import CreatableSelect from 'react-select/creatable';
 // Our very own repeat UI
 import Repeat from './Repeat';
 
+// Our very own tag editor UI
+import TagEditor from './TagEditor';
+
 // Our very own CSS
 import './Task.css';
 
@@ -152,6 +155,7 @@ class Task extends Component {
             availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
             isComplete: false, // are we completed?
             showRepeat: false, // is our repeat UI shown?
+            showTagEditor: false, // is our TagEditor UI shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
             haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false) // did we render the edit part yet? optimization
@@ -160,11 +164,15 @@ class Task extends Component {
         this.me = React.createRef(); // who am I? what am I?
         this.repeater = React.createRef(); // what's my repeater?
         this.checkbox = React.createRef(); // what's my pseudocheck
+        this.TagEditorRef = React.createRef(); // what's my tag editor
         this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
     hideRepeat() {this.setState({showRepeat: false})} // util func for hiding repeat
+
+    showTagEditor() {this.setState({showTagEditor: true})} // function for showing tag editor
+    showTageEditor() {this.setState({showTageEditor: false})}  // function for hiding tag editor
 
 
     // Monster function to query task info TODO TODO #cleanmeup
@@ -263,6 +271,9 @@ class Task extends Component {
         if (this.state.showRepeat) // if we are showing our repeat
             return; //click inside
 
+        if (this.state.showTagEditor)
+            return;
+
         //otherwise,
         this.closeTask();
     }
@@ -339,9 +350,11 @@ class Task extends Component {
 
                                 {/* Gotta get those on hover tips */}
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
-                                {/* And load up + hide a repeat UI, too! */}
+                                {/* And load up + hide the repeat UI, too! */}
                                 <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
-
+                                {/* As well as load up + hide the tag editor!*/}
+                                <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={this.hideTagEditor} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                                
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
                                 <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
@@ -485,7 +498,7 @@ class Task extends Component {
                                                     {/* Repeat icon that, on click, shows repeat */}
                                                     <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
                                                     {/* TagEditor icon that shows TagEditor on click*/}
-                                                    <a onClick={console.log("hurray")} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
+                                                    <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-textbox)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
 
