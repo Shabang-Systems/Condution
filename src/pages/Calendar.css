@@ -1,0 +1,32 @@
+#calender-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#calendar-page-calendar-wrapper {
+    display: inline-block;
+    height: 300px;
+    width: 300px;
+    background-color: var(--background-feature);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#calendar-page-taskpage-wrapper {
+    display: inline-block;
+}
+
+#calendar-daterow {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 15px;
+    color: var(--decorative-light-alt);
+    font-size: 12px;
+}
+
+#calendar-container {
+    display: grid;
+}
+
+

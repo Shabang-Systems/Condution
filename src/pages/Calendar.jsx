@@ -34,6 +34,25 @@ const autoBind = require('auto-bind/react');
  *
  */
 
+function CalPagelendar(props) {
+    return (
+        <div id="calendar-page-calendar-wrapper">
+            <div id="calendar-daterow">
+                <span className="calendar-daterow-item">Sun</span>
+                <span className="calendar-daterow-item">Mon</span>
+                <span className="calendar-daterow-item">Tues</span>
+                <span className="calendar-daterow-item">Wed</span>
+                <span className="calendar-daterow-item">Thu</span>
+                <span className="calendar-daterow-item">Fri</span>
+                <span className="calendar-daterow-item">Sat</span>
+            </div>
+            <div id="calendar-container">
+            </div>
+        </div>
+    )
+}
+
+
 
 class Calendar extends Component {
 
@@ -192,15 +211,20 @@ class Calendar extends Component {
                             </div> 
                         </div>
                     </div>
-                </div>
 
-                <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
-                    Botp
+                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                        <div id="calendar-page-wrapper">
+                            <CalPagelendar />
+                            <div id="calendar-page-taskpage-wrapper">
+                                Niku-niku-nii
+                            </div>
+                        </div>
+                        <div className="bottom-helper">&nbsp;</div>
+                    </div>
                 </div>
             </IonPage>
         )
     }
 }
-
 export default Calendar;
 
