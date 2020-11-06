@@ -254,7 +254,7 @@ const SortableProjectList = (props)=>{
                             }
                         }}
                     >
-                        <Task ref={objRefs[i]} tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} envelope={dragEnvelope}/>
+                        <Task ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} envelope={dragEnvelope}/>
                     </animated.div>
                 </div>
             )
