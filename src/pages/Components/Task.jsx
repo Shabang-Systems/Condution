@@ -245,12 +245,10 @@ class Task extends Component {
     
     closeTask() {
         this.setState({expanded: false});
-        console.log("amazinnn");
     }
     //closeTask = () => this.setState({expanded: false}); // util function to close a task
 
     openTask() {
-        console.log("SDFJHSDKJFHSDFKJHSDFJSDHFK");
         if (this.state.haveBeenExpanded)
             this.setState({expanded: true});
         else 
@@ -283,7 +281,6 @@ class Task extends Component {
         if (this.state.showTagEditor) // if we are showing TagEditor
             return; // click inside
 
-        console.log(e.target);
         //otherwise,
         this.closeTask();
     }
@@ -301,7 +298,6 @@ class Task extends Component {
             this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
             this.openTask(); // open task
-        console.log(prevState.expanded, this.state.expanded);
     }
 
 
