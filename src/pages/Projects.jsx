@@ -220,34 +220,6 @@ class Projects extends Component { // define the component
 
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate}/>
 
-                        {/*{this.state.currentProject.children.map(item => {
-                            if (item.type === "task")
-                                return (
-                                    <Task 
-                                        tid={item.content}
-                                        key={item.content+"-"+this.updatePrefix} 
-                                        uid={this.props.uid} 
-                                        engine={this.props.engine} 
-                                        gruntman={this.props.gruntman} 
-                                        availability={this.state.availability[item.content]} 
-                                        startOpen={this.state.activeTask === item.content}
-                                        ref={this.state.activeTask===item.content ? this.activeTask : undefined}
-                                        datapack={[
-                                            this.state.tagSelects, 
-                                            this.state.projectSelects, 
-                                            this.state.possibleProjects, 
-                                            this.state.possibleProjectsRev, 
-                                            this.state.possibleTags, 
-                                            this.state.possibleTagsRev
-                                        ]}
-                                    />
-                                )
-                            else if (item.type === "project")
-                                return (
-                                    <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}} onClick={()=>{this.props.paginate("projects", item.content.id);this.props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
-                                )
-                        })}*/}
-
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
                                 this.props.gruntman.do( // call a gruntman function

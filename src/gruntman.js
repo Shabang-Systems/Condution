@@ -35,6 +35,7 @@ class Gruntman {
         this.doers = {
             macro: {
                 applyOrder: async function (options) {
+                    console.log(options);
                     // TODO undo handler?
                     if (options.items.length !== options.order.length) 
                         console.error("Length of items and order length must be the same!")

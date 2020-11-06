@@ -221,7 +221,7 @@ const SortableProjectList = (props)=>{
                 "macro.applyOrder", { 
                     uid: props.uid, // pass it the things vvv
                     order: order.current, 
-                    items: props.list.map(i=>{return {type:"task", content:i}}),
+                    items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
                 }
             );
 
@@ -259,7 +259,28 @@ const SortableProjectList = (props)=>{
                 </div>
             )
         else if (item.type === "project") {
-            return <a className="subproject" style={{opacity:props.availability[item.content.id]?"1":"0.35"}} onClick={()=>{props.paginate("projects", item.content.id);props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+            return (
+            <div ref = {dragEnvelope}>
+                <animated.div 
+                    {...bind(i)} 
+                    className={activelyDragging.includes(i) ? "drag-envelope dragging" : "drag-envelope"}
+                    style={{
+                        borderRadius: 7,
+                        position: "relative",
+                        cursor: "pointer",
+                        zIndex: anim.zIndex,  // z-index is 1000 during drag
+                        transform: interpolate([anim.y], (y) => `translate3d(0,${y}px,0)`), // interpolate the transform, b/c that's, uh, the dragging part
+                    }} 
+                    onClickCapture={(e)=>{
+                        if (activelyDragging.includes(i)){ // if we are still dragging
+                            e.stopPropagation(); // no clicky!
+                        }
+                    }}
+                >
+                    <a className="subproject" style={{opacity:props.availability[item.content.id]?"1":"0.35"}} onClick={()=>{props.paginate("projects", item.content.id);props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+                </animated.div>
+            </div>
+            )
         }
     });
 }
