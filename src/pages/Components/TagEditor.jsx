@@ -17,13 +17,7 @@ const autoBind = require('auto-bind/react');
 class TagEditor extends Component {
     constructor(props) {
         super(props)
-        // TODO add comments like in repeat
-        this.state = {
-            name: "",
-            rule: "none",
-            advanced: false,
-            on: undefined,
-        }
+        this.state = {}
     }
     render() {
         return (
