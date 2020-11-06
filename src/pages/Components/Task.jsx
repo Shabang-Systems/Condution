@@ -322,6 +322,7 @@ class Task extends Component {
                                 className={"task "+(this.state.expanded?"expanded":"collapsed")} 
 
                                 ref={this.me} 
+
                                 style={{
                                     minHeight: animatedProps.taskHeight, 
                                     maxHeight: animatedProps.taskMaxHeight, 
@@ -642,7 +643,7 @@ class Task extends Component {
                                                                 // Fixes the overlapping problem of the component
                                                                 menuPortal: provided => ({ ...provided, zIndex: "9999 !important" })
                                                             }}
-                                                            menuPortalTarget={this.me.current}
+                                                            menuPortalTarget={this.props.envelope ? this.props.envelope.current : this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
                                                                 {/* :point up: filter for only options with this project and set that to be the value */}
@@ -665,7 +666,7 @@ class Task extends Component {
                                                             isClearable
                                                             isMulti
                                                             styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-                                                            menuPortalTarget={this.me.current}
+                                                                                                                                              menuPortalTarget={this.props.envelope ? this.props.envelope.current : this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
                                                             onChange={(newValue, actionMeta) => {
                                                                 let view = this;

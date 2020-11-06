@@ -31,6 +31,7 @@ const SortableTaskList = (props)=>{
     const order = useRef();
     const moveApplied = useRef();
     const currentIndex = useRef();
+    const dragEnvelope = useRef();
 
 
     let objRefs = props.list.map(_ => React.createRef());
@@ -114,6 +115,7 @@ const SortableTaskList = (props)=>{
     return props.list.map((id, i) => {
         let anim = springs[i];
         return (
+            <div ref = {dragEnvelope}>
             <animated.div 
                 {...bind(i)} 
                 className={activelyDragging.includes(i) ? "drag-envelope dragging" : "drag-envelope"}
@@ -130,8 +132,9 @@ const SortableTaskList = (props)=>{
                     }
                 }}
             >
-                <Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} />
+                <Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} envelope={dragEnvelope}/>
             </animated.div>
+            </div>
     )
     });
 }
