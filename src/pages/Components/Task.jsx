@@ -315,7 +315,7 @@ class Task extends Component {
                             // Actual task container, now
                             <animated.div 
                                 onClick={(e)=>{
-                                    if(!this.state.expanded && e.target !== this.checkbox.current && e.target !== this.actualCheck.current && !this.props.freeze && !(this.state.isComplete&&!this.stae.startingCompleted)) { 
+                                    if(!this.state.expanded && e.target !== this.checkbox.current && e.target !== this.actualCheck.current && !this.props.freeze && !(this.state.isComplete&&!this.state.startingCompleted)) { 
                                         this.openTask(); // open the task
                                     }
                                 }}
