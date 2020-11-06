@@ -10,7 +10,7 @@ import Task from './Components/Task';
 
 import { withRouter } from "react-router";
 
-import Datebar from './Components/Datebar';
+import { SortableProjectList } from './Components/Sortable';
 
 const autoBind = require('auto-bind/react'); // autobind things! 
 
@@ -217,7 +217,10 @@ class Projects extends Component { // define the component
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
-                        {this.state.currentProject.children.map(item => {
+
+                        <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate}/>
+
+                        {/*{this.state.currentProject.children.map(item => {
                             if (item.type === "task")
                                 return (
                                     <Task 
@@ -243,7 +246,8 @@ class Projects extends Component { // define the component
                                 return (
                                     <a className="subproject" style={{opacity:this.state.availability[item.content.id]?"1":"0.35"}} onClick={()=>{this.props.paginate("projects", item.content.id);this.props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{this.state.possibleProjects[item.content.id]}</div></div></a>
                                 )
-                        })}
+                        })}*/}
+
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
                                 this.props.gruntman.do( // call a gruntman function

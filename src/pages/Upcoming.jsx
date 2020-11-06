@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import './Upcoming.scss';
 import './Pages.css';
 
-import SortableTaskList from './Components/Sortable';
+import { SortableTaskList } from './Components/Sortable';
 
 import Task from './Components/Task';
 
