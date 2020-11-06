@@ -61,7 +61,7 @@ class Repeat extends Component {
                           return "task-repeat__default";
                       case "daily":
                           return "task-repeat__default";
-                      case "weekly2":
+                      case "weekly":
                           return (this.state.advanced ? "task-repeat__advanced-weekly" : "task-repeat__default");
                       case "monthly":
                           return (this.state.advanced ? "task-repeat__advanced-monthly" : "task-repeat__default");
@@ -101,14 +101,14 @@ class Repeat extends Component {
                                 }}>
                                 <IonSelectOption className="repeat-select__option" value="none">None</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="daily">Daily</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="weekly2">Weekly</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="weekly">Weekly</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="monthly">Monthly</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="yearly">Yearly</IonSelectOption>
                             </IonSelect>
                             </div>
                                 {
                                     
-                                <a style={{color: "var(--decorative-light-alt)", float: "right", cursor: "pointer", display: ["weekly2", "monthly"].includes(this.state.rule) ? "inline" : "none" }} className={"fas " + (this.state.advanced ? "fa-caret-down":"fa-caret-up")} onClick={()=> {
+                                <a style={{color: "var(--decorative-light-alt)", float: "right", cursor: "pointer", display: ["weekly", "monthly"].includes(this.state.rule) ? "inline" : "none" }} className={"fas " + (this.state.advanced ? "fa-caret-down":"fa-caret-up")} onClick={()=> {
                                     if (this.state.advanced) {
                                         this.props.gruntman.do(
                                             "task.update", 
@@ -130,7 +130,7 @@ class Repeat extends Component {
                         {(()=>{
                             if (this.state.advanced)
                                 switch (this.state.rule) {
-                                    case "weekly2":
+                                    case "weekly":
                                         return (
                                             <div className="repeat-weekgrid">
                                                 {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}

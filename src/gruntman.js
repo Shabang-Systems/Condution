@@ -142,7 +142,7 @@ class Gruntman {
                                 engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
                             }
 
-                        } else if (rRule === "weekly2") {
+                        } else if (rRule === "weekly") {
                             if (defer) {
                                 let rOn = repeat.on;
                                 let current = "";
