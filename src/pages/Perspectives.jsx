@@ -143,7 +143,7 @@ class Perspectives extends Component {
                 ).then(this.props.menuRefresh) // call the homebar refresh
             }, `perspective.this.${this.props.id}-update`) // give it a custom id
             this.setState({perspectiveName: e.target.value}) // set the perspectiveName
-        } else {console.log(e)}
+        }
     } 
 
 
