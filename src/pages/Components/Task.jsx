@@ -242,10 +242,15 @@ class Task extends Component {
     componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false); // remove the listener... no memory leaks plez
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded})); // util function to toggl a task
-
-    closeTask = () => this.setState({expanded: false}); // util function to close a task
+    
+    closeTask() {
+        this.setState({expanded: false});
+        console.log("amazinnn");
+    }
+    //closeTask = () => this.setState({expanded: false}); // util function to close a task
 
     openTask() {
+        console.log("SDFJHSDKJFHSDFKJHSDFJSDHFK");
         if (this.state.haveBeenExpanded)
             this.setState({expanded: true});
         else 
@@ -267,13 +272,18 @@ class Task extends Component {
         if (this.repeater.current) // if our repeater is a thing that mounted
             if (this.repeater.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
+        
+        if (this.TagEditorRef.current) // if our repeater is a thing that mounted
+            if (this.TagEditorRef.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
 
         if (this.state.showRepeat) // if we are showing our repeat
             return; //click inside
 
-        if (this.state.showTagEditor)
-            return;
+        if (this.state.showTagEditor) // if we are showing TagEditor
+            return; // click inside
 
+        console.log(e.target);
         //otherwise,
         this.closeTask();
     }
@@ -291,6 +301,7 @@ class Task extends Component {
             this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
             this.openTask(); // open task
+        console.log(prevState.expanded, this.state.expanded);
     }
 
 
