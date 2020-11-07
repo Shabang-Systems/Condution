@@ -112,7 +112,7 @@ class Home extends Component {
                     {/* OoIp */}
                     <ReactTooltip />
                     {/* App container */}
-                    <IonContent noBounce>
+                    <IonContent noBounce forceOverscroll={false}>
                         {/* Menu pane to control mobile view splitting */}
                         <IonSplitPane id="main-split" contentId="main" mode="md">
                             {/* The left: menu! */}

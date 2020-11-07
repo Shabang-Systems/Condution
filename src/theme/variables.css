@@ -39,7 +39,11 @@ div, .no-select {
 html{
     margin:0;
     padding:0;
+}
+
+html, body  {
     overflow: hidden;
+    overscroll-behavior: none;
 }
 
 textarea:focus, input:focus{
