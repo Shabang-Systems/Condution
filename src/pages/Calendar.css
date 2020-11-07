@@ -45,12 +45,24 @@
     border-radius: 5px;
     margin: 5px;
     font-weight: 600;
-    color: var(--content-normal-alt);
     transition: background-color 0.3s;
     /*color: var(--decorative-light);*/
+    cursor: pointer;
 }
 
-.calendar-container-item:hover {
+.calendar-container-item-pre {
+    color: var(--decorative-light);
+}
+
+.calendar-container-item-post {
+    color: var(--decorative-light);
+}
+
+.calendar-container-item-actual {
+    color: var(--content-normal-alt);
+}
+
+.calendar-container-item-actual:hover {
     background-color: var(--decorative-light);
 }
 

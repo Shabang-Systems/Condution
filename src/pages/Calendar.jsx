@@ -48,7 +48,7 @@ function CalPagelendar(props) {
 
     let daysBefore = [...new Array(firstDayDayname-1)].map((_, i)=>{return {type: "pre", content: i+lastDayLastMonth.getDate()-(firstDayDayname-1)+1}});
 
-    let daysAfter = [...new Array((6-lastDayMonth.getDay()===-1)?6:6-lastDayMonth.getDay())].map((_, i)=>{return {type:"after", content:i+1}});
+    let daysAfter = [...new Array((6-lastDayMonth.getDay()===-1)?6:6-lastDayMonth.getDay())].map((_, i)=>{return {type:"post", content:i+1}});
 
     let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>{return {type:"actual", content:i+1}});
 
@@ -65,7 +65,7 @@ function CalPagelendar(props) {
             </div>
             <div id="calendar-container">
                 {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                    <span className={`calendar-container-item calendar-container-item-${i.content}`}>{i.content}</span>
+                <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`}>{i.content}</span>
                 )}
             </div>
         </div>
