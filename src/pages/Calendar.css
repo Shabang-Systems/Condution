@@ -10,6 +10,8 @@
     background-color: var(--background-feature);
     margin-left: 5px;
     border-radius: 4px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 #calendar-page-taskpage-wrapper {
@@ -100,4 +102,24 @@
     font-weight: 500;
     transform: translateY(-1px);
 }
+
+#calendar-tools {
+    display: inline;
+    margin-left: 12px;
+}
+
+.calendar-button {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    padding: 2px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.calendar-button:hover {
+    background-color: var(--decorative-light);
+    border-radius: 3px;
+}
+
 

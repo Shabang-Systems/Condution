@@ -66,12 +66,16 @@ function CalPagelendar(props) {
             <div id="calendar-container">
                 {[...daysBefore,...contentDays,...daysAfter].map(i =>
                 <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":"inherit"}} onClick={(e)=>{
+                    let date;
                     if (i.type === "pre")
-                        setDateSelected(new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content))
-                    if (i.type === "actual")
-                        setDateSelected(new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content))
-                    if (i.type === "post")
-                        setDateSelected(new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content))
+                        date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);
+                    if (i.type === "actual") 
+                        date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content);
+                    if (i.type === "post") 
+                        date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
+                    setDateSelected(date);
+                    if (props.onDateSelected)
+                        props.onDateSelected(date);
                 }}>{i.content}</span>
                 )}
             </div>
@@ -80,6 +84,10 @@ function CalPagelendar(props) {
                 <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
                 <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
                 <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
+            </div>
+            <div id="calendar-tools">
+                <a className="fas fa-caret-left calendar-button"></a>
+                <a className="fas fa-caret-right calendar-button"></a>
             </div>
         </div>
     )
