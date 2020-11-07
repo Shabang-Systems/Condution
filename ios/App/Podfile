@@ -14,7 +14,7 @@ def capacitor_pods
   # Do not delete
 end
 
-target 'App' do
+target 'Condution' do
   capacitor_pods
   # Add your Pods here
 end
