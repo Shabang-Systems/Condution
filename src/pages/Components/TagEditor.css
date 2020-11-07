@@ -1,0 +1,8 @@
+.TagEditor-header {
+    background-color: var(--background-feature);
+    padding: 17px;
+    color: var(--decorative-light-alt);
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+}
