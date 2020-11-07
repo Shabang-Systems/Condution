@@ -35,10 +35,10 @@ const autoBind = require('auto-bind/react');
  */
 
 function CalPagelendar(props) {
-    let today = new Date();
+    let [dateSelected, setDateSelected] = useState(new Date());
 
-    let [currentMonth, setCurrentMonth] = useState(today.getMonth());
-    let [currentYear, setCurrentYear] = useState(today.getFullYear());
+    let [currentMonth, setCurrentMonth] = useState(dateSelected.getMonth());
+    let [currentYear, setCurrentYear] = useState(dateSelected.getFullYear());
 
     let firstDayMonth = new Date(currentYear, currentMonth, 1);
     let lastDayMonth = new Date(currentYear, currentMonth+1, 0);
@@ -67,6 +67,10 @@ function CalPagelendar(props) {
                 {[...daysBefore,...contentDays,...daysAfter].map(i =>
                 <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`}>{i.content}</span>
                 )}
+            </div>
+            <div id="calendar-infopanel">
+                <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
+                <div className="calendar-infopanel-datename">{new Date().toLocaleString('en-us', {  weekday: 'long' })}</div>
             </div>
         </div>
     )
