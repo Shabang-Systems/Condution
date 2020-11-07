@@ -9,8 +9,26 @@ import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
 /*
- * [insert poem]
- */
+ * Although I do not agree
+ * Jack told me to make this feat
+ * I did not make this carefree
+ * yet this is far from elite
+ *
+ * I resolved to give it a try
+ * and encountered this very strange bug
+ * This thing makes me want to cry
+ * Front-end is far from a drug
+ *
+ * I may be exageratting
+ * Maybe this bug wasn't so bad
+ * But still I cannot add padding
+ * and it still makes me very sad
+ *
+ * React may feel like a drug
+ * Until you find the next bug
+ *
+ * by @zbuster05
+ * */
 
 const autoBind = require('auto-bind/react');
 
@@ -28,7 +46,7 @@ class TagEditor extends Component {
 			            <b className="bold-prefix" >Tags</b> 
 			        </span>
                 </div>
-                <div></div>
+                <div className="tag-list"></div>
             </IonModal>
         )
     }
