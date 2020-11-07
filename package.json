@@ -88,6 +88,7 @@
   },
   "description": "Tasks? Done. That was quick.",
   "build": {
+    "extends": null,
     "appId": "cf.shabang.condution",
     "productName": "Condution",
     "copyright": "Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors.",
