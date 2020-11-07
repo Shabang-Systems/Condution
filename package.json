@@ -47,6 +47,8 @@
   },
   "scripts": {
     "electron:run": "electron .",
+    "electron:pack": "electron-builder --dir",
+    "electron:dist": "electron-builder",
     "ionic:dist": "ionic build --prod",
     "ionic:runserver": "ionic serve -l --external",
     "ionic:runios": "ionic capacitor run ios -l --external",
