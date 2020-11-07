@@ -88,19 +88,19 @@
 }
 
 .calendar-infopanel-month {
-    display: inline;
+    display: inline-block;
     color: var(--content-normal-alt);
     margin-left: 10px;
     font-weight: 500;
-    transform: translateY(-1px);
+    transform: translateY(1px);
 }
 
 .calendar-infopanel-year {
-    display: inline;
+    display: inline-block;
     color: var(--content-normal-alt);
     margin-left: 5px;
     font-weight: 500;
-    transform: translateY(-1px);
+    transform: translateY(1px);
 }
 
 #calendar-tools {
