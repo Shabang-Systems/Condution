@@ -16,6 +16,7 @@ a {
     --background: var(--menu-background);
     --padding-start: 15px;
     --padding-end: 15px;
+    --padding-top:min(env(safe-area-inset-top), 35px);
 }
 
 #menu-hero {
