@@ -86,8 +86,28 @@ function CalPagelendar(props) {
                 <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
             </div>
             <div id="calendar-tools">
-                <a className="fas fa-caret-left calendar-button"></a>
-                <a className="fas fa-caret-right calendar-button"></a>
+                <a className="fas fa-caret-left calendar-button" onClick={()=>{
+                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
+                    setDateSelected(date);
+                    if (props.onDateSelected)
+                        props.onDateSelected(date);
+
+                }}></a>
+                <a className="fas fa-caret-right calendar-button" onClick={()=>{
+                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
+                    setDateSelected(date);
+                    if (props.onDateSelected)
+                        props.onDateSelected(date);
+
+                }}></a>
+                <div className="calendar-today" onClick={()=>{
+                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
+                    setDateSelected(new Date());
+                    if (props.onDateSelected)
+                        props.onDateSelected(new Date());
+
+                }}>Today</div>
+
             </div>
         </div>
     )

@@ -109,17 +109,35 @@
 }
 
 .calendar-button {
-    width: 20px;
+    min-width: 20px;
     height: 20px;
     margin-right: 5px;
     padding: 2px;
     text-align: center;
     transition: background-color 0.3s;
+    color: var(--content-normal-accent) !important;
 }
 
 .calendar-button:hover {
     background-color: var(--decorative-light);
     border-radius: 3px;
 }
+
+.calendar-today {
+    min-width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    padding: 2px;
+    text-align: center;
+    transition: background-color 0.3s;
+    color: var(--content-normal-accent) !important;
+    font-size: 13px;
+    transform: translateY(-1px);
+    font-weight: 600;
+    display: inline-block;
+    cursor: pointer;
+}
+
+
 
 
