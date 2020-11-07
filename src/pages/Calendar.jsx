@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './Calendar.css'
 import './Pages.css';
 import ReactTooltip from 'react-tooltip';
@@ -35,6 +35,23 @@ const autoBind = require('auto-bind/react');
  */
 
 function CalPagelendar(props) {
+    let [dateSelected, setDateSelected] = useState(new Date());
+
+    let currentMonth = dateSelected.getMonth();
+    let currentYear = dateSelected.getFullYear();
+
+    let firstDayMonth = new Date(currentYear, currentMonth, 1);
+    let lastDayMonth = new Date(currentYear, currentMonth+1, 0);
+    let lastDayLastMonth = new Date(currentYear, currentMonth, 0);
+
+    let firstDayDayname = firstDayMonth.getDay()+1;
+
+    let daysBefore = [...new Array(firstDayDayname-1)].map((_, i)=>{return {type: "pre", content: i+lastDayLastMonth.getDate()-(firstDayDayname-1)+1}});
+
+    let daysAfter = [...new Array((6-lastDayMonth.getDay()===-1)?6:6-lastDayMonth.getDay())].map((_, i)=>{return {type:"post", content:i+1}});
+
+    let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>{return {type:"actual", content:i+1}});
+
     return (
         <div id="calendar-page-calendar-wrapper">
             <div id="calendar-daterow">
@@ -47,9 +64,50 @@ function CalPagelendar(props) {
                 <span className="calendar-daterow-item">Sat</span>
             </div>
             <div id="calendar-container">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35].map(i =>
-                    <span className={`calendar-container-item calendar-container-item-${i}`}>{i}</span>
+                {[...daysBefore,...contentDays,...daysAfter].map(i =>
+                <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":"inherit"}} onClick={(e)=>{
+                    let date;
+                    if (i.type === "pre")
+                        date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);
+                    if (i.type === "actual") 
+                        date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content);
+                    if (i.type === "post") 
+                        date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
+                    setDateSelected(date);
+                    if (props.onDateSelected)
+                        props.onDateSelected(date);
+                }}>{i.content}</span>
                 )}
+            </div>
+            <div id="calendar-infopanel">
+                <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
+                <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
+                <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
+            </div>
+            <div id="calendar-tools">
+                <a className="fas fa-caret-left calendar-button" onClick={()=>{
+                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
+                    setDateSelected(date);
+                    if (props.onDateSelected)
+                        props.onDateSelected(date);
+
+                }}></a>
+                <a className="fas fa-caret-right calendar-button" onClick={()=>{
+                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
+                    setDateSelected(date);
+                    if (props.onDateSelected)
+                        props.onDateSelected(date);
+
+                }}></a>
+                <div className="calendar-today" onClick={()=>{
+                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
+                    setDateSelected(new Date());
+                    if (props.onDateSelected)
+                        props.onDateSelected(new Date());
+
+                }}>Today</div>
+
             </div>
         </div>
     )
