@@ -74,6 +74,7 @@ class Keybinds extends Component {
 		    ['upcoming', ''], // set the first item to upcoming 
 		    // (i could do + but i think thats less efficent 
 		    ['completed', ''], // set the second item to completed
+		    ['calendar', ''], // set the second item to completed
 		    ...this.props.perspectives.map(o => ['perspectives', o.id]), // map the perspectives
 		    ...this.props.projects.map(o => ['projects', o.id]) // and the projects 
 		], 
