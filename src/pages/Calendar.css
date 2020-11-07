@@ -6,11 +6,11 @@
 
 #calendar-page-calendar-wrapper {
     display: inline-block;
-    height: 300px;
-    width: 300px;
+    height: 235px;
+    width: 290px;
     background-color: var(--background-feature);
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 5px;
+    border-radius: 4px;
 }
 
 #calendar-page-taskpage-wrapper {
@@ -18,15 +18,33 @@
 }
 
 #calendar-daterow {
-    display: flex;
-    justify-content: space-between;
-    padding: 7px 15px;
+    padding: 7px 7px;
     color: var(--decorative-light-alt);
     font-size: 12px;
+    display: grid;
+    grid-template-columns: 39px 39px 39px 39px 39px 39px 39px;
+}
+
+.calendar-daterow-item {
+    margin: 0 auto;
 }
 
 #calendar-container {
     display: grid;
+    grid-template-columns: 39px 39px 39px 39px 39px 39px 39px;
+    grid-template-rows: 39px 39px 39px 39px 39px;
+    /*width: 90%;*/
+    padding: 0 7px;
+    /*margin: 0 auto;*/
+}
+
+.calendar-container-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    border-radius: 5px;
+    margin: 6px;
 }
 
 

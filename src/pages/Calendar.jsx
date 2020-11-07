@@ -47,6 +47,9 @@ function CalPagelendar(props) {
                 <span className="calendar-daterow-item">Sat</span>
             </div>
             <div id="calendar-container">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35].map(i =>
+                    <span className={`calendar-container-item calendar-container-item-${i}`}>{i}</span>
+                )}
             </div>
         </div>
     )
@@ -216,7 +219,6 @@ class Calendar extends Component {
                         <div id="calendar-page-wrapper">
                             <CalPagelendar />
                             <div id="calendar-page-taskpage-wrapper">
-                                Niku-niku-nii
                             </div>
                         </div>
                         <div className="bottom-helper">&nbsp;</div>
