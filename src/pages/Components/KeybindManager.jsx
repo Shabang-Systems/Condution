@@ -4,6 +4,7 @@ import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
 import { createBrowserHistory, createHashHistory } from 'history';
 import { withRouter } from "react-router";
+import QuickSwitcher from './QuickSwitcher'
 
 const autoBind = require('auto-bind/react');
 
@@ -17,7 +18,8 @@ class Keybinds extends Component {
         this.state = {
 	    sidebar_list: [], // what's in the sidebar? 
 	    sidebar_index: 0, // how far down the sidebar are we? 
-	    prop_store: '' // store props so we can check if they have changed 
+	    prop_store: '', // store props so we can check if they have changed 
+	    qs_show: false // is the quick switcher shown? 
 	}
     }
 
@@ -37,6 +39,7 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
+	["command+k", ()=>{this.manageQs(this)}], // nav up keybind 
     ]
 
     sidebar_switcher(that, num){
@@ -56,6 +59,11 @@ class Keybinds extends Component {
 	} else { // if it's not defined and not at the end, then it must be at the beginning,
 	    this.sidebar_switcher(that, this.state.sidebar_list.length-1) // so go to the end 
 	}
+    }
+
+
+    manageQs(that) {
+	this.setState({qs_show: !this.state.qs_show}); 
     }
 
     componentDidUpdate(){
@@ -96,7 +104,11 @@ class Keybinds extends Component {
         })
     }
 
-    render() { return null }
+    render() { 
+	return (
+	    <QuickSwitcher qs_show={this.state.qs_show}/> 
+	)
+    }
 
 }
 
