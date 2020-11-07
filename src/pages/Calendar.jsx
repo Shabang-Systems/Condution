@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './Calendar.css'
 import './Pages.css';
 import ReactTooltip from 'react-tooltip';
@@ -35,6 +35,23 @@ const autoBind = require('auto-bind/react');
  */
 
 function CalPagelendar(props) {
+    let today = new Date();
+
+    let [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    let [currentYear, setCurrentYear] = useState(today.getFullYear());
+
+    let firstDayMonth = new Date(currentYear, currentMonth, 1);
+    let lastDayMonth = new Date(currentYear, currentMonth+1, 0);
+    let lastDayLastMonth = new Date(currentYear, currentMonth, 0);
+
+    let firstDayDayname = firstDayMonth.getDay()+1;
+
+    let daysBefore = [...new Array(firstDayDayname-1)].map((_, i)=>i+lastDayLastMonth.getDate()-(firstDayDayname-1)+1);
+
+    let daysAfter = [...new Array((6-lastDayMonth.getDay()===-1)?6:6-lastDayMonth.getDay())].map((_, i)=>i+1);
+
+    let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>i+1);
+
     return (
         <div id="calendar-page-calendar-wrapper">
             <div id="calendar-daterow">

@@ -42,9 +42,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: red;
     border-radius: 5px;
-    margin: 6px;
+    margin: 5px;
+    font-weight: 600;
+    color: var(--content-normal-alt);
+    transition: background-color 0.3s;
+    /*color: var(--decorative-light);*/
+}
+
+.calendar-container-item:hover {
+    background-color: var(--decorative-light);
 }
 
 
