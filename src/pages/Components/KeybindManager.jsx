@@ -64,7 +64,6 @@ class Keybinds extends Component {
 
     manageQs(that) {
 	this.setState({qs_show: !this.state.qs_show}); 
-	console.log("cmd+k")
     }
 
     componentDidUpdate(){
