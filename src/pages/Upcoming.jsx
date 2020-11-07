@@ -189,11 +189,17 @@ class Upcoming extends Component { // define the component
                         </div>
                         <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
                             <div>
-                                <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                {(()=>{
+                                    if (this.state.inbox.length > 0)
+                                        return <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                })()}
                                 <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             </div>
                             <div>
-                                <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                                {(()=>{
+                                    if (this.state.dueSoon.length > 0)
+                                        return <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                                })()}
                                 {this.state.dueSoon.map(id => (
                                     <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                 ))}
