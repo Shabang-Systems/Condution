@@ -81,7 +81,31 @@
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.1",
-    "electron": "^10.1.4"
+    "electron": "^10.1.4",
+    "electron-builder": "^22.9.1"
   },
-  "description": "Tasks? Done. That was quick."
+  "description": "Tasks? Done. That was quick.",
+  "build": {
+    "appId": "cf.shabang.condution",
+    "productName": "Condution",
+    "copyright": "Copyright © 2020 Shabang Systems, LLC and the Condution Project Contributors.",
+    "directories": {
+      "buildResources": "resources"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "identity": "Shabang Systems, LLC (9TEPY3US76)",
+      "gatekeeperAssess": false,
+      "entitlements": "resources/entitlements.mac.plist",
+      "entitlementsInherit": "resources/entitlements.mac.plist"
+    },
+    "dmg": {
+      "sign": false
+    },
+    "win": {
+      "target": "nsis-web"
+    },
+    "afterSign": "resources/buildscripts/aftersign.js"
+  }
 }
