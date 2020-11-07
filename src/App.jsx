@@ -1,7 +1,7 @@
 /* Global Imports */
 import React, { Component } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, IonMenu } from '@ionic/react';
+import { IonApp, IonRouterOutlet, IonMenu, setupConfig } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 /* Core CSS required for Ionic components to work properly */
@@ -81,6 +81,8 @@ const { Storage } = Plugins;
  * @Jemoka
  *
  */
+
+setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we implemented our own
 
 
 class App extends Component {
