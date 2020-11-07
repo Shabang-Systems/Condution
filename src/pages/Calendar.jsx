@@ -37,8 +37,8 @@ const autoBind = require('auto-bind/react');
 function CalPagelendar(props) {
     let [dateSelected, setDateSelected] = useState(new Date());
 
-    let [currentMonth, setCurrentMonth] = useState(dateSelected.getMonth());
-    let [currentYear, setCurrentYear] = useState(dateSelected.getFullYear());
+    let currentMonth = dateSelected.getMonth();
+    let currentYear = dateSelected.getFullYear();
 
     let firstDayMonth = new Date(currentYear, currentMonth, 1);
     let lastDayMonth = new Date(currentYear, currentMonth+1, 0);
@@ -65,12 +65,21 @@ function CalPagelendar(props) {
             </div>
             <div id="calendar-container">
                 {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`}>{i.content}</span>
+                <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":"inherit"}} onClick={(e)=>{
+                    if (i.type === "pre")
+                        setDateSelected(new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content))
+                    if (i.type === "actual")
+                        setDateSelected(new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content))
+                    if (i.type === "post")
+                        setDateSelected(new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content))
+                }}>{i.content}</span>
                 )}
             </div>
             <div id="calendar-infopanel">
                 <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                <div className="calendar-infopanel-datename">{new Date().toLocaleString('en-us', {  weekday: 'long' })}</div>
+                <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
+                <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
             </div>
         </div>
     )

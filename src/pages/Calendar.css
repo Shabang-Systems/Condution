@@ -6,7 +6,6 @@
 
 #calendar-page-calendar-wrapper {
     display: inline-block;
-    height: 290px;
     width: 290px;
     background-color: var(--background-feature);
     margin-left: 5px;
@@ -82,6 +81,23 @@
     color: var(--content-normal-alt);
     margin-left: 5px;
     font-weight: 600;
+    transform: translateY(-1px);
+    font-size: 15px;
+}
+
+.calendar-infopanel-month {
+    display: inline;
+    color: var(--content-normal-alt);
+    margin-left: 10px;
+    font-weight: 500;
+    transform: translateY(-1px);
+}
+
+.calendar-infopanel-year {
+    display: inline;
+    color: var(--content-normal-alt);
+    margin-left: 5px;
+    font-weight: 500;
     transform: translateY(-1px);
 }
 
