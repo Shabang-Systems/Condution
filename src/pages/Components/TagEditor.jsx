@@ -22,6 +22,12 @@ class TagEditor extends Component {
     render() {
         return (
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass={"tag-editor"}>
+                {/*Text Header*/}
+                <div className="TagEditor-header">
+                    <span style={{display: "flex", alignItems: "center", width: "100%"}}>
+			            <b className="bold-prefix" >Tags</b> 
+			        </span>
+                </div>
                 <div></div>
             </IonModal>
         )
