@@ -19,8 +19,7 @@ class QuickSwitcher extends Component {
         this.state = {}
     }
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() { 
         return (
