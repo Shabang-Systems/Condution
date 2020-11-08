@@ -12,7 +12,7 @@ script:
 
 branches:
   only:
-  - master
-  - one-point-o
-  - /(\w*)-*v(\d|\.)+/
+      - master
+      - one-point-o
+      - /(\w*)-*v(\d|\.)+/
 
