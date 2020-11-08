@@ -17,11 +17,27 @@
     }
 }
 
+.calendar-popover {
+    --background: transparent;
+    --width: 290px;
+    --height: 370px;
+    --box-shadow: 0 !important;
+}
+
 #calendar-wrapper {
     display: inline-block;
     width: 290px;
     background-color: var(--background-feature);
     margin-left: 5px;
+    border-radius: 4px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#calendar-wrapper-popover {
+    display: inline-block;
+    width: 290px;
+    background-color: var(--background-feature);
     border-radius: 4px;
     padding-top: 5px;
     padding-bottom: 5px;

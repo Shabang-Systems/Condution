@@ -7,6 +7,7 @@ import ReactTooltip from 'react-tooltip';
 import { withRouter } from "react-router";
 
 import Task from './Components/Task';
+import CalendarPopover from './Components/CalendarPopover';
 
 const autoBind = require('auto-bind/react');
 
@@ -245,7 +246,7 @@ class Calendar extends Component {
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     <i style={{paddingRight: 10}} 
-                                        className="fas fa-layer-group">
+                                        className="fas fa-calendar-alt">
                                     </i>
                                     Calendar
                                 </h1> 
@@ -253,7 +254,7 @@ class Calendar extends Component {
                             </div> 
                         </div>
                     </div>
-
+                    <CalendarPopover isShown={true}/>
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         <div id="calendar-page-wrapper">
                             <CalPagelendar onDateSelected={(async function(d){
