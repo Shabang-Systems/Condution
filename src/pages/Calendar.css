@@ -1,9 +1,20 @@
 #calendar-page-wrapper {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: center;
+}
+
+@media (max-width: 700px) {
+    #calendar-page-wrapper {
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 700px) { 
+    #calendar-page-wrapper {
+        flex-wrap: nowrap;
+    }
 }
 
 #calendar-wrapper {
@@ -20,7 +31,7 @@
     display: inline-block;
     height: 100%;
     flex-grow: 1;
-    min-width: 300px;
+    min-width: 400px;
 }
 
 #calendar-daterow {
