@@ -14,7 +14,7 @@ install:
 script:
     - CI=false REACT_APP_COMMIT_HASH=$TRAVIS_COMMIT yarn ionic:dist
 
-after_script:
+before_deploy:
     - echo "cuttingedge.condution.com" > build/CNAME
 
 deploy:
