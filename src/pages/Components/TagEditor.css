@@ -6,3 +6,9 @@
     display: flex;
     justify-content: space-between;
 }
+
+.TagEditor-close {
+    right: 0;
+    color: var(--decorative-light-accent);
+    cursor: pointer;
+}
