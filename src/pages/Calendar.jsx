@@ -53,61 +53,62 @@ function CalPagelendar(props) {
     let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>{return {type:"actual", content:i+1}});
 
     return (
-        <div id="calendar-page-calendar-wrapper">
-            <div id="calendar-daterow">
-                <span className="calendar-daterow-item">Sun</span>
-                <span className="calendar-daterow-item">Mon</span>
-                <span className="calendar-daterow-item">Tues</span>
-                <span className="calendar-daterow-item">Wed</span>
-                <span className="calendar-daterow-item">Thu</span>
-                <span className="calendar-daterow-item">Fri</span>
-                <span className="calendar-daterow-item">Sat</span>
-            </div>
-            <div id="calendar-container">
-                {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":"inherit"}} onClick={(e)=>{
-                    let date;
-                    if (i.type === "pre")
-                        date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);
-                    if (i.type === "actual") 
-                        date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content);
-                    if (i.type === "post") 
-                        date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
-                    setDateSelected(date);
-                    if (props.onDateSelected)
-                        props.onDateSelected(date);
-                }}>{i.content}</span>
-                )}
-            </div>
-            <div id="calendar-infopanel">
-                <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
-                <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
-                <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
-            </div>
-            <div id="calendar-tools">
-                <a className="fas fa-caret-left calendar-button" onClick={()=>{
-                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
-                    setDateSelected(date);
-                    if (props.onDateSelected)
-                        props.onDateSelected(date);
+        <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
+            <div id="calendar-wrapper">
+                <div id="calendar-daterow">
+                    <span className="calendar-daterow-item">Sun</span>
+                    <span className="calendar-daterow-item">Mon</span>
+                    <span className="calendar-daterow-item">Tues</span>
+                    <span className="calendar-daterow-item">Wed</span>
+                    <span className="calendar-daterow-item">Thu</span>
+                    <span className="calendar-daterow-item">Fri</span>
+                    <span className="calendar-daterow-item">Sat</span>
+                </div>
+                <div id="calendar-container">
+                    {[...daysBefore,...contentDays,...daysAfter].map(i =>
+                    <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":"inherit"}} onClick={(e)=>{
+                        let date;
+                        if (i.type === "pre")
+                            date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);
+                        if (i.type === "actual") 
+                            date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content);
+                        if (i.type === "post") 
+                            date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
+                        setDateSelected(date);
+                        if (props.onDateSelected)
+                            props.onDateSelected(date);
+                    }}>{i.content}</span>
+                    )}
+                </div>
+                <div id="calendar-infopanel">
+                    <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
+                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
+                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                    <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
+                </div>
+                <div id="calendar-tools">
+                    <a className="fas fa-caret-left calendar-button" onClick={()=>{
+                        let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
+                        setDateSelected(date);
+                        if (props.onDateSelected)
+                            props.onDateSelected(date);
 
-                }}></a>
-                <a className="fas fa-caret-right calendar-button" onClick={()=>{
-                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
-                    setDateSelected(date);
-                    if (props.onDateSelected)
-                        props.onDateSelected(date);
+                    }}></a>
+                    <a className="fas fa-caret-right calendar-button" onClick={()=>{
+                        let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
+                        setDateSelected(date);
+                        if (props.onDateSelected)
+                            props.onDateSelected(date);
 
-                }}></a>
-                <div className="calendar-today" onClick={()=>{
-                    let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
-                    setDateSelected(new Date());
-                    if (props.onDateSelected)
-                        props.onDateSelected(new Date());
+                    }}></a>
+                    <div className="calendar-today" onClick={()=>{
+                        setDateSelected(new Date());
+                        if (props.onDateSelected)
+                            props.onDateSelected(new Date());
 
-                }}>Today</div>
+                    }}>Today</div>
 
+                </div>
             </div>
         </div>
     )
@@ -120,6 +121,9 @@ class Calendar extends Component {
     constructor(props) {
         super(props);
 
+        let today = new Date();
+        today.setTime(0,0,0,0);
+
         this.state = {
             possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
             possibleTags:{}, 
@@ -128,7 +132,9 @@ class Calendar extends Component {
             availability: [], 
             projectSelects:[], 
             tagSelects: [], 
-            projectDB: {}
+            projectDB: {},
+            currentDate: (today), // new date
+            taskList: []
 
         };
 
@@ -182,6 +188,11 @@ class Calendar extends Component {
 
         projectDB.map(proj=>buildSelectString(proj));
 
+        let endDate = this.state.currentDate;
+        endDate.setTime(23,59,59,59);
+
+        let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, this.state.currentDate, endDate);
+
         this.setState({
             possibleProjects: pPandT[0][0],	     // set the project stuff
             possibleTags: pPandT[1][0],		    // set the tag stuff  
@@ -190,42 +201,14 @@ class Calendar extends Component {
             availability: avail,		 // set the avail
             projectSelects: projectList,	// set the project list  
             tagSelects: tagsList,	       // set the tag list
-            projectDB 			      // and the project db 
+            projectDB, 			      // and the project db 
+            currentDate: (new Date()), // new date
+            taskList
         }); // once we finish, set the state
     }
 
     componentDidMount() {
         this.refresh()
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        // flush styles
-        if (prevProps.id !== this.props.id) { // if we updated the defer date
-            this.setState({
-                taskList: [], // what tasks should we display? 
-                perspectiveName: "", // whats the perspective name? 
-                perspectiveQuery: "", // whats the perspective query (whats in the text box)?
-                perspectiveAvail: {}, // whats the perspective availability? 
-                perspectiveTord: {},  // whats the perspective ordering?
-                // not truth or dare. jack doent even know what that is! ^^ 
-                showEdit: this.props.options === "do", // are we showing? on do, we are.
-                possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
-                possibleTags:{}, 
-                possibleProjectsRev:{}, 
-                possibleTagsRev:{}, 
-                availability: [], 
-                projectSelects:[], 
-                tagSelects: [], 
-                projectDB: {}
-
-            });
-
-            this.refresh(); // switching between perspectives are a prop update and not a rerender
-        }
-        // so we want to refresh the perspective that's rendered
-        if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
-            this.setState({showEdit: true});
-
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -275,8 +258,15 @@ class Calendar extends Component {
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         <div id="calendar-page-wrapper">
-                            <CalPagelendar />
+                            <CalPagelendar onDateSelected={(async function(d){
+                                let endDate = new Date(d.getTime());;
+                                endDate.setTime(23,59,59,59);
+                                let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
+                                console.log(taskList, d, endDate)
+                                this.setState({currentDate: d, taskList});
+                            }).bind(this)}/>
                             <div id="calendar-page-taskpage-wrapper">
+                                {this.state.taskList.map(e=><span>{e}</span>)}
                             </div>
                         </div>
                         <div className="bottom-helper">&nbsp;</div>

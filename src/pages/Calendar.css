@@ -1,10 +1,12 @@
-#calender-page-wrapper {
+#calendar-page-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
 }
 
-#calendar-page-calendar-wrapper {
+#calendar-wrapper {
     display: inline-block;
     width: 290px;
     background-color: var(--background-feature);
@@ -16,6 +18,9 @@
 
 #calendar-page-taskpage-wrapper {
     display: inline-block;
+    height: 100%;
+    flex-grow: 1;
+    min-width: 300px;
 }
 
 #calendar-daterow {
