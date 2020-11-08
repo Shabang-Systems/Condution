@@ -1,0 +1,12 @@
+language: node_js
+
+node_js:
+    - stable
+
+before_install:
+    - openssl aes-256-cbc -K $encrypted_02c2eef88991_key -iv $encrypted_02c2eef88991_iv
+      -in secrets.json.enc -out src/backend/secrets.json -d
+
+script:
+    - yarn ionic:dist
+
