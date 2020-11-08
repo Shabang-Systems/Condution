@@ -12,7 +12,7 @@ install:
     - yarn add node-sass@4.14.1
 
 script:
-    - CI=false yarn ionic:dist
+    - CI=false REACT_APP_COMMIT_HASH=$TRAVIS_COMMIT yarn ionic:dist
 
 branches:
   only:
