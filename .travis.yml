@@ -10,3 +10,9 @@ before_install:
 script:
     - yarn ionic:dist
 
+branches:
+  only:
+  - master
+  - one-point-o
+  - /(\w*)-*v(\d|\.)+/
+
