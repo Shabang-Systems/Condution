@@ -22,20 +22,21 @@ class QuickSwitcher extends Component {
     componentDidMount() {}
 
     render() { 
-        return (
-                <IonModal 
-                    //ref={this.props.reference} 
-                    isOpen={this.props.qs_show} 
-            animated={false}
-            cssClass='qs_modal'
-            >
-            <input 
-                placeholder="LOCALIZE: quickswitcht-ify!"
-            >
-            </input> 
+	return (
+	    <IonModal 
+		//ref={this.props.reference} 
+		isOpen={this.props.qs_show} 
+		animated={false}
+		cssClass='qs_modal'
+		onDidDismiss={this.props.dismiss}
+	    >
+		<input 
+		    placeholder="LOCALIZE: quickswitcht-ify!"
+		>
+		</input> 
 
-                </IonModal>
-        ) 
+	    </IonModal>
+	) 
     }
 
 }

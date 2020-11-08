@@ -39,7 +39,7 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
-	["command+k", ()=>{this.manageQs(this)}], // nav up keybind 
+	["command+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
     ]
 
     sidebar_switcher(that, num){
@@ -67,6 +67,7 @@ class Keybinds extends Component {
     }
 
     componentDidUpdate(){
+	//TODO: safe-proof(?) this
 	// update the props
 	if (this.state.prop_store != this.props) { // if the props have changed, 
 	    this.setState({
@@ -74,7 +75,7 @@ class Keybinds extends Component {
 		    ['upcoming', ''], // set the first item to upcoming 
 		    // (i could do + but i think thats less efficent 
 		    ['completed', ''], // set the second item to completed
-		    ['calendar', ''], // set the second item to completed
+		    ['calendar', ''], // set the third item to calendar
 		    ...this.props.perspectives.map(o => ['perspectives', o.id]), // map the perspectives
 		    ...this.props.projects.map(o => ['projects', o.id]) // and the projects 
 		], 
@@ -107,7 +108,7 @@ class Keybinds extends Component {
 
     render() { 
 	return (
-	    <QuickSwitcher qs_show={this.state.qs_show}/> 
+	    <QuickSwitcher qs_show={this.state.qs_show} dismiss={()=> this.setState({qs_show: false})}/> 
 	)
     }
 
