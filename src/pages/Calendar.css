@@ -37,8 +37,11 @@
 .calendar-page-date {
     display: inline;
     margin-left: 5px;
-    color: var(--content-normal-accent);
-    font-weight: 600
+    color: var(--content-normal-alt);
+    font-weight: 600;
+    background-color: var(--background-feature);
+    padding: 4px 6px;
+    border-radius: 5px;    
 }
 
 .calendar-popover {
