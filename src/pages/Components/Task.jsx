@@ -296,10 +296,15 @@ class Task extends Component {
         if (prevState.dueDate !== this.state.dueDate) // if we updated the due date
             this.refreshDecorations();
         if (prevState.expanded !== this.state.expanded && this.state.expanded === true) {// if we opened a task for updating
+            if (this.props.setDragEnabled) // if we are a draggable task
+                this.props.setDragEnabled(false); // disable drag
             this.props.gruntman.lockUpdates(); // tell gruntman to chill
         }
-        else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) // if we closed a task
+        else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) { // if we closed a task
+            if (this.props.setDragEnabled) // if we are a draggable task
+                this.props.setDragEnabled(true); // enable drag
             this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
+        }
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
             this.openTask(); // open task
     }

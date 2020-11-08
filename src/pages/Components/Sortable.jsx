@@ -36,6 +36,7 @@ const SortableTaskList = (props)=>{
     const moveApplied = useRef();
     const currentIndex = useRef();
     const dragEnvelope = useRef();
+    const [dragEnabled, setDragEnabled] = useState(true);
 
 
     let objRefs = props.list.map(_ => React.createRef());
@@ -114,7 +115,7 @@ const SortableTaskList = (props)=>{
         }
 
 
-    }).bind(this), {drag:{delay:100}, filterTaps: true})
+    }).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
 
     return props.list.map((id, i) => {
         let anim = springs[i];
@@ -136,7 +137,7 @@ const SortableTaskList = (props)=>{
                     }
                 }}
             >
-                <Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} envelope={dragEnvelope}/>
+                <Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} envelope={dragEnvelope} setDragEnabled={setDragEnabled} />
             </animated.div>
             </div>
     )
@@ -153,6 +154,7 @@ const SortableProjectList = (props)=>{
     const moveApplied = useRef();
     const currentIndex = useRef();
     const dragEnvelope = useRef();
+    const [dragEnabled, setDragEnabled] = useState(true);
 
 
     let objRefs = props.list.map(_ => React.createRef());
@@ -231,7 +233,7 @@ const SortableProjectList = (props)=>{
         }
 
 
-    }).bind(this), {drag:{delay:100}, filterTaps: true})
+    }).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
 
     return props.list.map((item, i) => {
         let anim = springs[i];
@@ -254,7 +256,7 @@ const SortableProjectList = (props)=>{
                             }
                         }}
                     >
-                        <Task ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} envelope={dragEnvelope}/>
+                        <Task ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} envelope={dragEnvelope} setDragEnabled={setDragEnabled}/>
                     </animated.div>
                 </div>
             )
