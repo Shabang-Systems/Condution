@@ -127,10 +127,14 @@ class App extends Component {
                 case "firebase":
                     // Check if we actually has a user
                     firebase.auth().onAuthStateChanged(function(user) {
+                        if (!user)
+                            view.authDispatch({operation:"logout"});
                         // If we have one, shift the engine into firebase mode
-                        Engine.use("firebase", view.gruntman.requestRefresh);
-                        // Load the authenticated state, set authmode as "firebase" and supply the UID
-                        view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
+                        else {
+                            Engine.use("firebase", view.gruntman.requestRefresh);
+                            // Load the authenticated state, set authmode as "firebase" and supply the UID
+                            view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
+                        }
                     })
                     break;
                 // If its json
