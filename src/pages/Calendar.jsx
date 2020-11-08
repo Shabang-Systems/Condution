@@ -1,6 +1,7 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component, useState } from 'react';
+import {withGetScreen} from 'react-getscreen'
 import './Calendar.css'
 import './Pages.css';
 import ReactTooltip from 'react-tooltip';
@@ -257,23 +258,28 @@ class Calendar extends Component {
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         <div id="calendar-page-wrapper">
-                            <CalendarPopover isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
-                                let endDate = new Date(d.getTime());
-                                endDate.setHours(23,59,59,60);
-                                let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
-                                this.setState({currentDate: d, taskList});
-                            }).bind(this)}/>
-                            <CalPagelendar onDateSelected={(async function(d){
-                                let endDate = new Date(d.getTime());
-                                endDate.setHours(23,59,59,60);
-                                let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
-                                this.setState({currentDate: d, taskList});
-                            }).bind(this)}/>
+                            {(()=>{
+                                if (this.props.isMobile())
+                                    return <CalendarPopover isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
+                                        let endDate = new Date(d.getTime());
+                                        endDate.setHours(23,59,59,60);
+                                        let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
+                                        this.setState({currentDate: d, taskList});
+                                    }).bind(this)}/>
+                                else 
+                                    return <CalPagelendar onDateSelected={(async function(d){
+                                        let endDate = new Date(d.getTime());
+                                        endDate.setHours(23,59,59,60);
+                                        let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
+                                        this.setState({currentDate: d, taskList});
+                                    }).bind(this)}/>
+                            })()}
                             <div id="calendar-page-taskpage-wrapper">
                                 <span id="calendar-page-header">
                                     <div class="calendar-page-count">{this.state.taskList.length}</div>
                                     <div class="calendar-page-title">tasks due on</div>
-                                    <div class="calendar-page-date">{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
+                                    <div class="calendar-page-date" onClick={()=>this.setState({popoverIsVisible: true})}>{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
+                                    <a class="calendar-page-select fas fa-calendar-day" data-tip="Pick Date" onClick={()=>this.setState({popoverIsVisible: true})}></a>
                                 </span>
                                 {this.state.taskList.map(id=>(
                                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
@@ -287,5 +293,5 @@ class Calendar extends Component {
         )
     }
 }
-export default Calendar;
+export default withGetScreen(Calendar, {mobileLimit: 720, tabletLimit:768, shouldListenOnResize: true});
 

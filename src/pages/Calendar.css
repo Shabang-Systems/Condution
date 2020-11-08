@@ -17,6 +17,12 @@
     }
 }
 
+.calendar-page-select {
+    color: var(--content-normal-alt) !important;
+    margin-left: 7px;
+    cursor: pointer;
+}
+
 #calendar-page-header {
     margin-left: 15px;
 }
