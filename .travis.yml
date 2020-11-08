@@ -12,7 +12,7 @@ install:
     - yarn add node-sass@4.14.1
 
 script:
-    - yarn react-scripts build --verbose
+    - CI=false yarn ionic:dist
 
 branches:
   only:
