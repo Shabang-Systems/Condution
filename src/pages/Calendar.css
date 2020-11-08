@@ -35,8 +35,8 @@
 }
 
 .calendar-page-date {
-    display: inline;
-    margin-left: 5px;
+    display: inline-block;
+    margin-left: 10px;
     color: var(--content-normal-alt);
     font-weight: 600;
     background-color: var(--background-feature);
@@ -74,7 +74,7 @@
     display: inline-block;
     height: 100%;
     flex-grow: 1;
-    min-width: 400px;
+    min-width: 300px;
 }
 
 #calendar-daterow {

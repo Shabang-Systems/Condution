@@ -270,11 +270,11 @@ class Calendar extends Component {
                                 this.setState({currentDate: d, taskList});
                             }).bind(this)}/>
                             <div id="calendar-page-taskpage-wrapper">
-                                <div id="calendar-page-header">
+                                <span id="calendar-page-header">
                                     <div class="calendar-page-count">{this.state.taskList.length}</div>
                                     <div class="calendar-page-title">tasks due on</div>
                                     <div class="calendar-page-date">{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
-                                </div>
+                                </span>
                                 {this.state.taskList.map(id=>(
                                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                 ))}
