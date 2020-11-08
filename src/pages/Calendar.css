@@ -17,6 +17,30 @@
     }
 }
 
+#calendar-page-header {
+    margin-left: 15px;
+}
+
+.calendar-page-count {
+    font-weight: 600;
+    font-size: 30px;
+    color: var(--decorative-light-accent);
+    display: inline;
+}
+
+.calendar-page-title {
+    display: inline;
+    margin-left: 5px;
+    color: var(--content-normal-alt);
+}
+
+.calendar-page-date {
+    display: inline;
+    margin-left: 5px;
+    color: var(--content-normal-accent);
+    font-weight: 600
+}
+
 .calendar-popover {
     --background: transparent;
     --width: 290px;

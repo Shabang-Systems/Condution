@@ -123,7 +123,7 @@ class Calendar extends Component {
         super(props);
 
         let today = new Date();
-        today.setTime(0,0,0,0);
+        today.setHours(0,0,0,0);
 
         this.state = {
             possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
@@ -135,7 +135,8 @@ class Calendar extends Component {
             tagSelects: [], 
             projectDB: {},
             currentDate: (today), // new date
-            taskList: []
+            taskList: [],
+            popoverIsVisible: false,
 
         };
 
@@ -254,9 +255,14 @@ class Calendar extends Component {
                             </div> 
                         </div>
                     </div>
-                    <CalendarPopover isShown={true}/>
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         <div id="calendar-page-wrapper">
+                            <CalendarPopover isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
+                                let endDate = new Date(d.getTime());
+                                endDate.setHours(23,59,59,60);
+                                let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
+                                this.setState({currentDate: d, taskList});
+                            }).bind(this)}/>
                             <CalPagelendar onDateSelected={(async function(d){
                                 let endDate = new Date(d.getTime());
                                 endDate.setHours(23,59,59,60);
@@ -264,6 +270,11 @@ class Calendar extends Component {
                                 this.setState({currentDate: d, taskList});
                             }).bind(this)}/>
                             <div id="calendar-page-taskpage-wrapper">
+                                <div id="calendar-page-header">
+                                    <div class="calendar-page-count">{this.state.taskList.length}</div>
+                                    <div class="calendar-page-title">tasks due on</div>
+                                    <div class="calendar-page-date">{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
+                                </div>
                                 {this.state.taskList.map(id=>(
                                         <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                 ))}
