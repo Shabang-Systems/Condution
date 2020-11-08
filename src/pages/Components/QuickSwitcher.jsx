@@ -16,30 +16,26 @@ class QuickSwitcher extends Component {
         super(props);
         autoBind(this);
 
-        this.state = {
-	}
+        this.state = {}
     }
 
-
-    componentDidMount() {
-    }
-
+    componentDidMount() {}
 
     render() { 
-	return (
-            <IonModal 
-                //ref={this.props.reference} 
-                isOpen={this.props.qs_show} 
-		animated={false}
-		cssClass='qs_modal'
-	    >
-		<input 
-		    placeholder="LOCALIZE: quickswitcht-ify!"
-		>
-		</input> 
+        return (
+                <IonModal 
+                    //ref={this.props.reference} 
+                    isOpen={this.props.qs_show} 
+            animated={false}
+            cssClass='qs_modal'
+            >
+            <input 
+                placeholder="LOCALIZE: quickswitcht-ify!"
+            >
+            </input> 
 
-            </IonModal>
-	) 
+                </IonModal>
+        ) 
     }
 
 }

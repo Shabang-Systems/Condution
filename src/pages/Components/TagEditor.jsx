@@ -45,6 +45,8 @@ class TagEditor extends Component {
                     <span style={{display: "flex", alignItems: "center", width: "100%"}}>
 			            <b className="bold-prefix" >Tags</b> 
 			        </span>
+                    {/*Close Button*/}
+                    <a className="TagEditor-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
                 </div>
                 <div className="tag-list"></div>
             </IonModal>

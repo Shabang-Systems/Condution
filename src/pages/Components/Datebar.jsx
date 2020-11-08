@@ -28,20 +28,16 @@ class Datebar extends Component {
         super(props);
         autoBind(this);
 
-        this.state = {
-        }
+        this.state = {}
     }
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     render() {
         return (
-            <div>Nice</div>
+            <div></div>
         )
     }
-
-
 }
 
 export default Datebar;
