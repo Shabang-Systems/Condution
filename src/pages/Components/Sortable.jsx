@@ -119,7 +119,7 @@ const SortableTaskList = (props)=>{
     return props.list.map((id, i) => {
         let anim = springs[i];
         return (
-            <div ref = {dragEnvelope}>
+            <div ref={(e)=>{dragEnvelope.current=e}}>
             <animated.div 
                 {...bind(i)} 
                 className={activelyDragging.includes(i) ? "drag-envelope dragging" : "drag-envelope"}
@@ -260,7 +260,7 @@ const SortableProjectList = (props)=>{
             )
         else if (item.type === "project") {
             return (
-            <div ref = {dragEnvelope}>
+            <div ref={dragEnvelope}>
                 <animated.div 
                     {...bind(i)} 
                     className={activelyDragging.includes(i) ? "drag-envelope dragging" : "drag-envelope"}
