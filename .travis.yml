@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+    - stable
+
+before_install:
+    - openssl aes-256-cbc -K $encrypted_02c2eef88991_key -iv $encrypted_02c2eef88991_iv
+      -in secrets.json.enc -out src/backend/secrets.json -d
+
+install:
+    - yarn global add @ionic/cli
+    - yarn add node-sass@4.14.1
+
+script:
+    - CI=false yarn ionic:dist
+
+branches:
+  only:
+      - master
+      - one-point-o
+      - /(\w*)-*v(\d|\.)+/
+
