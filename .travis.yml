@@ -9,9 +9,10 @@ before_install:
 
 install:
     - yarn global add @ionic/cli
+    - yarn add node-sass
 
 script:
-    - yarn ionic:dist
+    - yarn react-scripts build --verbose
 
 branches:
   only:
