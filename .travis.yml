@@ -9,7 +9,7 @@ before_install:
 
 install:
     - yarn global add @ionic/cli
-    - yarn add node-sass
+    - yarn add node-sass@4.14.1
 
 script:
     - yarn react-scripts build --verbose
