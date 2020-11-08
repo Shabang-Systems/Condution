@@ -172,7 +172,7 @@ async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new D
                         .filter(doc =>
                             (doc.data().due ?
                                 (doc.data().defer ?
-                                    (new Date(doc.data().due.seconds*1000))<max && (new Date(doc.data().due.seconds*1000)) > min && (new Date()>(new Date(doc.data().defer.seconds*1000)))
+                                    (new Date(doc.data().due.seconds*1000)) <= max && (new Date(doc.data().due.seconds*1000)) >= min && (new Date() >= (new Date(doc.data().defer.seconds*1000)))
                                 : false) 
                                 : false)
                         )
