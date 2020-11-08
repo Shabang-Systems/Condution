@@ -259,8 +259,8 @@ class Calendar extends Component {
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         <div id="calendar-page-wrapper">
                             <CalPagelendar onDateSelected={(async function(d){
-                                let endDate = new Date(d.getTime());;
-                                endDate.setTime(23,59,59,59);
+                                let endDate = new Date(d.getTime());
+                                endDate.setHours(23,59,59,60);
                                 let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
                                 console.log(taskList, d, endDate)
                                 this.setState({currentDate: d, taskList});
