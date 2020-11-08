@@ -274,6 +274,10 @@ class Task extends Component {
         if (this.TagEditorRef.current) // if our repeater is a thing that mounted
             if (this.TagEditorRef.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
+        
+        if (this.props.envelope) // if we have a drag envelope
+            if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
 
         if (this.state.showRepeat) // if we are showing our repeat
             return; //click inside
