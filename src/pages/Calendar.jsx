@@ -188,9 +188,8 @@ class Calendar extends Component {
 
         projectDB.map(proj=>buildSelectString(proj));
 
-        let endDate = this.state.currentDate;
-        endDate.setTime(23,59,59,59);
-
+        let endDate = new Date(this.state.currentDate);
+        endDate.setHours(23,59,59,60);
         let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, this.state.currentDate, endDate);
 
         this.setState({
@@ -202,7 +201,6 @@ class Calendar extends Component {
             projectSelects: projectList,	// set the project list  
             tagSelects: tagsList,	       // set the tag list
             projectDB, 			      // and the project db 
-            currentDate: (new Date()), // new date
             taskList
         }); // once we finish, set the state
     }
@@ -262,11 +260,12 @@ class Calendar extends Component {
                                 let endDate = new Date(d.getTime());
                                 endDate.setHours(23,59,59,60);
                                 let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
-                                console.log(taskList, d, endDate)
                                 this.setState({currentDate: d, taskList});
                             }).bind(this)}/>
                             <div id="calendar-page-taskpage-wrapper">
-                                {this.state.taskList.map(e=><span>{e}</span>)}
+                                {this.state.taskList.map(id=>(
+                                        <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                ))}
                             </div>
                         </div>
                         <div className="bottom-helper">&nbsp;</div>
