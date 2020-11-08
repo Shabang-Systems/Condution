@@ -49,7 +49,7 @@
     "electron:run": "electron .",
     "electron:pack": "yarn ionic:dist; electron-builder --dir",
     "electron:dist": "yarn ionic:dist; electron-builder",
-    "ionic:dist": "ionic build --prod",
+    "ionic:dist": "ionic build --prod && cp build/index.html build/404.html",
     "ionic:runserver": "ionic serve -l --external",
     "ionic:runios": "ionic capacitor run ios -l --external",
     "ionic:rundroid": "ionic capacitor run android -l --external"

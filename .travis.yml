@@ -14,11 +14,8 @@ install:
 script:
     - CI=false REACT_APP_COMMIT_HASH=$TRAVIS_COMMIT yarn ionic:dist
 
-branches:
-  only:
-      - master
-      - one-point-o
-      - /(\w*)-*v(\d|\.)+/
+after_script:
+    - echo "cuttingedge.condution.com" > ./build/CNAME
 
 deploy:
   provider: pages
@@ -30,4 +27,9 @@ deploy:
     all_branches: true
     condition: ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} =~ ^(((\w*)-*v(\d|\.)+)|one-point-o|master)$
 
+branches:
+  only:
+      - master
+      - one-point-o
+      - /(\w*)-*v(\d|\.)+/
 

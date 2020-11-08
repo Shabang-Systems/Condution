@@ -198,7 +198,6 @@ class Home extends Component {
                                         )                            
                                     })}
 
-
                                 </IonContent>
 
                                 {/* Logout button */}
@@ -210,24 +209,24 @@ class Home extends Component {
                                 {/* The actual page */}
                                 <IonRouterOutlet>
                                     {/* empty => /upcoming*/}
-                                    <Route render={() => <Redirect to={process.env.PUBLIC_URL + "/upcoming"}/>}/>
+                                    <Route render={() => <Redirect to="/upcoming"/>}/>
                                     {/* / => /upcoming */}
-                                    <Route exact path={process.env.PUBLIC_URL + "/"} render={() => <Redirect to={process.env.PUBLIC_URL + "/upcoming"} />} />
+                                    <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
                                     {/* and the perspective switch */}
                                     <Switch>
                                         {/* upcoming renders upcoming */}
-                                        <Route path={process.env.PUBLIC_URL + "/upcoming"} exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} />} />
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} />} />
                                         {/* completed renders completed */}
-                                        <Route path={process.env.PUBLIC_URL + "/calendar"} exact render={()=><Calendar engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
                                         {/* completed renders completed */}
-                                        <Route path={process.env.PUBLIC_URL + "/completed"} exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
 
                                         {/* perspective renders perspectives */}
-                                        <Route path={process.env.PUBLIC_URL + "/perspectives/:id/:create?"} render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create}/>}  />
+                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create}/>}  />
 
                                         {/* project renders perspectives */}
-                                        <Route path={process.env.PUBLIC_URL + "/projects/:id/:create?"} render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create}/>}  />
+                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create}/>}  />
                                         {/* TODO projects */}
                                     </Switch>
                                 </IonRouterOutlet>
