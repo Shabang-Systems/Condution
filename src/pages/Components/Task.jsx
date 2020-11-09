@@ -280,6 +280,9 @@ class Task extends Component {
                 if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
                     return; //click inside
 
+        if (document.getElementById("parking-lot").contains(e.target))
+            return;
+
         if (this.state.showRepeat) // if we are showing our repeat
             return; //click inside
 
@@ -297,11 +300,15 @@ class Task extends Component {
         if (prevState.dueDate !== this.state.dueDate) // if we updated the due date
             this.refreshDecorations();
         if (prevState.expanded !== this.state.expanded && this.state.expanded === true) {// if we opened a task for updating
+            if (getPlatforms().includes("mobile"))
+                document.getElementById("abtib").style.display = "none";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(false); // disable drag
             this.props.gruntman.lockUpdates(); // tell gruntman to chill
         }
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) { // if we closed a task
+            if (getPlatforms().includes("mobile"))
+                document.getElementById("abtib").style.display = "block";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(true); // enable drag
             this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
@@ -531,7 +538,7 @@ class Task extends Component {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                    <input className="task-datebox" defaultValue={value} readOnly={(getPlatforms().includes("mobile")) ? true : false} onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
                                                                         // DATEHANDLING is here too. If you are looking for that, stop searching
@@ -572,6 +579,7 @@ class Task extends Component {
                                                             return (
                                                                 <DatePicker
                                                                     selected={this.state.deferDate}
+                                                                    portalId="parking-lot"
                                                                     onChange={date => {
                                                                         // If the calendar got a new date, set it
                                                                         this.setState({deferDate: date});
@@ -596,7 +604,7 @@ class Task extends Component {
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" defaultValue={value} onChange={(e)=>{
+                                                                    <input className="task-datebox" readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
                                                                         // Search for the word DATEHANDLING for what the heck the code actually does
@@ -639,6 +647,7 @@ class Task extends Component {
                                                             return (
                                                                 <DatePicker
                                                                     selected={this.state.dueDate}
+                                                                    portalId="parking-lot"
                                                                     onChange={date => this.setState({dueDate: date})}
                                                                     showTimeInput
                                                                     isClearable

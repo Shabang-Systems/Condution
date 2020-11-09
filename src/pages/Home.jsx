@@ -206,6 +206,8 @@ class Home extends Component {
                             <IonPage id="main">
                                 {/* the add button to inbox button*/}
                                 <ABTIB uid={this.props.uid} gruntman={this.props.gruntman} />
+                                {/* the portal root for DOM elements to park */}
+                                <div id="parking-lot"></div>
                                 {/* The actual page */}
                                 <IonRouterOutlet>
                                     {/* empty => /upcoming*/}

@@ -279,7 +279,7 @@ label.od:hover:before {
 
 
 .react-datepicker-popper {
-    z-index: 100;
+    z-index: 100000000000 !important;
 }
 
 /**:focus {*/
