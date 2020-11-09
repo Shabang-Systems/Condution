@@ -1156,6 +1156,11 @@
     fs-extra "^8.1.0"
     ora "^4.0.4"
 
+"@capacitor/android@2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-2.4.1.tgz#db1a7fd5f2244b47f72a61aa508e7bf875ee0493"
+  integrity sha512-y2KHTuD1SPiibYou8x84Aio54ZyG9LWNCoIcrjgiFM8FlIDdp2FuW4yP17KA8ORDfj37yWI+IRzKa+t/M7Jy3Q==
+
 "@capacitor/cli@2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-2.4.1.tgz#38128a3422994c14c47bdf45ff8b70fdc0714fc3"

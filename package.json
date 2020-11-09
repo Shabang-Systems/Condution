@@ -6,6 +6,7 @@
   "homepage": "./",
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
+    "@capacitor/android": "2.4.1",
     "@capacitor/core": "2.4.1",
     "@capacitor/ios": "^2.4.1",
     "@ionic/react": "^5.0.7",
