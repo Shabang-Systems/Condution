@@ -76,12 +76,15 @@ function CalendarPopover(props) {
                     map.set(time, 1);
             });
             let values = Array.from(map.values());
-            let sum = values.reduce((a, b) => {
-                return a + b;
-            });
-            let style = getComputedStyle(document.body);
-            let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/sum));
-            Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
+            if (values.length > 0) {
+                let sum = values.reduce((a, b) => {
+                    return a + b;
+                });
+                let style = getComputedStyle(document.body);
+                let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/sum));
+                console.log(hexes, values);
+                Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
+            }
             setHeat(hm);
         })();
     },[dateSelected]);
