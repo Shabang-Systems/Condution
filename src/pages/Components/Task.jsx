@@ -538,7 +538,7 @@ class Task extends Component {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" defaultValue={value} readOnly={(getPlatforms().includes("mobile")) ? true : false} onChange={(e)=>{
+                                                                    <input className="task-datebox" readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
                                                                         // DATEHANDLING is here too. If you are looking for that, stop searching
