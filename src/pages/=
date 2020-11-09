@@ -71,12 +71,12 @@ function CalPagelendar(props) {
 
     let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>{return {type:"actual", content:i+1}});
 
-    let [heat, setHeat] = useState({});
+    let [heat, setHeat] = useState(new Map());
     
     useEffect(()=>{
         (async function() {
             let map = new Map();
-            let hm = {};
+            let hm = new Map();
             let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
             taskList.forEach(([_, val])=>{
                 let date = new Date(val.due.seconds*1000);
@@ -92,7 +92,7 @@ function CalPagelendar(props) {
                 return a + b;
             });
             let hexes = values.map(e=>__util_calculate_gradient("434d5f", "eaedad", e/sum));
-            Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
+            Array.from(map.keys()).forEach((e, i)=>hm.set(e, hexes[i]));
             setHeat(hm);
         })();
     },[dateSelected]);
@@ -111,7 +111,8 @@ function CalPagelendar(props) {
                 </div>
                 <div id="calendar-container">
                     {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                    <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":((heat[i.content]&&i.type === "actual") ? `#${heat[i.content]}` : "inherit")}} onClick={(e)=>{
+                    <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":(heat.has(i.content) ? heat.get(i.content) : "inherit")}} onClick={(e)=>{
+                        console.log(heat.has(i.content));
                         let date;
                         if (i.type === "pre")
                             date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);

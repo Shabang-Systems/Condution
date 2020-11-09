@@ -97,7 +97,7 @@
 @media (min-width: 576px) { 
     .task-name {
         font-size: 12pt;
-        width: 85%;
+        width: 84%;
     }
 
     .task-name-bottom {
@@ -121,7 +121,7 @@
 @media (min-width: 992px) { 
     .task-name {
         font-size: 12pt;
-        width: 92%;
+        width: 90%;
     }
 
     .task-name-bottom {
