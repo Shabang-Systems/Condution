@@ -92,7 +92,8 @@ function CalPagelendar(props) {
                 return a + b;
             });
             let style = getComputedStyle(document.body);
-            let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--decorative-light').trim().slice(1), style.getPropertyValue('--background-feature').trim().slice(1), e/sum));
+            let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/sum));
+            console.log(hexes, values);
             Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
             setHeat(hm);
         })();
