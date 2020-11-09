@@ -276,8 +276,9 @@ class Task extends Component {
                 return; //click inside
         
         if (this.props.envelope) // if we have a drag envelope
-            if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
-                return; //click inside
+            if (this.props.envelope.current) // if we have a drag envelope
+                if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
+                    return; //click inside
 
         if (this.state.showRepeat) // if we are showing our repeat
             return; //click inside
