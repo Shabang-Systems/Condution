@@ -81,6 +81,10 @@
     --quickadd-success-text: #03561f;
     --quickadd-placeholder: #e2c0bc;
 
+    /* Heatmap */
+    --heatmap-lightest: #212121;
+    --heatmap-darkest: #3a4359;
+
     /* Other Things */
     --auth-background: url(./../static/auth-background-dark.jpg);
 }

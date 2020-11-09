@@ -1,7 +1,7 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import '../Calendar.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
@@ -36,11 +36,55 @@ function CalendarPopover(props) {
 
     let firstDayDayname = firstDayMonth.getDay()+1;
 
+    function __util_calculate_gradient(left, right, gradientAmount) {
+        let color1 = left;
+        let color2 = right;
+        let ratio = gradientAmount;
+        let hex = function(x) {
+            x = x.toString(16);
+            return (x.length == 1) ? '0' + x : x;
+        };
+
+        let r = Math.ceil(parseInt(color1.substring(0,2), 16) * ratio + parseInt(color2.substring(0,2), 16) * (1-ratio));
+        let g = Math.ceil(parseInt(color1.substring(2,4), 16) * ratio + parseInt(color2.substring(2,4), 16) * (1-ratio));
+        let b = Math.ceil(parseInt(color1.substring(4,6), 16) * ratio + parseInt(color2.substring(4,6), 16) * (1-ratio));
+
+        return hex(r) + hex(g) + hex(b);
+    }
+
     let daysBefore = [...new Array(firstDayDayname-1)].map((_, i)=>{return {type: "pre", content: i+lastDayLastMonth.getDate()-(firstDayDayname-1)+1}});
 
     let daysAfter = [...new Array((6-lastDayMonth.getDay()===-1)?6:6-lastDayMonth.getDay())].map((_, i)=>{return {type:"post", content:i+1}});
 
     let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>{return {type:"actual", content:i+1}});
+
+    
+    let [heat, setHeat] = useState({});
+    
+    useEffect(()=>{
+        (async function() {
+            let map = new Map();
+            let hm = {};
+            let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
+            taskList.forEach(([_, val])=>{
+                let date = new Date(val.due.seconds*1000);
+                date.setHours(0, 0, 0, 0);
+                let time = date.getDate();
+                if(map.has(time))
+                    map.set(time, map.get(time)+1);
+                else
+                    map.set(time, 1);
+            });
+            let values = Array.from(map.values());
+            let sum = values.reduce((a, b) => {
+                return a + b;
+            });
+            let style = getComputedStyle(document.body);
+            let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--decorative-light').trim().slice(1), style.getPropertyValue('--background-feature').trim().slice(1), e/sum));
+            Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
+            setHeat(hm);
+        })();
+    },[dateSelected]);
 
     return (
         <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="calendar-popover">
@@ -57,7 +101,8 @@ function CalendarPopover(props) {
                     </div>
                     <div id="calendar-container">
                         {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                        <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":"inherit"}} onClick={(e)=>{
+                        <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":((heat[i.content]&&i.type === "actual") ? `#${heat[i.content]}` : "inherit")}} onClick={(e)=>{
+
                             let date;
                             if (i.type === "pre")
                                 date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);

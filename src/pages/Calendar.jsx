@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { Component, useState, useEffect, useRef } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {withGetScreen} from 'react-getscreen'
 import './Calendar.css'
 import './Pages.css';
@@ -91,7 +91,8 @@ function CalPagelendar(props) {
             let sum = values.reduce((a, b) => {
                 return a + b;
             });
-            let hexes = values.map(e=>__util_calculate_gradient("434d5f", "eaedad", e/sum));
+            let style = getComputedStyle(document.body);
+            let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--decorative-light').trim().slice(1), style.getPropertyValue('--background-feature').trim().slice(1), e/sum));
             Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
             setHeat(hm);
         })();
