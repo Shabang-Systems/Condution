@@ -326,14 +326,15 @@ class Calendar extends Component {
                                     <div class="calendar-page-count">{this.state.taskList.length}</div>
                                     <div class="calendar-page-title">tasks due on</div>
                                     <div class="calendar-page-date" onClick={()=>this.setState({popoverIsVisible: true})}>{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
-                                    {(()=>{
-                                        if (this.props.isMobile())
-                                            return <a class="calendar-page-select fas fa-calendar-day" data-tip="Pick Date" onClick={()=>this.setState({popoverIsVisible: true})}></a>
-                                    })()}
                                 </span>
                                 {this.state.taskList.map(id=>(
                                     <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                 ))}
+                                {(()=>{
+                                    if (this.props.isMobile() && this.state.taskList.length == 0)
+                                        return <span class="calendar-page-select">Hint: tap the date above to change date!</span>
+                                })()}
+
                             </div>
                         </div>
                         <div className="bottom-helper">&nbsp;</div>
