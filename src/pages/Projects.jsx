@@ -216,7 +216,7 @@ class Projects extends Component { // define the component
                         </div>
                     </div>
 
-                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
 
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
 
