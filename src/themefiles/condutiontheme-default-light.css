@@ -80,8 +80,8 @@
     --quickadd-placeholder: #e2c0bc;
 
     /* Heatmap */
-    --heatmap-lightest: #e5e7ea;
-    --heatmap-darkest: #c0d5e0;
+    --heatmap-lightest: #dee4e8;
+    --heatmap-darkest: #6eb5e5;
 
     /* Other Things */
     --auth-background: url(./static/auth-background.jpg);
