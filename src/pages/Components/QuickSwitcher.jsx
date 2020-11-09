@@ -16,18 +16,49 @@ class QuickSwitcher extends Component {
         super(props);
         autoBind(this);
 
-        this.state = {}
+        this.state = {
+	    searchRef: ''
+	}
 	this.searcher = React.createRef();
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+	//const timer = setTimeout(() => {
+	//    console.log(this.searcher.current)
+	//}, 1);
+    }
 
 
-    async focusRef(ref) {
-	if (ref) {
-	    const el = await ref.getInputElement(); 
-	    el.focus(); 
-	} else {console.log(ref)}
+    //focusRef() {
+    //    const timer = setTimeout(() => {
+    //        if (this.searcher.current) {
+    //            const el = this.searcher.current.getInputElement()
+    //            el.focus(); 
+    //            console.log(this.searcher, "tmeo")
+    //        } else {console.log("no good")}
+    //    }, 1);
+
+    //}
+
+    //async focusRef() {
+    //    console.log("yes")
+    //    if (this.searcher.current != null) {
+    //        console.log(this.searcher.current.getInputElement())
+    //    }
+
+
+    //}
+    //
+
+    focusRef() {
+	setInterval(async () => {
+	    //console.log(this.searcher)
+	    if (this.searcher.current != null) {
+		const el = await this.searcher.current
+		console.log(el)
+		el.setFocus()
+	    }
+	}, 1000)
     }
 
 
@@ -36,12 +67,17 @@ class QuickSwitcher extends Component {
 	    <IonModal 
 		//ref={this.props.reference} 
 		isOpen={this.props.qs_show} 
-		ionModalDidPresent={this.focusRef(this.searcher.current)}
+		ionModalDidPresent={this.focusRef()}
 		animated={false}
 		cssClass='qs_modal'
 		onDidDismiss={this.props.dismiss}
 	    >
-		<IonSearchbar ref={this.searcher} className='search-bar'/>
+		<IonSearchbar 
+		    autoFocus={true}
+		    ref={this.searcher} 
+		    //ref={input => input && input.getInputElement.focus()}
+		    className='search-bar'
+		/>
 
 	    </IonModal>
 	) 
