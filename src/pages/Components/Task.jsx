@@ -373,7 +373,7 @@ class Task extends Component {
                                 {/* Chapter 0: Utility Components */}
 
                                 {/* Gotta get those on hover tips */}
-                                {/* And load up +s. hide the repeat UI, too! */}
+                                {/* And load up + hide the repeat UI, too! */}
                                 <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
                                 {/* As well as load up + hide the tag editor!*/}
                                 <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={this.hideTagEditor} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>

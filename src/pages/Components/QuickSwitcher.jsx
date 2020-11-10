@@ -28,7 +28,7 @@ class QuickSwitcher extends Component {
 	//}, 1);
     }
 
-
+    // HUXLEY TRYING TO MAKE IT FOCUS 
     //focusRef() {
     //    const timer = setTimeout(() => {
     //        if (this.searcher.current) {
@@ -51,14 +51,22 @@ class QuickSwitcher extends Component {
     //
 
     focusRef() {
-	setInterval(async () => {
-	    //console.log(this.searcher)
-	    if (this.searcher.current != null) {
-		const el = await this.searcher.current
-		console.log(el)
-		el.setFocus()
-	    }
-	}, 1000)
+	//console.log(this.searcher.current)
+	//setInterval(()=>{if (this.searcher.current) {
+	//this.searcher.current.setFocus()
+	//    console.log(this.searcher.current)
+	//}
+	//}, 1000)
+	//setInterval(async () => {
+	//    const el = await this.searcher.current
+	//    //console.log(this.searcher)
+	//    if (this.searcher.current != null) {
+	//        console.log(el)
+	//        el.setFocus()
+	//        el.focus()
+	//    }
+	//}, 1000)
+	console.log("this should focus it!") 
     }
 
 
