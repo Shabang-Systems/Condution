@@ -6,6 +6,7 @@ import { createBrowserHistory, createHashHistory } from 'history';
 import { withRouter } from "react-router";
 import { IonModal, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonSearchbar, IonFooter } from '@ionic/react';
 import './QuickSwitcher.css'
+import '../Pages.css';
 
 const autoBind = require('auto-bind/react');
 
@@ -17,7 +18,9 @@ class QuickSwitcher extends Component {
         autoBind(this);
 
         this.state = {
-	    searchRef: ''
+	    searchRef: '',
+	    items: this.props.items,
+	    options: this.props.items,
 	}
 	this.searcher = React.createRef();
     }
@@ -70,6 +73,14 @@ class QuickSwitcher extends Component {
     }
 
 
+    filterItems(searchTerm) {
+	this.setState({options: this.state.items.filter(item => {
+	    return item.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+	})});
+    }
+
+
+
     render() { 
 	return (
 	    <IonModal 
@@ -80,12 +91,24 @@ class QuickSwitcher extends Component {
 		cssClass='qs_modal'
 		onDidDismiss={this.props.dismiss}
 	    >
-		<IonSearchbar 
-		    autoFocus={true}
-		    ref={this.searcher} 
-		    //ref={input => input && input.getInputElement.focus()}
-		    className='search-bar'
-		/>
+		<div className='modal-content-wrapper'>
+		    <IonSearchbar 
+			autoFocus={true}
+			ref={this.searcher} 
+			animated={true}
+			//ref={input => input && input.getInputElement.focus()}
+			className='search-bar'
+			placeholder="Let's go to.."
+			onIonChange={e => this.filterItems(e.detail.value)}
+			debounce={0}
+			//value={this.searchText}
+		    />
+		    <div className='option-wrapper'> 
+			{this.state.options.map(item => 
+			    <p className='option-text'>{item}</p>
+			)}
+		    </div> 
+		</div>
 
 	    </IonModal>
 	) 
