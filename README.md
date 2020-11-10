@@ -9,7 +9,7 @@
 ***
 
 ## Those Download Buttons?
-👉 [**Direct Download**](https://condution.shabang.cf/#downloads) the latest version of Condution here! 👈 
+👉 [**Direct Download**](https://www.condution.com/#downloads) the latest version of Condution here! 👈 
 
 Also, here's the [App Store](https://apps.apple.com/us/app/condution/id1523249900) & [Play Store](https://play.google.com/store/apps/details?id=cf.shabang.condution) links for y'all phone nerds out there.
 
