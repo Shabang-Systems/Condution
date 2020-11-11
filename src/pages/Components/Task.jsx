@@ -275,10 +275,13 @@ class Task extends Component {
             if (this.TagEditorRef.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
         
-        if (this.props.envelope) // if we have a drag envelope
-            if (this.props.envelope.current) // if we have a drag envelope
-                if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
-                    return; //click inside
+        //if (this.props.envelope) // if we have a drag envelope
+            //if (this.props.envelope.current) // if we have a drag envelope
+                //if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
+                    {/*return; //click inside*/}
+
+        // DRAG ENVELOPES ARE SUPPOSED TO PROTECT AGAINST DRAGGING, AND ARE UNIVERSAL ACROSS ALL TASKS
+        // UNCOMMENTING THIS WILL MAKE MULTIPLE TASKS OPEN AT ONCE ON UPCOMING
 
         if (document.getElementById("parking-lot").contains(e.target))
             return;
@@ -680,7 +683,7 @@ class Task extends Component {
                                                             isClearable
                                                             styles={{
                                                                 // Fixes the overlapping problem of the component
-                                                                menuPortal: provided => ({ ...provided, zIndex: "9999 !important" })
+                                                                menuPortal: provided => ({ ...provided, zIndex: "99999 !important" })
                                                             }}
                                                                                                                                                               menuPortalTarget={this.props.envelope ? this.props.envelope.current : this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
@@ -704,7 +707,7 @@ class Task extends Component {
                                                             classNamePrefix='task-select'
                                                             isClearable
                                                             isMulti
-                                                            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                                                            styles={{ menuPortal: base => ({ ...base, zIndex: "99999 !important" }) }}
                                                                                                                                               menuPortalTarget={this.props.envelope ? this.props.envelope.current : this.me.current}
                                                             value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
                                                             onChange={(newValue, actionMeta) => {
