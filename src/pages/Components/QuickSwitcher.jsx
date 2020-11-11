@@ -133,12 +133,12 @@ class QuickSwitcher extends Component {
 			debounce={0}
 			//value={this.searchText}
 		    />
-		    <div className='option-wrapper'> 
-			{this.filterItems(this.state.query).map(item => 
-			    <p className='option-text'>{item[0]}</p>
-			)}
-			
-		    </div> 
+			<div className='option-wrapper'> 
+			    {this.filterItems(this.state.query).map(item => 
+				<p className='option-text'>{item[0]}</p>
+			    )}
+			    
+			</div> 
 		</div>
 
 	    </IonModal>
