@@ -50,6 +50,7 @@ class Keybinds extends Component {
 	const loca = this.state.sidebar_list[num]; // set our location to index in sidebar
 	that.props.history.push(`/${loca[0]}/${loca[1]}`) // push to the history
 	that.props.paginate(...loca); // paginate-ify it!
+	console.log(loca)
 	this.setState({sidebar_index: num}) // update the sidebar index 
     }
 
@@ -120,6 +121,7 @@ class Keybinds extends Component {
 		qs_show={this.state.qs_show} 
 		dismiss={()=> this.setState({qs_show: false})}
 		items={[this.props.perspectives, this.props.projects]}
+		paginate={this.props.paginate}
 
 	    /> 
 	)

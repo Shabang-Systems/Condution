@@ -21,6 +21,7 @@ class QuickSwitcher extends Component {
 	    searchRef: '',
 	    items: [],
 	    query: '',
+	    firstItem: '',
 	    prop_store: '',
 	}
 	this.searcher = React.createRef();
@@ -36,59 +37,20 @@ class QuickSwitcher extends Component {
     componentDidMount() {
 	this.processItems()
 	this.setState({prop_store: this.props, options: this.state.items})
-
-	//const timer = setTimeout(() => {
-	//    console.log(this.searcher.current)
-	//}, 1);
     }
 
-    // HUXLEY TRYING TO MAKE IT FOCUS 
-    //focusRef() {
-    //    const timer = setTimeout(() => {
-    //        if (this.searcher.current) {
-    //            const el = this.searcher.current.getInputElement()
-    //            el.focus(); 
-    //            console.log(this.searcher, "tmeo")
-    //        } else {console.log("no good")}
-    //    }, 1);
-
-    //}
-
-    //async focusRef() {
-    //    console.log("yes")
-    //    if (this.searcher.current != null) {
-    //        console.log(this.searcher.current.getInputElement())
-    //    }
-
-
-    //}
-    //
-
     focusRef() {
-	//console.log(this.searcher.current)
-	//setInterval(()=>{if (this.searcher.current) {
-	//this.searcher.current.setFocus()
-	//    console.log(this.searcher.current)
-	//}
-	//}, 1000)
-	//setInterval(async () => {
-	//    const el = await this.searcher.current
-	//    //console.log(this.searcher)
-	//    if (this.searcher.current != null) {
-	//        console.log(el)
-	//        el.setFocus()
-	//        el.focus()
-	//    }
-	//}, 1000)
        if (this.searcher.current)
             this.searcher.current.setFocus();
     }
 
 
     filterItems(searchTerm) {
-	return(this.state.items.filter(item => {
+	let filteredItems = this.state.items.filter(item => {
 	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-	}));
+	});
+	//this.setState({firstItem: filteredItems[0]});
+	return filteredItems
     }
 
 
@@ -105,10 +67,19 @@ class QuickSwitcher extends Component {
 	    ],
 	    prop_store: this.props //  and update the props 
 	})
-	//if (this.state.items[0] != undefined) {
-	//    console.log(this.state.items[0][0], "heree") // and the projects 
-	//} else {console.log(this.state.items[0], "else?")}
+    }
 
+    handleSubmit(e) {
+	if (e.key == "Enter") {
+	    let firstItem = this.filterItems(this.state.query)[0]
+	    if (!firstItem) {
+		console.log(firstItem)
+		firstItem = [".upcoming", "upcoming", ""]
+	    }
+	    this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
+	    this.props.paginate(...firstItem.slice(1)); // paginate-ify it!
+	    this.props.dismiss()
+	}
     }
 
 
@@ -118,8 +89,8 @@ class QuickSwitcher extends Component {
 		isOpen={this.props.qs_show} 
 		animated={false}
 		cssClass='qs_modal'
-            autoFocus={true}
-        onDidPresent={this.focusRef}
+		autoFocus={true}
+		onDidPresent={this.focusRef}
 		onDidDismiss={this.props.dismiss}
 	    >
 		<div className='modal-content-wrapper'>
@@ -127,14 +98,13 @@ class QuickSwitcher extends Component {
 			autoFocus={true}
 			ref={this.searcher} 
 			animated={true}
-			autocomplete={true}
-			autocorrect={true}
 			spellcheck={true}
-			//ref={input => input && input.getInputElement.focus()}
-			className='search-bar mousetrap'
+			className='search-bar'
 			placeholder="Let's go to.."
 			onIonChange={e => this.setState({query: e.detail.value})}
 			debounce={0}
+			onSubmit={()=>{console.log("wheee")}}
+			onKeyDown={this.handleSubmit}
 			//value={this.searchText}
 		    />
 			<div className='option-wrapper'> 
@@ -151,7 +121,7 @@ class QuickSwitcher extends Component {
 
 }
 
-export default QuickSwitcher;
+export default withRouter(QuickSwitcher);
 
 
 
