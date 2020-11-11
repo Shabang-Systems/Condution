@@ -111,7 +111,7 @@ class Keybinds extends Component {
 	    <QuickSwitcher 
 		qs_show={this.state.qs_show} 
 		dismiss={()=> this.setState({qs_show: false})}
-		items={['.upcoming', '.completed', '.calender']}
+		items={[this.props.perspectives, this.props.projects]}
 
 	    /> 
 	)

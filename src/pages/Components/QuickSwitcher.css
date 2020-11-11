@@ -1,11 +1,12 @@
 
 .qs_modal {
-    --max-height: 170px;
+    --max-height: 370px;
     /*--height: 150px;*/
     --width: 80%;
     --max-width: 520px;
     --ion-backdrop-opacity: 0.5;
     --border-radius: 8px;
+    overflow: scroll;
 
 }
 
