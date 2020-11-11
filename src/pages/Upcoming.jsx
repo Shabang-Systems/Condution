@@ -102,7 +102,7 @@ class Upcoming extends Component { // define the component
 
                         //this.setState({timelineRenderedUntil, timelineSoFar: timeline});
         // Date same date check https://stackoverflow.com/questions/4428327/checking-if-two-dates-have-the-same-date-info
-        
+        timeline = timeline.filter((x)=>!pandt[1].includes(x[0]))
         Date.prototype.isSameDateAs = function(pDate) {
           return (
             this.getFullYear() === pDate.getFullYear() &&
