@@ -71,15 +71,16 @@ class QuickSwitcher extends Component {
 	})
     }
 
+
     handleSubmit(e) {
 	if (e.key == "Enter") {
 	    let firstItem = this.filterItems(this.state.query)[0]
-	    console.log(this.state.query)
+	    // TODO: jack make the sidebar styling work 
 	    if (!firstItem || !this.state.query) {
-		console.log(this.state.direction)
-		if (this.state.direction) { this.props.history.goBack() } 
-		else { this.props.history.goForward() }
-
+		if (this.state.direction && this.props.history.length > 2) { 
+		    this.props.history.goBack() 
+		} 
+		else if (this.props.history.length > 2) { this.props.history.goForward() }
 		this.setState({direction: !this.state.direction})
 		
 	    } else {
@@ -117,7 +118,14 @@ class QuickSwitcher extends Component {
 		    />
 			<div className='option-wrapper'> 
 			    {this.filterItems(this.state.query).map(item => 
-				<p className='option-text'>{item[0]}</p>
+			    <p className='option-text' 
+				onClick={()=>{
+				    console.log(item)
+				    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
+				    this.props.paginate(...item.slice(1)); // paginate-ify it!
+				    this.props.dismiss()
+				}}
+			    >{item[0]}</p>
 			    )}
 			    
 			</div> 
