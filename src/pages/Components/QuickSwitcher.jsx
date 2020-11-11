@@ -19,13 +19,24 @@ class QuickSwitcher extends Component {
 
         this.state = {
 	    searchRef: '',
-	    items: this.props.items,
-	    options: this.props.items,
+	    items: [],
+	    query: '',
+	    prop_store: '',
 	}
 	this.searcher = React.createRef();
     }
 
+    componentDidUpdate() {
+	if (this.state.prop_store != this.props) { // if the props have changed, 
+	    this.processItems()
+	}
+
+    }
+
     componentDidMount() {
+	this.processItems()
+	this.setState({prop_store: this.props, options: this.state.items})
+
 	//const timer = setTimeout(() => {
 	//    console.log(this.searcher.current)
 	//}, 1);
@@ -75,11 +86,30 @@ class QuickSwitcher extends Component {
 
 
     filterItems(searchTerm) {
-	this.setState({options: this.state.items.filter(item => {
-	    return item.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-	})});
+	return(this.state.items.filter(item => {
+	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+	}));
     }
 
+
+    processItems() {
+	// name, url prefix, id
+	this.setState({items: 
+	    [
+		['.upcoming', 'upcoming', ''], // set the first item to upcoming 
+		// (i could do + but i think thats less efficent 
+		['.completed', 'completed', ''], // set the second item to completed
+		['.calendar', 'calendar', ''], // set the third item to calendar
+		...this.props.items[0].map(o => ['#'+o.name, 'perspectives', o.id]), // map the perspectives
+		...this.props.items[1].map(o => [':'+o.name, 'projects', o.id]) // and the projects 
+	    ],
+	    prop_store: this.props //  and update the props 
+	})
+	//if (this.state.items[0] != undefined) {
+	//    console.log(this.state.items[0][0], "heree") // and the projects 
+	//} else {console.log(this.state.items[0], "else?")}
+
+    }
 
 
     render() { 
@@ -100,15 +130,16 @@ class QuickSwitcher extends Component {
 			//ref={input => input && input.getInputElement.focus()}
 			className='search-bar'
 			placeholder="Let's go to.."
-			onIonChange={e => this.filterItems(e.detail.value)}
+			onIonChange={e => this.setState({query: e.detail.value})}
 			debounce={0}
 			//value={this.searchText}
 		    />
-		    <div className='option-wrapper'> 
-			{this.state.options.map(item => 
-			    <p className='option-text'>{item}</p>
-			)}
-		    </div> 
+			<div className='option-wrapper'> 
+			    {this.filterItems(this.state.query).map(item => 
+				<p className='option-text'>{item[0]}</p>
+			    )}
+			    
+			</div> 
 		</div>
 
 	    </IonModal>

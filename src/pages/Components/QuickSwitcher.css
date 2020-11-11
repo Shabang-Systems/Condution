@@ -1,6 +1,6 @@
 
 .qs_modal {
-    --max-height: 150px;
+    --max-height: 164px;
     /*--height: 150px;*/
     --width: 80%;
     --max-width: 520px;
@@ -17,26 +17,35 @@
 }
 
 .option-text {
-    font-weight: 500;
-    /*padding-top: 7px;*/
-    /*padding-bottom: 7px;*/
-    /*padding-top: 7px;*/
+    width: 100%;
+    font-weight: 600;
     padding-left: 10px;
-    margin-bottom: 2px;
-    margin-top: 2px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 0px;
+    margin-top: 0px;
     font-size: 15px;
-    border-radius: 5px;
-    color: var(--menu-text);
-    transition: background-color 0.5s;
+    border-radius: 2px;
+    color: var(--menu-label);
+    transition: background-color 0.2s;
     cursor: default;
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
 }
 
+.option-text:hover {
+    background-color: var(--decorative-light);
+
+}
+
+
 .option-wrapper {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    overflow-x: auto;
+    max-height: 110px;
+    padding-bottom: 8px;
 
 
 }
