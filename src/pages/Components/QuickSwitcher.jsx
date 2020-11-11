@@ -69,7 +69,8 @@ class QuickSwitcher extends Component {
 	//        el.focus()
 	//    }
 	//}, 1000)
-	console.log("this should focus it!") 
+       if (this.searcher.current)
+            this.searcher.current.setFocus();
     }
 
 
@@ -84,11 +85,11 @@ class QuickSwitcher extends Component {
     render() { 
 	return (
 	    <IonModal 
-		//ref={this.props.reference} 
 		isOpen={this.props.qs_show} 
-		ionModalDidPresent={this.focusRef()}
 		animated={false}
 		cssClass='qs_modal'
+            autoFocus={true}
+        onDidPresent={this.focusRef}
 		onDidDismiss={this.props.dismiss}
 	    >
 		<div className='modal-content-wrapper'>
