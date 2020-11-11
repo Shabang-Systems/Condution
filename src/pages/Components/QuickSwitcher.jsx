@@ -22,6 +22,7 @@ class QuickSwitcher extends Component {
 	    items: [],
 	    query: '',
 	    firstItem: '',
+	    direction: true, 
 	    prop_store: '',
 	}
 	this.searcher = React.createRef();
@@ -42,6 +43,7 @@ class QuickSwitcher extends Component {
     focusRef() {
        if (this.searcher.current)
             this.searcher.current.setFocus();
+	    this.setState({query: ''})
     }
 
 
@@ -72,13 +74,19 @@ class QuickSwitcher extends Component {
     handleSubmit(e) {
 	if (e.key == "Enter") {
 	    let firstItem = this.filterItems(this.state.query)[0]
-	    if (!firstItem) {
-		console.log(firstItem)
-		firstItem = [".upcoming", "upcoming", ""]
+	    console.log(this.state.query)
+	    if (!firstItem || !this.state.query) {
+		console.log(this.state.direction)
+		if (this.state.direction) { this.props.history.goBack() } 
+		else { this.props.history.goForward() }
+
+		this.setState({direction: !this.state.direction})
+		
+	    } else {
+		this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
+		this.props.paginate(...firstItem.slice(1)); // paginate-ify it!
 	    }
-	    this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
-	    this.props.paginate(...firstItem.slice(1)); // paginate-ify it!
-	    this.props.dismiss()
+	    this.props.dismiss() // dismiss the modal
 	}
     }
 
