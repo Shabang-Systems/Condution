@@ -22,6 +22,7 @@ class QuickSwitcher extends Component {
 	    items: [],
 	    query: '',
 	    firstItem: '',
+	    direction: true, 
 	    prop_store: '',
 	}
 	this.searcher = React.createRef();
@@ -42,6 +43,7 @@ class QuickSwitcher extends Component {
     focusRef() {
        if (this.searcher.current)
             this.searcher.current.setFocus();
+	    this.setState({query: ''})
     }
 
 
@@ -69,16 +71,23 @@ class QuickSwitcher extends Component {
 	})
     }
 
+
     handleSubmit(e) {
 	if (e.key == "Enter") {
 	    let firstItem = this.filterItems(this.state.query)[0]
-	    if (!firstItem) {
-		console.log(firstItem)
-		firstItem = [".upcoming", "upcoming", ""]
+	    // TODO: jack make the sidebar styling work 
+	    if (!firstItem || !this.state.query) {
+		if (this.state.direction && this.props.history.length > 2) { 
+		    this.props.history.goBack() 
+		} 
+		else if (this.props.history.length > 2) { this.props.history.goForward() }
+		this.setState({direction: !this.state.direction})
+		
+	    } else {
+		this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
+		this.props.paginate(...firstItem.slice(1)); // paginate-ify it!
 	    }
-	    this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
-	    this.props.paginate(...firstItem.slice(1)); // paginate-ify it!
-	    this.props.dismiss()
+	    this.props.dismiss() // dismiss the modal
 	}
     }
 
@@ -109,7 +118,14 @@ class QuickSwitcher extends Component {
 		    />
 			<div className='option-wrapper'> 
 			    {this.filterItems(this.state.query).map(item => 
-				<p className='option-text'>{item[0]}</p>
+			    <p className='option-text' 
+				onClick={()=>{
+				    console.log(item)
+				    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
+				    this.props.paginate(...item.slice(1)); // paginate-ify it!
+				    this.props.dismiss()
+				}}
+			    >{item[0]}</p>
 			    )}
 			    
 			</div> 
