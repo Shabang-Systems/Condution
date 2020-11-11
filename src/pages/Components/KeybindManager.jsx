@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
+import bindGlobal from 'mousetrap-global-bind';
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
 import { createBrowserHistory, createHashHistory } from 'history';
@@ -39,6 +40,9 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
+    ]
+
+    globalBindings = [
 	["command+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
     ]
 
@@ -95,8 +99,12 @@ class Keybinds extends Component {
 	this.setState({prop_store: this.props})
 
         this.bindings.map(combo => {
-            Mousetrap.bind(...combo)
+		Mousetrap.bind(...combo)
         })
+
+	this.globalBindings.map(combo => {
+		Mousetrap.bindGlobal(...combo)
+	})
     }
 
     // loop through and unbind all our things!

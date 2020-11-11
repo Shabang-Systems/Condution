@@ -127,8 +127,11 @@ class QuickSwitcher extends Component {
 			autoFocus={true}
 			ref={this.searcher} 
 			animated={true}
+			autocomplete={true}
+			autocorrect={true}
+			spellcheck={true}
 			//ref={input => input && input.getInputElement.focus()}
-			className='search-bar'
+			className='search-bar mousetrap'
 			placeholder="Let's go to.."
 			onIonChange={e => this.setState({query: e.detail.value})}
 			debounce={0}
