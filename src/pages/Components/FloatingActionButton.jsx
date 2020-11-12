@@ -59,8 +59,9 @@ function ABTIB(props) {
 		defaultValue={""} 
 		style={anim} 
 		className="attib"
+		ref={props.reference}
 
-        onClick={
+        onFocus={
             (event) => {
                 event.target.value = "";
                 setisExpanded(true);

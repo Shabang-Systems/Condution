@@ -40,11 +40,14 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
+	["command+i", ()=>{this.focusElement(this.props.abtib)}], // nav up keybind 
     ]
 
     globalBindings = [
 	["command+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
     ]
+    
+    //TODO: this doesnt work with clicking or like anything else but eh
 
     sidebar_switcher(that, num){
 	const loca = this.state.sidebar_list[num]; // set our location to index in sidebar
@@ -69,6 +72,12 @@ class Keybinds extends Component {
 
     manageQs(that) {
 	this.setState({qs_show: !this.state.qs_show}); 
+    }
+
+    focusElement(ref) {
+	if (ref) {
+	    ref.current.focus()
+	}
     }
 
     componentDidUpdate(){

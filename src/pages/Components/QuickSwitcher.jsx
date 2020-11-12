@@ -109,7 +109,7 @@ class QuickSwitcher extends Component {
 			animated={true}
 			spellcheck={true}
 			className='search-bar'
-			placeholder="Let's go to.."
+			placeholder="Previous  |  Let's go to.." // TODO: jack do you like this? 
 			onIonChange={e => this.setState({query: e.detail.value})}
 			debounce={0}
 			onSubmit={()=>{console.log("wheee")}}

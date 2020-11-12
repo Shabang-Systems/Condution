@@ -60,6 +60,7 @@ class Home extends Component {
         };
         // AutoBind!
         autoBind(this);
+	this.abtibRef = React.createRef();
     }
 
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
@@ -108,6 +109,7 @@ class Home extends Component {
 			ref={this.keybindRef} 
 			perspectives={this.state.perspectives}
 			projects={this.state.projects}
+			abtib={this.abtibRef}
 		    />
                     {/* OoIp */}
                     <ReactTooltip />
@@ -205,7 +207,7 @@ class Home extends Component {
                             </IonMenu>
                             <IonPage id="main">
                                 {/* the add button to inbox button*/}
-                                <ABTIB uid={this.props.uid} gruntman={this.props.gruntman} />
+                                <ABTIB reference={this.abtibRef} uid={this.props.uid} gruntman={this.props.gruntman} />
                                 {/* the portal root for DOM elements to park */}
                                 <div id="parking-lot"></div>
                                 {/* The actual page */}
