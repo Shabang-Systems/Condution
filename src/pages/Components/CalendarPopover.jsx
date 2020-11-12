@@ -61,6 +61,12 @@ function CalendarPopover(props) {
     
     let [heat, setHeat] = useState({});
     
+ 
+    Array.prototype.max = function() {
+        return Math.max.apply(null, this);
+    };
+
+    
     useEffect(()=>{
         (async function() {
             let map = new Map();
@@ -77,12 +83,9 @@ function CalendarPopover(props) {
             });
             let values = Array.from(map.values());
             if (values.length > 0) {
-                let sum = values.reduce((a, b) => {
-                    return a + b;
-                });
+                let max = values.max();
                 let style = getComputedStyle(document.body);
-                let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/sum));
-                console.log(hexes, values);
+                let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/max));
                 Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
             }
             setHeat(hm);
@@ -104,22 +107,30 @@ function CalendarPopover(props) {
                     </div>
                     <div id="calendar-container">
                         {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                        <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{backgroundColor: (i.type === "actual" && i.content === dateSelected.getDate()) ? "var(--decorative-light)":((heat[i.content]&&i.type === "actual") ? `#${heat[i.content]}` : "inherit")}} onClick={(e)=>{
+                        <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
+                            backgroundColor: ((heat[i.content]&&i.type === "actual") ? 
+                                `#${heat[i.content]}` :
+                                "inherit"),
+                            border:  (i.type === "actual" && i.content === dateSelected.getDate()) ? 
+                            "2px solid var(--decorative-light)" :
+                            "0"}} 
 
-                            let date;
-                            if (i.type === "pre")
-                                date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);
-                            if (i.type === "actual") 
-                                date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content);
-                            if (i.type === "post") 
-                                date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
-                            setDateSelected(date);
-                            if (props.onDateSelected)
-                                props.onDateSelected(date);
-                        }}>{i.content}</span>
+                            onClick={(e)=>{
+
+                                let date;
+                                if (i.type === "pre")
+                                    date = new Date(lastDayLastMonth.getFullYear(), lastDayLastMonth.getMonth(), i.content);
+                                if (i.type === "actual") 
+                                    date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth(), i.content);
+                                if (i.type === "post") 
+                                    date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
+                                setDateSelected(date);
+                                if (props.onDateSelected)
+                                    props.onDateSelected(date);
+                            }}>{i.content}</span>
                         )}
                     </div>
-                <div id="calendar-infopanel">
+                    <div id="calendar-infopanel">
                     <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
                     <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
                     <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
