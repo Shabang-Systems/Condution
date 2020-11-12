@@ -86,6 +86,8 @@
     --heatmap-darkest: #364c5b;
 
     /* Other Things */
+    --qs-shadow-intensity: -12px;
+    --qs-shadow-color: rgba(0,0,0,0.91);
     --auth-background: url(./../static/auth-background-dark.jpg);
 }
 
