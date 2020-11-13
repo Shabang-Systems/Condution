@@ -286,6 +286,10 @@ class Task extends Component {
         if (document.getElementById("parking-lot").contains(e.target))
             return;
 
+        if (this.props.onModal)
+            if (document.getElementById("airplane-hanger").contains(e.target))
+                return;
+
         if (this.state.showRepeat) // if we are showing our repeat
             return; //click inside
 
@@ -581,7 +585,7 @@ class Task extends Component {
                                                             return (
                                                                 <DatePicker
                                                                     selected={this.state.deferDate}
-                                                                    portalId="parking-lot"
+                                                                    portalId={this.props.onModal?"airplane-hanger":"parking-lot"}
                                                                     onChange={date => {
                                                                         // If the calendar got a new date, set it
                                                                         this.setState({deferDate: date});
@@ -649,7 +653,7 @@ class Task extends Component {
                                                             return (
                                                                 <DatePicker
                                                                     selected={this.state.dueDate}
-                                                                    portalId="parking-lot"
+                                                                    portalId={this.props.onModal?"airplane-hanger":"parking-lot"}
                                                                     onChange={date => this.setState({dueDate: date})}
                                                                     showTimeInput
                                                                     isClearable
