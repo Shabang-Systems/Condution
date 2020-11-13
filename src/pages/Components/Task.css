@@ -4,7 +4,7 @@
     border-radius: 7px;
     transition: background-color 0.3s;
     /*margin: 2px 8px;*/
-    color: var(--task-textbox);
+    color: var(--task-name-text);
 }
 
 .task.collapsed {
@@ -34,7 +34,7 @@
     font-size: 10pt;
     font-weight:300;
     background-color:inherit;
-    color: var(--task-textbox);
+    color: var(--task-textbox-text);
     margin: 5px 5px 0 0;
     padding: 2px 1px 0 5px;
     border: 0px;
@@ -58,13 +58,13 @@
     }
 
     .task-desc::placeholder{
-        color: var(--decorative-light-alt);
+        color: var(--task-textbox-placeholder);
     }
 
 .task-name {
     font-weight:400;
     background-color:inherit;
-    color: var(--content-normal-alt);
+    color: var(--task-name-text);
     padding: 13px 5px 10px 5px;
     border: 0;
     display: inline-block;
@@ -76,7 +76,7 @@
 }
 
 .task-name::placeholder{
-    color: var(--decorative-light-alt);
+    color: var(--task-name-placeholder);
 }
 
 /*    .task-name:focus{*/
@@ -328,7 +328,7 @@ label.od:hover:before {
 
 .react-datepicker__close-icon::after {
     background-color: transparent !important;
-    color: var(--task-clickbox) !important;
+    color: var(--task-datepicker-icon) !important;
     transform: translateY(2px) !important;
 }
 
@@ -342,8 +342,8 @@ button:focus {
     border-radius: 3px;
     font-size: 12px;
     padding-left: 5px;
-    background-color: var(--task-clickbox-background);
-    color: var(--task-clickbox);
+    background-color: var(--task-textbox-background);
+    color: var(--task-textbox-text);
     z-index: 20 !important;
     width: 150px !important;
 }
@@ -355,8 +355,8 @@ button:focus {
     border-radius: 3px;
     font-size: 13px;
     padding-left: 5px;
-    background-color: var(--task-clickbox-background);
-    color: var(--task-clickbox);
+    background-color: var(--task-textbox-background);
+    color: var(--task-textbox-text);
 }
 
 .task-project-container {
@@ -399,7 +399,7 @@ button:focus {
 
 
 .task-select__control {
-    background-color: var(--task-clickbox-background) !important;
+    background-color: var(--task-textbox-background) !important;
     min-height: 0 !important;
     min-width: 0 !important;
     border: 0 !important;
@@ -441,12 +441,12 @@ button:focus {
 }
 
 .task-select__single-value {
-    color: var(--content-normal-alt) !important;
+    color: var(--task-textbox-text) !important;
 }
 
 .css-b8ldur-Input {
     /*transform: translateY(-3.5px);*/
-    color: var(--content-normal-alt) !important;
+    color: var(--task-textbox-text) !important;
 }
 
 .css-*{
@@ -455,8 +455,8 @@ button:focus {
 }
 
 .task-select__menu {
-    background-color: var(--task-feature) !important;
-    color: var(--content-normal-alt) !important;
+    background-color: var(--task-select-dropdown-background) !important;
+    color: var(--task-select-dropdown-text) !important;
     /*transform: translateY(-3.5px) !important;*/
     font-size: 15px;
 }
@@ -469,19 +469,19 @@ button:focus {
 }
 
 .task-select__option--is-focused {
-    background-color: var(--task-textbox-background) !important;
-    color: var(--content-normal-alt) !important;
+    background-color: var(--task-select-dropdown-focused-background) !important;
+    color: var(--task-select-dropdown-focused-text) !important;
 }
 
 .task-select__option--is-selected{
-    background-color: var(--task-feature-alt) !important;
-    color: var(--content-normal-alt) !important;
+    background-color: var(--task-select-dropdown-select-background) !important;
+    color: var(--task-select-dropdown-select-text) !important;
 
 }
 
 .task-select__multi-value {
-    background-color: var(--special) !important;
-    color: var(--content-normal-alt) !important;
+    background-color: var(--task-tag-background) !important;
+    color: var(--task-tag-text) !important;
     height: 18px !important;
     /*transform: translateY(-2px);*/
     transition: 0.3s;
@@ -489,19 +489,19 @@ button:focus {
 }
 
 .task-select__multi-value:hover {
-    background-color: var(--special-alt) !important;
+    background-color: var(--task-tag-hover) !important;
     /*background-color: var(--quickadd-feature) !important;*/
 }
 
 
 .task-select__multi-value__label {
-    color: var(--content-normal-alt) !important;
+    color: var(--task-tag-text) !important;
     transform: translateY(-1px);
 }
 
 .task-select__multi-value__remove {
     background-color: transparent !important;
-    color: var(--content-normal-alt) !important;
+    color: var(--task-tag-text) !important;
     /*border: 1px solid red;*/
     /*border: 1px solid red;*/
     /*width: 100%;*/

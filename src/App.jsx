@@ -21,6 +21,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 /* Themefiles */
+import './themefiles/condutiontheme-default-adapter.css';
 import './themefiles/condutiontheme-default.css';
 import './themefiles/condutiontheme-default-dark.css';
 import './themefiles/condutiontheme-default-light.css';
