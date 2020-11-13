@@ -461,37 +461,6 @@ button:focus {
     font-size: 15px;
 }
 
-
-@media (max-width: 575px) {
-    .task-select__menu {
-        /* This space intentionally left blank */
-        /*transform: translateX(-272px) translateY(-3px) !important;*/
-    }
-}
-
-@media (min-width: 576px) { 
-    .task-select__menu {
-        /* This space intentionally left blank */
-        /*transform: translateX(-272px) translateY(-3px) !important;*/
-    }
-}
-
-@media (min-width: 768px) { 
-    .task-select__menu  {
-        /* This space intentionally left blank */
-        /*transform: translateX(-272px) translateY(-200px) !important;*/
-    }
-}
-
-@media (min-width: 992px) { 
-    .task-select__menu {
-        transform: translateX(-272px) translateY(-3px) !important;
-    }
-}
-/*.task-select__menu-list {*/
-    /*z-index: 2000000 !important;*/
-/*}*/
-
 .task-select__option {
     height: 25px;
     font-size: 14px !important;

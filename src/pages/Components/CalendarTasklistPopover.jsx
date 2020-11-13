@@ -44,11 +44,11 @@ function CalendarTasklistPopover(props) {
                 </span>
 
                 {props.list.map((id, i)=>
-                <div ref={refs.current[i]}>
-                    <Task tid={id} key={id} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} datapack={props.datapack} envelope={refs.current[i]} onModal={true}/>
-                </div>
+                    <div ref={refs.current[i]}>
+                        <Task tid={id} key={id} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} datapack={props.datapack} envelope={refs.current[i]} onModal={true}/>
+                    </div>
                 )}
-                <div className="bottom-helper" style={{height: 200}}>&nbsp;</div>
+                <div className="bottom-helper" style={{height: 150}}>&nbsp;</div>
             </div>
         </IonModal>
     )
