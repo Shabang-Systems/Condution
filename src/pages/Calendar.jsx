@@ -160,7 +160,10 @@ function CalPageBigOllendar(props) {
                             setIsPopoverShown(true)
                             if (props.onDateSelected)
                                 props.onDateSelected(date);
-                        }}><div className="calendar-date-text">{i.content}<span className="calendar-date-value">{heat[i.content]?`${heat[i.content].value} Tasks`:null}</span></div><div style={{marginLeft: 6, marginRight: 5, marginBottom: 2}}>{(heat[i.content]?heat[i.content].names:[]).map((name)=><span className="calendar-date-taskname"><div className="calendar-task-circle">&nbsp;</div>{name}</span>)}</div></span>
+                        }}>
+                        <div className="calendar-date-text">
+                            {i.content}<span className="calendar-date-value">{(heat[i.content]&&i.type==="actual")?`${heat[i.content].value} Tasks`:null}</span></div><div style={{marginLeft: 6, marginRight: 5, marginBottom: 2}}>{((heat[i.content]&&i.type==="actual")?heat[i.content].names:[]).map((name)=><span className="calendar-date-taskname"><div className="calendar-task-circle">&nbsp;</div>{name}</span>)}</div>
+                    </span>
                     )}
                 </div>
                 <div id="bigol-calendar-infopanel">
