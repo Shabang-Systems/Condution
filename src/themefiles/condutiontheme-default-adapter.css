@@ -16,6 +16,9 @@
 * {
     /* Task Colors */
 
+    /* Task */
+    --task-selected: var(--task-feature);
+
     /* Task Name */
     --task-name-text: var(--content-normal-alt);
     --task-name-placeholder: var(--decorative-light-alt);
@@ -26,7 +29,18 @@
         --task-textbox-background: #e8e8e8;
      */
     --task-textbox-placeholder: var(--decorative-light-alt);
+
+    /* Task Icons */
+    --task-icon-text: var(--task-textbox);
+    --task-icon-highlighted: var(--task-flagged);
+
+    --task-icon-ring-highlighted: var(--task-flaggedRing);
+    --task-icon-ring: var(--task-checkbox-feature-alt);
     
+    /* NO ADAPT... 
+        --task-icon: #777777;
+     */
+
     /* Task Check */
     /* NO ADAPT...
        --task-checkbox: #ccc;
