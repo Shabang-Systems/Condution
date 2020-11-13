@@ -351,13 +351,13 @@
 .calendar-list-popover {
     --background: transparent;
     --width: 700px;
-    --height: 400px;
+    --height: 70vh;
     --box-shadow: 0 !important;
 }
 
 .popover-list {
     background: var(--ion-background-color);
-    height: 400px;
+    height: 70vh;
     padding: 10px;
     border-radius: 3px;
     overflow-y: scroll;

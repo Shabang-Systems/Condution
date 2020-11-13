@@ -35,8 +35,8 @@ function CalendarTasklistPopover(props) {
 
     return (
         <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="calendar-list-popover">
-            <div className="popover-list">
                 <div id="airplane-hanger"></div> {/*to mount the calendar*/}
+            <div className="popover-list">
                 <span id="calendar-page-header">
                     <div class="calendar-page-count">{props.list.length}</div>
                     <div class="calendar-page-title">tasks due on</div>
@@ -48,6 +48,7 @@ function CalendarTasklistPopover(props) {
                     <Task tid={id} key={id} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} datapack={props.datapack} envelope={refs.current[i]} onModal={true}/>
                 </div>
                 )}
+                <div className="bottom-helper" style={{height: 200}}>&nbsp;</div>
             </div>
         </IonModal>
     )
