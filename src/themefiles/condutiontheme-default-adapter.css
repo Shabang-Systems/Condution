@@ -14,7 +14,44 @@
  */
 
 * {
-    /* Task Colors */
+    /* Boring Things */
+    /* NO ADAPT... 
+        --background: #f4f4f4;
+        --ion-background-color: #f4f4f4;
+        --background-feature: #e5e7ea;
+        --background-feature-overlay: rgba(229,231,234,0.7);
+    */
+
+    /* Special Things */
+    /* NO ADAPT... 
+        --special: #dadeae;
+        --special-alt: #E2E6B3;
+        --task-textbox-background: #e8e8e8;
+    */
+    --special-bold: var(--content-normal-accent); 
+
+    /* ## Pagewide Colors ## */
+
+    /* Header Area */
+    --page-title: var(--content-normal-alt);
+    --page-header-background: var(--background);
+
+    --page-editable-text: var(--content-normal-alt);
+    --page-editable-focusedBackground: var(--task-clickbox-background);
+
+    --page-greeting-text: var(--decorative-light-accent);
+    --page-greeting-date: var(--decorative-light-accent);
+
+    /* Page Label */
+    --page-label-background: var(--background);
+    --page-label-text: var(--decorative-light-accent);
+
+    /* Count Badge */
+    --page-badge-text: var(--content-normal-accent);
+    --page-badge-border: var(--content-normal-accent);
+    --page-badge-background: var(--task-feature);
+
+    /* ## Task Colors ## */
 
     /* Task */
     --task-selected: var(--task-feature);

@@ -11,7 +11,7 @@
 
     font-size: 15px;
     font-weight: 600;
-    color: var(--content-normal-alt);
+    color: var(--page-title);
     border-radius: 5px;
     display: inline-block;
     padding-left: 10px;
@@ -24,7 +24,7 @@
 }
 
 .bold-prefix {
-    color: var(--content-normal-accent);
+    color: var(--special-bold);
     font-weight: bold;
 }
 
@@ -32,7 +32,7 @@
 .editable-title {
     font-size: 15px;
     font-weight: 600;
-    color: var(--content-normal-alt);
+    color: var(--page-editable-text);
     outline: 0;
     background: transparent;
     border: 0px solid red;
@@ -44,11 +44,11 @@
 }
 
 .editable-title:hover {
-    background: var(--task-clickbox-background);
+    background: var(--page-editable-focusedBackground);
 }
 
 .editable-title:focus {
-    background: var(--task-clickbox-background);
+    background: var(--page-editable-focusedBackground);
 }
 
 
@@ -57,7 +57,7 @@
     padding-left: 10px;
     margin-left: 10px;
     font-size: 15px;
-    color: var(--decorative-light-accent);
+    color: var(--page-greeting-text);
     transform: translateY(-5px);
     
 }
@@ -70,17 +70,17 @@
 
 .greeting-date {
     font-weight: 800;
-    color: var(--decorative-light-accent);
+    color: var(--page-greeting-date);
     margin-right: 5px;
 }
 
 .greeting-datename {
     font-weight: 200;
-    color: var(--decorative-light-accent);
+    color: var(--page-greeting-date);
 }
 
 .header-container {
-    background: var(--background);
+    background: var(--page-header-background);
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -103,12 +103,12 @@
 }
 
 .page-label {
-    background: var(--background);
+    background: var(--page-label-background);
     top: -1px;
     position: sticky;
     z-index: 10000;
     font-weight: 600;
-    color: var(--decorative-light-accent);
+    color: var(--page-label-text);
     margin-left: 10px;
     margin-top: 5px;
     padding-bottom: 5px;
@@ -122,10 +122,10 @@
     /*height: 20px;*/
     padding: 5px 8px 5px 8px; /* top right bottom left */
     font-size: 12px;
-    color: var(--content-normal-accent);
-    border: 1.5px solid var(--content-normal-accent);
+    color: var(--page-badge-text);
+    border: 1.5px solid var(--page-badge-border);
     /*background-color: transparent;*/
-    background-color: var(--task-feature) !important;
+    background-color: var(--page-badge-background) !important;
     transform: translate(5px) scale(0.9);
 }
 
