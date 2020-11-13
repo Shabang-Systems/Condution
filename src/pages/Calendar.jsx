@@ -102,7 +102,10 @@ function CalPageBigOllendar(props) {
                     names.set(time, [...names.get(time), val.name]);
                 else
                     names.set(time, [val.name]);
-                ids.set(time, id);
+                if(ids.has(time))
+                    ids.set(time, [...ids.get(time), id]);
+                else
+                    ids.set(time, [id]);
 
             });
             let values = Array.from(map.values());
@@ -112,7 +115,7 @@ function CalPageBigOllendar(props) {
                 let max = values.max();
                 let style = getComputedStyle(document.body);
                 let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/max));
-                Array.from(map.keys()).forEach((e, i)=>{hm[e]={color:hexes[i], value:values[i], names:nameList[i], ids: idList}});
+                Array.from(map.keys()).forEach((e, i)=>{hm[e]={color:hexes[i], value:values[i], names:nameList[i], ids: idList[i]}});
             }
             setHeat(hm);
         })();
