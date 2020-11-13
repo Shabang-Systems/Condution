@@ -685,7 +685,7 @@ class Task extends Component {
                                                                 // Fixes the overlapping problem of the component
                                                                 menuPortal: provided => ({ ...provided, zIndex: "99999 !important" })
                                                             }}
-                                                                                                                                                              menuPortalTarget={this.props.envelope ? this.props.envelope.current : this.me.current}
+                                                            menuPortalTarget={this.props.envelope ? this.props.envelope.current : this.me.current}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
                                                                 {/* :point up: filter for only options with this project and set that to be the value */}
