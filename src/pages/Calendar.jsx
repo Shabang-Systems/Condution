@@ -36,7 +36,8 @@ const autoBind = require('auto-bind/react');
  *
  */
 
-function CalPagelendar(props) {
+
+function CalPageBigOllendar(props) {
 
     function __util_calculate_gradient(left, right, gradientAmount) {
         let color1 = left;
@@ -80,9 +81,11 @@ function CalPagelendar(props) {
     useEffect(()=>{
         (async function() {
             let map = new Map();
+            let names = new Map();
+            let ids = new Map();
             let hm = {};
             let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
-            taskList.forEach(([_, val])=>{
+            taskList.forEach(([id, val])=>{
                 let date = new Date(val.due.seconds*1000);
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
@@ -90,39 +93,48 @@ function CalPagelendar(props) {
                     map.set(time, map.get(time)+1);
                 else
                     map.set(time, 1);
+                if(names.has(time))
+                    names.set(time, [...names.get(time), val.name]);
+                else
+                    names.set(time, [val.name]);
+                if(ids.has(time))
+                    ids.set(time, [...ids.get(time), id]);
+                else
+                    ids.set(time, [id]);
+
             });
             let values = Array.from(map.values());
+            let nameList = Array.from(names.values());
+            let idList = Array.from(ids.values());
             if (values.length > 0) {
                 let max = values.max();
                 let style = getComputedStyle(document.body);
                 let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/max));
-                Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
+                Array.from(map.keys()).forEach((e, i)=>{hm[e]={color:hexes[i], value:values[i], names:nameList[i], ids: idList}});
             }
             setHeat(hm);
         })();
     },[dateSelected]);
 
     return (
-        <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
-            <div id="calendar-wrapper">
-                <div id="calendar-daterow">
-                    <span className="calendar-daterow-item">Sun</span>
-                    <span className="calendar-daterow-item">Mon</span>
-                    <span className="calendar-daterow-item">Tues</span>
-                    <span className="calendar-daterow-item">Wed</span>
-                    <span className="calendar-daterow-item">Thu</span>
-                    <span className="calendar-daterow-item">Fri</span>
-                    <span className="calendar-daterow-item">Sat</span>
+        <div id="calendar-page-bigol-calendar-wrapper" style={{display: "inline-block", height: "85%", width: "95%", ...props.style}}>
+            <div id="bigol-calendar-wrapper">
+                <div id="bigol-calendar-daterow">
+                    <span className="bigol-calendar-daterow-item">Sun</span>
+                    <span className="bigol-calendar-daterow-item">Mon</span>
+                    <span className="bigol-calendar-daterow-item">Tues</span>
+                    <span className="bigol-calendar-daterow-item">Wed</span>
+                    <span className="bigol-calendar-daterow-item">Thu</span>
+                    <span className="bigol-calendar-daterow-item">Fri</span>
+                    <span className="bigol-calendar-daterow-item">Sat</span>
                 </div>
-                <div id="calendar-container">
+                <div id="bigol-calendar-container">
                     {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                    <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
+                    <span className={`bigol-calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
                         backgroundColor: ((heat[i.content]&&i.type === "actual") ? 
-                            `#${heat[i.content]}` :
-                            "inherit"),
-                        border:  (i.type === "actual" && i.content === dateSelected.getDate()) ? 
-                            "2px solid var(--decorative-light)" :
-                            "0"}} 
+                            `#${heat[i.content].color}` :
+                            "inherit")
+                    }}
                         onClick={(e)=>{
                             let date;
                             if (i.type === "pre")
@@ -134,16 +146,15 @@ function CalPagelendar(props) {
                             setDateSelected(date);
                             if (props.onDateSelected)
                                 props.onDateSelected(date);
-                    }}>{i.content}</span>
+                        }}><div className="calendar-date-text">{i.content}<span className="calendar-date-value">{heat[i.content]?`${heat[i.content].value} Tasks`:null}</span></div><div style={{marginLeft: 6, marginRight: 5, marginBottom: 2}}>{(heat[i.content]?heat[i.content].names:[]).map((name)=><span className="calendar-date-taskname"><div className="calendar-task-circle">&nbsp;</div>{name}</span>)}</div></span>
                     )}
                 </div>
-                <div id="calendar-infopanel">
-                    <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
-                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
-                    <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
-                </div>
-                <div id="calendar-tools">
+                <div id="bigol-calendar-infopanel">
+                    <div className="bigol-calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
+                    <div className="bigol-calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
+                    <div className="bigol-calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                    <div className="bigol-calendar-infopanel-year">{dateSelected.getFullYear()}</div>
+                <div id="bigol-calendar-tools">
                     <a className="fas fa-caret-left calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
                         setDateSelected(date);
@@ -165,6 +176,8 @@ function CalPagelendar(props) {
 
                     }}>Today</div>
 
+
+                </div>
                 </div>
             </div>
         </div>
@@ -311,7 +324,8 @@ class Calendar extends Component {
                             </div> 
                         </div>
                     </div>
-                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", height: "100%"}}>
+                        Hey there folks, still not done with big-ol lendar. If you think this is broken, it is. Use the mobile version by resizing your window smaller. At least that's working.
                         <div id="calendar-page-wrapper">
                             {(()=>{
                                 if (this.props.isMobile())
@@ -322,14 +336,17 @@ class Calendar extends Component {
                                         this.setState({currentDate: d, taskList});
                                     }).bind(this)}/>
                                 else 
-                                    return <CalPagelendar uid={this.props.uid} engine={this.props.engine} onDateSelected={(async function(d){
-                                        let endDate = new Date(d.getTime());
-                                        endDate.setHours(23,59,59,60);
-                                        let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
-                                        this.setState({currentDate: d, taskList});
-                                    }).bind(this)}/>
+                                    return <CalPageBigOllendar  uid={this.props.uid} engine={this.props.engine} />
+{/*                                    return <CalPagelendar uid={this.props.uid} engine={this.props.engine} onDateSelected={(async function(d){*/}
+                                        //let endDate = new Date(d.getTime());
+                                        //endDate.setHours(23,59,59,60);
+                                        //let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
+                                        //this.setState({currentDate: d, taskList});
+                                    {/*}).bind(this)}/>*/}
                             })()}
-                            <div id="calendar-page-taskpage-wrapper">
+                            {(()=>{
+                                if (this.props.isMobile())
+                            return <div id="calendar-page-taskpage-wrapper">
                                 <span id="calendar-page-header">
                                     <div class="calendar-page-count">{this.state.taskList.length}</div>
                                     <div class="calendar-page-title">tasks due on</div>
@@ -344,8 +361,9 @@ class Calendar extends Component {
                                 })()}
 
                             </div>
-                        </div>
+                            })()}
                         <div className="bottom-helper">&nbsp;</div>
+                        </div>
                     </div>
                 </div>
             </IonPage>
