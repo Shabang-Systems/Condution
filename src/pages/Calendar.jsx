@@ -9,6 +9,7 @@ import { withRouter } from "react-router";
 
 import Task from './Components/Task';
 import CalendarPopover from './Components/CalendarPopover';
+import CalendarTasklistPopover from './Components/CalendarTasklistPopover';
 
 const autoBind = require('auto-bind/react');
 
@@ -73,6 +74,10 @@ function CalPageBigOllendar(props) {
     let contentDays = [...new Array(lastDayMonth.getDate())].map((_, i)=>{return {type:"actual", content:i+1}});
 
     let [heat, setHeat] = useState({});
+
+    let [isPopoverShown, setIsPopoverShown] = useState(false);
+
+    let [shownList, setShownList] = useState([]);
     
     Array.prototype.max = function() {
         return Math.max.apply(null, this);
@@ -97,10 +102,7 @@ function CalPageBigOllendar(props) {
                     names.set(time, [...names.get(time), val.name]);
                 else
                     names.set(time, [val.name]);
-                if(ids.has(time))
-                    ids.set(time, [...ids.get(time), id]);
-                else
-                    ids.set(time, [id]);
+                ids.set(time, id);
 
             });
             let values = Array.from(map.values());
@@ -118,6 +120,7 @@ function CalPageBigOllendar(props) {
 
     return (
         <div id="calendar-page-bigol-calendar-wrapper" style={{display: "inline-block", height: "85%", width: "95%", ...props.style}}>
+            <CalendarTasklistPopover uid={props.uid} engine={props.engine} isShown={isPopoverShown} onDidDismiss={()=>setIsPopoverShown(false)} list={shownList} availability={props.availability} datapack={props.datapack} gruntman={props.gruntman} currentDate={dateSelected}/>
             <div id="bigol-calendar-wrapper">
                 <div id="bigol-calendar-daterow">
                     <span className="bigol-calendar-daterow-item">Sun</span>
@@ -144,6 +147,11 @@ function CalPageBigOllendar(props) {
                             if (i.type === "post") 
                                 date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
                             setDateSelected(date);
+                            if (heat[i.content])
+                                setShownList(heat[i.content].ids);
+                            else
+                                setShownList([]);
+                            setIsPopoverShown(true)
                             if (props.onDateSelected)
                                 props.onDateSelected(date);
                         }}><div className="calendar-date-text">{i.content}<span className="calendar-date-value">{heat[i.content]?`${heat[i.content].value} Tasks`:null}</span></div><div style={{marginLeft: 6, marginRight: 5, marginBottom: 2}}>{(heat[i.content]?heat[i.content].names:[]).map((name)=><span className="calendar-date-taskname"><div className="calendar-task-circle">&nbsp;</div>{name}</span>)}</div></span>
@@ -325,7 +333,6 @@ class Calendar extends Component {
                         </div>
                     </div>
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", height: "100%"}}>
-                        Hey there folks, still not done with big-ol lendar. If you think this is broken, it is. Use the mobile version by resizing your window smaller. At least that's working.
                         <div id="calendar-page-wrapper">
                             {(()=>{
                                 if (this.props.isMobile())
@@ -336,7 +343,7 @@ class Calendar extends Component {
                                         this.setState({currentDate: d, taskList});
                                     }).bind(this)}/>
                                 else 
-                                    return <CalPageBigOllendar  uid={this.props.uid} engine={this.props.engine} />
+                                    return <CalPageBigOllendar gruntman={this.props.gruntman}  uid={this.props.uid} engine={this.props.engine} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
 {/*                                    return <CalPagelendar uid={this.props.uid} engine={this.props.engine} onDateSelected={(async function(d){*/}
                                         //let endDate = new Date(d.getTime());
                                         //endDate.setHours(23,59,59,60);
