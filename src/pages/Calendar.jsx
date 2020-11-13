@@ -37,6 +37,7 @@ const autoBind = require('auto-bind/react');
  *
  */
 
+let refreshed = 0;
 
 function CalPageBigOllendar(props) {
 
@@ -83,8 +84,7 @@ function CalPageBigOllendar(props) {
         return Math.max.apply(null, this);
     };
 
-    useEffect(()=>{
-        (async function() {
+    let refresh = (async function() {
             let map = new Map();
             let names = new Map();
             let ids = new Map();
@@ -118,8 +118,11 @@ function CalPageBigOllendar(props) {
                 Array.from(map.keys()).forEach((e, i)=>{hm[e]={color:hexes[i], value:values[i], names:nameList[i], ids: idList[i]}});
             }
             setHeat(hm);
-        })();
-    },[dateSelected]);
+        })
+
+    useEffect(()=>{
+        refresh();
+    },[dateSelected, refreshed]);
 
     return (
         <div id="calendar-page-bigol-calendar-wrapper" style={{display: "inline-block", height: "85%", width: "95%", ...props.style}}>
@@ -273,6 +276,8 @@ class Calendar extends Component {
         let endDate = new Date(this.state.currentDate);
         endDate.setHours(23,59,59,60);
         let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, this.state.currentDate, endDate);
+
+        refreshed++;
 
         this.setState({
             possibleProjects: pPandT[0][0],	     // set the project stuff
