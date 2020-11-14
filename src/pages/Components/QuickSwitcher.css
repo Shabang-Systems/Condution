@@ -13,7 +13,9 @@
     /*--background: var(--content-normal-accent);*/
     --background: var(--background-feature);
     --border-radius: 5px;
-    --box-shadow: 0px 13px 39px -12px rgba(0,0,0,0.91);
+    /*--box-shadow: 0px 13px 39px -12px rgba(0,0,0,0.91);*/
+    --box-shadow: 0px 13px 39px var(--qs-shadow-intensity) var(--qs-shadow-color);
+    --color: var(--decorative-light-alt);
 }
 
 .option-text {
