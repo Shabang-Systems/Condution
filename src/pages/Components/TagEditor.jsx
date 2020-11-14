@@ -38,12 +38,16 @@ class TagEditor extends Component {
         }
     }
 
-    setTagState() {}
+   async setTagState() {
+        this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
+        console.log(this.state.tagList)
+    }
 
     render() {
-
+        // TODO just do this when the tag pane is opened
+        // use on modal did present or something check quick switcher
         return (
-            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
+            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidPresent={() => {this.setTagState()}} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
 
                 {/*Text Header*/}
                 <div className="TagEditor-header">
