@@ -54,9 +54,9 @@
 
 
 .perspective-header {
-    background-color: var(--background-feature);
+    background-color: var(--perspective-builder-header-background);
     padding: 12px;
-    color: var(--decorative-light-alt);
+    color: var(--perspective-builder-header-text);
     text-overflow: ellipsis;
     display: flex;
     justify-content: space-between;
@@ -67,7 +67,7 @@
 .build-input-edit {
     font-size: 15px;
     font-weight: 600;
-    color: var(--content-normal-alt);
+    color: var(--perspective-query-string);
     font-family: "Courier New", Courier, monospace;
     outline: 0;
     background: transparent;
@@ -76,17 +76,17 @@
     padding: 5px;
     border-radius: 3px;
     width: 100%;
-    border: 1px solid var(--decorative-light-alt);
+    border: 1px solid var(--perspective-query-border);
 
 }
 
 
 .build-input-edit:hover {
-    background: var(--menu-semiaccent-background);
+    background: var(--perspective-query-hover);
 }
 
 .build-input-edit:focus {
-    background: var(--background-feature);
+    background: var(--perspective-query-background);
 }
 
 
@@ -102,16 +102,14 @@
 }
 
 .perspective-select {
-
-    background-color: var(--content-normal) !important;
-    color: var(--content-normal-alt) !important;
+    background-color: var(--perspective-select-background) !important;
+    color: var(--perspective-select-text) !important;
     box-shadow: 0 0 0 0 transparent !important;
     border: 0;
     border-radius: 3px;
     padding: 4px 7px;
     margin-left: 3px;
     margin-right: 0px;
-    --background:  var(--task-textbox-background);
     font-size: 15px;
     transition: 0.3s;
     min-width: 115px;
@@ -136,8 +134,7 @@
 /*}*/
 
 .perspective-select:hover {
-    background-color: var(--decorative-light) !important;
-
+    background-color: var(--perspective-select-focused) !important;
 }
 
 
@@ -152,7 +149,7 @@
 
 
 .perspective-label {
-    color: var(--decorative-light-alt);
+    color: var(--perspective-builder-label);
     font-size: 14px;
     margin-right: 10px;
 }
@@ -160,16 +157,14 @@
 .help-icon {
     margin-left: 15px;
     font-size: 18px;
-    color: var(--content-normal-accent);
+    color: var(--perspective-builder-help-icon);
     transition: 0.2s;
     transform: translate(9px, 1px);
     cursor: pointer;
 }
 
 .help-icon:hover {
-    color: var(--task-checkmark);
-
-
+    color: var(--perspective-builder-help-icon-hover);
 }
 
 

@@ -85,6 +85,24 @@
     --addbutton-text: var(--decorative-light-alt);
     --addbutton-background-hover: var(--background-feature);
 
+    /* ## Perspectives ## */
+    --perspective-builder-header-background: var(--background-feature);
+    --perspective-builder-header-text: var(--decorative-light-alt);
+    --perspective-builder-label: var(--decorative-light-alt);
+
+    --perspective-builder-help-icon: var(--content-normal-accent);
+    --perspective-builder-help-icon-hover: var(--task-checkmark);
+
+    --perspective-query-string: var(--content-normal-alt);
+    --perspective-query-border: var(--decorative-light-alt);
+    --perspective-query-hover: var(--background-feature);
+    --perspective-query-background: var(--background-feature);
+
+    --perspective-select-background: var(--content-normal);
+    --perspective-select-text: var(--content-normal-alt);
+
+    --perspective-select-focused: var(--decorative-light);
+
     /* ## Pagewide Colors ## */
 
     /* Header Area */
