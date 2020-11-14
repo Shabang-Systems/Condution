@@ -166,11 +166,6 @@ function CalPageBigOllendar(props) {
                     </span>
                     )}
                 </div>
-                <div id="bigol-calendar-infopanel">
-                    <div className="bigol-calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                    <div className="bigol-calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
-                    <div className="bigol-calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
-                    <div className="bigol-calendar-infopanel-year">{dateSelected.getFullYear()}</div>
                 <div id="bigol-calendar-tools">
                     <a className="fas fa-caret-left calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
@@ -195,6 +190,14 @@ function CalPageBigOllendar(props) {
 
 
                 </div>
+
+                <div id="bigol-calendar-infopanel">
+                    <div id="bigol-calendar-dategroup">
+                        <div className="bigol-calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
+                        <div className="bigol-calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
+                        <div className="bigol-calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                        <div className="bigol-calendar-infopanel-year">{dateSelected.getFullYear()}</div>
+                    </div>
                 </div>
             </div>
         </div>
