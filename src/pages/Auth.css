@@ -5,7 +5,7 @@
         .greeting-auth-subtitle {
             font-weight: 700;
             padding-top: 10px;
-            color: var(--content-normal-alt);
+            color: var(--auth-primary);
         }
 
                 @media (max-width: 575px) { 
@@ -45,7 +45,7 @@
         .auth-upf {
             font-weight:400;
             background-color:inherit;
-            color: var(--content-normal-alt);
+            color: var(--auth-primary);
             padding: 10px 5px 10px 5px;
             border: 1px grey solid;
             display: inline-block;
@@ -62,7 +62,7 @@
         }
 
         .auth-upf:focus {
-            background-color: var(--content-normal);
+            background-color: var(--auth-upf-focus);
         }
 
         .auth-upf.wrong {
@@ -119,7 +119,7 @@
 
         .convert-src {
             display: inline-block;
-            color: var(--content-normal-alt);
+            color: var(--auth-primary);
             font-weight: 500;
             transition-property: all;
             transition-duration: 200ms;
@@ -162,7 +162,7 @@
                 }
 
                 .convert-src:hover {
-                    border: 0.5px solid var(--content-normal-alt);
+                    border: 0.5px solid var(--auth-primary);
                 }
             }
 
@@ -173,7 +173,7 @@
                 }
 
                 .convert-src:hover {
-                    border: 0.5px solid var(--content-normal-alt);
+                    border: 0.5px solid var(--auth-primary);
                 }
             }
 
@@ -184,14 +184,14 @@
                 }
 
                 .convert-src:hover {
-                    border: 0.5px solid var(--content-normal-alt);
+                    border: 0.5px solid var(--auth-primary);
                 }
             }
 
 
         #newuser {
             display: inline-block;
-            color: var(--content-normal-alt);
+            color: var(--auth-primary);
             font-weight: 500;
             transition-property: all;
             transition-duration: 200ms;
@@ -236,7 +236,7 @@
                 }
 
                 #newuser:hover {
-                    border: 0.5px solid var(--content-normal-alt);
+                    border: 0.5px solid var(--auth-primary);
                 }
             }
 
@@ -247,7 +247,7 @@
                 }
 
                 #newuser:hover {
-                    border: 0.5px solid var(--content-normal-alt);
+                    border: 0.5px solid var(--auth-primary);
                 }
             }
 
@@ -258,13 +258,13 @@
                 }
 
                 #newuser:hover {
-                    border: 0.5px solid var(--content-normal-alt);
+                    border: 0.5px solid var(--auth-primary);
                 }
             }
 
         #login {
             bottom: 0;
-            color: var(--content-normal-accent);
+            color: var(--auth-login-button-text);
             -webkit-transition-property: color, background-color;
             -webkit-transition-duration: 200ms;
             -webkit-transition-timing-function: ease-in-out;
@@ -277,7 +277,7 @@
             -moz-border-radius: 5px;
             -webkit-border-radius: 5px;
             border-radius: 5px;
-            border: var(--content-normal-accent) 1px solid;
+            border: var(--auth-login-button-border) 1px solid;
             float: right;
             display: inline-block;
             text-align: center;
@@ -315,12 +315,12 @@
                 }
 
                 #login:hover {
-                    background-color: var(--content-normal-accent);
+                    background-color: var(--auth-login-button-text);
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
                     border-radius: 5px;
                     padding: 5px 2px 4px 0;
-                    color: var(--content-normal);
+                    color: var(--auth-login-button-hover-background);
                 }
             }
 
@@ -333,12 +333,12 @@
                 }
 
                 #login:hover {
-                    background-color: var(--content-normal-accent);
+                    background-color: var(--auth-login-button-text);
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
                     border-radius: 5px;
                     padding: 5px 2px 4px 0;
-                    color: var(--content-normal);
+                    color: var(--auth-login-button-hover-background);
                 }
             }
 
@@ -351,17 +351,17 @@
                 }
 
                 #login:hover {
-                    background-color: var(--content-normal-accent);
+                    background-color: var(--auth-login-button-text);
                     -moz-border-radius: 5px;
                     -webkit-border-radius: 5px;
                     border-radius: 5px;
                     padding: 5px 2px 4px 0;
-                    color: var(--content-normal);
+                    color: var(--auth-login-button-hover-background);
                 }
             }
 
         #recover-password {
-            color:var(--content-normal-accent);
+            color:var(--auth-rec-pswd-text);
             cursor:pointer;
         }
 
@@ -398,7 +398,7 @@
                 }
 
         #need-verify {
-            color:var(--content-normal-accent);
+            color:var(--auth-need-verify);
             font-size: 12.5px;
             /*display:none*/
         }
@@ -462,7 +462,7 @@
             bottom: 0;
             width: 100%;
             margin-top: auto;
-            color: var(--content-normal);
+            color: var(--auth-image-credit);
             font-weight: 200;
             padding-left: 10px;
             padding-bottom: 5px;
@@ -573,12 +573,12 @@
 
 
         #welcome-auth-msg {
-            color: var(--content-normal-alt);
+            color: var(--auth-primary);
             display: inline-block;
         }
 
         #greeting-auth {
-            color: var(--content-normal-accent);
+            color: var(--auth-greeting);
             display: inline-block;
             font-weight: 700;
             padding-right: 10px;

@@ -2,7 +2,7 @@
 .fetch-more { /* fetch more css */ 
     /*border: 1px solid red;*/
     font-size: 12px;
-    color: var(--task-datepicker-elems);
+    color: var(--completed-fetch-more-text);
     padding-left: 17px;
     margin-bottom: 25px;
     font-weight: bold;
@@ -12,7 +12,7 @@
 }
 
 .fetch-more:hover { /* fetch more on hover */
-    color: var(--task-checkmark)
+    color: var(--completed-fetch-more-hover)
 }
 
 .loader {

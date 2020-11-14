@@ -20,6 +20,9 @@
         --ion-background-color: #f4f4f4;
         --background-feature: #e5e7ea;
         --background-feature-overlay: rgba(229,231,234,0.7);
+        --qs-shadow-intensity: -17px;
+        --qs-shadow-color: rgba(0,0,0,0.91);
+        --auth-background: url(./static/auth-background.jpg);
     */
 
     /* ## Special Things ## */
@@ -30,7 +33,40 @@
     */
     --special-bold: var(--content-normal-accent); 
 
+    /* ## Quickadd ## */
+    /* NO ADAPT...
+        --quickadd: #c04f40; 
+        --quickadd-feature: #bf3b2a;
+        --quickadd-text: #eaeaea;
+        --quickadd-success: #b1dcbf;
+        --quickadd-successtext: #03561f;
+        --quickadd-placeholder: #e2c0bc;
+    */
+
+    /* ## Auth ## */
+    --auth-primary: var(--content-normal-alt);
+    --auth-upf-focus: var(--content-normal);
+
+    --auth-login-button-text: var(--content-normal-accent);
+    --auth-login-button-border: var(--content-normal-accent);
+
+    --auth-login-button-hover-text: var(--content-normal-accent);
+    --auth-login-button-hover-background: var(--content-normal);
+
+    --auth-rec-pswd-text: var(--content-normal-accent);
+    --auth-need-verify: var(--content-normal-accent);
+    --auth-image-credit: var(--content-normal);
+
+    --auth-greeting: var(--content-normal-accent);
+
+
     /* ## Calendar View ## */
+
+    /* Heatmap */
+    --heatmap-lightest: #dee4e8;
+    --heatmap-darkest: #b8c8e0;
+
+    /* Calendar */
     --calendar-page-hint: var(--content-normal-alt);
 
     --calendar-page-header-text: var(--content-normal-alt);
@@ -73,6 +109,10 @@
     --repeat-dategrid-hover: var(--task-clickbox-background);
     --repeat-dategrid-selected-border: var(--task-clickbox-background);
     --repeat-dategrid-selected-background: var(--task-clickbox-accent-background);
+
+    /* ## Completed ## */
+    --completed-fetch-more-text: var(--task-datepicker-elems);
+    --completed-fetch-more-hover: var(--task-datepicker-elems);
 
     /* ## Upcoming ## */
     --commitid: var(--decorative-light-alt);
@@ -125,6 +165,17 @@
     --page-badge-text: var(--content-normal-accent);
     --page-badge-border: var(--content-normal-accent);
     --page-badge-background: var(--task-feature);
+
+    /* ## The Menu ## */
+    /* NO ADAPT...
+        --menu-background: #eaebed;
+        --menu-semiaccent-background: #e5e7ea;
+        --menu-accent-background: #e1e2e5;
+        --menu-text: #414c5e;
+        --menu-accent: #323c4f;
+        --menu-label: #1a283d;
+        --menu-action: #90939a;
+     */
 
     /* ## Task Colors ## */
 
