@@ -1,8 +1,9 @@
 import { Plugins } from '@capacitor/core';
+import { getPlatforms } from '@ionic/react';
 
 const { parseFromTimeZone } = require('date-fns-timezone')
 
-const { LocalNotifications } = Plugins;
+const { LocalNotifications, Permissions } = Plugins;
 
 /* AutoBind */
 const autoBind = require('auto-bind/react');
@@ -29,19 +30,35 @@ class Gruntman {
      */
 
     constructor(engine) {
-/*        const notifs = LocalNotifications.schedule({*/
+        this.notifPermissionGranted = false;
+        Permissions.query({name: "notifications"}).then((async function (e) {
+            if (e.state === "prompt")
+                this.notifPermissionGranted = (await LocalNotifications.requestPermission()).granted;
+            else if (e.state === "granted")
+                this.notifPermissionGranted = true;
+
+            let platforms = getPlatforms();
+            if (this.notifPermissionGranted && !platforms.includes("mobileweb") && !platforms.includes("desktop")) {
+                // notification specific setup
+                //
+                // TODO TODO TODO TODO TODO TODO TODO TODO
+                //
+
+                LocalNotifications.registerActionTypes({types: [{id: "completeOrSnooze", actions: [{id:"complete", title: "LOCALIZE: Complete", requiresAuthentication: "true", foreground: "false"}]}]});
+            }
+        }).bind(this));
+
+
+        //const notifs = LocalNotifications.schedule({
   //notifications: [
     //{
       //title: "Title",
       //body: "Body",
       //id: 1,
-        //schedule: { at: new Date(Date.now() + 20) },
+      //schedule: { at: new Date(Date.now() + 1000 * 5) },
       //sound: null,
       //attachments: null,
-      //actionTypeId: "",
-        //threadIdentifier:"cf.shabang.condution",
-        //group:"cf.shabang.condution",
-      //extra: null
+        //actionTypeId: "like, here's a string",
     //}
   //]
 /*});*/
