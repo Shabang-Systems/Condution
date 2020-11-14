@@ -226,7 +226,12 @@
     text-overflow: ellipsis;
 }
 
+#bigol-calendar-dategroup {
+    display: inline-block;
+}
+
 #bigol-calendar-infopanel {
+    display: inline-block;
     /*padding: 0 15px;*/
 }
 
@@ -263,8 +268,8 @@
 }
 
 #bigol-calendar-tools {
-    display: inline;
-    margin-left: 12px;
+    display: inline-block;
+    margin-right: 12px;
 }
 
 .bigol-calendar-button {
