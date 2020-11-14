@@ -246,6 +246,20 @@ async function getTopLevelProjects(userID) {
     return ret;
 }
 
+async function getTags(userID) {
+    let tags = [];
+
+    await cRef("user", userID, "tags").get()
+        .then(snap => snap.docs.forEach( tag => {
+            if (tag.exists) {
+                tags.push(tag.data())
+            }
+        }
+    )).catch(console.error);
+    console.log(tags);
+    return tags;
+}
+
 async function getProjectsandTags(userID) {
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
@@ -816,5 +830,5 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags};
 
