@@ -75,7 +75,10 @@
     --repeat-dategrid-selected-background: var(--task-clickbox-accent-background);
 
     /* ## Upcoming ## */
-    --timeline-text: var(--decorative-light-alt);
+    --commitid: var(--decorative-light-alt);
+    --timeline-button: var(--decorative-light-alt);
+    --timeline-button-hover: var(--task-textbox);
+    --timeline-text: var(--decorative-light);
 
     /* ## Pagewide Colors ## */
 
