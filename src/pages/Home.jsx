@@ -58,9 +58,15 @@ class Home extends Component {
             perspectives:[], // list of perspectives
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
         };
+
+
         // AutoBind!
         autoBind(this);
-	this.abtibRef = React.createRef();
+
+        this.abtibRef = React.createRef();
+
+        this.menu = React.createRef();
+
     }
 
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
@@ -118,7 +124,7 @@ class Home extends Component {
                         {/* Menu pane to control mobile view splitting */}
                         <IonSplitPane id="main-split" contentId="main" mode="md">
                             {/* The left: menu! */}
-                            <IonMenu id="main-menu" contentId="main">
+                            <IonMenu id="main-menu" contentId="main" ref={this.menu}>
                                 <br />
                                 <IonContent id="menu-content" className={(()=>{
                                     if (!isPlatform("electron")) // if we are not running electron
@@ -151,6 +157,8 @@ class Home extends Component {
 
                                     {/* === Perspectives == */}
                                     <div className="menu-sublabel menu-decoration">Perspectives <a onClick={()=>{
+                                        if (this.menu.current)
+                                            this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
                                             let npid = (await this.props.gruntman.do(
                                                 "perspective.create", {
@@ -178,6 +186,8 @@ class Home extends Component {
 
                                     {/* === Projects == */}
                                     <div className="menu-sublabel menu-decoration">Projects <a onClick={()=>{
+                                        if (this.menu.current)
+                                            this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
                                             let npid = (await this.props.gruntman.do(
                                                 "project.create", {
