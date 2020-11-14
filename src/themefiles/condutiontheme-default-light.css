@@ -200,15 +200,16 @@
     --task-name-placeholder: var(--decorative-light-alt);
 
     /* Task Textbox */
+    --task-textbox: #434d5f;
     --task-textbox-text: var(--task-textbox);
     --task-textbox-background: #e8e8e8;
     --task-textbox-placeholder: var(--decorative-light-alt);
 
     /* Task Icons */
     --task-icon-text: var(--task-textbox);
-    --task-icon-highlighted: var(--task-flagged);
+    --task-icon-highlighted: #ed9512;
 
-    --task-icon-ring-highlighted: var(--task-flaggedRing);
+    --task-icon-ring-highlighted: #f9c06b;
     --task-icon-ring: var(--task-checkbox-feature-alt);
 
     --task-icon: #777777;
@@ -236,7 +237,7 @@
     --task-datepicker-feature: #434d5f;
     --task-datepicker-action: #656e7a;
 
-    --task-datepicker-icon: var(--task-clickbox);
+    --task-datepicker-icon: #8b8b8c;
 
     /* Task Menu */
     --task-select-dropdown-text: var(--content-normal-alt);
