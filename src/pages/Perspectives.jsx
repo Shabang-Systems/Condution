@@ -243,7 +243,7 @@ class Perspectives extends Component {
                             <div> 
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
-                                        style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+                                        style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     <i style={{paddingRight: 10}} 
@@ -261,9 +261,9 @@ class Perspectives extends Component {
                                         onClick={this.showEdit} 
                                         data-tip="LOCALIZE: Edit"
                                         className="perspective-icon" 
-                                        style={{borderColor: "var(--task-checkbox-feature-alt)", cursor: "pointer"}}>
+                                        style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}}>
                                         <i className="fas fa-edit" 
-                                            style={{margin: 3, color: "var(--task-textbox)", 
+                                            style={{margin: 3, color: "var(--task-icon-text)", 
                                                 fontSize: 10, 
                                                 transform: "translate(2px, -2px)"}} 
                                         ></i>
@@ -273,10 +273,10 @@ class Perspectives extends Component {
                                         onClick={this.handleDelete} 
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
-                                        style={{borderColor: "var(--task-checkbox-feature-alt)", 
+                                        style={{borderColor: "var(--task-icon-ring)", 
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className="fas fa-trash"
-                                            style={{margin: 3, color: "var(--task-textbox)", 
+                                            style={{margin: 3, color: "var(--task-icon-text)", 
                                                 fontSize: 10, transform: "translate(2px, -2px)"}}>
                                         </i>
                                     </a>

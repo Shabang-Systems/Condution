@@ -54,6 +54,29 @@
     --calendar-button-text: var(--content-normal-accent);
     --calendar-button-background: var(--decorative-light);
 
+    /* ## Repeat Popover ## */
+    --repeat-popover-header-background: var(--background-feature);
+    --repeat-popover-header-text: var(--decorative-light-alt);
+
+    --repeat-popover-close: var(--decorative-light-alt);
+    --repeat-popover-close-hover: var(--decorative-light-accent);
+
+    --repeat-select-background: var(--content-normal);
+    --repeat-select-text: var(--content-normal-alt);
+
+    --repeat-select-popover-background: var(--task-textbox-background);
+    --repeat-select-popover-text: var(--task-textbox);
+
+    --repeat-hint-icon: var(--decorative-light-alt);
+
+    --repeat-dategrid-border: var(--task-clickbox-background);
+    --repeat-dategrid-hover: var(--task-clickbox-background);
+    --repeat-dategrid-selected-border: var(--task-clickbox-background);
+    --repeat-dategrid-selected-background: var(--task-clickbox-accent-background);
+
+    /* ## Upcoming ## */
+    --timeline-text: var(--decorative-light-alt);
+
     /* ## Pagewide Colors ## */
 
     /* Header Area */
@@ -65,6 +88,8 @@
 
     --page-greeting-text: var(--decorative-light-accent);
     --page-greeting-date: var(--decorative-light-accent);
+
+    --page-header-sandwich: var(--decorative-light-alt);
 
     /* Page Label */
     --page-label-background: var(--background);

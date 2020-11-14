@@ -174,7 +174,7 @@ class Upcoming extends Component { // define the component
                     })()}>
                         <div className="header-container" onTouchMove={(e)=>e.preventDefault()}>
                             <div style={{display: "inline-block"}}>
-                                <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--decorative-light-alt"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
+                                <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
 
                                     
                             <div className="greeting-datewidget">
@@ -241,7 +241,7 @@ class Upcoming extends Component { // define the component
                                 {
                                     (()=>{
                                             if (this.state.timelineShown)
-                                            return <span style={{fontSize: 8, color:"var(--decorative-light-alt)", paddingLeft:10, paddingTop:10}}>Commit ID: {process.env.REACT_APP_COMMIT_HASH}</span>
+                                            return <span style={{fontSize: 8, color:"var(--timeline-text)", paddingLeft:10, paddingTop:10}}>Commit ID: {process.env.REACT_APP_COMMIT_HASH}</span>
                                     })()
                                 }
                             </div>

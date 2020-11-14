@@ -150,7 +150,7 @@ class Completed extends Component {
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle>
                                     <i class="fas fa-bars" 
-                                        style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+                                        style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     <i style={{paddingRight: 10}} 

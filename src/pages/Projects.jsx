@@ -146,7 +146,7 @@ class Projects extends Component { // define the component
                             <div> 
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
-                                        style={{marginLeft: 20, color: "var(--decorative-light-alt"}} />
+                                        style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     {(()=> {
@@ -179,10 +179,10 @@ class Projects extends Component { // define the component
                                         }} 
                                         data-tip="LOCALIZE: Sequencial/Paralellel"
                                         className="perspective-icon" 
-                                        style={{borderColor: "var(--task-checkbox-feature-alt)", 
+                                        style={{borderColor: "var(--task-icon-ring)", 
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
-                                            style={{margin: 3, color: "var(--task-textbox)", 
+                                            style={{margin: 3, color: "var(--task-icon-text)", 
                                                 fontSize: 13, transform: this.state.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
                                         </i>
                                     </a>
@@ -202,10 +202,10 @@ class Projects extends Component { // define the component
                                                 this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);
                                             }) // call the homebar refresh
                                         }}
-                                        style={{borderColor: "var(--task-checkbox-feature-alt)", 
+                                        style={{borderColor: "var(--task-icon-ring)", 
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className="fas fa-trash"
-                                            style={{margin: 3, color: "var(--task-textbox)", 
+                                            style={{margin: 3, color: "var(--task-icon-text)", 
                                                 fontSize: 10, transform: "translate(2px, -2px)"}}
                                         >
                                         </i>
