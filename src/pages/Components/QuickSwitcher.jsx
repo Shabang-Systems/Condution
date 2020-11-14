@@ -30,20 +30,20 @@ class QuickSwitcher extends Component {
 
     componentDidUpdate() {
 	if (this.state.prop_store != this.props) { // if the props have changed, 
-	    this.processItems()
+	    this.processItems() // process the items 
 	}
 
     }
 
     componentDidMount() {
-	this.processItems()
-	this.setState({prop_store: this.props, options: this.state.items})
+	this.processItems() // when we mount, process the items. probs delete this. 
+	this.setState({prop_store: this.props, options: this.state.items}) // set the prop store and the items 
     }
 
     focusRef() {
-       if (this.searcher.current)
-            this.searcher.current.setFocus();
-	    this.setState({query: ''})
+       if (this.searcher.current) // if the ref exists, 
+            this.searcher.current.setFocus(); // focus it 
+	    this.setState({query: ''}) // and reset the query 
     }
 
 
