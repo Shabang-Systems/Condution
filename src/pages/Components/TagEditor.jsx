@@ -33,21 +33,33 @@ const autoBind = require('auto-bind/react');
 class TagEditor extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            tagList: []
+        }
     }
+
+    setTagState() {}
+
     render() {
+
         return (
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
+
                 {/*Text Header*/}
                 <div className="TagEditor-header">
                     <span style={{display: "inline-flex", alignItems: "center"}}>
 			            <b className="bold-prefix" >Tags</b> 
 			        </span>
+
                     {/*Close Button*/}
                     <a className="TagEditor-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
                 </div>
+                
+                {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
-                    <div className="tag-list"></div>
+                    <div className="tag-list">
+                        {}
+                    </div>
                     <div className="tag-settings"></div>
                 </div>
             </IonModal>
