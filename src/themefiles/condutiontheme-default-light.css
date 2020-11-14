@@ -191,6 +191,8 @@
     /* ## Task Colors ## */
 
     /* Task */
+    --task-feature: #efefef;
+    --task-feature-alt: #dbdbdd;
     --task-selected: var(--task-feature);
 
     /* Task Name */

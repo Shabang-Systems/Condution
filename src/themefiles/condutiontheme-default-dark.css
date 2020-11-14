@@ -190,6 +190,8 @@
     /* ## Task Colors ## */
 
     /* Task */
+    --task-feature: #222323;
+    --task-feature-alt: #777777;
     --task-selected: var(--task-feature);
 
     /* Task Name */
