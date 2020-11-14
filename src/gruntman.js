@@ -1,4 +1,8 @@
+import { Plugins } from '@capacitor/core';
+
 const { parseFromTimeZone } = require('date-fns-timezone')
+
+const { LocalNotifications } = Plugins;
 
 /* AutoBind */
 const autoBind = require('auto-bind/react');
@@ -25,6 +29,22 @@ class Gruntman {
      */
 
     constructor(engine) {
+/*        const notifs = LocalNotifications.schedule({*/
+  //notifications: [
+    //{
+      //title: "Title",
+      //body: "Body",
+      //id: 1,
+        //schedule: { at: new Date(Date.now() + 20) },
+      //sound: null,
+      //attachments: null,
+      //actionTypeId: "",
+        //threadIdentifier:"cf.shabang.condution",
+        //group:"cf.shabang.condution",
+      //extra: null
+    //}
+  //]
+/*});*/
         this.e = engine;
         this.refresher = ()=>{};
         this.callbackRefresherReleased = true; // prevent live callback merge conflicts
