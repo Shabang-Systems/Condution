@@ -80,6 +80,11 @@
     --timeline-button-hover: var(--task-textbox);
     --timeline-text: var(--decorative-light);
 
+    /* ## Projects ## */
+    --subproject-text: var(--task-textbox);
+    --addbutton-text: var(--decorative-light-alt);
+    --addbutton-background-hover: var(--background-feature);
+
     /* ## Pagewide Colors ## */
 
     /* Header Area */

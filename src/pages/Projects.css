@@ -4,7 +4,7 @@
     border-radius: 7px;
     transition: background-color 0.3s;
     /* margin: 2px 8px; */
-    color: var(--task-textbox) !important;
+    color: var(--subproject-text) !important;
     width: 98%;
     height: 38px;
     display: block;
@@ -39,7 +39,7 @@
 }
 
 .newbutton:hover {
-    background: var(--background-feature);
+    background: var(--addbutton-background-hover);
 }
 
 .subproject-icon {
