@@ -375,7 +375,7 @@ class Calendar extends Component {
                                 ))}
                                 {(()=>{
                                     if (this.props.isMobile() && this.state.taskList.length == 0)
-                                        return <span class="calendar-page-select">Hint: tap the date above to change date!</span>
+                                        return <span class="calendar-page-hint">Hint: tap the date above to change date!</span>
                                 })()}
 
                             </div>

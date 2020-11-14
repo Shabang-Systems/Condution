@@ -14,7 +14,7 @@
  */
 
 * {
-    /* Boring Things */
+    /* ## Boring Things ## */
     /* NO ADAPT... 
         --background: #f4f4f4;
         --ion-background-color: #f4f4f4;
@@ -22,13 +22,34 @@
         --background-feature-overlay: rgba(229,231,234,0.7);
     */
 
-    /* Special Things */
+    /* ## Special Things ## */
     /* NO ADAPT... 
         --special: #dadeae;
         --special-alt: #E2E6B3;
         --task-textbox-background: #e8e8e8;
     */
     --special-bold: var(--content-normal-accent); 
+
+    /* ## Calendar View ## */
+    --calendar-page-hint: var(--content-normal-alt);
+
+    --calendar-page-header-text: var(--content-normal-alt);
+    --calendar-page-count: var(--decorative-light-accent);
+
+    --calendar-page-long-date: var(--content-normal-alt);
+    --calendar-page-long-date-mobile-background: var(--background-feature);
+
+    --calendar-wrapper-background: var(--background-feature);
+    --calendar-popover-background: var(--background-feature);
+
+    --calendar-top-weekdays: var(--decorative-light-alt);
+    --calendar-borders: var(--decorative-light);
+
+    --calendar-task-circle: var(--decorative-light-alt);
+
+    --calendar-date-unhighlighted: var(--decorative-light);
+    --calendar-date-highlighted: var(--content-normal-alt);
+    --calendar-date-hover: var(--decorative-light);
 
     /* ## Pagewide Colors ## */
 

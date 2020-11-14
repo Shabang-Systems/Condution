@@ -18,8 +18,8 @@
     }
 }
 
-.calendar-page-select {
-    color: var(--content-normal-alt) !important;
+.calendar-page-hint {
+    color: var(--calendar-page-hint) !important;
     margin-left: 11px;
     margin-top: 10px;
     cursor: pointer;
@@ -34,22 +34,22 @@
 .calendar-page-count {
     font-weight: 600;
     font-size: 30px;
-    color: var(--decorative-light-accent);
+    color: var(--calendar-page-count);
     display: inline;
 }
 
 .calendar-page-title {
     display: inline;
     margin-left: 5px;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-header-text);
 }
 
 .calendar-page-date {
     display: inline-block;
     margin-left: 10px;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-long-date);
     font-weight: 600;
-    background-color: var(--background-feature);
+    background-color: var(--calendar-page-long-date-mobile-background);
     padding: 4px 6px;
     border-radius: 5px;    
     font-size: 15px;
@@ -65,7 +65,7 @@
 #calendar-wrapper {
     display: inline-block;
     width: 290px;
-    background-color: var(--background-feature);
+    background-color: var(--calendar-wrapper-background);
     margin-left: 5px;
     border-radius: 4px;
     padding-top: 5px;
@@ -94,7 +94,7 @@
 #calendar-wrapper-popover {
     display: inline-block;
     width: 290px;
-    background-color: var(--background-feature);
+    background-color: var(--calendar-popover-background);
     border-radius: 4px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -109,7 +109,7 @@
 
 #calendar-daterow {
     padding: 7px 7px;
-    color: var(--decorative-light-alt);
+    color: var(--calendar-top-weekdays);
     font-size: 12px;
     display: grid;
     grid-template-columns: 39px 39px 39px 39px 39px 39px 39px;
@@ -117,7 +117,7 @@
 
 #bigol-calendar-daterow {
     padding: 7px 7px;
-    color: var(--decorative-light-alt);
+    color: var(--calendar-top-weekdays);
     font-size: 12px;
     display: grid;
     grid-template-columns: repeat(7, 14%);
@@ -155,8 +155,8 @@
 
 .bigol-calendar-container-item {
     margin:0 -1px -1px 0;
-    border-right: 1px solid var(--decorative-light);
-    border-top: 1px solid var(--decorative-light);
+    border-right: 1px solid var(--calendar-borders);
+    border-top: 1px solid  var(--calendar-borders);
 }
 
 .bigol-calendar-container-item:nth-child(7n) {
@@ -184,7 +184,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    border: 1px var(--decorative-light-alt) solid;
+    border: 1px var(--calendar-task-circle) solid;
     transform: translateY(4px);
     margin-right: 5px;
 }
@@ -196,19 +196,19 @@
 }
 
 .calendar-container-item-pre {
-    color: var(--decorative-light);
+    color: var(--calendar-date-unhighlighted);
 }
 
 .calendar-container-item-post {
-    color: var(--decorative-light);
+    color: var(--calendar-date-unhighlighted);
 }
 
 .calendar-container-item-actual {
-    color: var(--content-normal-alt);
+    color: var(--calendar-date-highlighted);
 }
 
 .calendar-container-item-actual:hover {
-    background-color: var(--decorative-light);
+    background-color: var(--calendar-date-hover);
 }
 
 .calendar-date-text {
