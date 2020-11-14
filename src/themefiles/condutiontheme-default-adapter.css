@@ -34,7 +34,7 @@
     --calendar-page-hint: var(--content-normal-alt);
 
     --calendar-page-header-text: var(--content-normal-alt);
-    --calendar-page-count: var(--decorative-light-accent);
+    --calendar-page-largenumber: var(--decorative-light-accent);
 
     --calendar-page-long-date: var(--content-normal-alt);
     --calendar-page-long-date-mobile-background: var(--background-feature);
@@ -50,6 +50,9 @@
     --calendar-date-unhighlighted: var(--decorative-light);
     --calendar-date-highlighted: var(--content-normal-alt);
     --calendar-date-hover: var(--decorative-light);
+
+    --calendar-button-text: var(--content-normal-accent);
+    --calendar-button-background: var(--decorative-light);
 
     /* ## Pagewide Colors ## */
 

@@ -34,7 +34,7 @@
 .calendar-page-count {
     font-weight: 600;
     font-size: 30px;
-    color: var(--calendar-page-count);
+    color: var(--calendar-page-largenumber);
     display: inline;
 }
 
@@ -234,12 +234,12 @@
     font-size: 40px;
     font-weight: 600;
     display: inline;
-    color: var(--content-normal-accent);
+    color: var(--calendar-page-largenumber);
 }
 
 .bigol-calendar-infopanel-datename {
     display: inline;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-largenumber);
     margin-left: 5px;
     font-weight: 600;
     transform: translateY(-1px);
@@ -248,7 +248,7 @@
 
 .bigol-calendar-infopanel-month {
     display: inline-block;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-long-date);
     margin-left: 10px;
     font-weight: 500;
     transform: translateY(1px);
@@ -256,7 +256,7 @@
 
 .bigol-calendar-infopanel-year {
     display: inline-block;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-long-date);
     margin-left: 5px;
     font-weight: 500;
     transform: translateY(1px);
@@ -274,7 +274,7 @@
     padding: 2px;
     text-align: center;
     transition: background-color 0.3s;
-    color: var(--content-normal-accent) !important;
+    color: var(--calendar-page-header-text) !important;
 }
 
 #calendar-infopanel {
@@ -285,12 +285,12 @@
     font-size: 40px;
     font-weight: 600;
     display: inline;
-    color: var(--content-normal-accent);
+    color: var(--calendar-page-long-date);
 }
 
 .calendar-infopanel-datename {
     display: inline;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-largenumber);
     margin-left: 5px;
     font-weight: 600;
     transform: translateY(-1px);
@@ -299,7 +299,7 @@
 
 .calendar-infopanel-month {
     display: inline-block;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-long-date);
     margin-left: 10px;
     font-weight: 500;
     transform: translateY(1px);
@@ -307,7 +307,7 @@
 
 .calendar-infopanel-year {
     display: inline-block;
-    color: var(--content-normal-alt);
+    color: var(--calendar-page-long-date);
     margin-left: 5px;
     font-weight: 500;
     transform: translateY(1px);
@@ -325,11 +325,11 @@
     padding: 2px;
     text-align: center;
     transition: background-color 0.3s;
-    color: var(--content-normal-accent) !important;
+    color: var(--calendar-page-long-date) !important;
 }
 
 .calendar-button:hover {
-    background-color: var(--decorative-light);
+    background-color: var(--calendar-button-background);
     border-radius: 3px;
 }
 
@@ -340,7 +340,7 @@
     padding: 2px;
     text-align: center;
     transition: background-color 0.3s;
-    color: var(--content-normal-accent) !important;
+    color: var(--calendar-button-text) !important;
     font-size: 13px;
     transform: translateY(-1px);
     font-weight: 600;
