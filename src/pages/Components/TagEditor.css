@@ -1,6 +1,7 @@
 .TagEditor-header {
+    width: 100%;
     background-color: var(--background-feature);
-    padding: 17px;
+    /*padding: 17px;*/
     color: var(--decorative-light-alt);
     text-overflow: ellipsis;
     display: flex;

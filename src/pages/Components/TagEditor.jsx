@@ -1,9 +1,7 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Repeat.css';
-//import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
@@ -39,10 +37,10 @@ class TagEditor extends Component {
     }
     render() {
         return (
-            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}} cssClass={"tag-editor"}>
+            <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
                 {/*Text Header*/}
                 <div className="TagEditor-header">
-                    <span style={{display: "flex", alignItems: "center", width: "100%"}}>
+                    <span style={{display: "flex", alignItems: "center"}}>
 			            <b className="bold-prefix" >Tags</b> 
 			        </span>
                     {/*Close Button*/}
