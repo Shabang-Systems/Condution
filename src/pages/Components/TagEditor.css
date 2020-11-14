@@ -13,3 +13,24 @@
     color: var(--decorative-light-accent);
     cursor: pointer;
 }
+
+.tag-list {
+    display: flex;
+    overflowY: scroll;
+    width: 40%;
+    height: 100%;
+}
+
+.tag-settings {
+    display: flex;
+    width: 60%;
+    height: 100%;
+    overflowY: scroll;
+}
+
+.tag-pane-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
