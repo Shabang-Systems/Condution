@@ -24,8 +24,8 @@ import '@ionic/react/css/display.css';
 import './themefiles/condutiontheme-default-adapter.css';
 import './themefiles/condutiontheme-default.css';
 import './themefiles/condutiontheme-default-dark.css';
-//import './themefiles/condutiontheme-default-light.css';
-import './themefiles/condutiontheme-default-new.css';
+import './themefiles/condutiontheme-default-light.css';
+//import './themefiles/condutiontheme-default-new.css';
 import './themefiles/condutiontheme-black-n-red.css';
 
 /* Font awesome */

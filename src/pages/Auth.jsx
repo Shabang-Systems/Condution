@@ -15,6 +15,7 @@ import './Auth.css';
 import '../themefiles/condutiontheme-default.css';
 import '../themefiles/condutiontheme-default-dark.css';
 import '../themefiles/condutiontheme-default-light.css';
+import '../themefiles/condutiontheme-default-adapter.css';
 
 
 
