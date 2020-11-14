@@ -46,7 +46,10 @@ class TagEditor extends Component {
                     {/*Close Button*/}
                     <a className="TagEditor-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
                 </div>
-                <div className="tag-list"></div>
+                <div className="tag-pane-container">
+                    <div className="tag-list"></div>
+                    <div className="tag-settings"></div>
+                </div>
             </IonModal>
         )
     }
