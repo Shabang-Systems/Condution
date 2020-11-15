@@ -588,7 +588,10 @@ class Task extends Component {
                                                             <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true, notificationPopoverShown:[false, null]})}>Change Notification</div>
                                                         </div>
                                                     </IonPopover>
-                                                    <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
+                                                    {(()=>{
+                                                        if (this.props.gruntman.notifPermissionGranted && !(getPlatforms().includes("mobileweb") || getPlatforms().includes("desktop")))
+                                                            return <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
+                                                    })()}
 
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
