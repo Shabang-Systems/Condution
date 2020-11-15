@@ -90,8 +90,7 @@ function CalendarPopover(props) {
             }
             setHeat(hm);
         })();
-    },[dateSelected]);
-
+    },[dateSelected, props.initialDate]);
     return (
         <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="calendar-popover">
             <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>

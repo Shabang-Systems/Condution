@@ -25,6 +25,9 @@ import Repeat from './Repeat';
 // Our very own tag editor UI
 import TagEditor from './TagEditor';
 
+// Our very own calendar popover
+import CalendarPopover from './CalendarPopover';
+
 // Our very own CSS
 import './Task.css';
 
@@ -156,6 +159,8 @@ class Task extends Component {
             isComplete: false, // are we completed?
             showRepeat: false, // is our repeat UI shown?
             showTagEditor: false, // is our TagEditor UI shown?
+            deferPopoverShown: false, // is the defer calendar popover shown?
+            duePopoverShown: false, // is the due calendar popover shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
             haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false) // did we render the edit part yet? optimization
@@ -166,6 +171,8 @@ class Task extends Component {
         this.checkbox = React.createRef(); // what's my pseudocheck
         this.TagEditorRef = React.createRef(); // what's my tag editor
         this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
+        this.duePopover = React.createRef(); // what's my due popover?
+        this.deferPopover = React.createRef(); // what's my defer popover?
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -269,6 +276,14 @@ class Task extends Component {
 
         if (this.repeater.current) // if our repeater is a thing that mounted
             if (this.repeater.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
+        if (this.duePopover.current) // if our due popover is a thing that mounted
+            if (this.duePopover.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
+        if (this.deferPopover.current) // if our defer popover is a thing that mounted
+            if (this.deferPopover.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
         
         if (this.TagEditorRef.current) // if our repeater is a thing that mounted
@@ -473,6 +488,7 @@ class Task extends Component {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
+
                                                 {/* First, task description field */}
                                                 <textarea 
                                                     placeholder="LOCALIZE:Description" 
@@ -607,6 +623,14 @@ class Task extends Component {
 
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
                                                         <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        {/* Due date popover */}
+                                                        <CalendarPopover reference={this.duePopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                            this.props.gruntman.do(
+                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            )
+                                                            this.setState({dueDate: d});
+
+                                                        }}/>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -627,8 +651,12 @@ class Task extends Component {
                                                                         }, `task-due-${this.props.tid}-update`)
                                                                     }
                                                                         } onFocus={(e) => {
-                                                                            onClick();
-                                                                            e.target.focus();
+                                                                            if (getPlatforms().includes("mobile"))
+                                                                                this.setState({duePopoverShown: true})
+                                                                            else {
+                                                                                onClick();
+                                                                                e.target.focus();
+                                                                            }
                                                                         }}
                                                                     />
                                                                 );
