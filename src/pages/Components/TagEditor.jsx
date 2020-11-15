@@ -69,10 +69,11 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map(tag => {
                             return (
-                                <div className="tag-in-list" onClick={this.tagClicked()}>
+                                <div className="tag-in-list" /*onClick={this.tagClicked()}*/>
                                     <div className="tag-name">
                                         {tag.name}
                                     </div>
+                                    <a className="TagEditor-close" /*onClick={console.log("x clicked")}*/><i className="fa fa-times"></i></a>
                                 </div>
                             )
                         })}
