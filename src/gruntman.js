@@ -426,7 +426,7 @@ class Gruntman {
                     schedule: { at: time},
                     sound: null,
                     id: this.hashCode(id),
-                    attachments: `${id}`,
+                    attachments: [`${id}`, `${uid}`],
                     extra: uid,
                     actionTypeId: "completeOrSnooze"
                 }
@@ -435,13 +435,11 @@ class Gruntman {
     }
 
     async handleNotificationAction(action) {
-        let taskID, userID;
+        let [taskID, userID] = action.notification.attachments;
         switch (action.actionId) {
             case "complete":
-                taskID = action.notification.attachments;
-                userID = action.notification.extra;
                 // TODO TODO
-                //this.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+                this.do("task.update__complete", { uid: userID, tid: taskID}, true)
                 break;
             case "snooze":
                 // TODO TODO
