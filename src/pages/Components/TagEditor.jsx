@@ -42,11 +42,11 @@ class TagEditor extends Component {
         this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
         console.log(this.state.tagList)
     }
-
+/*
     componentDidMount() {
         this.setTagState()
     }
-
+*/
     render() {
         // TODO just do this when the tag pane is opened
         // use on modal did present or something check quick switcher
