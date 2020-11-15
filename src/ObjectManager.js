@@ -249,10 +249,10 @@ async function getTopLevelProjects(userID) {
 async function getTags(userID) {
     let tags = [];
 
-    await cRef("user", userID, "tags").get()
+    await cRef("users", userID, "tags").get()
         .then(snap => snap.docs.forEach( tag => {
             if (tag.exists) {
-                tags.push(tag.data())
+                tags.push(tag.data());
             }
         }
     )).catch(console.error);
