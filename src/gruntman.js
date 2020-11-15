@@ -435,11 +435,17 @@ class Gruntman {
     }
 
     async handleNotificationAction(action) {
+        let taskID;
         switch (action.actionId) {
             case "complete":
-                let taskID = action.notification.attachments;
+                taskID = action.notification.attachments;
                 // TODO TODO
                 //this.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+                break;
+            case "snooze":
+                // TODO TODO
+                taskID = action.notification.attachments;
+                break;
         }
     }
 
