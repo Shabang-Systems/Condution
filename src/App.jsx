@@ -54,6 +54,8 @@ import Auth from './pages/Auth';
 import Loader from './pages/Loader';
 import Home from './pages/Home';
 
+/* Localization Toolkit */
+import LocalizedStrings from 'react-localization';
 
 /* AutoBind */
 const autoBind = require('auto-bind/react');
@@ -91,8 +93,17 @@ class App extends Component {
     constructor(props) {
         super(props);
 
+        let localizations = new LocalizedStrings({
+            en: require("./static/I18n/en-US.json"),
+            zh: require("./static/I18n/zh-CN.json"),
+            de: require("./static/I18n/de-DE.json"),
+        });
+
+        // TODO TODO remove this
+        //localizations.setLanguage("zh");
+
         // We start with setting our state. We don't know our user's UID (duh)
-        this.state = {authMode: "loader", uid: "", displayName: ""};
+        this.state = {authMode: "loader", uid: "", displayName: "", localizations};
         
         // We also set the theme based on the user's media query
         if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
@@ -232,11 +243,11 @@ class App extends Component {
                 return <Loader />
             // if we did not authenticate yet, load the auth view:
             case "none":
-                return <Auth dispatch={this.authDispatch}/>;
+                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
             case "json":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations}/>;
             // wut esta this auth mode? load the loader with an error
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);

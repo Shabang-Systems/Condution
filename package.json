@@ -38,6 +38,7 @@
     "react-datepicker": "^3.1.3",
     "react-dom": "^16.13.0",
     "react-getscreen": "^1.1.3",
+    "react-localization": "^1.0.15",
     "react-outside-click-handler": "^1.3.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
