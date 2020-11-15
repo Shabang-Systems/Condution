@@ -10,7 +10,6 @@ import QuickSwitcher from './QuickSwitcher'
 const autoBind = require('auto-bind/react');
 
 
-
 class Keybinds extends Component {
     constructor(props) {
         super(props);
@@ -53,7 +52,6 @@ class Keybinds extends Component {
 	const loca = this.state.sidebar_list[num]; // set our location to index in sidebar
 	that.props.history.push(`/${loca[0]}/${loca[1]}`) // push to the history
 	that.props.paginate(...loca); // paginate-ify it!
-	console.log(loca)
 	this.setState({sidebar_index: num}) // update the sidebar index 
     }
 
@@ -67,7 +65,6 @@ class Keybinds extends Component {
 	} else { // if it's not defined and not at the end, then it must be at the beginning,
 	    this.sidebar_switcher(that, this.state.sidebar_list.length-1) // so go to the end 
 	}
-	console.log(this.state.sidebar_index)
     }
 
     setSidebarIndex(item) {
@@ -77,7 +74,6 @@ class Keybinds extends Component {
 		idx = i
 	    }
 	})
-	console.log(idx)
 	this.setState({sidebar_index: idx})
     }
 
