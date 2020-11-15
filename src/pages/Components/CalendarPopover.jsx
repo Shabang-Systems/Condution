@@ -182,7 +182,7 @@ function CalendarPopover(props) {
                             props.onDateSelected(new Date());
 
                     }}>Today</div>
-
+                    <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={props.onDidDismiss}>Done</div>
                 </div>
                 </div>
             </div>
