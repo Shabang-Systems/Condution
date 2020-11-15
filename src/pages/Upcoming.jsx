@@ -35,7 +35,7 @@ class Upcoming extends Component { // define the component
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate()+1);
 
-        let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
+        let greetings = this.props.localizations.greetings_setA;
 
         this.state = {
             inbox: [], // define the inbox
@@ -174,12 +174,12 @@ class Upcoming extends Component { // define the component
                     })()}>
                         <div className="header-container" onTouchMove={(e)=>e.preventDefault()}>
                             <div style={{display: "inline-block"}}>
-                                <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>Upcoming</h1> 
+                                <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>{this.props.localizations.upcoming}</h1> 
 
                                     
                             <div className="greeting-datewidget">
                                 <div style={{display: "inline-block"}} className="greeting-date">{(new Date()).getDate()}</div>
-                                <div style={{display: "inline-block"}} className="greeting-datename">{new Date().toLocaleString('en-us', {  weekday: 'long' })}</div>
+                                <div style={{display: "inline-block"}} className="greeting-datename">{new Date().toLocaleString(this.props.localizations.getLanguage(), {  weekday: 'long' })}</div>
                             </div>
                             
 
@@ -191,14 +191,14 @@ class Upcoming extends Component { // define the component
                             <div>
                                 {(()=>{
                                     if (this.state.inbox.length > 0)
-                                        return <div className="page-label">Unsorted<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                        return <div className="page-label">{this.props.localizations.unsorted}<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                                 })()}
                                 <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             </div>
                             <div>
                                 {(()=>{
                                     if (this.state.dueSoon.length > 0)
-                                        return <div className="page-label">Due Soon<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
+                                        return <div className="page-label">{this.props.localizations.ds}<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
                                 })()}
                                 {this.state.dueSoon.map(id => (
                                     <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
@@ -223,7 +223,7 @@ class Upcoming extends Component { // define the component
                                         <i 
                                             className="fas fa-calendar-week" 
                                             style={{paddingRight: 5}}
-                                        ></i> {this.state.timelineShown? "Hide" : "Show"} timeline</a>
+                                        ></i> {this.state.timelineShown? "@NEEDLOC Hide" : "@NEEDLOC Show"} timeline</a>
                                 </div> 
                                 {
                                     (()=>{
@@ -232,7 +232,7 @@ class Upcoming extends Component { // define the component
                                                 if (timelineItem.type === "task")
                                                     return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                                         else if (timelineItem.type === "label")
-                                                    return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
+                                                    return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString(this.props.localizations.getLanguage(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
 
 
                                             })
