@@ -256,7 +256,6 @@ async function getTags(userID) {
             }
         }
     )).catch(console.error);
-    console.log(tags);
     return tags;
 }
 
