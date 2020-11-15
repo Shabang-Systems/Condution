@@ -35,9 +35,8 @@
     -webkit-backface-visibility: hidden;
 }
 
-.option-text:hover {
+.option-text-hover {
     background-color: var(--decorative-light);
-
 }
 
 

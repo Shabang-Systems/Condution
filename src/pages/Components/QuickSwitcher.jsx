@@ -20,10 +20,13 @@ class QuickSwitcher extends Component {
         this.state = {
 	    searchRef: '',
 	    items: [],
+	    filteredList: [],
 	    query: '',
 	    firstItem: '',
 	    direction: true, 
+	    selected: 0,
 	    prop_store: '',
+	    initialRenderingDone: false, 
 	}
 	this.searcher = React.createRef();
     }
@@ -37,7 +40,7 @@ class QuickSwitcher extends Component {
 
     componentDidMount() {
 	this.processItems() // when we mount, process the items. probs delete this. 
-	this.setState({prop_store: this.props, options: this.state.items}) // set the prop store and the items 
+	this.setState({prop_store: this.props, options: this.state.items, initialRenderingDone: true}) // set the prop store and the items 
     }
 
     focusRef() {
@@ -47,7 +50,7 @@ class QuickSwitcher extends Component {
     }
 
 
-    filterItems(searchTerm) {
+    filterItems(searchTerm, org) {
 	let filteredItems = this.state.items.filter(item => {
 	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
 	});
@@ -59,20 +62,21 @@ class QuickSwitcher extends Component {
 	// name, url prefix, id
 	this.setState({items: 
 	    [
-		['.upcoming', 'upcoming', ''], // set the first item to upcoming 
+		[':upcoming', 'upcoming', ''], // set the first item to upcoming 
 		// (i could do + but i think thats less efficent 
-		['.completed', 'completed', ''], // set the second item to completed
-		['.calendar', 'calendar', ''], // set the third item to calendar
-		...this.props.items[0].map(o => ['#'+o.name, 'perspectives', o.id]), // map the perspectives
-		...this.props.items[1].map(o => [':'+o.name, 'projects', o.id]) // and the projects 
+		[':completed', 'completed', ''], // set the second item to completed
+		[':calendar', 'calendar', ''], // set the third item to calendar
+		...this.props.items[0].map(o => ['!'+o.name, 'perspectives', o.id]), // map the perspectives
+		...this.props.items[1].map(o => ['.'+o.name, 'projects', o.id]) // and the projects 
 	    ],
 	    prop_store: this.props //  and update the props 
 	})
     }
 
 
-    handleSubmit(e) {
-	if (e.key == "Enter") {
+    handleKeydown(e) {
+	const keyname = e.key;
+	if (keyname == "Enter") {
 	    let firstItem = this.filterItems(this.state.query)[0]
 	    // TODO: jack make the sidebar styling work 
 	    if (!firstItem || !this.state.query) {
@@ -89,7 +93,23 @@ class QuickSwitcher extends Component {
 		this.props.updateIdx(slicedFirstItem)
 	    }
 	    this.props.dismiss() // dismiss the modal
+	} else {
+	    const idx = this.state.selected
+	    const len = this.filterItems(this.state.query).length-1
+	    //const len = this.state.filteredList.length
+	    if (keyname == "ArrowUp") {
+		console.log(idx, "up")
+		if (idx > 0) {
+		    this.setState({selected: idx-1})
+		} else { this.setState({selected: len})}
+	    } else if (keyname == "ArrowDown") {
+		console.log(idx, "down")
+		if (idx == len) {
+		    this.setState({selected: 0})
+		} else { this.setState({selected: idx+1}) }
+	    }
 	}
+
     }
 
 
@@ -113,23 +133,29 @@ class QuickSwitcher extends Component {
 			placeholder="Previous  |  Let's go to.." // TODO: jack do you like this? 
 			onIonChange={e => this.setState({query: e.detail.value})}
 			debounce={0}
-			onSubmit={()=>{console.log("wheee")}}
-			onKeyDown={this.handleSubmit}
-			//value={this.searchText}
+			onKeyDown={this.handleKeydown}
 		    />
-			<div className='option-wrapper'> 
-			    {this.filterItems(this.state.query).map(item => 
-			    <p className='option-text' 
-				onClick={()=>{
-				    console.log(item)
-				    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
-				    this.props.paginate(...item.slice(1)); // paginate-ify it!
-				    this.props.dismiss()
-				}}
-			    >{item[0]}</p>
-			    )}
-			    
-			</div> 
+		    <div className='option-wrapper'> 
+			{this.filterItems(this.state.query).map((item, i) => {
+			    return (
+				<p 
+				    className= {`option-text ${(this.state.selected == i)? 'option-text-hover' : ''}`}
+				    onMouseEnter={() => {
+					this.setState({selected: i}); 
+					console.log(this.state.selected)
+				    }}
+				    onClick={()=>{
+					this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
+					this.props.paginate(...item.slice(1)); // paginate-ify it!
+					this.props.dismiss()
+				    }}
+				>{item[0]}</p>
+				)
+
+			    }
+			)}
+
+		    </div> 
 		</div>
 
 	    </IonModal>
