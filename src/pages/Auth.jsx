@@ -28,7 +28,7 @@ class Auth extends Component {
     constructor(props) {
         super(props);
 
-        let greetings = ["Hello,", "Hey,", "Heyo,", "Aloha,", "Yo!"];
+        let greetings = this.props.localizations.greetings_setB;
 
         /*
          * mode 0 = login in progress, 
@@ -122,19 +122,19 @@ class Auth extends Component {
                     </div>
                 </div>
                 <div id="authwall">
-                    <h1 id="greeting-auth">{this.state.greeting}</h1><span id="welcome-auth-msg">Welcome to Condution.</span>
+                    <h1 id="greeting-auth">{this.state.greeting}</h1><span id="welcome-auth-msg">{this.props.localizations.welcome_auth_msg}</span>
                     <h3 className="greeting-auth-subtitle" id="greeting-auth-normal">{(()=>{
                         switch (this.state.authMode) {
                             case 2:
-                                return "No worries! Let's recover your password.";
+                                return this.props.localizations.nowirres;
                             default:
-                                return "Good to see you. Please sign in or tap Use Locally.";
+                                return this.props.localizations.greeting_auth_normal;
 
                         }
                     })()}</h3> 
-                    <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder="What should we call you?" style={{display: this.state.authMode === 1 ? "block" : "none"}}/>
-                    <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder="Email" />
-                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder="Password" style={{display: this.state.authMode !== 2 ? "block" : "none"}} onKeyPress={(event)=>{
+                    <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder={this.props.localizations.what_should_we} style={{display: this.state.authMode === 1 ? "block" : "none"}}/>
+                    <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={this.props.localizations.email} />
+                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={this.props.localizations.password} style={{display: this.state.authMode !== 2 ? "block" : "none"}} onKeyPress={(event)=>{
                         if (event.key === "Enter") {
                             switch (this.state.authMode) {
                                 case 0:
@@ -160,11 +160,11 @@ class Auth extends Component {
                             {(()=>{
                                 switch(this.state.authMode){
                                     case 3:
-                                        return "Check and verify your email, then tap Let's Do This!";
+                                        return "@NEEDLOC Check and verify your email, then tap Let's Do This!";
                                     case 4:
-                                        return "Check and verify your email, then tap Proceed!";
+                                        return this.props.localizations.need_verify;
                                     case 5:
-                                        return "Check and verify your email, then return to login.";
+                                        return "@NEEDLOC Check and verify your email, then return to login.";
 
                             }})()}
                         </span>
@@ -180,9 +180,9 @@ class Auth extends Component {
                         }}>{(()=>{
                             switch (this.state.authMode) {
                                 case 2:
-                                    return "Remembered? Login";
+                                    return this.props.localizations.remembered;
                                 default:
-                                    return "Recover Password";
+                                    return this.props.localizations.rec_pswd;
 
                             }
                         })()}</span>
@@ -198,9 +198,9 @@ class Auth extends Component {
                         }}>{(()=>{
                             switch (this.state.authMode) {
                                 case 1:
-                                    return "Log in";
+                                    return "@NEEDLOC Log in";
                                 default:
-                                    return "Make an account";
+                                    return this.props.localizations.newuser;
 
                             }
                         })()}</div>
@@ -224,20 +224,20 @@ class Auth extends Component {
                                 switch(this.state.authMode) {
                                     case 0:
                                     case 3:
-                                        return "Let's Do This!";
+                                        return this.props.localizations.lds;
                                     case 1:
                                         return "Verify Email!";
                                     case 2:
                                         return "Let's Recover!";
                                     case 4:
-                                        return "Proceed!";
+                                        return this.props.localizations.proceed;
                                     case 5:
-                                        return "Proceed!";
+                                        return this.props.localizations.proceed;
                                 }
                             })()}</span>
                         </div>
                         {(() => {
-                            if (this.state.authMode !== 2) return <div className="convert-src" id="ulac" onClick={this.doLocal}>Use Locally</div>
+                            if (this.state.authMode !== 2) return <div className="convert-src" id="ulac" onClick={this.doLocal}>{this.props.localizations.ulac}</div>
                         })()}
                     </div>
                 </div>

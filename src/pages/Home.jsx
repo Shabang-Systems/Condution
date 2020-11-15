@@ -140,23 +140,23 @@ class Home extends Component {
                                     {/* Upcoming button + link */}
                                     <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}> {/* Link to trigger router */}
                                         {/* Upcoming button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />Upcoming</div>
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />{this.props.localizations.upcoming}</div>
                                     </Link>
 
                                     {/* Completed button + link */}
                                     <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}> {/* Link to trigger router */}
                                         {/* Completed button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={checkmarkCircle} />Completed</div>
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={checkmarkCircle} />{this.props.localizations.completed}</div>
                                     </Link>
 
                                     {/* Calendar button + link */}
                                     <Link to="/calendar" onClick={()=>this.setState({itemSelected:{item:"calendar", id:undefined}})}> {/* Link to trigger router */}
                                         {/* Calendar button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "calendar" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={calendar} />Calendar</div>
+                                        <div className={"menu-item "+(this.state.itemSelected.item === "calendar" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={calendar} />@NEEDLOC Calendar</div>
                                     </Link>
 
                                     {/* === Perspectives == */}
-                                    <div className="menu-sublabel menu-decoration">Perspectives <a onClick={()=>{
+                                    <div className="menu-sublabel menu-decoration">{this.props.localizations.perspectives} <a onClick={()=>{
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
@@ -185,7 +185,7 @@ class Home extends Component {
 
 
                                     {/* === Projects == */}
-                                    <div className="menu-sublabel menu-decoration">Projects <a onClick={()=>{
+                                    <div className="menu-sublabel menu-decoration">{this.props.localizations.projects}<a onClick={()=>{
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
@@ -213,11 +213,11 @@ class Home extends Component {
                                 </IonContent>
 
                                 {/* Logout button */}
-                                <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />Logout</div>
+                                <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.localizations.logout}</div>
                             </IonMenu>
                             <IonPage id="main">
                                 {/* the add button to inbox button*/}
-                                <ABTIB reference={this.abtibRef} uid={this.props.uid} gruntman={this.props.gruntman} />
+                                <ABTIB reference={this.abtibRef} uid={this.props.uid} gruntman={this.props.gruntman} localizations={this.props.localizations}/>
                                 {/* the portal root for DOM elements to park */}
                                 <div id="parking-lot"></div>
                                 {/* The actual page */}
@@ -229,18 +229,18 @@ class Home extends Component {
                                     {/* and the perspective switch */}
                                     <Switch>
                                         {/* upcoming renders upcoming */}
-                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} />} />
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} />} />
                                         {/* completed renders completed */}
-                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
 
                                         {/* completed renders completed */}
-                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} />
+                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
 
                                         {/* perspective renders perspectives */}
-                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create}/>}  />
+                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create} localizations={this.props.localizations}/>}  />
 
                                         {/* project renders perspectives */}
-                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create}/>}  />
+                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations}/>}  />
                                         {/* TODO projects */}
                                     </Switch>
                                 </IonRouterOutlet>

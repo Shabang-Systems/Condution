@@ -83,7 +83,7 @@
     "blk_adt": "Add a task?",
     "welcome_auth_msg": "Welcome to Condution.",
     "greeting_auth_normal": "Good to see you. Please sign in or tap Use Locally.",
-    "need_verify": "Verify your email, then proceed!",
+    "need_verify": "Verify your email, then tap proceed!",
     "recover_password": "Recover Password",
     "newuser": "Make an account",
     "lds": "Let's do this!",

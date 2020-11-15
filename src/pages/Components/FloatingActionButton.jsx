@@ -18,7 +18,6 @@ import {useSpring, animated} from 'react-spring'
  *
  */
 
-const defaultValue = "Add something to the inbox?";
 
 function handleABTIBInput(value) {
     console.log('abtib reportin to handle input ^-^');
@@ -28,6 +27,7 @@ function handleABTIBInput(value) {
 }
 
 function ABTIB(props) {
+    const defaultValue = props.localizations.qa_content;
     const [isExpanded, setisExpanded] = useState(false);
     const [isSaving, setisSaving] = useState(false);
 
