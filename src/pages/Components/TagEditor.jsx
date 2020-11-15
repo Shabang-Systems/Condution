@@ -62,7 +62,12 @@ class TagEditor extends Component {
                 {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
                     <div className="tag-list">
-                        {}
+                        {this.state.tagList.map(tag => {
+                            console.log(tag.name)
+                            return (<div className="tag-in-list">
+                                {tag.name} 
+                            </div>)
+                        })}
                     </div>
                     <div className="tag-settings"></div>
                 </div>
