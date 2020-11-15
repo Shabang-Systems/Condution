@@ -575,6 +575,7 @@ class Task extends Component {
                                                         showBackdrop={false}
                                                         isOpen={this.state.notificationPopoverShown[0]}
                                                         cssClass='notif-popover'
+                                                        mode="md" 
                                                         onDidDismiss={e => this.setState({notificationPopoverShown: [false, null]})}
                                                         event={this.state.notificationPopoverShown[1]}
                                                         ref={this.notificationPopover}
@@ -584,7 +585,7 @@ class Task extends Component {
                                                                 this.props.gruntman.cancelNotification(this.props.tid)
                                                                 this.setState({hasNotification: false, notificationPopoverShown: [false, null]});
                                                             }}>Cancel Notification</div>
-                                                            <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true})}>Change Notification</div>
+                                                            <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true, notificationPopoverShown:[false, null]})}>Change Notification</div>
                                                         </div>
                                                     </IonPopover>
                                                     <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
