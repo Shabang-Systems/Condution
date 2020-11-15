@@ -65,7 +65,9 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map(tag => {
                             return (<div className="tag-in-list">
-                                {tag.name} 
+                                <div className="tag-name">
+                                    {tag.name}
+                                </div>
                             </div>)
                         })}
                     </div>
