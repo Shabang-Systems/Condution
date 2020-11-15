@@ -8,7 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import { withRouter } from "react-router";
 
 import Task from './Components/Task';
-import CalendarPopover from './Components/CalendarPopover';
+import CalendarPopover, { CalendarUnit } from './Components/CalendarPopover';
 import CalendarTasklistPopover from './Components/CalendarTasklistPopover';
 
 const autoBind = require('auto-bind/react');
@@ -350,7 +350,7 @@ class Calendar extends Component {
                         <div id="calendar-page-wrapper">
                             {(()=>{
                                 if (this.props.isMobile())
-                                    return <CalendarPopover uid={this.props.uid} engine={this.props.engine} isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
+                                    return <CalendarUnit uid={this.props.uid} engine={this.props.engine} isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
                                         let endDate = new Date(d.getTime());
                                         endDate.setHours(23,59,59,60);
                                         let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
@@ -358,12 +358,6 @@ class Calendar extends Component {
                                     }).bind(this)}/>
                                 else 
                                     return <CalPageBigOllendar gruntman={this.props.gruntman}  uid={this.props.uid} engine={this.props.engine} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-{/*                                    return <CalPagelendar uid={this.props.uid} engine={this.props.engine} onDateSelected={(async function(d){*/}
-                                        //let endDate = new Date(d.getTime());
-                                        //endDate.setHours(23,59,59,60);
-                                        //let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
-                                        //this.setState({currentDate: d, taskList});
-                                    {/*}).bind(this)}/>*/}
                             })()}
                             {(()=>{
                                 if (this.props.isMobile())
@@ -371,16 +365,11 @@ class Calendar extends Component {
                                 <span id="calendar-page-header">
                                     <div class="calendar-page-count">{this.state.taskList.length}</div>
                                     <div class="calendar-page-title">tasks due on</div>
-                                    <div class="calendar-page-date" onClick={()=>this.setState({popoverIsVisible: true})}>{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
+                                    <div class="calendar-page-date">{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
                                 </span>
                                 {this.state.taskList.map(id=>(
                                     <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[id]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                                 ))}
-                                {(()=>{
-                                    if (this.props.isMobile() && this.state.taskList.length == 0)
-                                        return <span class="calendar-page-hint">Hint: tap the date above to change date!</span>
-                                })()}
-
                             </div>
                             })()}
                         <div className="bottom-helper">&nbsp;</div>

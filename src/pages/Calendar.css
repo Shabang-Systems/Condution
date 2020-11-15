@@ -105,6 +105,7 @@
     height: 100%;
     flex-grow: 1;
     min-width: 300px;
+    margin-top: 10px;
 }
 
 #calendar-daterow {
