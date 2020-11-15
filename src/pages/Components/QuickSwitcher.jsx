@@ -29,6 +29,7 @@ class QuickSwitcher extends Component {
 	    initialRenderingDone: false, 
 	}
 	this.searcher = React.createRef();
+	this.currentlySelected = React.createRef();
     }
 
     componentDidUpdate() {
@@ -46,7 +47,7 @@ class QuickSwitcher extends Component {
     focusRef() {
        if (this.searcher.current) // if the ref exists, 
             this.searcher.current.setFocus(); // focus it 
-	    this.setState({query: ''}) // and reset the query 
+	this.setState({query: '', selected: 0}) // and reset the query 
     }
 
 
@@ -96,17 +97,19 @@ class QuickSwitcher extends Component {
 	} else {
 	    const idx = this.state.selected
 	    const len = this.filterItems(this.state.query).length-1
-	    if (keyname == "ArrowUp") {
-		console.log(idx, "up")
+	    if (keyname == "ArrowUp" || (e.ctrlKey && keyname == "p")) {
 		if (idx > 0) {
 		    this.setState({selected: idx-1})
 		} else { this.setState({selected: len})}
-	    } else if (keyname == "ArrowDown") {
-		console.log(idx, "down")
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView()}
+	    } else if (keyname == "ArrowDown" || (e.ctrlKey && keyname == "n")) {
 		if (idx == len) {
 		    this.setState({selected: 0})
 		} else { this.setState({selected: idx+1}) }
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView()}
 	    }
+	    console.log(this.state.selected)
+
 	}
 
     }
@@ -119,7 +122,7 @@ class QuickSwitcher extends Component {
 		animated={false}
 		cssClass='qs_modal'
 		autoFocus={true}
-		onDidPresent={this.focusRef}
+		onDidPresent={ this.focusRef }
 		onDidDismiss={this.props.dismiss}
 	    >
 		<div className='modal-content-wrapper'>
@@ -139,9 +142,10 @@ class QuickSwitcher extends Component {
 			    return (
 				<p 
 				    className= {`option-text ${(this.state.selected == i)? 'option-text-hover' : ''}`}
+				    ref={(this.state.selected == i)? this.currentlySelected : null}
+
 				    onMouseEnter={() => {
 					this.setState({selected: i}); 
-					console.log(this.state.selected)
 				    }}
 				    onClick={()=>{
 					this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
