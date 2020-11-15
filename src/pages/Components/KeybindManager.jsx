@@ -67,6 +67,28 @@ class Keybinds extends Component {
 	} else { // if it's not defined and not at the end, then it must be at the beginning,
 	    this.sidebar_switcher(that, this.state.sidebar_list.length-1) // so go to the end 
 	}
+	console.log(this.state.sidebar_index)
+    }
+
+    setSidebarIndex(item) {
+	let idx
+	this.state.sidebar_list.forEach((sidebarItem, i) => {
+	    if (this.arraysAreIdentical(sidebarItem, item)) {
+		idx = i
+	    }
+	})
+	console.log(idx)
+	this.setState({sidebar_index: idx})
+    }
+
+
+    arraysAreIdentical(arr1, arr2){
+	for (let i = 0, len = arr1.length; i < len; i++){
+	    if (arr1[i] !== arr2[i]){
+		return false;
+	    }
+	}
+	return true; 
     }
 
 
@@ -131,6 +153,7 @@ class Keybinds extends Component {
 		dismiss={()=> this.setState({qs_show: false})}
 		items={[this.props.perspectives, this.props.projects]}
 		paginate={this.props.paginate}
+		updateIdx={this.setSidebarIndex}
 
 	    /> 
 	)
