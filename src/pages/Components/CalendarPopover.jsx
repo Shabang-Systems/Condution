@@ -25,7 +25,7 @@ import Select from 'react-select'
 
 
 function CalendarPopover(props) {
-    let [dateSelected, setDateSelected] = useState(new Date());
+    let [dateSelected, setDateSelected] = useState(props.initialDate ? props.initialDate : new Date());
 
     let currentMonth = dateSelected.getMonth();
     let currentYear = dateSelected.getFullYear();
@@ -135,8 +135,34 @@ function CalendarPopover(props) {
                     <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
                     <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
                     <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
-                </div>
-                <div id="calendar-tools">
+                    </div>
+                    {(()=>{
+                        if (props.useTime)
+                            return <div className="calendar-timeunit">   
+                                <span className="calendar-time">
+                                    Time
+                                </span>
+                                <input
+                                    className="calendar-timebox"
+                                    defaultValue={dateSelected.toLocaleTimeString()}
+                                    onKeyPress={e => {
+                                        // TIMEHANDLING is here. If you are searching for that, it's here.
+                                        // But anyway, on change, parse the time
+                                        let d = chrono.parseDate(e.target.value); //TODO bad?
+                                        // ...and throw away the date 
+                                        if (d && e.key === "Enter") {
+                                            let newDate = new Date(dateSelected.getFullYear(), dateSelected.getMonth(), dateSelected.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
+                                            setDateSelected(newDate); // TODO make this with the onChange API
+                                            e.target.value = newDate.toLocaleTimeString();
+                                            if (props.onDateSelected)
+                                                props.onDateSelected(newDate);
+
+                                        }
+                                    }}
+                                />
+                            </div>
+                    })()}
+                    <div id="calendar-tools">
                     <a className="fas fa-caret-left calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
                         setDateSelected(date);

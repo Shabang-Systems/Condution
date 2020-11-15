@@ -50,6 +50,10 @@ textarea:focus, input:focus{
     outline: none;
 }
 
+input {
+    -webkit-appearance: none;
+}
+
 * ::-webkit-scrollbar {
     display: none;
 }
