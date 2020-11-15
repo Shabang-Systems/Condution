@@ -1,7 +1,7 @@
 // A whole lotta imports
 
 // Ionic components
-import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton } from '@ionic/react';
+import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton, IonPopover } from '@ionic/react';
 
 // Detect whether is mobile
 import { getPlatforms } from '@ionic/react';
@@ -163,7 +163,8 @@ class Task extends Component {
             duePopoverShown: false, // is the due calendar popover shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
-            haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false) // did we render the edit part yet? optimization
+            haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false), // did we render the edit part yet? optimization
+            notificationPopoverShown: [false, null], // is our notification popover shown?
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -173,6 +174,7 @@ class Task extends Component {
         this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
         this.duePopover = React.createRef(); // what's my due popover?
         this.deferPopover = React.createRef(); // what's my defer popover?
+        this.notificationPopover = React.createRef(); // what's my notification popover?
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -181,6 +183,7 @@ class Task extends Component {
     showTagEditor() {this.setState({showTagEditor: true})} // function for showing tag editor
     showTageEditor() {this.setState({showTageEditor: false})}  // function for hiding tag editor
 
+    showNotificationPopover(e) {this.setState({notificationPopoverShown: [true, e.nativeEvent]})}
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
@@ -285,6 +288,11 @@ class Task extends Component {
         if (this.deferPopover.current) // if our defer popover is a thing that mounted
             if (this.deferPopover.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
+
+        if (this.notificationPopover.current) // if our notification popover is a thing that mounted
+            if (this.notificationPopover.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
         
         if (this.TagEditorRef.current) // if our repeater is a thing that mounted
             if (this.TagEditorRef.current.contains(e.target)) // and we are clicking inside that
@@ -542,7 +550,24 @@ class Task extends Component {
                                                     }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
+                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
+
+                                                    {/* Notification icon that, on click, shows notify popover */}
+                                                    <IonPopover
+                                                        showBackdrop={false}
+                                                        isOpen={this.state.notificationPopoverShown[0]}
+                                                        cssClass='notif-popover'
+                                                        onDidDismiss={e => this.setState({notificationPopoverShown: [false, null]})}
+                                                        event={this.state.notificationPopoverShown[1]}
+                                                        ref={this.notificationPopover}
+                                                    >
+                                                        <div>
+                                                            <div className="notification-popover-item">Cancel Notification</div>
+                                                            <div className="notification-popover-item">Change Notification</div>
+                                                        </div>
+                                                    </IonPopover>
+                                                    <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
+
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}

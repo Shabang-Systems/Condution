@@ -418,7 +418,7 @@ class Gruntman {
             this.refresher();
     }
 
-    async scheduleNotification(id, title, desc, time) {
+    async scheduleNotification(id, uid, title, desc, time) {
         return await LocalNotifications.schedule({
             notifications: [
                 {
@@ -428,6 +428,7 @@ class Gruntman {
                     sound: null,
                     id: this.hashCode("id"),
                     attachments: `${id}`,
+                    extra: uid,
                     actionTypeId: "completeOrSnooze"
                 }
             ]
@@ -435,16 +436,18 @@ class Gruntman {
     }
 
     async handleNotificationAction(action) {
-        let taskID;
+        let taskID, userID;
         switch (action.actionId) {
             case "complete":
                 taskID = action.notification.attachments;
+                userID = action.notification.extra;
                 // TODO TODO
                 //this.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
                 break;
             case "snooze":
                 // TODO TODO
                 taskID = action.notification.attachments;
+                userID = action.notification.extra;
                 break;
         }
     }
