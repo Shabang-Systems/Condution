@@ -425,7 +425,7 @@ class Gruntman {
                     body: desc,
                     schedule: { at: time},
                     sound: null,
-                    id: this.hashCode("id"),
+                    id: this.hashCode(id),
                     attachments: `${id}`,
                     extra: uid,
                     actionTypeId: "completeOrSnooze"
