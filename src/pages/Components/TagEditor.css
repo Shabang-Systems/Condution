@@ -20,6 +20,7 @@
     overflowY: scroll;
     width: 40%;
     height: 100%;
+    flex-direction: column;
 }
 
 .tag-settings {
@@ -39,5 +40,4 @@
 .tag-in-list {
     width: 100%;
     background-color: var(--repeat-popover-header-text);
-    flex-direction: column;
 }
