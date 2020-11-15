@@ -44,30 +44,18 @@ class Gruntman {
                 // TODO TODO TODO TODO TODO TODO TODO TODO
                 //
 
-                LocalNotifications.registerActionTypes({types: [{id: "completeOrSnooze", actions: [{id:"complete", title: "LOCALIZE: Complete", requiresAuthentication: "true", foreground: "false"}]}]});
+                //LocalNotifications.registerActionTypes({types: [{id: "completeOrSnooze", actions: [{id:"complete", title: "LOCALIZE: Complete", requiresAuthentication: "true", foreground: "false"}, {id:"snooze", title: "LOCALIZE: Snooze", requiresAuthentication: "true", foreground: "false"}]}]});
             }
+            LocalNotifications.addListener("localNotificationActionPerformed", this.handleNotificationAction);
         }).bind(this));
 
+        this.hashCode = s => Math.abs(s.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0));
 
-        //const notifs = LocalNotifications.schedule({
-  //notifications: [
-    //{
-      //title: "Title",
-      //body: "Body",
-      //id: 1,
-      //schedule: { at: new Date(Date.now() + 1000 * 5) },
-      //sound: null,
-      //attachments: null,
-        //actionTypeId: "like, here's a string",
-    //}
-  //]
-/*});*/
         this.e = engine;
         this.refresher = ()=>{};
         this.callbackRefresherReleased = true; // prevent live callback merge conflicts
         this.conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
         this.releaseTimeout = undefined;
-
 
         this.doers = {
             macro: {
@@ -427,6 +415,48 @@ class Gruntman {
     requestRefresh() {
         if (!this.updateLock && this.callbackRefresherReleased)
             this.refresher();
+    }
+
+    async scheduleNotification(id, uid, title, desc, time) {
+        return await LocalNotifications.schedule({
+            notifications: [
+                {
+                    title: title,
+                    body: desc,
+                    schedule: { at: time},
+                    sound: null,
+                    id: this.hashCode(id),
+                    attachments: [`${id}`, `${uid}`],
+                    extra: uid,
+                }
+            ]
+        });
+    }
+
+    async handleNotificationAction(action) {
+        let [taskID, userID] = action.notification.attachments;
+        switch (action.actionId) {
+            case "complete":
+                // TODO TODO
+                this.do("task.update__complete", { uid: userID, tid: taskID}, true)
+                break;
+            case "snooze":
+                // TODO TODO
+                taskID = action.notification.attachments;
+                userID = action.notification.extra;
+                break;
+        }
+    }
+
+    async cancelNotification(id) {
+        return await LocalNotifications.cancel({notifications: [{id:`${this.hashCode(id)}`}]});
+    }
+
+    async checkNotification(id) {
+        let expectedID = this.hashCode(id);
+        let pending = await LocalNotifications.getPending();
+        let needed = pending.notifications.map(e=>e.id).filter(e=>e==expectedID); // two equal signs to ignore type
+        return needed.length > 0;
     }
 
     /*

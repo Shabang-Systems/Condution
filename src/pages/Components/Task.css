@@ -564,8 +564,21 @@ button:focus {
     /*background-color: var(--decorative-light) !important; */
     /*background-color: black !important;*/
     /*background-color: red !important; */
+}
 
+.notif-popover {
+    --width: 160px;
+}
 
+.notification-popover-item {
+    font-size: 14px;
+    padding: 5px;
+    color: var(--content-normal-accent);
+    transition: background 0.3s;
+}
+
+.notification-popover-item:hover {
+    background: var(--background-feature);
 }
 
 

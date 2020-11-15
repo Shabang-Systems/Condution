@@ -1,7 +1,7 @@
 // A whole lotta imports
 
 // Ionic components
-import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton } from '@ionic/react';
+import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton, IonPopover } from '@ionic/react';
 
 // Detect whether is mobile
 import { getPlatforms } from '@ionic/react';
@@ -24,6 +24,9 @@ import Repeat from './Repeat';
 
 // Our very own tag editor UI
 import TagEditor from './TagEditor';
+
+// Our very own calendar popover
+import CalendarPopover from './CalendarPopover';
 
 // Our very own CSS
 import './Task.css';
@@ -156,9 +159,14 @@ class Task extends Component {
             isComplete: false, // are we completed?
             showRepeat: false, // is our repeat UI shown?
             showTagEditor: false, // is our TagEditor UI shown?
+            deferPopoverShown: false, // is the defer calendar popover shown?
+            duePopoverShown: false, // is the due calendar popover shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
-            haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false) // did we render the edit part yet? optimization
+            haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false), // did we render the edit part yet? optimization
+            notificationPopoverShown: [false, null], // is our notification popover shown?
+            notificationCalendarShown: false, // is the notification calendar shown?
+            hasNotification: false // do we have a notification scheudled?
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -166,6 +174,10 @@ class Task extends Component {
         this.checkbox = React.createRef(); // what's my pseudocheck
         this.TagEditorRef = React.createRef(); // what's my tag editor
         this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
+        this.duePopover = React.createRef(); // what's my due popover?
+        this.deferPopover = React.createRef(); // what's my defer popover?
+        this.notificationPopover = React.createRef(); // what's my notification popover?
+        this.notificationCalender = React.createRef(); // what's my notification calandar?
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -174,6 +186,12 @@ class Task extends Component {
     showTagEditor() {this.setState({showTagEditor: true})} // function for showing tag editor
     showTageEditor() {this.setState({showTageEditor: false})}  // function for hiding tag editor
 
+    showNotificationPopover(e) {
+        if (this.state.hasNotification)
+            this.setState({notificationPopoverShown: [true, e.nativeEvent]})
+        else 
+            this.setState({notificationCalendarShown: true})
+    }
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
@@ -210,7 +228,8 @@ class Task extends Component {
                         {timeZone: taskInfo.timezone} // and cast it to the right time zone
                     )
                 ): undefined
-            )
+            ),
+            hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
         });
         this.refreshDecorations(); // flush and generate them decorations!
         this.initialRenderDone = true;
@@ -269,6 +288,22 @@ class Task extends Component {
 
         if (this.repeater.current) // if our repeater is a thing that mounted
             if (this.repeater.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
+        if (this.duePopover.current) // if our due popover is a thing that mounted
+            if (this.duePopover.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
+        if (this.deferPopover.current) // if our defer popover is a thing that mounted
+            if (this.deferPopover.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
+        if (this.notificationPopover.current) // if our notification popover is a thing that mounted
+            if (this.notificationPopover.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
+
+        if (this.notificationCalender.current) // if our notification calendar is a thing that mounted
+            if (this.notificationCalender.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
         
         if (this.TagEditorRef.current) // if our repeater is a thing that mounted
@@ -473,6 +508,7 @@ class Task extends Component {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
+
                                                 {/* First, task description field */}
                                                 <textarea 
                                                     placeholder="LOCALIZE:Description" 
@@ -526,7 +562,37 @@ class Task extends Component {
                                                     }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
+                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
+
+                                                    {/* Notification icon that, on click, shows notify popover */}
+                                                    <CalendarPopover reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                        this.props.gruntman.cancelNotification(this.props.tid).then(()=>{
+                                                            this.props.gruntman.scheduleNotification(this.props.tid, this.props.uid, this.state.name, this.state.desc, d);
+                                                            this.setState({hasNotification: true});
+                                                        });
+                                                    }}/>
+                                                    <IonPopover
+                                                        showBackdrop={false}
+                                                        isOpen={this.state.notificationPopoverShown[0]}
+                                                        cssClass='notif-popover'
+                                                        mode="md" 
+                                                        onDidDismiss={e => this.setState({notificationPopoverShown: [false, null]})}
+                                                        event={this.state.notificationPopoverShown[1]}
+                                                        ref={this.notificationPopover}
+                                                    >
+                                                        <div>
+                                                            <div className="notification-popover-item" onClick={()=>{
+                                                                this.props.gruntman.cancelNotification(this.props.tid)
+                                                                this.setState({hasNotification: false, notificationPopoverShown: [false, null]});
+                                                            }}>Cancel Notification</div>
+                                                            <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true, notificationPopoverShown:[false, null]})}>Change Notification</div>
+                                                        </div>
+                                                    </IonPopover>
+                                                    {(()=>{
+                                                        if (this.props.gruntman.notifPermissionGranted && !(getPlatforms().includes("mobileweb") || getPlatforms().includes("desktop")))
+                                                            return <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
+                                                    })()}
+
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
@@ -540,6 +606,13 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                         {/* The. Defer. Date. */}
                                                         <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        <CalendarPopover reference={this.deferPopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
+                                                            this.props.gruntman.do(
+                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            )
+                                                            this.setState({deferDate: d});
+
+                                                        }}/>
                                                         {(() => {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
@@ -559,8 +632,13 @@ class Task extends Component {
                                                                                 )
                                                                         }, `task-defer-${this.props.tid}-update`)
                                                                     }} onFocus={(e) => {
-                                                                        onClick();
-                                                                        e.target.focus();
+                                                                        if (getPlatforms().includes("mobile"))
+                                                                            this.setState({deferPopoverShown: true})
+                                                                        else {
+                                                                            onClick();
+                                                                            e.target.focus();
+                                                                        }
+
                                                                     }}
                                                                     />
                                                                 );
@@ -607,6 +685,14 @@ class Task extends Component {
 
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
                                                         <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        {/* Due date popover */}
+                                                        <CalendarPopover reference={this.duePopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                            this.props.gruntman.do(
+                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            )
+                                                            this.setState({dueDate: d});
+
+                                                        }}/>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -627,8 +713,12 @@ class Task extends Component {
                                                                         }, `task-due-${this.props.tid}-update`)
                                                                     }
                                                                         } onFocus={(e) => {
-                                                                            onClick();
-                                                                            e.target.focus();
+                                                                            if (getPlatforms().includes("mobile"))
+                                                                                this.setState({duePopoverShown: true})
+                                                                            else {
+                                                                                onClick();
+                                                                                e.target.focus();
+                                                                            }
                                                                         }}
                                                                     />
                                                                 );
