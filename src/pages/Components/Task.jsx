@@ -165,6 +165,8 @@ class Task extends Component {
             possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
             haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false), // did we render the edit part yet? optimization
             notificationPopoverShown: [false, null], // is our notification popover shown?
+            notificationCalendarShown: false, // is the notification calendar shown?
+            hasNotification: false // do we have a notification scheudled?
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -175,6 +177,7 @@ class Task extends Component {
         this.duePopover = React.createRef(); // what's my due popover?
         this.deferPopover = React.createRef(); // what's my defer popover?
         this.notificationPopover = React.createRef(); // what's my notification popover?
+        this.notificationCalender = React.createRef(); // what's my notification calandar?
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -183,7 +186,12 @@ class Task extends Component {
     showTagEditor() {this.setState({showTagEditor: true})} // function for showing tag editor
     showTageEditor() {this.setState({showTageEditor: false})}  // function for hiding tag editor
 
-    showNotificationPopover(e) {this.setState({notificationPopoverShown: [true, e.nativeEvent]})}
+    showNotificationPopover(e) {
+        if (this.state.hasNotification)
+            this.setState({notificationPopoverShown: [true, e.nativeEvent]})
+        else 
+            this.setState({notificationCalendarShown: true})
+    }
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
@@ -220,7 +228,8 @@ class Task extends Component {
                         {timeZone: taskInfo.timezone} // and cast it to the right time zone
                     )
                 ): undefined
-            )
+            ),
+            hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
         });
         this.refreshDecorations(); // flush and generate them decorations!
         this.initialRenderDone = true;
@@ -293,6 +302,9 @@ class Task extends Component {
             if (this.notificationPopover.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
 
+        if (this.notificationCalender.current) // if our notification calendar is a thing that mounted
+            if (this.notificationCalender.current.contains(e.target)) // and we are clicking inside that
+                return; //click inside
         
         if (this.TagEditorRef.current) // if our repeater is a thing that mounted
             if (this.TagEditorRef.current.contains(e.target)) // and we are clicking inside that
@@ -553,6 +565,11 @@ class Task extends Component {
                                                     <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
 
                                                     {/* Notification icon that, on click, shows notify popover */}
+                                                    <CalendarPopover reference={this.notificationCalender} uid={this.props.uid} engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime onDateSelected={(d)=>{
+                                                        this.props.gruntman.cancelNotification(this.props.tid).then(()=>{
+                                                            this.props.gruntman.scheduleNotification(this.props.tid, this.props.uid, this.state.name, this.state.desc, d);
+                                                        });
+                                                    }}/>
                                                     <IonPopover
                                                         showBackdrop={false}
                                                         isOpen={this.state.notificationPopoverShown[0]}

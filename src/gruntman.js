@@ -56,7 +56,6 @@ class Gruntman {
         this.callbackRefresherReleased = true; // prevent live callback merge conflicts
         this.conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
         this.releaseTimeout = undefined;
-        this.TEMPTEMPTEMP()
 
         this.doers = {
             macro: {
@@ -460,11 +459,7 @@ class Gruntman {
         let expectedID = this.hashCode(id);
         let pending = await LocalNotifications.getPending();
         let needed = pending.notifications.map(e=>e.id).filter(e=>e==expectedID); // two equal signs to ignore type
-        return needed.length >= 0;
-    }
-
-    async TEMPTEMPTEMP() {
-        //await this.scheduleNotification("TESTID", "hi", "I am bob", new Date()+5000);
+        return needed.length > 0;
     }
 
     /*
