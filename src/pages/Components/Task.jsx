@@ -556,6 +556,13 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                         {/* The. Defer. Date. */}
                                                         <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                        <CalendarPopover reference={this.deferPopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
+                                                            this.props.gruntman.do(
+                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            )
+                                                            this.setState({deferDate: d});
+
+                                                        }}/>
                                                         {(() => {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
@@ -575,8 +582,13 @@ class Task extends Component {
                                                                                 )
                                                                         }, `task-defer-${this.props.tid}-update`)
                                                                     }} onFocus={(e) => {
-                                                                        onClick();
-                                                                        e.target.focus();
+                                                                        if (getPlatforms().includes("mobile"))
+                                                                            this.setState({deferPopoverShown: true})
+                                                                        else {
+                                                                            onClick();
+                                                                            e.target.focus();
+                                                                        }
+
                                                                     }}
                                                                     />
                                                                 );
