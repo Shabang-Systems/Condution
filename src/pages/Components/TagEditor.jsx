@@ -40,16 +40,13 @@ class TagEditor extends Component {
 
    async setTagState() {
         this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
-        console.log(this.state.tagList)
     }
-/*
+   // TODO BADDD 
     componentDidMount() {
         this.setTagState()
     }
-*/
+
     render() {
-        // TODO just do this when the tag pane is opened
-        // use on modal did present or something check quick switcher
         return (
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidPresent={() => {this.setTagState()}} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
 
@@ -67,7 +64,6 @@ class TagEditor extends Component {
                 <div className="tag-pane-container">
                     <div className="tag-list">
                         {this.state.tagList.map(tag => {
-                            console.log(tag.name)
                             return (<div className="tag-in-list">
                                 {tag.name} 
                             </div>)

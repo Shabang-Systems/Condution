@@ -17,7 +17,7 @@
 
 .tag-list {
     display: flex;
-    overflowY: scroll;
+    overflow-y: scroll;
     width: 40%;
     height: 100%;
     flex-direction: column;
@@ -27,7 +27,7 @@
     display: flex;
     width: 60%;
     height: 100%;
-    overflowY: scroll;
+    overflow-y: scroll;
 }
 
 .tag-pane-container {
@@ -40,5 +40,6 @@
 .tag-in-list {
     width: 100%;
     color: var(--repeat-popover-header-text);
+    border: 0.1px solid var(--repeat-popover-header-text);
     /*border-right: 1px solid white;*/
 }
