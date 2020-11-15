@@ -46,6 +46,10 @@ class TagEditor extends Component {
         this.setTagState()
     }
 
+    tagClicked() {
+        console.log("Tag Clicked!")
+    }
+
     render() {
         return (
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidPresent={() => {this.setTagState()}} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
@@ -64,11 +68,13 @@ class TagEditor extends Component {
                 <div className="tag-pane-container">
                     <div className="tag-list">
                         {this.state.tagList.map(tag => {
-                            return (<div className="tag-in-list">
-                                <div className="tag-name">
-                                    {tag.name}
+                            return (
+                                <div className="tag-in-list" onClick={this.tagClicked()}>
+                                    <div className="tag-name">
+                                        {tag.name}
+                                    </div>
                                 </div>
-                            </div>)
+                            )
                         })}
                     </div>
                     <div className="tag-settings"></div>
