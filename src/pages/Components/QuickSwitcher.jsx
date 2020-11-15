@@ -77,9 +77,9 @@ class QuickSwitcher extends Component {
     handleKeydown(e) {
 	const keyname = e.key;
 	if (keyname == "Enter") {
-	    let firstItem = this.filterItems(this.state.query)[0]
+	    let selectedItem = this.filterItems(this.state.query)[this.state.selected]
 	    // TODO: jack make the sidebar styling work 
-	    if (!firstItem || !this.state.query) {
+	    if ((!selectedItem || !this.state.query) && this.state.selected == 0) {
 		if (this.state.direction && this.props.history.length > 2) { 
 		    this.props.history.goBack() 
 		} 
@@ -87,16 +87,15 @@ class QuickSwitcher extends Component {
 		this.setState({direction: !this.state.direction})
 		
 	    } else {
-		const slicedFirstItem = firstItem.slice(1)
-		this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
-		this.props.paginate(...slicedFirstItem); // paginate-ify it!
-		this.props.updateIdx(slicedFirstItem)
+		const slicedSelectedItem = selectedItem.slice(1)
+		this.props.history.push(`/${selectedItem[1]}/${selectedItem[2]}`) // push to the history
+		this.props.paginate(...slicedSelectedItem); // paginate-ify it!
+		this.props.updateIdx(slicedSelectedItem)
 	    }
 	    this.props.dismiss() // dismiss the modal
 	} else {
 	    const idx = this.state.selected
 	    const len = this.filterItems(this.state.query).length-1
-	    //const len = this.state.filteredList.length
 	    if (keyname == "ArrowUp") {
 		console.log(idx, "up")
 		if (idx > 0) {
@@ -131,7 +130,7 @@ class QuickSwitcher extends Component {
 			spellcheck={true}
 			className='search-bar'
 			placeholder="Previous  |  Let's go to.." // TODO: jack do you like this? 
-			onIonChange={e => this.setState({query: e.detail.value})}
+			onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
 			debounce={0}
 			onKeyDown={this.handleKeydown}
 		    />
