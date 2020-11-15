@@ -565,7 +565,7 @@ class Task extends Component {
                                                     <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
 
                                                     {/* Notification icon that, on click, shows notify popover */}
-                                                    <CalendarPopover reference={this.notificationCalender} uid={this.props.uid} engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                    <CalendarPopover reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
                                                         this.props.gruntman.cancelNotification(this.props.tid).then(()=>{
                                                             this.props.gruntman.scheduleNotification(this.props.tid, this.props.uid, this.state.name, this.state.desc, d);
                                                             this.setState({hasNotification: true});

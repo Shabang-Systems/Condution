@@ -44,7 +44,7 @@ class Gruntman {
                 // TODO TODO TODO TODO TODO TODO TODO TODO
                 //
 
-                LocalNotifications.registerActionTypes({types: [{id: "completeOrSnooze", actions: [{id:"complete", title: "LOCALIZE: Complete", requiresAuthentication: "true", foreground: "false"}, {id:"snooze", title: "LOCALIZE: Snooze", requiresAuthentication: "true", foreground: "false"}]}]});
+                //LocalNotifications.registerActionTypes({types: [{id: "completeOrSnooze", actions: [{id:"complete", title: "LOCALIZE: Complete", requiresAuthentication: "true", foreground: "false"}, {id:"snooze", title: "LOCALIZE: Snooze", requiresAuthentication: "true", foreground: "false"}]}]});
             }
             LocalNotifications.addListener("localNotificationActionPerformed", this.handleNotificationAction);
         }).bind(this));
@@ -428,7 +428,6 @@ class Gruntman {
                     id: this.hashCode(id),
                     attachments: [`${id}`, `${uid}`],
                     extra: uid,
-                    actionTypeId: "completeOrSnooze"
                 }
             ]
         });

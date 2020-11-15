@@ -124,7 +124,7 @@ function CalendarPopover(props) {
                                 if (i.type === "post") 
                                     date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, i.content);
                                 setDateSelected(date);
-                                if (props.onDateSelected)
+                                if (props.onDateSelected && !props.disableOnclick)
                                     props.onDateSelected(date);
                             }}>{i.content}</span>
                         )}
@@ -153,7 +153,7 @@ function CalendarPopover(props) {
                                             let newDate = new Date(dateSelected.getFullYear(), dateSelected.getMonth(), dateSelected.getDate(), d.getHours(), d.getMinutes(), d.getSeconds());
                                             setDateSelected(newDate); // TODO make this with the onChange API
                                             e.target.value = newDate.toLocaleTimeString();
-                                            if (props.onDateSelected)
+                                            if (props.onDateSelected && !props.disableOnclick)
                                                 props.onDateSelected(newDate);
 
                                         }
@@ -165,20 +165,20 @@ function CalendarPopover(props) {
                     <a className="fas fa-caret-left calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
                         setDateSelected(date);
-                        if (props.onDateSelected)
+                        if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(date);
 
                     }}></a>
                     <a className="fas fa-caret-right calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
                         setDateSelected(date);
-                        if (props.onDateSelected)
+                        if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(date);
 
                     }}></a>
                     <div className="calendar-today" onClick={()=>{
                         setDateSelected(new Date());
-                        if (props.onDateSelected)
+                        if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
                     }}>Today</div>
