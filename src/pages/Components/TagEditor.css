@@ -1,5 +1,6 @@
 .TagEditor-header {
     width: 100%;
+    padding-top:min(env(safe-area-inset-top), 35px);
     background-color: var(--background-feature);
     padding: 17px;
     color: var(--decorative-light-alt);
@@ -19,6 +20,7 @@
     overflowY: scroll;
     width: 40%;
     height: 100%;
+    flex-direction: column;
 }
 
 .tag-settings {
@@ -33,4 +35,9 @@
     flex-direction: row;
     height: 100%;
     width: 100%;
+}
+
+.tag-in-list {
+    width: 100%;
+    background-color: var(--repeat-popover-header-text);
 }
