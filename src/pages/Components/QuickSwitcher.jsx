@@ -51,7 +51,6 @@ class QuickSwitcher extends Component {
 	let filteredItems = this.state.items.filter(item => {
 	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
 	});
-	//this.setState({firstItem: filteredItems[0]});
 	return filteredItems
     }
 
@@ -84,8 +83,10 @@ class QuickSwitcher extends Component {
 		this.setState({direction: !this.state.direction})
 		
 	    } else {
+		const slicedFirstItem = firstItem.slice(1)
 		this.props.history.push(`/${firstItem[1]}/${firstItem[2]}`) // push to the history
-		this.props.paginate(...firstItem.slice(1)); // paginate-ify it!
+		this.props.paginate(...slicedFirstItem); // paginate-ify it!
+		this.props.updateIdx(slicedFirstItem)
 	    }
 	    this.props.dismiss() // dismiss the modal
 	}
