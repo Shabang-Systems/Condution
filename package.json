@@ -9,6 +9,7 @@
     "@capacitor/android": "^2.4.2",
     "@capacitor/core": "2.4.1",
     "@capacitor/ios": "^2.4.1",
+    "@ionic/lab": "^3.2.9",
     "@ionic/react": "^5.0.7",
     "@ionic/react-router": "^5.0.7",
     "@testing-library/jest-dom": "^4.2.4",
@@ -39,6 +40,7 @@
     "react-dom": "^16.13.0",
     "react-getscreen": "^1.1.3",
     "react-localization": "^1.0.15",
+    "react-lottie": "^1.2.3",
     "react-outside-click-handler": "^1.3.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
@@ -56,7 +58,8 @@
     "ionic:dist": "ionic build --prod && cp build/index.html build/404.html",
     "ionic:runserver": "ionic serve -l --external",
     "ionic:runios": "ionic capacitor run ios -l --external",
-    "ionic:rundroid": "ionic capacitor run android -l --external"
+    "ionic:rundroid": "ionic capacitor run android -l --external",
+    "capacitor:sync": "ionic cap sync"
   },
   "postinstall": {
     "postinstall": "electron-builder install-app-deps"
