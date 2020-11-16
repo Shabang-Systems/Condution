@@ -101,12 +101,18 @@ class QuickSwitcher extends Component {
 		if (idx > 0) {
 		    this.setState({selected: idx-1})
 		} else { this.setState({selected: len})}
-		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView()}
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
+		    behavior: "smooth",
+		    block: "end"
+		})}
 	    } else if (keyname == "ArrowDown" || (e.ctrlKey && keyname == "n")) {
 		if (idx == len) {
 		    this.setState({selected: 0})
 		} else { this.setState({selected: idx+1}) }
-		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView()}
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
+		    behavior: "smooth",
+		    block: "start",
+		})}
 	    }
 	    console.log(this.state.selected)
 
