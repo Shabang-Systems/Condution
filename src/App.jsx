@@ -52,6 +52,7 @@ import "firebase/firestore";
 /* Views that we need */
 import Auth from './pages/Auth';
 import Loader from './pages/Loader';
+import Onboarding from './pages/Onboarding';
 import Home from './pages/Home';
 
 /* Localization Toolkit */
