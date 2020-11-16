@@ -186,7 +186,7 @@ function CalPageBigOllendar(props) {
                         if (props.onDateSelected)
                             props.onDateSelected(new Date());
 
-                    }}>Today</div>
+                    }}>{props.gruntman.localizations.clbtd}</div>
 
 
                 </div>
@@ -194,8 +194,8 @@ function CalPageBigOllendar(props) {
                 <div id="bigol-calendar-infopanel">
                     <div id="bigol-calendar-dategroup">
                         <div className="bigol-calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                        <div className="bigol-calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
-                        <div className="bigol-calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                        <div className="bigol-calendar-infopanel-datename">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), {  weekday: 'long' })}</div>
+                        <div className="bigol-calendar-infopanel-month">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), { month: 'long' })}</div>
                         <div className="bigol-calendar-infopanel-year">{dateSelected.getFullYear()}</div>
                     </div>
                 </div>
@@ -340,7 +340,7 @@ class Calendar extends Component {
                                     <i style={{paddingRight: 10}} 
                                         className="fas fa-calendar-alt">
                                     </i>
-                                    Calendar
+                                    @NEEDLOC Calendar
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                             </div> 
@@ -350,7 +350,7 @@ class Calendar extends Component {
                         <div id="calendar-page-wrapper">
                             {(()=>{
                                 if (this.props.isMobile())
-                                    return <CalendarUnit uid={this.props.uid} engine={this.props.engine} isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
+                                    return <CalendarUnit gruntman={this.props.gruntman} uid={this.props.uid} engine={this.props.engine} isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
                                         let endDate = new Date(d.getTime());
                                         endDate.setHours(23,59,59,60);
                                         let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);

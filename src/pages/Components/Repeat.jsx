@@ -135,7 +135,7 @@ class Repeat extends Component {
                                             <div className="repeat-weekgrid">
                                                 {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}
                                                 {/* ["originalString", "localizedString"] <= localize in this way */}
-                                                {[["M", "M"], ["T", "T"], ["W", "W"], ["Th", "Th"], ["F", "F"], ["S", "S"], ["Su", "Su"]].map(e => <a key={e} className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
+                                                {[["M", this.props.gruntman.localizations.repeat_datework_weekname_m], ["T", this.props.gruntman.localizations.repeat_datework_weekname_tu], ["W",  this.props.gruntman.localizations.repeat_datework_weekname_w], ["Th",  this.props.gruntman.localizations.repeat_datework_weekname_th], ["F",  this.props.gruntman.localizations.repeat_datework_weekname_f], ["S",  this.props.gruntman.localizations.repeat_datework_weekname_sa], ["Su",  this.props.gruntman.localizations.repeat_datework_weekname_su]].map(e => <a key={e} className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
                                                     if (this.state.on.includes(e[0])) {
                                                         let oldOn = this.state.on;
                                                         let newOn = oldOn.filter(elem=>elem!==e[0]);

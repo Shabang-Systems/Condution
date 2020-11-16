@@ -85,13 +85,13 @@ class PerspectiveEdit extends Component {
                     <div className="perspective-header">
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%", whiteSpace: "nowrap"}}>
-                            <b className="bold-prefix" >Let&#39;s build &nbsp;</b> 
+                            <b className="bold-prefix" >{this.props.gruntman.localizations.perspective_build_callout}</b> 
                             <input className="editable-title pbuilder-pname" 
                                 ref={this.name}
                                 defaultValue={this.props.perspectiveName} 
                                 onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
                                 style={{minWidth: 0}}
-                                placeholder="Tap to set name"
+                                placeholder="@NEEDLOC Tap to set name"
                             />
 
                             <div className="repeat-task-name">{this.state.name}</div>
@@ -101,7 +101,7 @@ class PerspectiveEdit extends Component {
 
                     </div>
                     <div className="build-input">
-                        <span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span>
+                        <span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span> {/*@NEEDLOC*/}
                         <input 
                             className="build-input-edit"
                             defaultValue={this.props.query}
@@ -116,7 +116,7 @@ class PerspectiveEdit extends Component {
                         <span className="pbasic-container" style={{marginRight: "25px"}}>
                             <span>
                                 <i className="repeat-label fas fa-exchange-alt"></i>
-                                <span className="perspective-label">Include</span>
+                                <span className="perspective-label">{this.props.gruntman.localizations.perspective_include}</span>
                             </span>
 
                             <IonSelect 
@@ -135,16 +135,16 @@ class PerspectiveEdit extends Component {
                                 }}
                             >
 
-                                <IonSelectOption className="repeat-select__option" value="remain">Remaining</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="avail">Available</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="flagged">Flagged</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="remain">{this.props.gruntman.localizations.psp_rem}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="avail">{this.props.gruntman.localizations.psp_avil}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="flagged">{this.props.gruntman.localizations.psp_flg}</IonSelectOption>
                             </IonSelect>
                         </span>
 
                         <span className="pbasic-container">
                             <span>
                                 <i className="repeat-label fas fa-sort-amount-down-alt"></i>
-                                <span className="perspective-label">Order</span>
+                                <span className="perspective-label">{this.props.gruntman.localizations.perspective_order}</span>
                             </span>
 
                             <IonSelect 
@@ -163,11 +163,11 @@ class PerspectiveEdit extends Component {
                                 }}
                             >
 
-                                <IonSelectOption className="repeat-select__option" value="duas">Ascend by Due</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="duds">Descend by Due</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="deas">Ascend by Defer</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="deds">Descend by Defer</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="alph">Alphabetical</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="duas">{this.props.gruntman.localizations.psp_abd}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="duds">{this.props.gruntman.localizations.psp_dbd}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="deas">{this.props.gruntman.localizations.psp_abe}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="deds">{this.props.gruntman.localizations.psp_dbe}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="alph">{this.props.gruntman.localizations.psp_alpha}></IonSelectOption>
                             </IonSelect>
                             <div className="help-icon" onClick={this.handleHelp}>
                                 <i 

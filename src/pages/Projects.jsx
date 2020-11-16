@@ -235,7 +235,7 @@ class Projects extends Component { // define the component
                                     cProject.children.push({type: "task", content:result.tid}); // add our new task
                                     this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
                                 }) // call the homebar refresh
-                            }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Task</div></div></a>
+                            }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
                             <a className="newbutton" onClick={async function() {
                                 let npid = (await this.props.gruntman.do( // call a gruntman function
                                     "project.create", { 
@@ -244,7 +244,7 @@ class Projects extends Component { // define the component
                                     },
                                 )).pid;
                                 this.props.history.push(`/projects/${npid}/do`);
-                            }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>Add a Project</div></div></a>
+                            }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>

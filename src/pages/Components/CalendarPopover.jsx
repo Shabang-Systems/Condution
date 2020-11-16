@@ -91,6 +91,8 @@ function CalendarPopover(props) {
             setHeat(hm);
         })();
     },[dateSelected, props.initialDate]);
+
+    // @NEEDLOC days of the week
     return (
         <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="calendar-popover">
             <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
@@ -181,7 +183,7 @@ function CalendarPopover(props) {
                         if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
-                    }}>Today</div>
+                    }}>{props.gruntman.localizations.clbtd}</div>
                         <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={()=>{
                             if (dateSelected)
                                 props.onDateSelected(dateSelected);
@@ -300,8 +302,8 @@ function CalendarUnit(props) {
                 </div>
                 <div id="calendar-infopanel">
                     <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString('en-us', {  weekday: 'long' })}</div>
-                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString('en-us', { month: 'long' })}</div>
+                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), {  weekday: 'long' })}</div>
+                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), { month: 'long' })}</div>
                     <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
                 </div>
                 {(()=>{
@@ -350,7 +352,7 @@ function CalendarUnit(props) {
                         if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
-                    }}>Today</div>
+                    }}>{props.gruntman.localizations.clbtd}</div>
                     <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={()=>{
                         if (dateSelected)
                             props.onDateSelected(dateSelected);
