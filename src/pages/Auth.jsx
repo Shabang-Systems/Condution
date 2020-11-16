@@ -160,11 +160,11 @@ class Auth extends Component {
                             {(()=>{
                                 switch(this.state.authMode){
                                     case 3:
-                                        return "@NEEDLOC Check and verify your email, then tap Let's Do This!";
+                                        return this.props.localizations.need_and_do;
                                     case 4:
                                         return this.props.localizations.need_verify;
                                     case 5:
-                                        return "@NEEDLOC Check and verify your email, then return to login.";
+                                        return this.props.localizations.need_and_login;
 
                             }})()}
                         </span>
@@ -198,7 +198,7 @@ class Auth extends Component {
                         }}>{(()=>{
                             switch (this.state.authMode) {
                                 case 1:
-                                    return "@NEEDLOC Log in";
+                                    return this.props.localizations.login;
                                 default:
                                     return this.props.localizations.newuser;
 
@@ -226,9 +226,9 @@ class Auth extends Component {
                                     case 3:
                                         return this.props.localizations.lds;
                                     case 1:
-                                        return "Verify Email!";
+                                        return this.props.localizations.verifem;
                                     case 2:
-                                        return "Let's Recover!";
+                                        return this.props.localizations.lerec;
                                     case 4:
                                         return this.props.localizations.proceed;
                                     case 5:

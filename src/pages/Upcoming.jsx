@@ -223,7 +223,7 @@ class Upcoming extends Component { // define the component
                                         <i 
                                             className="fas fa-calendar-week" 
                                             style={{paddingRight: 5}}
-                                        ></i> {this.state.timelineShown? "@NEEDLOC Hide" : "@NEEDLOC Show"} timeline</a>
+                                        ></i> {this.state.timelineShown? this.props.localizations.hide : this.props.localizations.show} {this.props.localizations.timeline}</a>
                                 </div> 
                                 {
                                     (()=>{
