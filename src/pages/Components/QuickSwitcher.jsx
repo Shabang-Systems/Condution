@@ -28,6 +28,10 @@ const autoBind = require('auto-bind/react');
  * @enquirer
  */
 
+
+// TODO: subprojects and icon 
+
+
 class QuickSwitcher extends Component {
     constructor(props) {
         super(props);
@@ -40,6 +44,7 @@ class QuickSwitcher extends Component {
 	    direction: true, // should I go back in history, or forward? (for back toggle)
 	    selected: 0, // what is my selected item index?
 	    prop_store: '', // store my props so we can check if they have changed 
+	    projs: [],
 	}
 	this.searcher = React.createRef(); // searchbar input ref 
 	this.currentlySelected = React.createRef(); // selected item ref 
@@ -54,16 +59,26 @@ class QuickSwitcher extends Component {
     componentDidMount() {
 	this.processItems() // when we mount, process the items.
 	this.setState({prop_store: this.props}) // set the prop store and the items 
+	this.getProjs() // get our sub projects 
+    }
+
+    async getProjs() { // get our projects 
+	const subs = (await this.props.engine.db.getProjectsandTags(this.props.uid))[0][0] // hit the cache 
+	const mod = Object.entries(subs).map(([key, value]) => { // process it 
+	    return ['.' + value, 'projects', key, 'fas fa-tasks']
+	});
+	this.setState({projs: mod}) // and set our state 
     }
 
     focusRef() { // focus the ref!
-       if (this.searcher.current) // if the ref exists,
+	if (this.searcher.current) // if the ref exists,
             this.searcher.current.setFocus(); // focus it 
 	this.setState({query: '', selected: 0}) // and reset the query 
+	this.getProjs() // and get our projects
     }
 
 
-    filterItems(searchTerm, org) { // filter the items!
+    filterItems(searchTerm) { // filter the items!
 	let filteredItems = this.state.items.filter(item => {
 	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
 	});
@@ -74,18 +89,18 @@ class QuickSwitcher extends Component {
 	// name, url prefix, id
 	this.setState({items: 
 	    [
-		[':upcoming', 'upcoming', ''], // set the first item to upcoming 
+		[':upcoming', 'upcoming', '', 'fas fa-chevron-circle-right'], // set the first item to upcoming 
 		// (i could do + but i think thats less efficent 
-		[':completed', 'completed', ''], // set the second item to completed
-		[':calendar', 'calendar', ''], // set the third item to calendar
-		...this.props.items[0].map(o => ['!'+o.name, 'perspectives', o.id]), // map the perspectives
-		...this.props.items[1].map(o => ['.'+o.name, 'projects', o.id]) // and the projects 
+		[':completed', 'completed', '', 'fas fa-check-circle'], // set the second item to completed
+		[':calendar', 'calendar', '', 'fas fa-calendar-alt'], // set the third item to calendar
+		...this.props.items[0].map(o => ['!'+o.name, 'perspectives', o.id, 'fas fa-layer-group']), // map the perspectives
+		...this.state.projs // the projects! 
 	    ],
 	    prop_store: this.props //  and update the props 
 	})
     }
 
-    handleKeydown(e) { // handle the keydown... avery your eyes
+    handleKeydown(e) { // handle the keydown... avert your eyes
 	const keyname = e.key; // store the keyname
 	if (keyname == "Enter") { // if we submit, 
 	    let selectedItem = this.filterItems(this.state.query)[this.state.selected] // store the selected item
@@ -97,7 +112,7 @@ class QuickSwitcher extends Component {
 		} 
 		else if (this.props.history.length > 2) { this.props.history.goForward() }
 		this.setState({direction: !this.state.direction}) // and flip the direction 
-		
+
 	    } else {
 		const slicedSelectedItem = selectedItem.slice(1) // store the sliced item!
 		this.props.history.push(`/${selectedItem[1]}/${selectedItem[2]}`) // push to the history
@@ -136,7 +151,7 @@ class QuickSwitcher extends Component {
 		animated={false} // don't animate the opening. 
 		cssClass='qs_modal' // give it a class! 
 		autoFocus={true} // this doesnt do anything, but like, wishful thinking? 
-		onDidPresent={this.focusRef} // focus our input when we present the modal
+		onDidPresent={this.focusRef} // focus our input when we present the modal, and some other stuff
 		onDidDismiss={this.props.dismiss} // set the state toggle when we dismiss the modal
 	    >
 		<div className='modal-content-wrapper'>
@@ -162,10 +177,10 @@ class QuickSwitcher extends Component {
 		    <div className='option-wrapper'> 
 			{this.filterItems(this.state.query).map((item, i) => {
 			    return (
-				<p 
-				    className= {`option-text ${(this.state.selected == i)? 'option-text-hover' : ''}`}
+				<div 
+				    className="option-line"
+				    className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
 				    ref={(this.state.selected == i)? this.currentlySelected : null}
-
 				    onMouseEnter={() => {
 					this.setState({selected: i}); 
 				    }}
@@ -174,7 +189,14 @@ class QuickSwitcher extends Component {
 					this.props.paginate(...item.slice(1)); // paginate-ify it!
 					this.props.dismiss()
 				    }}
-				>{item[0]}</p>
+
+				>
+				    <i className={`${item[3]} option-icon`} style={{
+				    }}></i>
+				    <p 
+					className= {`option-text`}
+				    >{item[0]}</p>
+				</div>
 				)
 
 			    }

@@ -115,7 +115,10 @@ class Home extends Component {
 			ref={this.keybindRef} 
 			perspectives={this.state.perspectives}
 			projects={this.state.projects}
-			abtib={this.abtibRef}
+			abtib={this.abtibRef} 
+			engine={this.props.engine} 
+			uid={this.props.uid} 
+			gruntman={this.props.gruntman} 
 		    />
                     {/* OoIp */}
                     <ReactTooltip />

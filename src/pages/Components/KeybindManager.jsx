@@ -146,9 +146,13 @@ class Keybinds extends Component {
 	    <QuickSwitcher 
 		qs_show={this.state.qs_show} 
 		dismiss={()=> this.setState({qs_show: false})}
-		items={[this.props.perspectives, this.props.projects]}
+		items={[this.props.perspectives]}
 		paginate={this.props.paginate}
 		updateIdx={this.setSidebarIndex}
+		engine={this.props.engine} 
+		uid={this.props.uid} 
+		gruntman={this.props.gruntman} 
+
 
 	    /> 
 	)
