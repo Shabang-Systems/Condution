@@ -39,7 +39,7 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
-    ["command+enter", ()=>{this.focusElement(this.props.abtib)}], // nav up keybind 
+    ["command+enter", ()=>{this.focusElement(this.props.abtib)}], // focus the FAB
     ]
 
     globalBindings = [
@@ -67,9 +67,9 @@ class Keybinds extends Component {
 	}
     }
 
-    setSidebarIndex(item) {
+    setSidebarIndex(item) { // manage the quickswitcher sidebar index changing 
 	let idx
-	this.state.sidebar_list.forEach((sidebarItem, i) => {
+	this.state.sidebar_list.forEach((sidebarItem, i) => { // get passed an item, find the item 
 	    if (this.arraysAreIdentical(sidebarItem, item)) {
 		idx = i
 	    }
@@ -77,8 +77,7 @@ class Keybinds extends Component {
 	this.setState({sidebar_index: idx})
     }
 
-
-    arraysAreIdentical(arr1, arr2){
+    arraysAreIdentical(arr1, arr2){ // helper function cus js bad 
 	for (let i = 0, len = arr1.length; i < len; i++){
 	    if (arr1[i] !== arr2[i]){
 		return false;
@@ -92,7 +91,7 @@ class Keybinds extends Component {
 	this.setState({qs_show: !this.state.qs_show}); 
     }
 
-    focusElement(ref) {
+    focusElement(ref) { // another helper function 
 	if (ref) {
 	    ref.current.focus()
 	}
