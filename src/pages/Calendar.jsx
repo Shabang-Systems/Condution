@@ -340,7 +340,7 @@ class Calendar extends Component {
                                     <i style={{paddingRight: 10}} 
                                         className="fas fa-calendar-alt">
                                     </i>
-                                    @NEEDLOC Calendar
+                                    {this.props.gruntman.localizations.calendar}
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                             </div> 
