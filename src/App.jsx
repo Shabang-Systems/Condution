@@ -215,13 +215,12 @@ class App extends Component {
                         break;
                 }
 
-                // TODO: do onboarding
                 // Here
-                console.log("I would be onboarding, but... alas.");
+                this.setState({authMode: "onboarding", uid, displayName: name});
+                Engine.db.onBoard(uid, Intl.DateTimeFormat().resolvedOptions().timeZone, this.gruntman.localizations.getLanguage()==="en" ? "there": "", this.gruntman.localizations.onboarding_content).then(e=>this.setState({authMode: mode.service, uid, displayName: name}));
                 // TODO: be done with onboarding
                 // Set the storage type and write it into cookies
                 // load the authenicated state and TODO supply the UID
-                this.setState({authMode: mode.service, uid, displayName: name});
                 break;
             case "logout":
                 // Set the storage type to nada and write it into cookies
@@ -250,6 +249,8 @@ class App extends Component {
             case "json":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations}/>;
             // wut esta this auth mode? load the loader with an error
+            case "onboarding":
+                return <Onboarding />
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
                 return <Loader isError={true} error={this.state.authMode}/>
