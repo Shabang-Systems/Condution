@@ -15,6 +15,13 @@
     --decorative-light-alt: #909499;
     --decorative-light-accent: #d4d5d8;
 
+    /* TODO, deal with these */
+    --task-clickbox-background: #333333;
+    --task-clickbox-accent-background: #3a3a3a;
+    --task-clickbox: #8b8b8c;
+    --task-clickbox-accent: #bfbfbf;
+
+
 /*
    _____                _       _   _          _______ _                         
   / ____|              | |     | | (_)        |__   __| |                        

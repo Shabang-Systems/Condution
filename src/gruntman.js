@@ -387,8 +387,20 @@ class Gruntman {
         this.updateLock = false;
         this.updateInterval = undefined;
 
+        // @core-devs will not approve but I am secretly hiding
+        // a copy of localized strings in gruntman
+        this.secretLocalizedStrings = {};
+
         // And AutoBind any and all functions
         autoBind(this);
+    }
+
+    get localizations() {
+        return this.secretLocalizedStrings;
+    }
+
+    set localizations(value) {
+        this.secretLocalizedStrings = value;
     }
 
     halt() {

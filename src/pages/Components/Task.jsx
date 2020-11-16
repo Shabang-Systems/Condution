@@ -466,7 +466,6 @@ class Task extends Component {
                                 {/* The animated input box */}
                                 <animated.input 
                                     defaultValue={this.state.name} 
-                                    placeholder={"LOCALIZE: Task Name"} 
                                     onChange={
                                         (e)=>{
                                             // THIS. REFER TO THIS. YOU ARE HERE. STOP SEARCHING.
@@ -500,7 +499,7 @@ class Task extends Component {
                                     readOnly={(!this.state.expanded)} 
                                     type="text" 
                                     autoComplete="off" 
-                                    placeholder="LOCALIZE: Task Name" 
+                                    placeholder={this.props.gruntman.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}} />
 
                                 {/* Task edit. The thing that slides open on edit. */}
@@ -511,7 +510,7 @@ class Task extends Component {
 
                                                 {/* First, task description field */}
                                                 <textarea 
-                                                    placeholder="LOCALIZE:Description" 
+                                                    placeholder={this.props.gruntman.localizations.desc} 
                                                     className="task-desc" 
                                                     style={{marginBottom: 10}} 
                                                     defaultValue={this.state.desc}
@@ -536,7 +535,7 @@ class Task extends Component {
                                                 {/* Task icon set. TODO delete task */}
                                                 <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
                                                     {/* Flagged icon */}
-                                                    <a data-tip="LOCALIZE: Flagged" className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
+                                                    <a data-tip={this.props.gruntman.psp_flg} className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
                                                         // On change, set the flagged state to the opposite of whatever it is
                                                         // Both on the db...
                                                         this.props.gruntman.do(

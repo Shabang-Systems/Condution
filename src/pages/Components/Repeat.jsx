@@ -74,7 +74,7 @@ class Repeat extends Component {
                     <div className="repeat-header">
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%"}}>
-			                <b className="bold-prefix" >Repeat</b> 
+			                <b className="bold-prefix" >{this.props.gruntman.localizations.repeat_word}</b> 
 			                <div className="repeat-task-name">{this.state.name}</div>
 			            </span>
                         {/* Close button */}
@@ -85,7 +85,7 @@ class Repeat extends Component {
                             <div className="repeat-rule-selector">
                             <span>
                                 <i className="repeat-label fa fa-redo"></i>
-                                <span className="repeat-label">Repeat</span>
+                                <span className="repeat-label">{this.props.gruntman.localizations.repeat_word}</span>
                             </span>
                             {/* The big select, force iOS style */}
                             <IonSelect className="repeat-select" interface="popover" value={this.state.rule} mode="ios" onIonChange={e=>{
@@ -99,11 +99,11 @@ class Repeat extends Component {
                                     this.setState({rule: e.detail.value, advanced: false, on: undefined});
  
                                 }}>
-                                <IonSelectOption className="repeat-select__option" value="none">None</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="daily">Daily</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="weekly">Weekly</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="monthly">Monthly</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="yearly">Yearly</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="none">@NEEDLOC None</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="daily">{this.props.gruntman.localizations.repeat_every_day}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="weekly">{this.props.gruntman.localizations.repeat_every_week}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="monthly">{this.props.gruntman.localizations.repeat_every_month}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="yearly">{this.props.gruntman.localizations.repeat_every_year}</IonSelectOption>
                             </IonSelect>
                             </div>
                                 {

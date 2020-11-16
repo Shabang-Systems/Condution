@@ -117,7 +117,7 @@ class App extends Component {
 
         // Make ourselves a nice gruntman
         this.gruntman = new Gruntman(Engine);
-        
+        this.gruntman.localizations = localizations;
         // And AutoBind any and all functions
         autoBind(this);
     }
