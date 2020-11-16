@@ -11,6 +11,22 @@ import '../Pages.css';
 const autoBind = require('auto-bind/react');
 
 
+/*
+ * I am the quick switcher.
+ *
+ * With me you switch quickly!
+ *
+ * but be warned:
+ *
+ * The code upon which I am built
+ *
+ * Often sends those who see it
+ *
+ * Into horror.
+ *
+ *
+ * @enquirer
+ */
 
 class QuickSwitcher extends Component {
     constructor(props) {
@@ -18,48 +34,43 @@ class QuickSwitcher extends Component {
         autoBind(this);
 
         this.state = {
-	    searchRef: '',
-	    items: [],
-	    filteredList: [],
-	    query: '',
-	    firstItem: '',
-	    direction: true, 
-	    selected: 0,
-	    prop_store: '',
-	    initialRenderingDone: false, 
+	    items: [], // processed items I get passed
+	    filteredList: [], // my items filtered base upon query 
+	    query: '', // my query! 
+	    direction: true, // should I go back in history, or forward? (for back toggle)
+	    selected: 0, // what is my selected item index?
+	    prop_store: '', // store my props so we can check if they have changed 
 	}
-	this.searcher = React.createRef();
-	this.currentlySelected = React.createRef();
+	this.searcher = React.createRef(); // searchbar input ref 
+	this.currentlySelected = React.createRef(); // selected item ref 
     }
 
     componentDidUpdate() {
 	if (this.state.prop_store != this.props) { // if the props have changed, 
 	    this.processItems() // process the items 
 	}
-
     }
 
     componentDidMount() {
-	this.processItems() // when we mount, process the items. probs delete this. 
-	this.setState({prop_store: this.props, options: this.state.items, initialRenderingDone: true}) // set the prop store and the items 
+	this.processItems() // when we mount, process the items.
+	this.setState({prop_store: this.props}) // set the prop store and the items 
     }
 
-    focusRef() {
-       if (this.searcher.current) // if the ref exists, 
+    focusRef() { // focus the ref!
+       if (this.searcher.current) // if the ref exists,
             this.searcher.current.setFocus(); // focus it 
 	this.setState({query: '', selected: 0}) // and reset the query 
     }
 
 
-    filterItems(searchTerm, org) {
+    filterItems(searchTerm, org) { // filter the items!
 	let filteredItems = this.state.items.filter(item => {
 	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
 	});
 	return filteredItems
     }
 
-
-    processItems() {
+    processItems() { // process our items!
 	// name, url prefix, id
 	this.setState({items: 
 	    [
@@ -74,74 +85,79 @@ class QuickSwitcher extends Component {
 	})
     }
 
-
-    handleKeydown(e) {
-	const keyname = e.key;
-	if (keyname == "Enter") {
-	    let selectedItem = this.filterItems(this.state.query)[this.state.selected]
+    handleKeydown(e) { // handle the keydown... avery your eyes
+	const keyname = e.key; // store the keyname
+	if (keyname == "Enter") { // if we submit, 
+	    let selectedItem = this.filterItems(this.state.query)[this.state.selected] // store the selected item
 	    // TODO: jack make the sidebar styling work 
-	    if ((!selectedItem || !this.state.query) && this.state.selected == 0) {
-		if (this.state.direction && this.props.history.length > 2) { 
-		    this.props.history.goBack() 
+	    // if we are selectiong the first item and we have no query, 
+	    if ((!selectedItem || !this.state.query) && this.state.selected == 0) {  
+		if (this.state.direction && this.props.history.length > 2) { // check our direction, 
+		    this.props.history.goBack() // then navigate back accordingly. 
 		} 
 		else if (this.props.history.length > 2) { this.props.history.goForward() }
-		this.setState({direction: !this.state.direction})
+		this.setState({direction: !this.state.direction}) // and flip the direction 
 		
 	    } else {
-		const slicedSelectedItem = selectedItem.slice(1)
+		const slicedSelectedItem = selectedItem.slice(1) // store the sliced item!
 		this.props.history.push(`/${selectedItem[1]}/${selectedItem[2]}`) // push to the history
 		this.props.paginate(...slicedSelectedItem); // paginate-ify it!
-		this.props.updateIdx(slicedSelectedItem)
+		this.props.updateIdx(slicedSelectedItem) // make our homebar keybinds work by giving it the index
 	    }
 	    this.props.dismiss() // dismiss the modal
-	} else {
-	    const idx = this.state.selected
-	    const len = this.filterItems(this.state.query).length-1
-	    if (keyname == "ArrowUp" || (e.ctrlKey && keyname == "p")) {
-		if (idx > 0) {
-		    this.setState({selected: idx-1})
-		} else { this.setState({selected: len})}
-		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
-		    behavior: "smooth",
-		    block: "end"
+	} else { // if we havent pressed submit, 
+	    const idx = this.state.selected // store the index 
+	    const len = this.filterItems(this.state.query).length-1 // and the filtered items cus react lifecyle bd 
+	    if (keyname == "ArrowUp" || (e.ctrlKey && keyname == "p")) { // if we are navigating up, 
+		if (idx > 0) { // and we selecting something greater than the first element, 
+		    this.setState({selected: idx-1}) // subtract from our index 
+		} else { this.setState({selected: len})} // if we are selection the first element, wrap to the last
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({ // and scroll it into view 
+		    behavior: "smooth", // make it smooooth 
+		    block: "end" // make it not get covered by the searchbar 
 		})}
-	    } else if (keyname == "ArrowDown" || (e.ctrlKey && keyname == "n")) {
-		if (idx == len) {
+	    } else if (keyname == "ArrowDown" || (e.ctrlKey && keyname == "n")) { // if we are scrolling down, 
+		if (idx == len) { // handle wrapping 
 		    this.setState({selected: 0})
-		} else { this.setState({selected: idx+1}) }
+		} else { this.setState({selected: idx+1}) } 
 		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
-		    behavior: "smooth",
-		    block: "start",
+		    behavior: "smooth", // smooooooooooth
+		    block: "start", // make it work better. their might be a better option for this 
 		})}
 	    }
-	    console.log(this.state.selected)
-
 	}
-
     }
 
 
     render() { 
 	return (
 	    <IonModal 
-		isOpen={this.props.qs_show} 
-		animated={false}
-		cssClass='qs_modal'
-		autoFocus={true}
-		onDidPresent={ this.focusRef }
-		onDidDismiss={this.props.dismiss}
+		isOpen={this.props.qs_show}  // are we open? 
+		animated={false} // don't animate the opening. 
+		cssClass='qs_modal' // give it a class! 
+		autoFocus={true} // this doesnt do anything, but like, wishful thinking? 
+		onDidPresent={this.focusRef} // focus our input when we present the modal
+		onDidDismiss={this.props.dismiss} // set the state toggle when we dismiss the modal
 	    >
 		<div className='modal-content-wrapper'>
 		    <IonSearchbar 
-			autoFocus={true}
-			ref={this.searcher} 
-			animated={true}
-			spellcheck={true}
+			autoFocus={true} // more wishful thinking?
+			ref={this.searcher} // give it a ref!
+			animated={true} // idk what this does
+			spellcheck={true} // spellcheck
 			className='search-bar'
-			placeholder="Previous  |  Let's go to.." // TODO: jack do you like this? 
+			// if we are on the first item and with no query, then add a 'Previous' to the end
+			placeholder={`Let's go to..${(this.state.selected == 0 && this.state.query == '')?"   |   Previous" : ""}`} // TODO: jack do you like this? 
+			// when we change, set the query, then set the selected to the first item 
 			onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
-			debounce={0}
-			onKeyDown={this.handleKeydown}
+			debounce={0} // update for every update
+			onKeyDown={this.handleKeydown} // call our gross function 
+
+		    ////////
+		    // loop through our filtered items, highlight if the index is right
+		    // onclick nav there, on hover set the index and the styling
+		    ////////
+
 		    />
 		    <div className='option-wrapper'> 
 			{this.filterItems(this.state.query).map((item, i) => {
