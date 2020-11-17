@@ -102,6 +102,12 @@
     "directories": {
       "buildResources": "resources"
     },
+    "files": [
+      "**/build/*",
+      "**/resources/*",
+      "**/node_modules/*",
+      "**/main.js"
+    ],
     "mac": {
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
