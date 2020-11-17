@@ -48,6 +48,30 @@ function CalendarTasklistPopover(props) {
                         <Task tid={id} key={id} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} datapack={props.datapack} envelope={refs.current[i]} onModal={true}/>
                     </div>
                 )}
+
+
+
+
+
+
+		<div style={{marginTop: 10}}>
+		    <a className="newbutton" onClick={()=>{
+			props.gruntman.do( // call a gruntman function
+			    "task.create", { 
+				uid: props.uid, // pass it the things vvv
+				pid: "",
+				//due,
+				//defer,
+				name: ''
+			    }
+			).then((result)=>{
+			}) // call the homebar refresh
+		    }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>wheee</div></div></a>
+
+		    <div className="bottom-helper">&nbsp;</div>
+		</div>
+
+
                 <div className="bottom-helper" style={{height: 150}}>&nbsp;</div>
             </div>
         </IonModal>

@@ -86,7 +86,7 @@ class QuickSwitcher extends Component {
     }
 
     processItems() { // process our items!
-	// name, url prefix, id
+	// name, url prefix, id, icon classname 
 	this.setState({items: 
 	    [
 		[':upcoming', 'upcoming', '', 'fas fa-chevron-circle-right'], // set the first item to upcoming 
