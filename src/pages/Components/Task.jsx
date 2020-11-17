@@ -510,6 +510,7 @@ class Task extends Component {
 
                                                 {/* First, task description field */}
                                                 <textarea 
+						    tabIndex='0'
                                                     placeholder={this.props.gruntman.localizations.desc} 
                                                     className="task-desc" 
                                                     style={{marginBottom: 10}} 
@@ -616,7 +617,10 @@ class Task extends Component {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
+                                                                    <input 
+									tabIndex='0'
+									className="task-datebox" 
+									readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
                                                                         // DATEHANDLING is here too. If you are looking for that, stop searching
@@ -695,7 +699,9 @@ class Task extends Component {
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
-                                                                    <input className="task-datebox" readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
+                                                                    <input 
+									tabIndex='0'
+									className="task-datebox" readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
                                                                         // Search for the word DATEHANDLING for what the heck the code actually does
