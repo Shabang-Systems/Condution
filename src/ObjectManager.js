@@ -83,6 +83,14 @@ const util = {
     }
 };
 
+async function generateWorkspace(userID) {
+    let oldWorkspaces = (await cRef("users", userID).get()).data().workspaces;
+    oldWorkspaces = oldWorkspaces ? oldWorkspaces : [];
+    let workspaceID = (await cRef("workspaces").add({meta: {editors: []}})).id;
+    (await cRef("users", userID).update({workspaces:[...oldWorkspaces, "new!!"]}));
+    return workspaceID;
+}
+
 async function getTasks(userID, isWorkspace=false) {
     return cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
     .then(snap => snap.docs
