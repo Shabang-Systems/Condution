@@ -274,7 +274,7 @@
 }
 
 .bigol-calendar-button {
-    min-width: 20px;
+    min-width: 200px;
     height: 20px;
     margin-right: 5px;
     padding: 2px;
@@ -325,10 +325,12 @@
 }
 
 .calendar-button {
-    min-width: 20px;
-    height: 20px;
+    font-size: 20px;
+    min-width: 25px;
+    height: 25px;
     margin-right: 5px;
     padding: 2px;
+    padding-top: 3px;
     text-align: center;
     transition: background-color 0.3s;
     color: var(--calendar-page-long-date) !important;
@@ -352,7 +354,13 @@
     font-weight: 600;
     display: inline-block;
     cursor: pointer;
+    transition: 0.25s;
 }
+
+.calendar-today:hover {
+    color: var(--calendar-page-largenumber) !important;
+}
+
 
 .calendar-list-popover {
     --background: transparent;
