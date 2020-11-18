@@ -28,7 +28,7 @@ const perspectiveHandler = function(){
         return vr;
     };
 
-    let compileTask = async function(uid, str, pPaT, additionalFilter) {
+    let compileTask = async function(uid, str, pPaT, additionalFilter, isWorkspace) {
         let queries = additionalFilter ? [additionalFilter] : [];
         let taskCache = [];
         let antiCache = [];
@@ -39,7 +39,7 @@ const perspectiveHandler = function(){
                     case ".":
                         let pid = pPaT[0][1][e.slice(1, e.length)];
                         queries.push(['project', '==', pid]);
-                        let pS = await dbObj.getProjectStructure(uid, pid);
+                        let pS = await dbObj.getProjectStructure(uid, pid, false, isWorkspace);
                         for (let i of pS.children)
                             if (i.type === "project")
                                 taskCache = [...taskCache, ...(await compileTask(uid, str.replace(e.slice(1, e.length), pPaT[0][0][i.content.id]), pPaT, additionalFilter))];
@@ -53,10 +53,10 @@ const perspectiveHandler = function(){
                         let pid = pPaT[0][1][e.slice(2, e.length)];
                         queries.push(['project', '!=', pid]);
 
-                        let pS = await dbObj.getProjectStructure(uid, pid);
+                        let pS = await dbObj.getProjectStructure(uid, pid, false, isWorkspace);
                         for (let i of pS.children)
                             if (i.type === "project")
-                                antiCache = [...antiCache, ...(await compileTask(uid, str.replace(e, "."+pPaT[0][0][i.content.id]), pPaT, additionalFilter))];
+                                antiCache = [...antiCache, ...(await compileTask(uid, str.replace(e, "."+pPaT[0][0][i.content.id]), pPaT, additionalFilter, isWorkspace))];
                         break;
                     case "#":
                         queries.push(['tags', '!has',  pPaT[1][1][e.slice(2, e.length)]]);
@@ -64,12 +64,12 @@ const perspectiveHandler = function(){
             }
             queries.push(['isComplete', '==', false]);
         }));
-        return [...taskCache, ...(await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries)))].filter(i=>(!antiCache.includes(i)));
+        return [...taskCache, ...(await dbObj.getTasksWithQuery(uid, dbObj.util.select.all(...queries), isWorkspace))].filter(i=>(!antiCache.includes(i)));
     };
 
-    let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr) {
+    let compileLogicCaptureGroup = async function(uid, tasks, cmp, value, ltr, isWorkspace=false) {
         let taskInfo = await Promise.all(tasks[0].map(async function(t){
-            return [await dbObj.getTaskInformation(uid, t), t];
+            return [await dbObj.getTaskInformation(uid, t, isWorkspace), t];
         }));
         let taskCompValues;
         // TODO: add more?
@@ -103,8 +103,8 @@ const perspectiveHandler = function(){
         return (taskCompValues.map(t => t[0]));
     };
 
-    let getPerspectiveFromString = async function(uid, pStr, filter, order) {
-        let pPaT = await dbObj.getProjectsandTags(uid);
+    let getPerspectiveFromString = async function(uid, pStr, filter, order, isWorkspace=false) {
+        let pPaT = await dbObj.getProjectsandTags(uid, isWorkspace);
         let pRes = await getCaptureGroups(pStr);
         if (!pRes) {
             return [];
@@ -127,23 +127,23 @@ const perspectiveHandler = function(){
                 let [, lhs, cmp, rhs] = logicSort;
                 [lhs, rhs] = [parseTaskCaptureGroup(lhs), parseTaskCaptureGroup(rhs)];
                 if (cgs.taskCaptureGroup.test(lhs)) {
-                    lhs = [await compileTask(uid, lhs[0], pPaT, fquery), lhs[1]];
+                    lhs = [await compileTask(uid, lhs[0], pPaT, fquery, isWorkspace), lhs[1]];
                     rhs = parseSpecialVariables(rhs[1]);
-                    t = (await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true)); // true (that is, left to right order)
+                    t = (await compileLogicCaptureGroup(uid, lhs, cmp, rhs, true, isWorkspace)); // true (that is, left to right order)
                 } else {
-                    rhs = [await compileTask(uid, rhs[0], pPaT, fquery), rhs[1]];
+                    rhs = [await compileTask(uid, rhs[0], pPaT, fquery, isWorkspace), rhs[1]];
                     lhs = parseSpecialVariables(lhs[1]);
-                    t = (await compileLogicCaptureGroup(uid, rhs, cmp, lhs, false)); // false (that is, right to left order)
+                    t = (await compileLogicCaptureGroup(uid, rhs, cmp, lhs, false, isWorkspace)); // false (that is, right to left order)
                 }
             } else {
                 // handle standard group
-                t = (await compileTask(uid, i, pPaT, fquery));
+                t = (await compileTask(uid, i, pPaT, fquery, isWorkspace));
             }
             return t;
         }));
         tasks = [...new Set(tasks.flat(1))];
         let taskObjs = await Promise.all(tasks.map(async function(t){
-            return {id: t, ...(await dbObj.getTaskInformation(uid, t))}
+            return {id: t, ...(await dbObj.getTaskInformation(uid, t, isWorkspace))}
         })).then(values=>values);
         switch (order) {
             case "duas":
@@ -161,7 +161,7 @@ const perspectiveHandler = function(){
 
         }
         // Final availability filter for sequential
-        let aval = await dbObj.getItemAvailability(uid);
+        let aval = await dbObj.getItemAvailability(uid, isWorkspace);
         if (filter === "avail") taskObjs = taskObjs.filter(it => (aval[it.id] !== undefined)); 
         return taskObjs.map(t=>t.id);
     };
