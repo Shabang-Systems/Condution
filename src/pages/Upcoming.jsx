@@ -176,7 +176,7 @@ class Upcoming extends Component { // define the component
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>{this.props.localizations.upcoming}</h1> 
 
-                                    
+                                <div style={{display: "inline-block", background: "var(--decorative-light)", width: 1, transform:"translate(-13.5px, 4px)", height: 20}}>&nbsp;</div> 
                             <div className="greeting-datewidget">
                                 <div style={{display: "inline-block"}} className="greeting-date">{(new Date()).getDate()}</div>
                                 <div style={{display: "inline-block"}} className="greeting-datename">{new Date().toLocaleString(this.props.localizations.getLanguage(), {  weekday: 'long' })}</div>
