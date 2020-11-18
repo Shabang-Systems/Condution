@@ -139,6 +139,7 @@ class QuickSwitcher extends Component {
 		    behavior: "smooth", // smooooooooooth
 		    block: "start", // make it work better. their might be a better option for this 
 		})}
+		// TODO: try this: https://stackoverflow.com/questions/56688002/javascript-scrollintoview-only-in-immediate-parent/56688719 (check last answer)
 	    }
 	}
     }

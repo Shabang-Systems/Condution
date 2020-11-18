@@ -1,6 +1,6 @@
 /*TODO: make this work in light mode. */
 .qs_modal {
-    --max-height: 164px;
+    --max-height: 162px;
     /*--height: 150px;*/
     --width: 80%;
     --max-width: 520px;
