@@ -96,7 +96,7 @@ class PerspectiveEdit extends Component {
                             <div className="repeat-task-name">{this.state.name}</div>
                         </span>
                         {/* Close button */} 
-                        <a className="repeat-close" onClick={this.props.onDidDismiss} style={{transform: "translate(-10px, 3px)"}}><i className="fa fa-times"></i></a>
+                        <a className="edit-close" onClick={this.props.onDidDismiss} style={{transform: "translate(-5px, 5px)"}}><i className="fa fa-check check"></i></a>
 
                     </div>
                     <div className="build-input">
