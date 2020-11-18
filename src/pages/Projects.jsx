@@ -164,7 +164,7 @@ class Projects extends Component { // define the component
                                     />
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
-                                <div className="greeting-container" style={{marginLeft: 5, marginTop: 7}}>
+                                <div className="greeting-container" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
                                         onClick={()=> {
                                             this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {

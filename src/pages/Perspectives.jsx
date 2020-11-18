@@ -256,7 +256,7 @@ class Perspectives extends Component {
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
 
-                                <div className="greeting-container" style={{marginLeft: 11, marginTop: 7}}>
+                                <div className="greeting-container" style={{marginLeft: 11, marginTop: 7, marginBottom: 5}}>
                                     <a 
                                         onClick={this.showEdit} 
                                         data-tip="LOCALIZE: Edit"
