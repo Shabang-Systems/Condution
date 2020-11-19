@@ -108,6 +108,7 @@ class PerspectiveEdit extends Component {
                             placeholder="LOCALIZE: perspective query"
                         >
                         </input> 
+			<i className="fas fa-plus-circle check" style={{marginTop: "10px", marginLeft: "8px"}}></i>
                     </div>
 
 
