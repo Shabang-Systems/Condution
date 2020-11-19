@@ -95,7 +95,7 @@ class App extends Component {
         super(props);
 
         let localizations = new LocalizedStrings({
-            en: require("./static/I18n/en-US.json"),
+            en: require("./static/I18n/main.json"),
             zh: require("./static/I18n/zh-CN.json"),
             de: require("./static/I18n/de-DE.json"),
         });
