@@ -103,10 +103,11 @@
       "buildResources": "resources"
     },
     "files": [
-      "**/build/*",
-      "**/resources/*",
-      "**/node_modules/*",
-      "**/main.js"
+      "**/build/**",
+      "**/resources/**",
+      "**/node_modules/**",
+      "**/main.js",
+      "!**/old"
     ],
     "mac": {
       "category": "public.app-category.productivity",
