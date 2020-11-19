@@ -18,6 +18,7 @@
 .pbuilder-pname {
     background: var(--task-clickbox-background);
     flex-grow: 1;
+    margin-left: 10px;
 }
 
 .pbuilder-pname:hover {
@@ -168,3 +169,22 @@
 }
 
 
+.edit-close {
+    right: 0;
+    color: var(--repeat-popover-close);
+    transition: color 0.5s;
+}
+
+.edit-close:hover {
+    color: var(--repeat-popover-close-hover);
+    cursor: pointer;
+}
+
+.check {
+    color: var(--repeat-popover-close);
+    transition: 0.25s;
+}
+
+.check:hover {
+    color: var(--repeat-popover-close-hover);
+}
