@@ -83,13 +83,18 @@ const util = {
     }
 };
 
-async function generateWorkspace(userID) {
+async function generateWorkspace(userID, name="") {
     let oldWorkspaces = (await cRef("users", userID).get()).data().workspaces;
     oldWorkspaces = oldWorkspaces ? oldWorkspaces : [];
-    let workspaceID = (await cRef("workspaces").add({meta: {editors: [userID]}})).id;
+    let workspaceID = (await cRef("workspaces").add({meta: {editors: [userID], name}})).id;
     (await cRef("users", userID).update({workspaces:[...oldWorkspaces, workspaceID]}));
     return workspaceID;
 }
+
+async function getWorkspace(userID) {
+    return (await cRef("users", userID).get()).data()["workspaces"];
+}
+
 
 async function getTasks(userID, isWorkspace=false) {
     return cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
@@ -837,5 +842,5 @@ async function onBoard(userID, tz, username, payload, isWorkspace=false) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace};
 
