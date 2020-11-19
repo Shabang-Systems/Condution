@@ -73,7 +73,10 @@ class TagEditor extends Component {
                                     <div className="tag-name">
                                         {tag.name}
                                     </div>
-                                    <a className="TagEditor-close" onClick={() => {console.log("x clicked")}}><i className="fa fa-times x"></i></a>
+                                    <a className="TagEditor-close" onClick={(e) => {
+                                        console.log("x clicked")
+                                        e.stopPropagation()
+                                    }}><i className="fa fa-times x"></i></a>
                                 </div>
                             )
                         })}
