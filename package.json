@@ -104,6 +104,7 @@
     },
     "files": [
       "**/build/**",
+      "**/src/about.html",
       "**/resources/**",
       "**/node_modules/**",
       "**/main.js",
