@@ -86,8 +86,8 @@ const util = {
 async function generateWorkspace(userID) {
     let oldWorkspaces = (await cRef("users", userID).get()).data().workspaces;
     oldWorkspaces = oldWorkspaces ? oldWorkspaces : [];
-    let workspaceID = (await cRef("workspaces").add({meta: {editors: []}})).id;
-    (await cRef("users", userID).update({workspaces:[...oldWorkspaces, "new!!"]}));
+    let workspaceID = (await cRef("workspaces").add({meta: {editors: [userID]}})).id;
+    (await cRef("users", userID).update({workspaces:[...oldWorkspaces, workspaceID]}));
     return workspaceID;
 }
 
@@ -837,5 +837,5 @@ async function onBoard(userID, tz, username, payload, isWorkspace=false) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace};
 
