@@ -166,7 +166,7 @@ class PerspectiveEdit extends Component {
                                 <IonSelectOption className="repeat-select__option" value="duds">{this.props.gruntman.localizations.psp_dbd}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="deas">{this.props.gruntman.localizations.psp_abe}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="deds">{this.props.gruntman.localizations.psp_dbe}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="alph">{this.props.gruntman.localizations.psp_alpha}></IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="alph">{this.props.gruntman.localizations.psp_alpha}</IonSelectOption>
                             </IonSelect>
                             <div className="help-icon" onClick={this.handleHelp}>
                                 <i 
