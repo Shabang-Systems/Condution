@@ -57,7 +57,14 @@ class Home extends Component {
             projects:[], // list of top level projects
             perspectives:[], // list of perspectives
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
+            isWorkspace:false, // current workspace
+            workspace: this.props.uid, // current workspace/uid
         };
+
+        if (this.state.isWorkspace)
+            this.props.engine.workspaceify()
+        else
+            this.props.engine.userlandify()
 
 
         // AutoBind!
@@ -90,13 +97,22 @@ class Home extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.to !== this.state.to && this.state.to !== undefined)
              this.setState({sends:{to:undefined, id:undefined}})
+
+        if (prevState.isWorkspace !== this.state.isWorkspace) { 
+            if (this.state.isWorkspace)
+                this.props.engine.workspaceify()
+            else
+                this.props.engine.userlandify()
+            this.refresh();
+        }
+
     }
 
     async refresh() {
         // Load the top level projects and perspectives
         // to set into the state and to add to the menu
-        let tlp = await this.props.engine.db.getTopLevelProjects(this.props.uid);
-        let psp = await this.props.engine.db.getPerspectives(this.props.uid);
+        let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
+        let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
 
         this.setState({projects: tlp[2], perspectives:psp[2]});
     }
@@ -117,7 +133,7 @@ class Home extends Component {
 			projects={this.state.projects}
 			abtib={this.abtibRef} 
 			engine={this.props.engine} 
-			uid={this.props.uid} 
+			uid={this.state.workspace} 
 			gruntman={this.props.gruntman} 
 		    />
                     {/* OoIp */}
@@ -165,7 +181,7 @@ class Home extends Component {
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
                                             let npid = (await this.props.gruntman.do(
                                                 "perspective.create", {
-                                                    uid: this.props.uid,
+                                                    uid: this.state.workspace,
                                                 },
                                             )).pid;
                                             history.push(`/perspectives/${npid}/do`);
@@ -194,7 +210,7 @@ class Home extends Component {
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
                                             let npid = (await this.props.gruntman.do(
                                                 "project.create", {
-                                                    uid: this.props.uid,
+                                                    uid: this.state.workspace,
                                                 },
                                             )).pid;
                                             history.push(`/projects/${npid}/do`);
@@ -220,7 +236,7 @@ class Home extends Component {
                             </IonMenu>
                             <IonPage id="main">
                                 {/* the add button to inbox button*/}
-                                <ABTIB reference={this.abtibRef} uid={this.props.uid} gruntman={this.props.gruntman} localizations={this.props.localizations}/>
+                                <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations}/>
                                 {/* the portal root for DOM elements to park */}
                                 <div id="parking-lot"></div>
                                 {/* The actual page */}
@@ -232,18 +248,18 @@ class Home extends Component {
                                     {/* and the perspective switch */}
                                     <Switch>
                                         {/* upcoming renders upcoming */}
-                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} />} />
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} />} />
                                         {/* completed renders completed */}
-                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
+                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
 
                                         {/* completed renders completed */}
-                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.props.uid} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
+                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
 
                                         {/* perspective renders perspectives */}
-                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create} localizations={this.props.localizations}/>}  />
+                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create} localizations={this.props.localizations}/>}  />
 
                                         {/* project renders perspectives */}
-                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations}/>}  />
+                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations}/>}  />
                                         {/* TODO projects */}
                                     </Switch>
                                 </IonRouterOutlet>
