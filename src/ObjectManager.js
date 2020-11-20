@@ -123,8 +123,9 @@ async function getTasksWithQuery(userID, query) {
 }
 
 async function getInboxTasks(userID) {
+
     let inboxDocs = await cRef(
-        "users", userID,
+        isWorkspace?"workspaces":"users", userID,
         "tasks")
         //['project', '==', ''],
         //['isComplete', "==", false])
@@ -245,7 +246,7 @@ async function getTopLevelProjects(userID) {
     let projectNameById = {};
     let projectsSorted = []; 
 
-    let snap = (await cRef('users', userID, "projects")
+    let snap = (await cRef(isWorkspace?"workspaces":'users', userID, "projects")
         .get());
 
     snap.docs.forEach(proj => {
