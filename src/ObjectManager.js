@@ -83,6 +83,12 @@ const util = {
     }
 };
 
+let isWorkspace = false;
+
+function setWorkspaceMode(workspaceMode) {
+    isWorkspace = workspaceMode;
+}
+
 async function generateWorkspace(userID, name="") {
     let oldWorkspaces = (await cRef("users", userID).get()).data().workspaces;
     oldWorkspaces = oldWorkspaces ? oldWorkspaces : [];
@@ -96,7 +102,7 @@ async function getWorkspace(userID) {
 }
 
 
-async function getTasks(userID, isWorkspace=false) {
+async function getTasks(userID) {
     return cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
     .then(snap => snap.docs
         .map(doc => doc.id)
@@ -105,7 +111,7 @@ async function getTasks(userID, isWorkspace=false) {
     });
 }
 
-async function getTasksWithQuery(userID, query, isWorkspace=false) {
+async function getTasksWithQuery(userID, query) {
     let taskDocs = await cRef(isWorkspace?"workspaces":"users", userID, "tasks")
         .get()
         .then(snap => snap.docs
@@ -116,7 +122,7 @@ async function getTasksWithQuery(userID, query, isWorkspace=false) {
     return taskDocs.map(doc => doc.id);
 }
 
-async function getInboxTasks(userID, isWorkspace=false) {
+async function getInboxTasks(userID) {
     let inboxDocs = await cRef(
         "users", userID,
         "tasks")
@@ -132,7 +138,7 @@ async function getInboxTasks(userID, isWorkspace=false) {
     return inboxDocs.map(doc => doc.id);
 }
 
-async function getDSTasks(userID, available, wrt, isWorkspace=false) {
+async function getDSTasks(userID, available, wrt) {
     let dsTime = wrt ? wrt : new Date(); // TODO: merge with next line?
     dsTime.setHours(dsTime.getHours() + 24);
     //let available = await getItemAvailability(userID);
@@ -153,7 +159,7 @@ async function getDSTasks(userID, available, wrt, isWorkspace=false) {
     return dsDocs.map(doc => doc.id);
 }
 
-async function dueTasks(userID, available, wrt, isWorkspace=false) {
+async function dueTasks(userID, available, wrt) {
     let dsTime = wrt ? wrt : new Date(); // TODO: merge with next line?
     dsTime.setHours(23,59,59,999);
     //let available = await getItemAvailability(userID);
@@ -174,7 +180,7 @@ async function dueTasks(userID, available, wrt, isWorkspace=false) {
     return dsDocs.map(doc => doc.id);
 }
 
-async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new Date(2100, 1, 1)), returnFull=false, isWorkspace=false) {
+async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new Date(2100, 1, 1)), returnFull=false) {
 /*    let maxT = max;*/
     //let minT = min;
     //maxT.setHours(23, 59, 59, 999);
@@ -195,7 +201,7 @@ async function selectTasksInRange(userID, min=(new Date(1900, 1, 1)), max=(new D
     return returnFull ? tasks.map(doc => [doc.id, doc.data()]):tasks.map(doc => doc.id);
 }
 
-async function getDSRow(userID, avaliable, isWorkspace=false) {
+async function getDSRow(userID, avaliable) {
     console.warn("DEPERCATED: use instead selectTasksInRange");
     let ibt = await getInboxTasks(userID);
     let d = new Date();
@@ -211,14 +217,14 @@ async function getDSRow(userID, avaliable, isWorkspace=false) {
     return dsTasks.map(dst => dst.filter(x => ibt.indexOf(x) < 0));
 }
 
-async function getInboxandDS(userID, avalibility, isWorkspace=false) {
+async function getInboxandDS(userID, avalibility) {
     let ibt = await getInboxTasks(userID);
     let dst = await getDSTasks(userID, avalibility);
     let dstWithoutIbt = dst.filter(x => ibt.indexOf(x) < 0);
     return [ibt, dstWithoutIbt]
 }
 
-async function getTaskInformation(userID, taskID, isWorkspace=false) {
+async function getTaskInformation(userID, taskID) {
     let dat = (await cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
         .then(snap => snap.docs
             .filter(doc => doc.id === taskID))
@@ -226,7 +232,7 @@ async function getTaskInformation(userID, taskID, isWorkspace=false) {
     if (dat) return dat.data();
 }
 
-async function removeParamFromTask(userID, taskID, paramName, isWorkspace=false) {
+async function removeParamFromTask(userID, taskID, paramName) {
     let ti = await getTaskInformation(userID, taskID);
     delete ti[paramName];
     await cRef(isWorkspace?"workspaces":"users", userID, "tasks", taskID)
@@ -234,7 +240,7 @@ async function removeParamFromTask(userID, taskID, paramName, isWorkspace=false)
         .catch(console.error);
 }
 
-async function getTopLevelProjects(userID, isWorkspace=false) {
+async function getTopLevelProjects(userID) {
     let projectIdByName = {};
     let projectNameById = {};
     let projectsSorted = []; 
@@ -259,7 +265,7 @@ async function getTopLevelProjects(userID, isWorkspace=false) {
     return ret;
 }
 
-async function getTags(userID, isWorkspace=false) {
+async function getTags(userID) {
     let tags = [];
 
     await cRef(isWorkspace?"workspaces":"users", userID, "tags").get()
@@ -272,7 +278,7 @@ async function getTags(userID, isWorkspace=false) {
     return tags;
 }
 
-async function getProjectsandTags(userID, isWorkspace=false) {
+async function getProjectsandTags(userID) {
     // NOTE: no longer console.error when  !project/tag.exists
     let projectIdByName = {};
     let projectNameById = {};
@@ -299,7 +305,7 @@ async function getProjectsandTags(userID, isWorkspace=false) {
     return [[projectNameById, projectIdByName], [tagNameById, tagIdByName]];
 }
 
-async function getPerspectives(userID, isWorkspace=false) {
+async function getPerspectives(userID) {
     let pInfobyName = {};
     let pInfobyID = {};
     let ps = [];
@@ -318,25 +324,25 @@ async function getPerspectives(userID, isWorkspace=false) {
     return [pInfobyID, pInfobyName, ps];
 }
 
-async function modifyProject(userID, projectID, updateQuery, isWorkspace=false) {
+async function modifyProject(userID, projectID, updateQuery) {
     await cRef(isWorkspace?"workspaces":"users", userID, "projects", projectID)
         .update(updateQuery)
         .catch(console.error);
 }
 
-async function modifyTask(userID, taskID, updateQuery, isWorkspace=false) {
+async function modifyTask(userID, taskID, updateQuery) {
     await cRef(isWorkspace?"workspaces":"users", userID, "tasks", taskID)
         .update(updateQuery)
         .catch(console.error);
 }
 
-async function modifyPerspective(userID, taskID, updateQuery, isWorkspace=false) {
+async function modifyPerspective(userID, taskID, updateQuery) {
     await cRef(isWorkspace?"workspaces":"users", userID, "perspectives", taskID)
         .update(updateQuery)
         .catch(console.error);
 }
 
-async function newTask(userID, taskObj, isWorkspace=false) {
+async function newTask(userID, taskObj) {
 //, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
     // Set order param. Either return the latest item in index or
     if (taskObj.project === "") {
@@ -357,7 +363,7 @@ async function newTask(userID, taskObj, isWorkspace=false) {
     return taskID;
 }
 
-async function newProject(userID, projObj, parentProj, isWorkspace=false) {
+async function newProject(userID, projObj, parentProj) {
 //, nameParam, descParam, deferParam, dueParam, isFlaggedParam, isFloatingParam, projectParam, tagsParam, tz
     // Set order param. Either return the latest item in index or
     let projL;
@@ -384,30 +390,30 @@ async function newProject(userID, projObj, parentProj, isWorkspace=false) {
     return pid;
 }
 
-async function newPerspective(userID, pstObj, isWorkspace=false) {
+async function newPerspective(userID, pstObj) {
     return (await cRef(isWorkspace?"workspaces":"users", userID, "perspectives").add({order: (await getPerspectives(userID))[2].length, ...pstObj})).id;
 }
 
-async function newTag(userID, tagName, isWorkspace=false) {
+async function newTag(userID, tagName) {
     return (await cRef(isWorkspace?"workspaces":"users", userID, "tags").add({name: tagName})).id;
 }
 
-async function completeTask(userID, taskID, isWorkspace=false) {
+async function completeTask(userID, taskID) {
     await cRef(isWorkspace?"workspaces":"users", userID, "tasks", taskID).update({
         isComplete: true
     });
 }
 
-async function dissociateTask(userID, taskID, projectID, isWorkspace=false) {
+async function dissociateTask(userID, taskID, projectID) {
     let originalChildren = await cRef(isWorkspace?"workspaces":"users", userID, "projects").get().then(util.dump)
         .then(snapshot => snapshot.docs.filter(x => x.id === projectID)).then(util.dump).then(t => t[0].data().children);
 
     delete originalChildren[taskID];
-    await cRef(isWorkspace?"workspaces":"users", userID, "projects", projectID, isWorkspace=false)
+    await cRef(isWorkspace?"workspaces":"users", userID, "projects", projectID)
         .update({children: originalChildren});
 }
 
-async function associateTask(userID, taskID, projectID, isWorkspace=false) {
+async function associateTask(userID, taskID, projectID) {
     let originalChildren = await cRef(isWorkspace?"workspaces":"users", userID, "projects").get()
         .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0] //.filter(doc => doc.id === taskID)
         .data().children);
@@ -417,7 +423,7 @@ async function associateTask(userID, taskID, projectID, isWorkspace=false) {
         .update({children: originalChildren});
 }
 
-async function associateProject(userID, assosProjID, projectID, isWorkspace=false) {
+async function associateProject(userID, assosProjID, projectID) {
     let originalChildren = await cRef(isWorkspace?"workspaces":"users", userID, "projects").get()
         .then(snapshot => snapshot.docs.filter(x => x.id === projectID)[0] //.filter(doc => doc.id === taskID)
         .data().children);
@@ -427,7 +433,7 @@ async function associateProject(userID, assosProjID, projectID, isWorkspace=fals
         .update({children: originalChildren});
 }
 
-async function dissociateProject(userID, assosProjID, projectID, isWorkspace=false) {
+async function dissociateProject(userID, assosProjID, projectID) {
     let originalChildren = await cRef(isWorkspace?"workspaces":"users", userID, "projects").get().then(util.dump)
         .then(snapshot => snapshot.docs.filter(x => x.id === projectID)).then(util.dump).then(t => t[0].data().children);
 
@@ -436,7 +442,7 @@ async function dissociateProject(userID, assosProjID, projectID, isWorkspace=fal
         .update({children: originalChildren});
 }
 
-async function deleteTask(userID, taskID, willDissociateTask = true, isWorkspace=false) {
+async function deleteTask(userID, taskID, willDissociateTask = true) {
     let taskData = await cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
         .then(snap => snap.docs.filter(doc => doc.id === taskID)[0].data()); // Fetch task data
 
@@ -447,11 +453,11 @@ async function deleteTask(userID, taskID, willDissociateTask = true, isWorkspace
         .catch(console.error);
 }
 
-async function deletePerspective(userID, perspectiveID, isWorkspace=false) {
+async function deletePerspective(userID, perspectiveID) {
     await cRef(isWorkspace?"workspaces":"users", userID, "perspectives", perspectiveID).delete();
 }
 
-async function deleteProject(userID, projectID, isWorkspace=false) {
+async function deleteProject(userID, projectID) {
     let struct = await getProjectStructure(userID, projectID)
     for (let i of struct.children) {
         if (i.type === "project") deleteProject(userID, i.content.id)
@@ -468,12 +474,12 @@ async function deleteProject(userID, projectID, isWorkspace=false) {
         .catch(console.error);
 }
 
-async function deleteTag(userID, tagID, isWorkspace=false) {
+async function deleteTag(userID, tagID) {
     await cRef(isWorkspace?"workspaces":"users", userID, "tags", tagID).delete()
         .catch(console.error);
 }
 
-async function getProjectStructure(userID, projectID, recursive=false, isWorkspace=false) {
+async function getProjectStructure(userID, projectID, recursive=false) {
     let children = [];
 
     // absurdly hitting the cache with a very broad query so that the
@@ -506,7 +512,7 @@ async function getProjectStructure(userID, projectID, recursive=false, isWorkspa
     return { id: projectID, children: children, is_sequential: project.data().is_sequential, sortOrder: project.data().order, parentProj: project.data().parent};
 }
 
-async function getItemAvailability(userID, isWorkspace=false) {
+async function getItemAvailability(userID) {
     let t = new Date();
     let tlps = (await getTopLevelProjects(userID))[2];
     let blockstatus = {};
@@ -547,7 +553,7 @@ async function getItemAvailability(userID, isWorkspace=false) {
     return blockstatus;
 }
 
-async function getCompletedTasks(userID, isWorkspace=false) {
+async function getCompletedTasks(userID) {
     let completedTasks = await getTasksWithQuery(userID, util.select.all(["isComplete", "==", true]));
     let taskItems = {};
     await Promise.all(completedTasks.map(async function(tsk){
@@ -607,7 +613,7 @@ async function getCompletedTasks(userID, isWorkspace=false) {
     return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
 }
 
-async function onBoard(userID, tz, username, payload, isWorkspace=false) {
+async function onBoard(userID, tz, username, payload) {
     // Inbox, in reverse cronological order
     await newTask(userID, {
             name: payload[0] + ` ${username}, ` + payload[1],
@@ -843,4 +849,7 @@ async function onBoard(userID, tz, username, payload, isWorkspace=false) {
 }
 
 export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace};
+
+export { setWorkspaceMode };
+
 
