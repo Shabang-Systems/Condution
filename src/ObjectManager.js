@@ -113,6 +113,17 @@ async function editWorkspace(workspaceID, query) {
     return cRef("workspaces", workspaceID).update(query);
 }
 
+async function inviteToWorkspace(workspaceID, inviteeEmail) {
+    return (await cRef("invitations").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
+
+}
+
+async function revokeToWorkspace(workspaceID, inviteeEmail) {
+    return (await cRef("invitations").add({email: inviteeEmail, workspace: workspaceID, type: "revoke", time: new Date()})).id;
+}
+
+
+
 async function getTasks(userID) {
     return cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
     .then(snap => snap.docs
@@ -860,7 +871,7 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace};
 
 export { setWorkspaceMode };
 
