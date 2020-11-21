@@ -208,17 +208,17 @@ class Upcoming extends Component { // define the component
                             onDidDismiss={e => this.setState({workspacesPopoverShown: [false, null]})}
                             event={this.state.workspacesPopoverShown[1]}
                         >
-                            <div>
+                            <div><div className="workspace-name-container">
                                 <div className="workspace-name-selection" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
                                     this.props.switch("personal");
                                     this.setState({currentWorkspace: this.props.localizations.personal_workspace});
-                                }}><i className="fas fa-stream" style={{marginRight: 10}} />{this.props.localizations.personal_workspace}</div>
-                                {this.state.workspaces.map(([id, name])=><div onClick={()=>{
+                                }}><i className="fas fa-stream" style={{marginRight: 10}} />{this.props.localizations.personal_workspace}</div></div>
+                                {this.state.workspaces.map(([id, name])=><div className="workspace-name-container"><div onClick={()=>{
                                     this.workspaceButton.current.dismiss();
                                     this.props.switch("workspace", id);
                                     this.setState({currentWorkspace: name});
-                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div>)}
+                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div><a className="workspace-edit fas fa-pencil-alt" /></div>)}
                             </div>
                         </IonPopover>
                             <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
