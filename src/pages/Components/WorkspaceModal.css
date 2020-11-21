@@ -1,13 +1,13 @@
 .workspace-popover {
     --background: transparent;
     --width: 600px;
-    --height: 400px;
+    --height: 105px;
     --box-shadow: 0 !important;
 }
 
 .workspace-inside {
     background: var(--ion-background-color);
-    height: 400px;
+    height: 105px;
     width: 600px;
     border-radius: 5px;
     padding: 10px;
@@ -32,6 +32,7 @@
     width: 100%;
     display: flex;
     align-items: center;
+    margin-bottom: 5px;
 }
 
 .workspace-callout {
@@ -49,6 +50,8 @@
     border-radius: 5px;
     border: 0;
     background: var(--background-feature);
+    flex-grow: 10;
+    margin-left: 12px;
 }
 
 .react-tagsinput-tag {

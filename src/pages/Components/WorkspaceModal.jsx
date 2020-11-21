@@ -59,19 +59,30 @@ function WorkspaceModal(props) {
                         placeholder="@NEEDLOC Tap to set name"
                         onChange={(e)=>{
                             e.persist();
-                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                "workspace.update", // the scheduler actually updates the task
-                                {
-                                    uid: props.currentWorkspace, 
-                                    query:{meta: {name: e.target.value, editors: workspaceEditors}} // setting the name to the name
-                                }
-                            ), `workspace-${props.currentWorkspace}-update`)
+                            props.gruntman.registerScheduler(() => props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: e.target.value}}), `workspace-${props.currentWorkspace}-update`)
+                            setWorkspaceName(e.target.value);
                         }}
                     />
                 </div>
-                <TagsInput value={workspaceEditors} onChange={(list)=>{
-                    setWorkspaceEditors(list);
-                }} renderInput={autosizingRenderInput} />
+                <div style={{display: "flex", alignItems: "center", marginLeft: 5}}>
+                    <i className="fas fa-user-edit" />
+                    <TagsInput value={workspaceEditors} onChange={(list)=>{
+                        let isValid = true;
+                        list.filter(e=>!workspaceEditors.includes(e)).forEach(newAccount => {
+                            if (/\w+@\w+\.\w+/.test(newAccount))
+                                props.engine.db.inviteToWorkspace(props.currentWorkspace, newAccount);
+                            else 
+                                isValid = false;
+                        });
+                        workspaceEditors.filter(e=>!list.includes(e)).forEach(removedAccount => {
+                            props.engine.db.revokeToWorkspace(props.currentWorkspace, removedAccount);
+                        });
+                        if (isValid) {
+                            props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: list, name: workspaceName}});
+                            setWorkspaceEditors(list);
+                        }
+                    }} renderInput={autosizingRenderInput} inputProps={{placeholder: props.gruntman.localizations.workspace_email}} />
+                </div>
             </div>
         </IonModal>
     )
