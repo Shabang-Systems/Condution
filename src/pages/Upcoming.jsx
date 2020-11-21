@@ -127,14 +127,19 @@ class Upcoming extends Component { // define the component
             tcontent.push({type:"task", content: task[0]});
         }
 
-        let workspaces = await this.props.engine.db.getWorkspaces(this.props.actualUID);
         let n = this.props.localizations.personal_workspace;
-        let workspaceNames = await Promise.all(workspaces.map(async function(e){
-            let name = (await views.props.engine.db.getWorkspace(e)).meta.name
-            if (e===views.props.uid)
-                n = name;
-            return [e, name]
-        }));
+        let workspaceNames = []
+
+        if (this.props.authType === "firebase") {
+            let workspaces = await this.props.engine.db.getWorkspaces(this.props.actualUID);
+
+            workspaceNames = await Promise.all(workspaces.map(async function(e){
+                let name = (await views.props.engine.db.getWorkspace(e)).meta.name
+                if (e===views.props.uid)
+                    n = name;
+                return [e, name]
+            }));
+        }
 
         this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent, workspaces: workspaceNames, currentWorkspace: n});
     }

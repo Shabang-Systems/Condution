@@ -247,7 +247,7 @@ class App extends Component {
             // if we did auth, load it up and get the party going
             case "firebase":
             case "json":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations}/>;
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
             // wut esta this auth mode? load the loader with an error
             case "onboarding":
                 return <Onboarding />
