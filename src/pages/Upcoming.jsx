@@ -196,7 +196,7 @@ class Upcoming extends Component { // define the component
                             
 
 
-                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600}}>{this.props.displayName}</span><a className="workspace-name" onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
+                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600}}>{this.props.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
                             </div>
                         </div>
                         <IonPopover
