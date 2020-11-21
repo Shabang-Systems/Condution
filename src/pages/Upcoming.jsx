@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent, IonPopover } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Upcoming.scss';
@@ -50,10 +50,15 @@ class Upcoming extends Component { // define the component
             projectDB: {},
             timeline: [],
             timelineShown: false,
-            greeting: greetings[Math.floor(Math.random() * greetings.length)]
+            greeting: greetings[Math.floor(Math.random() * greetings.length)],
+            workspaces: [],
+            workspacesPopoverShown: [false, null],
+            currentWorkspace: this.props.localizations.personal_workspace
         };
 
         this.updatePrefix = this.random();
+
+        this.workspaceButton = React.createRef();
 
         this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
@@ -122,21 +127,25 @@ class Upcoming extends Component { // define the component
             tcontent.push({type:"task", content: task[0]});
         }
 
-        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent});
+        let workspaces = await this.props.engine.db.getWorkspaces(this.props.actualUID);
+        let n = this.props.localizations.personal_workspace;
+        let workspaceNames = await Promise.all(workspaces.map(async function(e){
+            let name = (await views.props.engine.db.getWorkspace(e)).meta.name
+            if (e===views.props.uid)
+                n = name;
+            return [e, name]
+        }));
+
+        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent, workspaces: workspaceNames, currentWorkspace: n});
     }
 
     componentDidMount() {
         this.refresh();
+    }
 
-        //// Jack and the Misadventures of Hiding the Scrollbar
-        //const content = this.pageRef.current;
-        //const styles = document.createElement('style');
-        //styles.textContent = `
-            //.scroll-y::-webkit-scrollbar {
-                //display: none;
-            //}
-        //`;
-        {/*content.shadowRoot.appendChild(styles);*/}
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.uid != this.props.uid) 
+            this.refresh();
     }
 
     componentWillUnmount() {
@@ -147,11 +156,9 @@ class Upcoming extends Component { // define the component
 
 
     render() {
-
         return (
             <IonPage>
                 <div style={{overflow: "hidden"}}>
-
                     <div className={"page-invis-drag " + (()=>{
                         if (!isPlatform("electron")) // if we are not running electron
                             return "normal"; // normal windowing proceeds
@@ -184,14 +191,36 @@ class Upcoming extends Component { // define the component
                             
 
 
-                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600}}>{this.props.displayName}</span></div>
+                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600}}>{this.props.displayName}</span><a className="workspace-name" onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
                             </div>
                         </div>
-                        <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
+                        <IonPopover
+                            showBackdrop={false}
+                            ref={this.workspaceButton}
+                            isOpen={this.state.workspacesPopoverShown[0]}
+                            cssClass='workspaces-popover'
+                            mode="md" 
+                            onDidDismiss={e => this.setState({workspacesPopoverShown: [false, null]})}
+                            event={this.state.workspacesPopoverShown[1]}
+                        >
                             <div>
-                                {(()=>{
-                                    if (this.state.inbox.length > 0)
-                                        return <div className="page-label">{this.props.localizations.unsorted}<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
+                                <div className="workspace-name-selection" onClick={()=>{
+                                    this.workspaceButton.current.dismiss();
+                                    this.props.switch("personal");
+                                    this.setState({currentWorkspace: this.props.localizations.personal_workspace});
+                                }}><i className="fas fa-stream" style={{marginRight: 10}} />{this.props.localizations.personal_workspace}</div>
+                                {this.state.workspaces.map(([id, name])=><div onClick={()=>{
+                                    this.workspaceButton.current.dismiss();
+                                    this.props.switch("workspace", id);
+                                    this.setState({currentWorkspace: name});
+                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div>)}
+                            </div>
+                        </IonPopover>
+                            <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
+                                <div>
+                                    {(()=>{
+                                        if (this.state.inbox.length > 0)
+                                            return <div className="page-label">{this.props.localizations.unsorted}<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                                 })()}
                                 <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
                             </div>
