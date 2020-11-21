@@ -500,7 +500,9 @@ class Task extends Component {
                                     type="text" 
                                     autoComplete="off" 
                                     placeholder={this.props.gruntman.localizations.nt} 
-                                    style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}} />
+                                    style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
+				    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
+				    />
 
                                 {/* Task edit. The thing that slides open on edit. */}
                                 {(() => {
