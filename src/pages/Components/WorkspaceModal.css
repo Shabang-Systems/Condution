@@ -1,0 +1,48 @@
+.workspace-popover {
+    --background: transparent;
+    --width: 600px;
+    --height: 400px;
+    --box-shadow: 0 !important;
+}
+
+.workspace-inside {
+    background: var(--ion-background-color);
+    height: 400px;
+    width: 600px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+
+.editable-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--page-editable-text);
+    outline: 0;
+    background: transparent;
+    border: 0px solid red;
+    transition: background 0.3s;
+    padding: 5px;
+    border-radius: 3px;
+    /*width: 95%;*/ /* IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
+    transform: translateY(-1px);
+}
+
+.workspace-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.workspace-callout {
+    color: var(--content-normal-accent);
+    font-weight: 600;
+    margin-right: 7px;
+}
+
+.workspace-input {
+    flex-grow: 10;
+    border: solid 1px transparent;
+}
+
+

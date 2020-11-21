@@ -8,6 +8,8 @@ import { SortableTaskList } from './Components/Sortable';
 
 import Task from './Components/Task';
 
+import WorkspaceModal from './Components/WorkspaceModal';
+
 const autoBind = require('auto-bind/react'); // autobind things! 
 
 /* 
@@ -53,6 +55,8 @@ class Upcoming extends Component { // define the component
             greeting: greetings[Math.floor(Math.random() * greetings.length)],
             workspaces: [],
             workspacesPopoverShown: [false, null],
+            workspaceModalShown: false,
+            currentlyEditedWorkspace: null,
             currentWorkspace: this.props.localizations.personal_workspace
         };
 
@@ -184,6 +188,7 @@ class Upcoming extends Component { // define the component
                             return "windows"; // non-frameless
 
                     })()}>
+                        <WorkspaceModal engine={this.props.engine} gruntman={this.props.gruntman} isShown={this.state.workspaceModalShown} currentWorkspace={this.state.currentlyEditedWorkspace} onDidDismiss={()=>this.setState({workspaceModalShown: false})} getUserByEmail={this.props.getUserByEmail}/>
                         <div className="header-container" onTouchMove={(e)=>e.preventDefault()}>
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>{this.props.localizations.upcoming}</h1> 
@@ -218,7 +223,11 @@ class Upcoming extends Component { // define the component
                                     this.workspaceButton.current.dismiss();
                                     this.props.switch("workspace", id);
                                     this.setState({currentWorkspace: name});
-                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div><a className="workspace-edit fas fa-pencil-alt" /></div>)}
+                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div><a className="workspace-edit fas fa-pen" onClick={()=>{
+                                    this.workspaceButton.current.dismiss();
+                                    this.props.switch("workspace", id);
+                                    this.setState({currentWorkspace: name, currentlyEditedWorkspace: id, workspaceModalShown: true});
+                                }} /></div>)}
                             </div>
                         </IonPopover>
                             <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
