@@ -98,7 +98,11 @@ async function generateWorkspace(userID, name="") {
 }
 
 async function getWorkspaces(userID) {
-    return (await cRef("users", userID).get()).data()["workspaces"];
+    let userData = (await cRef("users", userID).get()).data()
+    if (userData)
+        return userData["workspaces"];
+    else 
+        return [];
 }
 
 async function getWorkspace(workspaceID) {
