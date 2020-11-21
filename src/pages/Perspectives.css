@@ -39,6 +39,7 @@
     --width: 80%;
     --max-width: 503px;
     --ion-backdrop-opacity: 0.5;
+    transition: 0.3s;
 }
 
 @media (max-width: 585px) {
@@ -190,7 +191,6 @@
 }
 
 
-
 .dropdown {
     border: 1px solid red;
     height: 100px;
@@ -198,13 +198,10 @@
 
 }
 
-
-
-
-
-
-
-
+.expanded {
+    --max-height: 300px;
+    --height: 300px;
+}
 
 
 

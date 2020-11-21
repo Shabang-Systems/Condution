@@ -1,4 +1,4 @@
-import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonModal, IonContent, IonSearchbar, IonPage, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
@@ -34,6 +34,7 @@ class PerspectiveEdit extends Component {
 
         this.state = {
             inputEvent: "", // define our input event for the perspective title 
+	    expanded: false,
         }
 
         this.name = React.createRef();
@@ -76,108 +77,167 @@ class PerspectiveEdit extends Component {
                     this.props.updateName(this.state.inputEvent);
                     if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}
                 } 
-                cssClass={"perspective-modal"}
+                cssClass={`perspective-modal ${this.state.expanded? "expanded" : ""}`}
             > 
+		<IonPage>
+		    <div className="inner-content">
 
-                <div>
-                    {/* Header */}
-                    <div className="perspective-header">
-                        {/* Repeat name */}
-                        <span style={{display: "flex", alignItems: "center", width: "100%", whiteSpace: "nowrap"}}>
-                            <b className="bold-prefix" >{this.props.gruntman.localizations.perspective_build_callout}</b> 
-                            <input className="editable-title pbuilder-pname" 
-                                ref={this.name}
-                                defaultValue={this.props.perspectiveName} 
-                                onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
-                                style={{minWidth: 0}}
-                                placeholder="@NEEDLOC Tap to set name"
-                            />
+			<div>
+			    {/* Header */}
+			    <div className="perspective-header">
+				{/* Repeat name */}
+				<span style={{display: "flex", alignItems: "center", width: "100%", whiteSpace: "nowrap"}}>
+				    <b className="bold-prefix" >{this.props.gruntman.localizations.perspective_build_callout}</b> 
+				    <input className="editable-title pbuilder-pname" 
+					ref={this.name}
+					defaultValue={this.props.perspectiveName} 
+					onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
+					style={{minWidth: 0}}
+					placeholder="@NEEDLOC Tap to set name"
+				    />
 
-                            <div className="repeat-task-name">{this.state.name}</div>
-                        </span>
-                        {/* Close button */} 
-                        <a className="edit-close" onClick={this.props.onDidDismiss} style={{transform: "translate(-5px, 5px)"}}><i className="fa fa-check check"></i></a>
+				    <div className="repeat-task-name">{this.state.name}</div>
+				</span>
+				{/* Close button */} 
+				<a className="edit-close" onClick={this.props.onDidDismiss} 
+				    style={{transform: "translate(-5px, 5px)"}}><i className="fa fa-check check"></i></a>
 
-                    </div>
-                    <div className="build-input">
-                        <span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span> {/*@NEEDLOC*/}
-                        <input 
-                            className="build-input-edit"
-                            defaultValue={this.props.query}
-                            onChange={(e)=> {e.persist(); this.handleQueryChange(e)}}
-                            placeholder="LOCALIZE: perspective query"
-                        >
-                        </input> 
-			<i className="fas fa-plus-circle check" style={{marginTop: "10px", marginLeft: "8px"}}></i>
-                    </div>
+			    </div>
+			    <div className="build-input">
+				<span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span> {/*@NEEDLOC*/}
+				<input 
+				    className="build-input-edit"
+				    defaultValue={this.props.query}
+				    onChange={(e)=> {e.persist(); this.handleQueryChange(e)}}
+				    placeholder="LOCALIZE: perspective query"
+				>
+				</input> 
+				<i 
+				    className="fas fa-plus-circle check" 
+				    style={{marginTop: "10px", marginLeft: "8px"}}
+				    onClick={()=>this.setState({expanded: !this.state.expanded})}
+				></i>
+			    </div>
 
 
-                    <div className="perspective-basic-row">
-                        <span className="pbasic-container" style={{marginRight: "25px"}}>
-                            <span>
-                                <i className="repeat-label fas fa-exchange-alt"></i>
-                                <span className="perspective-label">{this.props.gruntman.localizations.perspective_include}</span>
-                            </span>
+			    <div className="perspective-basic-row">
+				<span className="pbasic-container" style={{marginRight: "25px"}}>
+				    <span>
+					<i className="repeat-label fas fa-exchange-alt"></i>
+					<span className="perspective-label">{this.props.gruntman.localizations.perspective_include}</span>
+				    </span>
 
-                            <IonSelect 
-                                className="perspective-select" 
-                                interface="popover" 
-                                value={this.props.avail} // TODO: make a database hit 
-                                mode="ios"
-                                onIonChange={e=>{
-                                    this.props.gruntman.do( // call a gruntman function
-                                        "perspective.update__perspective", { 
-                                            uid: this.props.uid, // pass it the user id 
-                                            id: this.props.id,  // pass it the perspective id
-                                            payload: {avail: e.detail.value} // set the availability 
-                                        }
-                                    )
-                                }}
-                            >
+				    <IonSelect 
+					className="perspective-select" 
+					interface="popover" 
+					value={this.props.avail} // TODO: make a database hit 
+					mode="ios"
+					onIonChange={e=>{
+					    this.props.gruntman.do( // call a gruntman function
+						"perspective.update__perspective", { 
+						    uid: this.props.uid, // pass it the user id 
+						    id: this.props.id,  // pass it the perspective id
+						    payload: {avail: e.detail.value} // set the availability 
+						}
+					    )
+					}}
+				    >
 
-                                <IonSelectOption className="repeat-select__option" value="remain">{this.props.gruntman.localizations.psp_rem}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="avail">{this.props.gruntman.localizations.psp_avil}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="flagged">{this.props.gruntman.localizations.psp_flg}</IonSelectOption>
-                            </IonSelect>
-                        </span>
+					<IonSelectOption className="repeat-select__option" value="remain">{this.props.gruntman.localizations.psp_rem}</IonSelectOption>
+					<IonSelectOption className="repeat-select__option" value="avail">{this.props.gruntman.localizations.psp_avil}</IonSelectOption>
+					<IonSelectOption className="repeat-select__option" value="flagged">{this.props.gruntman.localizations.psp_flg}</IonSelectOption>
+				    </IonSelect>
+				</span>
 
-                        <span className="pbasic-container">
-                            <span>
-                                <i className="repeat-label fas fa-sort-amount-down-alt"></i>
-                                <span className="perspective-label">{this.props.gruntman.localizations.perspective_order}</span>
-                            </span>
+				<span className="pbasic-container">
+				    <span>
+					<i className="repeat-label fas fa-sort-amount-down-alt"></i>
+					<span className="perspective-label">{this.props.gruntman.localizations.perspective_order}</span>
+				    </span>
 
-                            <IonSelect 
-                                className="perspective-select" 
-                                interface="popover" 
-                                value={this.props.tord} 
-                                mode="ios" 
-                                onIonChange={e=>{
-                                    this.props.gruntman.do( // call a gruntman function
-                                        "perspective.update__perspective", { 
-                                            uid: this.props.uid, // pass it the things, you know the drill 
-                                            id: this.props.id, 
-                                            payload: {tord: e.detail.value}
-                                        }
-                                    )
-                                }}
-                            >
+				    <IonSelect 
+					className="perspective-select" 
+					interface="popover" 
+					value={this.props.tord} 
+					mode="ios" 
+					onIonChange={e=>{
+					    this.props.gruntman.do( // call a gruntman function
+						"perspective.update__perspective", { 
+						    uid: this.props.uid, // pass it the things, you know the drill 
+						    id: this.props.id, 
+						    payload: {tord: e.detail.value}
+						}
+					    )
+					}}
+				    >
 
-                                <IonSelectOption className="repeat-select__option" value="duas">{this.props.gruntman.localizations.psp_abd}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="duds">{this.props.gruntman.localizations.psp_dbd}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="deas">{this.props.gruntman.localizations.psp_abe}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="deds">{this.props.gruntman.localizations.psp_dbe}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="alph">{this.props.gruntman.localizations.psp_alpha}</IonSelectOption>
-                            </IonSelect>
-                            <div className="help-icon" onClick={this.handleHelp}>
-                                <i 
-                                    className="far fa-question-circle" 
-                                ></i>
-                            </div>
-                        </span>
-                    </div> 
-                </div>
-		<div className="dropdown">>></div>
+					<IonSelectOption className="repeat-select__option" value="duas">{this.props.gruntman.localizations.psp_abd}</IonSelectOption>
+					<IonSelectOption className="repeat-select__option" value="duds">{this.props.gruntman.localizations.psp_dbd}</IonSelectOption>
+					<IonSelectOption className="repeat-select__option" value="deas">{this.props.gruntman.localizations.psp_abe}</IonSelectOption>
+					<IonSelectOption className="repeat-select__option" value="deds">{this.props.gruntman.localizations.psp_dbe}</IonSelectOption>
+					<IonSelectOption className="repeat-select__option" value="alph">{this.props.gruntman.localizations.psp_alpha}</IonSelectOption>
+				    </IonSelect>
+				    <div className="help-icon" onClick={this.handleHelp}>
+					<i 
+					    className="far fa-question-circle" 
+					></i>
+				    </div>
+				</span>
+			    </div> 
+			</div>
+			<div className="dropdown">>>
+			    <div className='modal-content-wrapper'>
+				<IonSearchbar 
+				    autoFocus={true} // more wishful thinking?
+				    animated={true} // idk what this does
+				    spellcheck={true} // spellcheck
+				    className='search-bar'
+				    // if we are on the first item and with no query, then add a 'Previous' to the end
+				    //placeholder={`Let's go to..${(this.state.selected == 0 && this.state.query == '')?"   |   Previous" : ""}`} // TODO: jack do you like this? 
+				    // when we change, set the query, then set the selected to the first item 
+				    //onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
+				    debounce={0} // update for every update
+				    //onKeyDown={this.handleKeydown} // call our gross function 
+
+				////////
+				// loop through our filtered items, highlight if the index is right
+				// onclick nav there, on hover set the index and the styling
+				////////
+
+				/>
+				<div className='option-wrapper'> 
+				    {/*this.filterItems(this.state.query).map((item, i) => {
+					return (
+					    <div 
+						className="option-line"
+						className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
+						ref={(this.state.selected == i)? this.currentlySelected : null}
+						onMouseEnter={() => {
+						    this.setState({selected: i}); 
+						}}
+						onClick={()=>{
+						    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
+						    this.props.paginate(...item.slice(1)); // paginate-ify it!
+						    this.props.dismiss()
+						}}
+
+					    >
+						<i className={`${item[3]} option-icon`} style={{
+						}}></i>
+						<p 
+						    className= {`option-text`}
+						>{item[0]}</p>
+					    </div>
+					    )
+
+					}
+				    )*/}
+
+				</div> 
+			    </div>
+			</div>
+		    </div>
+		</IonPage>
             </IonModal>
         )
     }
