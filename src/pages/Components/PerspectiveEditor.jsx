@@ -62,7 +62,7 @@ class PerspectiveEdit extends Component {
     }
 
     handleHelp() { // TODO TODO TODO: jack what do u want here? 
-        alert("You really think we have documentation ready? I mean, if they are there, they are at docs.condution.com")
+	window.open('https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2#35a4686c83eb4cc589d3570a05de6b5a')
     }
 
     render() {
@@ -175,11 +175,9 @@ class PerspectiveEdit extends Component {
                                 ></i>
                             </div>
                         </span>
-
-
                     </div> 
-
                 </div>
+		<div className="dropdown">>></div>
             </IonModal>
         )
     }

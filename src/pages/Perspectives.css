@@ -188,3 +188,26 @@
 .check:hover {
     color: var(--repeat-popover-close-hover);
 }
+
+
+
+.dropdown {
+    border: 1px solid red;
+    height: 100px;
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
