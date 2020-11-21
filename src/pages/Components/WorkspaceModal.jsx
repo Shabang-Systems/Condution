@@ -4,6 +4,11 @@ import React, { useState, useEffect } from 'react';
 //import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
 
+import TagsInput from './TagsInput'
+import AutosizeInput from 'react-input-autosize';
+
+import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
+
 import "./WorkspaceModal.css";
 
 
@@ -21,6 +26,12 @@ import "./WorkspaceModal.css";
  *
  */
 
+function autosizingRenderInput ({addTag, ...props}) {
+  let {onChange, value, ...other} = props
+  return (
+      <AutosizeInput style={{border: 0}} name="react-tagsinput-actualinput" type='text' onChange={onChange} value={value} {...other} />
+  )
+}
 
 function WorkspaceModal(props) {
 
@@ -58,7 +69,9 @@ function WorkspaceModal(props) {
                         }}
                     />
                 </div>
-                {workspaceEditors.map(e=><span>{e}</span>)}
+                <TagsInput value={workspaceEditors} onChange={(list)=>{
+                    setWorkspaceEditors(list);
+                }} renderInput={autosizingRenderInput} />
             </div>
         </IonModal>
     )

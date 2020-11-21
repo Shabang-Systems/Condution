@@ -45,4 +45,33 @@
     border: solid 1px transparent;
 }
 
+.react-tagsinput {
+    border-radius: 5px;
+    border: 0;
+    background: var(--background-feature);
+}
+
+.react-tagsinput-tag {
+    background: var(--special);
+    border: 0;
+    color: var(--content-normal-alt);
+    border-radius: 3px;
+}
+
+.react-tagsinput-input {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+}
+
+input[name="react-tagsinput-actualinput"] {
+    border: 0;
+    background: 0;
+    -webkit-appearance: none;
+    color: var(--content-normal-accent);
+}
+
+
+
 
