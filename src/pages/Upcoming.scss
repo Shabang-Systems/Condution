@@ -10,6 +10,44 @@
   min-width: 200px;
 }
 
+.workspace-name {
+    display: inline-block;
+    background: var(--background-feature);
+    margin-top: 3px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 17px;
+    transform: translateY(-1.5px);
+    cursor: pointer;
+}
+
+.workspaces-popover {
+    --background: var(--ion-background);
+    --width: 200px;
+    font-size: 14px;
+    margin-top: 3px;
+    margin-left: 5px;
+}
+
+.workspace-name-selection {
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: var(--content-normal-alt);
+    transition: background 0.3s;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.workspace-name-selection:hover {
+    background: var(--background-feature);
+}
+
+
 .timeline-box {
     display: flex;
     position: sticky;

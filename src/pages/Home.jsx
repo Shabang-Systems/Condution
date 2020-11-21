@@ -76,6 +76,14 @@ class Home extends Component {
 
     }
 
+    switch = (workspaceType, id=this.props.uid) => { 
+        if (workspaceType === "workspace")
+            this.props.engine.workspaceify();
+        else
+            this.props.engine.userlandify();
+        this.setState({isWorkspace: workspaceType==="workspace", workspace:id});
+    }
+
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
 
     componentDidMount() {
@@ -98,14 +106,13 @@ class Home extends Component {
         if (prevState.to !== this.state.to && this.state.to !== undefined)
              this.setState({sends:{to:undefined, id:undefined}})
 
-        if (prevState.isWorkspace !== this.state.isWorkspace) { 
-            if (this.state.isWorkspace)
-                this.props.engine.workspaceify()
-            else
-                this.props.engine.userlandify()
+        if (prevState.isWorkspace !== this.state.isWorkspace) 
             this.refresh();
-        }
 
+/*            if (this.state.isWorkspace)*/
+                //this.props.engine.workspaceify()
+            //else
+                /*this.props.engine.userlandify()*/
     }
 
     async refresh() {
@@ -248,7 +255,7 @@ class Home extends Component {
                                     {/* and the perspective switch */}
                                     <Switch>
                                         {/* upcoming renders upcoming */}
-                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} />} />
+                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} />} />
                                         {/* completed renders completed */}
                                         <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
 
