@@ -108,15 +108,15 @@ class Home extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.to !== this.state.to && this.state.to !== undefined)
-             this.setState({sends:{to:undefined, id:undefined}})
+            this.setState({sends:{to:undefined, id:undefined}})
 
         if (prevState.workspace !== this.state.workspace) 
             this.refresh();
 
-/*            if (this.state.isWorkspace)*/
-                //this.props.engine.workspaceify()
-            //else
-                /*this.props.engine.userlandify()*/
+        /*            if (this.state.isWorkspace)*/
+        //this.props.engine.workspaceify()
+        //else
+        /*this.props.engine.userlandify()*/
     }
 
     async refresh() {
@@ -124,7 +124,7 @@ class Home extends Component {
         // to set into the state and to add to the menu
         let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
         let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
-        
+
         if (this.props.authType === "firebase") {
             let invites = await this.props.engine.db.getInvitations(this.props.email);
             let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
@@ -154,16 +154,16 @@ class Home extends Component {
             <IonPage>
                 {/* The central router that controls the routing of views */}
                 <Router history={history}>
-		    <Keybinds 
-			paginate={this.paginate} 
-			ref={this.keybindRef} 
-			perspectives={this.state.perspectives}
-			projects={this.state.projects}
-			abtib={this.abtibRef} 
-			engine={this.props.engine} 
-			uid={this.state.workspace} 
-			gruntman={this.props.gruntman} 
-		    />
+                    <Keybinds 
+                        paginate={this.paginate} 
+                        ref={this.keybindRef} 
+                        perspectives={this.state.perspectives}
+                        projects={this.state.projects}
+                        abtib={this.abtibRef} 
+                        engine={this.props.engine} 
+                        uid={this.state.workspace} 
+                        gruntman={this.props.gruntman} 
+                    />
                     {/* OoIp */}
                     <ReactTooltip />
                     {/* App container */}
@@ -273,11 +273,11 @@ class Home extends Component {
                                     buttons={[
                                         {
                                             text: 'Reject',
-                                            role: 'cancel',
-                                            handler:  (async function() {
-                                                await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                this.setState({isWorkspaceRequestShown: [false, null]});
-                                            }).bind(this)
+                                                role: 'cancel',
+                                                handler:  (async function() {
+                                                    await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                    this.setState({isWorkspaceRequestShown: [false, null]});
+                                                }).bind(this)
                                         },
                                         {
                                             text: 'Accept',
