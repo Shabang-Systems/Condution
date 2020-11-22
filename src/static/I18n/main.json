@@ -29,6 +29,8 @@
     "perspective_include": "Include",
     "perspective_order": "Order",
     "workspace_email": "Email",
+    "workspace_welcome": "Welcome to",
+    "workspace_explanation": "Good to see you. You just tapped on a Condution workspace link! Workspaces are collaborative sessions where people could share a set of to-do projects to jot down ideas and track progress. ",
     "psp_avil": "Avaliable",
     "psp_rem": "Remaining",
     "psp_flg": "Flagged",

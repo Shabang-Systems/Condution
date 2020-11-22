@@ -19,6 +19,7 @@ import Calendar from './Calendar';
 import Completed from './Completed';
 import Perspectives from './Perspectives';
 import Projects from './Projects';
+import WorkspaceWelcome from './WorkspaceWelcome';
 import ABTIB from './Components/FloatingActionButton';
 import Keybinds from './Components/KeybindManager';
 import ReleaseNotesModal from './Components/ReleaseNotesModal';
@@ -308,7 +309,8 @@ class Home extends Component {
                                         <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email}/>} />
                                         {/* completed renders completed */}
                                         <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
-
+                                        {/* workspace renders workspace */}
+                                        <Route path="/workspaces/:id" render={({match})=><WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} localizations={this.props.localizations}/>}  />
                                         {/* completed renders completed */}
                                         <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
 
