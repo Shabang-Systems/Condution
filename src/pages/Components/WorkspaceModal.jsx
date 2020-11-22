@@ -54,13 +54,13 @@ function WorkspaceModal(props) {
                 <div className="workspace-header">
                     <span className="workspace-callout">{props.gruntman.localizations.perspective_build_callout}</span>
                     <input className="editable-title workspace-input" 
-                        defaultValue={workspaceName} 
+                        value={workspaceName} 
                         style={{minWidth: 0}}
                         placeholder="@NEEDLOC Tap to set name"
                         onChange={(e)=>{
+                            setWorkspaceName(e.target.value);
                             e.persist();
                             props.gruntman.registerScheduler(() => props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: e.target.value}}), `workspace-${props.currentWorkspace}-update`)
-                            setWorkspaceName(e.target.value);
                         }}
                     />
                 </div>

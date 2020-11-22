@@ -57,7 +57,7 @@ class Upcoming extends Component { // define the component
             workspacesPopoverShown: [false, null],
             workspaceModalShown: false,
             currentlyEditedWorkspace: null,
-            currentWorkspace: this.props.localizations.personal_workspace
+            currentWorkspace: this.props.localizations.personal_workspace,
         };
 
         this.updatePrefix = this.random();
@@ -227,6 +227,12 @@ class Upcoming extends Component { // define the component
                                     this.workspaceButton.current.dismiss();
                                     this.setState({currentlyEditedWorkspace: id, workspaceModalShown: true});
                                 }} /></div>)}
+                                <div className="workspace-name-container" style={{borderTop: "1px solid var(--decorative-light)", fontWeight: 600}}><div className="workspace-name-selection" onClick={(async function(){
+                                    let id = await this.props.engine.db.generateWorkspace(this.props.actualUID, this.props.email);
+                                    this.workspaceButton.current.dismiss();
+                                    this.props.switch("workspace", id);
+                                    this.setState({currentlyEditedWorkspace: id, workspaceModalShown: true});
+                                }).bind(this)}><i className="fas fa-plus-circle" style={{marginRight: 10}} />{this.props.localizations.new_workspace}</div></div>
                             </div>
                         </IonPopover>
                             <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
