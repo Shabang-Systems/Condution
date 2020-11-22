@@ -37,9 +37,10 @@ class PerspectiveEdit extends Component {
 	    expanded: false,
 	    items: [],
 	    inited: false,
-	    query: '',
+	    query: '', // this is the searhbar query 
 	    selected: 0,
-	    inputValue: this.props.query,
+	    inputValue: '', // really the value of the perspective query 
+	    idStore: '',
         }
 
         this.name = React.createRef();
@@ -48,6 +49,7 @@ class PerspectiveEdit extends Component {
     }
 
     componentDidMount() {
+	this.setState({idStore: this.props.id})
         if (this.props.startHighlighted) // if we are trying to create
             this.name.current.focus(); // focus the name
 	this.setState({inputValue: this.props.query})
@@ -55,8 +57,14 @@ class PerspectiveEdit extends Component {
     }
 
     componentDidUpdate() {
+	if (this.props.id != this.state.idStore) {
+	    this.setState({inited: false, idStore: this.props.id, inputEvent: "", inputValue: ''}) 
+	}
 	if (this.props.query != this.state.inputValue && !this.state.inited) {
-	    this.setState({inputValue: this.props.query, inited: true})
+	    if (this.props.query) { 
+		this.setState({inputValue: this.props.query, inited: true})
+		console.log("qury")
+	    } else { this.setState({inputValue: '', inited: true}); console.log("notquery") }
 	}
     }
 

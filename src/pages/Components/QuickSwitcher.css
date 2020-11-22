@@ -35,6 +35,9 @@
 
 }
 
+.option-text-hover {
+    background-color: var(--background-feature);
+}
 
 .option-text {
     display: inline-block;
@@ -55,9 +58,6 @@
     -webkit-backface-visibility: hidden;
 }
 
-.option-text-hover {
-    background-color: var(--background-feature);
-}
 
 .option-icon {
     display: inline-block;
