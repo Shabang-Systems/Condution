@@ -272,9 +272,10 @@ class Home extends Component {
                                         {
                                             text: 'Reject',
                                             role: 'cancel',
-                                            handler: () => {
-                                                console.log('Cancel clicked');
-                                            }
+                                            handler:  (async function() {
+                                                await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                this.setState({isWorkspaceRequestShown: [false, null]});
+                                            }).bind(this)
                                         },
                                         {
                                             text: 'Accept',
