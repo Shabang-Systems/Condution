@@ -100,9 +100,13 @@ async function generateWorkspace(userID, userEmail, name="") {
 async function getWorkspaces(userID) {
     let userData = (await cRef("users", userID).get()).data()
     if (userData)
-        return userData["workspaces"];
+        return userData["workspaces"]?userData["workspaces"]:[];
     else 
         return [];
+}
+
+async function updateWorkspaces(userID, newWorkspaces) {
+    return (await cRef("users", userID).set({workspaces: newWorkspaces}, {merge:true}))
 }
 
 async function getWorkspace(workspaceID) {
@@ -114,14 +118,21 @@ async function editWorkspace(workspaceID, query) {
 }
 
 async function inviteToWorkspace(workspaceID, inviteeEmail) {
-    return (await cRef("invitations").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
+    return (await cRef("invitations", inviteeEmail, "invites").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
 
 }
 
 async function revokeToWorkspace(workspaceID, inviteeEmail) {
-    return (await cRef("invitations").add({email: inviteeEmail, workspace: workspaceID, type: "revoke", time: new Date()})).id;
+    return (await cRef("invitations", inviteeEmail, "invites").add({email: inviteeEmail, workspace: workspaceID, type: "revoke", time: new Date()})).id;
 }
 
+async function getInvitations(userEmail) {
+    return (await cRef("invitations", userEmail, "invites").get()).docs.map(doc=>Object.assign(doc.data(), {id: doc.id}));
+}
+
+async function resolveInvitation(inviteID, userEmail) {
+    return cRef("invitations", userEmail, "invites", inviteID).delete();
+}
 
 
 async function getTasks(userID) {
@@ -871,7 +882,7 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces};
 
 export { setWorkspaceMode };
 
