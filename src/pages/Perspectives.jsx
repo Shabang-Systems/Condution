@@ -56,7 +56,6 @@ class Perspectives extends Component {
 
 
         this.updatePrefix = this.random();
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
         this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
 
 
@@ -163,6 +162,7 @@ class Perspectives extends Component {
 
     componentDidMount() {
         this.refresh()
+        this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

@@ -45,7 +45,6 @@ class Completed extends Component {
         };
 
         this.updatePrefix = this.random();
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
         autoBind(this);
     }
 
@@ -99,6 +98,7 @@ class Completed extends Component {
 
     async componentDidMount() {
         this.refresh(); // refresh when the component mounts
+        this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
     handleFetchMore() {

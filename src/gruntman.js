@@ -407,7 +407,7 @@ class Gruntman {
     halt() {
         for (let key in this.schedulers)
             clearTimeout(this.schedulers[key])
-        //this.refresher = ()=>{}; TODO TODO may cause memory leaks in _very_ narrow circumstances but uncomming will break project toggles due to refresher mounting too quickly
+        this.refresher = ()=>{}; // TODO TODO may cause memory leaks in _very_ narrow circumstances but uncomming will break project toggles due to refresher mounting too quickly
         if (this.updateInterval)
             clearTimeout(this.updateInterval);
         this.updateInterval = undefined;
@@ -532,6 +532,7 @@ class Gruntman {
 
         if (unsafe_FORCE_UPDATES)
             this.refresher();
+
 
         return await resources;
     }

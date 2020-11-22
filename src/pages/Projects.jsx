@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, withIonLifeCycle } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Projects.css';
@@ -36,7 +36,6 @@ class Projects extends Component { // define the component
 
         this.updatePrefix = this.random();
 
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
         this.activeTask = React.createRef();
 
@@ -93,6 +92,7 @@ class Projects extends Component { // define the component
     }
 
     componentDidMount() {
+        this.props.gruntman.registerRefresher((this.refresh).bind(this));
         this.refresh();
         if (this.props.options === "do") // if we are trying to create
             this.name.current.focus(); // focus the name
@@ -255,5 +255,5 @@ class Projects extends Component { // define the component
     }
 }
 
-export default withRouter(Projects);
+export default withIonLifeCycle(withRouter(Projects));
 

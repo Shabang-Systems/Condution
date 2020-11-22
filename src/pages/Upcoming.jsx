@@ -64,7 +64,6 @@ class Upcoming extends Component { // define the component
 
         this.workspaceButton = React.createRef();
 
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
 
         autoBind(this);
     }
@@ -150,6 +149,7 @@ class Upcoming extends Component { // define the component
 
     componentDidMount() {
         this.refresh();
+        this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {

@@ -230,7 +230,6 @@ class Calendar extends Component {
         };
 
         this.updatePrefix = this.random();
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
         this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
 
         // AutoBind!
@@ -300,6 +299,7 @@ class Calendar extends Component {
 
     componentDidMount() {
         this.refresh()
+        this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
