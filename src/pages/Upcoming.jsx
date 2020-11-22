@@ -225,8 +225,7 @@ class Upcoming extends Component { // define the component
                                     this.setState({currentWorkspace: name});
                                 }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div><a className="workspace-edit fas fa-pen" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.props.switch("workspace", id);
-                                    this.setState({currentWorkspace: name, currentlyEditedWorkspace: id, workspaceModalShown: true});
+                                    this.setState({currentlyEditedWorkspace: id, workspaceModalShown: true});
                                 }} /></div>)}
                             </div>
                         </IonPopover>

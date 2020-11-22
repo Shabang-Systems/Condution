@@ -9,7 +9,7 @@ import AutosizeInput from 'react-input-autosize';
 
 import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
 
-import "./WorkspaceModal.css";
+import "./WorkspaceModal.scss";
 
 
 /*
@@ -49,8 +49,8 @@ function WorkspaceModal(props) {
 
 
     return (
-        <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="workspace-popover">
-            <div className="workspace-inside">
+        <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="workspace-popover auto-height">
+            <div className="inner-content workspace-inside">
                 <div className="workspace-header">
                     <span className="workspace-callout">{props.gruntman.localizations.perspective_build_callout}</span>
                     <input className="editable-title workspace-input" 
@@ -65,7 +65,7 @@ function WorkspaceModal(props) {
                     />
                 </div>
                 <div style={{display: "flex", alignItems: "center", marginLeft: 5}}>
-                    <i className="fas fa-user-edit" />
+                    <i className="fas fa-user-edit" style={{color: "var(--content-normal-alt)"}} />
                     <TagsInput value={workspaceEditors} onChange={(list)=>{
                         let isValid = true;
                         list.filter(e=>!workspaceEditors.includes(e)).forEach(newAccount => {

@@ -1,13 +1,32 @@
+ion-modal.auto-height {
+    &.bottom {
+        align-items: flex-end;
+    }
+
+    --height: auto;
+
+    .ion-page {
+        position: relative;
+        display: block;
+        contain: content;
+
+        .inner-content {
+            max-height: 80vh;
+            overflow: auto;
+            padding: 10px;
+        }
+    }
+}
+
 .workspace-popover {
     --background: transparent;
     --width: min(600px, 80vw);
-    --height: 110px;
     --box-shadow: 0 !important;
 }
 
 .workspace-inside {
     background: var(--ion-background-color);
-    width: min(600px, 80vw);
+    width: unquote("min(600px, 80vw)");
     border-radius: 5px;
     padding: 10px;
 }
