@@ -36,6 +36,10 @@ class PerspectiveEdit extends Component {
             inputEvent: "", // define our input event for the perspective title 
 	    expanded: false,
 	    items: [],
+	    inited: false,
+	    query: '',
+	    selected: 0,
+	    inputValue: this.props.query,
         }
 
         this.name = React.createRef();
@@ -44,6 +48,15 @@ class PerspectiveEdit extends Component {
     componentDidMount() {
         if (this.props.startHighlighted) // if we are trying to create
             this.name.current.focus(); // focus the name
+	this.setState({inputValue: this.props.query})
+	console.log(this.props.query)
+    }
+
+    componentDidUpdate() {
+	if (this.props.query != this.state.inputValue && !this.state.inited) {
+	    console.log("updatinggg homebrewwwwww")
+	    this.setState({inputValue: this.props.query, inited: true})
+	}
     }
 
     async getItems(){
@@ -58,6 +71,13 @@ class PerspectiveEdit extends Component {
 	this.setState({items: items})
 	//console.log(items)
     }
+    filterItems(searchTerm) { // filter the items!
+	let filteredItems = this.state.items.filter(item => {
+	    return item[0].toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
+	});
+	return filteredItems
+    }
+
 
     handleQueryChange(e) {
         if (e) { // if the event is defined 
@@ -78,6 +98,14 @@ class PerspectiveEdit extends Component {
 
     handleHelp() { // TODO TODO TODO: jack what do u want here? 
 	window.open('https://condutiondocs.shabang.cf/Perspective-Menus-408aae7988a345c0912644267ccda4d2#35a4686c83eb4cc589d3570a05de6b5a')
+    }
+
+    handleAppend(item) {
+	let value = ''
+	if (item[1] == 'tags') {
+	    value = `${item[0]}`
+	}
+	console.log(value, item)
     }
 
     render() {
@@ -121,8 +149,15 @@ class PerspectiveEdit extends Component {
 				<span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span> {/*@NEEDLOC*/}
 				<input 
 				    className="build-input-edit"
-				    defaultValue={this.props.query}
-				    onChange={(e)=> {e.persist(); this.handleQueryChange(e)}}
+				    //defaultValue={this.props.query}
+				    value={this.state.inputValue}
+				    //value={this.props.query}
+				    onChange={(e)=> {
+					e.persist(); 
+					this.handleQueryChange(e); 
+					this.setState({inputValue: e.target.value})}
+				    }
+
 				    placeholder="LOCALIZE: perspective query"
 				>
 				</input> 
@@ -211,7 +246,7 @@ class PerspectiveEdit extends Component {
 					    // if we are on the first item and with no query, then add a 'Previous' to the end
 					    //placeholder={`Let's go to..${(this.state.selected == 0 && this.state.query == '')?"   |   Previous" : ""}`} // TODO: jack do you like this? 
 					    // when we change, set the query, then set the selected to the first item 
-					    //onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
+					    onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
 					    debounce={0} // update for every update
 					    //onKeyDown={this.handleKeydown} // call our gross function 
 
@@ -222,19 +257,19 @@ class PerspectiveEdit extends Component {
 
 					/>
 					<div className='option-wrapper'> 
-					    {/*this.filterItems(this.state.query).map((item, i) => {
+					    {this.filterItems(this.state.query).map((item, i) => {
 						return (
 						    <div 
-							className="option-line"
-							className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
+							className= {`poption-line ${(this.state.selected == i)? 'poption-text-hover' : ''}`}
 							ref={(this.state.selected == i)? this.currentlySelected : null}
 							onMouseEnter={() => {
 							    this.setState({selected: i}); 
 							}}
 							onClick={()=>{
-							    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
-							    this.props.paginate(...item.slice(1)); // paginate-ify it!
-							    this.props.dismiss()
+							    this.handleAppend(item)
+							    //this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
+							    //this.props.paginate(...item.slice(1));  //paginate-ify it!
+							    //this.props.dismiss()
 							}}
 
 						    >
@@ -245,10 +280,9 @@ class PerspectiveEdit extends Component {
 							>{item[0]}</p>
 						    </div>
 						    )
-
 						}
-					    )*/}
-
+					    )
+					}
 					</div> 
 				    </div>
 			    </div> : null }
