@@ -39,7 +39,7 @@ class WorkspaceWelcome extends Component {
 
     async refresh() {
         try {
-            let wsp = await this.props.engine.db.getWorkspace(this.props.uid);
+            let wsp = await this.props.engine.db.getWorkspace(this.props.id);
             this.setState({name: wsp.meta.name, loaded: true});
         } catch {
             this.setState({error: true, loaded: true});
@@ -65,10 +65,15 @@ class WorkspaceWelcome extends Component {
                             <h1 className="workspace-title">{this.props.localizations.workspace_welcome}<span className="workspace-name" style={{fontSize: 20}}>{this.state.name}</span></h1>
                         <p className="workspace-subtitle">{this.props.localizations.workspace_explanation} </p>
                         {/*<p className="workspace-subtitle" style={{fontWeight: 600}}>You have been signed into the {this.state.name} workspace. Simply head back to <a href="https://app.condution.com" className="link">TODO.!!!!!!.com</a> to keep working. Your work is automatically saved.</p>*/}
-                        <div className="continue-button" onClick={()=>{
+                        <div className="continue-button" onClick={(async function(){
                             this.props.history.push("/upcoming/");
                             this.props.paginate("upcoming");
-                        }}><i className="fas fa-snowboarding button-right" />Let's do this!</div></div>
+                            if (this.props.authType === "firebase") {
+                                let workspaces = await this.props.engine.db.getWorkspaces(this.props.actualUID);
+                                if (!workspaces.includes(this.props.id))
+                                    await this.props.engine.db.updateWorkspaces(this.props.actualUID, [...workspaces, this.props.id]);
+                            }
+                        }).bind(this)}><i className="fas fa-snowboarding button-right" />Let's do this!</div></div>
                     ):(<div className="workspace-error">
                         <div style={{fontSize: 26}}>🤷 <b>{this.props.localizations.nahman}</b> <span style={{fontSize: 20}}>{this.props.localizations.where_workspace}</span></div>
                         <div className="workspace-forbidden">{this.props.localizations.workspace_forbidden}</div>

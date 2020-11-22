@@ -104,7 +104,11 @@ class Home extends Component {
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
 
-        this.refresh()
+        this.refresh().then(()=> {
+            if (uri[1] === "workspaces")
+                this.switch("workspace", uri[2]);
+        });
+
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -310,7 +314,7 @@ class Home extends Component {
                                         {/* completed renders completed */}
                                         <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
                                         {/* workspace renders workspace */}
-                                        <Route path="/workspaces/:id" render={({match})=><WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} localizations={this.props.localizations}/>}  />
+                                        <Route path="/workspaces/:id" render={({match})=><WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id}  actualUID={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email}/>}  />
                                         {/* completed renders completed */}
                                         <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
 
