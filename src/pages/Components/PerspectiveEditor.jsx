@@ -35,6 +35,7 @@ class PerspectiveEdit extends Component {
         this.state = {
             inputEvent: "", // define our input event for the perspective title 
 	    expanded: false,
+	    items: [],
         }
 
         this.name = React.createRef();
@@ -43,6 +44,19 @@ class PerspectiveEdit extends Component {
     componentDidMount() {
         if (this.props.startHighlighted) // if we are trying to create
             this.name.current.focus(); // focus the name
+    }
+
+    async getItems(){
+	const subs = (await this.props.engine.db.getProjectsandTags(this.props.uid)) // hit the cache 
+	let items = []
+	items.push(...Object.entries(subs[1][0]).map(([key, value]) => { // process it 
+	    return ['#' + value, 'tags', key, 'fas fa-tags']
+	}))
+	items.push(...Object.entries(subs[0][0]).map(([key, value]) => { // process it 
+	    return ['.' + value, 'projects', key, 'fas fa-tasks']
+	}))
+	this.setState({items: items})
+	//console.log(items)
     }
 
     handleQueryChange(e) {
@@ -71,7 +85,7 @@ class PerspectiveEdit extends Component {
             <IonModal 
                 ref={this.props.reference} 
                 isOpen={this.props.isShown} 
-                onWillPresent={() => {this.props.gruntman.lockUpdates();}}
+                onWillPresent={() => {this.props.gruntman.lockUpdates(); this.getItems()}}
                 onDidDismiss={() => {
                     this.props.gruntman.unlockUpdates(); 
                     this.props.updateName(this.state.inputEvent);
@@ -185,56 +199,59 @@ class PerspectiveEdit extends Component {
 				</span>
 			    </div> 
 			</div>
-			<div className="dropdown">>>
-			    <div className='modal-content-wrapper'>
-				<IonSearchbar 
-				    autoFocus={true} // more wishful thinking?
-				    animated={true} // idk what this does
-				    spellcheck={true} // spellcheck
-				    className='search-bar'
-				    // if we are on the first item and with no query, then add a 'Previous' to the end
-				    //placeholder={`Let's go to..${(this.state.selected == 0 && this.state.query == '')?"   |   Previous" : ""}`} // TODO: jack do you like this? 
-				    // when we change, set the query, then set the selected to the first item 
-				    //onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
-				    debounce={0} // update for every update
-				    //onKeyDown={this.handleKeydown} // call our gross function 
+			<div className="dropdown">
+			    {this.state.expanded?
+				<div>
+				    <div className='modal-content-wrapper'>
+					<IonSearchbar 
+					    autoFocus={true} // more wishful thinking?
+					    animated={true} // idk what this does
+					    spellcheck={true} // spellcheck
+					    className='search-add'
+					    // if we are on the first item and with no query, then add a 'Previous' to the end
+					    //placeholder={`Let's go to..${(this.state.selected == 0 && this.state.query == '')?"   |   Previous" : ""}`} // TODO: jack do you like this? 
+					    // when we change, set the query, then set the selected to the first item 
+					    //onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
+					    debounce={0} // update for every update
+					    //onKeyDown={this.handleKeydown} // call our gross function 
 
-				////////
-				// loop through our filtered items, highlight if the index is right
-				// onclick nav there, on hover set the index and the styling
-				////////
+					////////
+					// loop through our filtered items, highlight if the index is right
+					// onclick nav there, on hover set the index and the styling
+					////////
 
-				/>
-				<div className='option-wrapper'> 
-				    {/*this.filterItems(this.state.query).map((item, i) => {
-					return (
-					    <div 
-						className="option-line"
-						className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
-						ref={(this.state.selected == i)? this.currentlySelected : null}
-						onMouseEnter={() => {
-						    this.setState({selected: i}); 
-						}}
-						onClick={()=>{
-						    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
-						    this.props.paginate(...item.slice(1)); // paginate-ify it!
-						    this.props.dismiss()
-						}}
+					/>
+					<div className='option-wrapper'> 
+					    {/*this.filterItems(this.state.query).map((item, i) => {
+						return (
+						    <div 
+							className="option-line"
+							className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
+							ref={(this.state.selected == i)? this.currentlySelected : null}
+							onMouseEnter={() => {
+							    this.setState({selected: i}); 
+							}}
+							onClick={()=>{
+							    this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
+							    this.props.paginate(...item.slice(1)); // paginate-ify it!
+							    this.props.dismiss()
+							}}
 
-					    >
-						<i className={`${item[3]} option-icon`} style={{
-						}}></i>
-						<p 
-						    className= {`option-text`}
-						>{item[0]}</p>
-					    </div>
-					    )
+						    >
+							<i className={`${item[3]} option-icon`} style={{
+							}}></i>
+							<p 
+							    className= {`option-text`}
+							>{item[0]}</p>
+						    </div>
+						    )
 
-					}
-				    )*/}
+						}
+					    )*/}
 
-				</div> 
-			    </div>
+					</div> 
+				    </div>
+			    </div> : null }
 			</div>
 		    </div>
 		</IonPage>

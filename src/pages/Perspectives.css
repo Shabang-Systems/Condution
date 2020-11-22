@@ -192,10 +192,14 @@
 
 
 .dropdown {
-    border: 1px solid red;
-    height: 100px;
-
-
+    margin-top: 5px;
+    /*text-align: center;*/
+    /*color: var(--decorative-light-alt);*/
+    /*font-size: 15px;*/
+    /*padding-top: 1px;*/
+    /*z-index: 10000;*/
+    background: var(--heatmap-lightest);
+    height: 100%;
 }
 
 .expanded {
@@ -203,7 +207,16 @@
     --height: 300px;
 }
 
-
+.search-add {
+    /*--background: var(--content-normal-accent);*/
+    --background: var(--decorative-light);
+    --border-radius: 5px;
+    /*--box-shadow: 0px 13px 39px -12px rgba(0,0,0,0.91);*/
+    --box-shadow: 0px 13px 39px var(--qs-shadow-intensity) var(--qs-shadow-color);
+    /*--color: var(--content-normal);*/
+    /*--icon-color: var(--content-normal);*/
+    /*--cancel-button-color: var(--content-normal);*/
+}
 
 
 
