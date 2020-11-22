@@ -216,6 +216,7 @@ class Home extends Component {
                                                 "perspective.create", {
                                                     uid: this.state.workspace,
                                                 },
+                                                true
                                             )).pid;
                                             history.push(`/perspectives/${npid}/do`);
                                             this.paginate("perspectives", npid);
