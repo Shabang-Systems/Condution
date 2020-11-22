@@ -261,7 +261,7 @@ class Home extends Component {
                                 </IonContent>
 
                                 {/* Logout button */}
-                                <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.localizations.logout}</div>
+                                <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType=="workspace"?this.props.localizations.exitworkspace:this.props.localizations.logout}</div>
                             </IonMenu>
                             <IonPage id="main">
                                 {/* raise a glass to Workspace Add */}
