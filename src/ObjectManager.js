@@ -90,10 +90,11 @@ function setWorkspaceMode(workspaceMode) {
 }
 
 async function generateWorkspace(userID, userEmail, name="") {
-    let oldWorkspaces = (await cRef("users", userID).get()).data().workspaces;
+    let oldWorkspaces = (await cRef("users", userID).get()).data()
+    oldWorkspaces = oldWorkspaces ? oldWorkspaces.workspaces : undefined;
     oldWorkspaces = oldWorkspaces ? oldWorkspaces : [];
     let workspaceID = (await cRef("workspaces").add({meta: {editors: [userEmail], name}})).id;
-    (await cRef("users", userID).update({workspaces:[...oldWorkspaces, workspaceID]}));
+    (await cRef("users", userID).set({workspaces:[...oldWorkspaces, workspaceID]}, {merge:true}));
     return workspaceID;
 }
 
