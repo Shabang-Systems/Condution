@@ -109,3 +109,10 @@ ion-icon {
     cursor: pointer;
 }
 
+.workspace-toast {
+    --background: var(--background-feature);
+    --button-color: var(--content-normal-accent);
+    --color: var(--content-normal-alt);
+}
+
+

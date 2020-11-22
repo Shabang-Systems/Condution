@@ -1,7 +1,7 @@
 // A whole lotta imports
 
 // Ionic components
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast } from '@ionic/react';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
 
 // Routing
@@ -59,6 +59,7 @@ class Home extends Component {
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
             isWorkspace:false, // current workspace
             workspace: this.props.uid, // current workspace/uid
+            isWorkspaceRequestShown: [false, null] // is the workspace toast shown
         };
 
         if (this.state.isWorkspace)
@@ -67,13 +68,14 @@ class Home extends Component {
             this.props.engine.userlandify()
 
 
+        this.props.gruntman.registerGlobalRefresher(this.refresh.bind(this));
+
         // AutoBind!
         autoBind(this);
 
         this.abtibRef = React.createRef();
 
         this.menu = React.createRef();
-
     }
 
     switch = (workspaceType, id=this.props.uid) => { 
@@ -120,6 +122,23 @@ class Home extends Component {
         // to set into the state and to add to the menu
         let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
         let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
+        
+        if (this.props.authType === "firebase") {
+            let invites = await this.props.engine.db.getInvitations(this.props.email);
+            let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
+            if (top) {
+                this.props.gruntman.lockUpdates();
+                if (top.type === "revoke") {
+                    let newWorkspaces = (await this.props.engine.db.getWorkspaces(this.props.uid)).filter(e=>(e != top.workspace));
+                    await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
+                    await invites.filter(i=>i.workspace===top.workspace).forEach(i=>this.props.engine.db.resolveInvitation(i.id, this.props.email)) // simply accept all rejections and anything that happened before, and...
+                    this.switch("userland");
+                    // TODO potenially prompt the user
+                } else if (top.type === "invite")
+                    this.setState({isWorkspaceRequestShown: [true, [top.workspace,  (await this.props.engine.db.getWorkspace(top.workspace)).meta.name, top.id]]});
+                this.props.gruntman.unlockUpdates();
+            }
+        }
 
         this.setState({projects: tlp[2], perspectives:psp[2]});
     }
@@ -242,6 +261,33 @@ class Home extends Component {
                                 <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.localizations.logout}</div>
                             </IonMenu>
                             <IonPage id="main">
+                                {/* raise a glass to Workspace Add */}
+                                <IonToast
+                                    mode="ios"
+                                    cssClass="workspace-toast"
+                                    isOpen={this.state.isWorkspaceRequestShown[0]}
+                                    message={`Invitation to join workspace ${this.state.isWorkspaceRequestShown[1]?this.state.isWorkspaceRequestShown[1][1]:""}`}
+                                    position="bottom"
+                                    buttons={[
+                                        {
+                                            text: 'Reject',
+                                            role: 'cancel',
+                                            handler: () => {
+                                                console.log('Cancel clicked');
+                                            }
+                                        },
+                                        {
+                                            text: 'Accept',
+                                            handler: (async function() {
+                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
+                                                let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
+                                                await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
+                                                await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                this.setState({isWorkspaceRequestShown: [false, null]});
+                                            }).bind(this)
+                                        }
+                                    ]}
+                                />
                                 {/* the add button to inbox button*/}
                                 <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations}/>
                                 {/* the portal root for DOM elements to park */}

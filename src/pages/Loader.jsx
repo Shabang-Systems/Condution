@@ -28,7 +28,7 @@ function Loader(props) {
                 isStopped={false}
                 isPaused={false}
             />
-            <div style={{position: "absolute", bottom: 15, color: "var(--decorative-light-alt)", fontSize: 11}}>
+            <div style={{position: "absolute", bottom: 15, color: "var(--decorative-light-alt)", fontSize: 11, paddingLeft:20, paddingRight:10}}>
                 ©2019-2020 Shabang Systems, LLC and the Condution Authors. Software released under GNU-GPLv3.
             </div>
         </div>

@@ -53,6 +53,7 @@ class Gruntman {
 
         this.e = engine;
         this.refresher = ()=>{};
+        this.globalRefresher = ()=>{};
         this.callbackRefresherReleased = true; // prevent live callback merge conflicts
         this.conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
         this.releaseTimeout = undefined;
@@ -425,8 +426,10 @@ class Gruntman {
     }
 
     requestRefresh() {
-        if (!this.updateLock && this.callbackRefresherReleased)
+        if (!this.updateLock && this.callbackRefresherReleased) {
             this.refresher();
+            this.globalRefresher();
+        }
     }
 
     async scheduleNotification(id, uid, title, desc, time) {
@@ -469,6 +472,13 @@ class Gruntman {
         let pending = await LocalNotifications.getPending();
         let needed = pending.notifications.map(e=>e.id).filter(e=>e==expectedID); // two equal signs to ignore type
         return needed.length > 0;
+    }
+
+    registerGlobalRefresher(r) {
+        this.globalRefresher=r;
+        this.callbackRefresherReleased= false;
+        this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution);
+
     }
 
     /*

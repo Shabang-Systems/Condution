@@ -246,6 +246,7 @@ class App extends Component {
                 return <Auth dispatch={this.authDispatch} localizations={this.state.localizations}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
             case "json":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
             // wut esta this auth mode? load the loader with an error

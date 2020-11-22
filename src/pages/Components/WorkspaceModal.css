@@ -1,7 +1,7 @@
 .workspace-popover {
     --background: transparent;
     --width: min(600px, 80vw);
-    --height: 300px;
+    --height: 110px;
     --box-shadow: 0 !important;
 }
 
