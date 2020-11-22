@@ -80,20 +80,18 @@ class PerspectiveEdit extends Component {
 
 
     handleQueryChange(e) {
-        if (e) { // if the event is defined 
-            this.props.gruntman.registerScheduler(() => { 
-                //Register a scheduler to deal with React's onChange
-                //check out the FANCYCHANGE in task.jsx
-                this.props.gruntman.do( // call a gruntman function
-                    "perspective.update__perspective", { 
-                        // pass it the things 
-                        uid: this.props.uid, // pass it the uid 
-                        id: this.props.id,  // pass it the perspective id 
-                        payload: {query: e.target.value} // pass it the action, updating the query
-                    }
-                )
-            }, `perspective.this.${this.props.id}-update`) // give it a custom id
-        } else {console.log(e)}
+	this.props.gruntman.registerScheduler(() => { 
+	    //Register a scheduler to deal with React's onChange
+	    //check out the FANCYCHANGE in task.jsx
+	    this.props.gruntman.do( // call a gruntman function
+		"perspective.update__perspective", { 
+		    // pass it the things 
+		    uid: this.props.uid, // pass it the uid 
+		    id: this.props.id,  // pass it the perspective id 
+		    payload: {query: e} // pass it the action, updating the query
+		}
+	    )
+	}, `perspective.this.${this.props.id}-update`) // give it a custom id
     }
 
     handleHelp() { // TODO TODO TODO: jack what do u want here? 
@@ -101,11 +99,9 @@ class PerspectiveEdit extends Component {
     }
 
     handleAppend(item) {
-	let value = ''
-	if (item[1] == 'tags') {
-	    value = `${item[0]}`
-	}
-	console.log(value, item)
+	const value = `[${item[0]}]`
+	this.setState({inputValue: this.state.inputValue += value})
+	this.handleQueryChange(this.state.inputValue)
     }
 
     render() {
@@ -154,7 +150,7 @@ class PerspectiveEdit extends Component {
 				    //value={this.props.query}
 				    onChange={(e)=> {
 					e.persist(); 
-					this.handleQueryChange(e); 
+					if (e) { this.handleQueryChange(e.target.value) };
 					this.setState({inputValue: e.target.value})}
 				    }
 
