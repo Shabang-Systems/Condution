@@ -108,7 +108,7 @@ class Home extends Component {
         if (prevState.to !== this.state.to && this.state.to !== undefined)
              this.setState({sends:{to:undefined, id:undefined}})
 
-        if (prevState.isWorkspace !== this.state.isWorkspace) 
+        if (prevState.workspace !== this.state.workspace) 
             this.refresh();
 
 /*            if (this.state.isWorkspace)*/
