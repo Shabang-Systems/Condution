@@ -37,19 +37,25 @@ function WorkspaceModal(props) {
 
     let [workspaceName, setWorkspaceName] = useState("");
     let [workspaceEditors, setWorkspaceEditors] = useState([]);
+    let [isPublic, setIsPublic] = useState(false);
+
+
+    let update = (async function() {
+            if (props.currentWorkspace) {
+                let wsp = await props.engine.db.getWorkspace(props.currentWorkspace);
+                setWorkspaceName(wsp.meta.name);
+                setWorkspaceEditors(wsp.meta.editors);
+                setIsPublic(wsp.meta.is_public);
+            }
+        });
 
     useEffect(()=>{
-        (async function() {
-            if (props.currentWorkspace) {
-                setWorkspaceName((await props.engine.db.getWorkspace(props.currentWorkspace)).meta.name);
-                setWorkspaceEditors((await props.engine.db.getWorkspace(props.currentWorkspace)).meta.editors);
-            }
-        })();
+        update();
     }, [props.currentWorkspace]);
 
 
     return (
-        <IonModal ref={props.reference} isOpen={props.isShown} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="workspace-popover auto-height">
+        <IonModal ref={props.reference} isOpen={props.isShown} onDidPresent={()=>{update()}} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="workspace-popover auto-height">
             <div className="inner-content workspace-inside">
                 <div className="workspace-header">
                     <span className="workspace-callout">{props.gruntman.localizations.perspective_build_callout}</span>
@@ -60,7 +66,7 @@ function WorkspaceModal(props) {
                         onChange={(e)=>{
                             setWorkspaceName(e.target.value);
                             e.persist();
-                            props.gruntman.registerScheduler(() => props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: e.target.value}}), `workspace-${props.currentWorkspace}-update`)
+                            props.gruntman.registerScheduler(() => props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: e.target.value, is_public: isPublic ? true : false}}), `workspace-${props.currentWorkspace}-update`)
                         }}
                     />
                 </div>
@@ -78,7 +84,7 @@ function WorkspaceModal(props) {
                             props.engine.db.revokeToWorkspace(props.currentWorkspace, removedAccount);
                         });
                         if (isValid) {
-                            props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: list, name: workspaceName}});
+                            props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: list, name: workspaceName, is_public: isPublic ? true : false}});
                             setWorkspaceEditors(list);
                         }
                     }} renderInput={autosizingRenderInput} inputProps={{placeholder: props.gruntman.localizations.workspace_email}} />

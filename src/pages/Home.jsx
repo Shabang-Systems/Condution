@@ -1,5 +1,6 @@
 // A whole lotta imports
 
+
 // Ionic components
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast } from '@ionic/react';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
@@ -20,6 +21,7 @@ import Perspectives from './Perspectives';
 import Projects from './Projects';
 import ABTIB from './Components/FloatingActionButton';
 import Keybinds from './Components/KeybindManager';
+import ReleaseNotesModal from './Components/ReleaseNotesModal';
 
 // Our very own CSS
 import './Home.css';
@@ -291,6 +293,7 @@ class Home extends Component {
                                 />
                                 {/* the add button to inbox button*/}
                                 <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations}/>
+                                <ReleaseNotesModal />
                                 {/* the portal root for DOM elements to park */}
                                 <div id="parking-lot"></div>
                                 {/* The actual page */}
