@@ -103,67 +103,83 @@ class App extends Component {
         // TODO TODO remove this
         //localizations.setLanguage("zh");
 
-        // We start with setting our state. We don't know our user's UID (duh)
-        this.state = {authMode: "loader", uid: "", displayName: "", localizations};
-        
-        // We also set the theme based on the user's media query
-        if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
-            $("body").removeClass();
-            $("body").addClass("condutiontheme-default-dark");
+            // We start with setting our state. We don't know our user's UID (duh)
+            this.state = {authMode: "loader", uid: "", displayName: "", localizations, workspace: null};
+            
+            // We also set the theme based on the user's media query
+            if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+                $("body").removeClass();
+                $("body").addClass("condutiontheme-default-dark");
+            }
+            else {
+                $("body").removeClass();
+                $("body").addClass("condutiontheme-default-light");
+            }
+
+            // Make ourselves a nice gruntman
+            this.gruntman = new Gruntman(Engine);
+            this.gruntman.localizations = localizations;
+            // And AutoBind any and all functions
+            autoBind(this);
         }
-        else {
-            $("body").removeClass();
-            $("body").addClass("condutiontheme-default-light");
-        }
 
-        // Make ourselves a nice gruntman
-        this.gruntman = new Gruntman(Engine);
-        this.gruntman.localizations = localizations;
-        // And AutoBind any and all functions
-        autoBind(this);
-    }
+        async componentDidMount() {
+            // This IS in fact the view
+            let view = this;
 
-    async componentDidMount() {
-        // This IS in fact the view
-        let view = this;
+            // Light the fire, kick the tires an instance 
+            // of {firebase}, and initializing the firebase 
+            // and json engines
+            await Engine.start({firebase}, "firebase", "json");
 
-        // Light the fire, kick the tires an instance 
-        // of {firebase}, and initializing the firebase 
-        // and json engines
-        await Engine.start({firebase}, "firebase", "json");
+            let url = (new URL(document.URL))
+            let uri = url.pathname.split("/");
 
-
-        // ==Handling cached dispatch==
-        // So, do we have a condution_stotype? 
-        Storage.get({key: 'condution_stotype'}).then((dbType) => {
-            switch (dbType.value) {
-                // If its firebase 
-                case "firebase":
-                    // Check if we actually has a user
-                    firebase.auth().onAuthStateChanged(function(user) {
-                        if (!user)
-                            view.authDispatch({operation:"logout"});
-                        // If we have one, shift the engine into firebase mode
-                        else {
-                            Engine.use("firebase", view.gruntman.requestRefresh);
-                            // Load the authenticated state, set authmode as "firebase" and supply the UID
-                            view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
-                        }
-                    })
-                    break;
-                // If its json
+            // ==Handling cached dispatch==
+            // So, do we have a condution_stotype? 
+            Storage.get({key: 'condution_stotype'}).then((async function(dbType) {
+                switch (dbType.value) {
+                    // If its firebase 
+                    case "firebase":
+                        // Check if we actually has a user
+                        firebase.auth().onAuthStateChanged(function(user) {
+                            if (!user)
+                                view.authDispatch({operation:"logout"});
+                            // If we have one, shift the engine into firebase mode
+                            else {
+                                Engine.use("firebase", view.gruntman.requestRefresh);
+                                // Load the authenticated state, set authmode as "firebase" and supply the UID
+                                view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
+                            }
+                        })
+                        break;
+                    // If its json
                 case "json":
                     // Shift the engine into json mode
                     Engine.use("json", view.gruntman.requestRefresh);
                     // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
+                // If its workspace preload
+                case "workspace":
+                    if (uri[1] !== "workspaces") {
+                        Engine.use("firebase", view.gruntman.requestRefresh);
+                        this.setState({authMode: "workspace", workspace:(await Storage.get({key: 'condution_workspace'})).value});
+                        break;
+                    }
                 // If there is nothing, well, set the authmode as "none"
                 default:
-                    this.setState({authMode: "none", uid:undefined});
+                    if (uri[1] !== "workspaces")
+                        this.setState({authMode: "none", uid:undefined});
+                    else {
+                        Engine.use("firebase", view.gruntman.requestRefresh);
+                        Storage.set({key: 'condution_stotype', value: "workspace"});
+                        Storage.set({key: 'condution_workspace', value: uri[2]});
+                        this.setState({authMode: "workspace", workspace:uri[2]});
+                    }
                     break;
             }
-        });
+        }).bind(this));
     }
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
@@ -247,6 +263,8 @@ class App extends Component {
             // if we did auth, load it up and get the party going
             case "firebase":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
+            case "workspace":
+                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
             case "json":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
             // wut esta this auth mode? load the loader with an error

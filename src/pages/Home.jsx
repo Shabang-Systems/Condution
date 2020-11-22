@@ -60,11 +60,11 @@ class Home extends Component {
             perspectives:[], // list of perspectives
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
             isWorkspace:false, // current workspace
-            workspace: this.props.uid, // current workspace/uid
+            workspace: this.props.authType==="workspace" ? this.props.workspace : this.props.uid, // current workspace/uid
             isWorkspaceRequestShown: [false, null] // is the workspace toast shown
         };
 
-        if (this.state.isWorkspace)
+        if (this.state.isWorkspace || this.props.authType==="workspace")
             this.props.engine.workspaceify()
         else
             this.props.engine.userlandify()
