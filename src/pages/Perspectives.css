@@ -32,6 +32,7 @@
 
 
 .perspective-modal {
+    overflow-y: hidden;
     /*--height: 148px;*/
     --max-height: 200px;
     --height: 200px;
@@ -192,6 +193,7 @@
 
 
 .dropdown {
+    overflow-y: hidden;
     margin-top: 5px;
     /*text-align: center;*/
     /*color: var(--decorative-light-alt);*/
@@ -231,5 +233,7 @@
     background-color: var(--decorative-light);
 }
 
-
+.pmodal-content-wrapper {
+    overflow-y: hidden;
+}
 

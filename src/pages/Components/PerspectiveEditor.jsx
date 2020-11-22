@@ -43,6 +43,8 @@ class PerspectiveEdit extends Component {
         }
 
         this.name = React.createRef();
+	this.currentlySelected = React.createRef(); // selected item ref 
+
     }
 
     componentDidMount() {
@@ -54,7 +56,6 @@ class PerspectiveEdit extends Component {
 
     componentDidUpdate() {
 	if (this.props.query != this.state.inputValue && !this.state.inited) {
-	    console.log("updatinggg homebrewwwwww")
 	    this.setState({inputValue: this.props.query, inited: true})
 	}
     }
@@ -68,8 +69,7 @@ class PerspectiveEdit extends Component {
 	items.push(...Object.entries(subs[0][0]).map(([key, value]) => { // process it 
 	    return ['.' + value, 'projects', key, 'fas fa-tasks']
 	}))
-	this.setState({items: items})
-	//console.log(items)
+	this.setState({items: items, query: ''})
     }
     filterItems(searchTerm) { // filter the items!
 	let filteredItems = this.state.items.filter(item => {
@@ -102,6 +102,35 @@ class PerspectiveEdit extends Component {
 	const value = `[${item[0]}]`
 	this.setState({inputValue: this.state.inputValue += value})
 	this.handleQueryChange(this.state.inputValue)
+    }
+    handleKeydown(e) { // handle the keydown... avert your eyes
+	const keyname = e.key; // store the keyname
+	if (keyname == "Enter") { // if we submit, 
+	    const selectedItem = this.filterItems(this.state.query)[this.state.selected] // store the selected item
+	    console.log(selectedItem)
+	    this.handleAppend(selectedItem)
+	} else { // if we havent pressed submit, 
+	    const idx = this.state.selected // store the index 
+	    const len = this.filterItems(this.state.query).length-1 // and the filtered items cus react lifecyle bd 
+	    if (keyname == "ArrowUp" || (e.ctrlKey && keyname == "p")) { // if we are navigating up, 
+		if (idx > 0) { // and we selecting something greater than the first element, 
+		    this.setState({selected: idx-1}) // subtract from our index 
+		} else { this.setState({selected: len})} // if we are selection the first element, wrap to the last
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({ // and scroll it into view 
+		    behavior: "smooth", // make it smooooth 
+		    block: "end" // make it not get covered by the searchbar 
+		})}
+	    } else if (keyname == "ArrowDown" || (e.ctrlKey && keyname == "n")) { // if we are scrolling down, 
+		if (idx == len) { // handle wrapping 
+		    this.setState({selected: 0})
+		} else { this.setState({selected: idx+1}) } 
+		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
+		    behavior: "smooth", // smooooooooooth
+		    block: "start", // make it work better. their might be a better option for this 
+		})}
+		// TODO: try this: https://stackoverflow.com/questions/56688002/javascript-scrollintoview-only-in-immediate-parent/56688719 (check last answer)
+	    }
+	}
     }
 
     render() {
@@ -232,8 +261,8 @@ class PerspectiveEdit extends Component {
 			</div>
 			<div className="dropdown">
 			    {this.state.expanded?
-				<div>
-				    <div className='modal-content-wrapper'>
+				<div style={{overflowY: "hidden"}}>
+				    <div className='pmodal-content-wrapper'>
 					<IonSearchbar 
 					    autoFocus={true} // more wishful thinking?
 					    animated={true} // idk what this does
@@ -244,7 +273,7 @@ class PerspectiveEdit extends Component {
 					    // when we change, set the query, then set the selected to the first item 
 					    onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
 					    debounce={0} // update for every update
-					    //onKeyDown={this.handleKeydown} // call our gross function 
+					    onKeyDown={this.handleKeydown} // call our gross function 
 
 					////////
 					// loop through our filtered items, highlight if the index is right
@@ -261,13 +290,7 @@ class PerspectiveEdit extends Component {
 							onMouseEnter={() => {
 							    this.setState({selected: i}); 
 							}}
-							onClick={()=>{
-							    this.handleAppend(item)
-							    //this.props.history.push(`/${item[1]}/${item[2]}`) // push to the history
-							    //this.props.paginate(...item.slice(1));  //paginate-ify it!
-							    //this.props.dismiss()
-							}}
-
+							onClick={()=>{ this.handleAppend(item) }}
 						    >
 							<i className={`${item[3]} option-icon`} style={{
 							}}></i>
