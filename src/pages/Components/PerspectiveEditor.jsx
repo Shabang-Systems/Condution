@@ -146,7 +146,6 @@ class PerspectiveEdit extends Component {
                 } 
                 cssClass={`perspective-modal ${this.state.expanded? "expanded" : ""}`}
             > 
-		<IonPage>
 		    <div className="inner-content">
 
 			<div>
@@ -307,7 +306,6 @@ class PerspectiveEdit extends Component {
 			    </div> : null }
 			</div>
 		    </div>
-		</IonPage>
             </IonModal>
         )
     }
