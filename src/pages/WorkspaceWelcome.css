@@ -31,6 +31,8 @@
 
 .workspace-error {
     color: var(--content-normal-accent);
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .button-right {
