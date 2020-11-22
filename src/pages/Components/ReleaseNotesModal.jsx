@@ -28,7 +28,7 @@ function ReleaseNotesModal(props) {
     let [isShown, setIsShown] = useState(false);
     useEffect(()=>{
         Storage.get({key: "condution_release"}).then((res) => {
-            if (res.value!=="onezerozero") {
+            if (res.value!=="onezerozero" && props.authType!=="workspace") {
                 setIsShown(true);
                 Storage.set({key: "condution_release", value: "onezerozero"});
             }

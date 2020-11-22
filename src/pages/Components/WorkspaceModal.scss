@@ -51,7 +51,7 @@ ion-modal.auto-height {
     display: flex;
     align-items:baseline;
     margin-bottom: 5px;
-    flex-wrap: wrap;
+    //flex-wrap: wrap;
 }
 
 .workspace-callout {
@@ -62,10 +62,33 @@ ion-modal.auto-height {
 
 .workspace-input {
     flex-grow: 10;
-    border: solid 1px transparent;
-    font-size: 15px;
+    //background: var(--background-feature);
+    margin-bottom: 10px;
+    transform: translateY(-1px);
 }
 
+
+@media (max-width: 575px) { 
+    .workspace-callout {
+        font-size: 14px;
+    }
+
+    .workspace-input {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 576px) { 
+    .workspace-callout {
+        font-size: 16px;
+    }
+
+    .workspace-input {
+        font-size: 15px;
+    }
+}
+
+    
 .react-tagsinput {
     border-radius: 5px;
     border: 0;
@@ -95,6 +118,16 @@ input[name="react-tagsinput-actualinput"] {
     color: var(--content-normal-accent);
 }
 
-
+.workspace-link {
+    border: 0;
+    -webkit-appearance: none;
+    color: var(--decorative-light-accent);
+    margin-left: 15px;
+    background: var(--background-feature);
+    flex-grow: 10;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 5px 6px;
+}
 
 

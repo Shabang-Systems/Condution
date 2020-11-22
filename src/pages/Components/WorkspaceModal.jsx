@@ -89,6 +89,26 @@ function WorkspaceModal(props) {
                         }
                     }} renderInput={autosizingRenderInput} inputProps={{placeholder: props.gruntman.localizations.workspace_email}} />
                 </div>
+                <div style={{display: "flex", alignItems: "center", marginLeft: 5, marginTop: 5}}>
+                    {isPublic ? (
+                        <>
+                            <i class="fas fa-link" style={{color: "var(--content-normal-alt)"}} />
+                            <input value={`https://${window.location.host}/workspaces/${props.currentWorkspace}`} className="workspace-link" readOnly={true} onClick={(e)=>{
+                              /* Select the text field */
+                              e.nativeEvent.target.select();
+                              e.nativeEvent.target.setSelectionRange(0, 99999); /*For mobile devices*/
+
+                              /* Copy the text inside the text field */
+                              document.execCommand("copy");
+                            }} />
+                        </>
+                    ):(
+                        <>
+                            <i class="fas fa-link" style={{color: "var(--content-normal-alt)"}} />
+                            <a className="linkaccess">{props.gruntman.localizations.publicify}</a>
+                        </>
+                    )}
+                </div>
             </div>
         </IonModal>
     )

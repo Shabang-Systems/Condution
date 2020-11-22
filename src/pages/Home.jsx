@@ -297,8 +297,8 @@ class Home extends Component {
                                     ]}
                                 />
                                 {/* the add button to inbox button*/}
-                                <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations}/>
-                                <ReleaseNotesModal />
+                                <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />
+                                <ReleaseNotesModal  authType={this.props.authType}/>
                                 {/* the portal root for DOM elements to park */}
                                 <div id="parking-lot"></div>
                                 {/* The actual page */}
