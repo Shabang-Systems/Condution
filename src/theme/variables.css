@@ -20,6 +20,27 @@ http://ionicframework.com/docs/theming/ */
 }
 
 
+ion-modal.auto-height {
+    &.bottom {
+        align-items: flex-end;
+    }
+
+    --height: auto;
+
+    .ion-page {
+        position: relative;
+        display: block;
+        contain: content;
+
+        .inner-content {
+            max-height: 80vh;
+            overflow: auto;
+            padding: 10px;
+        }
+    }
+}
+
+
 h1, h2, h3, span, div {
     font-family: 'Arial' !important;
 }

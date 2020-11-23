@@ -37,9 +37,10 @@ class PerspectiveEdit extends Component {
 	    expanded: false,
 	    items: [],
 	    inited: false,
-	    query: '',
+	    query: '', // this is the searhbar query 
 	    selected: 0,
-	    inputValue: this.props.query,
+	    inputValue: '', // really the value of the perspective query 
+	    idStore: '',
         }
 
         this.name = React.createRef();
@@ -48,6 +49,7 @@ class PerspectiveEdit extends Component {
     }
 
     componentDidMount() {
+	this.setState({idStore: this.props.id})
         if (this.props.startHighlighted) // if we are trying to create
             this.name.current.focus(); // focus the name
 	this.setState({inputValue: this.props.query})
@@ -55,8 +57,14 @@ class PerspectiveEdit extends Component {
     }
 
     componentDidUpdate() {
+	if (this.props.id != this.state.idStore) {
+	    this.setState({inited: false, idStore: this.props.id, inputEvent: "", inputValue: ''}) 
+	}
 	if (this.props.query != this.state.inputValue && !this.state.inited) {
-	    this.setState({inputValue: this.props.query, inited: true})
+	    if (this.props.query) { 
+		this.setState({inputValue: this.props.query, inited: true})
+		console.log("qury")
+	    } else { this.setState({inputValue: '', inited: true}); console.log("notquery") }
 	}
     }
 
@@ -124,10 +132,18 @@ class PerspectiveEdit extends Component {
 		if (idx == len) { // handle wrapping 
 		    this.setState({selected: 0})
 		} else { this.setState({selected: idx+1}) } 
-		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
-		    behavior: "smooth", // smooooooooooth
-		    block: "start", // make it work better. their might be a better option for this 
-		})}
+		if (this.currentlySelected) { 
+		    this.name.current.scrollIntoView(
+			{
+			    behavior: "smooth", // smooooooooooth
+			    block: "start", // make it work better. their might be a better option for this 
+			}
+		    ) 
+		    setTimeout(()=>{
+		    this.currentlySelected.current.scrollIntoView({
+			block: "end", // make it work better. their might be a better option for this 
+		    })}, 10) // LMAOOOOO
+		}
 		// TODO: try this: https://stackoverflow.com/questions/56688002/javascript-scrollintoview-only-in-immediate-parent/56688719 (check last answer)
 	    }
 	}

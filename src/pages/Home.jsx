@@ -32,7 +32,7 @@ import ReactTooltip from 'react-tooltip';
 
 // autobind those functions
 const autoBind = require('auto-bind/react');
-const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory();
+const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
 /* 
  *
