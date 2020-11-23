@@ -109,7 +109,7 @@ function WorkspaceModal(props) {
                         </>
                     ):(
                         <>
-                            <i class="fas fa-link"/>
+                            <i class="fas fa-link" style={{color: "var(--decorative-light-alt)"}}/>
                             <a className="linkaccess" onClick={()=>{
                                 props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: workspaceName, is_public: true}});
                                 setIsPublic(true);

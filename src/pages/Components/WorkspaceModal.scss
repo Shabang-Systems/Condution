@@ -134,7 +134,7 @@ input[name="react-tagsinput-actualinput"] {
     margin-left: 15px;
     padding: 5px 8px;
     background: var(--special-alt);
-    color: var(--content-normal-accent);
+    color: var(--content-normal-alt) !important;
     border-radius: 5px;
     font-size: 14px;
     font-weight: 600;

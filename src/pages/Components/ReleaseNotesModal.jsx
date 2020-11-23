@@ -25,7 +25,7 @@ const { Storage } = Plugins;
 
 
 function ReleaseNotesModal(props) {
-    let [isShown, setIsShown] = useState(false);
+    let [isShown, setIsShown] = useState(true);
     useEffect(()=>{
         Storage.get({key: "condution_release"}).then((res) => {
             if (res.value!=="onezerozero" && props.authType!=="workspace") {
