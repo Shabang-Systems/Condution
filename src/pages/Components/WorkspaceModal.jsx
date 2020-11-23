@@ -101,11 +101,19 @@ function WorkspaceModal(props) {
                               /* Copy the text inside the text field */
                               document.execCommand("copy");
                             }} />
+                            <i class="fas fa-unlink" style={{marginLeft: 10, marginRight: 5, color: "var(--decorative-light-alt)", cursor: "pointer"}} onClick={()=>{
+                                props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: workspaceName, is_public: false}});
+                                setIsPublic(false);
+
+                            }}/>
                         </>
                     ):(
                         <>
-                            <i class="fas fa-link" style={{color: "var(--content-normal-alt)"}} />
-                            <a className="linkaccess">{props.gruntman.localizations.publicify}</a>
+                            <i class="fas fa-link"/>
+                            <a className="linkaccess" onClick={()=>{
+                                props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: workspaceName, is_public: true}});
+                                setIsPublic(true);
+                            }}>{props.gruntman.localizations.publicify}</a>
                         </>
                     )}
                 </div>
