@@ -132,10 +132,18 @@ class PerspectiveEdit extends Component {
 		if (idx == len) { // handle wrapping 
 		    this.setState({selected: 0})
 		} else { this.setState({selected: idx+1}) } 
-		if (this.currentlySelected) {this.currentlySelected.current.scrollIntoView({
-		    behavior: "smooth", // smooooooooooth
-		    block: "start", // make it work better. their might be a better option for this 
-		})}
+		if (this.currentlySelected) { 
+		    this.name.current.scrollIntoView(
+			{
+			    behavior: "smooth", // smooooooooooth
+			    block: "start", // make it work better. their might be a better option for this 
+			}
+		    ) 
+		    setTimeout(()=>{
+		    this.currentlySelected.current.scrollIntoView({
+			block: "end", // make it work better. their might be a better option for this 
+		    })}, 10) // LMAOOOOO
+		}
 		// TODO: try this: https://stackoverflow.com/questions/56688002/javascript-scrollintoview-only-in-immediate-parent/56688719 (check last answer)
 	    }
 	}

@@ -201,6 +201,7 @@
     /*padding-top: 1px;*/
     /*z-index: 10000;*/
     background: var(--heatmap-lightest);
+    border-radius: 5px;
     height: 100%;
 }
 
@@ -210,6 +211,7 @@
 }
 
 .search-add {
+    overflow-y: hidden;
     --background: var(--decorative-light);
     --border-radius: 5px;
     --box-shadow: 0px 13px 39px var(--qs-shadow-intensity) var(--qs-shadow-color);
@@ -233,7 +235,7 @@
     background-color: var(--decorative-light);
 }
 
-.pmodal-content-wrapper {
+.modal-content-wrapper {
     overflow-y: hidden;
 }
 
