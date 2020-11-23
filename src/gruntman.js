@@ -31,6 +31,7 @@ class Gruntman {
 
     constructor(engine) {
         this.notifPermissionGranted = false;
+        this.notifList = {notifications:[]};
         Permissions.query({name: "notifications"}).then((async function (e) {
             if (e.state === "prompt")
                 this.notifPermissionGranted = (await LocalNotifications.requestPermission()).granted;
@@ -43,7 +44,7 @@ class Gruntman {
                 //
                 // TODO TODO TODO TODO TODO TODO TODO TODO
                 //
-
+                this.refreshNotificationList();
                 //LocalNotifications.registerActionTypes({types: [{id: "completeOrSnooze", actions: [{id:"complete", title: "LOCALIZE: Complete", requiresAuthentication: "true", foreground: "false"}, {id:"snooze", title: "LOCALIZE: Snooze", requiresAuthentication: "true", foreground: "false"}]}]});
             }
             LocalNotifications.addListener("localNotificationActionPerformed", this.handleNotificationAction);
@@ -433,6 +434,7 @@ class Gruntman {
     }
 
     async scheduleNotification(id, uid, title, desc, time) {
+        this.refreshNotificationList();
         return await LocalNotifications.schedule({
             notifications: [
                 {
@@ -449,6 +451,7 @@ class Gruntman {
     }
 
     async handleNotificationAction(action) {
+        this.refreshNotificationList();
         let [taskID, userID] = action.notification.attachments;
         switch (action.actionId) {
             case "complete":
@@ -463,18 +466,23 @@ class Gruntman {
         }
     }
 
+    async refreshNotificationList() {
+        this.notifList = await LocalNotifications.getPending();
+    }
+
     async cancelNotification(id) {
+        this.refreshNotificationList();
         return await LocalNotifications.cancel({notifications: [{id:`${this.hashCode(id)}`}]});
     }
 
     async checkNotification(id) {
         let expectedID = this.hashCode(id);
-        let pending = await LocalNotifications.getPending();
-        let needed = pending.notifications.map(e=>e.id).filter(e=>e==expectedID); // two equal signs to ignore type
+        let needed = this.notifList.notifications.map(e=>e.id).filter(e=>e==expectedID); // two equal signs to ignore type
         return needed.length > 0;
     }
 
     registerGlobalRefresher(r) {
+        this.refreshNotificationList();
         this.globalRefresher=r;
         this.callbackRefresherReleased= false;
         this.releaseTimeout = setTimeout(()=>{this.callbackRefresherReleased=true; this.releaseTimeout=undefined}, this.conflictResolution);
