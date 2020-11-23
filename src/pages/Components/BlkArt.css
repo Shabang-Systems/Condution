@@ -1,0 +1,34 @@
+
+.blkArt {
+    width: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.3;
+}
+
+.blkArt-content {
+    max-width: min(300px, 50vw);
+    max-height: 40vh;
+    margin-bottom: 15px;
+    pointer-events: none;
+}
+
+.blkArt-text {
+    margin-top: 15px;
+    font-size: 17px;
+}
+
+.blkArt-title {
+    font-weight: 600;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.blkArt-subtitle {
+    display: inline-block;
+}
+
+

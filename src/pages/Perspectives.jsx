@@ -6,6 +6,8 @@ import './Pages.css';
 import ReactTooltip from 'react-tooltip';
 import { withRouter } from "react-router";
 
+import BlkArt from './Components/BlkArt';
+
 import Task from './Components/Task';
 import PerspectiveEdit from './Components/PerspectiveEditor';
 
@@ -306,6 +308,7 @@ class Perspectives extends Component {
                                 ]}
                             />
                         ))}
+                        <BlkArt visible={(this.state.taskList.length)==0} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
                     </div>
                 </div>

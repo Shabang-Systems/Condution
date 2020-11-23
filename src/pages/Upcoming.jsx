@@ -7,6 +7,7 @@ import './Pages.css';
 import { SortableTaskList } from './Components/Sortable';
 
 import Task from './Components/Task';
+import BlkArt from './Components/BlkArt';
 
 import WorkspaceModal from './Components/WorkspaceModal';
 
@@ -201,7 +202,7 @@ class Upcoming extends Component { // define the component
                             
 
 
-                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600}}>{this.props.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
+                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600, marginRight: 10}}>{this.props.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
                             </div>
                         </div>
                         <IonPopover
@@ -293,6 +294,7 @@ class Upcoming extends Component { // define the component
                                     })()
                                 }
                             </div>
+                                <BlkArt visible={(this.state.inbox.length+this.state.dueSoon.length)==0 && !this.state.timelineShown} title={"Nothing upcoming."} subtitle={"Expand the timeline to see more!"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>

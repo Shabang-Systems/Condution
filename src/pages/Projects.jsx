@@ -7,6 +7,7 @@ import './Pages.css';
 import ReactTooltip from 'react-tooltip';
 
 import Task from './Components/Task';
+import BlkArt from './Components/BlkArt';
 
 import { withRouter } from "react-router";
 
@@ -219,6 +220,8 @@ class Projects extends Component { // define the component
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
 
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
+                        <BlkArt visible={(this.state.currentProject.children.length)==0} title={"Nothing in this project."} subtitle={"Add a task?"} />
+
 
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
