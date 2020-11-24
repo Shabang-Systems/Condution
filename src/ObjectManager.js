@@ -420,7 +420,7 @@ async function newChainedTask(userID, workspaceID, taskID) {
     let tInfo = await getTaskInformation(workspaceID, taskID, true);
     tInfo.project = "";
     tInfo.tags = [];
-    let ntid = await newTask(userID, Object.assign(tInfo, {delegatedWorkspace: workspaceID}));
+    let ntid = await newTask(userID, Object.assign(tInfo, {delegatedWorkspace: workspaceID, delegatedTaskID: taskID}));
 
     let oldChains = (await cRef("users", userID).get()).data()
     oldChains =  oldChains ? oldChains.chains : undefined;
