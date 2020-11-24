@@ -121,7 +121,7 @@ async function editWorkspace(workspaceID, query) {
 }
 
 async function inviteToWorkspace(workspaceID, inviteeEmail) {
-    return (await cRef("invitations", inviteeEmail, "jnvites").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
+    return (await cRef("invitations", inviteeEmail, "invites").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
 }
 
 async function revokeToWorkspace(workspaceID, inviteeEmail) {
@@ -557,6 +557,13 @@ async function deleteProject(userID, projectID) {
         .catch(console.error);
 }
 
+async function setTag(userID, tagID, tag) {
+    await cRef(isWorkspace?"workspaces":"users", userID, "tags", tagID).set(tag)
+        .catch(console.error);
+}
+
+
+
 async function deleteTag(userID, tagID) {
     await cRef(isWorkspace?"workspaces":"users", userID, "tags", tagID).delete()
         .catch(console.error);
@@ -931,7 +938,7 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode, newChainedTask, deleteChainedTask};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode, setTag, newChainedTask, deleteChainedTask};
 
 export { setWorkspaceMode };
 
