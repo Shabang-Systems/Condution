@@ -89,6 +89,8 @@ function setWorkspaceMode(workspaceMode) {
     isWorkspace = workspaceMode;
 }
 
+function getWorkspaceMode() { return isWorkspace }
+
 async function generateWorkspace(userID, userEmail, name="") {
     let oldWorkspaces = (await cRef("users", userID).get()).data()
     oldWorkspaces = oldWorkspaces ? oldWorkspaces.workspaces : undefined;
@@ -119,8 +121,7 @@ async function editWorkspace(workspaceID, query) {
 }
 
 async function inviteToWorkspace(workspaceID, inviteeEmail) {
-    return (await cRef("invitations", inviteeEmail, "invites").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
-
+    return (await cRef("invitations", inviteeEmail, "jnvites").add({email: inviteeEmail, workspace: workspaceID, type: "invite", time: new Date()})).id;
 }
 
 async function revokeToWorkspace(workspaceID, inviteeEmail) {
@@ -135,6 +136,21 @@ async function resolveInvitation(inviteID, userEmail) {
     return cRef("invitations", userEmail, "invites", inviteID).delete();
 }
 
+async function delegateTaskToUser(workspaceID, inviteeEmail, taskID) {
+    return (await cRef("invitations", inviteeEmail, "delagations").add({email: inviteeEmail, workspace: workspaceID, type: "delegation", time: new Date(), task: taskID})).id;
+}
+
+async function revokeTaskToUser(workspaceID, inviteeEmail, taskID) {
+    return (await cRef("invitations", inviteeEmail, "delagations").add({email: inviteeEmail, workspace: workspaceID, type: "dedelegation", time: new Date(), task: taskID})).id;
+}
+
+async function getDelegations(userEmail) {
+    return (await cRef("invitations", userEmail, "delegations").get()).docs.map(doc=>Object.assign(doc.data(), {id: doc.id}));
+}
+
+async function resolveDelegation(inviteID, userEmail) {
+    return cRef("invitations", userEmail, "delegations", inviteID).delete();
+}
 
 async function getTasks(userID) {
     return cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
@@ -892,7 +908,8 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, setTag};
+
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode, setTag};
 
 export { setWorkspaceMode };
 
