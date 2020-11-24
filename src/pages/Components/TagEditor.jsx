@@ -50,12 +50,13 @@ class TagEditor extends Component {
         console.log("Tag Clicked!")
     }
 
-    tagDeleteClicked(e, i) {
-        console.log("x clicked");
-        console.log(this.state.tagList[i]);
-
+    tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
         this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
-        this.tagList = this.state.tagList.splice(i, 1);
+
+        let tagexclu = this.state.tagList;
+        tagexclu.splice(i,1);
+        this.setState({tagList: tagexclu});
+        
         e.stopPropagation();
     }
 
