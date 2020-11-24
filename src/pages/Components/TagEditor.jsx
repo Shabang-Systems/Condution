@@ -34,10 +34,12 @@ class TagEditor extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            tagList: []
+            tagList: [],
+            settingState: 0
         }
     }
-
+    // TODO make not freak out if there aren't any tags
+    // TODO make not bad and actually set tag state
    async setTagState() {
         this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
     }
@@ -47,7 +49,18 @@ class TagEditor extends Component {
     }
 
     tagClicked(i) {
+        this.setState({settingState: i});
         console.log(this.state.tagList.length)
+    }
+
+    tagNameChanged(e, index) {
+        if (e.key == "Enter") {
+            let newName = this.state.tagList;
+            newName[index].name = e.target.value;
+            this.setState({tagList: newName});
+
+            this.props.engine.db.setTag(this.props.uid, this.state.tagList[index].id, newName[index])
+        }
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
@@ -88,7 +101,11 @@ class TagEditor extends Component {
                             )
                         })}
                     </div>
-                    <div className="tag-settings"></div>
+                    <div className="tag-settings">
+                        <div className="tag-name-header">
+                           <input className="tag-name-input" onKeyDown={(e) => {this.tagNameChanged(e, this.state.settingState)}} defaultValue={this.state.tagList[0]? this.state.tagList[this.state.settingState].name : ""}></input> 
+                        </div>
+                    </div>
                 </div>
             </IonModal>
         )
