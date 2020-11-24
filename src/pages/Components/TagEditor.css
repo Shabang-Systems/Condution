@@ -1,8 +1,10 @@
 .TagEditor-header {
     width: 100%;
-    padding-top: min(env(safe-area-inset-top), 35px);
+    padding-top: max(env(safe-area-inset-top), 17px);
     background-color: var(--background-feature);
-    padding: 17px;
+    padding-left: 17px;
+    padding-right: 17px;
+    padding-bottom: 17px;
     color: var(--decorative-light-alt);
     text-overflow: ellipsis;
     display: flex;
@@ -26,7 +28,7 @@
     display: flex;
     overflow-y: scroll;
     width: 40%;
-    height: 90%;
+    height: 100%;
     flex-direction: column;
 }
 
@@ -43,6 +45,7 @@
     flex-direction: row;
     height: 100%;
     width: 100%;
+    margin: 10px;
 }
 
 .tag-in-list {
