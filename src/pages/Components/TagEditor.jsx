@@ -46,8 +46,7 @@ class TagEditor extends Component {
         this.setTagState()
     }
 
-    tagClicked() {
-        console.log("Tag Clicked!")
+    tagClicked(i) {
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
@@ -79,7 +78,7 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
-                                <div className="tag-in-list" onClick={() => {this.tagClicked()}}>
+                                <div className="tag-in-list" onClick={() => {this.tagClicked(index)}}>
                                     <div className="tag-name">
                                         {tag.name}
                                     </div>
