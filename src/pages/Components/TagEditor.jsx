@@ -47,6 +47,7 @@ class TagEditor extends Component {
     }
 
     tagClicked(i) {
+        console.log(this.state.tagList.length)
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
