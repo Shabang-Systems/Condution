@@ -306,7 +306,9 @@ async function getTags(userID) {
     await cRef(isWorkspace?"workspaces":"users", userID, "tags").get()
         .then(snap => snap.docs.forEach( tag => {
             if (tag.exists) {
-                tags.push(tag.data());
+                let data = tag.data()
+                data.id = tag.id
+                tags.push(data);
             }
         }
     )).catch(console.error);
