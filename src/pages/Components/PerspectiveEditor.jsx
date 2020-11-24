@@ -284,7 +284,7 @@ class PerspectiveEdit extends Component {
 					    spellcheck={true} // spellcheck
 					    className='search-add'
 					    // if we are on the first item and with no query, then add a 'Previous' to the end
-					    //placeholder={`Let's go to..${(this.state.selected == 0 && this.state.query == '')?"   |   Previous" : ""}`} // TODO: jack do you like this? 
+					    placeholder={"Add 'OR' relation..   see '?' for more"} 
 					    // when we change, set the query, then set the selected to the first item 
 					    onIonChange={e => this.setState({query: e.detail.value, selected: 0})}
 					    debounce={0} // update for every update

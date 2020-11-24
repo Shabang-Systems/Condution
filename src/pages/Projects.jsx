@@ -220,7 +220,6 @@ class Projects extends Component { // define the component
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
 
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
-                        <BlkArt visible={(this.state.currentProject.children.length)==0} title={"Nothing in this project."} subtitle={"Add a task?"} />
 
 
                         <div style={{marginTop: 10}}>
@@ -248,6 +247,7 @@ class Projects extends Component { // define the component
                                 )).pid;
                                 this.props.history.push(`/projects/${npid}/do`);
                             }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
+			    <BlkArt visible={(this.state.currentProject.children.length)==0} title={"Nothing in this project."} subtitle={"Add a task?"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
