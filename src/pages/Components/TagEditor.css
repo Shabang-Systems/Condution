@@ -1,3 +1,6 @@
+/*
+ *TODO fix colors and their variables
+ * */
 .TagEditor-header {
     width: 100%;
     padding-top: max(env(safe-area-inset-top), 17px);
@@ -35,7 +38,7 @@
 .tag-settings {
     display: flex;
     width: 60%;
-    height: 100%;
+    height: 90%;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -69,4 +72,28 @@
 .tag-name {
     display: inline;
     color: var(--repeat-popover-header-text);
+}
+
+.tag-name-header {
+    background-color: var(--perspective-builder-header-background);
+    padding: 12px;
+    color: var(--perspective-builder-header-text);
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tag-name-input {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--perspective-query-string);
+    font-family: "Courier New", Courier, monospace;
+    outline: 0;
+    background: transparent;
+    border: 0px solid red;
+    transition: background 0.3s;
+    padding: 5px;
+    border-radius: 3px;
+    width: 100%;
+    border: 1px solid var(--perspective-query-border);
 }
