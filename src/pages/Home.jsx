@@ -132,7 +132,11 @@ class Home extends Component {
 
         if (this.props.authType === "firebase") {
             let invites = await this.props.engine.db.getInvitations(this.props.email);
+            let delegations = await this.props.engine.db.getDelegations(this.props.email);
             let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
+            delegations.sort((a, b)=>a.time.seconds>b.time.seconds).map(delegation => {
+
+            });
             if (top) {
                 this.props.gruntman.lockUpdates();
                 if (top.type === "revoke") {

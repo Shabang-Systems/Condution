@@ -245,7 +245,8 @@ class Task extends Component {
                 ): undefined
             ),
             hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
-            delegations: taskInfo.delegations ? taskInfo.delegations : []
+            delegations: taskInfo.delegations ? taskInfo.delegations : [],
+            delegatedWorkspace: taskInfo.delegatedWorkspace ? taskInfo.delegatedWorkspace : "",
         });
         this.refreshDecorations(); // flush and generate them decorations!
         this.initialRenderDone = true;
