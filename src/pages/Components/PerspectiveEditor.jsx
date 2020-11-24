@@ -53,7 +53,6 @@ class PerspectiveEdit extends Component {
         if (this.props.startHighlighted) // if we are trying to create
             this.name.current.focus(); // focus the name
 	this.setState({inputValue: this.props.query})
-	console.log(this.props.query)
     }
 
     componentDidUpdate() {
@@ -63,8 +62,7 @@ class PerspectiveEdit extends Component {
 	if (this.props.query != this.state.inputValue && !this.state.inited) {
 	    if (this.props.query) { 
 		this.setState({inputValue: this.props.query, inited: true})
-		console.log("qury")
-	    } else { this.setState({inputValue: '', inited: true}); console.log("notquery") }
+	    } else { this.setState({inputValue: '', inited: true}) }
 	}
     }
 
@@ -115,8 +113,7 @@ class PerspectiveEdit extends Component {
 	const keyname = e.key; // store the keyname
 	if (keyname == "Enter") { // if we submit, 
 	    const selectedItem = this.filterItems(this.state.query)[this.state.selected] // store the selected item
-	    console.log(selectedItem)
-	    this.handleAppend(selectedItem)
+	    if (selectedItem) { this.handleAppend(selectedItem) }
 	} else { // if we havent pressed submit, 
 	    const idx = this.state.selected // store the index 
 	    const len = this.filterItems(this.state.query).length-1 // and the filtered items cus react lifecyle bd 
