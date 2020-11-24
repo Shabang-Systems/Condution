@@ -19,6 +19,12 @@ import * as chrono from 'chrono-node';
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable';
 
+import TagsInput from './TagsInput'
+import AutosizeInput from 'react-input-autosize';
+
+import 'react-tagsinput/react-tagsinput.css'
+
+
 // Our very own repeat UI
 import Repeat from './Repeat';
 
@@ -52,6 +58,13 @@ const autoBind = require('auto-bind/react');
  *
  */
 
+
+function autosizingRenderInput ({addTag, ...props}) {
+    let {onChange, value, ...other} = props
+    return (
+        <AutosizeInput style={{border: 0}} name="react-tagsinput-actualinput-delegation" type='text' onChange={onChange} value={value} {...other} />
+    )
+}
 
 // Our very own custom animatinos
 const AnimationFactory = Keyframes.Spring({
@@ -88,7 +101,7 @@ const AnimationFactory = Keyframes.Spring({
             taskEditOpacity: 1,
             taskDisplay: "",
             taskOpacity: 1,
-            taskEditMaxHeight: 300,
+            taskEditMaxHeight: 350,
             taskNameDecoration: "",
             taskPosition: "",
             taskMaxHeight: 500,
@@ -166,7 +179,9 @@ class Task extends Component {
             haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false), // did we render the edit part yet? optimization
             notificationPopoverShown: [false, null], // is our notification popover shown?
             notificationCalendarShown: false, // is the notification calendar shown?
-            hasNotification: false // do we have a notification scheudled?
+            hasNotification: false, // do we have a notification scheudled?
+            delegations: [], // task is delegated to...
+            delegatedWorkspace: "" // task is delegated to workspace...
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -230,6 +245,7 @@ class Task extends Component {
                 ): undefined
             ),
             hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
+            delegations: taskInfo.delegations ? taskInfo.delegations : []
         });
         this.refreshDecorations(); // flush and generate them decorations!
         this.initialRenderDone = true;
@@ -602,7 +618,7 @@ class Task extends Component {
 
 
                                                 {/* Task date set */}
-                                                <div style={{display: "inline-block", marginBottom: 8}}>
+                                                <div style={{display: "inline-block", marginBottom: 8, marginRight: 12}}>
 
                                                     {/* Defer date container */}
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
@@ -771,6 +787,32 @@ class Task extends Component {
                                                         })()}
                                                     </div>
                                                 </div>
+                                                <div className="tag-container" style={{display: this.props.engine.db.getWorkspaceMode() ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
+                                                    <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
+                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
+                                                        let isValid = true;
+                                                        list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
+                                                            if (/\w+@\w+\.\w+/.test(newAccount))
+                                                                this.props.engine.db.delegateTaskToUser(this.props.uid, newAccount, this.props.tid);
+                                                            else 
+                                                                isValid = false;
+                                                        });
+                                                        this.state.delegations.filter(e=>!list.includes(e)).forEach(removedAccount => {
+                                                            this.props.engine.db.revokeTaskToUser(this.props.uid, removedAccount, this.props.tid);
+                                                        });
+                                                        if (isValid) {
+                                                            this.props.gruntman.do(
+                                                                "task.update", // the scheduler actually updates the task
+                                                                {
+                                                                    uid: this.props.uid, 
+                                                                    tid: this.props.tid, 
+                                                                    query:{delegations: list} // setting the name to the name
+                                                                }
+                                                            )
+                                                            this.setState({delegations: list});
+                                                        }}} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.gruntman.localizations.workspace_email}} />
+                                                </div>
+
                                                 <div>
                                                     {/* Task project container */}
                                                     <span className="task-project-container">

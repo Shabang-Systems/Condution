@@ -581,4 +581,81 @@ button:focus {
     background: var(--background-feature);
 }
 
+.tag-container {
+}
+
+@media (max-width: 575px) { 
+    .tag-container {
+        width: 89.5%;
+    }
+}
+
+@media (min-width: 576px) { 
+    .tag-container {
+        width: 86%;
+    }
+}
+
+@media (min-width: 640px) { 
+    .tag-container {
+        width: 87%;
+    }
+}
+
+
+@media (min-width: 990px) { 
+    .tag-container {
+        width: 89.5%;
+    }
+}
+
+@media (min-width: 1150px) { 
+    .tag-container {
+        width: 30%;
+    }
+}
+ 
+.delegation-textbox  {
+    border-radius: 5px;
+    border: 0;
+    background: var(--task-textbox-background) !important;
+    flex-grow: 10 !important;
+    margin-left: 5px !important;
+    display: inline-block !important;
+    height: 25px;
+}
+
+.delegation-delegate {
+    background: var(--special);
+    border: 0;
+    color: var(--content-normal-alt);
+    border-radius: 3px;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 400;
+    margin-bottom: 4px;
+    margin-right: 5px;
+    padding: 2px 5px;
+    transform: translateY(-9px);
+    height: 18px;
+}
+
+.delegation-input {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+}
+
+input[name="react-tagsinput-actualinput-delegation"] {
+    border: 0;
+    background: 0;
+    -webkit-appearance: none;
+    color: var(--content-normal-accent);
+    height: 18px;
+    transform: translateY(-9px);
+    font-size: 10px;
+
+}
+
 
