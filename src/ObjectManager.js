@@ -137,11 +137,11 @@ async function resolveInvitation(inviteID, userEmail) {
 }
 
 async function delegateTaskToUser(workspaceID, inviteeEmail, taskID) {
-    return (await cRef("invitations", inviteeEmail, "delagations").add({email: inviteeEmail, workspace: workspaceID, type: "delegation", time: new Date(), task: taskID})).id;
+    return (await cRef("invitations", inviteeEmail, "delegations").add({email: inviteeEmail, workspace: workspaceID, type: "delegation", time: new Date(), task: taskID})).id;
 }
 
 async function revokeTaskToUser(workspaceID, inviteeEmail, taskID) {
-    return (await cRef("invitations", inviteeEmail, "delagations").add({email: inviteeEmail, workspace: workspaceID, type: "dedelegation", time: new Date(), task: taskID})).id;
+    return (await cRef("invitations", inviteeEmail, "delegations").add({email: inviteeEmail, workspace: workspaceID, type: "dedelegation", time: new Date(), task: taskID})).id;
 }
 
 async function getDelegations(userEmail) {
@@ -275,8 +275,8 @@ async function getInboxandDS(userID, avalibility) {
     return [ibt, dstWithoutIbt]
 }
 
-async function getTaskInformation(userID, taskID) {
-    let dat = (await cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
+async function getTaskInformation(userID, taskID, overrideIsWorkspace=false) {
+    let dat = (await cRef((isWorkspace||overrideIsWorkspace)?"workspaces":"users", userID, "tasks").get()
         .then(snap => snap.docs
             .filter(doc => doc.id === taskID))
     )[0]
@@ -414,6 +414,36 @@ async function newTask(userID, taskObj) {
     let taskID = (await cRef(isWorkspace?"workspaces":"users", userID, "tasks").add(taskObj)).id;
 
     return taskID;
+}
+
+async function newChainedTask(userID, workspaceID, taskID) {
+    let tInfo = await getTaskInformation(workspaceID, taskID, true);
+    tInfo.project = "";
+    tInfo.tags = [];
+    let ntid = await newTask(userID, Object.assign(tInfo, {delegatedWorkspace: workspaceID}));
+
+    let oldChains = (await cRef("users", userID).get()).data()
+    oldChains =  oldChains ? oldChains.chains : undefined;
+    oldChains =  oldChains ? oldChains : {};
+
+    let chainItem = {};
+    chainItem[taskID] = ntid;
+
+    (await cRef("users", userID).set({chains:Object.assign(oldChains, chainItem)}, {merge:true}));
+
+    return ntid;
+}
+
+async function deleteChainedTask(userID, workspaceTaskID) {
+    let userData = (await cRef("users", userID).get()).data();
+    if (userData)
+        if (userData.chains) {
+            let data = userData.chains[workspaceTaskID];
+            if (data)
+                await deleteTask(userID, data);
+        }
+
+    // TODO I recognize that this is bad. how to fix?
 }
 
 async function newProject(userID, projObj, parentProj) {
@@ -901,7 +931,7 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode, newChainedTask, deleteChainedTask};
 
 export { setWorkspaceMode };
 
