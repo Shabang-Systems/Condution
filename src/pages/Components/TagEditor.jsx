@@ -50,6 +50,15 @@ class TagEditor extends Component {
         console.log("Tag Clicked!")
     }
 
+    tagDeleteClicked(e, i) {
+        console.log("x clicked");
+        console.log(this.state.tagList[i]);
+
+        this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
+        this.tagList = this.state.tagList.splice(i, 1);
+        e.stopPropagation();
+    }
+
     render() {
         return (
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidPresent={() => {this.setTagState()}} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
@@ -67,16 +76,13 @@ class TagEditor extends Component {
                 {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
                     <div className="tag-list">
-                        {this.state.tagList.map(tag => {
+                        {this.state.tagList.map((tag, index) => {
                             return (
                                 <div className="tag-in-list" onClick={() => {this.tagClicked()}}>
                                     <div className="tag-name">
                                         {tag.name}
                                     </div>
-                                    <a className="TagEditor-close" onClick={(e) => {
-                                        console.log("x clicked")
-                                        e.stopPropagation()
-                                    }}><i className="fa fa-times x"></i></a>
+                                    <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e,index)}><i className="fa fa-times x"></i></a>
                                 </div>
                             )
                         })}
