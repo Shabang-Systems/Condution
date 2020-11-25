@@ -113,7 +113,7 @@ class TagEditor extends Component {
                         <div className="tag-name-header">
                            <input className="tag-name-input" onKeyDown={(e) => {this.tagNameChanged(e, this.state.settingState)}} onChange={(e) => {this.tagNameEdited(e, this.state.settingState)}} value={this.state.tagList[0]? this.state.tagList[this.state.settingState].tempname : ""} defaultValue={this.state.tagList[0]? this.state.tagList[this.state.settingState].name : ""}></input>
                         </div>
-                        <div>
+                        <div className="tag-weight-container">
                             <b>tag weight: </b> {"garbage"}
                         </div>
                     </div>

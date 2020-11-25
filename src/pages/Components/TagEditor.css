@@ -37,6 +37,8 @@
 
 .tag-settings {
     display: flex;
+    flex-direction: column;
+    justify: flex-start;
     width: 60%;
     height: 90%;
     overflow-y: scroll;
@@ -107,4 +109,10 @@
     padding: 5px;
     border-radius: 3px;
     border: 1px solid var(--perspective-query-border);*/
+}
+
+.tag-weight-container {
+    color: var(--perspective-query-string);
+    margin-top: 20px;
+    margin-left: 5px;
 }
