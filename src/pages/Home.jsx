@@ -129,7 +129,7 @@ class Home extends Component {
         // to set into the state and to add to the menu
         let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
         let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
-        if (this.props.authType === "firebase") {
+        if (this.props.authType === "firebase" && !this.state.isWorkspace) {
             let invites = await this.props.engine.db.getInvitations(this.props.email);
             let delegations = await this.props.engine.db.getDelegations(this.props.email);
             let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
