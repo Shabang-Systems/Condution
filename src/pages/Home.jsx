@@ -129,14 +129,21 @@ class Home extends Component {
         // to set into the state and to add to the menu
         let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
         let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
-
         if (this.props.authType === "firebase") {
             let invites = await this.props.engine.db.getInvitations(this.props.email);
-            //let delegations = await this.props.engine.db.getDelegations(this.props.email);
+            let delegations = await this.props.engine.db.getDelegations(this.props.email);
             let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
-            //delegations.sort((a, b)=>a.time.seconds>b.time.seconds).map(delegation => {
-
-            //});
+            this.props.gruntman.lockUpdates();
+            await Promise.all(delegations.sort((a, b)=>a.time.seconds>b.time.seconds).map((async function(delegation) {
+                if (delegation.type === "delegation") {
+                    await this.props.engine.db.newChainedTask(this.props.uid, delegation.workspace, delegation.task);
+                    await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
+                } else if (delegation.type === "dedelegation") {
+                    await this.props.engine.db.deleteChainedTask(this.props.uid, delegation.workspace);
+                    await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
+                }
+            }).bind(this)));
+            this.props.gruntman.unlockUpdates();
             if (top) {
                 this.props.gruntman.lockUpdates();
                 if (top.type === "revoke") {

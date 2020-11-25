@@ -181,7 +181,8 @@ class Task extends Component {
             notificationCalendarShown: false, // is the notification calendar shown?
             hasNotification: false, // do we have a notification scheudled?
             delegations: [], // task is delegated to...
-            delegatedWorkspace: "" // task is delegated to workspace...
+            delegatedWorkspace: "", // task is delegated to workspace...
+            delegatedTaskID: "" // the ID of the shadow task
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -247,27 +248,30 @@ class Task extends Component {
             hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
             delegations: taskInfo.delegations ? taskInfo.delegations : [],
             delegatedWorkspace: taskInfo.delegatedWorkspace ? taskInfo.delegatedWorkspace : "",
-        });
-        this.refreshDecorations(); // flush and generate them decorations!
+            delegatedTaskID: taskInfo.delegatedTaskID ? taskInfo.delegatedTaskID : "",
+        }, this.refreshDecorations);
         this.initialRenderDone = true;
     }
 
     refreshDecorations() {
-        if (this.state.dueDate) // if we gotta due date
-            if (this.state.dueDate-(new Date()) < 0) // and this kid has not done his homework
-                this.setState({decoration: "od"}); // give 'em a red badge
-        else if (this.state.dueDate-(new Date()) < 24*60*60*1000) // or if this kid has not done his homework a day earlier
-            this.setState({decoration: "ds"}); // give 'em an orange badge
-        else 
-            this.setState({decoration: ""}); // give 'em an nothing badge
+        let base = ""
+        if (this.state.delegatedWorkspace !== "") 
+            base = "delegated"
+        if (this.state.dueDate && this.state.dueDate-(new Date()) < 0)
+            this.setState({decoration: base+" od"}); // give 'em a red badge
+        else if (this.state.dueDate && this.state.dueDate-(new Date()) < 24*60*60*1000) // or if this kid has not done his homework a day earlier
+            this.setState({decoration: base+" ds"}); // give 'em an orange badge
+        else
+            this.setState({decoration: base}); // give 'em an nothing badge
 
-        if (this.state.deferDate) // if we gotta defer date
-            if (this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
-                this.setState({availability: false}); // tell 'em it's not avaliable
-        else if (this.props.availability === true) //  otherwise, if this thing's avaliable
+        if (this.state.deferDate&&this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
+            this.setState({availability: false}); // tell 'em it's not avaliable
+        else if (this.state.deferDate&&this.props.availability === true) //  otherwise, if this thing's avaliable
             this.setState({availability: true}); // set it to be so!
         else if (!this.props.availability) // or if my props make me disabled
             this.setState({availability: false}); // well then you gotta follow them props, no?
+
+        
     }
 
     componentDidMount() {
@@ -638,7 +642,7 @@ class Task extends Component {
                                                                 return (
                                                                     <input 
 									tabIndex='0'
-									className="task-datebox" 
+									className={"task-datebox "+this.state.decoration}
 									readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
@@ -720,7 +724,7 @@ class Task extends Component {
                                                                 return (
                                                                     <input 
 									tabIndex='0'
-									className="task-datebox" readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
+									className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
                                                                         // Register a scheduler to deal with React's onChange
                                                                         // Search for the word FANCYCHANGE to read my spheal on this
                                                                         // Search for the word DATEHANDLING for what the heck the code actually does

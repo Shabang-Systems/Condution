@@ -174,7 +174,7 @@
     position: absolute;
     left: 6px; top: 4.4px;
     width: 1em; height: 1em;
-    border: 1px solid var(--task-checkbox-ds);
+    border: 1px solid var(--task-checkbox-ds) !important;
     background: var(--task-checkbox-ds-background);
     border-radius: 4px;
     /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
@@ -186,10 +186,15 @@
     position: absolute;
     left: 6px; top: 4.4px;
     width: 1em; height: 1em;
-    border: 1px solid var(--task-checkbox-od);
+    border: 1px solid var(--task-checkbox-od) !important;
     background: var(--task-checkbox-od-background);
     border-radius: 4px;
     /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
+}
+
+.task-check:not(:checked) + label.delegated:before,
+.task-check:checked + label.delegated:before {
+    border: 1px solid var(--task-border-delegated);
 }
 
 /* checked mark aspect */
@@ -656,6 +661,10 @@ input[name="react-tagsinput-actualinput-delegation"] {
     transform: translateY(-9px);
     font-size: 10px;
 
+}
+
+.task-datebox.delegated {
+    border: 0.5px dotted var(--task-border-delegated);
 }
 
 

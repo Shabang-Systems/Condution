@@ -110,6 +110,9 @@ class Gruntman {
                 },
                 update: async function (options) {
                     let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
+                    if (tInfo.delegatedWorkspace && tInfo.delegatedWorkspace !== "") 
+                        if (options.query.due || options.query.defer) 
+                            await engine.db.modifyTask(tInfo.delegatedWorkspace, tInfo.delegatedTaskID, options.query, true);
                     await engine.db.modifyTask(options.uid, options.tid, options.query)
 
                     return {uid: options.uid, tid: options.tid, tInfo};
