@@ -383,8 +383,8 @@ async function modifyProject(userID, projectID, updateQuery) {
         .catch(console.error);
 }
 
-async function modifyTask(userID, taskID, updateQuery) {
-    await cRef(isWorkspace?"workspaces":"users", userID, "tasks", taskID)
+async function modifyTask(userID, taskID, updateQuery, overrideIsWorkspace=false) {
+    await cRef((isWorkspace||overrideIsWorkspace)?"workspaces":"users", userID, "tasks", taskID)
         .update(updateQuery)
         .catch(console.error);
 }
