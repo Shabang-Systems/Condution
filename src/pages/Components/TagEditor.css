@@ -75,15 +75,27 @@
 }
 
 .tag-name-header {
-    background-color: var(--perspective-builder-header-background);
-    padding: 12px;
-    color: var(--perspective-builder-header-text);
+    height: 7%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /*
     text-overflow: ellipsis;
     display: flex;
-    justify-content: space-between;
+    width: 100%;
+    justify-content: center;*/
 }
 
 .tag-name-input {
+    text-align: center;
+    width: 100%;
+    color: var(--perspective-query-string);
+    background-color: var(--perspective-builder-header-background);
+    font-size: 23px;
+    margin-top: 5px;
+
+    /*
+    background-color: var(--perspective-builder-header-background);
     font-size: 15px;
     font-weight: 600;
     color: var(--perspective-query-string);
@@ -94,6 +106,5 @@
     transition: background 0.3s;
     padding: 5px;
     border-radius: 3px;
-    width: 100%;
-    border: 1px solid var(--perspective-query-border);
+    border: 1px solid var(--perspective-query-border);*/
 }
