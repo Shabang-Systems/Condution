@@ -144,9 +144,11 @@ class Home extends Component {
                     if (chains[delegation.task] === undefined) {
                         await this.props.engine.db.newChainedTask(this.props.uid, delegation.workspace, delegation.task);
                         await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
+                    } else {
+                        await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
                     }
                 } else if (delegation.type === "dedelegation") {
-                    await this.props.engine.db.deleteChainedTask(this.props.uid, delegation.workspace);
+                    await this.props.engine.db.deleteChainedTask(this.props.uid, delegation.task);
                     await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
                 }
 
