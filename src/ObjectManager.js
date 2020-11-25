@@ -420,11 +420,16 @@ async function newChainedTask(userID, workspaceID, taskID) {
     let tInfo = await getTaskInformation(workspaceID, taskID, true);
     tInfo.project = "";
     tInfo.tags = [];
-    let ntid = await newTask(userID, Object.assign(tInfo, {delegatedWorkspace: workspaceID, delegatedTaskID: taskID}));
 
     let oldChains = (await cRef("users", userID).get()).data()
+
+    let ntid = await newTask(userID, Object.assign(tInfo, {delegatedWorkspace: workspaceID, delegatedTaskID: taskID}));
+
     oldChains =  oldChains ? oldChains.chains : undefined;
     oldChains =  oldChains ? oldChains : {};
+
+    if (oldChains[taskID])
+        await deleteTask(userID, oldChains[taskID]);
 
     let chainItem = {};
     chainItem[taskID] = ntid;
@@ -436,12 +441,17 @@ async function newChainedTask(userID, workspaceID, taskID) {
 
 async function deleteChainedTask(userID, workspaceTaskID) {
     let userData = (await cRef("users", userID).get()).data();
-    if (userData)
-        if (userData.chains) {
-            let data = userData.chains[workspaceTaskID];
-            if (data)
-                await deleteTask(userID, data);
+    if (userData && userData.chains){
+        let data = userData.chains[workspaceTaskID];
+        if (data) {
+            await deleteTask(userID, data);
+            let oldChains =  userData ? userData.chains : undefined;
+            oldChains =  userData ? userData : {};
+            if (oldChains[workspaceTaskID])
+                delete oldChains[workspaceTaskID];
+            (await cRef("users", userID).set({chains:oldChains}, {merge:true}));
         }
+    }
 
     // TODO I recognize that this is bad. how to fix?
 }
