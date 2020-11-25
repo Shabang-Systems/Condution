@@ -140,8 +140,11 @@ class Home extends Component {
                     return; // fix duplicate deligation bug
                 
                 if (delegation.type === "delegation") {
-                    await this.props.engine.db.newChainedTask(this.props.uid, delegation.workspace, delegation.task);
-                    await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
+                    let chains = await this.props.engine.db.getChainedTasks(this.props.uid);
+                    if (chains[delegation.task] === undefined) {
+                        await this.props.engine.db.newChainedTask(this.props.uid, delegation.workspace, delegation.task);
+                        await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
+                    }
                 } else if (delegation.type === "dedelegation") {
                     await this.props.engine.db.deleteChainedTask(this.props.uid, delegation.workspace);
                     await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
