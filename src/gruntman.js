@@ -139,8 +139,9 @@ class Gruntman {
                     let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
                     if (taskInfo.delegatedWorkspace && taskInfo.delegatedWorkspace !== "") 
                         await engine.db.modifyTask(taskInfo.delegatedWorkspace, taskInfo.delegatedTaskID, {isComplete: true, completeDate: new Date()}, true);
-                    if (engine.db.getWorkspaceMode() && taskInfo.delegations)
+                    if (engine.db.getWorkspaceMode() && taskInfo.delegations)  {
                         taskInfo.delegations.map((invite) => engine.db.revokeTaskToUser(options.uid, invite, options.tid));
+                    }
 
                     let due = (
                         taskInfo.due ?

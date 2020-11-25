@@ -619,7 +619,11 @@ button:focus {
         width: 30%;
     }
 }
- 
+
+.react-tagsinput-input {
+    height: 0px;
+}
+
 .delegation-textbox  {
     border-radius: 5px;
     border: 0;
@@ -627,7 +631,13 @@ button:focus {
     flex-grow: 10 !important;
     margin-left: 5px !important;
     display: inline-block !important;
-    height: 25px;
+    min-height: 25px;
+    height: auto;
+    max-height: 250px;
+    margin: 0;
+    padding: 0;
+    padding-left: 3px;
+    /*padding-top: 5px;*/
 }
 
 .delegation-delegate {
@@ -641,7 +651,7 @@ button:focus {
     margin-bottom: 4px;
     margin-right: 5px;
     padding: 2px 5px;
-    transform: translateY(-9px);
+    transform: translate(1px, -1px);
     height: 18px;
 }
 
@@ -658,7 +668,7 @@ input[name="react-tagsinput-actualinput-delegation"] {
     -webkit-appearance: none;
     color: var(--content-normal-alt);
     height: 18px;
-    transform: translateY(-9px);
+    transform: translateY(-2px);
     font-size: 10px;
 
 }
