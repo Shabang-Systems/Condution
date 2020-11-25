@@ -447,16 +447,17 @@ async function newChainedTask(userID, workspaceID, taskID) {
 }
 
 async function deleteChainedTask(userID, workspaceTaskID) {
+
     let userData = (await cRef("users", userID).get()).data();
     if (userData && userData.chains){
         let data = userData.chains[workspaceTaskID];
         if (data) {
             await deleteTask(userID, data);
             let oldChains =  userData ? userData.chains : undefined;
-            oldChains =  userData ? userData : {};
+            oldChains =  oldChains ? oldChains : {};
             if (oldChains[workspaceTaskID])
                 delete oldChains[workspaceTaskID];
-            (await cRef("users", userID).set({chains:oldChains}, {merge:true}));
+            (await cRef("users", userID).update({chains:oldChains}));
         }
     }
 
