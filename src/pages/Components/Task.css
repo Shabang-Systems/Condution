@@ -656,7 +656,7 @@ input[name="react-tagsinput-actualinput-delegation"] {
     border: 0;
     background: 0;
     -webkit-appearance: none;
-    color: var(--content-normal-accent);
+    color: var(--content-normal-alt);
     height: 18px;
     transform: translateY(-9px);
     font-size: 10px;

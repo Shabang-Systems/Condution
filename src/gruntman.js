@@ -56,7 +56,7 @@ class Gruntman {
         this.refresher = ()=>{};
         this.globalRefresher = ()=>{};
         this.callbackRefresherReleased = true; // prevent live callback merge conflicts
-        this.conflictResolution = 1000; // 1000 ms = 1s worth of conflict time.
+        this.conflictResolution = 2000; // 1000 ms = 1s worth of conflict time.
         this.releaseTimeout = undefined;
 
         this.doers = {
@@ -137,6 +137,11 @@ class Gruntman {
                 update__complete: async function (options) {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: true, completeDate: new Date()})
                     let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
+                    if (taskInfo.delegatedWorkspace && taskInfo.delegatedWorkspace !== "") 
+                        await engine.db.modifyTask(taskInfo.delegatedWorkspace, taskInfo.delegatedTaskID, {isComplete: true, completeDate: new Date()}, true);
+                    if (engine.db.getWorkspaceMode() && taskInfo.delegations)
+                        taskInfo.delegations.map((invite) => engine.db.revokeTaskToUser(options.uid, invite, options.tid));
+
                     let due = (
                         taskInfo.due ?
                         (taskInfo.isFloating ?

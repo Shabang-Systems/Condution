@@ -134,7 +134,11 @@ class Home extends Component {
             let delegations = await this.props.engine.db.getDelegations(this.props.email);
             let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
             this.props.gruntman.lockUpdates();
+            let lastSeen = [null, null];
             await Promise.all(delegations.sort((a, b)=>a.time.seconds>b.time.seconds).map((async function(delegation) {
+                if (lastSeen[0] == delegation.task && lastSeen[1] == delegation.type) 
+                    return; // fix duplicate deligation bug
+                
                 if (delegation.type === "delegation") {
                     await this.props.engine.db.newChainedTask(this.props.uid, delegation.workspace, delegation.task);
                     await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
@@ -142,6 +146,9 @@ class Home extends Component {
                     await this.props.engine.db.deleteChainedTask(this.props.uid, delegation.workspace);
                     await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
                 }
+
+                lastSeen = [delegation.task, delegation.type];
+
             }).bind(this)));
             this.props.gruntman.unlockUpdates();
             if (top) {
