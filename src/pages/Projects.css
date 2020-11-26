@@ -70,7 +70,7 @@
 }
 
 .progressbar {
-    height: 23px;
+    height: 10px;
     background: var(--progressbar-background);
     border-radius: 5px;
     margin: 5px 15px;
@@ -81,6 +81,7 @@
 
 .pcontent {
     border-radius: 5px;
+    height: 10px;
     background-image: linear-gradient(to right, var(--progressbar-min),var(--progressbar-max));
 }
 
