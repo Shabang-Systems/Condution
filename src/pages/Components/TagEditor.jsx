@@ -55,14 +55,21 @@ class TagEditor extends Component {
     }
 
     tagNameChanged(e, index) {
-        if (e.key == "Enter") {
+        e.persist();
+        this.props.gruntman.registerScheduler(() => {
             this.state.tagList[index].name = this.state.tagList[index].tempname; 
             let newName = this.state.tagList;
             newName[index].name = e.target.value;
             this.setState({tagList: newName});
+            this.props.gruntman.do(
+                "tag.update__name", // the scheduler actually updates the task
+                {
+                    uid: this.props.uid, 
+                    tid: this.state.tagList[index].id, 
+                    name: newName[index],
+                }
+            )}, `tag-name-${this.props.tid}-update`) // and we will schedule it as this
 
-            this.props.engine.db.setTag(this.props.uid, this.state.tagList[index].id, newName[index])
-        }
     }
 
     tagNameEdited(e, index) {
