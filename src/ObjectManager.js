@@ -283,6 +283,19 @@ async function getTaskInformation(userID, taskID, overrideIsWorkspace=false) {
     if (dat) return dat.data();
 }
 
+async function getTaskWeight(userID, taskID) {
+    let tinfo = await getTaskInformation(userID, taskID);
+    let tags = await getTags(userID, true);
+    let weight = 1;
+    if (tinfo.tags) {
+        tinfo.tags.forEach(tag => {
+            if (tags[tag])
+                weight *= (tags[tag].weight)?(tags[tag].weight):1
+        });
+    }
+    return weight;
+}
+
 async function removeParamFromTask(userID, taskID, paramName) {
     let ti = await getTaskInformation(userID, taskID);
     delete ti[paramName];
@@ -316,8 +329,9 @@ async function getTopLevelProjects(userID) {
     return ret;
 }
 
-async function getTags(userID) {
+async function getTags(userID, returnObj=false) {
     let tags = [];
+    let tagObj = {};
 
     await cRef(isWorkspace?"workspaces":"users", userID, "tags").get()
         .then(snap => snap.docs.forEach( tag => {
@@ -325,10 +339,11 @@ async function getTags(userID) {
                 let data = tag.data()
                 data.id = tag.id
                 tags.push(data);
+                tagObj[tag.id] = data;
             }
         }
     )).catch(console.error);
-    return tags;
+    return returnObj?tagObj:tags;
 }
 
 async function getProjectsandTags(userID) {
@@ -956,7 +971,7 @@ async function onBoard(userID, tz, username, payload) {
     await associateTask(userID, yiipee, promotion);
 }
 
-export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode, setTag, newChainedTask, deleteChainedTask, getChainedTasks};
+export default {util, getTasks, getTasksWithQuery, getInboxTasks, getDSTasks, getInboxandDS, removeParamFromTask, getTopLevelProjects, getProjectsandTags, getPerspectives, modifyProject, modifyTask, modifyPerspective, newProject, newPerspective, newTag, newTask, completeTask, dissociateTask, associateTask, associateProject, dissociateProject, deleteTask, deletePerspective, deleteProject, selectTasksInRange, getProjectStructure, getItemAvailability, getTaskInformation, getDSRow, deleteTag, getCompletedTasks, onBoard, getTags, generateWorkspace, getWorkspace, getWorkspaces, editWorkspace, inviteToWorkspace, revokeToWorkspace, getInvitations, resolveInvitation, updateWorkspaces, delegateTaskToUser, revokeTaskToUser, getDelegations, resolveDelegation, getWorkspaceMode, setTag, newChainedTask, deleteChainedTask, getChainedTasks, getTaskWeight};
 
 export { setWorkspaceMode };
 
