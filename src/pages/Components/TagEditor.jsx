@@ -53,7 +53,6 @@ class TagEditor extends Component {
     tagClicked(i) {
         this.state.tagList[i].tempname = this.state.tagList[i].name
         this.setState({settingState: i});
-        console.log(this.state.tagList.length)
     }
 
     tagNameChanged(e, index) {
@@ -64,11 +63,11 @@ class TagEditor extends Component {
             newName[index].name = e.target.value;
             this.setState({tagList: newName});
             this.props.gruntman.do(
-                "tag.update__name", // the scheduler actually updates the task
+                "tag.update", // the scheduler actually updates the task
                 {
                     uid: this.props.uid, 
                     tid: this.state.tagList[index].id, 
-                    name: newName[index],
+                    query: {name: e.target.value},
                 }
             )}, `tag-name-${this.props.tid}-update`) // and we will schedule it as this
 
@@ -132,7 +131,30 @@ class TagEditor extends Component {
 
                                 <div className="tag-weight-container">
                                     <i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />
-                                    <input type="number" className="tag-weight-input" defaultValue={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight ? this.state.tagList[this.state.settingState].weight:"1") : "1"}/>
+                                    <input type="number" className="tag-weight-input" value={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight ? String(this.state.tagList[this.state.settingState].weight):"1") : "1"} onKeyDown={(e)=>{
+                                        let index = this.state.settingState;
+                                        e.persist();
+                                        this.props.gruntman.registerScheduler(() => {
+                                            let tl = this.state.tagList;
+                                            tl[index].weight = Number(e.target.value);
+                                            this.setState({tagList: tl});
+                                            this.props.gruntman.do(
+                                                "tag.update", // the scheduler actually updates the task
+                                                {
+                                                    uid: this.props.uid, 
+                                                    tid: this.state.tagList[index].id, 
+                                                    query: {weight: Number(e.target.value)},
+                                                }
+                                            );
+                                        }, `tagweight-${index}-update`);
+
+                                    }} onChange={(e)=>{
+                                        let index = this.state.settingState;
+                                        let ntl = this.state.tagList;
+                                        ntl[index].weight = Number(e.target.value.slice(-1));
+                                        this.setState({tagList: ntl})
+
+                                    }}/>
                                 </div>
                             </>
                         )}

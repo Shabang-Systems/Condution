@@ -81,8 +81,8 @@ class Gruntman {
                     let newTag = await engine.db.newTag(options.uid, options.name);
                     return {uid: options.uid, id: newTag};
                 },
-                update__name: async function (options) {
-                    await engine.db.setTag(options.uid, options.tid, options.name)
+                update: async function (options) {
+                    await engine.db.setTag(options.uid, options.tid, options.query)
 
                     return {message: "TODO"}
                 }
