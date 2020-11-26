@@ -32,11 +32,11 @@
     overflow-y: scroll;
     overflow-x: hidden;
     height: 98.5%;
-    flex-grow: 10;
     margin-top: 10px;
     margin-left: 10px;
+    margin-right: 10px;
     flex-direction: column;
-    min-width:100px;
+    width:150px !important;
 }
 
 .tag-settings {
@@ -73,16 +73,23 @@
     background-color: var(--special-alt);
 }
 
+
+.tag-in-list.selected{
+    background-color: var(--special-alt);
+}
+
+
 .tag-name {
     display: inline;
     color: var(--repeat-popover-header-text);
 }
 
 .tag-name-header {
-    height: 7%;
-    width: 100%;
+    margin-top: 10px;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    align-items:center;
+    margin-bottom: 5px;
     /*
     text-overflow: ellipsis;
     display: flex;
@@ -91,15 +98,27 @@
 }
 
 .tag-name-input {
-    text-align: center;
+    /*text-align: center;*/
     width: 90%;
     color: var(--perspective-query-string);
-    background-color: var(--perspective-builder-header-background);
-    font-size: 23px;
+    background-color: var(--task-clickbox-background);
     margin-top: 5px;
     outline: 0;
     border: 0;
-    height: 25px;
+    height: 30px;
+    border-radius: 5px;
+    padding-left: 10px;
+    margin-left: 10px;
+    transform: translateY(-2px);
+    transition: background-color 0.3s;
+}
+
+.tag-name-input:hover {
+    background-color: var(--background-feature);
+}
+
+.tag-name-input:focus {
+    background-color: var(--background-feature);
 }
 
 .tag-weight-container {

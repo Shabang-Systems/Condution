@@ -109,7 +109,7 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
-                                <div className="tag-in-list" onClick={() => {this.tagClicked(index)}}>
+                                <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
                                     <div className="tag-name">
                                         {tag.name}
                                     </div>
@@ -126,6 +126,7 @@ class TagEditor extends Component {
                         ):(
                             <>
                                 <div className="tag-name-header">
+                                    <i class="fas fa-edit"></i>
                                     <input className="tag-name-input" onKeyDown={(e) => {this.tagNameChanged(e, this.state.settingState)}} onChange={(e) => {this.tagNameEdited(e, this.state.settingState)}} value={this.state.tagList[0]? this.state.tagList[this.state.settingState].tempname : ""} defaultValue={this.state.tagList[0]? this.state.tagList[this.state.settingState].name : ""}></input>
                                 </div>
                                 <div className="tag-weight-container">
