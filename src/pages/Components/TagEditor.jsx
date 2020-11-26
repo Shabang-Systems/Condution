@@ -6,6 +6,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
+import BlkArt from './BlkArt';
+
 /*
  * Although I do not agree
  * Jack told me to make this feat
@@ -35,7 +37,7 @@ class TagEditor extends Component {
         super(props)
         this.state = {
             tagList: [],
-            settingState: 0
+            settingState: -1
         }
     }
     // TODO make not freak out if there aren't any tags
@@ -117,12 +119,20 @@ class TagEditor extends Component {
                         })}
                     </div>
                     <div className="tag-settings">
-                        <div className="tag-name-header">
-                           <input className="tag-name-input" onKeyDown={(e) => {this.tagNameChanged(e, this.state.settingState)}} onChange={(e) => {this.tagNameEdited(e, this.state.settingState)}} value={this.state.tagList[0]? this.state.tagList[this.state.settingState].tempname : ""} defaultValue={this.state.tagList[0]? this.state.tagList[this.state.settingState].name : ""}></input>
-                        </div>
-                        <div className="tag-weight-container">
-                            <b>tag weight: </b> {"garbage"}
-                        </div>
+                        {this.state.settingState==-1?(
+                            <div className="tag-settings-empty">
+                                <BlkArt visible={this.state.settingState==-1} title={"No tags selected..."} subtitle={"Select a tag?"} />
+                            </div>
+                        ):(
+                            <>
+                                <div className="tag-name-header">
+                                    <input className="tag-name-input" onKeyDown={(e) => {this.tagNameChanged(e, this.state.settingState)}} onChange={(e) => {this.tagNameEdited(e, this.state.settingState)}} value={this.state.tagList[0]? this.state.tagList[this.state.settingState].tempname : ""} defaultValue={this.state.tagList[0]? this.state.tagList[this.state.settingState].name : ""}></input>
+                                </div>
+                                <div className="tag-weight-container">
+                                    <b>tag weight: </b> {"garbage"}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </IonModal>

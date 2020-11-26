@@ -30,30 +30,32 @@
 .tag-list {
     display: flex;
     overflow-y: scroll;
-    width: 40%;
-    height: 100%;
+    overflow-x: hidden;
+    height: 98.5%;
+    flex-grow: 10;
+    margin-top: 10px;
+    margin-left: 10px;
     flex-direction: column;
+    min-width:100px;
 }
 
 .tag-settings {
-    display: flex;
-    flex-direction: column;
-    justify: flex-start;
-    width: 60%;
     height: 90%;
     overflow-y: scroll;
+    flex-grow: 10;
     overflow-x: hidden;
+    padding:0px 10px;
 }
 
 .tag-pane-container {
     display: flex;
     flex-direction: row;
     height: 100%;
-    width: 100%;
-    margin: 10px;
+    width: 96.5%;
 }
 
 .tag-in-list {
+    cursor: pointer;
     font-size: 14px;
     margin: 3px;
     padding: 5px;
@@ -90,29 +92,16 @@
 
 .tag-name-input {
     text-align: center;
-    width: 100%;
+    width: 90%;
     color: var(--perspective-query-string);
     background-color: var(--perspective-builder-header-background);
     font-size: 23px;
     margin-top: 5px;
-
-    /*
-    background-color: var(--perspective-builder-header-background);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--perspective-query-string);
-    font-family: "Courier New", Courier, monospace;
     outline: 0;
-    background: transparent;
-    border: 0px solid red;
-    transition: background 0.3s;
-    padding: 5px;
-    border-radius: 3px;
-    border: 1px solid var(--perspective-query-border);*/
+    border: 0;
+    height: 25px;
 }
 
 .tag-weight-container {
     color: var(--perspective-query-string);
-    margin-top: 20px;
-    margin-left: 5px;
 }
