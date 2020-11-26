@@ -105,6 +105,8 @@ class TagEditor extends Component {
                 
                 {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
+                    {this.state.tagList.length>0?(
+                        <>
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
@@ -159,6 +161,8 @@ class TagEditor extends Component {
                             </>
                         )}
                     </div>
+                            </>
+                    ):(<BlkArt visible={this.state.tagList.length<=0} title={"There are no tags!"} subtitle={"Add a tag to tasks?"} />)}
                 </div>
             </IonModal>
         )

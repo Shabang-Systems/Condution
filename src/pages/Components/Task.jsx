@@ -867,8 +867,10 @@ class Task extends Component {
                                                                             {
                                                                                 uid: view.props.uid,
                                                                                 name: e.label,
-                                                                            }, 
+                                                                            } 
                                                                         )).id;
+
+                                                                        // TODO new tags don't show up to tags pane
                                                                         let originalTags = view.state.possibleTags; // get tags
                                                                         originalTags.push({label: e.label, value: tagID}); // add our new tag
                                                                         view.setState({possibleTags: originalTags}); // sax-a-boom!
