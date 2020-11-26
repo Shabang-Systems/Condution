@@ -576,7 +576,7 @@ async function deleteProject(userID, projectID) {
 }
 
 async function setTag(userID, tagID, tag) {
-    await cRef(isWorkspace?"workspaces":"users", userID, "tags", tagID).set(tag)
+    await cRef(isWorkspace?"workspaces":"users", userID, "tags", tagID).set(tag, {merge: true})
         .catch(console.error);
 }
 

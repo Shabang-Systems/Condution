@@ -340,7 +340,7 @@ const [cRef, flush] = (() => {
         }
     }
 
-    async function storageSet(path, payload) {
+    async function storageSet(path, payload, param) {
         /* 
          * Sets the value of a document
          *
@@ -373,7 +373,10 @@ const [cRef, flush] = (() => {
                     payload[key] = {seconds: Math.round(payload[key].getTime()/1000)-5} // The function runs a bit too quickly. Bump time forward by 5 ms.
                 }
             }
-            pointer[task] = payload;
+            if (param[0] && param[0].merge)
+                pointer[task] = Object.assign(pointer[task], payload);
+            else
+                pointer[task] = payload;
             await diskJSONDB.write();
         }
         return Object.assign({}, {id, data: payload, exists: true}); // TODO TODO Better way to make JS objects immutable?
@@ -471,7 +474,7 @@ const [cRef, flush] = (() => {
             //doc: not here, right?,
             //docs: not here, rgiht?, // TODO: docs.filter
             get: () => storageRead(path),
-            set: (payload) => storageSet(path, payload),
+            set: (payload, ...param) => storageSet(path, payload, param),
             update: (payload) => storageUpdate(path, payload),
             delete: () => storageDel(path),
         };
