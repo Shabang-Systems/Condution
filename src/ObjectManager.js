@@ -496,7 +496,7 @@ async function newPerspective(userID, pstObj) {
 }
 
 async function newTag(userID, tagName) {
-    return (await cRef(isWorkspace?"workspaces":"users", userID, "tags").add({name: tagName})).id;
+    return (await cRef(isWorkspace?"workspaces":"users", userID, "tags").add({name: tagName, weight:1})).id;
 }
 
 async function completeTask(userID, taskID) {
