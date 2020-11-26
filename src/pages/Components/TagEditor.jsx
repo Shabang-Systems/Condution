@@ -132,7 +132,7 @@ class TagEditor extends Component {
 
                                 <div className="tag-weight-container">
                                     <i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />
-                                    <input className="tag-weight-input"/>
+                                    <input type="number" className="tag-weight-input" defaultValue={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight ? this.state.tagList[this.state.settingState].weight:"1") : "1"}/>
                                 </div>
                             </>
                         )}

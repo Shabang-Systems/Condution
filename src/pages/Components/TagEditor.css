@@ -115,21 +115,33 @@
 }
 
 .tag-weight-input {
-    /*text-align: center;*/
-    width: 70px;
-    text-align: center;
+    width: 40px;
+    text-align: center !important;
     color: var(--perspective-query-string);
     background-color: var(--task-clickbox-background);
     margin-top: 5px;
     outline: 0;
     border: 0;
     height: 30px;
+    /*padding-left: 10px;*/
     border-radius: 5px;
     margin-left: 10px;
     transform: translateY(-2px);
     transition: background-color 0.3s;
+    font-weight: 600;
 }
 
+/* Hide arrows */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
 
 .tag-name-input:hover {
