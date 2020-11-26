@@ -602,8 +602,15 @@ async function deleteTag(userID, tagID) {
         .catch(console.error);
 }
 
-async function getProjectStructure(userID, projectID, recursive=false) {
+async function getProjectStructure(userID, projectID, recursive=false, includeWeights=false) {
+
+    ////////// TODO TODO TODO TODO AAAAAAAAAAAAAAAAAAAAAAAA!AAAAAAAAAAAAAAAAAAAAAAAA!AAAAAAAAAAAAAAAAAAAAAAAA! TODO TODO TODO TODO ////////// 
+    // What is this code?
+    
+    console.assert((includeWeights == false || includeWeights == recursive), "IncludeWeights could only occur when recursive");
     let children = [];
+    let weights = 0;
+    let uncompletedWeights = 0;
 
     // absurdly hitting the cache with a very broad query so that the
     // cache will catch all projects and only hit the db once
@@ -615,16 +622,27 @@ async function getProjectStructure(userID, projectID, recursive=false) {
     for (let [itemID, type] of Object.entries(project.data().children)) {
         if (type === "task") {  // TODO: combine if statements
             let task = await getTaskInformation(userID, itemID);
+            let taskWeight = 0;
+            if (task && includeWeights) 
+                 taskWeight = await getTaskWeight(userID, itemID);
             if(task){
                 if (!task.isComplete) {
                     children.push({type: "task", content: itemID, sortOrder: task.order});
+                    uncompletedWeights += taskWeight;
                 }
+                weights += taskWeight;
             }
            
         } else if (type === "project") {
             if (recursive) {
-                let project = await getProjectStructure(userID, itemID);
-                if(project) children.push({type: "project", content: project, is_sequential: project.is_sequential, sortOrder: project.sortOrder}); 
+                let project = await getProjectStructure(userID, itemID, true, includeWeights);
+                if(project && includeWeights) {
+                    children.push({type: "project", content: project, is_sequential: project.is_sequential, sortOrder: project.sortOrder, weight:project.weight}); 
+                    weights += project.weight;
+                    uncompletedWeights += project.pendingWeight;
+                }
+                else if (project)
+                    children.push({type: "project", content: project, is_sequential: project.is_sequential, sortOrder: project.sortOrder}); 
             } else {
                 let project =  (await cRef(isWorkspace?"workspaces":"users", userID, "projects").get().then(snap => snap.docs)).filter(doc=>doc.id === itemID)[0];
                 if(project) children.push({type: "project", content: {id: itemID}, is_sequential: project.data().is_sequential, sortOrder: project.data().order}); 
@@ -632,7 +650,7 @@ async function getProjectStructure(userID, projectID, recursive=false) {
         }
     }
     children.sort((a,b) => a.sortOrder-b.sortOrder); //  sort by ascending order of order, TODO: we should prob use https://firebase.google.com/docs/reference/js/firebase.firestore.Query#order-by
-    return { id: projectID, children: children, is_sequential: project.data().is_sequential, sortOrder: project.data().order, parentProj: project.data().parent};
+    return includeWeights ? { id: projectID, children: children, is_sequential: project.data().is_sequential, sortOrder: project.data().order, parentProj: project.data().parent, weight:weights, pendingWeight:uncompletedWeights} : { id: projectID, children: children, is_sequential: project.data().is_sequential, sortOrder: project.data().order, parentProj: project.data().parent};
 }
 
 async function getItemAvailability(userID) {
