@@ -41,6 +41,7 @@ let refreshed = 0;
 
 function CalPageBigOllendar(props) {
 
+
     function __util_calculate_gradient(left, right, gradientAmount) {
         let color1 = left;
         let color2 = right;
@@ -90,14 +91,15 @@ function CalPageBigOllendar(props) {
             let ids = new Map();
             let hm = {};
             let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
-            taskList.forEach(([id, val])=>{
+            await Promise.all(taskList.map((async function ([id, val]){
+                let weight = await props.engine.db.getTaskWeight(props.uid, id);
                 let date = new Date(val.due.seconds*1000);
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
                 if(map.has(time))
-                    map.set(time, map.get(time)+1);
+                    map.set(time, map.get(time)+weight);
                 else
-                    map.set(time, 1);
+                    map.set(time, weight);
                 if(names.has(time))
                     names.set(time, [...names.get(time), val.name]);
                 else
@@ -107,7 +109,7 @@ function CalPageBigOllendar(props) {
                 else
                     ids.set(time, [id]);
 
-            });
+            }).bind(this)));
             let values = Array.from(map.values());
             let nameList = Array.from(names.values());
             let idList = Array.from(ids.values());
@@ -162,7 +164,7 @@ function CalPageBigOllendar(props) {
                                 props.onDateSelected(date);
                         }}>
                         <div className="calendar-date-text">
-                            {i.content}<span className="calendar-date-value">{(heat[i.content]&&i.type==="actual")?`${heat[i.content].value} Tasks`:null}</span></div><div style={{marginLeft: 6, marginRight: 5, marginBottom: 2}}>{((heat[i.content]&&i.type==="actual")?heat[i.content].names:[]).map((name)=><span className="calendar-date-taskname"><div className="calendar-task-circle">&nbsp;</div>{name}</span>)}</div>
+                            {i.content}<span className="calendar-date-value">{(heat[i.content]&&i.type==="actual")?`${heat[i.content].value} ${props.gruntman.localizations.weighted}`:null}</span></div><div style={{marginLeft: 6, marginRight: 5, marginBottom: 2}}>{((heat[i.content]&&i.type==="actual")?heat[i.content].names:[]).map((name)=><span className="calendar-date-taskname"><div className="calendar-task-circle">&nbsp;</div>{name}</span>)}</div>
                     </span>
                     )}
                 </div>

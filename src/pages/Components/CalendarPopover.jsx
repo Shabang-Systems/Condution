@@ -72,15 +72,16 @@ function CalendarPopover(props) {
             let map = new Map();
             let hm = {};
             let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
-            taskList.forEach(([_, val])=>{
+            await Promise.all(taskList.map((async function ([id, val]){
+                let weight = await props.engine.db.getTaskWeight(props.uid, id);
                 let date = new Date(val.due.seconds*1000);
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
                 if(map.has(time))
-                    map.set(time, map.get(time)+1);
+                    map.set(time, map.get(time)+weight);
                 else
-                    map.set(time, 1);
-            });
+                    map.set(time, weight);
+            }).bind(this)));
             let values = Array.from(map.values());
             if (values.length > 0) {
                 let max = values.max();
@@ -244,15 +245,17 @@ function CalendarUnit(props) {
             let map = new Map();
             let hm = {};
             let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
-            taskList.forEach(([_, val])=>{
+            await Promise.all(taskList.map((async function ([id, val]){
+                let weight = await props.engine.db.getTaskWeight(props.uid, id);
                 let date = new Date(val.due.seconds*1000);
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
                 if(map.has(time))
-                    map.set(time, map.get(time)+1);
+                    map.set(time, map.get(time)+weight);
                 else
-                    map.set(time, 1);
-            });
+                    map.set(time, weight);
+            }).bind(this)));
+
             let values = Array.from(map.values());
             if (values.length > 0) {
                 let max = values.max();
