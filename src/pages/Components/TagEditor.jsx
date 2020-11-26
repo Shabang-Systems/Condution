@@ -131,7 +131,7 @@ class TagEditor extends Component {
 
                                 <div className="tag-weight-container">
                                     <i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />
-                                    <input type="number" className="tag-weight-input" value={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight ? String(this.state.tagList[this.state.settingState].weight):"1") : "1"} onKeyDown={(e)=>{
+                                    <input type="number" className="tag-weight-input" value={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight!==undefined)?(this.state.tagList[this.state.settingState].weight):1 : 1} onKeyDown={(e)=>{
                                         let index = this.state.settingState;
                                         e.persist();
                                         this.props.gruntman.registerScheduler(() => {
@@ -151,7 +151,7 @@ class TagEditor extends Component {
                                     }} onChange={(e)=>{
                                         let index = this.state.settingState;
                                         let ntl = this.state.tagList;
-                                        ntl[index].weight = Number(e.target.value.slice(-1));
+                                        ntl[index].weight = +Number(e.target.value);
                                         this.setState({tagList: ntl})
 
                                     }}/>
