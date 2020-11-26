@@ -126,11 +126,13 @@ class TagEditor extends Component {
                         ):(
                             <>
                                 <div className="tag-name-header">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit" style={{color: "var(--content-normal-alt)"}}></i>
                                     <input className="tag-name-input" onKeyDown={(e) => {this.tagNameChanged(e, this.state.settingState)}} onChange={(e) => {this.tagNameEdited(e, this.state.settingState)}} value={this.state.tagList[0]? this.state.tagList[this.state.settingState].tempname : ""} defaultValue={this.state.tagList[0]? this.state.tagList[this.state.settingState].name : ""}></input>
                                 </div>
+
                                 <div className="tag-weight-container">
-                                    <b>tag weight: </b> {"garbage"}
+                                    <i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />
+                                    <input className="tag-weight-input"/>
                                 </div>
                             </>
                         )}

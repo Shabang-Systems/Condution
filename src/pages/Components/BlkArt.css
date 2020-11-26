@@ -10,7 +10,7 @@
 }
 
 .blkArt-content {
-    max-width: min(200px, 50vw);
+    max-width: min(200px, 40vw);
     max-height: 40vh;
     margin-bottom: 15px;
     pointer-events: none;

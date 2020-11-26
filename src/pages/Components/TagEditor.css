@@ -36,7 +36,8 @@
     margin-left: 10px;
     margin-right: 10px;
     flex-direction: column;
-    width:150px !important;
+    width:140px !important;
+    min-width:140px !important;
 }
 
 .tag-settings {
@@ -113,6 +114,24 @@
     transition: background-color 0.3s;
 }
 
+.tag-weight-input {
+    /*text-align: center;*/
+    width: 70px;
+    text-align: center;
+    color: var(--perspective-query-string);
+    background-color: var(--task-clickbox-background);
+    margin-top: 5px;
+    outline: 0;
+    border: 0;
+    height: 30px;
+    border-radius: 5px;
+    margin-left: 10px;
+    transform: translateY(-2px);
+    transition: background-color 0.3s;
+}
+
+
+
 .tag-name-input:hover {
     background-color: var(--background-feature);
 }
@@ -122,5 +141,8 @@
 }
 
 .tag-weight-container {
-    color: var(--perspective-query-string);
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    margin-bottom: 5px;
 }
