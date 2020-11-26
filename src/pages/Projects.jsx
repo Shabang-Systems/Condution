@@ -3,6 +3,7 @@ import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuBu
 import React, { Component } from 'react';
 import './Projects.css';
 import './Pages.css';
+import {Spring, animated} from 'react-spring/renderprops'
 
 import ReactTooltip from 'react-tooltip';
 
@@ -145,7 +146,7 @@ class Projects extends Component { // define the component
                 })()}>
 
                     <div className="header-container" >
-                        <div style={{display: "inline-block"}}>
+                        <div style={{display: "inline-block", width: "100%"}}>
                             <div> 
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
@@ -167,7 +168,7 @@ class Projects extends Component { // define the component
                                     />
                                 </h1> 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
-                                <div className="greeting-container" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
+                                <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
                                         onClick={()=> {
                                             this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
@@ -213,7 +214,12 @@ class Projects extends Component { // define the component
                                         >
                                         </i>
                                     </a>
-
+                                    <div className="progressbar">
+                                        <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
+                                            {props =>
+                                                <animated.div className="pcontent" style={{...props}}>&nbsp;</animated.div>}
+                                        </Spring>
+                                    </div>
                                 </div> 
                             </div>
                         </div>
@@ -221,7 +227,6 @@ class Projects extends Component { // define the component
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
-
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
 
 

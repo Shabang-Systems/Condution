@@ -143,6 +143,9 @@
     --subproject-text: var(--task-textbox);
     --addbutton-text: var(--decorative-light-alt);
     --addbutton-background-hover: var(--background-feature);
+    --progressbar-background: var(--background-feature);
+    --progressbar-min: var(--heatmap-lightest);
+    --progressbar-max: var(--heatmap-darkest);
 
     /* ## Perspectives ## */
     --perspective-builder-header-background: var(--background-feature);

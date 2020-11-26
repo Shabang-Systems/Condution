@@ -61,4 +61,26 @@
     background: var(--background-feature);
 }
 
+.project-top {
+    width: 99%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0!important;
+}
+
+.progressbar {
+    height: 23px;
+    background: var(--progressbar-background);
+    border-radius: 5px;
+    margin: 5px 15px;
+    display: inline-block;
+    flex-grow: 10;
+    overflow: hidden;
+}
+
+.pcontent {
+    border-radius: 5px;
+    background-image: linear-gradient(to right, var(--progressbar-min),var(--progressbar-max));
+}
 
