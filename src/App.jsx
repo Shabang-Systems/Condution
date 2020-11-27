@@ -94,7 +94,6 @@ setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we impl
 class App extends Component {
     constructor(props) {
         super(props);
-
         let localizations = new LocalizedStrings({
             en: require("./static/I18n/main.json"),
             zh: require("./static/I18n/zh-CN.json"),
@@ -261,9 +260,11 @@ class App extends Component {
             case "auth":
                 Storage.set({key: 'condution_stotype', value: "none"});
                 this.setState({authMode: "none", name: ""});
+                break;
             case "form":
                 Storage.set({key: 'condution_stotype', value: "none"});
                 this.setState({authMode: "form", name: ""});
+                break;
 
         }
     }
@@ -280,7 +281,7 @@ class App extends Component {
             case "none":
                 return <Auth dispatch={this.authDispatch} localizations={this.state.localizations}/>;
             case "form":
-                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm/>;
+                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
