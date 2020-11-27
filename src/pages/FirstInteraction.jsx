@@ -28,15 +28,18 @@ function FirstInteraction(props) {
                     <>
                     <animated.div style={{opacity: styles.opacityB, display: styles.displayB}}>
                         <div className="selection-choices">
-                            <GuttedTask tid="0" name="test" localizations={props.localizations} complete={()=>{
+                            <div className="first-interaction-right-callout-d">{props.localizations.welcome_aboard}</div>
+                            <div className="first-interaction-right-callout-e">{props.localizations.onboarding_msg_2}</div>
+                            <GuttedTask tid="0" name={props.localizations.onboarding_sync_yes} localizations={props.localizations} complete={()=>{
                             }}/>
-                            <GuttedTask tid="1" name="botp" localizations={props.localizations} complete={()=>{
+                            <GuttedTask tid="1" name={props.localizations.onboarding_sync_no} localizations={props.localizations} complete={()=>{
                             }}/>
                         </div>
                     </animated.div>
                     <animated.div style={{opacity: styles.opacityA, display: styles.displayA}}>
                         <div className="first-interaction-right-callout-a">{props.localizations.onboarding_howdy}</div><div className="first-interaction-right-callout-b">👋 {props.localizations.onboarding_welcome}</div>
                         <div className="first-interaction-right-callout-c">{props.localizations.onboarding_quick_things}</div>
+                        <br />
                         <div className="first-interaction-onboarding-action first-interaction-button" onClick={()=>{
                             setIsSignup(true);
                         }}>Let's get started</div>
