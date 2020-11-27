@@ -54,6 +54,7 @@ import Auth from './pages/Auth';
 import Loader from './pages/Loader';
 import Onboarding from './pages/Onboarding';
 import Home from './pages/Home';
+import FirstInteraction from './pages/FirstInteraction';
 
 /* Localization Toolkit */
 import LocalizedStrings from 'react-localization';
@@ -134,6 +135,17 @@ class App extends Component {
 
             let url = (new URL(document.URL))
             let uri = url.pathname.split("/");
+
+            let ret = await Storage.get({key: 'condution_onboarding'})
+            let val = undefined;
+            try {
+                val = JSON.parse(ret.value);
+            } catch(e) {} finally {
+                if (ret.value !== "done" && val !== "done") {
+                    view.setState({authMode: "FI"});
+                    return;
+                }
+            }
 
             // ==Handling cached dispatch==
             // So, do we have a condution_stotype? 
@@ -270,6 +282,8 @@ class App extends Component {
             // wut esta this auth mode? load the loader with an error
             case "onboarding":
                 return <Onboarding  localizations={this.state.localizations}/>
+            case "FI":
+                return <FirstInteraction localizations={this.state.localizations} dispatch={this.authDispatch}/>
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
                 return <Loader isError={true} error={this.state.authMode}/>

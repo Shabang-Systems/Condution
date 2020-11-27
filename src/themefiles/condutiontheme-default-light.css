@@ -262,6 +262,9 @@
     --task-tag-background: var(--special);
     --task-tag-text: var(--content-normal-alt);
     --task-tag-hover: var(--special-alt);
+
+    /* FI */
+    --first-interaction-image-text: #f4f4f4;
 }
 
 
