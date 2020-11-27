@@ -246,7 +246,6 @@
     --task-datepicker-selected: #484a4c;
     --task-datepicker-feature: #b1b5bc;
     --task-datepicker-action: #a2a3a5;
-
     --task-datepicker-icon:  #8b8b8c;
 
     /* Task Menu */
@@ -262,6 +261,10 @@
     --task-tag-background: var(--special);
     --task-tag-text: var(--content-normal-alt);
     --task-tag-hover: var(--special-alt);
+
+    /* FI */
+    --first-interaction-image-text: #f4f4f4;
+    --first-interaction-image-logo: #efefef;
 }
 
 

@@ -19,7 +19,7 @@
     "policy": "privacy policy",
     "onboarding_msg_1_3": "and make sure you agree with them.",
     "onboarding_agree": "I agree 👍",
-    "onboarding_msg_2": "Lastly, we want to connect you with sync.",
+    "onboarding_msg_2": "Should we connect you with a synced account?",
     "onboarding_sync_yes": "Let's do it! 🌐",
     "onboarding_sync_no": "Use locally. 💾",
     "onboarding_msg_3": "Data stored on your machine if used locally. No registration needed if sync is not enabled.",

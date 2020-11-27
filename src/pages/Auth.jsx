@@ -41,7 +41,7 @@ class Auth extends Component {
          */
 
         this.state = {
-            authMode: 0,
+            authMode: this.props.startOnForm ? 1 : 0,
             showExtra: false,
             greeting: greetings[Math.floor(Math.random() * greetings.length)]
         };
