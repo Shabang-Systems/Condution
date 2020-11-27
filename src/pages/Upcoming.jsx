@@ -170,6 +170,7 @@ class Upcoming extends Component { // define the component
             <IonPage>
                 <div style={{overflow: "hidden"}}>
                     <div className={"page-invis-drag " + (()=>{
+                        console.log(process.platform)
                         if (!isPlatform("electron")) // if we are not running electron
                             return "normal"; // normal windowing proceeds
                         else if (window.navigator.platform.includes("Mac")){ // macos
@@ -177,6 +178,8 @@ class Upcoming extends Component { // define the component
                         }
                         else if (process.platform === "win32") // windows
                             return "windows"; // non-frameless
+                        else 
+                            return "windows"; // ummm, it does not know about windows pt0
 
                     })()}>&nbsp;</div>
                     <div className={"page-content " + (()=>{
@@ -187,6 +190,8 @@ class Upcoming extends Component { // define the component
                         }
                         else if (process.platform === "win32") // windows
                             return "windows"; // non-frameless
+                        else 
+                            return "windows"; // ummm, it does not know about windows pt0
 
                     })()}>
                         <WorkspaceModal engine={this.props.engine} gruntman={this.props.gruntman} isShown={this.state.workspaceModalShown} currentWorkspace={this.state.currentlyEditedWorkspace} onDidDismiss={()=>this.setState({workspaceModalShown: false})} getUserByEmail={this.props.getUserByEmail}/>

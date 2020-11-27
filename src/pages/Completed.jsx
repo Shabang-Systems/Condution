@@ -133,7 +133,8 @@ class Completed extends Component {
                         }
                         else if (process.platform === "win32") // windows
                             return "windows"; // non-frameless
-
+                        else 
+                            return "windows"; // ummm, it does not know about windows pt.n
                     })()}>&nbsp;</div>
                     <div className={"page-content " + (()=>{
                         if (!isPlatform("electron")) // if we are not running electron
@@ -143,7 +144,8 @@ class Completed extends Component {
                         }
                         else if (process.platform === "win32") // windows
                             return "windows"; // non-frameless
-
+                        else 
+                            return "windows"; // ummm, it does not know about windows pt.n
                     })()}>
 
                         <div className="header-container">
