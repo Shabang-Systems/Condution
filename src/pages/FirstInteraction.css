@@ -60,7 +60,7 @@
 
 @media (max-width: 767px) { 
     .first-interaction-actions {
-        height: min(35%, 250px);
+        height: min(45%, 300px);
         margin-top: 10px;
         width: 100%;
     }

@@ -258,6 +258,13 @@ class App extends Component {
                 // Load the auth view
                 this.setState({authMode: "none", name: ""});
                 break;
+            case "auth":
+                Storage.set({key: 'condution_stotype', value: "none"});
+                this.setState({authMode: "none", name: ""});
+            case "form":
+                Storage.set({key: 'condution_stotype', value: "none"});
+                this.setState({authMode: "form", name: ""});
+
         }
     }
 
@@ -272,6 +279,8 @@ class App extends Component {
             // if we did not authenticate yet, load the auth view:
             case "none":
                 return <Auth dispatch={this.authDispatch} localizations={this.state.localizations}/>;
+            case "form":
+                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm/>;
             // if we did auth, load it up and get the party going
             case "firebase":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;

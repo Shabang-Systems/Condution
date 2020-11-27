@@ -5,10 +5,16 @@ import './Pages.css';
 import './FirstInteraction.css';
 
 import GuttedTask from './Components/GuttedTask';
+import { Plugins } from '@capacitor/core';
+
 
 import {Spring, animated, config} from 'react-spring/renderprops'
 
 import logo from '../static/logo.png';
+import dark_preload from '../static/auth-background.jpg';
+import light_preload from '../static/auth-background-dark.jpg';
+
+const { Storage } = Plugins;
 
 const autoBind = require('auto-bind/react');
 
@@ -16,6 +22,8 @@ function FirstInteraction(props) {
     let [isSignup, setIsSignup] = useState(false);
     return (
         <div className="first-interaction-container">
+            <img src={light_preload} style={{display: "none"}} />
+            <img src={dark_preload} style={{display: "none"}} />
             <div style={{width: "100%", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexDirection: "column", paddingTop: "min(env(safe-area-inset-top), 35px)", paddingLeft: 10, paddingRight: 10, paddingBottom: 10, flexGrow: 10}}>
                 <div className="first-interaction-logo"><img src={logo} width={25} style={{marginBottom: 1, marginRight: 10, transform: "translateY(-1px)"}}/>Condution Project</div>
                 <div className="first-interaction-callout">
@@ -31,9 +39,14 @@ function FirstInteraction(props) {
                             <div className="first-interaction-right-callout-d">{props.localizations.welcome_aboard}</div>
                             <div className="first-interaction-right-callout-e">{props.localizations.onboarding_msg_2}</div>
                             <GuttedTask tid="0" name={props.localizations.onboarding_sync_yes} localizations={props.localizations} complete={()=>{
+                                Storage.set({key: 'condution_onboarding', value: "done"})
+                                props.dispatch({operation: "form"})
                             }}/>
                             <GuttedTask tid="1" name={props.localizations.onboarding_sync_no} localizations={props.localizations} complete={()=>{
+                                Storage.set({key: 'condution_onboarding', value: "done"})
+                                props.dispatch({operation: "create", service: "json"})
                             }}/>
+                            <div style={{marginTop: 5}}>{props.localizations.onboarding_msg_3}</div>
                         </div>
                     </animated.div>
                     <animated.div style={{opacity: styles.opacityA, display: styles.displayA}}>
@@ -44,6 +57,8 @@ function FirstInteraction(props) {
                             setIsSignup(true);
                         }}>Let's get started</div>
                         <a className="first-interaction-onboarding-login first-interaction-button" onClick={()=>{
+                            Storage.set({key: 'condution_onboarding', value: "done"})
+                            props.dispatch({operation: "auth"})
                         }}>I have an account</a>
                     </animated.div>
                     </>}
