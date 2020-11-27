@@ -120,4 +120,42 @@
     color: var(--first-interaction-image-logo);
 }
 
+.first-interaction-button {
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    font-weight: 600;
+}
 
+
+@media (max-width: 767px) { 
+    .first-interaction-button {
+        width: 250px;
+        height: 40px;
+        margin: 0 auto;
+        margin-top: 20px;
+        margin-right: 25px;
+        display: flex;
+    }
+}
+
+@media (min-width: 768px) { 
+    .first-interaction-button {
+        width: 150px;
+        height: 40px;
+        margin-top: 20px;
+        margin-right: 25px;
+        display: inline-flex;
+    }
+}
+
+.first-interaction-onboarding-action {
+    background: var(--content-normal-alt);
+    color: var(--content-normal);
+}
+
+.first-interaction-onboarding-login {
+    background: var(--content-normal);
+    color: var(--content-normal-alt);
+}
