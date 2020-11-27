@@ -284,7 +284,8 @@ class App extends Component {
                 return <Auth dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
+                return <Onboarding  localizations={this.state.localizations}/>
+                //return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
             case "workspace":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
             case "json":
