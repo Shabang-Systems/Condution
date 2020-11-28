@@ -72,8 +72,6 @@ class TagEditor extends Component {
                 id: tagid
             }
         )
-        console.log(tagid);
-        console.log(temp);
         this.setState({tagList: temp});
     }
 
