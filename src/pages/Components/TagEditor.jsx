@@ -35,6 +35,18 @@ const autoBind = require('auto-bind/react');
 class TagEditor extends Component {
     constructor(props) {
         super(props)
+        this.state = {}
+    }
+
+    render() {
+        return null
+    }
+}
+
+/*
+class TagEditor extends Component {
+    constructor(props) {
+        super(props)
         this.state = {
             tagList: [],
             settingState: -1
@@ -42,7 +54,7 @@ class TagEditor extends Component {
     }
     // TODO make not freak out if there aren't any tags
     // TODO make not bad and actually set tag state
-   async setTagState() {
+    async setTagState() {
         this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
     }
    // TODO BADDD 
@@ -96,12 +108,17 @@ class TagEditor extends Component {
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
+        e.stopPropagation();
+        if (this.settingState == i) {
+            console.log("heh")
+            this.settingState = 0;
+        }
         this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
         let tagexclu = this.state.tagList;
         tagexclu.splice(i,1);
+
         this.setState({tagList: tagexclu});
         
-        e.stopPropagation();
     }
 
     render() {
@@ -130,7 +147,7 @@ class TagEditor extends Component {
                                         <div className="tag-name">
                                             {tag.name}
                                         </div>
-                                        <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e,index)}><i className="fa fa-times x"></i></a>
+                                        <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e, index)}><i className="fa fa-times x"></i></a>
                                     </div>
                                 </>
                             )
@@ -189,5 +206,5 @@ class TagEditor extends Component {
         )
     }
 }
-
+*/
 export default TagEditor
