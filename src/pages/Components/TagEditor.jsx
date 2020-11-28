@@ -43,7 +43,6 @@ class TagEditor extends Component {
     }
 }
 
-/*
 class TagEditor extends Component {
     constructor(props) {
         super(props)
@@ -206,5 +205,6 @@ class TagEditor extends Component {
         )
     }
 }
-*/
+
+
 export default TagEditor
