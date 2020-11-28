@@ -58,12 +58,12 @@ class TagEditor extends Component {
     }
    // TODO BADDD 
     componentDidMount() {
-        this.setTagState()
+        this.setTagState();
     }
     
     async newTagClicked() {
-        let tagid = await this.props.engine.db.newTag(this.props.uid, "New Tag")
-        let temp = this.state.tagList
+        let tagid = await this.props.engine.db.newTag(this.props.uid, "New Tag");
+        let temp = this.state.tagList;
         temp.push(
             {
                 name: "New Tag",
@@ -73,12 +73,12 @@ class TagEditor extends Component {
             }
         )
         console.log(tagid);
-        console.log(temp)
-        this.setState({tagList: temp})
+        console.log(temp);
+        this.setState({tagList: temp});
     }
 
     tagClicked(i) {
-        this.state.tagList[i].tempname = this.state.tagList[i].name
+        this.state.tagList[i].tempname = this.state.tagList[i].name;
         this.setState({settingState: i});
     }
 
@@ -103,13 +103,12 @@ class TagEditor extends Component {
     tagNameEdited(e, index) {
         let newName = this.state.tagList;
         newName[index].tempname = e.target.value;
-        this.setState({tagList: newName})
+        this.setState({tagList: newName});
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
         e.stopPropagation();
         if (this.state.settingState == i) {
-            console.log("heh")
             this.state.settingState = 0;
         }
         this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
@@ -191,7 +190,7 @@ class TagEditor extends Component {
                                         let index = this.state.settingState;
                                         let ntl = this.state.tagList;
                                         ntl[index].weight = +Number(e.target.value);
-                                        this.setState({tagList: ntl})
+                                        this.setState({tagList: ntl});
 
                                     }}/>
                                 </div>
