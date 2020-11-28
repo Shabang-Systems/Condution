@@ -31,7 +31,7 @@ import BlkArt from './BlkArt';
  * */
 
 const autoBind = require('auto-bind/react');
-
+/*
 class TagEditor extends Component {
     constructor(props) {
         super(props)
@@ -42,7 +42,7 @@ class TagEditor extends Component {
         return null
     }
 }
-
+*/
 class TagEditor extends Component {
     constructor(props) {
         super(props)
@@ -108,9 +108,9 @@ class TagEditor extends Component {
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
         e.stopPropagation();
-        if (this.settingState == i) {
+        if (this.state.settingState == i) {
             console.log("heh")
-            this.settingState = 0;
+            this.state.settingState = 0;
         }
         this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
         let tagexclu = this.state.tagList;
