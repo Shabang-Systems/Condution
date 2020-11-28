@@ -49,6 +49,19 @@ class TagEditor extends Component {
     componentDidMount() {
         this.setTagState()
     }
+    
+    newTagClicked() {
+        this.props.engine.db.newTag(this.props.uid, "New Tag")
+        let temp = this.state.tagList
+        temp.push(
+            {
+                name: "New Tag",
+                weight: 1
+            }
+        )
+
+        this.setState({tagList: temp})
+    }
 
     tagClicked(i) {
         this.state.tagList[i].tempname = this.state.tagList[i].name
@@ -80,8 +93,9 @@ class TagEditor extends Component {
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
-        this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
-
+        if (this.state.tagList[i].id) {
+            this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
+        }
         let tagexclu = this.state.tagList;
         tagexclu.splice(i,1);
         this.setState({tagList: tagexclu});
@@ -110,14 +124,20 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
-                                <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
-                                    <div className="tag-name">
-                                        {tag.name}
+                                <>
+                                    <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
+                                        <div className="tag-name">
+                                            {tag.name}
+                                        </div>
+                                        <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e,index)}><i className="fa fa-times x"></i></a>
                                     </div>
-                                    <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e,index)}><i className="fa fa-times x"></i></a>
-                                </div>
+                                </>
                             )
                         })}
+                        <div className="new-tag-button" onClick={ () => {this.newTagClicked()}}>
+                            <i class="fas fa-plus" style={{marginLeft: "2px"}}></i>
+                            <div className="new-tag-text">New Tag</div>
+                        </div>
                     </div>
                     <div className="tag-settings">
                         {this.state.settingState==-1?(
