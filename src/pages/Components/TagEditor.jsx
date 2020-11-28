@@ -50,16 +50,19 @@ class TagEditor extends Component {
         this.setTagState()
     }
     
-    newTagClicked() {
-        this.props.engine.db.newTag(this.props.uid, "New Tag")
+    async newTagClicked() {
+        let tagid = await this.props.engine.db.newTag(this.props.uid, "New Tag")
         let temp = this.state.tagList
         temp.push(
             {
                 name: "New Tag",
-                weight: 1
+                tempname: "New Tag",
+                weight: 1,
+                id: tagid
             }
         )
-
+        console.log(tagid);
+        console.log(temp)
         this.setState({tagList: temp})
     }
 
@@ -93,9 +96,7 @@ class TagEditor extends Component {
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
-        if (this.state.tagList[i].id) {
-            this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
-        }
+        this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
         let tagexclu = this.state.tagList;
         tagexclu.splice(i,1);
         this.setState({tagList: tagexclu});
