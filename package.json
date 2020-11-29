@@ -111,17 +111,6 @@
       "**/src/static/**",
       "**/resources/**",
       "**/main.js",
-      "!**/node_modules/",
-      "!**/node_modules/**",
-      "**/node_modules/electron/**",
-      "**/node_modules/electron-is-dev/**",
-      "**/node_modules/electron-updater/**",
-      "**/node_modules/builder-util-runtime/**",
-      "**/node_modules/ms/**",
-      "**/node_modules/debug/**",
-      "**/node_modules/lazy-val/**",
-      "**/node_modules/js-yaml/**",
-      "**/node_modules/semver/**",
       "!**/old"
     ],
     "mac": {
