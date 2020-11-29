@@ -135,7 +135,7 @@
       "sign": false
     },
     "win": {
-      "target": "nsis-web"
+      "target": "nsis"
     },
     "afterSign": "resources/buildscripts/aftersign.js"
   }
