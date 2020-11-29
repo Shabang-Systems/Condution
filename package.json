@@ -120,6 +120,7 @@
       "**/node_modules/ms/**",
       "**/node_modules/debug/**",
       "**/node_modules/lazy-val/**",
+      "**/node_modules/js-yaml/**",
       "**/node_modules/semver/**",
       "!**/old"
     ],
