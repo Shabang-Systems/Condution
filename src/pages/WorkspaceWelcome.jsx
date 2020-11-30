@@ -10,11 +10,11 @@ const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
 /*
 
- * Sometimes we complete.
+ * Hi Jack, this is hux.  
  *
- * This is not always correct,
+ * I know my poems are amazing, 
  *
- * so we have this page! 
+ * but you need not copy them. 
  *
  * @enquirer
 
