@@ -223,19 +223,33 @@ class Home extends Component {
                                 })()}>
                                     {/* === Built Ins: upcoming + completed == */}
                                     {/* Upcoming button + link */}
-                                    <Link to="/upcoming" onClick={()=>this.setState({itemSelected:{item:"upcoming", id:undefined}})}> {/* Link to trigger router */}
+                                    <Link to="/upcoming" onClick={()=>{
+                                            this.setState({itemSelected:{item:"upcoming", id:undefined}});
+                                            if (this.menu.current)
+                                                this.menu.current.close();
+
+                                        }}> {/* Link to trigger router */}
                                         {/* Upcoming button */}
                                         <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />{this.props.localizations.upcoming}</div>
                                     </Link>
 
                                     {/* Completed button + link */}
-                                    <Link to="/completed" onClick={()=>this.setState({itemSelected:{item:"completed", id:undefined}})}> {/* Link to trigger router */}
+                                    <Link to="/completed" onClick={()=>{
+                                        this.setState({itemSelected:{item:"completed", id:undefined}});
+                                        if (this.menu.current)
+                                            this.menu.current.close();
+                                    }}> {/* Link to trigger router */}
                                         {/* Completed button */}
                                         <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={checkmarkCircle} />{this.props.localizations.completed}</div>
                                     </Link>
 
                                     {/* Calendar button + link */}
-                                    <Link to="/calendar" onClick={()=>this.setState({itemSelected:{item:"calendar", id:undefined}})}> {/* Link to trigger router */}
+                                    <Link to="/calendar" onClick={()=>{
+                                        this.setState({itemSelected:{item:"calendar", id:undefined}})
+                                        if (this.menu.current)
+                                            this.menu.current.close();
+
+                                        }}> {/* Link to trigger router */}
                                         {/* Calendar button */}
                                         <div className={"menu-item "+(this.state.itemSelected.item === "calendar" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={calendar} />{this.props.localizations.calendar}</div>
                                     </Link>
@@ -262,7 +276,11 @@ class Home extends Component {
                                     {/* === Perspective button + link == */}
                                     {this.state.perspectives.map((psp) => {
                                         return (
-                                            <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>this.setState({itemSelected:{item:"perspectives", id:psp.id}})}> {/* Link to trigger router */}
+                                            <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>{
+                                                this.setState({itemSelected:{item:"perspectives", id:psp.id}});
+                                                if (this.menu.current)
+                                                    this.menu.current.close();
+                                            }}> {/* Link to trigger router */}
                                                 {/* Perspective button */}
                                                 <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
                                             </Link>
@@ -290,7 +308,11 @@ class Home extends Component {
                                     {/* === Project Contents == */}
                                     {this.state.projects.map((proj) => {
                                         return (
-                                            <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>this.setState({itemSelected:{item:"projects", id:proj.id}})}> {/* Link to trigger router */}
+                                            <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
+                                                this.setState({itemSelected:{item:"projects", id:proj.id}})
+                                                if (this.menu.current)
+                                                    this.menu.current.close();
+                                                }}> {/* Link to trigger router */}
                                                 {/* Perspective button */}
                                                 <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link> 
                                         )                            
