@@ -163,3 +163,28 @@ input[type=number] {
     align-items:center;
     margin-bottom: 5px;
 }
+
+.new-tag-button {
+    display: inline;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 3px;
+    padding: 5px;
+    display: inline;
+    /*width: 98%;*/
+    border-radius: 4px;
+    background-color: var(--task-clickbox-background);
+    transition: 0.25s;
+    height: 30px;
+    color: var(--perspective-query-string);
+}
+
+.new-tag-button:hover {
+    background-color: var(--background-feature);
+}
+
+.new-tag-text {
+    color: var(--perspective-query-string);
+    float: right;
+    margin-right: 45px;
+}
