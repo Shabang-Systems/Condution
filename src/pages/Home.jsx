@@ -79,6 +79,7 @@ class Home extends Component {
         this.abtibRef = React.createRef();
 
         this.menu = React.createRef();
+        this.menuContent = React.createRef();
     }
 
     switch = (workspaceType, id=this.props.uid) => { 
@@ -92,6 +93,15 @@ class Home extends Component {
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
 
     componentDidMount() {
+        const content = this.menuContent.current;
+        const styles = document.createElement('style');
+        styles.textContent = `
+            .scroll-y::-webkit-scrollbar {
+                display: none;
+            }
+        `;
+        content.shadowRoot.appendChild(styles);
+
         // This is, indeed, the view
         // Get the current URI to set which view is selected
         let url = (new URL(document.URL))
@@ -201,7 +211,7 @@ class Home extends Component {
                             {/* The left: menu! */}
                             <IonMenu id="main-menu" contentId="main" ref={this.menu}>
                                 <br />
-                                <IonContent id="menu-content" className={(()=>{
+                                <IonContent id="menu-content" ref={this.menuContent} className={(()=>{
                                     if (!isPlatform("electron")) // if we are not running electron
                                         return "normal"; // normal windowing proceeds
                                     else if (window.navigator.platform.includes("Mac")){ // macos
