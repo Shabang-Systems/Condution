@@ -103,7 +103,8 @@ Good luck! Let us know if you have any questions [on the Discord](https://discor
 We love contributions! You are welcome to contribute, just keep in mind that we prefer 4 spaces over tabs.
 
 ## Thank you!
-Thank you for supporting us on this project. We really hope that this will be something useful. 
+Thank you for supporting us on this project. We want to give a special shout out to the parteons that have supported us. 
+Thanks to Greirson and cyberic for their support
 
 ***
 
