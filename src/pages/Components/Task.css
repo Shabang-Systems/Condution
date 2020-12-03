@@ -637,7 +637,7 @@ button:focus {
     margin: 0;
     padding: 0;
     padding-left: 3px;
-    font-size: 12px !important;
+    font-size: 12px; 
     /*padding-top: 5px;*/
 }
 
@@ -662,7 +662,7 @@ button:focus {
     box-shadow: none;
     cursor: default;
     -webkit-appearance: none;
-    font-size: 12px !important;
+    /*font-size: 120px !important;*/
 }
 
 input[name="react-tagsinput-actualinput-delegation"] {
