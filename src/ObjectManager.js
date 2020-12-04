@@ -560,9 +560,12 @@ async function dissociateProject(userID, assosProjID, projectID) {
 
 async function deleteTask(userID, taskID, willDissociateTask = true) {
     let taskData = await cRef(isWorkspace?"workspaces":"users", userID, "tasks").get()
-        .then(snap => snap.docs.filter(doc => doc.id === taskID)[0].data()); // Fetch task data
+        .then(snap => snap.docs.filter(doc => doc.id === taskID)[0]); // Fetch task data
 
-    if (taskData.project!== "" && willDissociateTask) {
+    if (taskData)
+        taskData = taskData.data();
+
+    if (taskData && taskData.project!== "" && willDissociateTask) {
         await dissociateTask(userID, taskID, taskData.project);
     }
     await cRef(isWorkspace?"workspaces":"users", userID, "tasks", taskID).delete()
