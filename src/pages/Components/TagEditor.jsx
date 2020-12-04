@@ -31,7 +31,18 @@ import BlkArt from './BlkArt';
  * */
 
 const autoBind = require('auto-bind/react');
+/*
+class TagEditor extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {}
+    }
 
+    render() {
+        return null
+    }
+}
+*/
 class TagEditor extends Component {
     constructor(props) {
         super(props)
@@ -42,16 +53,30 @@ class TagEditor extends Component {
     }
     // TODO make not freak out if there aren't any tags
     // TODO make not bad and actually set tag state
-   async setTagState() {
+    async setTagState() {
         this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
     }
    // TODO BADDD 
     componentDidMount() {
-        this.setTagState()
+        this.setTagState();
+    }
+    
+    async newTagClicked() {
+        let tagid = await this.props.engine.db.newTag(this.props.uid, "New Tag");
+        let temp = this.state.tagList;
+        temp.push(
+            {
+                name: "New Tag",
+                tempname: "New Tag",
+                weight: 1,
+                id: tagid
+            }
+        )
+        this.setState({tagList: temp});
     }
 
     tagClicked(i) {
-        this.state.tagList[i].tempname = this.state.tagList[i].name
+        this.state.tagList[i].tempname = this.state.tagList[i].name;
         this.setState({settingState: i});
     }
 
@@ -76,17 +101,20 @@ class TagEditor extends Component {
     tagNameEdited(e, index) {
         let newName = this.state.tagList;
         newName[index].tempname = e.target.value;
-        this.setState({tagList: newName})
+        this.setState({tagList: newName});
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
+        e.stopPropagation();
+        if (this.state.settingState == i) {
+            this.state.settingState = 0;
+        }
         this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
-
         let tagexclu = this.state.tagList;
         tagexclu.splice(i,1);
+
         this.setState({tagList: tagexclu});
         
-        e.stopPropagation();
     }
 
     render() {
@@ -110,14 +138,20 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
-                                <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
-                                    <div className="tag-name">
-                                        {tag.name}
+                                <>
+                                    <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
+                                        <div className="tag-name">
+                                            {tag.name}
+                                        </div>
+                                        <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e, index)}><i className="fa fa-times x"></i></a>
                                     </div>
-                                    <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e,index)}><i className="fa fa-times x"></i></a>
-                                </div>
+                                </>
                             )
                         })}
+                        <div className="new-tag-button" onClick={ () => {this.newTagClicked()}}>
+                            <i class="fas fa-plus" style={{marginLeft: "2px"}}></i>
+                            <div className="new-tag-text">New Tag</div>
+                        </div>
                     </div>
                     <div className="tag-settings">
                         {this.state.settingState==-1?(
@@ -154,7 +188,7 @@ class TagEditor extends Component {
                                         let index = this.state.settingState;
                                         let ntl = this.state.tagList;
                                         ntl[index].weight = +Number(e.target.value);
-                                        this.setState({tagList: ntl})
+                                        this.setState({tagList: ntl});
 
                                     }}/>
                                 </div>
@@ -168,5 +202,6 @@ class TagEditor extends Component {
         )
     }
 }
+
 
 export default TagEditor
