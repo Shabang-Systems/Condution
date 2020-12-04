@@ -170,7 +170,6 @@ class Upcoming extends Component { // define the component
             <IonPage>
                 <div style={{overflow: "hidden"}}>
                     <div className={"page-invis-drag " + (()=>{
-                        console.log(process.platform)
                         if (!isPlatform("electron")) // if we are not running electron
                             return "normal"; // normal windowing proceeds
                         else if (window.navigator.platform.includes("Mac")){ // macos
