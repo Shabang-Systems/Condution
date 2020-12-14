@@ -276,7 +276,7 @@ class App extends Component {
         switch (this.state.authMode) {
             // if we are at the first-paint load mode, do this:
             case "loader":
-                return <Loader />
+            return <Loader />;
             // if we did not authenticate yet, load the auth view:
             case "none":
                 return <Auth dispatch={this.authDispatch} localizations={this.state.localizations}/>;
@@ -291,12 +291,12 @@ class App extends Component {
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
             // wut esta this auth mode? load the loader with an error
             case "onboarding":
-                return <Onboarding  localizations={this.state.localizations}/>
+		return <Onboarding  localizations={this.state.localizations}/>;
             case "FI":
-                return <FirstInteraction localizations={this.state.localizations} dispatch={this.authDispatch}/>
+            return <FirstInteraction localizations={this.state.localizations} dispatch={this.authDispatch}/>;
             default:
                 console.error(`CentralDispatchError: Wut Esta ${this.state.authMode}`);
-                return <Loader isError={true} error={this.state.authMode}/>
+		return <Loader isError={true} error={this.state.authMode}/>;
         }
     }
 }
