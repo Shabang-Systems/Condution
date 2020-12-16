@@ -1,12 +1,9 @@
-#ifndef __TASK_HPP 
-#define __TASK_HPP
+#pragma once
+#include <string>
 
-extern "C" {
-    class Task {
-        public:
-            int test(int &c);
-    };
-}
-
-#endif
+class Task {
+    public:
+        int test(int &c);
+        std::string* test(std::string &c);
+};
 
