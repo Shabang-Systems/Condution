@@ -1,4 +1,4 @@
-import dbManager from "./DBManager"
+import dbManager from "./DBManager.js"
 let cRef = dbManager.cRef;
 
 const util = {

@@ -1,4 +1,4 @@
-import dbObj from "./ObjectManager";
+import dbObj from "./ObjectManager.js";
 
 const perspectiveHandler = function(){
     let cgs = {
