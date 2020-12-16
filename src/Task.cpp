@@ -7,10 +7,10 @@ int Task::test(int &c) {
     return c;
 }
 
-//std::string* Task::test(std::string &c) {
-    //c[c.length()-1] = '\0';
-    //return &c;
-//}
+std::string* Task::test(std::string &c) {
+    c[c.length()-1] = '\0';
+    return &c;
+}
 
 
 

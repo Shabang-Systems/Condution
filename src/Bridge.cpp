@@ -1,16 +1,24 @@
 #include <iostream>
-
 #include "../lib/Task.hpp"
 
-    Task t;
-extern "C" {
-    int test();
+#include <emscripten/bind.h>
+#include <SDL/SDL.h>
+
+using namespace emscripten;
+
+Task t;
+
+int plusTwo(int t) {
+    return t+2; 
 }
 
-int test() {
-    int three = 3;
-    t.test(three);
-    return three;
+const char * stringTest(const char str[]) {
+    std::string stdString(str);
+    t.test(stdString);
+    const char * st = stdString.c_str();
+    return st;
 }
 
-
+EMSCRIPTEN_BINDINGS(module) {
+    function("lerp", &plusTwo);
+}

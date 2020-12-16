@@ -6,10 +6,17 @@
   "repository": "https://github.com/Shabang-Systems/CondutionEngine",
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "express": "^4.17.1",
-    "firebase": "^7.19.0",
-    "firebase-admin": "^9.1.1",
-    "sqlite3": "^5.0.0"
+  "scripts": {
+    "api:run": "nodemon --exec babel-node api/CondutionEngine.js",
+    "core:run": "rerun 'emcmake cmake . && make' -i api -i CMakeCache.txt -i CMakeFiles -i Makefile",
+    "api:dist": "babel api --out-dir dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-rc.1",
+    "@babel/core": "^7.0.0-rc.1",
+    "@babel/node": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
+    "nodemon": "^1.18.3"
   }
 }
