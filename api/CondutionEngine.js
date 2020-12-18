@@ -18,8 +18,8 @@ let plusOnePointer = Module.addFunction(plusOneDavid, "ii");
 
 Module.onRuntimeInitialized = function() {
     Module.feedSalad(fnPtr);
-    Module.plus_two("test");
     Module.feedEmacs(plusOnePointer);
+    Module.plus_two("test");
 };
 
 

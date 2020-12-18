@@ -90,7 +90,7 @@ void plugEmacs(int ptr) {
 
 void plus_two(std::string str) {
     salad();
-    //std::cout << "Number+1 " << test(12) << std::endl;
+    std::cout << "Number+1 " << test(12) << std::endl;
 }
 
 // # Bindings #
