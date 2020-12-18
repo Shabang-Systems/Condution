@@ -24,4 +24,5 @@ import ReferenceManager from "./Storage/ReferenceManager";
     //Module.plus_two("test");
 //};
 
+export { ReferenceManager };
 
