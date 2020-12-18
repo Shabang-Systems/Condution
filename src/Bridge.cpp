@@ -77,14 +77,14 @@ extern "C" {
 typedef void eatSaladZach();
 eatSaladZach* salad;
 
-void feedSalad(int ptr) {
+void feedSalad(long ptr) {
     salad = (void(*)()) ptr;
 }
 
 typedef int testfunc(int);
 testfunc* test;
 
-void plugEmacs(int ptr) {
+void plugEmacs(long ptr) {
     test = (int(*)(int)) ptr;
 }
 
