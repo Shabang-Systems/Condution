@@ -137,7 +137,6 @@ secrets.json
 # Executables
 *.exe
 *.out
-*.wasm
 
 CMakeLists.txt.user
 CMakeCache.txt
