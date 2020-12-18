@@ -1,8 +1,9 @@
 {
-  "name": "condutionengine",
-  "version": "0.0.1",
+  "name": "@condution/engine",
+  "version": "1.0.0-prealpha.0",
   "description": "The thing that powers the magic that's Condution",
-  "main": "CondutionEngine.js",
+  "main": "dist/CondutionEngine.js",
+  "types": "dist/CondutionEngine.d.ts",
   "repository": "https://github.com/Shabang-Systems/CondutionEngine",
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
@@ -12,6 +13,7 @@
     "api:tscomp": "tsc",
     "api:dist": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist"
   },
+  "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist",
   "dependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.0.0-rc.1",
