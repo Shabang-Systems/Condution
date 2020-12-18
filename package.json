@@ -9,7 +9,8 @@
   "scripts": {
     "api:run": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" api/CondutionEngine.js",
     "core:run": "rerun 'emcmake cmake . && make' -i api -i CMakeCache.txt -i CMakeFiles -i Makefile",
-    "api:dist": "babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist"
+    "api:type": "tsc ./api/**/*.ts -t es5 --declaration --allowJs --emitDeclarationOnly --outDir dist/types",
+    "api:dist": "babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && yarn api:type && cp ./api/CondutionCore.wasm ./dist"
   },
   "dependencies": {},
   "devDependencies": {
