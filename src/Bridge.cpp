@@ -34,6 +34,8 @@
 // # Glue-exclusive Packages # 
 // Packages you exclusively need for the glue. Should be only iostream + other diag things
 #include <iostream>
+#include <string>
+#include <stdint.h>
 
 // # Our Packages #
 #include "../lib/Task.hpp" // tasks
@@ -48,11 +50,44 @@
 #include <emscripten/bind.h>
 #endif
 
-
+// Using WASM Toochain's namespace
 using namespace emscripten;
 
+// # Raw C Exported Function Signatures 
+extern "C" {
+    // Put the function definitions/signatures
+    // in this section. Remember that they
+    // must behave in terms of mangling
+    // as C functions, meaning... ...
+    //
+    // 1. No pass-by-ref
+    // 2. No std:: in params
+    // 3. No overloading
+    //
+    // And this is why you should use
+    // EMSCRIPTEN_BINDINGS if you can instead 
+    // of doing this. After you are done, 
+    // put the function as part of the exports
+    // list in the CMakeLists file, but remember
+    // that the function's exported name has to
+    // underscore before it in the CMakeLists
+    // (but not here).
+}
+
+typedef void eatSaladZach();
+eatSaladZach* salad;
+
+void feedSalad(int ptr) {
+    salad = (eatSaladZach*) ptr;
+}
+
+void plus_two(std::string str) {
+    salad();
+}
 
 // # Bindings #
 EMSCRIPTEN_BINDINGS(module) {
-    function("lerp", &plusTwo);
+    // Functional Bindings
+    function("feedSalad", &feedSalad);
+    function("plus_two", &plus_two);
 }
