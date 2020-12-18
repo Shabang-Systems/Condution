@@ -9,10 +9,11 @@
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "api:run": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" api/CondutionEngine.js",
     "core:run": "rerun 'emcmake cmake . && make' -i api -i CMakeCache.txt -i CMakeFiles -i Makefile",
+    "core:dist": "emcmake cmake . && make",
+    "api:run": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" api/CondutionEngine.ts",
     "api:tscomp": "tsc",
-    "api:dist": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist"
+    "api:dist": "yarn core:dist && tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist"
   },
   "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist",
   "dependencies": {},
