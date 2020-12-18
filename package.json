@@ -5,6 +5,7 @@
   "main": "dist/CondutionEngine.js",
   "types": "dist/CondutionEngine.d.ts",
   "repository": "https://github.com/Shabang-Systems/CondutionEngine",
+  "homepage": "https://future.condution.com",
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
   "scripts": {
