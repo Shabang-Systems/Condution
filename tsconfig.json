@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "target": "esnext",
     "moduleResolution": "node",
     "allowJs": true,
-    "strict": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "target": "es5"
+    "target": "es5",
+    "rootDir":"api",
+    "outDir": "dist/"
   },
   "include": [
-    "src"
+    "api/**/*.ts"
   ]
 }
