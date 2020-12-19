@@ -1,5 +1,9 @@
 import Module from './CondutionCore';
 import ReferenceManager from "./Storage/ReferenceManager";
+import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
+
+let manager:ReferenceManager = new ReferenceManager([new FirebaseProvider()])
+
 
 //function eatSaladZach() {
     //console.log("zach ate salad");

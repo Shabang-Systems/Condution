@@ -16,7 +16,9 @@
     "api:dist": "yarn core:dist && tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist"
   },
   "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist",
-  "dependencies": {},
+  "dependencies": {
+    "firebase": "^8.2.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.0.0-rc.1",
     "@babel/core": "^7.0.0-rc.1",

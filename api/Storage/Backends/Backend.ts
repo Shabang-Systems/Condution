@@ -65,11 +65,11 @@ abstract class Provider {
 abstract class Page {
     abstract get id() : String; // The ID of the Page
 
-    abstract get() : object; // Function to get the value of page
-    abstract add(payload:object) : object; // Function to send a value to the page
-    abstract set(payload:object, ...param:any) : Function; // Function to set a value of a page
-    abstract update(payload:object) : Function; // Function to update the value of a page
-    abstract delete() : Function; // Function to delete a page
+    abstract get() : Promise<object>; // Function to get the value of page
+    abstract add(payload:object) : Promise<object>; // Function to send a value to the page
+    abstract set(payload:object, ...param:any) : Promise<object> ; // Function to set a value of a page
+    abstract update(payload:object) : Promise<object> ; // Function to update the value of a page
+    abstract delete() : Promise<object> ; // Function to delete a page
 }
 
 export { Provider, Page, AuthenticationProvider };
