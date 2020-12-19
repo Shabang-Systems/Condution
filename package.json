@@ -1,6 +1,6 @@
 {
   "name": "@condution/engine",
-  "version": "1.0.0-prealpha.0",
+  "version": "1.0.0-prealpha.1",
   "description": "The thing that powers the magic that's Condution",
   "main": "dist/CondutionEngine.js",
   "types": "dist/CondutionEngine.d.ts",
