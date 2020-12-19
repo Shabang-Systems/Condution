@@ -1,7 +1,10 @@
 {
     "presets": [
         "@babel/env",
-        "@babel/preset-typescript"
+        "@babel/preset-typescript",
+        ["minify", {
+            "keepFnName": true
+        }]
     ],
     "plugins": [
         "@babel/proposal-class-properties",

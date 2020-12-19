@@ -35,8 +35,8 @@ abstract class AuthenticationProvider {
  */
 
 abstract class Provider {
-    name: String;
-    abstract reference(path: String[]) : Page;
+    name: string;
+    abstract reference(path: string[]) : Page;
     authenticationProvider() : AuthenticationProvider {
         console.log("CondutionEngine: attempting to acquire the auth provider on a backend with authenticationProvider() unimplemented!");
         return null;
@@ -63,7 +63,7 @@ abstract class Provider {
  */
 
 abstract class Page {
-    abstract get id() : String; // The ID of the Page
+    abstract get id() : string; // The ID of the Page
 
     abstract get() : Promise<object>; // Function to get the value of page
     abstract add(payload:object) : Promise<object>; // Function to send a value to the page

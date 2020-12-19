@@ -50,12 +50,12 @@ export default class ReferenceManager {
      *
      * Which provider to use?
      *
-     * @param {String} providerName: the name field of the desired provider
+     * @param {string} providerName: the name field of the desired provider
      * @returns {Number}: 0 if successfully set, 1 if provider unimplemented or uninitialized
      * 
      */
 
-    use(providerName: String) : Number {
+    use(providerName: string) : Number {
         let providerCanidates:Provider[] = this.providers.filter(p => p.name === providerName);
         if (providerCanidates.length > 0) {
             this.currentProvider = providerCanidates[0];
@@ -68,7 +68,7 @@ export default class ReferenceManager {
      *
      * @method reference
      *
-     * @param {String[]} path: path that you desire to get a reference to
+     * @param {string[]} path: path that you desire to get a reference to
      * @returns {Page}:a page representing the reference that you could act upon
      *
      * Example:
@@ -78,7 +78,7 @@ export default class ReferenceManager {
      * 
      */
 
-    reference(...path:String[]) : Page {
+    reference(...path:string[]) : Page {
         return this.currentProvider.reference(path);
     }
 }

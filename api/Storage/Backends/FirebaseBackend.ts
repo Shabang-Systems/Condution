@@ -8,18 +8,18 @@ let cache = new Map();
 let unsubscribeCallbacks = new Map();
 
 class FirebasePage extends Page {
-    path: String[];
+    path: string[];
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
-    constructor(path:String[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore)) {
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore)) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
     }
 
-    get id() : String {
+    get id() : string {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
         return ref.id; // return the requested ID
     }
@@ -97,7 +97,7 @@ class FirebasePage extends Page {
      * 
      */
 
-    getFirebaseRef(path:String[]) {
+    getFirebaseRef(path:string[]) {
         let ref:any = this.firebaseDB;
         let fsRef:any = this.firebaseRef;
 
@@ -108,7 +108,8 @@ class FirebasePage extends Page {
         else
             ref = ref.collection(path[0]);
         // generic handling
-        for (let nav of path.slice(1)) {
+        for (let n of path.slice(1)) {
+            let nav:any = n;
             if (typeof nav === 'string') {
                 if (ref instanceof fsRef.DocumentReference) {
                     ref = ref.collection(nav);
@@ -178,7 +179,7 @@ class FirebaseProvider extends Provider {
      *
      * @method reference
      *
-     * @param {String[]} path: path that you desire to get a reference to
+     * @param {string[]} path: path that you desire to get a reference to
      * @returns {Page}:a page representing the reference that you could act upon
      *
      * Example:
@@ -188,7 +189,7 @@ class FirebaseProvider extends Provider {
      * 
      */
 
-    reference(path: String[]) : Page {
+    reference(path: string[]) : Page {
         return new FirebasePage(path, this.firebaseDB, this.firebaseRef);
     }
 
