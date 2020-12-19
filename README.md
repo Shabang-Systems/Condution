@@ -1,6 +1,8 @@
 # #!/Shabang | Condution(Engine)
 **This. Is. Condution('s API).** A personal project management system (toolkit) that makes sense and will not burn your pockets out.
 
+**By trying to download this package, you will add a few kb of bloat to your repo that currently does almost NOTHING.** How did you even find me, anyways? Check back in a month or so for better documentation and a working package
+
 ***
 
 ## What the heck?
