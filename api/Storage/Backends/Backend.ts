@@ -25,7 +25,7 @@ interface AuthenticationResult {
 }
 
 interface AuthenticationRequest {
-    requestType: string,
+    requestType?: string,
     identifier?: string,
     payload?: any
 }
@@ -45,11 +45,11 @@ abstract class AuthenticationProvider {
         return this._authenticated;
     }
 
-    abstract authenticate(request: AuthenticationRequest) : AuthenticationResult;
-    abstract deauthenticate() : AuthenticationResult;
+    abstract authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult>;
+    abstract deauthenticate() : void;
 
-    abstract createUser(request: AuthenticationRequest) : AuthenticationResult;
-    abstract actUponUser(request: AuthenticationRequest) : AuthenticationResult;
+    abstract createUser(request: AuthenticationRequest) : Promise<AuthenticationResult>;
+    abstract updateUserProfile(request: AuthenticationRequest) : Promise<AuthenticationResult>;
 }
 
 /**

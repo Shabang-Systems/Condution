@@ -148,7 +148,7 @@ class FirebasePage extends Page {
 }
 
 class FirebaseAuthenticationProvider extends AuthenticationProvider {
-    firebaseAuthPointer: firebase.auth.Auth;
+    private firebaseAuthPointer: firebase.auth.Auth;
 
     constructor() {
         super();
@@ -160,16 +160,88 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
             this._authenticated = false;
     }
 
-    authenticate(request: AuthenticationRequest) : AuthenticationResult {
-        if (request.requestType == "email_pass")
-            this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password);
+    get currentUser() : AuthenticationUser {
+        if (!this.firebaseAuthPointer.currentUser) return null;
+
+        return {
+            identifier: this.firebaseAuthPointer.currentUser.uid,
+            displayName: this.firebaseAuthPointer.currentUser.displayName,
+            email: this.firebaseAuthPointer.currentUser.email
+        }
+    }
+
+    async authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult> {
+        if (request.requestType == "email_pass" || !request.requestType) {
+            await this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password)        
+            if (this.firebaseAuthPointer.currentUser.emailVerified)
+                this._authenticated = true;
+            return {
+                actionDesired: "authenticate", 
+                actionSuccess: this.firebaseAuthPointer.currentUser.emailVerified ? true : false, 
+                identifier: this.firebaseAuthPointer.currentUser.uid, 
+                payload: this.firebaseAuthPointer.currentUser.emailVerified ? null : {msg: "User email unverified", code: "email_verification_needed"}
+            }
+        }
         else 
             return {
                 actionDesired: "authenticate", 
                 actionSuccess: false, 
                 identifier: null, 
-                payload: {msg: "unknown request type"}
+                payload: {msg: "Unknown request type", code: "unknown_request_type"}
             };
+    }
+
+    async deauthenticate() {
+        this.firebaseAuthPointer.signOut();
+        this._authenticated = false;
+    }
+
+    async createUser(request: AuthenticationRequest) : Promise<AuthenticationResult> {
+        try {
+            await this.firebaseAuthPointer.createUserWithEmailAndPassword(request.payload.email, request.payload.password);
+            // TODO should we remove email verification requirement??
+            this.firebaseAuthPointer.currentUser.sendEmailVerification();
+            this._authenticated = true;
+            return {
+                actionDesired: "createUser", 
+                actionSuccess: true, 
+                identifier: this.firebaseAuthPointer.currentUser.uid, 
+                payload: null
+            }
+        } catch (err) {
+            return {
+                actionDesired: "createUser", 
+                actionSuccess: false, 
+                identifier: null, 
+                payload: {msg: err.message, code: err.code}
+            };
+        }
+    }
+
+    async updateUserProfile(request: AuthenticationRequest) : Promise<AuthenticationResult> {
+        if (!this._authenticated) 
+            return {
+                actionDesired: "updateUserProfile", 
+                actionSuccess: false, 
+                identifier: null, 
+                payload: {msg: "Cannot update a non-existent user", code: "user_missing"}
+            };
+        try {
+            this.firebaseAuthPointer.currentUser.updateProfile(request.payload);
+            return {
+                actionDesired: "updateUserProfile", 
+                actionSuccess: true, 
+                identifier: this.firebaseAuthPointer.currentUser.uid, 
+                payload: null
+            }
+        } catch (err) {
+            return {
+                actionDesired: "updateUserProfile", 
+                actionSuccess: false, 
+                identifier: null, 
+                payload: err
+            };
+        }
     }
 }
 
