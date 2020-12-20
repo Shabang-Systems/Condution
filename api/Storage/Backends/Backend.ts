@@ -17,8 +17,39 @@
  *
  */
 
+interface AuthenticationResult {
+    actionDesired: string,
+    actionSuccess: boolean,
+    identifier: string,
+    payload?: any
+}
+
+interface AuthenticationRequest {
+    requestType: string,
+    identifier?: string,
+    payload?: any
+}
+
+interface AuthenticationUser {
+    identifier: string,
+    displayName: string,
+    email: string
+}
+
 abstract class AuthenticationProvider {
-    // TODO
+    protected _authenticated : boolean;
+
+    abstract get currentUser() : AuthenticationUser;
+
+    get authenticated() : boolean {
+        return this._authenticated;
+    }
+
+    abstract authenticate(request: AuthenticationRequest) : AuthenticationResult;
+    abstract deauthenticate() : AuthenticationResult;
+
+    abstract createUser(request: AuthenticationRequest) : AuthenticationResult;
+    abstract actUponUser(request: AuthenticationRequest) : AuthenticationResult;
 }
 
 /**
@@ -73,11 +104,29 @@ abstract class Provider {
 
     abstract reference(path: string[]) : Page;
     
-    // TODO
-    authenticationProvider() : AuthenticationProvider {
+    /**
+     *
+     * @property authenticationProvider
+     *
+     * Return the AuthenticationProvider instance bundled with the Provider, 
+     * if that is supposed to be a thing
+     *
+     */
+    
+    get authenticationProvider() : AuthenticationProvider {
         console.log("CondutionEngine: attempting to acquire the auth provider on a backend with authenticationProvider() unimplemented!");
         return null;
     }
+
+    /**
+     * @method flush
+     *
+     * Used during log out and wipes. Do whatever to clean up after yourself.
+     *
+     * @returns {void}
+     */
+
+    abstract flush() : void;
 }
 
 
@@ -110,4 +159,5 @@ abstract class Page {
 }
 
 export { Provider, Page, AuthenticationProvider };
+export type { AuthenticationRequest, AuthenticationResult, AuthenticationUser };
 

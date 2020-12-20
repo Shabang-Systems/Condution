@@ -1,7 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/auth";
 
 import  { Provider, Page, AuthenticationProvider } from "./Backend";
+import type { AuthenticationResult, AuthenticationRequest, AuthenticationUser } from "./Backend";
 
 // TODO TODO the maps should go to somewhere better than this.
 let cache = new Map();
@@ -145,6 +147,32 @@ class FirebasePage extends Page {
     }
 }
 
+class FirebaseAuthenticationProvider extends AuthenticationProvider {
+    firebaseAuthPointer: firebase.auth.Auth;
+
+    constructor() {
+        super();
+        this.firebaseAuthPointer = firebase.auth();
+
+        if (this.firebaseAuthPointer.currentUser)
+            this._authenticated = true;
+        else
+            this._authenticated = false;
+    }
+
+    authenticate(request: AuthenticationRequest) : AuthenticationResult {
+        if (request.requestType == "email_pass")
+            this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password);
+        else 
+            return {
+                actionDesired: "authenticate", 
+                actionSuccess: false, 
+                identifier: null, 
+                payload: {msg: "unknown request type"}
+            };
+    }
+}
+
 /**
  * 
  * @Class FirebaseProvider.
@@ -166,10 +194,12 @@ class FirebaseProvider extends Provider {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
+    private authProvider: AuthenticationProvider;
 
     constructor() {
         super();
 
+        // Yes, we support auth
         this._authSupported = true;
 
         // Get our shared secrets file
@@ -182,6 +212,9 @@ class FirebaseProvider extends Provider {
             firebase.initializeApp(obj.dbkeys.deploy);
         else
             firebase.initializeApp(obj.dbkeys.debug);
+
+        // Initialize and add the provider
+        this.authProvider = new FirebaseAuthenticationProvider();
 
         // Get firestore references
         [ this.firebaseDB, this.firebaseRef ] = [firebase.firestore(), firebase.firestore];
@@ -208,7 +241,19 @@ class FirebaseProvider extends Provider {
         return new FirebasePage(path, this.firebaseDB, this.firebaseRef);
     }
 
-    
+    /**
+     *
+     * @property authenticationProvider
+     *
+     * Return the AuthenticationProvider instance bundled with the Provider, 
+     * if that is supposed to be a thing
+     *
+     */
+
+    get authenticationProvider() {
+        return this.authProvider;
+    }
+   
     /**
      *
      * @method flush
