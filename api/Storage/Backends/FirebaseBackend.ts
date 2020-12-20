@@ -268,8 +268,10 @@ class FirebaseProvider extends Provider {
 
     private authProvider: AuthenticationProvider;
 
-    constructor() {
+    constructor(name:string="firebase") {
         super();
+
+        this.name = name;
 
         // Yes, we support auth
         this._authSupported = true;

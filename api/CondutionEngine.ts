@@ -2,7 +2,16 @@ import Module from './CondutionCore';
 import ReferenceManager from "./Storage/ReferenceManager";
 import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 
-let manager:ReferenceManager = new ReferenceManager([new FirebaseProvider()])
+
+async function test() {
+    let manager:ReferenceManager = new ReferenceManager([new FirebaseProvider()])
+    manager.use("firebase");
+
+
+    console.log(await manager.reference("users", "TcZUcte5MFOx410Q8WJ6mRW1Pco1", "tasks").get());
+}
+
+test();
 
 
 //function eatSaladZach() {
