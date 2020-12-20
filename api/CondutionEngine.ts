@@ -4,16 +4,19 @@ import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 
 require('dotenv').config();
 
-async function test() {
-    let manager:ReferenceManager = new ReferenceManager([new FirebaseProvider()])
-    manager.use("firebase");
+//async function test() {
+    //let manager:ReferenceManager = new ReferenceManager([new FirebaseProvider()])
+    //manager.use("firebase");
 
-    await manager.currentProvider.authenticationProvider.authenticate({payload: {email: process.env.USERNAME, password:process.env.PASSWORD}});
+    //await manager.currentProvider.authenticationProvider.authenticate({payload: {email: process.env.USERNAME, password:process.env.PASSWORD}});
 
-    let tasks:any = (await manager.reference("users", "TcZUcte5MFOx410Q8WJ6mRW1Pco1", "tasks").get());
-}
+    //let tasks:any = (await manager.reference("users", "TcZUcte5MFOx410Q8WJ6mRW1Pco1", "tasks").get());
+//}
 
-test();
+
+//test();
+
+
 
 
 //function eatSaladZach() {
@@ -32,11 +35,9 @@ test();
 //let fnPtr = Module.addFunction(eatSaladZach, "v");
 //let plusOnePointer = Module.addFunction(plusOneDavid, "ii");
 
-//Module.onRuntimeInitialized = function() {
-    //Module.feedSalad(fnPtr);
-    //Module.feedEmacs(plusOnePointer);
-    //Module.plus_two("test");
-//};
+Module.onRuntimeInitialized = function() {
+    console.log(Module.plus_two("test"));
+};
 
 export { ReferenceManager };
 

@@ -55,6 +55,8 @@ using namespace emscripten;
 
 // # Raw C Exported Function Signatures 
 extern "C" {
+    // # Using as Function Exports #
+    //
     // Put the function definitions/signatures
     // in this section. Remember that they
     // must behave in terms of mangling
@@ -72,6 +74,14 @@ extern "C" {
     // that the function's exported name has to
     // underscore before it in the CMakeLists
     // (but not here).
+    // 
+    // #####################################
+    //
+    // # Using as Function Imports # 
+    //
+    //
+    //
+    extern int testv(int inta);
 }
 
 typedef void eatSaladZach();
@@ -89,8 +99,7 @@ void plugEmacs(long ptr) {
 }
 
 void plus_two(std::string str) {
-    salad();
-    std::cout << "Number+1 " << test(12) << std::endl;
+    std::cout << testv(13) << std::endl;
 }
 
 // # Bindings #

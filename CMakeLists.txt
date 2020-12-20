@@ -50,6 +50,6 @@ set(exports_string "")
 list(JOIN exports "," exports_string)
 
 # set compiler flags and add things
-set_target_properties(${project} PROPERTIES LINK_FLAGS "-s WASM=1 -s RESERVED_FUNCTION_POINTERS=10 -s EXPORTED_FUNCTIONS='[${exports_string}]' -s EXTRA_EXPORTED_RUNTIME_METHODS='[ccall, cwrap, addFunction]' --bind")
+set_target_properties(${project} PROPERTIES LINK_FLAGS "--js-library ./src/BridgeGlue.js -s WASM=1 -s RESERVED_FUNCTION_POINTERS=10 -s EXPORTED_FUNCTIONS='[${exports_string}]' -s EXTRA_EXPORTED_RUNTIME_METHODS='[ccall, cwrap, addFunction]' --bind")
 
 

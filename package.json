@@ -9,8 +9,8 @@
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "core:run": "rerun 'emcmake cmake . && make' -i api -i CMakeCache.txt -i CMakeFiles -i Makefile",
-    "core:dist": "emcmake cmake . && make",
+    "core:run": "rerun 'npx emscripten-library-generator src/Bridge.js > src/BridgeGlue.js && emcmake cmake . && make' -i api -i CMakeCache.txt -i CMakeFiles -i Makefile -i BridgeGlue.js",
+    "core:dist": "npx emscripten-library-generator src/Bridge.js > src/BridgeGlue.js && emcmake cmake . && make",
     "api:run": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" api/CondutionEngine.ts",
     "api:tscomp": "tsc",
     "api:dist": "yarn core:dist && tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist && cp ./api/CondutionCore.wasm ./dist"
@@ -29,6 +29,7 @@
     "@babel/preset-typescript": "^7.12.7",
     "babel-preset-minify": "^0.5.1",
     "dotenv": "^8.2.0",
+    "emscripten-library-generator": "^0.1.8",
     "nodemon": "^1.18.3",
     "typescript": "^4.1.3"
   }
