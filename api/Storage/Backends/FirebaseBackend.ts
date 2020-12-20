@@ -7,6 +7,18 @@ import  { Provider, Page, AuthenticationProvider } from "./Backend";
 let cache = new Map();
 let unsubscribeCallbacks = new Map();
 
+/**
+ * FirebasePage
+ *
+ * A firebase page to operate on see 
+ * Storage/Backend/Backend/Page abstract 
+ * class for usage and documentation.
+ *
+ * @extends {Page}
+ * 
+ */
+
+
 class FirebasePage extends Page {
     path: string[];
     firebaseDB: firebase.firestore.Firestore;
@@ -150,12 +162,15 @@ class FirebasePage extends Page {
  */
 
 class FirebaseProvider extends Provider {
+    name: string;
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
 
     constructor() {
         super();
+
+        this._authSupported = true;
 
         // Get our shared secrets file
         const obj = require("./../../../secrets.json");

@@ -35,8 +35,45 @@ abstract class AuthenticationProvider {
  */
 
 abstract class Provider {
-    name: string;
+    abstract name: string;
+
+    /**
+     * 
+     * @protected @property _authSupported
+     * 
+     * Marks if database provider supports 
+     * authentication and hence the related features
+     * a la Workspaces and whatever
+     * 
+     */
+
+    protected _authSupported: boolean;
+
+    /**
+     * 
+     * @property authSupported
+     * 
+     * Returns the private _authSupported prop
+     * 
+     */
+
+    get authSupported(): boolean {
+        return this._authSupported;
+    }
+    
+    /**
+     * 
+     * @method reference
+     *
+     * Gets a Page to operate on 
+     *
+     * @param {string[]} path
+     * @returns {Page}
+     */
+
     abstract reference(path: string[]) : Page;
+    
+    // TODO
     authenticationProvider() : AuthenticationProvider {
         console.log("CondutionEngine: attempting to acquire the auth provider on a backend with authenticationProvider() unimplemented!");
         return null;
