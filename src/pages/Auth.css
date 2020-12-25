@@ -17,7 +17,6 @@
     background-color: var(--background);
     flex-grow: 10;
     min-width: 450px;
-    padding-top: 30px;
     padding-right: 5px;
     padding-left: 5px;
 }
@@ -25,6 +24,7 @@
 @media (max-width: 599px) { 
     .auth-container {
         display: block;
+        padding-top: 10px;
     }
 }
 
@@ -33,6 +33,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        padding-top: 30px;
     }
 }
 
@@ -126,8 +127,16 @@
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
     text-overflow: ellipsis;
-    width: 100%;
     height: 35px;
+    display: inline-block;
+    flex-grow: 10;
+}
+
+.auth-containerbox {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 .auth-upf:focus {
@@ -136,6 +145,32 @@
 
 .auth-upf.wrong {
     border-color: red;
+}
+
+.auth-symbol {
+    color: var(--content-normal-alt);
+    display: inline;
+    padding-right: 15px;
+}
+
+.auth-opbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.auth-action {
+    padding: 2px 9px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.auth-action-primary {
+    float:right;
+    background: var(--content-normal-accent);
+    color: var(--content-normal);
 }
 
 
