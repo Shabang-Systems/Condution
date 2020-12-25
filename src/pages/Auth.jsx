@@ -16,6 +16,7 @@ const autoBind = require('auto-bind/react');
 
 function Auth(props) {
     let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
+    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>auth in progress, 3=>recovery, 4=>recovery in progress
 
     let greetings = props.localizations.greetings_setB;
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -34,6 +35,8 @@ function Auth(props) {
                                 switch (majorMode) {
                                     case 0:
                                         return <><span style={{display: "inline-block"}}>Good to see you back!</span> <span style={{display: "inline-block"}}>Where shall we connect to Condution?</span></>;
+                                    case 1:
+                                            return <><span style={{display: "inline-block"}}>Let's connect to our cloud database.</span></>
                                 }
                             }
                         )()}
@@ -49,12 +52,17 @@ function Auth(props) {
                                                 <div className="auth-click-button" onClick={()=>setMajorMode(2)}>💾 on your device</div>
                                             </>
                                         );
+                                    case 1:
+                                        switch (minorMode) {
+                                            case 0:
+                                                return <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={props.localizations.email} />
+                                        }
                                 }
                             })()}
                     </div>
                 </div>
                 <div className="auth-copyright">
-                    <span syle={{display: "inline-block"}}>©2020 Shabang Systems, LLC and the Condution Authors.</span><span syle={{display: "inline-block"}}> An open source project licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database governed by our <a>TOS</a> and <a>Privacy Policy</a>.</span>
+                    <span syle={{display: "inline-block"}}>©2020 Shabang Systems, LLC and the Condution Authors.</span><span syle={{display: "inline-block"}}> An open source project licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a>Privacy Policy</a>.</span>
                 </div>
             </animated.div>
         </div>
