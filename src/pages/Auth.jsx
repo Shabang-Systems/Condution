@@ -15,6 +15,8 @@ const autoBind = require('auto-bind/react');
 
 
 function Auth(props) {
+    let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
+
     let greetings = props.localizations.greetings_setB;
     let greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
@@ -26,17 +28,33 @@ function Auth(props) {
             <animated.div className="auth-container">
                 <div className="auth-story">
                     <div className="auth-greeting">{greeting} <span className="auth-welcome">Welcome to Condution</span></div>
-                    <div className="auth-subtitle">Good to see you! Where is your Condution database?</div>
-                    <div style={{marginTop: 10}}>
-                        <GuttedTask tid="0" name={"🌐 In the cloud"} localizations={props.localizations} complete={()=>{
-                        }}/>
-                        <GuttedTask tid="1" name={"💾 On your device"} localizations={props.localizations} complete={()=>{
-                        }}/>
-
+                    <div className="auth-subtitle">
+                        {(()=>
+                            {
+                                switch (majorMode) {
+                                    case 0:
+                                        return <><span style={{display: "inline-block"}}>Good to see you back!</span> <span style={{display: "inline-block"}}>Where shall we connect to Condution?</span></>;
+                                }
+                            }
+                        )()}
+                    </div>
+                    <div style={{marginTop: 20}}>
+                        {(()=>
+                            {
+                                switch (majorMode) {
+                                    case 0:
+                                        return (
+                                            <>
+                                                <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐 in the cloud</div>
+                                                <div className="auth-click-button" onClick={()=>setMajorMode(2)}>💾 on your device</div>
+                                            </>
+                                        );
+                                }
+                            })()}
                     </div>
                 </div>
                 <div className="auth-copyright">
-                    ©2020 Shabang Systems, LLC and the Condution Authors. An open source project licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database governed by our <a>TOS</a> and <a>Privacy Policy</a>.
+                    <span syle={{display: "inline-block"}}>©2020 Shabang Systems, LLC and the Condution Authors.</span><span syle={{display: "inline-block"}}> An open source project licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database governed by our <a>TOS</a> and <a>Privacy Policy</a>.</span>
                 </div>
             </animated.div>
         </div>

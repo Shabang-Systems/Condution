@@ -14,7 +14,7 @@
     color: var(--content-normal-alt);
     height: 100%;
     backdrop-filter: blur(15px);
-    background-color: var(--background-feature-overlay);
+    background-color: var(--background);
     flex-grow: 10;
     min-width: 450px;
     padding-top: 30px;
@@ -46,9 +46,10 @@
 
 .auth-story {
     color: var(--content-normal-accent);
-    padding: 40px;
+    padding: 30px;
     position: absolute;
     width: 100%;
+    max-width: 100vw;
 }
 
 .auth-greeting {
@@ -56,6 +57,20 @@
     font-weight: 600;
     font-size: 25px
 }
+
+@media (max-width: 599px) { 
+    .auth-greeting {
+        font-size: 22px
+    }
+}
+
+@media (min-width: 600px) { 
+    .auth-greeting {
+        font-size: 25px
+    }
+}
+
+
 
 .auth-welcome {
     color: var(--content-normal-alt);
@@ -73,6 +88,23 @@
 
 .auth-subtitle {
     color: var(--content-normal-alt);
-    padding-top: 5px;
+    margin-top: 10px;
+}
+
+
+
+.auth-click-button {
+    padding: 6px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: var(--content-normal-accent);
+    cursor: pointer;
+    border: dotted 1px var(--content-normal-alt);
+    background-color: transparent;
+    transition: background-color 0.3s;
+}
+
+.auth-click-button:hover {
+    background-color: var(--background-feature);
 }
 
