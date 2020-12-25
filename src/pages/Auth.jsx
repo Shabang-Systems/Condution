@@ -9,6 +9,8 @@ import './Auth.css';
 import dark_preload from '../static/auth-background.jpg';
 import light_preload from '../static/auth-background-dark.jpg';
 
+import GuttedTask from './Components/GuttedTask';
+
 const autoBind = require('auto-bind/react');
 
 
@@ -24,6 +26,14 @@ function Auth(props) {
             <animated.div className="auth-container">
                 <div className="auth-story">
                     <div className="auth-greeting">{greeting} <span className="auth-welcome">Welcome to Condution</span></div>
+                    <div className="auth-subtitle">Good to see you! Where is your Condution database?</div>
+                    <div style={{marginTop: 10}}>
+                        <GuttedTask tid="0" name={"🌐 In the cloud"} localizations={props.localizations} complete={()=>{
+                        }}/>
+                        <GuttedTask tid="1" name={"💾 On your device"} localizations={props.localizations} complete={()=>{
+                        }}/>
+
+                    </div>
                 </div>
                 <div className="auth-copyright">
                     ©2020 Shabang Systems, LLC and the Condution Authors. An open source project licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database governed by our <a>TOS</a> and <a>Privacy Policy</a>.

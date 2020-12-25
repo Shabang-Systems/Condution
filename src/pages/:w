@@ -16,26 +16,15 @@
     backdrop-filter: blur(15px);
     background-color: var(--background-feature-overlay);
     flex-grow: 10;
-    min-width: 450px;
+    min-width: 375px;
     padding-top: 30px;
     padding-right: 5px;
     padding-left: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
 }
-
-@media (max-width: 599px) { 
-    .auth-container {
-        display: block;
-    }
-}
-
-@media (min-width: 600px) { 
-    .auth-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-}
-
 
 .auth-not-actually-a-clearfix {
     max-width: 30%;
@@ -48,6 +37,7 @@
     color: var(--content-normal-accent);
     padding: 40px;
     position: absolute;
+    margin: auto;
     width: 100%;
 }
 
