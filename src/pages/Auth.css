@@ -14,9 +14,15 @@
     color: var(--content-normal-alt);
     height: 100%;
     backdrop-filter: blur(15px);
-    background-color: rgba(255, 255, 255, 0.80);
+    background-color: var(--background-feature-overlay);
     flex-grow: 10;
     min-width: 375px;
+    padding-top: 30px;
+    padding-right: 5px;
+    padding-left: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .auth-not-actually-a-clearfix {
@@ -24,5 +30,28 @@
     min-width: 150px;
     min-height: 40%;
     flex-grow: 10;
+}
+
+.auth-story {
+    color: var(--content-normal-accent);
+    margin: 0 auto;
+}
+
+.auth-greeting {
+    text-align: center;
+    font-weight: 600;
+    font-size: 25px
+}
+
+.auth-welcome {
+    color: var(--content-normal-alt);
+}
+
+.auth-copyright {
+    color: var(--content-normal-alt);
+    font-weight: 300;
+    font-size: 8px;
+    text-align: center;
+    padding: 20px;
 }
 
