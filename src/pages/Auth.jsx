@@ -53,28 +53,26 @@ function Auth(props) {
                                             </>
                                         );
                                     case 1:
-                                        switch (minorMode) {
-                                            case 0:
-                                                return (
-                                                    <>
-                                                        <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={props.localizations.email} /></div>
-                                                        <div className="auth-containerbox"><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={props.localizations.password} /></div>
-                                                        <div className="auth-opbar">
-                                                            <div>
-                                                            <div className="auth-action" style={{transform: "translateX(-9px)"}}>Banana</div>
-                                                            <div className="auth-action">Kiwifruit</div>
-                                                            </div>
-                                                            <div className="auth-action auth-action-primary">Potato</div>
+                                            return (
+                                                <>
+                                                    <div className="auth-containerbox"><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder={props.localizations.what_should_we} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={props.localizations.email} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={props.localizations.password} /></div>
+                                                    <div className="auth-opbar">
+                                                        <div>
+                                                        <div className="auth-action" style={{transform: "translateX(-9px)"}}>Banana</div>
+                                                        <div className="auth-action">Kiwifruit</div>
                                                         </div>
-                                                    </>
-                                                );
-                                        }
+                                                        <div className="auth-action auth-action-primary">Potato</div>
+                                                    </div>
+                                                </>
+                                            );
                                 }
                             })()}
                     </div>
                 </div>
                 <div className="auth-copyright">
-                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2020 Shabang Systems, LLC and the Condution Authors.</span><span syle={{display: "inline-block"}}> An open source project licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a>Privacy Policy</a>.</span>
+                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2020 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a>Privacy Policy</a>.</span>
                 </div>
             </animated.div>
         </div>

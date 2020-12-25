@@ -47,7 +47,7 @@
 
 .auth-story {
     color: var(--content-normal-accent);
-    padding: 30px;
+    padding: 20px;
     position: absolute;
     width: 100%;
     max-width: 100vw;
@@ -161,6 +161,7 @@
 }
 
 .auth-action {
+    cursor: pointer;
     padding: 2px 9px;
     border-radius: 5px;
     font-size: 14px;
