@@ -89,14 +89,17 @@
 
 
 .completer-wrapper {
-    border: 1px solid red;
+    background-color: var(--special);
+    border-radius: 20px;
+    margin: 5px;
+    padding: 5px;
+    /*border: 1px solid red;*/
     width: 120px;
 
     /*display: flex;*/
     /*flex-direction: row;*/
     float: right;
     /*margin-top: 10px;*/
-    padding-top: 15px;
 }
 
 
@@ -112,6 +115,7 @@
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+    padding-top: 15px;
     /*text-overflow: ellipsis;*/
 }
 

@@ -185,13 +185,16 @@ class Projects extends Component { // define the component
                                 <div style={{
 				    display: "inline-block", 
 				    transform: "translateY(-3px)", 
-				    border: "1px solid red",
+				    //border: "1px solid red",
 				    width: "100%",
 				}}>
                                     {/* First, an invisible checkmark */}
                                     <input 
                                         type="checkbox" 
-					style={{display: "inline-block"}}
+					style={{
+					    display: "inline-block", 
+					    //transform: "translateY(30px)", 
+					}}
 
      //ref={this.actualCheck}
      //                                   id={"task-check-"+this.props.tid} 
@@ -229,6 +232,7 @@ class Projects extends Component { // define the component
                                     <label ref={this.checkbox} className={"task-pseudocheck"} 
 	    //id={"task-pseudocheck-"+this.props.tid} 
 	    //htmlFor={"task-check-"+this.props.tid}
+				    style={{transform: "translateY(-3px)"}}
 				    >&zwnj;
 				    </label>
 				    <p 
