@@ -199,40 +199,41 @@ class Projects extends Component { // define the component
      //ref={this.actualCheck}
      //                                   id={"task-check-"+this.props.tid} 
 					className="task-check"
-     //                                   defaultChecked={this.props.startingCompleted}
-     //                                   onChange={()=>{
+					//defaultChecked={this.props.startingCompleted}
+					defaultChecked={this.state.isComplete}
+					onChange={()=>{
 
-     //                                       // If we are uncompleting a task (that is, currently task is complete)
-     //                                       if (this.state.isComplete) {
-     //                                           this.props.gruntman.lockUpdates();
-     //                                           // Well, first, uncomplete it
-     //                                           this.setState({isComplete: false})
-     //                                           // Update the database, registering a gruntman action while you are at it.
-     //                                           this.props.gruntman.do("task.update__uncomplete", { uid: this.props.uid, tid: this.props.tid}, true)
-     //                                           // Whatever this is
-     //                                           this.props.gruntman.unlockUpdates(1000)
-     //                                       }
-     //                                       // If we are completing a task (that is, currently task is incomplete)
-     //                                       else if (!this.state.isComplete) {
-     //                                           // Lock updates so that animation could finish
-     //                                           this.props.gruntman.lockUpdates();
-     //                                           // Complete it
-     //                                           this.setState({isComplete: true})
-     //                                           // Update the database, registering a gruntman action while you are at it.
-     //                                           this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
-     //                                           //TODO wait for animation to finish before state update??
-     //                                           this.props.gruntman.unlockUpdates(1000)
-     //                                       }
-     //                                   }} 
-     //                                   style={{opacity: this.state.availability?1:0.35}}
+					    // If we are uncompleting a task (that is, currently task is complete)
+					    if (this.state.isComplete) {
+						//this.props.gruntman.lockUpdates();
+						// Well, first, uncomplete it
+						this.setState({isComplete: false})
+						// Update the database, registering a gruntman action while you are at it.
+						//this.props.gruntman.do("task.update__uncomplete", { uid: this.props.uid, tid: this.props.tid}, true)
+						// Whatever this is
+						//this.props.gruntman.unlockUpdates(1000)
+					    }
+					    // If we are completing a task (that is, currently task is incomplete)
+					    else if (!this.state.isComplete) {
+						// Lock updates so that animation could finish
+						//this.props.gruntman.lockUpdates();
+						// Complete it
+						this.setState({isComplete: true})
+						// Update the database, registering a gruntman action while you are at it.
+						//this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+						//TODO wait for animation to finish before state update??
+						//this.props.gruntman.unlockUpdates(1000)
+					    }
+					}} 
+					//style={{opacity: this.state.availability?1:0.35}}
                                     />
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
                                     <label ref={this.checkbox} className={"task-pseudocheck"} 
-	    //id={"task-pseudocheck-"+this.props.tid} 
-	    //htmlFor={"task-check-"+this.props.tid}
-				    style={{transform: "translateY(-3px)"}}
+					//id={"task-pseudocheck-"} 
+					//htmlFor={"task-check"}
+					style={{transform: "translateY(-3px)"}}
 				    >&zwnj;
 				    </label>
 				    <p 
