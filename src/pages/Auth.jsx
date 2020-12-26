@@ -18,8 +18,14 @@ function Auth(props) {
     let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
     let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>auth in progress, 3=>recovery, 4=>recovery in progress
 
+    let [name, setName] = useState("");
+    let [email, setEmail] = useState("");
+    let [password, setPassword] = useState("");
+
     let greetings = props.localizations.greetings_setB;
-    let greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    let [currentGreeting, _] = useState(greetings[Math.floor(Math.random() * greetings.length)]);
+
+    let greeting = name==""?currentGreeting:name+", ";
 
     return (
         <div className="auth-backdrop">
@@ -55,9 +61,9 @@ function Auth(props) {
                                     case 1:
                                             return (
                                                 <>
-                                                    <div className="auth-containerbox"><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder={props.localizations.what_should_we} /></div>
-                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={props.localizations.email} /></div>
-                                                    <div className="auth-containerbox"><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={props.localizations.password} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" autoComplete="off" value={name} placeholder={props.localizations.what_should_we} value={name} onChange={(e)=>setName(e.target.value)} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={props.localizations.email} value={email} onChange={(e)=>setEmail(e.target.value)}  /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
                                                     <div className="auth-opbar">
                                                         <div>
                                                         <div className="auth-action" style={{transform: "translateX(-9px)"}}>Banana</div>
