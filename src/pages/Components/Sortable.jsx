@@ -279,7 +279,13 @@ const SortableProjectList = (props)=>{
                         }
                     }}
                 >
-                    <a className="subproject" style={{opacity:props.availability[item.content.id]?"1":"0.35"}} onClick={()=>{props.paginate("projects", item.content.id);props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+                    <a className="subproject" 
+			style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+			onClick={()=>{
+			    props.paginate("projects", item.content.id);
+			    props.history.push(`/projects/${item.content.id}`)
+			}}>
+			<div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
                 </animated.div>
             </div>
             )

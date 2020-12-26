@@ -85,3 +85,24 @@
     background-image: linear-gradient(to right, var(--progressbar-min),var(--progressbar-max));
 }
 
+
+
+
+.completer {
+    border: 1px solid red;
+    display: inline-block;
+    float: right;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

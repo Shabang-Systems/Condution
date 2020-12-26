@@ -36,6 +36,7 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
+	    isComplete: true // TODO: replace this
         };
 
         this.updatePrefix = this.random();
@@ -149,7 +150,7 @@ class Projects extends Component { // define the component
 
                     <div className="header-container" >
                         <div style={{display: "inline-block", width: "100%"}}>
-                            <div> 
+                            <div style={{border: "1px solid red"}}> 
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
                                         style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
@@ -169,6 +170,7 @@ class Projects extends Component { // define the component
                                         ref={this.name}
                                     />
                                 </h1> 
+				<div className="completer" >here</div>
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
