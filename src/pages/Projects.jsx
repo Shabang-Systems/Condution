@@ -10,6 +10,8 @@ import ReactTooltip from 'react-tooltip';
 import Task from './Components/Task';
 import BlkArt from './Components/BlkArt';
 
+import './Components/Task.css';
+
 import { withRouter } from "react-router";
 
 import { SortableProjectList } from './Components/Sortable';
@@ -45,6 +47,8 @@ class Projects extends Component { // define the component
         this.activeTask = React.createRef();
 
         this.name = React.createRef();
+	this.checkbox = React.createRef(); // what's my pseudocheck
+
 
         autoBind(this);
     }
@@ -150,7 +154,7 @@ class Projects extends Component { // define the component
 
                     <div className="header-container" >
                         <div style={{display: "inline-block", width: "100%"}}>
-                            <div style={{border: "1px solid red"}}> 
+                            <div> 
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
                                         style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
@@ -170,7 +174,80 @@ class Projects extends Component { // define the component
                                         ref={this.name}
                                     />
                                 </h1> 
-				<div className="completer" >here</div>
+				<div className="completer-wrapper">
+
+
+
+
+
+
+
+                                <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
+                                    {/* First, an invisible checkmark */}
+                                    <input 
+                                        type="checkbox" 
+
+     //ref={this.actualCheck}
+     //                                   id={"task-check-"+this.props.tid} 
+					className="task-check"
+     //                                   defaultChecked={this.props.startingCompleted}
+     //                                   onChange={()=>{
+
+     //                                       // If we are uncompleting a task (that is, currently task is complete)
+     //                                       if (this.state.isComplete) {
+     //                                           this.props.gruntman.lockUpdates();
+     //                                           // Well, first, uncomplete it
+     //                                           this.setState({isComplete: false})
+     //                                           // Update the database, registering a gruntman action while you are at it.
+     //                                           this.props.gruntman.do("task.update__uncomplete", { uid: this.props.uid, tid: this.props.tid}, true)
+     //                                           // Whatever this is
+     //                                           this.props.gruntman.unlockUpdates(1000)
+     //                                       }
+     //                                       // If we are completing a task (that is, currently task is incomplete)
+     //                                       else if (!this.state.isComplete) {
+     //                                           // Lock updates so that animation could finish
+     //                                           this.props.gruntman.lockUpdates();
+     //                                           // Complete it
+     //                                           this.setState({isComplete: true})
+     //                                           // Update the database, registering a gruntman action while you are at it.
+     //                                           this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
+     //                                           //TODO wait for animation to finish before state update??
+     //                                           this.props.gruntman.unlockUpdates(1000)
+     //                                       }
+     //                                   }} 
+     //                                   style={{opacity: this.state.availability?1:0.35}}
+                                    />
+
+                                    {/* Oh yeah, that checkmark above you can't actually see */}
+                                    {/* Here's what the user actually clicks on, the label! */}
+                                    <label ref={this.checkbox} className={"task-pseudocheck"} 
+	    //id={"task-pseudocheck-"+this.props.tid} 
+	    //htmlFor={"task-check-"+this.props.tid}
+				    >&zwnj;
+				    </label>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				</div>
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 

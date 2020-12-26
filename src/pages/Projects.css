@@ -88,10 +88,12 @@
 
 
 
-.completer {
-    border: 1px solid red;
+.completer-wrapper {
+    /*border: 1px solid red;*/
     display: inline-block;
     float: right;
+    /*margin-top: 10px;*/
+    padding-top: 15px;
 }
 
 
