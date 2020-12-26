@@ -89,8 +89,11 @@
 
 
 .completer-wrapper {
-    /*border: 1px solid red;*/
-    display: inline-block;
+    border: 1px solid red;
+    width: 120px;
+
+    /*display: flex;*/
+    /*flex-direction: row;*/
     float: right;
     /*margin-top: 10px;*/
     padding-top: 15px;
@@ -98,6 +101,19 @@
 
 
 
+.completer-text {
+    font-weight:400;
+    background-color:inherit;
+    color: var(--task-name-text);
+    /*padding: 13px 5px 10px 5px;*/
+    border: 0;
+    display: inline-block;
+    height: 30px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    /*text-overflow: ellipsis;*/
+}
 
 
 

@@ -182,10 +182,16 @@ class Projects extends Component { // define the component
 
 
 
-                                <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
+                                <div style={{
+				    display: "inline-block", 
+				    transform: "translateY(-3px)", 
+				    border: "1px solid red",
+				    width: "100%",
+				}}>
                                     {/* First, an invisible checkmark */}
                                     <input 
                                         type="checkbox" 
+					style={{display: "inline-block"}}
 
      //ref={this.actualCheck}
      //                                   id={"task-check-"+this.props.tid} 
@@ -225,6 +231,14 @@ class Projects extends Component { // define the component
 	    //htmlFor={"task-check-"+this.props.tid}
 				    >&zwnj;
 				    </label>
+				    <p 
+	                                className={"completer-text"}
+					style={{display: "inline-block"}}
+				    > 
+					Complete
+				    </p>
+
+
                                 </div>
 
 
