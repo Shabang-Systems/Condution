@@ -165,13 +165,16 @@
     padding: 2px 9px;
     border-radius: 5px;
     font-size: 14px;
-    display: inline-block;
+    margin-bottom: 6px;
 }
 
 .auth-action-primary {
     float:right;
     background: var(--content-normal-accent);
-    color: var(--content-normal);
+    color: var(--content-normal) !important;
+    display: inline-block;
+    height: 30px;
+    padding-top: 4.5px;
 }
 
 

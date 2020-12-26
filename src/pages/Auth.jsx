@@ -16,7 +16,7 @@ const autoBind = require('auto-bind/react');
 
 function Auth(props) {
     let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
-    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>auth in progress, 3=>recovery, 4=>recovery in progress
+    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress
 
     let [name, setName] = useState("");
     let [email, setEmail] = useState("");
@@ -61,15 +61,15 @@ function Auth(props) {
                                     case 1:
                                             return (
                                                 <>
-                                                    <div className="auth-containerbox"><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" autoComplete="off" value={name} placeholder={props.localizations.what_should_we} value={name} onChange={(e)=>setName(e.target.value)} /></div>
-                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={props.localizations.email} value={email} onChange={(e)=>setEmail(e.target.value)}  /></div>
-                                                    <div className="auth-containerbox"><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
+                                                    <div className="auth-containerbox" style={{display: (minorMode == 1) || (minorMode == 2) ? "flex" : "none"}}><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" autoComplete="off" value={name} placeholder={props.localizations.what_should_we} value={name} onChange={(e)=>setName(e.target.value)} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" placeholder={props.localizations.email} value={email} onChange={(e)=>setEmail(e.target.value)}  /></div>
+                                                    <div className="auth-containerbox" style={{display: (minorMode==3) || (minorMode == 4) ? "none" : "flex"}}><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
                                                     <div className="auth-opbar">
-                                                        <div>
-                                                        <div className="auth-action" style={{transform: "translateX(-9px)"}}>Banana</div>
-                                                        <div className="auth-action">Kiwifruit</div>
+                                                        <div style={{transform: "translateX(-9px)"}}>
+                                                            <div className="auth-action">New Account</div>
+                                                            <div className="auth-action">Change Database</div>
                                                         </div>
-                                                        <div className="auth-action auth-action-primary">Potato</div>
+                                                        <div className="auth-action auth-action-primary"><i className="fas fa-child auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div>
                                                     </div>
                                                 </>
                                             );
