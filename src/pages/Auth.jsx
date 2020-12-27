@@ -26,6 +26,7 @@ function Auth(props) {
     let [password, setPassword] = useState("");
 
     let [specialMessage, setSpecialMessage] = useState("Welcome aboard, let's get started.");
+    let [recoveryMessage, setRecoveryMessage] = useState("No worries! Let's recover your password.");
 
     let greetings = props.localizations.greetings_setB;
     let [currentGreeting, _] = useState(greetings[Math.floor(Math.random() * greetings.length)]);
@@ -75,8 +76,19 @@ function Auth(props) {
                                 props.dispatch({service: "firebase", operation: "create"});
                             else
                                 setSpecialMessage("Please check that you have tapped the verification link in your email.");
-                        });
-                        break;
+                        }); break;
+                    case 3:
+                        let recProblem = false;
+                        firebase.auth().sendPasswordResetEmail(email).catch(function(error) {
+                            setRecoveryMessage(error.message);
+                            problem=true;
+                        }).then(function() {
+                            if (!recProblem) {
+                                setRecoveryMessage("Please check your email and head back to login with your resetted password.");
+                                setMinorMode(4);
+                            }
+                        }); break;
+
                 }; break;
         }
     }
@@ -104,6 +116,9 @@ function Auth(props) {
                                                         case 1:
                                                         case 2:
                                                             return specialMessage;
+                                                        case 3:
+                                                        case 4:
+                                                            return recoveryMessage;
                                                     }
                                                 })()}</span></>
                                 }
@@ -118,7 +133,7 @@ function Auth(props) {
                                         return (
                                             <>
                                                 <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐  in the cloud</div>
-                                                <div className="auth-click-button" onClick={()=>setMajorMode(2)}>💾  on your device</div>
+                                                <div className="auth-click-button" onClick={()=>props.dispatch({service: "json", operation: "login"})}>💾  on your device</div>
                                             </>
                                         );
                                     case 1:
@@ -130,7 +145,7 @@ function Auth(props) {
                                                     <div className="auth-opbar">
                                                         <div style={{transform: "translateX(-9px)"}}>
                                                             <div className="auth-action" onClick={()=>{(minorMode==1 || minorMode==2) ? setMinorMode(0) : setMinorMode(1)}}>{(minorMode==1 || minorMode==2) ? "Login" : "New Account"}</div>
-                                                            <div className="auth-action">Forgot Password?</div>
+                                                            <div className="auth-action" onClick={()=>{(minorMode==3 || minorMode==4) ? setMinorMode(0) : setMinorMode(3)}}>{(minorMode==3 || minorMode==4) ? "Login" : "Forgot Password?"}</div>
                                                         </div>
                                                         <div>
                                                             <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-snowboarding auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
