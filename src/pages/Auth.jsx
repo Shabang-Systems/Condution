@@ -117,8 +117,8 @@ function Auth(props) {
                                     case 0:
                                         return (
                                             <>
-                                                <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐 in the cloud</div>
-                                                <div className="auth-click-button" onClick={()=>setMajorMode(2)}>💾 on your device</div>
+                                                <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐  in the cloud</div>
+                                                <div className="auth-click-button" onClick={()=>setMajorMode(2)}>💾  on your device</div>
                                             </>
                                         );
                                     case 1:

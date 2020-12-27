@@ -125,12 +125,16 @@
 @media (max-width: 599px) { 
     .auth-subtitle {
         margin-top: 3px;
+        font-size: 14px;
+        margin-bottom: 20px;
     }
 }
 
 @media (min-width: 600px) { 
     .auth-subtitle {
         margin-top: 10px;
+        margin-bottom: 25px;
+        font-size: 16px;
     }
 }
 
@@ -146,6 +150,18 @@
     border: solid 1px grey;
     background-color: transparent;
     transition: background-color 0.3s;
+}
+
+@media (max-width: 599px) { 
+    .auth-click-button {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 600px) { 
+    .auth-click-button {
+        font-size: 15px;
+    }
 }
 
 .auth-click-button:hover {
