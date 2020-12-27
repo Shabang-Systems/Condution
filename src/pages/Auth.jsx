@@ -25,6 +25,7 @@ function Auth(props) {
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
 
+    let [regularMessage, setRegularMessage] = useState("Let's connect to our cloud database.");
     let [specialMessage, setSpecialMessage] = useState("Welcome aboard, let's get started.");
     let [recoveryMessage, setRecoveryMessage] = useState("No worries! Let's recover your password.");
 
@@ -45,12 +46,14 @@ function Auth(props) {
                             firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
                                 if (firebase.auth().currentUser.emailVerified)
                                     props.dispatch({service: "firebase", operation: "login"});
-                                else
-                                    setMinorMode(5);
+                                else {
+                                    firebase.auth().currentUser.sendEmailVerification();
+                                    setRegularMessage("Email unverified. Please check your email and try again");
+                                }
                             }).catch(function(error) {
                                 // Handle Errors here.
                                 const errorMessage = error.message;
-                                setSpecialMessage(errorMessage);
+                                setRegularMessage(errorMessage);
                             });
                         });
                         break;
@@ -112,7 +115,7 @@ function Auth(props) {
                                                 {(()=>{
                                                     switch (minorMode) {
                                                         case 0:
-                                                            return "Let's connect to our cloud database.";
+                                                            return regularMessage;
                                                         case 1:
                                                         case 2:
                                                             return specialMessage;
