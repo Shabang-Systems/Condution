@@ -47,7 +47,7 @@
 
 .auth-story {
     color: var(--content-normal-accent);
-    padding: 20px;
+    padding: 10px 25px;
     position: absolute;
     width: 100%;
     max-width: 100vw;
@@ -61,7 +61,7 @@
 
 @media (max-width: 599px) { 
     .auth-greeting {
-        font-size: 22px
+        font-size: 19px
     }
 }
 
@@ -77,6 +77,37 @@
     color: var(--content-normal-alt);
 }
 
+
+@media (max-width: 599px) { 
+    .auth-welcome {
+        font-size: 14px
+    }
+}
+
+@media (min-width: 600px) { 
+    .auth-welcome {
+        font-size: 20px
+    }
+}
+
+
+@media (max-width: 599px) { 
+    .auth-message {
+        font-size: 14px
+    }
+}
+
+@media (min-width: 600px) { 
+    .auth-message {
+        font-size: 16px
+    }
+}
+
+
+
+
+
+
 .auth-copyright {
     color: var(--content-normal-alt);
     font-weight: 300;
@@ -89,8 +120,20 @@
 
 .auth-subtitle {
     color: var(--content-normal-alt);
-    margin-top: 10px;
 }
+
+@media (max-width: 599px) { 
+    .auth-subtitle {
+        margin-top: 3px;
+    }
+}
+
+@media (min-width: 600px) { 
+    .auth-subtitle {
+        margin-top: 10px;
+    }
+}
+
 
 
 

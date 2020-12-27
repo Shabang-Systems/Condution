@@ -96,7 +96,7 @@ function Auth(props) {
                                     case 0:
                                         return <><span style={{display: "inline-block"}}>Good to see you back!</span> <span style={{display: "inline-block"}}>Where shall we connect to Condution?</span></>;
                                     case 1:
-                                            return <><span style={{display: "inline-block"}}>
+                                            return <><span style={{display: "inline-block"}} className="auth-message">
                                                 {(()=>{
                                                     switch (minorMode) {
                                                         case 0:
@@ -110,7 +110,7 @@ function Auth(props) {
                             }
                         )()}
                     </div>
-                    <div style={{marginTop: 20}}>
+                    <div style={{marginTop: 15}}>
                         {(()=>
                             {
                                 switch (majorMode) {
@@ -133,7 +133,7 @@ function Auth(props) {
                                                             <div className="auth-action">Forgot Password?</div>
                                                         </div>
                                                         <div>
-                                                            <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-skating auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
+                                                            <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-snowboarding auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
                                                             <div className="auth-action" style={{display: "block", float:"right", paddingRight: 0, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}>Change Database</div>
                                                         </div>
                                                     </div>
