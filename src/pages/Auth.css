@@ -100,7 +100,7 @@
     border-radius: 5px;
     color: var(--content-normal-accent);
     cursor: pointer;
-    border: dotted 1px var(--content-normal-alt);
+    border: solid 1px grey;
     background-color: transparent;
     transition: background-color 0.3s;
 }

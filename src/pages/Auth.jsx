@@ -3,6 +3,9 @@ import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuBu
 import React, { useState, useEffect } from 'react';
 import {useSpring, animated} from 'react-spring'
 
+import * as firebase from "firebase/app";
+import "firebase/auth";
+
 import './Pages.css';
 import './Auth.css';
 
@@ -21,6 +24,8 @@ function Auth(props) {
     let [name, setName] = useState("");
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
+
+    let [specialMessage, setSpecialMessage] = useState("Welcome aboard, let's get started.");
 
     let greetings = props.localizations.greetings_setB;
     let [currentGreeting, _] = useState(greetings[Math.floor(Math.random() * greetings.length)]);
@@ -42,7 +47,16 @@ function Auth(props) {
                                     case 0:
                                         return <><span style={{display: "inline-block"}}>Good to see you back!</span> <span style={{display: "inline-block"}}>Where shall we connect to Condution?</span></>;
                                     case 1:
-                                            return <><span style={{display: "inline-block"}}>Let's connect to our cloud database.</span></>
+                                            return <><span style={{display: "inline-block"}}>
+                                                {(()=>{
+                                                    switch (minorMode) {
+                                                        case 0:
+                                                            return "Let's connect to our cloud database.";
+                                                        case 1:
+                                                        case 2:
+                                                            return specialMessage;
+                                                    }
+                                                })()}</span></>
                                 }
                             }
                         )()}
@@ -66,10 +80,13 @@ function Auth(props) {
                                                     <div className="auth-containerbox" style={{display: (minorMode==3) || (minorMode == 4) ? "none" : "flex"}}><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
                                                     <div className="auth-opbar">
                                                         <div style={{transform: "translateX(-9px)"}}>
-                                                            <div className="auth-action">New Account</div>
-                                                            <div className="auth-action">Change Database</div>
+                                                            <div className="auth-action" onClick={()=>{(minorMode==1 || minorMode==2) ? setMinorMode(0) : setMinorMode(1)}}>{(minorMode==1 || minorMode==2) ? "Login" : "New Account"}</div>
+                                                            <div className="auth-action">Forgot Password?</div>
                                                         </div>
-                                                        <div className="auth-action auth-action-primary"><i className="fas fa-child auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div>
+                                                        <div>
+                                                            <div className="auth-action auth-action-primary"><i className="fas fa-child auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
+                                                            <div className="auth-action" style={{display: "block", float:"right", paddingRight: 0, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}>Change Database</div>
+                                                        </div>
                                                     </div>
                                                 </>
                                             );
