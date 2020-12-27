@@ -61,6 +61,7 @@ class Completed extends Component {
         // loop through the tasks, converting to objects and inserting labels between each cat
         full.forEach((cat, i) => {
             taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
+	    // if item[0] == task, ... else, ...
             cat.forEach(task => { // this loops through each cat
                 taskArr.push(new TaskObject("task", task)) // convert each task to an object then push it to the temp arr
             })
