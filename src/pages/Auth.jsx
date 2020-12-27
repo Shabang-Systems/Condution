@@ -19,7 +19,7 @@ const autoBind = require('auto-bind/react');
 
 function Auth(props) {
     let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
-    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress
+    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress, 5=>need verify email
 
     let [name, setName] = useState("");
     let [email, setEmail] = useState("");
@@ -31,6 +31,55 @@ function Auth(props) {
     let [currentGreeting, _] = useState(greetings[Math.floor(Math.random() * greetings.length)]);
 
     let greeting = name==""?currentGreeting:name+", ";
+
+    let emailBox = React.createRef();
+    let passwordBox = React.createRef();
+
+    function takeAction() {
+        switch (majorMode) {
+            case 1:
+                switch (minorMode) {
+                    case 0:
+                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+                            firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+                                if (firebase.auth().currentUser.emailVerified)
+                                    props.dispatch({service: "firebase", operation: "login"});
+                                else
+                                    setMinorMode(5);
+                            }).catch(function(error) {
+                                // Handle Errors here.
+                                const errorMessage = error.message;
+                                setSpecialMessage(errorMessage);
+                            });
+                        });
+                        break;
+                    case 1:
+                        let problem = false
+                        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+                            const errorMessage = error.message;
+                            setSpecialMessage(errorMessage);
+                            problem = true;
+                        }).then(function() {
+                            if (!problem) {
+                                firebase.auth().currentUser.sendEmailVerification();
+                                firebase.auth().currentUser.updateProfile({displayName: name});
+                                props.engine.use("firebase", props.gruntman.requestRefresh);
+                                props.engine.db.onBoard(firebase.auth().currentUser.uid, Intl.DateTimeFormat().resolvedOptions().timeZone, props.localizations.getLanguage()==="en" ? "there": "", props.localizations.onboarding_content);
+                                setMinorMode(2);
+                                setSpecialMessage("Please tap the verification link in your email, then tap Proceed.");
+                            }
+                        }); break;
+                    case 2:
+                        firebase.auth().currentUser.reload().then(()=>{
+                            if (firebase.auth().currentUser.emailVerified)
+                                props.dispatch({service: "firebase", operation: "create"});
+                            else
+                                setSpecialMessage("Please check that you have tapped the verification link in your email.");
+                        });
+                        break;
+                }; break;
+        }
+    }
 
     return (
         <div className="auth-backdrop">
@@ -75,16 +124,16 @@ function Auth(props) {
                                     case 1:
                                             return (
                                                 <>
-                                                    <div className="auth-containerbox" style={{display: (minorMode == 1) || (minorMode == 2) ? "flex" : "none"}}><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" autoComplete="off" value={name} placeholder={props.localizations.what_should_we} value={name} onChange={(e)=>setName(e.target.value)} /></div>
-                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" type="email" autoComplete="off" placeholder={props.localizations.email} value={email} onChange={(e)=>setEmail(e.target.value)}  /></div>
-                                                    <div className="auth-containerbox" style={{display: (minorMode==3) || (minorMode == 4) ? "none" : "flex"}}><i className="fas fa-unlock-alt auth-symbol" /><input className="auth-upf" id="password" type="password" autoComplete="off" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
+                                                    <div className="auth-containerbox" style={{display: (minorMode == 1) || (minorMode == 2) ? "flex" : "none"}}><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" onKeyDown={(event)=>{if(event.key==="Enter") emailBox.current.focus() }} autoComplete="off" value={name} placeholder={props.localizations.what_should_we} value={name} onChange={(e)=>setName(e.target.value)} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" ref={emailBox} type="email" autoComplete="off" onKeyDown={(event)=>{if(event.key==="Enter") passwordBox.current.focus() }} placeholder={props.localizations.email} value={email} onChange={(e)=>setEmail(e.target.value)}  /></div>
+                                                    <div className="auth-containerbox" style={{display: (minorMode==3) || (minorMode == 4) ? "none" : "flex"}}><i className="fas fa-unlock-alt auth-symbol" /><input ref={passwordBox} onKeyDown={(event)=>{if(event.key==="Enter") takeAction() }} className="auth-upf" id="password" type="password" autoComplete="off" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
                                                     <div className="auth-opbar">
                                                         <div style={{transform: "translateX(-9px)"}}>
                                                             <div className="auth-action" onClick={()=>{(minorMode==1 || minorMode==2) ? setMinorMode(0) : setMinorMode(1)}}>{(minorMode==1 || minorMode==2) ? "Login" : "New Account"}</div>
                                                             <div className="auth-action">Forgot Password?</div>
                                                         </div>
                                                         <div>
-                                                            <div className="auth-action auth-action-primary"><i className="fas fa-child auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
+                                                            <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-skating auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
                                                             <div className="auth-action" style={{display: "block", float:"right", paddingRight: 0, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}>Change Database</div>
                                                         </div>
                                                     </div>
