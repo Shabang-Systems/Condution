@@ -1,250 +1,173 @@
-import React, { Component } from 'react';
-import { Plugins } from '@capacitor/core';
-// Firebase App (the core Firebase SDK) is always required and must be listed first
-import * as firebase from "firebase/app";
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
+//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
+import React, { useState, useEffect } from 'react';
+import {useSpring, animated} from 'react-spring'
 
-// Add the Firebase products that you want to use
+import * as firebase from "firebase/app";
 import "firebase/auth";
 
-import $ from "jquery";
-
-
+import './Pages.css';
 import './Auth.css';
 
+import dark_preload from '../static/auth-background.jpg';
+import light_preload from '../static/auth-background-dark.jpg';
 
-import '../themefiles/condutiontheme-default.css';
-import '../themefiles/condutiontheme-default-dark.css';
-import '../themefiles/condutiontheme-default-light.css';
-import '../themefiles/condutiontheme-default-adapter.css';
-
-
+import GuttedTask from './Components/GuttedTask';
 
 const autoBind = require('auto-bind/react');
 
 
-const { Storage } = Plugins;
+function Auth(props) {
+    let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
+    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress, 5=>need verify email
 
-class Auth extends Component {
-    constructor(props) {
-        super(props);
+    let [name, setName] = useState("");
+    let [email, setEmail] = useState("");
+    let [password, setPassword] = useState("");
 
-        let greetings = this.props.localizations.greetings_setB;
+    let [regularMessage, setRegularMessage] = useState("Let's connect to our cloud database.");
+    let [specialMessage, setSpecialMessage] = useState("Welcome aboard, let's get started.");
+    let [recoveryMessage, setRecoveryMessage] = useState("No worries! Let's recover your password.");
 
-        /*
-         * mode 0 = login in progress, 
-         *      1 = new account in progress,
-         *      2 = recovery in progress, 
-         *      3 = email unverified,
-         *      4 = email verified, proceed create
-         *      5 = recovery executed, shepeard them back
-         *
-         */
+    let greetings = props.localizations.greetings_setB;
+    let [currentGreeting, _] = useState(greetings[Math.floor(Math.random() * greetings.length)]);
 
+    let greeting = name==""?currentGreeting:name+", ";
 
-        this.state = {
-            authMode: this.props.startOnForm===true ? 1 : 0,
-            showExtra: false,
-            greeting: greetings[Math.floor(Math.random() * greetings.length)]
-        };
+    let emailBox = React.createRef();
+    let passwordBox = React.createRef();
 
-        autoBind(this);
-    }
-
-    doLogin() {
-        let view = this;
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-            firebase.auth().signInWithEmailAndPassword($("#email").val(), $("#password").val()).then(function() {
-                if (firebase.auth().currentUser.emailVerified)
-                     view.props.dispatch({service: "firebase", operation: "login"});
-                else
-                    view.setState({authMode: 3});
-            }).catch(function(error) {
-                    // Handle Errors here.
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    console.log(error);
-                    $(".auth-upf").addClass("wrong");
-            });
-        });
-    }
-
-    doCreate() {
-        // TODO: actually create the account
-        let view = this;
-        let problem = false;
-        firebase.auth().createUserWithEmailAndPassword($("#email").val(), $("#password").val()).catch(function(error) {
-            view.setState({showExtra: true}, ()=>$('#need-verify').html(error.message));
-            problem=true;
-        }).then(function() {
-            if (!problem) {
-                firebase.auth().currentUser.sendEmailVerification();
-                firebase.auth().currentUser.updateProfile({displayName: $("#name").val()});
-                view.setState({authMode: 4, showExtra: true});
-            }
-        })
-    }
-
-    dispatchCreate() {
-        firebase.auth().currentUser.reload().then(()=>{;
-            if (firebase.auth().currentUser.emailVerified)
-                this.props.dispatch({service: "firebase", operation: "create"});
-            else
-                $('#need-verify').html("Please double-check that you tapped the verification link in your email.");
-        });
-    }
-
-    doRecover() {
-        let problem = false;
-        let view = this;
-        firebase.auth().sendPasswordResetEmail($("#email").val()).catch(function(error) {
-            view.setState({showExtra: true});
-            $('#need-verify').html(error.message);
-            problem=true;
-        }).then(function() {
-            if (!problem) {
-                view.setState({authMode: 5});
-            }
-        })
-        // TODO: actually recover the account
-    }
-
-    doLocal() {
-        this.props.dispatch({service: "json", operation: "login"});
-    }
-
-    render() {
-        return (
-            <div id="auth-content-wrapper">
-                <div id="auth-left-menu">
-                    <div className="menu-area" style={{height:"100%"}}>
-                        <div className="auth-component"></div>
-                        <div className="auth-component"></div>
-                        <span id="auth-image-credit">Image by <span style={{fontWeight: 500}}>Tobias Keller/Paweł Czerwiński</span></span>
-                    </div>
-                </div>
-                <div id="authwall">
-                    <h1 id="greeting-auth">{this.state.greeting}</h1><span id="welcome-auth-msg">{this.props.localizations.welcome_auth_msg}</span>
-                    <h3 className="greeting-auth-subtitle" id="greeting-auth-normal">{(()=>{
-                        switch (this.state.authMode) {
-                            case 2:
-                                return this.props.localizations.nowirres;
-                            default:
-                                return this.props.localizations.greeting_auth_normal;
-
-                        }
-                    })()}</h3> 
-                    <input className="auth-upf" id="name" type="text" autoComplete="off" defaultValue="" placeholder={this.props.localizations.what_should_we} style={{display: this.state.authMode === 1 ? "block" : "none"}}/>
-                    <input className="auth-upf" id="email" type="email" autoComplete="off" defaultValue="" placeholder={this.props.localizations.email} />
-                    <input className="auth-upf" id="password" type="password" autoComplete="off" defaultValue="" placeholder={this.props.localizations.password} style={{display: this.state.authMode !== 2 ? "block" : "none"}} onKeyPress={(event)=>{
-                        if (event.key === "Enter") {
-                            switch (this.state.authMode) {
-                                case 0:
-                                    this.doLogin();
-                                    break;
-                                case 1:
-                                    this.doCreate();
-                                    break;
-                                case 2:
-                                    this.doRecover();
-                                    break;
-                                case 4:
-                                    this.dispatchCreate();
-                                    break;
-                                case 5: 
-                                    this.doLogin();
-                                    break;
-                            }
-                        }
-                    }}/>
-                    {(() => {
-                        if (this.state.authMode === 3 || this.state.authMode ===  4 || this.state.authMode === 5 || this.state.showExtra) return <span id="need-verify">
-                            {(()=>{
-                                switch(this.state.authMode){
-                                    case 3:
-                                        return this.props.localizations.need_and_do;
-                                    case 4:
-                                        return this.props.localizations.need_verify;
-                                    case 5:
-                                        return this.props.localizations.need_and_login;
-
-                            }})()}
-                        </span>
-                    })()}
-                    <span id="recover-password" style={{display: this.state.authMode === 3 ? "none" : "block"}} onClick={()=>{
-                            switch (this.state.authMode) {
-                                case 2:
-                                    return this.setState({authMode: 0});
-                                default:
-                                    return this.setState({authMode: 2});
-
-                            }
-                        }}>{(()=>{
-                            switch (this.state.authMode) {
-                                case 2:
-                                    return this.props.localizations.remembered;
-                                default:
-                                    return this.props.localizations.rec_pswd;
-
-                            }
-                        })()}</span>
-                    <div id="auth-actiongroup">
-                        <div id="newuser" onClick={()=>{
-                            switch (this.state.authMode) {
-                                case 1:
-                                    return this.setState({authMode: 0});
-                                default:
-                                    return this.setState({authMode: 1});
-
-                            }
-                        }}>{(()=>{
-                            switch (this.state.authMode) {
-                                case 1:
-                                    return this.props.localizations.login;
-                                default:
-                                    return this.props.localizations.newuser;
-
-                            }
-                        })()}</div>
-                        <div id="login" onClick={()=>{
-                            switch (this.state.authMode) {
-                                case 0:
-                                    this.doLogin();
-                                    break;
-                                case 1:
-                                    this.doCreate();
-                                    break;
-                                case 2:
-                                    this.doRecover();
-                                    break;
-                                case 4:
-                                    this.dispatchCreate();
-                                    break;
-                            }
-                        }}>
-                            <i className="fas fa-snowboarding" style={{paddingRight: "5px"}}></i><span id="login-text">{(() => {
-                                switch(this.state.authMode) {
-                                    case 0:
-                                    case 3:
-                                        return this.props.localizations.lds;
-                                    case 1:
-                                        return this.props.localizations.verifem;
-                                    case 2:
-                                        return this.props.localizations.lerec;
-                                    case 4:
-                                        return this.props.localizations.proceed;
-                                    case 5:
-                                        return this.props.localizations.proceed;
+    function takeAction() {
+        switch (majorMode) {
+            case 1:
+                switch (minorMode) {
+                    case 0:
+                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+                            firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+                                if (firebase.auth().currentUser.emailVerified)
+                                    props.dispatch({service: "firebase", operation: "login"});
+                                else {
+                                    firebase.auth().currentUser.sendEmailVerification();
+                                    setRegularMessage("Email unverified. Please check your email and try again");
                                 }
-                            })()}</span>
-                        </div>
-                        {(() => {
-                            if (this.state.authMode !== 2) return <div className="convert-src" id="ulac" onClick={this.doLocal}>{this.props.localizations.ulac}</div>
-                        })()}
+                            }).catch(function(error) {
+                                // Handle Errors here.
+                                const errorMessage = error.message;
+                                setRegularMessage(errorMessage);
+                            });
+                        });
+                        break;
+                    case 1:
+                        let problem = false
+                        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+                            const errorMessage = error.message;
+                            setSpecialMessage(errorMessage);
+                            problem = true;
+                        }).then(function() {
+                            if (!problem) {
+                                firebase.auth().currentUser.sendEmailVerification();
+                                firebase.auth().currentUser.updateProfile({displayName: name});
+                                props.engine.use("firebase", props.gruntman.requestRefresh);
+                                props.engine.db.onBoard(firebase.auth().currentUser.uid, Intl.DateTimeFormat().resolvedOptions().timeZone, props.localizations.getLanguage()==="en" ? "there": "", props.localizations.onboarding_content);
+                                setMinorMode(2);
+                                setSpecialMessage("Please tap the verification link in your email, then tap Proceed.");
+                            }
+                        }); break;
+                    case 2:
+                        firebase.auth().currentUser.reload().then(()=>{
+                            if (firebase.auth().currentUser.emailVerified)
+                                props.dispatch({service: "firebase", operation: "create"});
+                            else
+                                setSpecialMessage("Please check that you have tapped the verification link in your email.");
+                        }); break;
+                    case 3:
+                        let recProblem = false;
+                        firebase.auth().sendPasswordResetEmail(email).catch(function(error) {
+                            setRecoveryMessage(error.message);
+                            problem=true;
+                        }).then(function() {
+                            if (!recProblem) {
+                                setRecoveryMessage("Please check your email and head back to login with your resetted password.");
+                                setMinorMode(4);
+                            }
+                        }); break;
+
+                }; break;
+        }
+    }
+
+    return (
+        <div className="auth-backdrop">
+            <img rel="preload" src={light_preload} style={{display: "none"}} />
+            <img rel="preload"  src={dark_preload} style={{display: "none"}} />
+            <div className="auth-not-actually-a-clearfix">&nbsp;</div>
+            <animated.div className="auth-container">
+                <div className="auth-story">
+                    <div className="auth-greeting">{greeting} <span className="auth-welcome">Welcome to Condution</span></div>
+                    <div className="auth-subtitle">
+                        {(()=>
+                            {
+                                switch (majorMode) {
+                                    case 0:
+                                        return <><span style={{display: "inline-block"}}>Good to see you back!</span> <span style={{display: "inline-block"}}>Where shall we connect to Condution?</span></>;
+                                    case 1:
+                                            return <><span style={{display: "inline-block"}} className="auth-message">
+                                                {(()=>{
+                                                    switch (minorMode) {
+                                                        case 0:
+                                                            return regularMessage;
+                                                        case 1:
+                                                        case 2:
+                                                            return specialMessage;
+                                                        case 3:
+                                                        case 4:
+                                                            return recoveryMessage;
+                                                    }
+                                                })()}</span></>
+                                }
+                            }
+                        )()}
+                    </div>
+                    <div style={{marginTop: 15}}>
+                        {(()=>
+                            {
+                                switch (majorMode) {
+                                    case 0:
+                                        return (
+                                            <>
+                                                <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐  in the cloud</div>
+                                                <div className="auth-click-button" onClick={()=>props.dispatch({service: "json", operation: "login"})}>💾  on your device</div>
+                                            </>
+                                        );
+                                    case 1:
+                                            return (
+                                                <>
+                                                    <div className="auth-containerbox" style={{display: (minorMode == 1) || (minorMode == 2) ? "flex" : "none"}}><i className="fas fa-signature auth-symbol" style={{paddingRight: 12}}/><input className="auth-upf" id="name" type="text" onKeyDown={(event)=>{if(event.key==="Enter") emailBox.current.focus() }} autoComplete="off" value={name} placeholder={props.localizations.what_should_we} value={name} onChange={(e)=>setName(e.target.value)} /></div>
+                                                    <div className="auth-containerbox"><i className="fas fa-envelope auth-symbol" /><input className="auth-upf" id="email" ref={emailBox} type="email" autoComplete="off" onKeyDown={(event)=>{if(event.key==="Enter") {if (minorMode !== 3) passwordBox.current.focus(); else takeAction()}}} placeholder={props.localizations.email} value={email} onChange={(e)=>setEmail(e.target.value)}  /></div>
+                                                    <div className="auth-containerbox" style={{display: (minorMode==3) || (minorMode == 4) ? "none" : "flex"}}><i className="fas fa-unlock-alt auth-symbol" /><input ref={passwordBox} onKeyDown={(event)=>{if(event.key==="Enter") takeAction() }} className="auth-upf" id="password" type="password" autoComplete="off" placeholder={props.localizations.password} value={password} onChange={(e)=>setPassword(e.target.value)}  /></div>
+                                                    <div className="auth-opbar">
+                                                        <div style={{transform: "translateX(-9px)"}}>
+                                                            <div className="auth-action" onClick={()=>{(minorMode==1 || minorMode==2) ? setMinorMode(0) : setMinorMode(1)}}>{(minorMode==1 || minorMode==2) ? "Login" : "New Account"}</div>
+                                                            <div className="auth-action" onClick={()=>{(minorMode==3 || minorMode==4) ? setMinorMode(0) : setMinorMode(3)}}>{(minorMode==3 || minorMode==4) ? "Login" : "Forgot Password?"}</div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-snowboarding auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
+                                                            <div className="auth-action" style={{display: "block", float:"right", paddingRight: 0, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}>Change Database</div>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            );
+                                }
+                            })()}
                     </div>
                 </div>
-            </div>
-      );
-    }
+                <div className="auth-copyright">
+                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2020 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a>Privacy Policy</a>.</span>
+                </div>
+            </animated.div>
+        </div>
+    )
 }
 
 export default Auth;
+

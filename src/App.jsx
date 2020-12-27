@@ -241,10 +241,10 @@ class App extends Component {
                         name = ""
                         break;
                 }
-
+                this.setState({authMode: mode.service, uid, displayName: name});
                 // Here
-                this.setState({authMode: "onboarding", uid, displayName: name});
-                Engine.db.onBoard(uid, Intl.DateTimeFormat().resolvedOptions().timeZone, this.gruntman.localizations.getLanguage()==="en" ? "there": "", this.gruntman.localizations.onboarding_content).then(e=>this.setState({authMode: mode.service, uid, displayName: name}));
+                //this.setState({authMode: "onboarding", uid, displayName: name});
+                //Engine.db.onBoard(uid, Intl.DateTimeFormat().resolvedOptions().timeZone, this.gruntman.localizations.getLanguage()==="en" ? "there": "", this.gruntman.localizations.onboarding_content).then(e=>this.setState({authMode: mode.service, uid, displayName: name}));
                 // TODO: be done with onboarding
                 // Set the storage type and write it into cookies
                 // load the authenicated state and TODO supply the UID
@@ -279,9 +279,9 @@ class App extends Component {
                 return <Loader />
             // if we did not authenticate yet, load the auth view:
             case "none":
-                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations}/>;
+                return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} engine={Engine} />;
             case "form":
-                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true}/>;
+                return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true} engine={Engine}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
                 return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
