@@ -30,7 +30,7 @@ function Spinner(props) {
                 speed={2}
                 style={{margin: "-40px auto"}}
             />
-            <div style={{margin: "0 auto", width: "100%", textAlign: "center", transform: "translate(-10px, 4px)", color: "var(--decorative-light-alt)", fontWeight: 600}}>Loading...</div>
+            <div style={{margin: "0 auto", width: "100%", textAlign: "center", transform: "translate(-9px, 4px)", color: "var(--decorative-light-alt)", fontWeight: 600}}>Loading...</div>
         </div>
     )
 }

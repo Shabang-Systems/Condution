@@ -152,7 +152,7 @@ function Auth(props) {
                                                         </div>
                                                         <div>
                                                             <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-snowboarding auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
-                                                            <div className="auth-action" style={{display: "block", float:"right", paddingRight: 0, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}>Change Database</div>
+                                                            <div className="auth-action" style={{display: "block", float:"right", paddingRight: 1, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}><i className="fas fa-caret-left auth-symbol" style={{paddingRight: 5}}/>Back</div>
                                                         </div>
                                                     </div>
                                                 </>
