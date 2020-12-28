@@ -18,8 +18,8 @@ const autoBind = require('auto-bind/react');
 
 
 function Auth(props) {
-    let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
-    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress, 5=>need verify email
+    let [majorMode, setMajorMode] = useState(props.startOnForm ? 1 : 0); // 0=>nada, 1=>firebase, 2=> hard
+    let [minorMode, setMinorMode] = useState(props.startOnForm ? 1 : 0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress, 5=>need verify email
 
     let [name, setName] = useState("");
     let [email, setEmail] = useState("");

@@ -140,7 +140,7 @@ class App extends Component {
             try {
                 val = JSON.parse(ret.value);
             } catch(e) {} finally {
-                if (ret.value !== "done" && val !== "done") {
+                if (ret.value !== "done" && val !== "done" && uri[1] !== "workspaces") {
                     view.setState({authMode: "FI"});
                     return;
                 }
