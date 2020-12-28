@@ -21,16 +21,16 @@ const defaultOptions = {
 
 function Spinner(props) {
     return (
-        <div style={{display: props.ready?"none":"block", position: "relative"}}>
+        <div style={{display: props.ready?"none":"block", position: "relative", marginTop: 20, marginBottom:20}}>
             <Lottie options={defaultOptions}
-                height={200}
-                width={200}
+                height={150}
+                width={150}
                 isStopped={false}
                 isPaused={false}
                 speed={2}
                 style={{margin: "-40px auto"}}
             />
-            <div style={{margin: "0 auto", width: "100%", textAlign: "center", transform: "translate(-12px, -10px)", color: "var(--decorative-light-alt)", fontWeight: 600}}>Loading...</div>
+            <div style={{margin: "0 auto", width: "100%", textAlign: "center", transform: "translate(-10px, 4px)", color: "var(--decorative-light-alt)", fontWeight: 600}}>Loading...</div>
         </div>
     )
 }
