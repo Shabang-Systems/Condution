@@ -21,7 +21,7 @@ const defaultOptions = {
 
 function Spinner(props) {
     return (
-        <div style={{marginRight: 20, display: props.ready?"none":"block", position: "relative"}}>
+        <div style={{display: props.ready?"none":"block", position: "relative"}}>
             <Lottie options={defaultOptions}
                 height={200}
                 width={200}
