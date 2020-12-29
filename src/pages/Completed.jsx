@@ -113,6 +113,7 @@ class Completed extends Component {
             this.setState({tasksShown: this.state.tasksShown+1}) 
             // increment tasksShown by one whenever fetch more is clicked
             // this renders 10 more items 
+	    // // if item[0] == task, ... else, ...
             this.setState({rendering: false}) // set rendering to false
         }, 1)
 
