@@ -36,8 +36,10 @@
 #include <iostream>
 #include <string>
 #include <stdint.h>
+#include <typeinfo>
 
 // # Our Packages #
+#include "../lib/Globals.hpp" // global functions
 #include "../lib/Task.hpp" // tasks
 
 // clangd will fail on this line b/c it does not use standards-compilant C++11. 
@@ -84,28 +86,58 @@ extern "C" {
     extern int testv(int inta);
 }
 
-typedef void eatSaladZach();
-eatSaladZach* salad;
+// # Function Definitions and Recievers #
+// cRef
+val docRefVal = val::global("function");
+val colRefVal = val::global("function");
 
-void feedSalad(long ptr) {
-    salad = (void(*)()) ptr;
+// # CRef Bind Functions # 
+void bindDocRef(val dr) {
+    docRefVal = dr;
 }
 
-typedef int testfunc(int);
-testfunc* test;
-
-void plugEmacs(long ptr) {
-    test = (int(*)(int)) ptr;
+void bindColRef(val cr) {
+    colRefVal = cr;
 }
 
-void plus_two(std::string str) {
-    std::cout << testv(13) << std::endl;
+// # DocRef Definitions # 
+docRef::docRef(std::vector<std::string> p) 
+    : path(p),
+      docRefObject(docRefVal(p)) {}
+
+val docRef::get() {
+    val result = docRefObject["get"]().await();
+    return result;
 }
 
+void docRef::set(std::map<std::string, std::string> payload, bool merge) {
+    docRefObject["set"](payload, merge);
+}
+
+void docRef::set(std::map<std::string, std::string> payload) {
+    docRefObject["set"](payload);
+}
+
+void docRef::update(std::map<std::string, std::string> payload) {
+    docRefObject["update"](payload);
+}
+
+void docRef::remove() {
+docRefObject["delete"]();
+}
+
+// # ColRef Definitions # 
+colRef::colRef(std::vector<std::string> p) 
+    : path(p),
+      colRefObject(colRefVal(p)) {}
+
+val colRef::add(std::map<std::string, std::string> payload) {
+    return colRefObject["add"](payload).await();
+}
+ 
 // # Bindings #
 EMSCRIPTEN_BINDINGS(module) {
     // Functional Bindings
-    function("feedSalad", &feedSalad);
-    function("plus_two", &plus_two);
-    function("feedEmacs", &plugEmacs);
+    function("bindDocRef", &bindDocRef);
+    function("bindColRef", &bindColRef);
 }

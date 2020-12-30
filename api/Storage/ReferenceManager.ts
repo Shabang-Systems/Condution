@@ -1,4 +1,4 @@
-import { Provider, Page, AuthenticationProvider } from "./Backends/Backend";
+import { Provider, Page } from "./Backends/Backend";
 
 /*
  * Hello human, good afternoon.

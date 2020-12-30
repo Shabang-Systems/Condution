@@ -1,0 +1,10 @@
+#*
+*.o
+*.pyc
+*.pyo
+*~
+extern/
+heroku.yml
+node_modules/
+tmp
+vendor/

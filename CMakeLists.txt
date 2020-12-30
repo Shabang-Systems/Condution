@@ -39,17 +39,29 @@ set(EXECUTABLE_OUTPUT_PATH "api")
 # _bontehu. Notice the Underscore.
 
 set(exports 
-    # anything and everything
-    # consider why you are exposing
-    # before you do. EMSCRIPTEN_BINDINGS
-    # will fix most of your problems
- )
+   # anything and everything
+   # consider why you are exposing
+   # before you do. EMSCRIPTEN_BINDINGS
+   # will fix most of your problems
+)
+
+set (asyncify
+   # add everything that is an async function
+   # that is manually passed through a library
+   # function (which, because we don't actually
+   # use library functions, you mostly don't need to worry
+   # about this)
+)
 
 # process exported functions bu chaining it into a list
 set(exports_string "")
 list(JOIN exports "," exports_string)
 
+# process asyncified function
+set(asyncify_string "")
+list(JOIN asyncify "," asyncify_string)
+
 # set compiler flags and add things
-set_target_properties(${project} PROPERTIES LINK_FLAGS "--js-library ./src/BridgeGlue.js -s WASM=1 -s RESERVED_FUNCTION_POINTERS=10 -s EXPORTED_FUNCTIONS='[${exports_string}]' -s EXTRA_EXPORTED_RUNTIME_METHODS='[ccall, cwrap, addFunction]' --bind")
+set_target_properties(${project} PROPERTIES LINK_FLAGS "-O3 -s ASYNCIFY -s WASM=1 -s RESERVED_FUNCTION_POINTERS=10 -s USE_BOOST_HEADERS=1 -s EXPORTED_FUNCTIONS='[${exports_string}]' -s EXPORTED_FUNCTIONS='[${asyncify_string}]' -s EXTRA_EXPORTED_RUNTIME_METHODS='[ccall, cwrap, addFunction]' --bind")
 
 
