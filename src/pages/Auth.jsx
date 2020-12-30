@@ -18,8 +18,8 @@ const autoBind = require('auto-bind/react');
 
 
 function Auth(props) {
-    let [majorMode, setMajorMode] = useState(0); // 0=>nada, 1=>firebase, 2=> hard
-    let [minorMode, setMinorMode] = useState(0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress, 5=>need verify email
+    let [majorMode, setMajorMode] = useState(props.startOnForm ? 1 : 0); // 0=>nada, 1=>firebase, 2=> hard
+    let [minorMode, setMinorMode] = useState(props.startOnForm ? 1 : 0); // 0=>default/auth, 1=>create, 2=>create in progress, 3=>recovery, 4=>recovery in progress, 5=>need verify email
 
     let [name, setName] = useState("");
     let [email, setEmail] = useState("");
@@ -152,7 +152,7 @@ function Auth(props) {
                                                         </div>
                                                         <div>
                                                             <div className="auth-action auth-action-primary" onClick={takeAction}><i className="fas fa-snowboarding auth-symbol" style={{paddingRight: 10, color: "var(--content-normal)"}}/>Proceed!</div> <br />
-                                                            <div className="auth-action" style={{display: "block", float:"right", paddingRight: 0, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}>Change Database</div>
+                                                            <div className="auth-action" style={{display: "block", float:"right", paddingRight: 1, paddingTop: 5}} onClick={()=>{setName(""); setEmail(""); setPassword(""); setMajorMode(0); setMinorMode(0)}}><i className="fas fa-caret-left auth-symbol" style={{paddingRight: 5}}/>Back</div>
                                                         </div>
                                                     </div>
                                                 </>

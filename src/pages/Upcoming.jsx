@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import './Upcoming.scss';
 import './Pages.css';
 
+import Spinner from './Components/Spinner';
+
 import { SortableTaskList } from './Components/Sortable';
 
 import Task from './Components/Task';
@@ -59,6 +61,7 @@ class Upcoming extends Component { // define the component
             workspaceModalShown: false,
             currentlyEditedWorkspace: null,
             currentWorkspace: this.props.localizations.personal_workspace,
+            initialRenderingDone: false,
         };
 
         this.updatePrefix = this.random();
@@ -145,7 +148,7 @@ class Upcoming extends Component { // define the component
             }));
         }
 
-        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent, workspaces: workspaceNames, currentWorkspace: n});
+        this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent, workspaces: workspaceNames, currentWorkspace: n, initialRenderingDone: true});
     }
 
     componentDidMount() {
@@ -241,6 +244,7 @@ class Upcoming extends Component { // define the component
                             </div>
                         </IonPopover>
                             <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", flexGrow: 5}}>
+                                <Spinner ready={this.state.initialRenderingDone} />
                                 <div>
                                     {(()=>{
                                         if (this.state.inbox.length > 0)
@@ -298,7 +302,7 @@ class Upcoming extends Component { // define the component
                                     })()
                                 }
                             </div>
-                                <BlkArt visible={(this.state.inbox.length+this.state.dueSoon.length)==0 && !this.state.timelineShown} title={"Nothing upcoming."} subtitle={"Expand the timeline to see more!"} />
+                                <BlkArt visible={(this.state.inbox.length+this.state.dueSoon.length)==0 && !this.state.timelineShown && this.state.initialRenderingDone} title={"Nothing upcoming."} subtitle={"Expand the timeline to see more!"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
