@@ -8,6 +8,7 @@ import {Spring, animated} from 'react-spring/renderprops'
 import ReactTooltip from 'react-tooltip';
 
 import Task from './Components/Task';
+import GuttedTask from './Components/GuttedTask';
 import BlkArt from './Components/BlkArt';
 
 import './Components/Task.css';
@@ -181,9 +182,9 @@ class Projects extends Component { // define the component
 
 
 
-
-                                <div style={{
+				<div style={{
 				    display: "inline-block", 
+				    display: "none", 
 				    transform: "translateY(-3px)", 
 				    //border: "1px solid red",
 				    width: "100%",
@@ -244,8 +245,7 @@ class Projects extends Component { // define the component
 				    </p>
 
 
-                                </div>
-
+                                </div> 
 
 
 
@@ -267,6 +267,12 @@ class Projects extends Component { // define the component
 
 
 				</div>
+				<GuttedTask 
+				    startingCompleted={false} 
+				    tid={"test"} 
+				    name={"Complete"} 
+				    localizations={{nt: null}}
+				/>
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 

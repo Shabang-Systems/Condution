@@ -271,7 +271,7 @@ class GuttedTask extends Component {
                                     readOnly={true} 
                                     type="text" 
                                     autoComplete="off" 
-                                    placeholder={this.props.localizations.nt} 
+				    placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
                                 />
                             </animated.div>
