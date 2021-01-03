@@ -113,6 +113,23 @@ const AnimationFactory = Keyframes.Spring({
         },
         reset: false
     },
+    // Incomplete->complete animation for static
+    staticComplete: [
+        {
+            to: {
+                taskMargin: "14px 8px", 
+                taskNameDecoration: "line-through",
+                taskOpacity: 1,
+                taskPosition: "",
+            },
+            config: {
+                tension: 200,
+                friction: 25,
+                mass: 1
+            },
+
+        } 
+    ],
     // Incomplete->complete animation
     complete: [
         {
@@ -206,10 +223,14 @@ class GuttedTask extends Component {
                                 (this.state.startingCompleted? // and we start complete 
                                     (this.state.expanded? // and we are expanded 
                                         "show":"hide") // show, otherwise, hide 
-                                        :"complete") // if we are complete,  and don't start completed, complete. 
+					: 
+					    (this.props.isStatic? 
+						"staticComplete" : "complete")) // if we are complete,  and don't start completed, complete. 
                                         : // if we arnt complete, 
                                 this.state.startingCompleted ?  // and we start complete 
-                                "complete" :
+				(this.props.isStatic? "staticComplete" : "complete" )
+				    //"complete" :
+				    :
                                 (this.state.expanded? "show":"hide")):"hide"
                     } // if we are incomplete, and we start incomplete, then show or hide based on expanded 
 
@@ -246,6 +267,7 @@ class GuttedTask extends Component {
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
+					    console.log("here")
                                             // If we are uncompleting a task (that is, currently task is complete) 
                                             if (this.state.isComplete && this.props.uncomplete) {
                                                 this.props.uncomplete();

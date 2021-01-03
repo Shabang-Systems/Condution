@@ -244,6 +244,7 @@ class Projects extends Component { // define the component
 				    tid={"test"} 
 				    name={"Complete"} 
 				    localizations={{nt: null}}
+				    isstatic={true}
 				/>
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
