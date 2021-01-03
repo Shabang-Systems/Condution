@@ -175,12 +175,7 @@ class Projects extends Component { // define the component
                                         ref={this.name}
                                     />
                                 </h1> 
-				<GuttedTask 
-				    startingCompleted={false} 
-				    tid={"test"} 
-				    name={"Complete"} 
-				    localizations={{nt: null}}
-				/>
+
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
@@ -269,6 +264,16 @@ class Projects extends Component { // define the component
                                 )).pid;
                                 this.props.history.push(`/projects/${npid}/do`);
                             }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
+
+
+				<GuttedTask 
+				    startingCompleted={false} 
+				    tid={"test"} 
+				    name={"Complete"} 
+				    localizations={{nt: null}}
+				/>
+
+
 			    <BlkArt visible={(this.state.currentProject.children.length)==0} title={"Nothing in this project."} subtitle={"Add a task?"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
