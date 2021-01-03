@@ -239,6 +239,12 @@ class Projects extends Component { // define the component
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
 
 
+				<GuttedTask 
+				    startingCompleted={false} 
+				    tid={"test"} 
+				    name={"Complete"} 
+				    localizations={{nt: null}}
+				/>
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
                                 this.props.gruntman.do( // call a gruntman function
@@ -266,12 +272,6 @@ class Projects extends Component { // define the component
                             }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
 
 
-				<GuttedTask 
-				    startingCompleted={false} 
-				    tid={"test"} 
-				    name={"Complete"} 
-				    localizations={{nt: null}}
-				/>
 
 
 			    <BlkArt visible={(this.state.currentProject.children.length)==0} title={"Nothing in this project."} subtitle={"Add a task?"} />
