@@ -127,6 +127,17 @@ class Projects extends Component { // define the component
         } else { console.log(e)}
     } 
 
+
+    completeProject() {
+	console.log("project, completing")
+    }
+
+    uncompleteProject() {
+	console.log("project, uncompleting")
+    }
+
+
+
     render() {
         return (
             <IonPage>
@@ -244,7 +255,9 @@ class Projects extends Component { // define the component
 				    tid={"test"} 
 				    name={"Complete"} 
 				    localizations={{nt: null}}
-				    isstatic={true}
+				    isStatic={true}
+				    complete={this.completeProject}
+				    uncomplete={this.uncompleteProject}
 				/>
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{

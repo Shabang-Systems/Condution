@@ -267,16 +267,17 @@ class GuttedTask extends Component {
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
-					    console.log("here")
                                             // If we are uncompleting a task (that is, currently task is complete) 
                                             if (this.state.isComplete && this.props.uncomplete) {
                                                 this.props.uncomplete();
                                                 this.setState({isComplete: false})
+						console.log("uncomp")
                                             }
                                             // If we are completing a task (that is, currently task is incomplete)
                                             else if (!this.state.isComplete && this.props.complete) {
                                                 this.props.complete();
                                                 this.setState({isComplete: true})
+						console.log("comping")
                                             }
                                         }} 
                                     />
