@@ -128,7 +128,18 @@ const AnimationFactory = Keyframes.Spring({
                 mass: 1
             },
 
-        } 
+        },
+        {
+            to: {
+		taskOpacity: 0.5,
+                taskMargin: "0px 8px", 
+            },
+            config: {
+                tension: 800,
+                friction: 50,
+                mass: 1
+            },
+        }
     ],
     // Incomplete->complete animation
     complete: [
@@ -254,7 +265,7 @@ class GuttedTask extends Component {
                                     position: animated.taskPosition,
                                     padding: animatedProps.taskPadding}}
                             >
-                                
+
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
                                 <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
@@ -271,13 +282,13 @@ class GuttedTask extends Component {
                                             if (this.state.isComplete && this.props.uncomplete) {
                                                 this.props.uncomplete();
                                                 this.setState({isComplete: false})
-						console.log("uncomp")
+						console.log("uncomp", this.props.tid)
                                             }
                                             // If we are completing a task (that is, currently task is incomplete)
                                             else if (!this.state.isComplete && this.props.complete) {
                                                 this.props.complete();
                                                 this.setState({isComplete: true})
-						console.log("comping")
+						console.log("comping", this.props.tid)
                                             }
                                         }} 
                                     />

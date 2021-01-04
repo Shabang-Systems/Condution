@@ -129,11 +129,11 @@ class Projects extends Component { // define the component
 
 
     completeProject() {
-	console.log("project, completing")
+	console.log("project, completing", this.state.currentProject.id)
     }
 
     uncompleteProject() {
-	console.log("project, uncompleting")
+	console.log("project, uncompleting", this.state.currentProject.id)
     }
 
 
@@ -252,8 +252,8 @@ class Projects extends Component { // define the component
 
 				<GuttedTask 
 				    startingCompleted={false} 
-				    tid={"test"} 
-				    name={"Complete"} 
+				    tid={this.state.currentProject.id} 
+				    name={"Complete"+this.state.currentProject.id} 
 				    localizations={{nt: null}}
 				    isStatic={true}
 				    complete={this.completeProject}
