@@ -249,7 +249,6 @@ class Projects extends Component { // define the component
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
 
-
 				<GuttedTask 
 				    startingCompleted={false} 
 				    tid={this.state.currentProject.id} 
@@ -258,7 +257,7 @@ class Projects extends Component { // define the component
 				    isStatic={true}
 				    complete={this.completeProject}
 				    uncomplete={this.uncompleteProject}
-				    inputStyle={"newbutton"}
+				    inputStyle={"completeproject"}
 				/>
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{

@@ -20,6 +20,10 @@
     background: var(--background-feature);
 }
 
+.completeproject {
+    color: var(--decorative-light-alt) !important;
+}
+
 .newbutton {
     border-width: 0px;
     border-style: 0;
