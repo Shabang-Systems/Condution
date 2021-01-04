@@ -301,12 +301,18 @@ class GuttedTask extends Component {
                                 {/* The animated input box */}
                                 <animated.input 
                                     value={this.props.name} 
-                                    className={"task-name no-select"} 
+				    className={
+					`task-name no-select ${this.props.inputStyle?
+					    this.props.inputStyle : ""}`} 
                                     readOnly={true} 
                                     type="text" 
                                     autoComplete="off" 
 				    placeholder={this.props.localizations.nt} 
-                                    style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
+                                    style={{
+					opacity: this.state.availability?1:0.35, 
+					textDecoration: animatedProps.taskNameDecoration,
+					//fontWeight: 100,
+				    }}
                                 />
                             </animated.div>
                         )}
