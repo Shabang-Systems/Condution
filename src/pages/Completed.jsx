@@ -41,7 +41,8 @@ class Completed extends Component {
             availability: [], 
             projectSelects:[], 
             tagSelects: [], 
-            projectDB: {}
+            projectDB: {},
+	    pPandT: ''
         };
 
         this.updatePrefix = this.random();
@@ -98,7 +99,7 @@ class Completed extends Component {
                         buildSelectString(e.content, level+":: ");
         };
         projectDB.map(proj=>buildSelectString(proj));
-        this.setState({taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB}); // once we finish, set the state
+	this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB}); // once we finish, set the state
         // also set rendering to false. 
         // This is a hacky solution instead of creating an entirely new async function.
     }
@@ -122,6 +123,7 @@ class Completed extends Component {
 	    // // if item[0] == task, ... else, ...
             this.setState({rendering: false}) // set rendering to false
         }, 1)
+	//console.log(this.state.pPandT[0][0])
 
         // disclaimer: I do not understand how this works. I was just messing around trying to debug and this happened to work.
         // if it ain't broke, dont fix it? 
@@ -204,17 +206,27 @@ class Completed extends Component {
 							this.state.possibleTags, 
 							this.state.possibleTagsRev]}
 					    />
-					    : <p>{content.contents}</p>)
+					    : 
+						<a className="subproject" 
+						    //style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+						    //onClick={()=>{
+							//props.paginate("projects", item.content.id);
+							//props.history.push(`/projects/${item.content.id}`)
+						    //}}
+						>
+						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
+					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
+					)
 				    }
-                                </div>
-                            ))}
+				</div>
+			    ))}
 
-                        <div className="fetch-more" > 
-                            {/* define the fetch more button */}
-                            {this.state.rendering? <p className="loader" >Loading...</p> : <p onClick={this.handleFetchMore}>Fetch more...</p>}
-                        </div> 
-                    <div className="bottom-helper">&nbsp;</div>
-                    </div>
+			    <div className="fetch-more" > 
+				{/* define the fetch more button */}
+				{this.state.rendering? <p className="loader" >Loading...</p> : <p onClick={this.handleFetchMore}>Fetch more...</p>}
+			    </div> 
+			    <div className="bottom-helper">&nbsp;</div>
+			</div>
                     </div>
                 </div>
             </IonPage>
