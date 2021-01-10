@@ -54,7 +54,7 @@ class Completed extends Component {
 
     async refresh() {
         let taskArr = []; // define temp array
-        let full = await this.props.engine.db.getCompletedTasks(this.props.uid); // get the tasks from the database 
+        let full = await this.props.engine.db.getCompletedItems(this.props.uid); // get the tasks from the database 
 
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
@@ -62,8 +62,14 @@ class Completed extends Component {
         full.forEach((cat, i) => {
             taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
 	    // if item[0] == task, ... else, ...
-            cat.forEach(task => { // this loops through each cat
-                taskArr.push(new TaskObject("task", task)) // convert each task to an object then push it to the temp arr
+            cat.forEach(item => { // this loops through each cat
+		if (item[1] == "task") {
+		    // convert each task to an object then push it to the temp arr
+		    taskArr.push(new TaskObject("task", item[0])) 
+		} else if (item[1] == "project")
+		{
+		    taskArr.push(new TaskObject("project", item[0])) 
+		}
             })
         });
 
@@ -173,25 +179,33 @@ class Completed extends Component {
                             {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
                                     {(content.type == "label")?  
-                                            (this.state.taskList[i+1] ? 
-                                                ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
-                                                "" : <p className="page-label" style={{marginBottom:0}}>{content.contents}</p>) : "") : 
-                                                <Task 
-                                                    tid={content.contents} 
-                                                    startingCompleted={true}
-                                                    key={content.contents+"-"+this.updatePrefix} 
-                                                    uid={this.props.uid} 
-                                                    engine={this.props.engine} 
-                                                    gruntman={this.props.gruntman} 
-                                                    availability={this.state.availability[content.contents]} 
-                                                    datapack={[this.state.tagSelects,
-                                                        this.state.projectSelects, 
-                                                        this.state.possibleProjects, 
-                                                        this.state.possibleProjectsRev, 
-                                                        this.state.possibleTags, 
-                                                        this.state.possibleTagsRev]}
-                                                />
-                                    }
+					(this.state.taskList[i+1] ? 
+					    ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
+                                                "" 
+						: 
+						<p 
+						    className="page-label" 
+						    style={{marginBottom:0}}
+						>{content.contents}</p>) 
+					    : "")
+					: (content.type == "task"? 
+					    <Task 
+						tid={content.contents} 
+						startingCompleted={true}
+						key={content.contents+"-"+this.updatePrefix} 
+						uid={this.props.uid} 
+						engine={this.props.engine} 
+						gruntman={this.props.gruntman} 
+						availability={this.state.availability[content.contents]} 
+						datapack={[this.state.tagSelects,
+							this.state.projectSelects, 
+							this.state.possibleProjects, 
+							this.state.possibleProjectsRev, 
+							this.state.possibleTags, 
+							this.state.possibleTagsRev]}
+					    />
+					    : <p>{content.contents}</p>)
+				    }
                                 </div>
                             ))}
 
