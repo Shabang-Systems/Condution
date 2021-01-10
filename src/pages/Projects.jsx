@@ -39,7 +39,7 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
-	    isComplete: true // TODO: replace this
+	    isComplete: '' // TODO: replace this
         };
 
         this.updatePrefix = this.random();
@@ -98,7 +98,7 @@ class Projects extends Component { // define the component
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
-        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight});
+        this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight});
     }
 
     componentDidMount() {
@@ -135,7 +135,7 @@ class Projects extends Component { // define the component
 		id: this.props.id, 
 	    }
 	)
-	console.log(await this.props.engine.db.getCompletedItems(this.props.uid))
+	//console.log(this.state.isComplete)
 
 
 	//console.log("project, completing", this.state.currentProject)
@@ -267,7 +267,8 @@ class Projects extends Component { // define the component
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
 
 				<GuttedTask 
-				    startingCompleted={false} 
+				    startingCompleted={this.state.isComplete} 
+				    //startingCompleted={true} 
 				    tid={this.state.currentProject.id} 
 				    name={"Complete "+this.state.name} 
 				    localizations={{nt: null}}

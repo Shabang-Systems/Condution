@@ -209,12 +209,20 @@ class GuttedTask extends Component {
             hasNotification: false, // do we have a notification scheudled?
             delegations: [], // task is delegated to...
             delegatedWorkspace: "", // task is delegated to workspace...
-            delegatedTaskID: "" // the ID of the shadow task
+            delegatedTaskID: "", // the ID of the shadow task
+	    tid: this.props.tid,
         }
         this.initialRenderDone = true; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
         this.checkbox = React.createRef(); // who am I? what am I?
         this.actualCheck = React.createRef(); // who am I? what am I?
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+	if (prevProps !== this.props) { // if we updated the defer date
+
+	    this.setState({tid: this.props.tid, isComplete: this.props.startingCompleted})
+	}
     }
 
     render() {
@@ -274,7 +282,7 @@ class GuttedTask extends Component {
                                         type="checkbox" 
 
      ref={this.actualCheck}
-                                        id={"task-check-"+this.props.tid} 
+                                        id={"task-check-"+this.state.tid} 
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
@@ -282,20 +290,20 @@ class GuttedTask extends Component {
                                             if (this.state.isComplete && this.props.uncomplete) {
                                                 this.props.uncomplete();
                                                 this.setState({isComplete: false})
-						console.log("uncomp", this.props.tid)
+						console.log("uncomp", this.state.tid)
                                             }
                                             // If we are completing a task (that is, currently task is incomplete)
                                             else if (!this.state.isComplete && this.props.complete) {
                                                 this.props.complete();
                                                 this.setState({isComplete: true})
-						console.log("comping", this.props.tid)
+						console.log("comping", this.state.tid)
                                             }
                                         }} 
                                     />
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.state.tid} htmlFor={"task-check-"+this.state.tid}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
