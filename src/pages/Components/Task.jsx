@@ -558,6 +558,10 @@ class Task extends Component {
 
                                                 {/* Task icon set. TODO delete task */}
                                                 <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
+                                                    {/*Deltete icon*/}
+                                                    <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
+                                                        console.log("amazing")
+                                                    }}><i className="fas fa" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}}>
                                                     {/* Flagged icon */}
                                                     <a data-tip={this.props.gruntman.psp_flg} className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
                                                         // On change, set the flagged state to the opposite of whatever it is
@@ -618,7 +622,7 @@ class Task extends Component {
 
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
-                                                    {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
+                                                    {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/} </i>
                                                 </div>
 
 
