@@ -128,12 +128,22 @@ class Projects extends Component { // define the component
     } 
 
 
-    completeProject() {
-	console.log("project, completing", this.state.currentProject)
+    async completeProject() {
+	await this.props.engine.db.getCompletedItems(this.props.uid); 
+	this.props.gruntman.do( // call a gruntman function
+	    "project.update__complete", { 
+		uid: this.props.uid, // pass it the things vvv
+		id: this.props.id, 
+	    }
+	)
+
+
+	//console.log("project, completing", this.state.currentProject)
+
     }
 
     uncompleteProject() {
-	console.log("project, uncompleting", this.state.currentProject)
+	//console.log("project, uncompleting", this.state.currentProject)
     }
 
 
