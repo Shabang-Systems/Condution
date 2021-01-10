@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import './Pages.css';
 import './FirstInteraction.css';
 
@@ -20,10 +20,17 @@ const autoBind = require('auto-bind/react');
 
 function FirstInteraction(props) {
     let [isSignup, setIsSignup] = useState(false);
+
+    useEffect(()=>{
+        let imageList = [logo, dark_preload, light_preload]
+        imageList.forEach((image) => {
+            new Image().src = image
+        });
+    }, []);
     return (
         <div className="first-interaction-container">
-            <img src={light_preload} style={{display: "none"}} />
-            <img src={dark_preload} style={{display: "none"}} />
+            <link rel="preload" href="../static/auth-background.jpg" as="image" />
+            <link rel="preload" href="../static/auth-background-dark.jpg" as="image" />
             <div style={{width: "100%", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexDirection: "column", paddingTop: "min(env(safe-area-inset-top), 35px)", paddingLeft: 10, paddingRight: 10, paddingBottom: 10, flexGrow: 10}}>
                 <div className="first-interaction-logo"><img src={logo} width={25} style={{marginBottom: 1, marginRight: 10, transform: "translateY(-1px)"}}/>Condution Project</div>
                 <div className="first-interaction-callout">
