@@ -102,7 +102,7 @@ class Projects extends Component { // define the component
     }
 
     componentDidMount() {
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
+	this.props.gruntman.registerRefresher((this.refresh).bind(this));
         this.refresh();
         if (this.props.options === "do") // if we are trying to create
             this.name.current.focus(); // focus the name
