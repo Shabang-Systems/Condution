@@ -195,6 +195,7 @@ class App extends Component {
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
     authDispatch(mode) {
+
         // TODO: that's a state machine! @zbuster05
         let uid;
         let name;
@@ -303,13 +304,13 @@ class App extends Component {
 
 export default App;
 //class App extends Component {
-    //render() {
-        //return (
-            //<IonApp>
-                //<Home />
-            //</IonApp>
-        //);
-    //}
+//render() {
+//return (
+//<IonApp>
+//<Home />
+//</IonApp>
+//);
+//}
 //}
 
 /*export default App;*/
