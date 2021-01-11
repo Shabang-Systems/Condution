@@ -219,9 +219,10 @@ class GuttedTask extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-	if (prevProps !== this.props) { // if we updated the defer date
+	if (prevProps.tid !== this.props.tid) { // if we updated the defer date
 
-	    this.setState({tid: this.props.tid, isComplete: this.props.startingCompleted})
+	    this.setState({tid: this.props.tid, isComplete: this.props.startingCompleted, startingCompleted: this.props.startingCompleted})
+	    console.log("update", prevProps, this.props, this.state)
 	}
     }
 
@@ -284,7 +285,7 @@ class GuttedTask extends Component {
      ref={this.actualCheck}
                                         id={"task-check-"+this.state.tid} 
                                         className="task-check"
-                                        defaultChecked={this.props.startingCompleted}
+                                        defaultChecked={this.state.startingCompleted}
                                         onChange={()=>{
                                             // If we are uncompleting a task (that is, currently task is complete) 
                                             if (this.state.isComplete && this.props.uncomplete) {

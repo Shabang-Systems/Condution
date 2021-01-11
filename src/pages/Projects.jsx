@@ -39,7 +39,7 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
-	    isComplete: '' // TODO: replace this
+	    isComplete: '', // TODO: replace this
         };
 
         this.updatePrefix = this.random();
@@ -99,6 +99,7 @@ class Projects extends Component { // define the component
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
         this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight});
+	console.log(this.state.isComplete, this.state.name)
     }
 
     componentDidMount() {
