@@ -137,7 +137,7 @@ class Projects extends Component { // define the component
 		uid: this.props.uid, // pass it the things vvv
 		id: this.props.id, 
 	    }
-	)
+	).then(this.props.menuRefresh)
 	//console.log(this.state.isComplete)
 
 
@@ -151,7 +151,7 @@ class Projects extends Component { // define the component
 		uid: this.props.uid, // pass it the things vvv
 		id: this.props.id, 
 	    }
-	)
+	).then(this.props.menuRefresh)
 
 	//console.log("project, uncompleting", this.state.currentProject)
     }

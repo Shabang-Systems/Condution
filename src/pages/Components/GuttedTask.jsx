@@ -222,7 +222,7 @@ class GuttedTask extends Component {
 	if (prevProps.tid !== this.props.tid) { // if we updated the defer date
 
 	    this.setState({tid: this.props.tid, isComplete: this.props.startingCompleted, startingCompleted: this.props.startingCompleted})
-	    console.log("update", prevProps, this.props, this.state)
+	    //console.log("update", prevProps, this.props, this.state)
 	}
     }
 
