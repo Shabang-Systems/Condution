@@ -194,7 +194,7 @@ class Projects extends Component { // define the component
                                 <h1 className="page-title">
                                     {(()=> {
 					if (this.state.isComplete) {
-                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("/completeted", "");this.props.history.push("/completed")}} />
+                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("/completed", "");this.props.history.push("/completed")}} />
 
 					} else if (this.state.parent !== "") 
                                             return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.parent);this.props.history.push(`/projects/${this.state.parent}`)}} />
@@ -244,9 +244,13 @@ class Projects extends Component { // define the component
                                                     parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
                                                 }
                                             ).then(()=>{
-                                                this.props.menuRefresh(); // refresh menubar
-                                                this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
-                                                this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);
+						this.props.menuRefresh(); // refresh menubar
+						if (this.state.isComplete) {
+						    this.props.history.push("/completed", ""); // go back
+						    this.props.paginate("/completed");
+						} else {
+						    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+						    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
                                             }) // call the homebar refresh
                                         }}
                                         style={{borderColor: "var(--task-icon-ring)", 
