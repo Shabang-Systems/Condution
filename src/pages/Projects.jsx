@@ -95,6 +95,8 @@ class Projects extends Component { // define the component
                     if (e.type === "project")
                         buildSelectString(e.content, level+":: ");
         };
+	
+	
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
@@ -191,7 +193,10 @@ class Projects extends Component { // define the component
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     {(()=> {
-                                        if (this.state.parent !== "")
+					if (this.state.isComplete) {
+                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("/completeted", "");this.props.history.push("/completed")}} />
+
+					} else if (this.state.parent !== "") 
                                             return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.parent);this.props.history.push(`/projects/${this.state.parent}`)}} />
                                     })()}
                                     <i style={{paddingRight: 4}} 
