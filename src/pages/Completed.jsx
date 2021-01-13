@@ -209,10 +209,10 @@ class Completed extends Component {
 					    : 
 						<a className="subproject" 
 						    //style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
-						    //onClick={()=>{
-							//props.paginate("projects", item.content.id);
-							//props.history.push(`/projects/${item.content.id}`)
-						    //}}
+						    onClick={()=>{
+							this.props.paginate("projects", content.contents);
+							this.props.history.push(`/projects/${content.contents}`)
+						    }}
 						>
 						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
 					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
