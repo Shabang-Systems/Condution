@@ -211,7 +211,19 @@ class Projects extends Component { // define the component
                                     />
 
                                 </h1> 
-				<div className="complete-container"><a className="complete-name">Complete</a></div>
+				<div className="complete-container">
+				    <a className="complete-name"
+					style={{color: "var(--page-title"}} 
+					onClick={() => { 
+					    if (this.state.isComplete) {
+						this.uncompleteProject()
+					    } else {
+						this.completeProject()
+					    }
+					}}
+
+				    >Complete </a>
+				</div>
 				</div>
 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />

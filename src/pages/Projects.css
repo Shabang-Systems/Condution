@@ -128,7 +128,7 @@
 .complete-name {
     display: inline-block;
     background: var(--background-feature);
-    margin-top: 3px;
+    margin-top: 10px;
     margin-left: 10px;
     padding: 5px 10px;
     font-size: 12px;
@@ -136,7 +136,7 @@
     border-radius: 17px;
     transform: translateY(-1.5px);
     cursor: pointer;
-    color: var(--page-title);
+    /*color: var(--page-title);*/
 }
 
 
