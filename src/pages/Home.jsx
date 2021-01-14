@@ -138,7 +138,7 @@ class Home extends Component {
         // Load the top level projects and perspectives
         // to set into the state and to add to the menu
         let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
-	console.log(tlp)
+	//console.log(tlp)
         let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
         if (this.props.authType === "firebase" && !this.state.isWorkspace) {
             let invites = await this.props.engine.db.getInvitations(this.props.email);
@@ -311,7 +311,7 @@ class Home extends Component {
                                         return (
                                             <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
                                                 this.setState({itemSelected:{item:"projects", id:proj.id}})
-						console.log(proj)
+						//console.log(proj)
                                                 if (this.menu.current)
                                                     this.menu.current.close();
                                                 }}> {/* Link to trigger router */}

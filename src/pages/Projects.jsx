@@ -101,7 +101,7 @@ class Projects extends Component { // define the component
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
         this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight});
-	console.log(this.state.isComplete, this.state.name)
+	//console.log(this.state.isComplete, this.state.name)
     }
 
     componentDidMount() {
@@ -222,7 +222,7 @@ class Projects extends Component { // define the component
 					    }
 					}}
 
-				    >Complete </a>
+				    >{this.state.isComplete? "Uncomplete" : "Complete"} </a>
 				</div>
 				</div>
 
@@ -292,7 +292,7 @@ class Projects extends Component { // define the component
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} parentComplete={this.state.isComplete} activeTaskID={this.state.activeTask}/>
 
-				<GuttedTask 
+			{/*<GuttedTask 
 				    startingCompleted={this.state.isComplete} 
 				    //startingCompleted={true} 
 				    tid={this.state.currentProject.id} 
@@ -303,6 +303,7 @@ class Projects extends Component { // define the component
 				    uncomplete={this.uncompleteProject}
 				    inputStyle={"completeproject"}
 				/>
+			    */}
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
                                 this.props.gruntman.do( // call a gruntman function

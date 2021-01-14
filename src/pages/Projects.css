@@ -136,7 +136,13 @@
     border-radius: 17px;
     transform: translateY(-1.5px);
     cursor: pointer;
+    transition: 0.3s;
     /*color: var(--page-title);*/
+}
+
+.complete-name:hover {
+    background: var(--content-normal);
+    padding: 5px 12px;
 }
 
 
