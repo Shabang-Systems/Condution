@@ -145,6 +145,13 @@
     padding: 5px 12px;
 }
 
+.complete-anim {
+    /*background-color: var(--page-title) !important;*/
+    /*padding: 5px 20px !important;*/
+    margin-right: 10px;
+
+}
+
 
 .complete-container {
     display: inline-block;

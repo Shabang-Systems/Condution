@@ -40,6 +40,7 @@ class Projects extends Component { // define the component
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
 	    isComplete: '', // TODO: replace this
+	    animClass: '',
         };
 
         this.updatePrefix = this.random();
@@ -212,14 +213,18 @@ class Projects extends Component { // define the component
 
                                 </h1> 
 				<div className="complete-container">
-				    <a className="complete-name"
-					style={{color: "var(--page-title"}} 
+				    <a className={"complete-name " + this.state.animClass}
+					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
 					onClick={() => { 
 					    if (this.state.isComplete) {
 						this.uncompleteProject()
 					    } else {
 						this.completeProject()
 					    }
+					    this.setState({animClass: "complete-anim"})
+					    setTimeout(() => {
+						this.setState({animClass: ""})
+					    }, 1000);
 					}}
 
 				    >{this.state.isComplete? "Uncomplete" : "Complete"} </a>
