@@ -78,7 +78,8 @@ export default class ReferenceManager {
      * 
      */
 
-    reference(...path:string[]) : Page {
+    reference(path:string[], _actuallyAccessRawReference=false) : Page {
+	console.assert(_actuallyAccessRawReference, "CondutionEngine: a raw reference object has been requested! This should only be done internally.");
         return this.currentProvider.reference(path);
     }
 }
