@@ -187,6 +187,7 @@ class Projects extends Component { // define the component
                     <div className="header-container" >
                         <div style={{display: "inline-block", width: "100%"}}>
                             <div> 
+				<div>
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
                                         style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
@@ -208,7 +209,10 @@ class Projects extends Component { // define the component
                                         style={{transform: "transformY(-2px)"}}
                                         ref={this.name}
                                     />
+
                                 </h1> 
+				<div className="complete-container"><a className="complete-name">Complete</a></div>
+				</div>
 
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
