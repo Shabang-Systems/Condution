@@ -48,7 +48,7 @@ function Auth(props) {
                                     props.dispatch({service: "firebase", operation: "login"});
                                 else {
                                     firebase.auth().currentUser.sendEmailVerification();
-                                    setRegularMessage("Email unverified. Please check your email and try again");
+                                    setRegularMessage(props.localizations.auth_email_unverified_message);
                                 }
                             }).catch(function(error) {
                                 // Handle Errors here.
@@ -87,7 +87,7 @@ function Auth(props) {
                             problem=true;
                         }).then(function() {
                             if (!recProblem) {
-                                setRecoveryMessage("Please check your email and head back to login with your resetted password.");
+                                setRecoveryMessage(props.localizations.auth_recovery_check_message);
                                 setMinorMode(4);
                             }
                         }); break;
