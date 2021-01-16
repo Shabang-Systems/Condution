@@ -143,6 +143,8 @@
     "search_projects": "Search Projects...",
     "qa_content": "Add something to the inbox?",
     "new_tag_button": "New Tag",
+    "blk_art_tags" : "There are no tags!",
+    "blk_art_tags_subtitle" : "Add a tag to tasks?",
     "onboarding_content": [
         "Hey",
         "🙌 welcome to Condution! 🙌",
