@@ -62,12 +62,12 @@ class TagEditor extends Component {
     }
     
     async newTagClicked() {
-        let tagid = await this.props.engine.db.newTag(this.props.uid, "New Tag");
+        let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.localizations.new_tag_button);
         let temp = this.state.tagList;
         temp.push(
             {
-                name: "New Tag",
-                tempname: "New Tag",
+                name: this.props.localizations.new_tag_button,
+                tempname: this.props.localizations.new_tag_button,
                 weight: 1,
                 id: tagid
             }
