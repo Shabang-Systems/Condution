@@ -155,6 +155,7 @@
     "auth_verification_check_message" : "Please check that you have tapped the verification link in your email",
     "auth_email_unverified_message" : "Email unverified. Please check your email and try again",
     "auth_recovery_check_message" : "Please check your email and head back to login with your resetted password.",
+    "workspace_modal_placeholder" : "Tap to set name",
     "onboarding_content": [
         "Hey",
         "🙌 welcome to Condution! 🙌",

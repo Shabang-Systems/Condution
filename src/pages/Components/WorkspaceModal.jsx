@@ -62,7 +62,7 @@ function WorkspaceModal(props) {
                     <input className="editable-title workspace-input" 
                         value={workspaceName} 
                         style={{minWidth: 0}}
-                        placeholder="@NEEDLOC Tap to set name"
+                        placeholder={props.gruntman.localizations.workspace_modal_placeholder}
                         onChange={(e)=>{
                             setWorkspaceName(e.target.value);
                             e.persist();
