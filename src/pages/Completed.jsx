@@ -33,7 +33,7 @@ class Completed extends Component {
         this.state = {
             taskList: [], // the objects we render
             tasksShown: 1, // track the number of times we have fetched more
-            taskCats: ["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+            taskCats: this.props.gruntman.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
             rendering: true, // define whether or not the element is rendering 
             possibleProjects:{}, // see jacks comments in upcoming 
             possibleTags:{}, 
@@ -198,7 +198,7 @@ class Completed extends Component {
 
                         <div className="fetch-more" > 
                             {/* define the fetch more button */}
-                            {this.state.rendering? <p className="loader" >Loading...</p> : <p onClick={this.handleFetchMore}>Fetch more...</p>}
+                            {this.state.rendering? <p className="loader" >{this.props.gruntman.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.gruntman.localizations.fetchmore}</p>}
                         </div> 
                     <div className="bottom-helper">&nbsp;</div>
                     </div>

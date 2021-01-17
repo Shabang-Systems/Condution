@@ -85,6 +85,13 @@
     "clbpw": "Past Week",
     "clbpm": "Past Month",
     "clbel": "Earlier/Untracked",
+    "completed_categories" : [
+        "Today",
+        "Yesterday",
+        "This Week",
+        "This Month",
+        "Even Before"
+    ],
     "fetchmore": "Fetch more...",
     "fetchmoretasks": "Fetch 'em tasks!",
     "muchempty": "Wow... Much empty!",
