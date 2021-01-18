@@ -1,4 +1,4 @@
-import { Provider, Page } from "./Backends/Backend";
+import { Provider, Page, Collection } from "./Backends/Backend";
 
 /*
  * Hello human, good afternoon.
@@ -65,22 +65,45 @@ export default class ReferenceManager {
     }
 
     /**
+     * 
+     * @method page
      *
-     * @method reference
-     *
-     * @param {string[]} path: path that you desire to get a reference to
-     * @returns {Page}:a page representing the reference that you could act upon
+     * Gets a Page to operate on 
      *
      * Example:
      *
-     * > let ref = manager.reference("users, "test", "tasks", "434d5fab10129a");
+     * > let ref = manager.page("users, "test", "tasks", "434d5fab10129a");
      * > let values = ref.get();
-     * 
+     *
+     * @param {string[]} path
+     * @returns {Page}
+     *
      */
 
-    reference(path:string[], _actuallyAccessRawReference=false) : Page {
-	console.assert(_actuallyAccessRawReference, "CondutionEngine: a raw reference object has been requested! This should only be done internally.");
-        return this.currentProvider.reference(path);
+    page(path: string[]) : Page {
+        return this.currentProvider.page(path);
+    }
+
+    /**
+     *
+     * @method collection
+     *
+     * Gets a collection, with is a
+     * list of pages, and some other stuff
+     * to operate on
+     *
+     * Example:
+     *
+     * > let ref = manager.collection("users, "test", "tasks");
+     * > let pages = ref.pages();
+     *
+     * @param {string[]} path
+     * @returns {Collection}
+     *
+     */
+
+    collection(path: string[]) : Collection {
+        return this.currentProvider.collection(path);
     }
 }
 

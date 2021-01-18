@@ -2,12 +2,165 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
-import  { Provider, Page, AuthenticationProvider } from "./Backend";
-import type { AuthenticationResult, AuthenticationRequest, AuthenticationUser } from "./Backend";
+import  { Provider, Page, Collection, AuthenticationProvider } from "./Backend";
+import type { AuthenticationResult, AuthenticationRequest, AuthenticationUser, DataExchangeResult } from "./Backend";
 
 // TODO TODO the maps should go to somewhere better than this.
 let cache = new Map();
 let unsubscribeCallbacks = new Map();
+
+/**
+ * FirebaseCollection
+ *
+ * A firebase collection to operate on 
+ * Storage/Backend/Backend/Page/Collection abstract 
+ * class for usage and documentation.
+ *
+ * @extends {Collection}
+ * 
+ */
+
+
+class FirebaseCollection extends Collection {
+    path: string[];
+    firebaseDB: firebase.firestore.Firestore;
+    firebaseRef: typeof firebase.firestore;
+
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore)) {
+        super();
+        this.path = path;
+        this.firebaseDB = firebaseDB;
+        this.firebaseRef = firebaseRef;
+    }
+    async add(payload:object) {
+        const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
+        const resultDocument = await ref.add(payload); // add the document
+        return {identifier: resultDocument.id, payload: payload, response: resultDocument};
+    }
+
+    async delete() {
+        const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
+        const resultDocument = await ref.delete(); // delete the document
+        return {identifier: null, payload: null, response: resultDocument};
+    }
+
+    private getCachedAccessPoint() {
+        let path = this.path;
+        const TODOstring = JSON.stringify(path);        //  strigify to hash array
+        if (!cache.has(TODOstring)) {                   //  if path string isn't cached
+            // TODO: comment this out someday \/
+            const ref = this.getFirebaseRef(path);           //  get the reference from the database
+            cache.set(TODOstring, ref.get());           //  save result in cache
+            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
+                                     ref.onSnapshot({
+                                         error: console.trace,
+                                         next: (snap:any) => {
+                                             cache.set(TODOstring, snap);
+                                             //requestRefresh();
+                                             // TODO TODO: requestRefresh
+                                         }
+                                     })
+                                    );
+        }
+
+        return cache.get(TODOstring);
+    }
+
+    /**
+     *
+     * @method pages
+     * Get a snapshot from the cache.
+     *
+     * @param   path    The valid path to the reference
+     * @return  {Page[]} The result of calling `.get()` on the database reference
+     *
+     * Logic:
+     *  If the path is cached, return from cache.
+     *  Else, register a snapshot listener to update the cache
+     *      and return the newly cached value.
+     *
+     */
+
+    async pages() : Promise<Page[]> {
+        return (await this.getCachedAccessPoint()).docs.map((page:any)=>{
+            return new FirebasePage([...this.path, page.id], this.firebaseDB, this.firebaseRef, page.data());
+        });
+    }
+
+    /**
+     *
+     * @method data
+     * Get a snapshot from the cache.
+     *
+     * @param   path    The valid path to the reference
+     * @return  {object[]} The result of calling `.get()` on the database reference
+     *
+     * Logic:
+     *  If the path is cached, return from cache.
+     *  Else, register a snapshot listener to update the cache
+     *      and return the newly cached value.
+     *
+     */
+
+    async data() : Promise<object[]> {
+        return (await this.getCachedAccessPoint()).docs.map((page:any)=>{
+            return Object.assign(page.data(), {id: page.id});
+        });
+    }
+
+
+    /**
+     *
+     * @method getFirebaseRef
+     * Get a database reference.
+     *
+     * @param   path        A valid path array, see below.
+     * @return  reference   The generated reference
+     *
+     * Examples of valid path arrays:
+     *  [`collection/${docName}`] => DocumentReference
+     *  ["collection", "docName"] => DocumentReference
+     *  ["collection", "docName", "collection"] => CollectionReference
+     *  ["collection", ["query", "params"], ["more", "params"]] => Query
+     *  ["collection", ["query", "params"], "docname"] => DocumentReference
+     * 
+     */
+
+    getFirebaseRef(path:string[]) {
+        let ref:any = this.firebaseDB;
+        let fsRef:any = this.firebaseRef;
+
+        // special handling for first collection from root
+        console.assert(typeof path[0] === 'string');
+        if (path[0].includes('/'))
+            ref = ref.collectionGroup(path[0]);
+        else
+            ref = ref.collection(path[0]);
+        // generic handling
+        for (let n of path.slice(1)) {
+            let nav:any = n;
+            if (typeof nav === 'string') {
+                if (ref instanceof fsRef.DocumentReference) {
+                    ref = ref.collection(nav);
+                } else if (ref instanceof fsRef.Query) {
+                    ref = ref.doc(nav);
+                } else {
+                    throw new Error("Unknown reference");
+                }
+            } else if (Array.isArray(nav)) {                // query, TODO shouldn't need to query
+                if (ref instanceof fsRef.Query) {
+                    ref = ref.where(...nav);
+                } else {
+                    throw new Error("Cannot query with");
+                }
+                console.assert(ref instanceof fsRef.Query)
+            } else {
+                throw new Error("Cannot parse");
+            }
+        }
+        return ref;
+    }
+}
 
 /**
  * FirebasePage
@@ -26,11 +179,14 @@ class FirebasePage extends Page {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
-    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore)) {
+    private _data: object;
+
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), _dataSeed?:object) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
+        this._data = _dataSeed;
     }
 
     get id() : string {
@@ -38,24 +194,22 @@ class FirebasePage extends Page {
         return ref.id; // return the requested ID
     }
 
-    async add(payload:object) {
+    async set(payload:object, ...param:any):Promise<DataExchangeResult> {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        return await ref.add(payload); // add the document
-    }
-
-    async set(payload:object, ...param:any) {
-        const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        return await ref.set(payload, ...param); // set the document
+        const resultDocument = await ref.set(payload, ...param); // set the document
+        return {identifier: resultDocument.id, payload: payload, response: resultDocument};
     }
 
     async update(payload:object) {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        return await ref.update(payload); // update the document
+        const resultDocument = await ref.update(payload); // update the document
+        return {identifier: resultDocument.id, payload: payload, response: resultDocument};
     }
 
     async delete() {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        return await ref.delete(); // delete the document
+        const resultDocument = await ref.delete(); // delete the document
+        return {identifier: null, payload: null, response: resultDocument};
     }
 
     /**
@@ -74,6 +228,8 @@ class FirebasePage extends Page {
      */
 
     async get() : Promise<object> {
+        if (this._data) // TODO OH MY GOD THIS IS JANKY
+            return this._data;
         let path = this.path;
         const TODOstring = JSON.stringify(path);        //  strigify to hash array
         if (!cache.has(TODOstring)) {                   //  if path string isn't cached
@@ -84,6 +240,7 @@ class FirebasePage extends Page {
                                      ref.onSnapshot({
                                          error: console.trace,
                                          next: (snap:any) => {
+                                             this._data = undefined;
                                              cache.set(TODOstring, snap);
                                              //requestRefresh();
                                              // TODO TODO: requestRefresh
@@ -91,7 +248,8 @@ class FirebasePage extends Page {
                                      })
                                     );
         }
-        return await cache.get(TODOstring);
+        const result = await cache.get(TODOstring);
+        return Object.assign(result.data(), {id: result.id});
     }
 
     /**
@@ -296,24 +454,39 @@ class FirebaseProvider extends Provider {
         // Enable Persistance
         this.firebaseDB.enablePersistence({synchronizeTabs: true}).catch((e)=>console.log(`CondutionEngine (FirebaseProvider): persistance enabling failed due to code "${e.code}"`));
     }
-    
+
     /**
      *
-     * @method reference
+     * @method page
+     *
+     * Gets a Page to operate on
      *
      * @param {string[]} path: path that you desire to get a reference to
-     * @returns {Page}:a page representing the reference that you could act upon
+     * @returns {Page}: the page ye wished for
      *
-     * Example:
-     *
-     * > let ref = manager.reference("users, "test", "tasks", "434d5fab10129a");
-     * > let values = ref.get();
-     * 
      */
 
-    reference(path: string[]) : Page {
+    page(path: string[]) : FirebasePage {
         return new FirebasePage(path, this.firebaseDB, this.firebaseRef);
     }
+
+    /**
+     *
+     * @method collection
+     *
+     * Gets a collection, with is a
+     * list of pages, and some other stuff
+     * to operate on
+     *
+     * @param {string[]} path: path that you desire to get a reference to
+     * @returns {FirebaseCollection}: the collection ye wished for
+     *
+     */
+
+    collection(path: string[]) : FirebaseCollection {
+        return new FirebaseCollection(path, this.firebaseDB, this.firebaseRef);
+    }
+
 
     /**
      *
@@ -344,5 +517,5 @@ class FirebaseProvider extends Provider {
 }
 
 export default FirebaseProvider;
-export { FirebasePage };
+export { FirebasePage, FirebaseCollection };
 

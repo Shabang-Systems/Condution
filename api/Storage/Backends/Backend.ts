@@ -36,6 +36,12 @@ interface AuthenticationUser {
     email: string
 }
 
+interface DataExchangeResult {
+    identifier: string,
+    payload: object,
+    response: any
+}
+
 abstract class AuthenticationProvider {
     protected _authenticated : boolean;
 
@@ -94,16 +100,32 @@ abstract class Provider {
     
     /**
      * 
-     * @method reference
+     * @method page
      *
      * Gets a Page to operate on 
      *
      * @param {string[]} path
      * @returns {Page}
+     *
      */
 
-    abstract reference(path: string[]) : Page;
+    abstract page(path: string[]) : Page;
+
+    /**
+     *
+     * @method collection
+     *
+     * Gets a collection, with is a
+     * list of pages, and some other stuff
+     * to operate on
+     *
+     * @param {string[]} path
+     * @returns {Collection}
+     *
+     */
     
+    abstract collection(path: string[]) : Collection;
+
     /**
      *
      * @property authenticationProvider
@@ -135,7 +157,7 @@ abstract class Provider {
  * @Class Page
  * 
  * A single page of a document
- * You probably know it as what a Provider refrence()
+ * You probably know it as what a Provider page()
  * returns.
  *
  * All functions does a particular action on the page
@@ -143,7 +165,7 @@ abstract class Provider {
  * Example:
  *
  * > let provider = new Provider()
- * > let page = provider.refrence("users", "test", "tasks", "434d5fab10129a")
+ * > let page = provider.page("users", "test", "tasks", "434d5fab10129a")
  * > page.set({"name": "A Task!"})
  *
  */
@@ -151,13 +173,39 @@ abstract class Provider {
 abstract class Page {
     abstract get id() : string; // The ID of the Page
 
-    abstract get() : Promise<any>; // Function to get the value of page
-    abstract add(payload:object) : Promise<any>; // Function to send a value to the page
-    abstract set(payload:object, ...param:any) : Promise<any> ; // Function to set a value of a page
-    abstract update(payload:object) : Promise<any> ; // Function to update the value of a page
-    abstract delete() : Promise<any> ; // Function to delete a page
+    abstract get() : Promise<object>; // Function to get the value of page
+    abstract set(payload:object, ...param:any) : Promise<DataExchangeResult> ; // Function to set a value of a page
+    abstract update(payload:object) : Promise<DataExchangeResult> ; // Function to update the value of a page
+    abstract delete() : Promise<DataExchangeResult> ; // Function to delete a page
 }
 
-export { Provider, Page, AuthenticationProvider };
-export type { AuthenticationRequest, AuthenticationResult, AuthenticationUser };
+
+
+/**
+ *
+ * @Class Collection
+ * 
+ * A bunch of Pages.
+ * You probably know it as what a Provider collection()
+ * returns.
+ *
+ * All functions does a particular action on the page
+ * 
+ * Example:
+ *
+ * > let provider = new Provider()
+ * > let collection = provider.collection("users", "test", "tasks")
+ * > collection.add({"name": "A Task!"})
+ *
+ */
+
+abstract class Collection {
+    abstract pages(): Promise<Page[]>; // the... contents, but in pages form
+    abstract data(): Promise<object[]>; // the... contents
+    abstract add(payload:object) : Promise<DataExchangeResult>; // Function to send a value to the page
+    abstract delete() : Promise<DataExchangeResult> ; // Function to delete a page
+}
+
+export { Provider, Page, AuthenticationProvider, Collection };
+export type { AuthenticationRequest, AuthenticationResult, AuthenticationUser, DataExchangeResult };
 
