@@ -18,7 +18,7 @@ import { Page, Collection } from "../Storage/Backends/Backend";
  * 
  */
 
-export default class ContextManager {
+export class ContextManager {
     private rm:ReferenceManager; // the ReferenceManager used by this context
     private ticketID:string; // current UID/Workspace ID
     private isWorkspace:boolean = false; // currently under workspaces mode
@@ -44,36 +44,42 @@ export default class ContextManager {
     get identifier() {
         return this.ticketID;
     }
+
+
+    /**
+     *
+     * @method collection
+     *
+     * Gets a collection, with is a
+     * list of pages, and some other stuff
+     * to operate on
+     *
+     * @param {string[]} path: path that you desire to get a reference to
+     * @returns {FirebaseCollection}: the collection ye wished for
+     *
+     */
     
     collection(...target:string[]): Collection {
         let top:string[] = this.isWorkspace ? ["workspaces", this.ticketID] : ["users", this.ticketID];
         return this.rm.collection(top.concat(target));
     }
 
-    //private async collectionGet(target:string[]): Promise<object[]> {
-	//return (await (this.rRef(target).get())).docs.map((d:any)=>Object.assign(d.data(),{id:d.id}));
-    //}
+    /**
+     *
+     * @method page
+     *
+     * Gets a Page to operate on
+     *
+     * @param {string[]} path: path that you desire to get a reference to
+     * @returns {Page}: the page ye wished for
+     *
+     */
 
-    //private async collectionAdd(target:string[], payload:object): Promise<object> {
-	//let newID:string = (await (this.rRef(target).add(payload))).id;
-	//return this.documentGet([...target, newID]);
-    //}
-
-    //private async documentGet(target:string[]): Promise<object> {
-	//let result:any = (await (this.rRef(target).get()));
-	//return Object.assign(result.data(),{id:result.id});
-    //}
-
-    //get couldAuthenticate():boolean {
-	//return this.authenticatable;
-    //}
-
-    //collection(...target:string[]): CollectionOperator {
-	//return {
-		//get: async ()=>(await this.collectionGet(target)),
-		//add: async (payload: object)=>(await this.collectionAdd(target, payload)),
-		//delete: async ()=>{}
-	//}
-    //}
+    page(...target:string[]):  Page {
+        let top:string[] = this.isWorkspace ? ["workspaces", this.ticketID] : ["users", this.ticketID];
+        return this.rm.page(top.concat(target));
+    }
 }
+
+
 

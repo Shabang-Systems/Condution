@@ -1,5 +1,4 @@
-import ReferenceManager from "../Storage/ReferenceManager";
+export class Task {
 
-export default class Task {
 }
 
