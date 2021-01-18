@@ -43,7 +43,7 @@ class Completed extends Component {
             projectSelects:[], 
             tagSelects: [], 
             projectDB: {},
-	          pPandT: ''
+	    pPandT: '',
             initialRenderingDone: false,
         };
 
