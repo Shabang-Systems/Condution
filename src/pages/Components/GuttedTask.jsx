@@ -113,6 +113,34 @@ const AnimationFactory = Keyframes.Spring({
         },
         reset: false
     },
+    // Incomplete->complete animation for static
+    staticComplete: [
+        {
+            to: {
+                taskMargin: "14px 8px", 
+                taskNameDecoration: "line-through",
+                taskOpacity: 1,
+                taskPosition: "",
+            },
+            config: {
+                tension: 200,
+                friction: 25,
+                mass: 1
+            },
+
+        },
+        {
+            to: {
+		taskOpacity: 0.5,
+                taskMargin: "0px 8px", 
+            },
+            config: {
+                tension: 800,
+                friction: 50,
+                mass: 1
+            },
+        }
+    ],
     // Incomplete->complete animation
     complete: [
         {
@@ -181,12 +209,21 @@ class GuttedTask extends Component {
             hasNotification: false, // do we have a notification scheudled?
             delegations: [], // task is delegated to...
             delegatedWorkspace: "", // task is delegated to workspace...
-            delegatedTaskID: "" // the ID of the shadow task
+            delegatedTaskID: "", // the ID of the shadow task
+	    tid: this.props.tid,
         }
         this.initialRenderDone = true; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
         this.checkbox = React.createRef(); // who am I? what am I?
         this.actualCheck = React.createRef(); // who am I? what am I?
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+	if (prevProps.tid !== this.props.tid) { // if we updated the defer date
+
+	    this.setState({tid: this.props.tid, isComplete: this.props.startingCompleted, startingCompleted: this.props.startingCompleted})
+	    //console.log("update", prevProps, this.props, this.state)
+	}
     }
 
     render() {
@@ -206,10 +243,14 @@ class GuttedTask extends Component {
                                 (this.state.startingCompleted? // and we start complete 
                                     (this.state.expanded? // and we are expanded 
                                         "show":"hide") // show, otherwise, hide 
-                                        :"complete") // if we are complete,  and don't start completed, complete. 
+					: 
+					    (this.props.isStatic? 
+						"staticComplete" : "complete")) // if we are complete,  and don't start completed, complete. 
                                         : // if we arnt complete, 
                                 this.state.startingCompleted ?  // and we start complete 
-                                "complete" :
+				(this.props.isStatic? "staticComplete" : "complete" )
+				    //"complete" :
+				    :
                                 (this.state.expanded? "show":"hide")):"hide"
                     } // if we are incomplete, and we start incomplete, then show or hide based on expanded 
 
@@ -233,7 +274,7 @@ class GuttedTask extends Component {
                                     position: animated.taskPosition,
                                     padding: animatedProps.taskPadding}}
                             >
-                                
+
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
                                 <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
@@ -242,37 +283,45 @@ class GuttedTask extends Component {
                                         type="checkbox" 
 
      ref={this.actualCheck}
-                                        id={"task-check-"+this.props.tid} 
+                                        id={"task-check-"+this.state.tid} 
                                         className="task-check"
-                                        defaultChecked={this.props.startingCompleted}
+                                        defaultChecked={this.state.startingCompleted}
                                         onChange={()=>{
                                             // If we are uncompleting a task (that is, currently task is complete) 
                                             if (this.state.isComplete && this.props.uncomplete) {
                                                 this.props.uncomplete();
                                                 this.setState({isComplete: false})
+						console.log("uncomp", this.state.tid)
                                             }
                                             // If we are completing a task (that is, currently task is incomplete)
                                             else if (!this.state.isComplete && this.props.complete) {
                                                 this.props.complete();
                                                 this.setState({isComplete: true})
+						console.log("comping", this.state.tid)
                                             }
                                         }} 
                                     />
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.state.tid} htmlFor={"task-check-"+this.state.tid}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
                                 <animated.input 
                                     value={this.props.name} 
-                                    className={"task-name no-select"} 
+				    className={
+					`task-name no-select ${this.props.inputStyle?
+					    this.props.inputStyle : ""}`} 
                                     readOnly={true} 
                                     type="text" 
                                     autoComplete="off" 
-                                    placeholder={this.props.localizations.nt} 
-                                    style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
+				    placeholder={this.props.localizations.nt} 
+                                    style={{
+					opacity: this.state.availability?1:0.35, 
+					textDecoration: animatedProps.taskNameDecoration,
+					//fontWeight: 100,
+				    }}
                                 />
                             </animated.div>
                         )}

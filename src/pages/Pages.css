@@ -80,12 +80,25 @@
 }
 
 .header-container {
-    box-shadow: 0 0.2px 2px var(--decorative-light);
+    /*box-shadow: 0 0.2px 2px var(--decorative-light);*/
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     align-items:flex-end;
     flex-shrink: 0;
+}
+
+
+.header-container:after {
+  content: "";
+  background: var(--decorative-light);
+  position: absolute;
+  bottom: 0;
+  left: 1%;
+  right: 1%;
+  height: 1px;
+  width: 98%;
 }
 
 @media (max-width: 575px) {

@@ -63,11 +63,11 @@ class Gruntman {
             macro: {
                 applyOrder: async function (options) {
                     // TODO undo handler?
-                    if (options.items.length !== options.order.length) 
+                    if (options.items.length !== options.order.length)
                         console.error("Length of items and order length must be the same!")
                     await Promise.all(options.order.map((e,i) => {
                         let item = options.items[e];
-                        if (item.type === "task") 
+                        if (item.type === "task")
                             return engine.db.modifyTask(options.uid, item.content, {order: i});
                         else if (item.type === "project")
                             return engine.db.modifyProject(options.uid, item.content, {order: i});
@@ -115,8 +115,8 @@ class Gruntman {
                 },
                 update: async function (options) {
                     let tInfo = await engine.db.getTaskInformation(options.uid, options.tid);
-                    if (tInfo.delegatedWorkspace && tInfo.delegatedWorkspace !== "") 
-                        if (options.query.due || options.query.defer) 
+                    if (tInfo.delegatedWorkspace && tInfo.delegatedWorkspace !== "")
+                        if (options.query.due || options.query.defer)
                             await engine.db.modifyTask(tInfo.delegatedWorkspace, tInfo.delegatedTaskID, options.query, true);
                     await engine.db.modifyTask(options.uid, options.tid, options.query)
 
@@ -142,7 +142,7 @@ class Gruntman {
                 update__complete: async function (options) {
                     await engine.db.modifyTask(options.uid, options.tid, {isComplete: true, completeDate: new Date()})
                     let taskInfo = await engine.db.getTaskInformation(options.uid, options.tid);
-                    if (taskInfo.delegatedWorkspace && taskInfo.delegatedWorkspace !== "") 
+                    if (taskInfo.delegatedWorkspace && taskInfo.delegatedWorkspace !== "")
                         await engine.db.modifyTask(taskInfo.delegatedWorkspace, taskInfo.delegatedTaskID, {isComplete: true, completeDate: new Date()}, true);
                     if (engine.db.getWorkspaceMode() && taskInfo.delegations)  {
                         taskInfo.delegations.map((invite) => engine.db.revokeTaskToUser(options.uid, invite, options.tid));
@@ -331,6 +331,25 @@ class Gruntman {
                     // return what we need to undo
                     return {projectName, uid: options.uid}
                 },
+		update__complete: async function (options) {
+                    await engine.db.modifyProject(options.uid, options.id,
+			{
+			    isComplete: true,
+			    completeDate: new Date()
+			}
+		    );
+
+
+		},
+		update__uncomplete: async function (options) {
+                    await engine.db.modifyProject(options.uid, options.id,
+			{
+			    isComplete: false
+			}
+		    );
+
+
+		},
                 update__pstate: async function (options) { // update the project name!
                     let currentProject = await engine.db.getProjectStructure(options.uid, options.id, false); // get current project info
                     // get all possible project

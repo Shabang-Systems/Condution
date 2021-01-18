@@ -454,7 +454,7 @@ class Task extends Component {
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
 
-                                            // If we are uncompleting a task (that is, currently task is complete) 
+                                            // If we are uncompleting a task (that is, currently task is complete)
                                             if (this.state.isComplete) {
                                                 this.props.gruntman.lockUpdates();
                                                 // Well, first, uncomplete it

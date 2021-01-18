@@ -8,7 +8,10 @@ import {Spring, animated} from 'react-spring/renderprops'
 import ReactTooltip from 'react-tooltip';
 
 import Task from './Components/Task';
+import GuttedTask from './Components/GuttedTask';
 import BlkArt from './Components/BlkArt';
+
+import './Components/Task.css';
 
 import { withRouter } from "react-router";
 
@@ -38,6 +41,8 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
+	          isComplete: '', // TODO: replace this
+	          animClass: '',
             initialRenderingDone: false
         };
 
@@ -47,6 +52,8 @@ class Projects extends Component { // define the component
         this.activeTask = React.createRef();
 
         this.name = React.createRef();
+	      this.checkbox = React.createRef(); // what's my pseudocheck
+
 
         autoBind(this);
     }
@@ -92,14 +99,17 @@ class Projects extends Component { // define the component
                     if (e.type === "project")
                         buildSelectString(e.content, level+":: ");
         };
+	
+	
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
-        this.setState({name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight, initialRenderingDone: true});
+
+        this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight, initialRenderingDone: true});
     }
 
     componentDidMount() {
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
+	this.props.gruntman.registerRefresher((this.refresh).bind(this));
         this.refresh();
         if (this.props.options === "do") // if we are trying to create
             this.name.current.focus(); // focus the name
@@ -123,6 +133,34 @@ class Projects extends Component { // define the component
             this.setState({name: e.target.value})
         } else { console.log(e)}
     } 
+
+
+    async completeProject() {
+	this.props.gruntman.do( // call a gruntman function
+	    "project.update__complete", { 
+		uid: this.props.uid, // pass it the things vvv
+		id: this.props.id, 
+	    }
+	).then(this.props.menuRefresh)
+	//console.log(this.state.isComplete)
+
+
+	//console.log("project, completing", this.state.currentProject)
+
+    }
+
+    async uncompleteProject() {
+	this.props.gruntman.do( // call a gruntman function
+	    "project.update__uncomplete", { 
+		uid: this.props.uid, // pass it the things vvv
+		id: this.props.id, 
+	    }
+	).then(this.props.menuRefresh)
+
+	//console.log("project, uncompleting", this.state.currentProject)
+    }
+
+
 
     render() {
         return (
@@ -153,13 +191,17 @@ class Projects extends Component { // define the component
                     <div className="header-container" >
                         <div style={{display: "inline-block", width: "100%"}}>
                             <div> 
+				<div>
                                 <IonMenuToggle>
                                     <i className="fas fa-bars" 
                                         style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     {(()=> {
-                                        if (this.state.parent !== "")
+					if (this.state.isComplete) {
+                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("/completed", "");this.props.history.push("/completed")}} />
+
+					} else if (this.state.parent !== "") 
                                             return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.parent);this.props.history.push(`/projects/${this.state.parent}`)}} />
                                     })()}
                                     <i style={{paddingRight: 4}} 
@@ -171,7 +213,27 @@ class Projects extends Component { // define the component
                                         style={{transform: "transformY(-2px)"}}
                                         ref={this.name}
                                     />
+
                                 </h1> 
+				<div className="complete-container">
+				    <a className={"complete-name " + this.state.animClass}
+					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
+					onClick={() => { 
+					    if (this.state.isComplete) {
+						this.uncompleteProject()
+					    } else {
+						this.completeProject()
+					    }
+					    this.setState({animClass: "complete-anim"})
+					    setTimeout(() => {
+						this.setState({animClass: ""})
+					    }, 1000);
+					}}
+
+				    >{this.state.isComplete? "Uncomplete" : "Complete"} </a>
+				</div>
+				</div>
+
                                 <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
@@ -206,9 +268,13 @@ class Projects extends Component { // define the component
                                                     parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
                                                 }
                                             ).then(()=>{
-                                                this.props.menuRefresh(); // refresh menubar
-                                                this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
-                                                this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);
+						this.props.menuRefresh(); // refresh menubar
+						if (this.state.isComplete) {
+						    this.props.history.push("/completed", ""); // go back
+						    this.props.paginate("/completed");
+						} else {
+						    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+						    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
                                             }) // call the homebar refresh
                                         }}
                                         style={{borderColor: "var(--task-icon-ring)", 
@@ -234,9 +300,20 @@ class Projects extends Component { // define the component
                                                 <Spinner ready={this.state.initialRenderingDone} />
 
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
-                        <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} activeTaskID={this.state.activeTask}/>
+                        <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} parentComplete={this.state.isComplete} activeTaskID={this.state.activeTask}/>
 
-
+			{/*<GuttedTask 
+				    startingCompleted={this.state.isComplete} 
+				    //startingCompleted={true} 
+				    tid={this.state.currentProject.id} 
+				    name={"Complete "+this.state.name} 
+				    localizations={{nt: null}}
+				    isStatic={true}
+				    complete={this.completeProject}
+				    uncomplete={this.uncompleteProject}
+				    inputStyle={"completeproject"}
+				/>
+			    */}
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
                                 this.props.gruntman.do( // call a gruntman function
@@ -262,6 +339,7 @@ class Projects extends Component { // define the component
                                 )).pid;
                                 this.props.history.push(`/projects/${npid}/do`);
                             }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
+
 			    <BlkArt visible={(this.state.currentProject.children.length)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>

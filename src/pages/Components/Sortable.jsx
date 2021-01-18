@@ -260,7 +260,8 @@ const SortableProjectList = (props)=>{
                     </animated.div>
                 </div>
             )
-        else if (item.type === "project") {
+        //else if (item.type === "project") {
+	else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
             return (
             <div ref={dragEnvelope}>
                 <animated.div 
@@ -279,7 +280,14 @@ const SortableProjectList = (props)=>{
                         }
                     }}
                 >
-                    <a className="subproject" style={{opacity:props.availability[item.content.id]?"1":"0.35"}} onClick={()=>{props.paginate("projects", item.content.id);props.history.push(`/projects/${item.content.id}`)}}><div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+                    <a className="subproject" 
+			style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+			onClick={()=>{
+			    props.paginate("projects", item.content.id);
+			    props.history.push(`/projects/${item.content.id}`)
+			    console.log(item)
+			}}>
+			<div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
                 </animated.div>
             </div>
             )
