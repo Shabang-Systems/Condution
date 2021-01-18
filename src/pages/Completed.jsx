@@ -3,6 +3,7 @@ import { IonContent, IonPage, IonMenuToggle, isPlatform } from '@ionic/react';
 import React, { Component, useEffect } from 'react';
 import './Completed.css';
 import './Pages.css';
+import Spinner from './Components/Spinner';
 import Task from './Components/Task';
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
@@ -42,7 +43,8 @@ class Completed extends Component {
             projectSelects:[], 
             tagSelects: [], 
             projectDB: {},
-	    pPandT: ''
+	          pPandT: ''
+            initialRenderingDone: false,
         };
 
         this.updatePrefix = this.random();
@@ -99,7 +101,9 @@ class Completed extends Component {
                         buildSelectString(e.content, level+":: ");
         };
         projectDB.map(proj=>buildSelectString(proj));
-	this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB}); // once we finish, set the state
+
+        this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
+
         // also set rendering to false. 
         // This is a hacky solution instead of creating an entirely new async function.
     }
@@ -178,6 +182,7 @@ class Completed extends Component {
                         {/* for the fetch more, if we are currently rendering, render a loading animation. */}
                         {/* Otherwise, render a fetch more.*/}
                         <div style={{overflowY: "scroll"}}>
+                            <Spinner ready={this.state.initialRenderingDone} />
                             {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
                                     {(content.type == "label")?  

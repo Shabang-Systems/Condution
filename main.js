@@ -4,11 +4,10 @@ autoUpdater.checkForUpdatesAndNotify();
 const path = require('path');
 const isDev = require('electron-is-dev');
 
-
 function createWindow () {
     // Create the browser window.
     let win = new BrowserWindow({
-        'width': 950,
+        'width': 1000,
         'height': 650,
         'minWidth': 400,
         'minHeight': 650,

@@ -11,6 +11,8 @@ import BlkArt from './Components/BlkArt';
 import Task from './Components/Task';
 import PerspectiveEdit from './Components/PerspectiveEditor';
 
+import Spinner from './Components/Spinner';
+
 const autoBind = require('auto-bind/react');
 
 
@@ -40,10 +42,10 @@ class Perspectives extends Component {
         this.state = {
             taskList: [], // what tasks should we display? 
             perspectiveName: "", // whats the perspective name? 
-	    perspectiveQuery: "", // whats the perspective query (whats in the text box)?
-	    perspectiveAvail: {}, // whats the perspective availability? 
-	    perspectiveTord: {},  // whats the perspective ordering?
-	    // not truth or dare. jack doent even know what that is! ^^ 
+            perspectiveQuery: "", // whats the perspective query (whats in the text box)?
+            perspectiveAvail: {}, // whats the perspective availability? 
+            perspectiveTord: {},  // whats the perspective ordering?
+            // not truth or dare. jack doent even know what that is! ^^ 
             showEdit: this.props.options === "do", // are we showing? on do, we are.
             possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
             possibleTags:{}, 
@@ -52,8 +54,8 @@ class Perspectives extends Component {
             availability: [], 
             projectSelects:[], 
             tagSelects: [], 
-            projectDB: {}
-
+            projectDB: {},
+            initialRenderingDone: false
         };
 
 
@@ -125,7 +127,8 @@ class Perspectives extends Component {
             availability: avail,		 // set the avail
             projectSelects: projectList,	// set the project list  
             tagSelects: tagsList,	       // set the tag list
-            projectDB 			      // and the project db 
+            projectDB, 			      // and the project db 
+            initialRenderingDone: true
         }); // once we finish, set the state
     }
 
@@ -291,6 +294,7 @@ class Perspectives extends Component {
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                        <Spinner ready={this.state.initialRenderingDone} />
 
                         {this.state.taskList.map(id => (
                             <Task 
@@ -310,7 +314,7 @@ class Perspectives extends Component {
                                 ]}
                             />
                         ))}
-                        <BlkArt visible={(this.state.taskList.length)==0} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
+                        <BlkArt visible={(this.state.taskList.length)==0&& this.state.initialRenderingDone} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
                     </div>
                 </div>

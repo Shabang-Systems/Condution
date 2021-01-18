@@ -17,6 +17,8 @@ import { withRouter } from "react-router";
 
 import { SortableProjectList } from './Components/Sortable';
 
+import Spinner from './Components/Spinner';
+
 const autoBind = require('auto-bind/react'); // autobind things! 
 
 class Projects extends Component { // define the component
@@ -39,8 +41,9 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
-	    isComplete: '', // TODO: replace this
-	    animClass: '',
+	          isComplete: '', // TODO: replace this
+	          animClass: '',
+            initialRenderingDone: false
         };
 
         this.updatePrefix = this.random();
@@ -49,7 +52,7 @@ class Projects extends Component { // define the component
         this.activeTask = React.createRef();
 
         this.name = React.createRef();
-	this.checkbox = React.createRef(); // what's my pseudocheck
+	      this.checkbox = React.createRef(); // what's my pseudocheck
 
 
         autoBind(this);
@@ -101,8 +104,8 @@ class Projects extends Component { // define the component
         projectDB.map(proj=>buildSelectString(proj));
         this.updatePrefix = this.random();
         let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
-        this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight});
-	//console.log(this.state.isComplete, this.state.name)
+
+        this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight, initialRenderingDone: true});
     }
 
     componentDidMount() {
@@ -294,6 +297,8 @@ class Projects extends Component { // define the component
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
+                                                <Spinner ready={this.state.initialRenderingDone} />
+
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} parentComplete={this.state.isComplete} activeTaskID={this.state.activeTask}/>
 
@@ -335,10 +340,7 @@ class Projects extends Component { // define the component
                                 this.props.history.push(`/projects/${npid}/do`);
                             }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
 
-
-
-
-			    <BlkArt visible={(this.state.currentProject.children.length)==0} title={"Nothing in this project."} subtitle={"Add a task?"} />
+			    <BlkArt visible={(this.state.currentProject.children.length)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>
