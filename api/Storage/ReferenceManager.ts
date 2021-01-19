@@ -42,6 +42,8 @@ export default class ReferenceManager {
 
     constructor(engineProviders: Provider[]) {
         this.providers = engineProviders;
+        if (engineProviders.length >= 1)
+            this.currentProvider = engineProviders[0];
     }
 
     /**
@@ -76,12 +78,13 @@ export default class ReferenceManager {
      * > let values = ref.get();
      *
      * @param {string[]} path
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {Page}
      *
      */
 
-    page(path: string[]) : Page {
-        return this.currentProvider.page(path);
+    page(path: string[], refreshCallback?:Function) : Page {
+        return this.currentProvider.page(path, refreshCallback);
     }
 
     /**

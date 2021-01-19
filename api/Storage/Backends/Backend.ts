@@ -104,12 +104,13 @@ abstract class Provider {
      *
      * Gets a Page to operate on 
      *
-     * @param {string[]} path
+     * @param {string[]} path: path that you desire to get a reference to
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {Page}
      *
      */
 
-    abstract page(path: string[]) : Page;
+    abstract page(path: string[], refreshCallback?:Function) : Page;
 
     /**
      *

@@ -32,6 +32,7 @@ class FirebaseCollection extends Collection {
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
     }
+
     async add(payload:object) {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
         const resultDocument = await ref.add(payload); // add the document
@@ -83,7 +84,7 @@ class FirebaseCollection extends Collection {
 
     async pages() : Promise<Page[]> {
         return (await this.getCachedAccessPoint()).docs.map((page:any)=>{
-            return new FirebasePage([...this.path, page.id], this.firebaseDB, this.firebaseRef, page.data());
+            return new FirebasePage([...this.path, page.id], this.firebaseDB, this.firebaseRef);
         });
     }
 
@@ -178,15 +179,28 @@ class FirebasePage extends Page {
     path: string[];
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
-
-    private _data: object;
-
-    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), _dataSeed?:object) {
+    
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback?:Function) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
-        this._data = _dataSeed;
+        const TODOstring = JSON.stringify(this.path);        //  strigify to hash array
+        if (!cache.has(TODOstring)) {                   //  if path string isn't cached
+            // TODO: comment this out someday \/
+            const ref = this.getFirebaseRef(path);           //  get the reference from the database
+            cache.set(TODOstring, ref.get());           //  save result in cache
+            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
+                                     ref.onSnapshot({
+                                         error: console.trace,
+                                         next: (snap:any) => {
+                                             cache.set(TODOstring, snap);
+                                             refreshCallback(Object.assign(snap.data(), {id:snap.id}));
+                                             // TODO TODO: requestRefresh
+                                         }
+                                     })
+                                    );
+        }
     }
 
     get id() : string {
@@ -228,26 +242,7 @@ class FirebasePage extends Page {
      */
 
     async get() : Promise<object> {
-        if (this._data) // TODO OH MY GOD THIS IS JANKY
-            return this._data;
-        let path = this.path;
-        const TODOstring = JSON.stringify(path);        //  strigify to hash array
-        if (!cache.has(TODOstring)) {                   //  if path string isn't cached
-            // TODO: comment this out someday \/
-            const ref = this.getFirebaseRef(path);           //  get the reference from the database
-            cache.set(TODOstring, ref.get());           //  save result in cache
-            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
-                                     ref.onSnapshot({
-                                         error: console.trace,
-                                         next: (snap:any) => {
-                                             this._data = undefined;
-                                             cache.set(TODOstring, snap);
-                                             //requestRefresh();
-                                             // TODO TODO: requestRefresh
-                                         }
-                                     })
-                                    );
-        }
+        const TODOstring = JSON.stringify(this.path);        //  strigify to hash array
         const result = await cache.get(TODOstring);
         return Object.assign(result.data(), {id: result.id});
     }
@@ -462,12 +457,13 @@ class FirebaseProvider extends Provider {
      * Gets a Page to operate on
      *
      * @param {string[]} path: path that you desire to get a reference to
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {Page}: the page ye wished for
      *
      */
 
-    page(path: string[]) : FirebasePage {
-        return new FirebasePage(path, this.firebaseDB, this.firebaseRef);
+    page(path: string[], refreshCallback?:Function) : FirebasePage {
+        return new FirebasePage(path, this.firebaseDB, this.firebaseRef, refreshCallback);
     }
 
     /**
