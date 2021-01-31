@@ -163,6 +163,7 @@
     "auth_email_unverified_message" : "Email unverified. Please check your email and try again",
     "auth_recovery_check_message" : "Please check your email and head back to login with your resetted password.",
     "workspace_modal_placeholder" : "Tap to set name",
+    "projects_delete" : "Delete",
     "onboarding_content": [
         "Hey",
         "🙌 welcome to Condution! 🙌",
