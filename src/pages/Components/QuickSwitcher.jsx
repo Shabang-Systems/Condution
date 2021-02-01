@@ -51,7 +51,8 @@ class QuickSwitcher extends Component {
     }
 
     componentDidUpdate() {
-	if (this.state.prop_store != this.props) { // if the props have changed, 
+	if (this.state.prop_store != this.props) { // if the props have changed, TODO: fix this
+	    this.getProjs() // get our sub projects 
 	    this.processItems() // process the items 
 	}
     }
