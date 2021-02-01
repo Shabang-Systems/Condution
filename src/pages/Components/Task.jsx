@@ -562,6 +562,9 @@ class Task extends Component {
                                                 {/*Deltete icon*/}
                                                     <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
                                                         this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
+                                                        console.log("task delted *sigh*");
+                                                        this.closeTask();
+
                                                     }}><i className="fas fa-trash" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
 
                                                     {/* Flagged icon */}
