@@ -172,7 +172,7 @@ class PerspectiveEdit extends Component {
 					defaultValue={this.props.perspectiveName} 
 					onChange={(e)=> {e.persist(); this.props.updateName(e); this.setState({inputEvent: e})}}
 					style={{minWidth: 0}}
-					placeholder="@NEEDLOC Tap to set name"
+					placeholder="Tap to set name"
 				    />
 
 				    <div className="repeat-task-name">{this.state.name}</div>

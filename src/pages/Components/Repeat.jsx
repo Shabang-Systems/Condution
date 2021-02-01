@@ -99,7 +99,7 @@ class Repeat extends Component {
                                     this.setState({rule: e.detail.value, advanced: false, on: undefined});
  
                                 }}>
-                                <IonSelectOption className="repeat-select__option" value="none">@NEEDLOC None</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="none">None</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="daily">{this.props.gruntman.localizations.repeat_every_day}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="weekly">{this.props.gruntman.localizations.repeat_every_week}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="monthly">{this.props.gruntman.localizations.repeat_every_month}</IonSelectOption>
