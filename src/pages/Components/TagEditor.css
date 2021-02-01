@@ -17,7 +17,6 @@
 .TagEditor-close {
     margin-right: 3px;
     float: right;
-    /*color: var(--decorative-light-accent);*/
     color: red;
     cursor: pointer;
 }
