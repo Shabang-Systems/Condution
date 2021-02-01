@@ -36,8 +36,8 @@
     margin-left: 10px;
     margin-right: 10px;
     flex-direction: column;
-    width:140px !important;
-    min-width:140px !important;
+    width: 140px !important;
+    min-width: 140px !important;
 }
 
 .tag-settings {
@@ -45,7 +45,7 @@
     overflow-y: scroll;
     flex-grow: 10;
     overflow-x: hidden;
-    padding:0px 10px;
+    padding: 0px 10px;
 }
 
 .tag-pane-container {
@@ -94,7 +94,7 @@
     margin-top: 10px;
     display: flex;
     flex-direction: row;
-    align-items:center;
+    align-items: center;
     margin-bottom: 5px;
     /*
     text-overflow: ellipsis;
@@ -160,7 +160,7 @@ input[type=number] {
 .tag-weight-container {
     display: flex;
     flex-direction: row;
-    align-items:center;
+    align-items: center;
     margin-bottom: 5px;
 }
 
