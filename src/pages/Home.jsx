@@ -5,7 +5,7 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast } from '@ionic/react';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
 
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 
 // Routing
@@ -298,20 +298,26 @@ class Home extends Component {
 							{...provided.droppableId}
 						    >
 					    
-						{this.state.perspectives.map((psp) => {
+						{this.state.perspectives.map((psp, i) => {
 						    return (
-							<Link key={psp.id} to={`/perspectives/${psp.id}`} 
+							<Draggable draggableId={psp.id} index={i}>
+							    {(provided) => { return (
+							    <Link key={psp.id} to={`/perspectives/${psp.id}`} 
+								{...provided.draggableProps}
+								{...provided.dragHandleProps}
+								ref={provided.innerRef}
 
 
-
-							    onClick={()=>{
-								this.setState({itemSelected:{item:"perspectives", id:psp.id}});
-								if (this.menu.current)
-								    this.menu.current.close();
-							}}> {/* Link to trigger router */}
-							    {/* Perspective button */}
-							    <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
-							</Link>
+								onClick={()=>{
+								    this.setState({itemSelected:{item:"perspectives", id:psp.id}});
+								    if (this.menu.current)
+									this.menu.current.close();
+							    }}> {/* Link to trigger router */}
+								{/* Perspective button */}
+								<div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
+							    </Link>
+						)}}
+							</Draggable>
 						    )
 					    })}
 						{provided.placeholder}
