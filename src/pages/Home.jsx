@@ -5,6 +5,9 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast } from '@ionic/react';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
 
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+
+
 // Routing
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';
 import { Redirect, Route, Link, Switch } from 'react-router-dom';
@@ -149,7 +152,7 @@ class Home extends Component {
             await Promise.all(delegations.sort((a, b)=>a.time.seconds>b.time.seconds).map((async function(delegation) {
                 if (lastSeen[0] == delegation.task && lastSeen[1] == delegation.type) 
                     return; // fix duplicate deligation bug
-                
+
                 if (delegation.type === "delegation") {
                     let chains = await this.props.engine.db.getChainedTasks(this.props.uid);
                     if (chains[delegation.task] === undefined) {
@@ -182,6 +185,14 @@ class Home extends Component {
         }
 
         this.setState({projects: tlp[2], perspectives:psp[2]});
+    }
+
+
+
+
+
+    onDragEnd = result => {
+
     }
 
 
@@ -275,18 +286,38 @@ class Home extends Component {
                                     }} className="fa fa-plus add"></a></div>
 
                                     {/* === Perspective button + link == */}
-                                    {this.state.perspectives.map((psp) => {
-                                        return (
-                                            <Link key={psp.id} to={`/perspectives/${psp.id}`} onClick={()=>{
-                                                this.setState({itemSelected:{item:"perspectives", id:psp.id}});
-                                                if (this.menu.current)
-                                                    this.menu.current.close();
-                                            }}> {/* Link to trigger router */}
-                                                {/* Perspective button */}
-                                                <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
-                                            </Link>
-                                        )
-                                    })}
+
+
+
+				    <DragDropContext>
+					<Droppable droppableId={"3"}>
+					    { () => { return (<div>
+					    {provided => { 
+					    
+						{this.state.perspectives.map((psp) => {
+						    return (
+							<Link key={psp.id} to={`/perspectives/${psp.id}`} 
+
+
+
+							    onClick={()=>{
+								this.setState({itemSelected:{item:"perspectives", id:psp.id}});
+								if (this.menu.current)
+								    this.menu.current.close();
+							}}> {/* Link to trigger router */}
+							    {/* Perspective button */}
+							    <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
+							</Link>
+						    )
+					    })}}
+						} </div> )}}
+					</Droppable>
+				    </DragDropContext>
+
+
+
+
+
 
 
                                     {/* === Projects == */}
