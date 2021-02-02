@@ -164,6 +164,8 @@
     "auth_recovery_check_message" : "Please check your email and head back to login with your resetted password.",
     "workspace_modal_placeholder" : "Tap to set name",
     "perspective_modal_placeholder" : "Tap to set name",
+    "perspective_query_placeholder" : "perspective query",
+    "perspective_filter_by" : "Filter by",
     "projects_delete" : "Delete",
     "none" : "None",
     "onboarding_content": [

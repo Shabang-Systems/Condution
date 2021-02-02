@@ -183,7 +183,7 @@ class PerspectiveEdit extends Component {
 
 			    </div>
 			    <div className="build-input">
-				<span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>Filter by</span> {/*@NEEDLOC*/}
+				<span className="bold-prefix" style={{minWidth: "70px", marginTop: "4px"}}>{this.props.gruntman.localizations.perspective_filter_by}</span>
 				<input 
 				    className="build-input-edit"
 				    //defaultValue={this.props.query}
@@ -195,7 +195,7 @@ class PerspectiveEdit extends Component {
 					this.setState({inputValue: e.target.value})}
 				    }
 
-				    placeholder="LOCALIZE: perspective query"
+				    placeholder={this.props.gruntman.localizations.perspective_query_placeholder}
 				>
 				</input> 
 				<i 
