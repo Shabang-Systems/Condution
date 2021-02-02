@@ -291,8 +291,12 @@ class Home extends Component {
 
 				    <DragDropContext>
 					<Droppable droppableId={"3"}>
-					    { () => { return (<div>
 					    {provided => { 
+						return (
+						    <div
+							ref = {provided.innerRef}
+							{...provided.droppableId}
+						    >
 					    
 						{this.state.perspectives.map((psp) => {
 						    return (
@@ -309,8 +313,10 @@ class Home extends Component {
 							    <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
 							</Link>
 						    )
-					    })}}
-						} </div> )}}
+					    })}
+						{provided.placeholder}
+						 </div> )
+					    }}
 					</Droppable>
 				    </DragDropContext>
 
