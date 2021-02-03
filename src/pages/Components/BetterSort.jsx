@@ -240,7 +240,11 @@ const SortableProjectList = (props)=>{
     const onDragEnd = result => {
 
     }
-    
+   
+    const me = (item, i) => {
+	return (<div> {item.type} whshf</div>)
+
+    }
 
 
     return ( 
@@ -253,50 +257,54 @@ const SortableProjectList = (props)=>{
 			{...provided.droppableProps}
 		    >
 			{props.list.map((item, i) => (
-			    <Draggable draggableId={(item.type == "task")? item.content: item.content.id} key={item.content.id} index={i}>
+			    <Draggable draggableId={(item.type == "task")? item.content : item.content.id} key={item.content.id} index={i}>
 				{provided => (
 				    <div
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
 					ref={provided.innerRef}
 					key={item.content.id}
-
-
 				    >
+					{me(item, i)}
 				{console.log(item)}
+				{() => { return (<div> gere</div> )}}
 				{//let anim = springs[i]; 
-				    () => {
-					console.log(item)
-				    if (item.type === "task")
-					return (
-					    <div 
-						//ref = {dragEnvelope}
-					    >
-						<Task 
-						    //ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} 
-						    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
-						    //envelope={dragEnvelope} setDragEnabled={setDragEnabled}
-						/>
-					    </div>
-					)
-				    //else if (item.type === "project") {
-				    else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
-					return (
-					    <div 
-						//ref={dragEnvelope}
-					    >
-						<a className="subproject" 
-						    style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
-						    onClick={()=>{
-							props.paginate("projects", item.content.id);
-							props.history.push(`/projects/${item.content.id}`)
-							console.log(item)
-						    }}>
-						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
-					    </div>
-					)
-				    }
-				}}
+
+				    () => { return (<div> {item.type} </div> )}
+				//    () => {
+				//        console.log(item, "hii:")
+				//    if (item.type === "task")
+				//        return (
+				//            <div 
+				//                //ref = {dragEnvelope}
+				//            >
+				//                tassks
+				//                <Task 
+				//                    //ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} 
+				//                    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
+				//                    //envelope={dragEnvelope} setDragEnabled={setDragEnabled}
+				//                />
+				//            </div>
+				//        )
+				//    //else if (item.type === "project") {
+				//    else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
+				//        return (
+				//            <div 
+				//                //ref={dragEnvelope}
+				//            >
+				//                <a className="subproject" 
+				//                    style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+				//                    onClick={()=>{
+				//                        props.paginate("projects", item.content.id);
+				//                        props.history.push(`/projects/${item.content.id}`)
+				//                        console.log(item)
+				//                    }}>
+				//                    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+				//            </div>
+				//        )
+				//    }
+				//}
+					}
 				    {provided.placeholder}
 				</div>
 
