@@ -99,13 +99,13 @@ function CalendarPopover(props) {
             <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
                 <div id="calendar-wrapper-popover">
                     <div id="calendar-daterow">
-                        <span className="calendar-daterow-item">SunYYYYY</span>
-                        <span className="calendar-daterow-item">Mon</span>
-                        <span className="calendar-daterow-item">Tues</span>
-                        <span className="calendar-daterow-item">Wed</span>
-                        <span className="calendar-daterow-item">Thu</span>
-                        <span className="calendar-daterow-item">Fri</span>
-                        <span className="calendar-daterow-item">Sat</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[0]}</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[1]}</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[2]}</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[3]}</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[4]}</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[5]}</span>
+                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[6]}</span>
                     </div>
                     <div id="calendar-container">
                         {[...daysBefore,...contentDays,...daysAfter].map(i =>
@@ -270,13 +270,13 @@ function CalendarUnit(props) {
         <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
             <div id="calendar-wrapper-popover">
                 <div id="calendar-daterow">
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[0]}</span>
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[1]}</span>
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[2]}</span>
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[3]}</span>
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[4]}</span>
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[5]}</span>
-                    <span className="calendar-daterow-item">{this.props.gruntman.localizations.calendar_day_abrvs[6]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[0]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[1]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[2]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[3]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[4]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[5]}</span>
+                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[6]}</span>
                 </div>
                 <div id="calendar-container">
                     {[...daysBefore,...contentDays,...daysAfter].map(i =>
