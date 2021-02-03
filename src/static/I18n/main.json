@@ -168,6 +168,15 @@
     "perspective_filter_by" : "Filter by",
     "projects_delete" : "Delete",
     "none" : "None",
+    "calendar_day_abrvs" : [
+        "Sun",
+        "Mon",
+        "Tues",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat"
+    ],
     "onboarding_content": [
         "Hey",
         "🙌 welcome to Condution! 🙌",
