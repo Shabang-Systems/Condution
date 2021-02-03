@@ -227,8 +227,6 @@ class Home extends Component {
 		}
 	    )
 	})
-	
-	
 
 
 	this.setState({perspectives: pspOrder})
@@ -345,12 +343,13 @@ class Home extends Component {
 						    >
 					    
 						{this.state.perspectives.map((psp, i) => (
-							<Draggable draggableId={psp.id} index={i}>
+							<Draggable draggableId={psp.id} key={psp.id} index={i}>
 							    {(provided) => (
 							    <div
 								{...provided.draggableProps}
 								{...provided.dragHandleProps}
 								ref={provided.innerRef}
+								key={psp.id}
 
 							    >
 							    <Link key={psp.id} to={`/perspectives/${psp.id}`} 
