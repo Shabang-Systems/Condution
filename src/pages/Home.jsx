@@ -183,11 +183,18 @@ class Home extends Component {
                 this.props.gruntman.unlockUpdates();
             }
         }
+	for (let i in psp[2]) 
+	{
+	    console.log(psp[2][i].name)
+	}
 
         this.setState({projects: tlp[2], perspectives:psp[2]});
     }
 
+    
+    reorderBackend() {
 
+    }
 
 
 
@@ -205,7 +212,27 @@ class Home extends Component {
 	pspOrder.splice(result.source.index, 1);
 	pspOrder.splice(result.destination.index, 0, inDrag);
 
+	//await this.props.engine.db.modify
+	
+	pspOrder.forEach((v,i) => {
+	    console.log(v.name, i)
+
+
+	    this.props.gruntman.do(
+		"perspective.update__perspective", {
+		    uid: this.props.uid,
+		    id: v.id,
+		    payload: {order: i}
+
+		}
+	    )
+	})
+	
+	
+
+
 	this.setState({perspectives: pspOrder})
+	//this.refresh()
 
 
     }
