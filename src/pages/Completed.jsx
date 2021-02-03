@@ -43,6 +43,7 @@ class Completed extends Component {
             projectSelects:[], 
             tagSelects: [], 
             projectDB: {},
+	    pPandT: '',
             initialRenderingDone: false,
         };
 
@@ -56,15 +57,22 @@ class Completed extends Component {
 
     async refresh() {
         let taskArr = []; // define temp array
-        let full = await this.props.engine.db.getCompletedTasks(this.props.uid); // get the tasks from the database 
+        let full = await this.props.engine.db.getCompletedItems(this.props.uid); // get the tasks from the database 
 
         let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
         let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
         // loop through the tasks, converting to objects and inserting labels between each cat
         full.forEach((cat, i) => {
             taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
-            cat.forEach(task => { // this loops through each cat
-                taskArr.push(new TaskObject("task", task)) // convert each task to an object then push it to the temp arr
+	    // if item[0] == task, ... else, ...
+            cat.forEach(item => { // this loops through each cat
+		if (item[1] == "task") {
+		    // convert each task to an object then push it to the temp arr
+		    taskArr.push(new TaskObject("task", item[0])) 
+		} else if (item[1] == "project")
+		{
+		    taskArr.push(new TaskObject("project", item[0])) 
+		}
             })
         });
 
@@ -93,7 +101,9 @@ class Completed extends Component {
                         buildSelectString(e.content, level+":: ");
         };
         projectDB.map(proj=>buildSelectString(proj));
-        this.setState({taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
+
+        this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
+
         // also set rendering to false. 
         // This is a hacky solution instead of creating an entirely new async function.
     }
@@ -114,8 +124,10 @@ class Completed extends Component {
             this.setState({tasksShown: this.state.tasksShown+1}) 
             // increment tasksShown by one whenever fetch more is clicked
             // this renders 10 more items 
+	    // // if item[0] == task, ... else, ...
             this.setState({rendering: false}) // set rendering to false
         }, 1)
+	//console.log(this.state.pPandT[0][0])
 
         // disclaimer: I do not understand how this works. I was just messing around trying to debug and this happened to work.
         // if it ain't broke, dont fix it? 
@@ -174,34 +186,54 @@ class Completed extends Component {
                             {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
                                     {(content.type == "label")?  
-                                            (this.state.taskList[i+1] ? 
-                                                ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
-                                                "" : <p className="page-label" style={{marginBottom:0}}>{content.contents}</p>) : "") : 
-                                                <Task 
-                                                    tid={content.contents} 
-                                                    startingCompleted={true}
-                                                    key={content.contents+"-"+this.updatePrefix} 
-                                                    uid={this.props.uid} 
-                                                    engine={this.props.engine} 
-                                                    gruntman={this.props.gruntman} 
-                                                    availability={this.state.availability[content.contents]} 
-                                                    datapack={[this.state.tagSelects,
-                                                        this.state.projectSelects, 
-                                                        this.state.possibleProjects, 
-                                                        this.state.possibleProjectsRev, 
-                                                        this.state.possibleTags, 
-                                                        this.state.possibleTagsRev]}
-                                                />
-                                    }
-                                </div>
-                            ))}
 
-                        <div className="fetch-more" > 
-                            {/* define the fetch more button */}
-                            {this.state.rendering? <p className="loader" >{this.props.gruntman.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.gruntman.localizations.fetchmore}</p>}
-                        </div> 
-                    <div className="bottom-helper">&nbsp;</div>
-                    </div>
+					(this.state.taskList[i+1] ? 
+					    ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
+                                                "" 
+						: 
+						<p 
+						    className="page-label" 
+						    style={{marginBottom:0}}
+						>{content.contents}</p>) 
+					    : "")
+					: (content.type == "task"? 
+					    <Task 
+						tid={content.contents} 
+						startingCompleted={true}
+						key={content.contents+"-"+this.updatePrefix} 
+						uid={this.props.uid} 
+						engine={this.props.engine} 
+						gruntman={this.props.gruntman} 
+						availability={this.state.availability[content.contents]} 
+						datapack={[this.state.tagSelects,
+							this.state.projectSelects, 
+							this.state.possibleProjects, 
+							this.state.possibleProjectsRev, 
+							this.state.possibleTags, 
+							this.state.possibleTagsRev]}
+					    />
+					    : 
+						<a className="subproject" 
+						    //style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+						    onClick={()=>{
+							this.props.paginate("projects", content.contents);
+							this.props.history.push(`/projects/${content.contents}`)
+						    }}
+						>
+						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
+					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
+					)
+				    }
+				</div>
+			    ))}
+
+			    <div className="fetch-more" > 
+				{/* define the fetch more button */}
+				{this.state.rendering? <p className="loader" >{this.props.gruntman.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.gruntman.localizations.fetchmore}</p>}
+			    </div> 
+			    <div className="bottom-helper">&nbsp;</div>
+			</div>
+
                     </div>
                 </div>
             </IonPage>

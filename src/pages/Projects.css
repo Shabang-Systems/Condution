@@ -20,6 +20,10 @@
     background: var(--background-feature);
 }
 
+.completeproject {
+    color: var(--decorative-light-alt) !important;
+}
+
 .newbutton {
     border-width: 0px;
     border-style: 0;
@@ -84,4 +88,106 @@
     height: 10px;
     background-image: linear-gradient(to right, var(--progressbar-min),var(--progressbar-max));
 }
+
+
+
+
+/*.completer-wrapper {*/
+/*    background-color: var(--special);*/
+/*    border-radius: 20px;*/
+/*    margin: 5px;*/
+/*    padding: 5px;*/
+/*    [>border: 1px solid red;<]*/
+/*    width: 120px;*/
+
+/*    [>display: flex;<]*/
+/*    [>flex-direction: row;<]*/
+/*    float: right;*/
+/*    [>margin-top: 10px;<]*/
+/*}*/
+
+
+
+/*.completer-text {*/
+/*    font-weight:400;*/
+/*    background-color:inherit;*/
+/*    color: var(--task-name-text);*/
+/*    [>padding: 13px 5px 10px 5px;<]*/
+/*    border: 0;*/
+/*    display: inline-block;*/
+/*    height: 30px;*/
+/*    -moz-border-radius: 3px;*/
+/*    -webkit-border-radius: 3px;*/
+/*    border-radius: 3px;*/
+/*    padding-top: 15px;*/
+/*    [>text-overflow: ellipsis;<]*/
+/*}*/
+
+
+
+.complete-name {
+    display: inline-block;
+    background: var(--background-feature);
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 17px;
+    transform: translateY(-1.5px);
+    cursor: pointer;
+    transition: 0.3s;
+    /*color: var(--page-title);*/
+}
+
+.complete-name:hover {
+    background: var(--content-normal);
+    padding: 5px 12px;
+}
+
+.complete-anim {
+    /*background-color: var(--page-title) !important;*/
+    /*padding: 5px 20px !important;*/
+    margin-right: 10px;
+
+}
+
+
+.complete-container {
+    display: inline-block;
+    float: right;
+    /*margin-right: 30px;*/
+    margin-right: 1.5%;
+    margin-top: 10px;
+    /*width: 10%;*/
+
+}
+
+.mpage-title {
+
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--page-title);
+    border-radius: 5px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 15px;
+    padding-top: 10px;
+    margin: 10px;
+    transform: translateY(-0.5px);
+    /*border: 1px solid red;*/
+    /*width: 100%;<] [> IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

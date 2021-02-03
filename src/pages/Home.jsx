@@ -138,6 +138,7 @@ class Home extends Component {
         // Load the top level projects and perspectives
         // to set into the state and to add to the menu
         let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
+	//console.log(tlp)
         let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
         if (this.props.authType === "firebase" && !this.state.isWorkspace) {
             let invites = await this.props.engine.db.getInvitations(this.props.email);
@@ -310,12 +311,13 @@ class Home extends Component {
                                         return (
                                             <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
                                                 this.setState({itemSelected:{item:"projects", id:proj.id}})
+						//console.log(proj)
                                                 if (this.menu.current)
                                                     this.menu.current.close();
                                                 }}> {/* Link to trigger router */}
                                                 {/* Perspective button */}
-                                                <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link> 
-                                        )                            
+                                                <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link>
+                                        )
                                     })}
 
                                 </IonContent>
@@ -372,7 +374,7 @@ class Home extends Component {
                                         {/* workspace renders workspace */}
                                         <Route path="/workspaces/:id" render={({match})=><WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id}  actualUID={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email}/>}  />
                                         {/* completed renders completed */}
-                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
+                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.state.workspace} history={history} paginate={this.paginate} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
 
                                         {/* perspective renders perspectives */}
                                         <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create} localizations={this.props.localizations}/>}  />

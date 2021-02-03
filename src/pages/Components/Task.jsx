@@ -454,7 +454,7 @@ class Task extends Component {
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
 
-                                            // If we are uncompleting a task (that is, currently task is complete) 
+                                            // If we are uncompleting a task (that is, currently task is complete)
                                             if (this.state.isComplete) {
                                                 this.props.gruntman.lockUpdates();
                                                 // Well, first, uncomplete it
@@ -558,6 +558,14 @@ class Task extends Component {
 
                                                 {/* Task icon set. TODO delete task */}
                                                 <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
+                                                    
+                                                {/*Deltete icon*/}
+                                                    <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
+                                                        this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
+                                                        this.closeTask();
+
+                                                    }}><i className="fas fa-trash" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
+
                                                     {/* Flagged icon */}
                                                     <a data-tip={this.props.gruntman.psp_flg} className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
                                                         // On change, set the flagged state to the opposite of whatever it is
