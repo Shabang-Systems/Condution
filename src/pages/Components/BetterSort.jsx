@@ -240,16 +240,39 @@ const SortableProjectList = (props)=>{
     const onDragEnd = result => {
 
     }
+    const renderTask = (item, i, provided) => {
+	return ( 
+	    <div>
+		<Task 
+		    //ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} 
+		    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
+		    //envelope={dragEnvelope} setDragEnabled={setDragEnabled}
+		/>
+	    </div>
+	)
+    }
    
-    const me = (item, i) => {
-	return (<div> {item.type} whshf</div>)
+    const renderProject = (item, i, provided) => {
+	if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
+	    return ( 
+		    <div> 
+		    <a className="subproject" 
+			style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+			onClick={()=>{
+			    props.paginate("projects", item.content.id);
+			    props.history.push(`/projects/${item.content.id}`)
+			    console.log(item)
+			}}>
+			<div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+		</div>
+	    )
+	}
 
     }
 
 
     return ( 
 	<DragDropContext onDragEnd={onDragEnd}>
-	    hiii
 	    <Droppable droppableId={"main"}>
 		{provided => (
 		    <div
@@ -265,12 +288,10 @@ const SortableProjectList = (props)=>{
 					ref={provided.innerRef}
 					key={item.content.id}
 				    >
-					{me(item, i)}
-				{console.log(item)}
-				{() => { return (<div> gere</div> )}}
+					{(item.type == "task")? renderTask(item, i, provided): renderProject(item, i, provided)}
 				{//let anim = springs[i]; 
 
-				    () => { return (<div> {item.type} </div> )}
+				    //() => { return (<div> {item.type} </div> )}
 				//    () => {
 				//        console.log(item, "hii:")
 				//    if (item.type === "task")
@@ -305,7 +326,6 @@ const SortableProjectList = (props)=>{
 				//    }
 				//}
 					}
-				    {provided.placeholder}
 				</div>
 
 				    )}
@@ -313,6 +333,7 @@ const SortableProjectList = (props)=>{
 			)
 			)
 			}
+				{provided.placeholder}
 		    </div>
 		)}
 	    </Droppable>
