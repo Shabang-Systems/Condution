@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDrag } from 'react-use-gesture'
 import { useSprings, animated, interpolate } from 'react-spring'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
 
 import '../Projects.css';
 
@@ -234,39 +236,80 @@ const SortableProjectList = (props)=>{
 
 
     //}).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
+    
+    const onDragEnd = result => {
 
-    return props.list.map((item, i) => {
-        //let anim = springs[i];
-        if (item.type === "task")
-            return (
-                <div 
-		    //ref = {dragEnvelope}
-		>
-                        <Task 
-			    //ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} 
-			    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
-			//envelope={dragEnvelope} setDragEnabled={setDragEnabled}
-			/>
-                </div>
-            )
-        //else if (item.type === "project") {
-	else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
-            return (
-            <div 
-		//ref={dragEnvelope}
-	    >
-                    <a className="subproject" 
-			style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
-			onClick={()=>{
-			    props.paginate("projects", item.content.id);
-			    props.history.push(`/projects/${item.content.id}`)
-			    console.log(item)
-			}}>
-			<div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
-            </div>
-            )
-        }
-    });
+    }
+    
+
+
+    return ( 
+	<DragDropContext onDragEnd={onDragEnd}>
+	    hiii
+	    <Droppable droppableId={"main"}>
+		{provided => (
+		    <div
+			ref = {provided.innerRef}
+			{...provided.droppableProps}
+		    >
+			{props.list.map((item, i) => (
+			    <Draggable draggableId={(item.type == "task")? item.content: item.content.id} key={item.content.id} index={i}>
+				{provided => (
+				    <div
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
+					key={item.content.id}
+
+
+				    >
+				{console.log(item)}
+				{//let anim = springs[i]; 
+				    () => {
+					console.log(item)
+				    if (item.type === "task")
+					return (
+					    <div 
+						//ref = {dragEnvelope}
+					    >
+						<Task 
+						    //ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} 
+						    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
+						    //envelope={dragEnvelope} setDragEnabled={setDragEnabled}
+						/>
+					    </div>
+					)
+				    //else if (item.type === "project") {
+				    else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
+					return (
+					    <div 
+						//ref={dragEnvelope}
+					    >
+						<a className="subproject" 
+						    style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+						    onClick={()=>{
+							props.paginate("projects", item.content.id);
+							props.history.push(`/projects/${item.content.id}`)
+							console.log(item)
+						    }}>
+						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>{props.possibleProjects[item.content.id]}</div></div></a>
+					    </div>
+					)
+				    }
+				}}
+				    {provided.placeholder}
+				</div>
+
+				    )}
+			    </Draggable>
+			)
+			)
+			}
+		    </div>
+		)}
+	    </Droppable>
+	</DragDropContext>
+    );
 }
 
 export { SortableTaskList, SortableProjectList };
