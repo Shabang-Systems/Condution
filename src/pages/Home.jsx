@@ -192,6 +192,7 @@ class Home extends Component {
 
 
     onDragEnd = result => {
+	console.log(result)
 
     }
 
@@ -289,23 +290,33 @@ class Home extends Component {
 
 
 
-				    <DragDropContext>
+				    <DragDropContext onDragEnd={this.onDragEnd}>
 					<Droppable droppableId={"3"}>
-					    {provided => { 
-						return (
+					    {provided => (
 						    <div
 							ref = {provided.innerRef}
-							{...provided.droppableId}
+							{...provided.droppableProps}
+							style = {{
+							    height: 500
+
+
+							}}
 						    >
 					    
-						{this.state.perspectives.map((psp, i) => {
-						    return (
+						{this.state.perspectives.map((psp, i) => (
 							<Draggable draggableId={psp.id} index={i}>
-							    {(provided) => { return (
-							    <Link key={psp.id} to={`/perspectives/${psp.id}`} 
+							    {(provided) => (
+							    <div
 								{...provided.draggableProps}
 								{...provided.dragHandleProps}
 								ref={provided.innerRef}
+
+							    >
+							    <Link key={psp.id} to={`/perspectives/${psp.id}`} 
+								//style={{
+								    //border: "1px solid red"
+								    //backgroundColor: "blue"
+								//}}
 
 
 								onClick={()=>{
@@ -316,13 +327,14 @@ class Home extends Component {
 								{/* Perspective button */}
 								<div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
 							    </Link>
-						)}}
+								</div>
+						)}
 							</Draggable>
 						    )
-					    })}
-						{provided.placeholder}
+					    )}
+						    {provided.placeholder}
 						 </div> )
-					    }}
+					    }
 					</Droppable>
 				    </DragDropContext>
 
