@@ -192,7 +192,21 @@ class Home extends Component {
 
 
     onDragEnd = result => {
-	console.log(result)
+	//console.log(result, this.state.perspectives)
+
+	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
+	    console.log("bad drop")
+	    return
+	}
+	
+	let pspOrder = this.state.perspectives
+
+	let inDrag = pspOrder[result.source.index]
+	pspOrder.splice(result.source.index, 1);
+	pspOrder.splice(result.destination.index, 0, inDrag);
+
+	this.setState({perspectives: pspOrder})
+
 
     }
 
@@ -291,13 +305,13 @@ class Home extends Component {
 
 
 				    <DragDropContext onDragEnd={this.onDragEnd}>
-					<Droppable droppableId={"3"}>
+					<Droppable droppableId={"psp"}>
 					    {provided => (
 						    <div
 							ref = {provided.innerRef}
 							{...provided.droppableProps}
 							style = {{
-							    height: 500
+							    //height: 500
 
 
 							}}
