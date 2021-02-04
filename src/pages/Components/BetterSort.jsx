@@ -240,9 +240,23 @@ const SortableProjectList = (props)=>{
     const onDragEnd = result => {
 
     }
-    const renderTask = (item, i, provided) => {
+    const renderTask = (item, i, provided, snapshot) => {
 	return ( 
-	    <div>
+	    <div
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
+					key={item.content.id}
+					//style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
+					//style={(snapshot.isDragging)? 
+					    //{ 
+						//top : "auto !important", 
+						//left: "auto !important"
+						//border: "1px solid red",
+						//position: "static"
+					    //} 
+					    //: {}}
+	    >
 		<Task 
 		    //ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} 
 		    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
@@ -252,10 +266,16 @@ const SortableProjectList = (props)=>{
 	)
     }
    
-    const renderProject = (item, i, provided) => {
+    const renderProject = (item, i, provided, snapshot) => {
 	if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
 	    return ( 
-		    <div> 
+		    <div
+					{...provided.draggableProps}
+					{...provided.dragHandleProps}
+					ref={provided.innerRef}
+					key={item.content.id}
+					//style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
+		    > 
 		    <a className="subproject" 
 			style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
 			onClick={()=>{
@@ -273,22 +293,40 @@ const SortableProjectList = (props)=>{
 
     return ( 
 	<DragDropContext onDragEnd={onDragEnd}>
-	    <Droppable droppableId={"main"}>
+	    <Droppable droppableId={"main"}
+		renderClone={(provided, snapshot, rubric) => (
+		    <div
+			//{...provided.draggableProps}
+			//{...provided.dragHandleProps}
+			//ref={provided.innerRef}
+			//key={item.content.id}
+		    >
+			{(props.list[rubric.source.index].type == "task")? renderTask(props.list[rubric.source.index], rubric.source.index, provided, snapshot): renderProject(props.list[rubric.source.index], rubric.source.index, provided, snapshot)}
+		    </div>
+		)}
+		>
 		{provided => (
 		    <div
 			ref = {provided.innerRef}
 			{...provided.droppableProps}
 		    >
 			{props.list.map((item, i) => (
-			    <Draggable draggableId={(item.type == "task")? item.content : item.content.id} key={item.content.id} index={i}>
-				{provided => (
+			    <Draggable draggableId={(item.type == "task")? item.content : item.content.id} key={item.content.id} index={i}
+				//style={(_isDragging, draggableStyle) => ({ ...draggableStyle, position: 'absolute'})}
+			    >
+				{(provided, snapshot) => (
 				    <div
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-					ref={provided.innerRef}
-					key={item.content.id}
+					//style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
+					//style={{ top : "auto !important", left: "auto !important"}}
+					style={(snapshot.isDragging)? 
+					    { 
+						//border: "1px solid red",
+						//position: "static"
+					    } 
+					    : {}}
+
 				    >
-					{(item.type == "task")? renderTask(item, i, provided): renderProject(item, i, provided)}
+					{(item.type == "task")? renderTask(item, i, provided, snapshot): renderProject(item, i, provided, snapshot)}
 				{//let anim = springs[i]; 
 
 				    //() => { return (<div> {item.type} </div> )}
