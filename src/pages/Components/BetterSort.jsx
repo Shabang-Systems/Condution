@@ -237,6 +237,17 @@ const SortableProjectList = (props)=>{
 
 
     //}).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
+    let prevList = []
+    
+    useEffect(() => {
+	let isMounted = true;
+	if (prevList != props.list && isMounted) {
+	    prevList = props.list
+	    setList(props.list)
+	}
+
+    });
+
     let [stateList, setList] = useState(props.list)
     
     const onDragEnd = async result => {
@@ -247,10 +258,12 @@ const SortableProjectList = (props)=>{
 	}
 
 	//let list = props.list
-	let inDrag = stateList[result.source.index]
 	let order = stateList.map(item => (item.sortOrder))
 	order.splice(result.source.index, 1);
 	order.splice(result.destination.index, 0, result.source.index);
+
+
+	let inDrag = stateList[result.source.index]
 	let list = stateList
 	list.splice(result.source.index, 1);
 	list.splice(result.destination.index, 0, inDrag);
@@ -261,9 +274,10 @@ const SortableProjectList = (props)=>{
 	    "macro.applyOrder", { 
 		uid: props.uid, // pass it the things vvv
 		order: order, 
-		items: stateList.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+		//items: stateList.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+		items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
 	    }
-	).then(setList(props.list));
+	);
 
 
     }

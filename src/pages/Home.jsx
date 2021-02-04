@@ -209,7 +209,7 @@ class Home extends Component {
 	let pspOrder = this.state.perspectives
 
 	let inDrag = pspOrder[result.source.index]
-	pspOrder.splice(result.source.index, 1);
+    pspOrder.splice(result.source.index, 1);
 	pspOrder.splice(result.destination.index, 0, inDrag);
 
 	//await this.props.engine.db.modify

@@ -15,7 +15,7 @@ import './Components/Task.css';
 
 import { withRouter } from "react-router";
 
-import { SortableProjectList } from './Components/Sortable';
+import { SortableProjectList } from './Components/BetterSort';
 
 import Spinner from './Components/Spinner';
 
