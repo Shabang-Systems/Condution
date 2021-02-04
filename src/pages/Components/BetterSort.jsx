@@ -237,6 +237,7 @@ const SortableProjectList = (props)=>{
 
 
     //}).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
+    let [stateList, setList] = useState(props.list)
     
     const onDragEnd = async result => {
 
@@ -246,22 +247,23 @@ const SortableProjectList = (props)=>{
 	}
 
 	//let list = props.list
-	let inDrag = props.list[result.source.index]
-	let order = props.list.map(item => (item.sortOrder))
+	let inDrag = stateList[result.source.index]
+	let order = stateList.map(item => (item.sortOrder))
 	order.splice(result.source.index, 1);
 	order.splice(result.destination.index, 0, result.source.index);
+	let list = stateList
+	list.splice(result.source.index, 1);
+	list.splice(result.destination.index, 0, inDrag);
+	setList(list)
 
 	console.log(order)
 	await props.gruntman.do( // call a gruntman function
 	    "macro.applyOrder", { 
 		uid: props.uid, // pass it the things vvv
 		order: order, 
-		items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+		items: stateList.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
 	    }
-	);
-	let list = props.list
-	list.splice(result.source.index, 1);
-	list.splice(result.destination.index, 0, inDrag);
+	).then(setList(props.list));
 
 
     }
@@ -324,11 +326,12 @@ const SortableProjectList = (props)=>{
 
     return ( 
 	<DragDropContext onDragEnd={onDragEnd}>
+	    {console.log(stateList, props.list)}
 	    <Droppable droppableId={"main"}
 		renderClone={(provided, snapshot, rubric) => (
 		    <div
 		    >
-			{(props.list[rubric.source.index].type == "task")? renderTask(props.list[rubric.source.index], rubric.source.index, provided, snapshot): renderProject(props.list[rubric.source.index], rubric.source.index, provided, snapshot)}
+			{(stateList[rubric.source.index].type == "task")? renderTask(stateList[rubric.source.index], rubric.source.index, provided, snapshot): renderProject(stateList[rubric.source.index], rubric.source.index, provided, snapshot)}
 		    </div>
 		)}
 	    >
@@ -337,7 +340,7 @@ const SortableProjectList = (props)=>{
 			ref = {provided.innerRef}
 			{...provided.droppableProps}
 		    >
-			{props.list.map((item, i) => (
+			{stateList.map((item, i) => (
 			    <Draggable draggableId={(item.type == "task")? item.content : item.content.id} key={item.content.id} index={i}
 			    >
 				{(provided, snapshot) => (
