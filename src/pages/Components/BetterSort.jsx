@@ -243,14 +243,26 @@ const SortableProjectList = (props)=>{
     const renderTask = (item, i, provided, snapshot) => {
 	return ( 
 	    <div
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-					ref={provided.innerRef}
-					key={item.content.id}
+		{...provided.draggableProps}
+		{...provided.dragHandleProps}
+		ref={provided.innerRef}
+		key={item.content.id}
+		    //style={{
+		    //    //background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
+		    //}}
 	    >
+		<div
+		    style={{
+			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`,
+			borderRadius: "8px",
+
+		    }}
+
+		>
 		<Task 
-		    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} 
+		    tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]}
 		/>
+		    </div>
 	    </div>
 	)
     }
