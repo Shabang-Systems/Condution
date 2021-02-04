@@ -103,6 +103,7 @@ const SortableTaskList = (props)=>{
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             moveApplied.current = 0; // moves applied
             currentIndex.current = 0; // currentIndex
+	    console.log(order.current)
             await props.gruntman.do( // call a gruntman function
                 "macro.applyOrder", { 
                     uid: props.uid, // pass it the things vvv
@@ -237,9 +238,36 @@ const SortableProjectList = (props)=>{
 
     //}).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
     
-    const onDragEnd = result => {
+    const onDragEnd = async result => {
+
+	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
+	    console.log("bad drop")
+	    return
+	}
+
+	//let list = props.list
+	let inDrag = props.list[result.source.index]
+	let order = props.list.map(item => (item.sortOrder))
+	order.splice(result.source.index, 1);
+	order.splice(result.destination.index, 0, result.source.index);
+
+	console.log(order)
+	await props.gruntman.do( // call a gruntman function
+	    "macro.applyOrder", { 
+		uid: props.uid, // pass it the things vvv
+		order: order, 
+		items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+	    }
+	);
+	let list = props.list
+	list.splice(result.source.index, 1);
+	list.splice(result.destination.index, 0, inDrag);
+
 
     }
+
+
+
     const renderTask = (item, i, provided, snapshot) => {
 	return ( 
 	    <div
@@ -253,7 +281,7 @@ const SortableProjectList = (props)=>{
 	    >
 		<div
 		    style={{
-			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`,
+			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
 			borderRadius: "8px",
 
 		    }}
@@ -277,7 +305,11 @@ const SortableProjectList = (props)=>{
 					key={item.content.id}
 		    >
 		    <a className="subproject" 
-			style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+			style={{
+			    opacity:props.availability[item.content.id]?"1":"0.35",
+			    background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
+			    borderRadius: "8px",
+			}} 
 			onClick={()=>{
 			    props.paginate("projects", item.content.id);
 			    props.history.push(`/projects/${item.content.id}`)
