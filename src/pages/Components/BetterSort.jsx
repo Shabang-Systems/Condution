@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDrag } from 'react-use-gesture'
 import { useSprings, animated, interpolate } from 'react-spring'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import GuttedTask from './GuttedTask';
 
 
 import '../Projects.css';
@@ -265,7 +266,7 @@ const SortableProjectList = (props)=>{
     //    );
     //}
     
-    const onDragEnd = result => {
+    //const onDragEnd = result => {
 
 	//if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
 	//    console.log("bad drop")
@@ -306,7 +307,64 @@ const SortableProjectList = (props)=>{
 
 
 
+    //}
+    function usePrevious(value) {
+	const ref = useRef();
+	useEffect(() => {
+	    ref.current = value;
+	});
+	return ref.current;
     }
+
+    //let previousProps = null
+
+    let [stateList, setList] = useState([])
+
+    const prevList = usePrevious(props.list)
+
+    useEffect(() => { // Whenever props change, set statelist
+	//mounted = true
+	//if (previous != props.list) {
+	//    prevProps = props.list
+	//    setList(props.list)
+	//    console.log("setting propss")
+	//}
+	//if (stateList.length < 1) {
+	//    setList(props.list)
+	//    console.log(props.list, "no good")
+	//}
+	//console.log(stateList)
+	
+	//console.log(props.list, stateList, "yeeeeeet")
+	if (prevList !== props.list) {
+	    setList(props.list)
+	    console.log("updatin")
+	}
+    }, [props.list])
+
+
+
+    const onDragEnd = result => {
+	// Bad drop code
+	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) { return }
+
+	let listItems = [...stateList]
+
+	let inDrag = listItems[result.source.index]
+	listItems.splice(result.source.index, 1);
+	listItems.splice(result.destination.index, 0, inDrag);
+	setList(listItems)
+
+    }
+
+
+// PRAHN:
+    // have front end render out statelist
+    // on drag, we reorder statelist
+    // then we loop through statelist and apply order to each item
+    // set statelist to props.list if props have changed? or will that break? 
+	// set statelist to props.list if props.list != statelist before drag? 
+
 
 
 
@@ -366,7 +424,8 @@ const SortableProjectList = (props)=>{
 
     return ( 
 	<DragDropContext onDragEnd={onDragEnd}>
-	    {console.log(stateList, props.list)}
+	    {//console.log(stateList, props.list)
+	    }
 	    <Droppable droppableId={"main"}
 		renderClone={(provided, snapshot, rubric) => (
 		    <div
