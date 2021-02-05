@@ -25,9 +25,9 @@ function Auth(props) {
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
 
-    let [regularMessage, setRegularMessage] = useState("Let's connect to our cloud database.");
-    let [specialMessage, setSpecialMessage] = useState("Welcome aboard, let's get started.");
-    let [recoveryMessage, setRecoveryMessage] = useState("No worries! Let's recover your password.");
+    let [regularMessage, setRegularMessage] = useState(props.localizations.auth_regular_message);
+    let [specialMessage, setSpecialMessage] = useState(props.localizations.auth_special_message);
+    let [recoveryMessage, setRecoveryMessage] = useState(props.localizations.auth_recovery_message);
 
     let greetings = props.localizations.greetings_setB;
     let [currentGreeting, _] = useState(greetings[Math.floor(Math.random() * greetings.length)]);
@@ -48,7 +48,7 @@ function Auth(props) {
                                     props.dispatch({service: "firebase", operation: "login"});
                                 else {
                                     firebase.auth().currentUser.sendEmailVerification();
-                                    setRegularMessage("Email unverified. Please check your email and try again");
+                                    setRegularMessage(props.localizations.auth_email_unverified_message);
                                 }
                             }).catch(function(error) {
                                 // Handle Errors here.
@@ -70,7 +70,7 @@ function Auth(props) {
                                 props.engine.use("firebase", props.gruntman.requestRefresh);
                                 props.engine.db.onBoard(firebase.auth().currentUser.uid, Intl.DateTimeFormat().resolvedOptions().timeZone, props.localizations.getLanguage()==="en" ? "there": "", props.localizations.onboarding_content);
                                 setMinorMode(2);
-                                setSpecialMessage("Please tap the verification link in your email, then tap Proceed.");
+                                setSpecialMessage(props.localizations.auth_verification_message);
                             }
                         }); break;
                     case 2:
@@ -78,7 +78,7 @@ function Auth(props) {
                             if (firebase.auth().currentUser.emailVerified)
                                 props.dispatch({service: "firebase", operation: "create"});
                             else
-                                setSpecialMessage("Please check that you have tapped the verification link in your email.");
+                                setSpecialMessage(props.localizations.auth_verification_check_message);
                         }); break;
                     case 3:
                         let recProblem = false;
@@ -87,7 +87,7 @@ function Auth(props) {
                             problem=true;
                         }).then(function() {
                             if (!recProblem) {
-                                setRecoveryMessage("Please check your email and head back to login with your resetted password.");
+                                setRecoveryMessage(props.localizations.auth_recovery_check_message);
                                 setMinorMode(4);
                             }
                         }); break;

@@ -42,7 +42,7 @@ function ReleaseNotesModal(props) {
                 <div className="releasenotes">Release Notes</div>
                 <h1 className="header">👋 Hey, it's been a while.</h1>
                 <p className="content">Thanks for entrusting Condution for your task management. After a few months of working on the app, we are ready to release our <b>next major version.</b></p>
-                <p className="content">We promised to be a community driven task-management solution, and in 1.0, we aim do deliver on some of those promises. All of the features of 1.0 are proposed by our community <a href="https://discord.gg/3hS7yv3">on Discord</a> and <a href="https://github.com/Shabang-Systems/Condution">on GitHub</a>.</p>
+                <p className="content">We promised to be a community driven task-management solution, and in 1.0, we aim do deliver on some of those promises. <a href="https://discord.gg/3hS7yv3">on Discord</a> and <a href="https://github.com/Shabang-Systems/Condution">on GitHub</a>.</p>
                 <h1 className="header">🏃 tl;dr</h1>
                 <p className="content">A refreshed interface, tag weights, and shared workspaces comes to this all-new release of Condution. We are also building out an API so that you could customize it even further. Enjoy!</p>
                 <p className="content">Now, here's a rundown of some major features added.</p>

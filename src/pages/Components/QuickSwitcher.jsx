@@ -89,10 +89,10 @@ class QuickSwitcher extends Component {
 	// name, url prefix, id, icon classname 
 	this.setState({items: 
 	    [
-		[':upcoming', 'upcoming', '', 'fas fa-chevron-circle-right'], // set the first item to upcoming 
+		[this.props.gruntman.localizations.qs_upcoming, 'upcoming', '', 'fas fa-chevron-circle-right'], // set the first item to upcoming 
 		// (i could do + but i think thats less efficent 
-		[':completed', 'completed', '', 'fas fa-check-circle'], // set the second item to completed
-		[':calendar', 'calendar', '', 'fas fa-calendar-alt'], // set the third item to calendar
+		[this.props.gruntman.localizations.qs_completed, 'completed', '', 'fas fa-check-circle'], // set the second item to completed
+		[this.props.gruntman.localizations.qs_calendar, 'calendar', '', 'fas fa-calendar-alt'], // set the third item to calendar
 		...this.props.items[0].map(o => ['!'+o.name, 'perspectives', o.id, 'fas fa-layer-group']), // map the perspectives
 		...this.state.projs // the projects! 
 	    ],

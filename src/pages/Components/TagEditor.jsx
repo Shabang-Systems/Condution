@@ -62,12 +62,12 @@ class TagEditor extends Component {
     }
     
     async newTagClicked() {
-        let tagid = await this.props.engine.db.newTag(this.props.uid, "New Tag");
+        let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
         let temp = this.state.tagList;
         temp.push(
             {
-                name: "New Tag",
-                tempname: "New Tag",
+                name: this.props.gruntman.localizations.new_tag_button,
+                tempname: this.props.gruntman.localizations.new_tag_button,
                 weight: 1,
                 id: tagid
             }
@@ -150,7 +150,7 @@ class TagEditor extends Component {
                         })}
                         <div className="new-tag-button" onClick={ () => {this.newTagClicked()}}>
                             <i class="fas fa-plus" style={{marginLeft: "2px"}}></i>
-                            <div className="new-tag-text">New Tag</div>
+                            <div className="new-tag-text">{this.props.gruntman.localizations.new_tag_button}</div>
                         </div>
                     </div>
                     <div className="tag-settings">
@@ -196,7 +196,7 @@ class TagEditor extends Component {
                         )}
                     </div>
                             </>
-                    ):(<BlkArt visible={this.state.tagList.length<=0} title={"There are no tags!"} subtitle={"Add a tag to tasks?"} />)}
+                    ):(<BlkArt visible={this.state.tagList.length<=0} title={this.props.gruntman.localizations.blk_art_tags} subtitle={this.props.gruntman.localizations.blk_art_tags_subtitle} />)}
                 </div>
             </IonModal>
         )
