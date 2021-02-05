@@ -237,47 +237,73 @@ const SortableProjectList = (props)=>{
 
 
     //}).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
-    let prevList = []
+    //let prevList = []
     
-    useEffect(() => {
-	let isMounted = true;
-	if (prevList != props.list && isMounted) {
-	    prevList = props.list
-	    setList(props.list)
-	}
+    //useEffect(() => {
+    //    let isMounted = true;
+    //    if (prevList != props.list && isMounted) {
+    //        prevList = props.list
+    //        setList(props.list)
+    //    }
 
-    });
+    //});
 
-    let [stateList, setList] = useState(props.list)
+    //let [stateList, setList] = useState(props.list)
+    //useEffect(() => {
+    //    if (stateList != props.list) { setList(props.list) }
+
+    //})
     
-    const onDragEnd = async result => {
+    //const reorder = async (order) => {
+    //    await props.gruntman.do( // call a gruntman function
+    //        "macro.applyOrder", { 
+    //            uid: props.uid, // pass it the things vvv
+    //            order: order, 
+    //            //items: stateList.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+    //            items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+    //        }
+    //    );
+    //}
+    
+    const onDragEnd = result => {
 
-	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
-	    console.log("bad drop")
-	    return
-	}
+	//if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
+	//    console.log("bad drop")
+	//    return
+	//}
+
+
+	//let order = props.list.map(item => (item.sortOrder))
+	//order.splice(result.source.index, 1);
+	//order.splice(result.destination.index, 0, result.source.index);
+	//reorder(order)
+
+
 
 	//let list = props.list
-	let order = stateList.map(item => (item.sortOrder))
-	order.splice(result.source.index, 1);
-	order.splice(result.destination.index, 0, result.source.index);
+	//let order = stateList.map(item => (item.sortOrder))
+	//order.splice(result.source.index, 1);
+	//order.splice(result.destination.index, 0, result.source.index);
 
 
-	let inDrag = stateList[result.source.index]
-	let list = stateList
-	list.splice(result.source.index, 1);
-	list.splice(result.destination.index, 0, inDrag);
-	setList(list)
+	//let inDrag = stateList[result.source.index]
+	//let list = stateList
+	//list.splice(result.source.index, 1);
+	//list.splice(result.destination.index, 0, inDrag);
+	//setList(list)
 
-	console.log(order)
-	await props.gruntman.do( // call a gruntman function
-	    "macro.applyOrder", { 
-		uid: props.uid, // pass it the things vvv
-		order: order, 
-		//items: stateList.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
-		items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
-	    }
-	);
+	//console.log(order)
+	//await props.gruntman.do( // call a gruntman function
+	//    "macro.applyOrder", { 
+	//        uid: props.uid, // pass it the things vvv
+	//        order: order, 
+	//        //items: stateList.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+	//        items: props.list.map(i=>{return {type:i.type, content:i.type==="project"?i.content.id:i.content}}),
+	//    }
+	//);
+	
+
+
 
 
     }
