@@ -430,7 +430,8 @@ class Task extends Component {
                                     overflow: "hidden",
                                     display: animatedProps.taskDisplay,
                                     position: animated.taskPosition,
-                                    padding: animatedProps.taskPadding}}
+                                    padding: animatedProps.taskPadding,
+				}}
                             >
 
                                 {/* Chapter 0: Utility Components */}

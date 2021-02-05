@@ -344,12 +344,18 @@ class Home extends Component {
 					    
 						{this.state.perspectives.map((psp, i) => (
 							<Draggable draggableId={psp.id} key={psp.id} index={i}>
-							    {(provided) => (
+							    {(provided, snapshot) => (
 							    <div
 								{...provided.draggableProps}
 								{...provided.dragHandleProps}
 								ref={provided.innerRef}
 								key={psp.id}
+
+								//style = {{
+								    //background: "red"
+								    //border: "1px solid red"
+
+								//}}
 
 							    >
 							    <Link key={psp.id} to={`/perspectives/${psp.id}`} 
@@ -365,7 +371,21 @@ class Home extends Component {
 									this.menu.current.close();
 							    }}> {/* Link to trigger router */}
 								{/* Perspective button */}
-								<div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}><i className="fas fa-layer-group" style={{paddingRight: 2}}></i> {psp.name}</div> 
+								<div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}
+								    style = {{
+									//border: "1px solid red"
+									background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
+
+								    }}
+
+								>
+								    <i className="fas fa-layer-group" 
+									style={{
+									    paddingRight: 2,
+									    //backgroundColor: "red"
+									}}>
+								    </i> {psp.name}
+								</div> 
 							    </Link>
 								</div>
 						)}
