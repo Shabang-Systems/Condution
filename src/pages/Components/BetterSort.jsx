@@ -354,7 +354,32 @@ const SortableProjectList = (props)=>{
 	listItems.splice(result.source.index, 1);
 	listItems.splice(result.destination.index, 0, inDrag);
 	setList(listItems)
+	//props.gruntman.lockUpdates(); // tell gruntman to chill
 
+	listItems.forEach((v,i) => {
+	    if (v.type == "task") {
+		props.gruntman.do(
+		    "task.update", {
+			uid: props.uid,
+			tid: v.content,
+			query: {order: i}
+		    }
+		)
+
+
+	    } else {
+		props.gruntman.do(
+		    "project.update__projectVal", {
+			uid: props.uid,
+			id: v.content.id,
+			payload: {order: i}
+		    }
+		)
+	    }
+
+
+	})
+        //props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
     }
 
 

@@ -320,6 +320,18 @@ class Gruntman {
 
                     return {uid: options.uid, TODO: "TODO"} // TODO: how do we undelete a project?
                 },
+                update__projectVal: async function (options) { // update the project name!
+                    //let possibleProjects = await engine.db.getProjectsandTags(options.uid);
+                    // get all possible project
+                    //let projectName = possibleProjects[0][0][options.id]
+                    // get the one we want based on page id
+
+                    // modify the project
+		    //return engine.db.modifyProject(options.uid, item.content, {order: i});
+                    await engine.db.modifyProject(options.uid, options.id, options.payload);
+                    // return what we need to undo
+		    //return {projectName, uid: options.uid}
+                },
                 update__name: async function (options) { // update the project name!
                     let possibleProjects = await engine.db.getProjectsandTags(options.uid);
                     // get all possible project
