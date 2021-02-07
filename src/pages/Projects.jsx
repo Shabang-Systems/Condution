@@ -234,7 +234,7 @@ class Projects extends Component { // define the component
 				</div>
 				</div>
 
-                                <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+                                {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
                                         onClick={()=> {
