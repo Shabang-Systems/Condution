@@ -24,7 +24,6 @@ import AutosizeInput from 'react-input-autosize';
 
 import 'react-tagsinput/react-tagsinput.css'
 
-
 // Our very own repeat UI
 import Repeat from './Repeat';
 
@@ -36,9 +35,6 @@ import CalendarPopover from './CalendarPopover';
 
 // Our very own CSS
 import './Task.css';
-
-// Oooips
-import ReactTooltip from 'react-tooltip';
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -430,7 +426,8 @@ class Task extends Component {
                                     overflow: "hidden",
                                     display: animatedProps.taskDisplay,
                                     position: animated.taskPosition,
-                                    padding: animatedProps.taskPadding}}
+                                    padding: animatedProps.taskPadding,
+				}}
                             >
 
                                 {/* Chapter 0: Utility Components */}

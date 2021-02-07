@@ -98,9 +98,6 @@ function Auth(props) {
 
     return (
         <div className="auth-backdrop">
-            <img rel="preload" src={light_preload} style={{display: "none"}} />
-            <img rel="preload"  src={dark_preload} style={{display: "none"}} />
-            <div className="auth-not-actually-a-clearfix">&nbsp;</div>
             <animated.div className="auth-container">
                 <div className="auth-story">
                     <div className="auth-greeting">{greeting} <span className="auth-welcome">Welcome to Condution</span></div>
@@ -162,9 +159,13 @@ function Auth(props) {
                     </div>
                 </div>
                 <div className="auth-copyright">
-                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2020 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a>Privacy Policy</a>.</span>
+                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2020 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a href="https://www.condution.com/privacy.html">Privacy Policy</a>.</span>
                 </div>
             </animated.div>
+            <img rel="preload" src={light_preload} style={{display: "none"}} />
+            <img rel="preload"  src={dark_preload} style={{display: "none"}} />
+            <div className="auth-not-actually-a-clearfix">&nbsp;</div>
+
         </div>
     )
 }

@@ -229,12 +229,14 @@ class Projects extends Component { // define the component
 						this.setState({animClass: ""})
 					    }, 1000);
 					}}
-
-				    >{this.state.isComplete? "Uncomplete" : "Complete"} </a>
+				    >{(window.screen.width >= 400)? 
+					(this.state.isComplete? "Uncomplete" : "Complete") :
+					(this.state.isComplete? <i className="fas fa-times"></i> : <i className="fas fa-check"></i>) 
+				    } </a>
 				</div>
 				</div>
 
-                                <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+                                {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
                                     <a 
                                         onClick={()=> {
@@ -302,18 +304,6 @@ class Projects extends Component { // define the component
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
                         <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} parentComplete={this.state.isComplete} activeTaskID={this.state.activeTask}/>
 
-			{/*<GuttedTask 
-				    startingCompleted={this.state.isComplete} 
-				    //startingCompleted={true} 
-				    tid={this.state.currentProject.id} 
-				    name={"Complete "+this.state.name} 
-				    localizations={{nt: null}}
-				    isStatic={true}
-				    complete={this.completeProject}
-				    uncomplete={this.uncompleteProject}
-				    inputStyle={"completeproject"}
-				/>
-			    */}
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
                                 this.props.gruntman.do( // call a gruntman function

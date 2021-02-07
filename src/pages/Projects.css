@@ -129,7 +129,9 @@
     display: inline-block;
     background: var(--background-feature);
     margin-top: 10px;
-    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    /*margin-left: 10px;*/
     padding: 5px 10px;
     font-size: 12px;
     font-weight: 600;

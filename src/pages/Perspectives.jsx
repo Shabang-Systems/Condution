@@ -261,7 +261,7 @@ class Perspectives extends Component {
                                         value={this.state.perspectiveName} // TODO: jack this is hecka hacky
                                     />
                                 </h1> 
-                                <ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />
+                                {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
 
                                 <div className="greeting-container" style={{marginLeft: 11, marginTop: 7, marginBottom: 5}}>
                                     <a 
