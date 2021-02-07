@@ -219,9 +219,6 @@ class Projects extends Component { // define the component
 				    <a className={"complete-name " + this.state.animClass}
 					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
 					onClick={() => { 
-					    if (window.screen.width >= 1200) {
-						console.log("here")
-					    } else {console.log("there")}
 					    if (this.state.isComplete) {
 						this.uncompleteProject()
 					    } else {
