@@ -17,7 +17,6 @@
 .TagEditor-close {
     margin-right: 3px;
     float: right;
-    /*color: var(--decorative-light-accent);*/
     color: red;
     cursor: pointer;
 }
@@ -36,8 +35,8 @@
     margin-left: 10px;
     margin-right: 10px;
     flex-direction: column;
-    width:140px !important;
-    min-width:140px !important;
+    width: 140px !important;
+    min-width: 140px !important;
 }
 
 .tag-settings {
@@ -45,13 +44,13 @@
     overflow-y: scroll;
     flex-grow: 10;
     overflow-x: hidden;
-    padding:0px 10px;
+    padding: 0px 10px;
 }
 
 .tag-pane-container {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    height: 90%;
     width: 96.5%;
 }
 
@@ -94,7 +93,7 @@
     margin-top: 10px;
     display: flex;
     flex-direction: row;
-    align-items:center;
+    align-items: center;
     margin-bottom: 5px;
     /*
     text-overflow: ellipsis;
@@ -160,7 +159,7 @@ input[type=number] {
 .tag-weight-container {
     display: flex;
     flex-direction: row;
-    align-items:center;
+    align-items: center;
     margin-bottom: 5px;
 }
 
