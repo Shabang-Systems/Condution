@@ -56,11 +56,11 @@
     "electron:run": "cd electron; electron .",
     "electron:pack": "yarn ionic:dist; electron-builder --dir",
     "electron:dist": "PUBLIC_URL=./ ionic build --prod --aot --optimizejs; cp build/index.html build/404.html; cp -r build/* electron/src/; cp src/about.html electron/src/; cd electron; electron-builder -mwl",
-    "ionic:dist": "ionic build  --prod --aot --optimizejs && cp build/index.html build/404.html",
+    "ionic:dist": "ionic build --prod --aot --optimizejs && cp build/index.html build/404.html",
     "ionic:runserver": "ionic serve -l --external",
     "ionic:runios": "ionic capacitor run ios -l --external",
     "ionic:rundroid": "ionic capacitor run android -l --external",
-    "capacitor:sync": "ionic cap sync"
+    "capacitor:dist": "yarn ionic:dist; cap sync"
   },
   "postinstall": {
     "postinstall": "electron-builder install-app-deps"
