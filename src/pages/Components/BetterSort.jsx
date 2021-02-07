@@ -399,6 +399,7 @@ const SortableProjectList = (props)=>{
 		{...provided.dragHandleProps}
 		ref={provided.innerRef}
 		key={item.content.id}
+		{...provided.draggableProps}
 		    //style={{
 		    //    //background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
 		    //}}
@@ -409,7 +410,6 @@ const SortableProjectList = (props)=>{
 			borderRadius: "8px",
 
 		    }}
-		    {...provided.draggableProps}
 
 		>
 		<Task 
@@ -465,7 +465,10 @@ const SortableProjectList = (props)=>{
 			{...provided.droppableProps}
 		    >
 			{stateList.map((item, i) => (
-			    <Draggable draggableId={(item.type == "task")? item.content : item.content.id} key={item.content.id} index={i}
+			    <Draggable 
+				draggableId={(item.type == "task")? item.content : item.content.id} 
+				key={item.content.id} index={i}
+				//disableInteractiveElementBlocking={true}
 			    >
 				{(provided, snapshot) => (
 				    <div

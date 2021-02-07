@@ -192,13 +192,10 @@ class Home extends Component {
     }
 
     
-    reorderBackend() {
-
-    }
 
 
 
-    onDragEnd = result => {
+    onDragEndPsp = result => {
 	//console.log(result, this.state.perspectives)
 
 	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
@@ -232,6 +229,12 @@ class Home extends Component {
 	this.setState({perspectives: pspOrder})
 	//this.refresh()
 
+
+    }
+
+
+
+    onDragEndPrj = result => {
 
     }
 
@@ -329,7 +332,7 @@ class Home extends Component {
 
 
 
-				    <DragDropContext onDragEnd={this.onDragEnd}>
+				    <DragDropContext onDragEnd={this.onDragEndPsp}>
 					<Droppable droppableId={"psp"}>
 					    {provided => (
 						    <div
@@ -421,91 +424,127 @@ class Home extends Component {
                                         f();
 
                                     }} className="fa fa-plus add"></a></div>
+
+
+
+
+
+
+
+
+
+
                                     {/* === Project Contents == */}
-                                    {this.state.projects.map((proj) => {
-                                        return (
-                                            <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
-                                                this.setState({itemSelected:{item:"projects", id:proj.id}})
-						//console.log(proj)
-                                                if (this.menu.current)
-                                                    this.menu.current.close();
-                                                }}> {/* Link to trigger router */}
-                                                {/* Perspective button */}
-                                                <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link>
-                                        )
-                                    })}
+				    <DragDropContext onDragEnd={this.onDragEndPrj}> 
+					<Droppable droppableId={"prj"}>
+					    {provided => (
+						<div 
+						    ref = {provided.innerRef}
+						    {...provided.droppableProps}
+						>
+						    {this.state.projects.map((proj, i) => (
+							<Draggable draggableId={proj.id} key={proj.id} index={i}>
+							    {(provided, snapshot) => (
+								<div
+								    {...provided.draggableProps}
+								    {...provided.dragHandleProps}
+								    ref={provided.innerRef}
+								    key={proj.id}
+								>
+								<Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
+								    this.setState({itemSelected:{item:"projects", id:proj.id}})
+								    //console.log(proj)
+								    if (this.menu.current)
+									this.menu.current.close();
+								    }}> {/* Link to trigger router */}
+								    {/* Perspective button */}
+								    <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link>
+								</div>
+							    )}
+							    </Draggable>
+							)
+						    )}
+						{provided.placeholder}
+					    </div> )}
+					</Droppable>
+				    </DragDropContext> 
 
-                                </IonContent>
 
-                                {/* Logout button */}
-                                <div className="menu-item" id="logout" onClick={()=>{history.push(`/`);this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType=="workspace"?this.props.localizations.exitworkspace:this.props.localizations.logout}</div>
-                            </IonMenu>
-                            <IonPage id="main">
-                                {/* raise a glass to Workspace Add */}
-                                <IonToast
-                                    mode="ios"
-                                    cssClass="workspace-toast"
-                                    isOpen={this.state.isWorkspaceRequestShown[0]}
-                                    message={`Invitation to join workspace ${this.state.isWorkspaceRequestShown[1]?this.state.isWorkspaceRequestShown[1][1]:""}`}
-                                    position="bottom"
-                                    buttons={[
-                                        {
-                                            text: 'Reject',
-                                                role: 'cancel',
-                                                handler:  (async function() {
-                                                    await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                    this.setState({isWorkspaceRequestShown: [false, null]});
-                                                }).bind(this)
-                                        },
-                                        {
-                                            text: 'Accept',
-                                            handler: (async function() {
-                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
-                                                let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
-                                                await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
-                                                await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                this.setState({isWorkspaceRequestShown: [false, null]});
-                                            }).bind(this)
-                                        }
-                                    ]}
-                                />
-                                {/* the add button to inbox button*/}
-                                <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />
-                                <ReleaseNotesModal  authType={this.props.authType}/>
-                                {/* the portal root for DOM elements to park */}
-                                <div id="parking-lot"></div>
-                                {/* The actual page */}
-                                <IonRouterOutlet>
-                                    {/* empty => /upcoming*/}
-                                    <Route render={() => <Redirect to="/upcoming"/>}/>
-                                    {/* / => /upcoming */}
-                                    <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
-                                    {/* and the perspective switch */}
-                                    <Switch>
-                                        {/* upcoming renders upcoming */}
-                                        <Route path="/upcoming" exact render={()=><Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email}/>} />
-                                        {/* completed renders completed */}
-                                        <Route path="/calendar" exact render={()=><Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
-                                        {/* workspace renders workspace */}
-                                        <Route path="/workspaces/:id" render={({match})=><WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id}  actualUID={this.props.uid}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email}/>}  />
-                                        {/* completed renders completed */}
-                                        <Route path="/completed" exact render={()=><Completed engine={this.props.engine} uid={this.state.workspace} history={history} paginate={this.paginate} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
 
-                                        {/* perspective renders perspectives */}
-                                        <Route path="/perspectives/:id/:create?" render={({match})=><Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh}  options={match.params.create} localizations={this.props.localizations}/>}  />
 
-                                        {/* project renders perspectives */}
-                                        <Route path="/projects/:id/:create?" render={({match})=><Projects engine={this.props.engine} id={match.params.id} uid={this.state.workspace}  gruntman={this.props.gruntman}  menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations}/>}  />
-                                        {/* TODO projects */}
-                                    </Switch>
-                                </IonRouterOutlet>
-                            </IonPage>
-                        </IonSplitPane>
-                    </IonContent>
-                </Router>
-            </IonPage>
-        );
-    }
+
+
+								</IonContent>
+
+								{/* Logout button */}
+								<div className="menu-item" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
+							</IonMenu>
+							<IonPage id="main">
+								{/* raise a glass to Workspace Add */}
+								<IonToast
+									mode="ios"
+									cssClass="workspace-toast"
+									isOpen={this.state.isWorkspaceRequestShown[0]}
+									message={`Invitation to join workspace ${this.state.isWorkspaceRequestShown[1] ? this.state.isWorkspaceRequestShown[1][1] : ""}`}
+									position="bottom"
+									buttons={[
+										{
+											text: 'Reject',
+											role: 'cancel',
+											handler: (async function () {
+												await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+												this.setState({isWorkspaceRequestShown: [false, null]});
+											}).bind(this)
+										},
+										{
+											text: 'Accept',
+											handler: (async function () {
+												let workspace = this.state.isWorkspaceRequestShown[1][0];
+												let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
+												await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
+												await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+												this.setState({isWorkspaceRequestShown: [false, null]});
+											}).bind(this)
+										}
+									]}
+								/>
+								{/* the add button to inbox button*/}
+								<ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />
+								<ReleaseNotesModal authType={this.props.authType} />
+								{/* the portal root for DOM elements to park */}
+								<div id="parking-lot"></div>
+								{/* The actual page */}
+								<IonRouterOutlet>
+									{/* empty => /upcoming*/}
+									<Route render={() => <Redirect to="/upcoming" />} />
+									{/* / => /upcoming */}
+									<Route exact path="/" render={() => <Redirect to="/upcoming" />} />
+									{/* and the perspective switch */}
+									<Switch>
+										{/* upcoming renders upcoming */}
+										<Route path="/upcoming" exact render={() => <Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
+										{/* completed renders completed */}
+										<Route path="/calendar" exact render={() => <Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
+										{/* workspace renders workspace */}
+										<Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} gruntman={this.props.gruntman} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email} />} />
+										{/* completed renders completed */}
+										<Route path="/completed" exact render={() => <Completed engine={this.props.engine} uid={this.state.workspace} history={history} paginate={this.paginate} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
+
+										{/* perspective renders perspectives */}
+										<Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace} gruntman={this.props.gruntman} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} />} />
+
+										{/* project renders perspectives */}
+										<Route path="/projects/:id/:create?" render={({match}) => <Projects engine={this.props.engine} id={match.params.id} uid={this.state.workspace} gruntman={this.props.gruntman} menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations} />} />
+										{/* TODO projects */}
+									</Switch>
+								</IonRouterOutlet>
+							</IonPage>
+						</IonSplitPane>
+					</IonContent>
+				</Router>
+			</IonPage>
+		);
+	}
 };
 
 export default Home;
