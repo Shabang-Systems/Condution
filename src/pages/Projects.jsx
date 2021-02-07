@@ -232,8 +232,7 @@ class Projects extends Component { // define the component
 						this.setState({animClass: ""})
 					    }, 1000);
 					}}
-
-				    >{(window.screen.width >= 1200)? 
+				    >{(window.screen.width >= 400)? 
 					(this.state.isComplete? "Uncomplete" : "Complete") :
 					(this.state.isComplete? <i className="fas fa-times"></i> : <i className="fas fa-check"></i>) 
 				    } </a>
