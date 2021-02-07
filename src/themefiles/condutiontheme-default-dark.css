@@ -64,7 +64,7 @@
 
     /* ## Auth ## */
     --auth-primary: var(--content-normal-alt);
-    --auth-upf-focus: var(--content-normal);
+    --auth-upf-focus: #2626269c;
 
     --auth-login-button-text: var(--content-normal-accent);
     --auth-login-button-border: var(--content-normal-accent);
@@ -75,7 +75,7 @@
     --auth-rec-pswd-text: var(--content-normal-accent);
     --auth-need-verify: var(--content-normal-accent);
     --auth-image-credit: var(--content-normal);
-
+    --auth-semitransparent: #161616d4;
     --auth-greeting: var(--content-normal-accent);
 
 
