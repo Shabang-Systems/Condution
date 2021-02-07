@@ -396,7 +396,6 @@ const SortableProjectList = (props)=>{
     const renderTask = (item, i, provided, snapshot) => {
 	return ( 
 	    <div
-		{...provided.draggableProps}
 		{...provided.dragHandleProps}
 		ref={provided.innerRef}
 		key={item.content.id}
@@ -410,6 +409,7 @@ const SortableProjectList = (props)=>{
 			borderRadius: "8px",
 
 		    }}
+		    {...provided.draggableProps}
 
 		>
 		<Task 
