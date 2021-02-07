@@ -199,7 +199,6 @@ class Home extends Component {
 	//console.log(result, this.state.perspectives)
 
 	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
-	    console.log("bad drop")
 	    return
 	}
 	
@@ -209,7 +208,6 @@ class Home extends Component {
 	pspOrder.splice(result.source.index, 1);
 	pspOrder.splice(result.destination.index, 0, inDrag);
 
-	//await this.props.engine.db.modify
 	
 	pspOrder.forEach((v,i) => {
 	    console.log(v.name, i)
@@ -235,6 +233,38 @@ class Home extends Component {
 
 
     onDragEndPrj = result => {
+	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
+	    console.log("bad drop prj")
+	    return
+	}
+
+	let prjOrder = this.state.projects
+
+	let inDrag = prjOrder[result.source.index]
+	prjOrder.splice(result.source.index, 1);
+	prjOrder.splice(result.destination.index, 0, inDrag);
+
+	
+	prjOrder.forEach((v,i) => {
+	    console.log(v.name, i)
+
+
+	    this.props.gruntman.do(
+		"project.update__projectVal", {
+		    uid: this.props.uid,
+		    id: v.id,
+		    payload: {order: i}
+
+		}
+	    )
+	})
+
+
+	this.setState({projects: prjOrder})
+	
+
+
+
 
     }
 
