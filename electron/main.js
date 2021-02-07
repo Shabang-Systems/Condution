@@ -36,7 +36,7 @@ function createWindow () {
     if (isDev)
         win.loadURL(`http://localhost:8100`);
     else
-        win.loadURL(`file://${path.join(__dirname, './build/index.html')}`);
+        win.loadURL(`file://${path.join(__dirname, './src/index.html')}`);
 
     
     nativeTheme.addListener("updated", function() {

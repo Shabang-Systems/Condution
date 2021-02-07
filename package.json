@@ -1,8 +1,6 @@
 {
   "name": "Condution",
   "version": "1.0.0",
-  "private": true,
-  "main": "main.js",
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/android": "^2.4.2",
@@ -55,10 +53,10 @@
     "typescript": "3.8.3"
   },
   "scripts": {
-    "electron:run": "electron .",
+    "electron:run": "cd electron; electron .",
     "electron:pack": "yarn ionic:dist; electron-builder --dir",
-    "electron:dist": "PUBLIC_URL=./ yarn ionic:dist; electron-builder",
-    "ionic:dist": "ionic build --prod && cp build/index.html build/404.html",
+    "electron:dist": "PUBLIC_URL=./ ionic build --prod --aot --optimizejs; cp build/index.html build/404.html; cp -r build/* electron/src/; cp src/about.html electron/src/; cd electron; electron-builder -mwl",
+    "ionic:dist": "ionic build  --prod --aot --optimizejs && cp build/index.html build/404.html",
     "ionic:runserver": "ionic serve -l --external",
     "ionic:runios": "ionic capacitor run ios -l --external",
     "ionic:rundroid": "ionic capacitor run android -l --external",
@@ -93,7 +91,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.1",
-    "electron": "^10.1.4",
+    "electron": "^11.2.3",
     "electron-builder": "^22.9.1",
     "electron-notarize": "^1.0.0"
   },
