@@ -458,7 +458,12 @@ class Home extends Component {
 									this.menu.current.close();
 								    }}> {/* Link to trigger router */}
 								    {/* Perspective button */}
-								    <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}><IonIcon icon={listOutline}/>{proj.name}</div></Link>
+								    <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}
+									style = {{
+									    background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
+									}}
+
+								    ><IonIcon icon={listOutline}/>{proj.name}</div></Link>
 								</div>
 							    )}
 							    </Draggable>
