@@ -36,11 +36,16 @@ import CalendarPopover from './CalendarPopover';
 // Our very own CSS
 import './Task.css';
 
+import { Plugins, HapticsImpactStyle, HapticsNotificationType } from '@capacitor/core';
+
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
 
 // autobind those functions
 const autoBind = require('auto-bind/react');
+
+let { Haptics } = Plugins;
+
 
 /*
  *
@@ -450,7 +455,8 @@ class Task extends Component {
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
-
+                                            if (getPlatforms().includes("mobile") && !getPlatforms().includes("mobileweb"))
+                                                Haptics.notification({type: HapticsNotificationType.SUCCESS});
                                             // If we are uncompleting a task (that is, currently task is complete)
                                             if (this.state.isComplete) {
                                                 this.props.gruntman.lockUpdates();

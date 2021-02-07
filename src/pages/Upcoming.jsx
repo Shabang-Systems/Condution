@@ -68,7 +68,7 @@ class Upcoming extends Component { // define the component
         this.updatePrefix = this.random();
 
         this.workspaceButton = React.createRef();
-
+        this.activeTask = React.createRef();
 
         autoBind(this);
     }
@@ -251,7 +251,7 @@ class Upcoming extends Component { // define the component
                                         if (this.state.inbox.length > 0)
                                             return <div className="page-label">{this.props.localizations.unsorted}<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                                 })()}
-                                <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
+                                    <SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} exploaded={this.props.exploaded} activeTaskRef={this.activeTask}/>
                             </div>
                             <div>
                                 {(()=>{

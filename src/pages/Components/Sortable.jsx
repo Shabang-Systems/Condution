@@ -117,6 +117,15 @@ const SortableTaskList = (props)=>{
 
     }).bind(this), {drag:{delay:100}, filterTaps: true, enabled: dragEnabled})
 
+    let currentExplosion = useRef();
+    useEffect(()=>{
+        if (props.exploaded != currentExplosion.current && props.exploaded !== "") {
+            console.log(props.exploaded, props.list);
+            objRefs[props.list.indexOf(props.exploaded)].current._explode();
+        }
+        currentExplosion.current = "";
+    }, [props.exploaded]);
+
     return props.list.map((id, i) => {
         let anim = springs[i];
         return (

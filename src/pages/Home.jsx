@@ -65,7 +65,8 @@ class Home extends Component {
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
             isWorkspace:false, // current workspace
             workspace: this.props.authType==="workspace" ? this.props.workspace : this.props.uid, // current workspace/uid
-            isWorkspaceRequestShown: [false, null] // is the workspace toast shown
+            isWorkspaceRequestShown: [false, null], // is the workspace toast shown
+            upcomingExplosion: "" // is there a task to be exploaded in upcoming?
         };
 
         if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -261,14 +262,11 @@ class Home extends Component {
 
 
 	this.setState({projects: prjOrder})
-	
-
-
-
-
     }
 
-
+    tellexplode(task) {
+        this.setState({upcomingExplosion: task});
+    }
 
 
     render() {
@@ -544,7 +542,7 @@ class Home extends Component {
 									]}
 								/>
 								{/* the add button to inbox button*/}
-								<ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} />
+                                <ABTIB reference={this.abtibRef} uid={this.state.workspace} gruntman={this.props.gruntman} localizations={this.props.localizations} explosion={this.tellexplode}/>
 								<ReleaseNotesModal authType={this.props.authType} />
 								{/* the portal root for DOM elements to park */}
 								<div id="parking-lot"></div>
@@ -557,7 +555,7 @@ class Home extends Component {
 									{/* and the perspective switch */}
 									<Switch>
 										{/* upcoming renders upcoming */}
-										<Route path="/upcoming" exact render={() => <Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
+                                        <Route path="/upcoming" exact render={() => <Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} exploaded={this.state.upcomingExplosion}/>} />
 										{/* completed renders completed */}
 										<Route path="/calendar" exact render={() => <Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
 										{/* workspace renders workspace */}

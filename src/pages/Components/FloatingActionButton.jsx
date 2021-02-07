@@ -4,6 +4,9 @@ import './FloatingActionButton.css';
 import * as chrono from 'chrono-node';
 import {useSpring, animated} from 'react-spring'
 
+// Detect whether is mobile
+import { getPlatforms } from '@ionic/react';
+
 
 /*
  * Hello human,
@@ -52,70 +55,84 @@ function ABTIB(props) {
 	    )
     })
 
-    return <animated.input 
+    if (getPlatforms().includes("mobile")) 
+        return <div id="abtib" className="abtib-mobile" onClick={()=>{
+            props.gruntman.do( // call a gruntman function
+                "task.create", {
+                    uid: props.uid, // pass it the things vvv
+                    pid: "",
+                    name: ""
+                },
+            ).then(result => {
+                props.explosion(result.tid);
+            });
+        }}>
+            <i class="fas fa-plus" />
+        </div>
+    else return <animated.input 
 		id="abtib" 
-		readOnly={false} 
-		type="text" 
-		defaultValue={""} 
-		style={anim} 
-		className="attib"
-		ref={props.reference}
+            readOnly={false} 
+            type="text" 
+            defaultValue={""} 
+            style={anim} 
+            className="attib abtib-desktop"
+            ref={props.reference}
 
-        onFocus={
-            (event) => {
-                event.target.value = "";
-                setisExpanded(true);
-            }
-        }
-        onBlur={e=>{
-            setisExpanded(false);
-            setisSaving(false);
-            e.target.value = "";
-        }}
-        onKeyUp={
-            (event) => {
-                if (event.key === 'Enter') {
-                    event.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                    setisSaving(true);
-                    let taskName = event.target.value;
-                    let dateInfo = chrono.parse(taskName);
-                    let due = undefined;
-                    let defer = undefined;
-                    if (dateInfo.length > 0) {
-                        // we got a date!
-                        if (dateInfo[0].end) {
-                            // both start (defer) and end (due)
-                            // get end (due) date
-                            due = dateInfo[0].end.date();
-                            defer = dateInfo[0].start.date();
-                            // strip the due date string
-                            taskName = taskName.replace(dateInfo[0].text, "").trim();
-
-                        }
-                        else {
-                            // only start (due)
-                            due = dateInfo[0].start.date();
-                            // strip the due date string
-                            taskName = taskName.replace(dateInfo[0].text, "").trim();
-                        }
-                    }
-                    let npobj = { 
-                            uid: props.uid, // pass it the things vvv
-                            pid: "",
-                            due,
-                            defer,
-                            name: taskName
-                    };
-                    props.gruntman.do( // call a gruntman function
-                        "task.create", npobj,
-                    ).then(()=>{
-                        event.target.blur();
-                    });
+            onFocus={
+                (event) => {
+                    event.target.value = "";
+                    setisExpanded(true);
                 }
             }
-        }
-        placeholder={ defaultValue + ((Math.random()*128 < 1) ? " ^-^" : "")}
-     />;
+            onBlur={e=>{
+                setisExpanded(false);
+                setisSaving(false);
+                e.target.value = "";
+            }}
+            onKeyUp={
+                (event) => {
+                    if (event.key === 'Enter') {
+                        event.persist(); //https://reactjs.org/docs/events.html#event-pooling
+                        setisSaving(true);
+                        let taskName = event.target.value;
+                        let dateInfo = chrono.parse(taskName);
+                        let due = undefined;
+                        let defer = undefined;
+                        if (dateInfo.length > 0) {
+                            // we got a date!
+                            if (dateInfo[0].end) {
+                                // both start (defer) and end (due)
+                                // get end (due) date
+                                due = dateInfo[0].end.date();
+                                defer = dateInfo[0].start.date();
+                                // strip the due date string
+                                taskName = taskName.replace(dateInfo[0].text, "").trim();
+
+                            }
+                            else {
+                                // only start (due)
+                                due = dateInfo[0].start.date();
+                                // strip the due date string
+                                taskName = taskName.replace(dateInfo[0].text, "").trim();
+                            }
+                        }
+                        let npobj = { 
+                                uid: props.uid, // pass it the things vvv
+                                pid: "",
+                                due,
+                                defer,
+                                name: taskName
+                        };
+                        props.gruntman.do( // call a gruntman function
+                            "task.create", npobj,
+                        ).then(()=>{
+                            event.target.blur();
+                        });
+                    }
+                }
+            }
+            placeholder={ defaultValue + ((Math.random()*128 < 1) ? " ^-^" : "")}
+         />;
 }
 
 export default ABTIB;
