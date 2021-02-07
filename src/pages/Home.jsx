@@ -183,10 +183,10 @@ class Home extends Component {
                 this.props.gruntman.unlockUpdates();
             }
         }
-	for (let i in psp[2]) 
-	{
-	    console.log(psp[2][i].name)
-	}
+	//for (let i in psp[2]) 
+	//{
+	    //console.log(psp[2][i].name)
+	//}
 
         this.setState({projects: tlp[2], perspectives:psp[2]});
     }
@@ -210,7 +210,7 @@ class Home extends Component {
 
 	
 	pspOrder.forEach((v,i) => {
-	    console.log(v.name, i)
+	    //console.log(v.name, i)
 
 
 	    this.props.gruntman.do(
@@ -234,7 +234,7 @@ class Home extends Component {
 
     onDragEndPrj = result => {
 	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
-	    console.log("bad drop prj")
+	    //console.log("bad drop prj")
 	    return
 	}
 
@@ -246,7 +246,7 @@ class Home extends Component {
 
 	
 	prjOrder.forEach((v,i) => {
-	    console.log(v.name, i)
+	    //console.log(v.name, i)
 
 
 	    this.props.gruntman.do(
