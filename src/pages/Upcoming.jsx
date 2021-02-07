@@ -9,7 +9,6 @@ import Spinner from './Components/Spinner';
 //import { SortableTaskList } from './Components/Sortable';
 import { SortableTaskList } from './Components/Sortable';
 
-
 import Task from './Components/Task';
 import BlkArt from './Components/BlkArt';
 
