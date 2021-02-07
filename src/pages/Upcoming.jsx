@@ -7,7 +7,7 @@ import './Pages.css';
 import Spinner from './Components/Spinner';
 
 //import { SortableTaskList } from './Components/Sortable';
-import { SortableTaskList } from './Components/BetterSort';
+import { SortableTaskList } from './Components/Sortable';
 
 
 import Task from './Components/Task';
