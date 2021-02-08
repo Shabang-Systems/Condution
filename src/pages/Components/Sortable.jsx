@@ -261,7 +261,7 @@ const SortableProjectList = (props)=>{
                 </div>
             )
         //else if (item.type === "project") {
-	else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true)) {
+        else if (item.type === "project" && (item.content.isComplete == props.parentComplete) || (item.content.isComplete != true && props.parentComplete == true || !item.content.isComplete)) {
             return (
             <div ref={dragEnvelope}>
                 <animated.div 
