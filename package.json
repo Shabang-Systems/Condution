@@ -1,6 +1,6 @@
 {
   "name": "Condution",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/android": "^2.4.2",
