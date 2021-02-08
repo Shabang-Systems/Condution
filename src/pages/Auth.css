@@ -48,9 +48,9 @@
 .auth-story {
     color: var(--content-normal-accent);
     padding: 10px 25px;
-    position: absolute;
+    /*position: absolute;*/
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
 }
 
 .auth-greeting {
