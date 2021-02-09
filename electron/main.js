@@ -4,6 +4,12 @@ autoUpdater.checkForUpdatesAndNotify();
 const path = require('path');
 const isDev = require('electron-is-dev');
 
+setInterval(()=>{
+    autoUpdater.checkForUpdatesAndNotify();
+}, 15000);
+
+
+
 function createWindow () {
     // Create the browser window.
     let win = new BrowserWindow({
@@ -47,9 +53,6 @@ function createWindow () {
             win.setBackgroundColor("#f4f4f4");
             win.webContents.send("systheme-light", "hello")
         }
-    });
-    ipcMain.on('updatecheck', (event, arg) => {
-        autoUpdater.checkForUpdatesAndNotify();
     });
 
     win.once('ready-to-show', function() {
