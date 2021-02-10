@@ -11,6 +11,8 @@
     manual/manual
     developer/developer
 
+    test
+
 *********************
 The Condution Project
 *********************
@@ -29,4 +31,7 @@ Where are you headed?
 - **Need tutorials, workflows, and tips?** Head over to :ref:`guides/guides:Condution Guides`
 - **Need a precise manual of every feature?** Go to :ref:`manual/manual:Condution Manual`
 - **Need** :code:`@condution/engine` **help?** Go to :ref:`developer/developer:Condution Developer`
+
+.. include:: test.md
+
 

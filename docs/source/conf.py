@@ -20,7 +20,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Condution'
-copyright = '2019-2021 Shabang Systems, LLC'
+copyright = '2019-2021 Shabang Systems'
 author = 'The Condution Project'
 
 
