@@ -2,12 +2,23 @@
     background: #434d5f;
 }
 
-.caption-text {
+.std.std-ref {
     /*color: #eaedad;*/
+    border-bottom: 1px solid #e7eb96;
 }
 
+
+
 a {
-    color: #434d5f;
+    color: #5a6578;
+}
+
+.wy-menu-vertical a {
+    color: #5a6578;
+}
+
+.reference.external {
+    border-bottom: 1px solid #e7eb96;
 }
 
 
