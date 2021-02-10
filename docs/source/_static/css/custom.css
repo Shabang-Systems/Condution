@@ -1,0 +1,23 @@
+.wy-side-nav-search, .wy-nav-top {
+    background: #434d5f;
+}
+
+.caption-text {
+    /*color: #eaedad;*/
+}
+
+a {
+    color: #434d5f;
+}
+
+a:hover {
+    color: #4e6a96;
+}
+
+a:visited {
+    color: #434d5f;
+}
+
+
+
+

@@ -61,7 +61,7 @@
     "ionic:runios": "ionic capacitor run ios -l --external",
     "ionic:rundroid": "ionic capacitor run android -l --external",
     "capacitor:dist": "yarn ionic:dist; cap sync",
-    "docs:run": "cd docs; rerun 'make html' -i build"
+    "docs:run": "cd docs; rerun 'make clean html' -i build"
   },
   "postinstall": {
     "postinstall": "electron-builder install-app-deps"
