@@ -53,7 +53,8 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     "collapse_navigation": False,
     "style_nav_header_background": "#434d5f",
-    "logo_only": True
+    "logo_only": True,
+    'prev_next_buttons_location': None
 }
 
 html_logo = './docslogo.png'

@@ -3,15 +3,25 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Weird
-=====================================
+*********************
+The Condution Project
+*********************
+
+👋 **Howdy!** How are you doing? 
+
+Welcome to the documentation for The Condution Project. You know, `that task manager`_?
+
+.. _that task manager: https://www.condution.com/
+
+.. image:: screenshotlight.png
+
+Where are you headed?
+====================
 
 .. toctree::
-    :maxdepth: 2
-    :caption: Contents:
+    :hidden:
+    :maxdepth: 8
 
-    testv
+    guides/index
 
-
-Hey, man!
 

@@ -10,8 +10,25 @@ a {
     color: #434d5f;
 }
 
+
 a:hover {
     color: #4e6a96;
+}
+
+.wy-nav-side {
+    background-color: #f2f2f2;
+}
+
+.wy-menu-vertical a:hover {
+    background-color: #ededed;
+}
+
+.wy-menu-vertical a:active {
+    color: #4e6a96;
+}
+
+.wy-menu-vertical a:hover span.toctree-expand {
+    color: #434d5f;
 }
 
 a:visited {
