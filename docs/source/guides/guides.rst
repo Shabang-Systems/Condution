@@ -10,6 +10,8 @@ For those looking for specific information you are probably looking for `our man
 
 .. TODO turn manual into a link idk how
 .. toctree::
+    :maxdepth: 1
+
     glossary
     task
     projects
