@@ -25,6 +25,10 @@ class Projects extends Component { // define the component
     constructor(props) {
         super(props);
 
+        // long press handler: https://stackoverflow.com/a/48057286
+        this.deleteLongPressHandlerDown = this.deleteLongPressHandlerDown.bind(this);
+        this.deleteLongPressHandlerUp   = this.deleteLongPressHandlerUp.bind(this);
+
         this.state = {
             name: '', // project name
             possibleProjects:{}, // what are the possible projects? 
@@ -69,6 +73,31 @@ class Projects extends Component { // define the component
 
         if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
             this.name.current.focus(); // focus the name
+    }
+
+    deleteLongPressHandlerDown () {
+        this.deleteLongPressTimer = setTimeout(()=>{
+                                            this.props.gruntman.do( // call a gruntman function
+                                                "project.delete", { 
+                                                    uid: this.props.uid, // pass it the things vvv
+                                                    pid: this.props.id, 
+                                                    parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
+                                                }
+                                            ).then(()=>{
+                                                this.props.menuRefresh(); // refresh menubar
+                                                if (this.state.isComplete) {
+                                                    this.props.history.push("/completed", ""); // go back
+                                                    this.props.paginate("/completed");
+                                                } else {
+                                                    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+                                                    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
+                                            }) // call the homebar refresh
+                                        }
+            , 500);
+    }
+
+    deleteLongPressHandlerUp () {
+        clearTimeout(this.deleteLongPressTimer);
     }
 
     async refresh() {
@@ -262,23 +291,13 @@ class Projects extends Component { // define the component
                                     <a 
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
-                                        onClick={()=>{
-                                            this.props.gruntman.do( // call a gruntman function
-                                                "project.delete", { 
-                                                    uid: this.props.uid, // pass it the things vvv
-                                                    pid: this.props.id, 
-                                                    parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
-                                                }
-                                            ).then(()=>{
-						this.props.menuRefresh(); // refresh menubar
-						if (this.state.isComplete) {
-						    this.props.history.push("/completed", ""); // go back
-						    this.props.paginate("/completed");
-						} else {
-						    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
-						    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
-                                            }) // call the homebar refresh
-                                        }}
+
+                                        onTouchStart={this.handleButtonPress} 
+                                        onTouchEnd={this.handleButtonRelease} 
+                                        onMouseDown={this.handleButtonPress} 
+                                        onMouseUp={this.handleButtonRelease} 
+                                        onMouseLeave={this.handleButtonRelease}
+
                                         style={{borderColor: "var(--task-icon-ring)", 
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className="fas fa-trash"
