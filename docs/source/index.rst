@@ -11,7 +11,6 @@
     manual/manual
     developer/developer
 
-    test
 
 *********************
 The Condution Project
@@ -26,12 +25,9 @@ Welcome to the documentation for The Condution Project. You know, `that task man
 .. image:: screenshotlight.png
 
 Where are you headed?
-====================
+=====================
 .. HTMLify this to be pretty
 - **Need tutorials, workflows, and tips?** Head over to :ref:`guides/guides:Condution Guides`
 - **Need a precise manual documenting all of our features?** Go to :ref:`manual/manual:Condution Manual`
 - **Need** :code:`@condution/engine` **help?** Go to :ref:`developer/developer:Condution Developer`
-
-.. include:: test.md
-
 
