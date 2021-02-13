@@ -76,27 +76,28 @@ class Projects extends Component { // define the component
     }
 
     deleteLongPressHandlerDown () {
-        this.deleteLongPressTimer = setTimeout(()=>{
-                                            this.props.gruntman.do( // call a gruntman function
-                                                "project.delete", { 
-                                                    uid: this.props.uid, // pass it the things vvv
-                                                    pid: this.props.id, 
-                                                    parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
-                                                }
-                                            ).then(()=>{
-                                                this.props.menuRefresh(); // refresh menubar
-                                                if (this.state.isComplete) {
-                                                    this.props.history.push("/completed", ""); // go back
-                                                    this.props.paginate("/completed");
-                                                } else {
-                                                    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
-                                                    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
-                                            }) // call the homebar refresh
-                                        }
-            , 500);
+        this.setState({ deleteLongPressActivated: 0 }); // TODO: do this animation thingy and make sure it takes the same amount of time as the timer
+        this.deleteLongPressTimer = setTimeout(() => {
+            this.props.gruntman.do( // call a gruntman function
+                "project.delete", { 
+                    uid: this.props.uid, // pass it the things vvv
+                    pid: this.props.id, 
+                    parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
+                }
+            ).then(()=>{
+                this.props.menuRefresh(); // refresh menubar
+                if (this.state.isComplete) {
+                    this.props.history.push("/completed", ""); // go back
+                    this.props.paginate("/completed");
+                } else {
+                    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
+                    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
+            }) // call the homebar refresh
+        }, 500);
     }
 
     deleteLongPressHandlerUp () {
+        this.setState({ deleteLongPressActivated: 1 }); // TODO: the animation thingy
         clearTimeout(this.deleteLongPressTimer);
     }
 
@@ -245,68 +246,71 @@ class Projects extends Component { // define the component
                                     />
 
                                 </h1> 
-				<div className="complete-container">
-				    <a className={"complete-name " + this.state.animClass}
-					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
-					onClick={() => { 
-					    if (this.state.isComplete) {
-						this.uncompleteProject()
-					    } else {
-						this.completeProject()
-					    }
-					    this.setState({animClass: "complete-anim"})
-					    setTimeout(() => {
-						this.setState({animClass: ""})
-					    }, 1000);
-					}}
-				    >{(window.screen.width >= 400)? 
-					(this.state.isComplete? "Uncomplete" : "Complete") :
-					(this.state.isComplete? <i className="fas fa-times"></i> : <i className="fas fa-check"></i>) 
-				    } </a>
-				</div>
-				</div>
+                                <div className="complete-container">
+                                    <a className={"complete-name " + this.state.animClass}
+                                    style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
+                                    onClick={() => { 
+                                        if (this.state.isComplete) {
+                                        this.uncompleteProject()
+                                        } else {
+                                        this.completeProject()
+                                        }
+                                        this.setState({animClass: "complete-anim"})
+                                        setTimeout(() => {
+                                        this.setState({animClass: ""})
+                                        }, 1000);
+                                    }}
+                                    >{(window.screen.width >= 400)? 
+                                    (this.state.isComplete? "Uncomplete" : "Complete") :
+                                    (this.state.isComplete? <i className="fas fa-times"></i> : <i className="fas fa-check"></i>) 
+                                    } </a>
+                                </div>
+                                </div>
 
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
-                                    <a 
-                                        onClick={()=> {
-                                            this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
-                                                this.props.gruntman.do( // call a gruntman function
-                                                    "project.update__pstate", { 
-                                                        uid: this.props.uid, // pass it the things vvv
-                                                        id: this.props.id, 
-                                                        is_sequential: this.state.is_sequential
-                                                    }
-                                                );
-                                            }); // change the icon
-                                        }} 
-                                        data-tip="LOCALIZE: Sequencial/Paralellel"
-                                        className="perspective-icon" 
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 13, transform: this.state.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
-                                        </i>
-                                    </a>
-                                    <a 
-                                        data-tip="LOCALIZE: Delete"
-                                        className="perspective-icon" 
+                                <Spring
+                                    to={{ value: this.state.deleteLongPressActivated }}>
+                                        <a 
+                                            onClick={()=> {
+                                                this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
+                                                    this.props.gruntman.do( // call a gruntman function
+                                                        "project.update__pstate", { 
+                                                            uid: this.props.uid, // pass it the things vvv
+                                                            id: this.props.id, 
+                                                            is_sequential: this.state.is_sequential
+                                                        }
+                                                    );
+                                                }); // change the icon
+                                            }} 
+                                            data-tip="LOCALIZE: Sequencial/Paralellel"
+                                            className="perspective-icon" 
+                                            style={{borderColor: "var(--task-icon-ring)", 
+                                                cursor: "pointer", marginLeft: 5}}>
+                                            <i className={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
+                                                style={{margin: 3, color: "var(--task-icon-text)", 
+                                                    fontSize: 13, transform: this.state.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
+                                            </i>
+                                        </a>
+                                        <a 
+                                            data-tip="LOCALIZE: Delete"
+                                            className="perspective-icon" 
 
-                                        onTouchStart={this.handleButtonPress} 
-                                        onTouchEnd={this.handleButtonRelease} 
-                                        onMouseDown={this.handleButtonPress} 
-                                        onMouseUp={this.handleButtonRelease} 
-                                        onMouseLeave={this.handleButtonRelease}
+                                            onTouchStart={this.deleteLongPressHandlerDown} 
+                                            onMouseDown={ this.deleteLongPressHandlerDown} 
+                                            onTouchEnd={  this.deleteLongPressHandlerUp} 
+                                            onMouseUp={   this.deleteLongPressHandlerUp} 
+                                            onMouseLeave={this.deleteLongPressHandlerUp}
 
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className="fas fa-trash"
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 10, transform: "translate(2px, -2px)"}}
-                                        >
-                                        </i>
-                                    </a>
+                                            style={{borderColor: "var(--task-icon-ring)", 
+                                                cursor: "pointer", marginLeft: 5}}>
+                                            <i className="fas fa-trash"
+                                                style={{margin: 3, color: "var(--task-icon-text)", 
+                                                    fontSize: 10, transform: "translate(2px, -2px)"}}
+                                            >
+                                            </i>
+                                        </a>
+                                    </Spring>
                                     <div className="progressbar">
                                         <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
                                             {props =>
