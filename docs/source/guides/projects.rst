@@ -19,7 +19,9 @@ Create a subproject by navigating within a project and clicking `add a project` 
 Sequential or Parallel?
 -----------------------
 
-Items in both parallel and sequential projects can be completed in any order. However, only the first item in a sequential project will show up in the Upcoming page, and Perspectives . Sequential projects are useful for task lists that must be completed in order.
+Parallel projects simply act like folders to group items, while sequential projects are useful for task lists that must be completed in order.
+
+Items in both parallel and sequential projects can be completed in any order. However, only the first item in a sequential project will show up in Upcoming and on the Calendar. Perspectives can also filter for all tasks or only the first "Available" task in a sequential project.
 
 Projects are parallel by default, but can be switched to sequential mode with the double ended arrow icon in the top left.
 
@@ -32,4 +34,3 @@ Deleting Projects
 -----------------
 
 Projects can also be deleted by pressing and holding the delete button in the top left.
-
