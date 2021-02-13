@@ -120,6 +120,7 @@ class Projects extends Component { // define the component
     updateName(e) {
         if (e) {
             this.props.gruntman.registerScheduler(() => { 
+                console.log("DID IT!");
                 // Register a scheduler to deal with React's onChange
                 // check out the FANCYCHANGE in task.jsx
                 this.props.gruntman.do( // call a gruntman function
@@ -129,7 +130,7 @@ class Projects extends Component { // define the component
                         name: e.target.value
                     }
                 ).then(this.props.menuRefresh) // call the homebar refresh
-            }, `project.this.${this.props.id}-update`) // give it a custom id
+            }, `project.name.${this.props.id}-update`, 1500) // give it a custom id
             this.setState({name: e.target.value})
         } else { console.log(e)}
     } 
