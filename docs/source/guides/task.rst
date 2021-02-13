@@ -21,8 +21,22 @@ Inside a task
 
 Inside of the task there are quite a few elements as can be seen in the below diagram.
 
+The Delete Button
++++++++++++++++++
+
+The Delete button deletes a task... yeah that's about it.
+
+The Flag Button
++++++++++++++++
+
+When pressed, the flag button flags a task.
+
+Flagged tasks can be filtered using perspective filters. A brief tutorial on how to use perspective filters is `available here`_.
+
+.. _available here: /guides/perspectives.html
+
 The Globe Button
-++++++++++++
+++++++++++++++++
 
 The globe button toggles between floating and fixed timezones.
 
