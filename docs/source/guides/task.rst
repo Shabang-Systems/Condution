@@ -3,6 +3,9 @@
 Anatomy of a Task
 *****************
 
+.. image:: ./task.png
+
+
 Tasks are the center of every productivity app which is why they're so crucial to understand. In this guide, we'll walk you through the different ways to add and interact with tasks.
 
 Adding a task
