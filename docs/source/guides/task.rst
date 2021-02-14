@@ -44,3 +44,11 @@ Let's say for example you needed to call your mother at 8pm every Friday and one
 
 However, say for example you want to do Yoga between 5-6pm as well, but you wanted to do it at 5-6pm whereever you are, you can used Floating Timezones.
 
+The Repeat Button
++++++++++++++++++
+
+Using the repeat button on a task allows you to set a task to repeat.
+
+Clicking it will reveal a model as shown below:
+
+.. add image
