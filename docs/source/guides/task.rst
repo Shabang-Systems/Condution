@@ -49,6 +49,22 @@ The Repeat Button
 
 Using the repeat button on a task allows you to set a task to repeat.
 
-Clicking it will reveal a model as shown below:
+Clicking it will reveal a modal that will allow you to choose whether or not you want your task to repeat on a daily, weekly, monthly, or yearly basis. Choosing either daily, or monthly will also create an arrow in the bottom right.
 
 .. add image
+
+Clicking this arrow will reveal an option to choose what days in the week, or days in a month you would like your task to repeat.
+.. add image
+
+Checking a repeating task off will cause it to re-appear due whenever you have set it to be next due.
+
+The Tags Pane Button
+++++++++++++++++++++
+
+Clicking the tags pane button will reveal the tags pane.
+
+The tags pane allows you to modify tags. A guide on how to use tags and the tags pane can be `seen here`_.
+
+.. _seen here: /guides/tags.html
+
+
