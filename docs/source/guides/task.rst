@@ -82,4 +82,22 @@ Like the FAB box, the Deffered Date Box also supports natural language processin
 The Due Date Box
 ++++++++++++++++
 
+The due date box allows you to set a due date for a task
 
+Due dates are quite fundemental to the Condution workflow. Setting a due date specifies when a task is due dictating it's placement on the calendar, how it's filtereda and sorted in perspectives, and when it appears in upcoming.
+
+Much like with deffer dates, the due date box supports natural langauge processing.
+
+The Projects Assigner
++++++++++++++++++++++
+
+The projects assigner simply takes a task and places it where you specify within it's dropdown.
+
+The Tags Adder
+++++++++++++++
+
+The tags adder simply allows you to asign and create tags.
+
+To create a tag, simply type the name of the tag you would like and press enter. To assign a tag, simply type the name of the tag you wish to assign and press enter.
+
+This concludes our guide to tasks and their anatomy. If you have further questions, be sure to either checkout the more detailed manual, or join and ask on our Discord.
