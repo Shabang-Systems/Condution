@@ -57,7 +57,6 @@ Clicking this arrow will reveal an option to choose what days in the week, or da
 .. add image
 
 Checking a repeating task off will cause it to re-appear due whenever you have set it to be next due.
-
 The Tags Pane Button
 ++++++++++++++++++++
 
@@ -66,5 +65,18 @@ Clicking the tags pane button will reveal the tags pane.
 The tags pane allows you to modify tags. A guide on how to use tags and the tags pane can be `seen here`_.
 
 .. _seen here: /guides/tags.html
+
+The Deffered Date Box
++++++++++++++++++++++
+
+The deffered date box allows you to set a deffer date for a task.
+
+A deffer date is the date by which you want to/are able to start a task. When a task is deffered, Condution treats it as something you aren't able to complete. You can still check them off, but they will appear grey in color and won't appear in upcoming until the deffer date has passed and they are no longer deffered. There are other ways a task might become deferred such as in `sequential projects`_, but for the most part this is done via a deffer date.
+
+An example of when you might want to use a defer date is say for example you need to visit your neighbor to ask about the strange and at times disturbing screams coming from their basement no one else in your neigborhood is brave enough to confront them about. However, you happen to be in Japan. You might defer that task until you return.
+
+Another example might be if you're home, but too busy working on documentation for a productivity application for the next few days to bother yourself with investigating the screams. You might want to defer it until you feel it is more convenient.
+
+Like the FAB box, the Deffered Date Box also supports natural language processing so you can type natural phrases such as "Tomorrow at 2pm".
 
 
