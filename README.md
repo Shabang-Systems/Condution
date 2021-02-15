@@ -18,11 +18,6 @@ Condution is a wonderful electron app built to create a perfectly easy task-mana
 
 Condution attempts to change this. We want to create an open-source productivity/task-management app that is both simple, and, well, free (but we do take [Patreon](https://www.patreon.com/condution) donations though).
 
-<p align="center">
-  <img src="https://www.condution.com/app.png" />
-  <i>This. Is. (Actually.) Condution.</i>
-</p>
-
 ### Features 
 #### The Standard Spiel
 Create tasks, manage them in projects, add some tags, set due dates, and repeat them at will. Condution has the whole nine-yards of the core list-making features nailed so you could create and edit anything from grocery lists to hundred-task projects.
