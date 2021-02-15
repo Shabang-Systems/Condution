@@ -77,6 +77,9 @@ An example of when you might want to use a defer date is say for example you nee
 
 Another example might be if you're home, but too busy working on documentation for a productivity application for the next few days to bother yourself with investigating the screams. You might want to defer it until you feel it is more convenient.
 
-Like the FAB box, the Deffered Date Box also supports natural language processing so you can type natural phrases such as "Tomorrow at 2pm".
+Like the FAB box, the Deffered Date Box also supports natural language processing so you can type natural phrases such as "Tomorrow at 2pm". Just make sure to do so in the text field within the calendar view.
+
+The Due Date Box
+++++++++++++++++
 
 
