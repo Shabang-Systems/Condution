@@ -21,7 +21,7 @@ const defaultOptions = {
 
 function Loader(props) {
     return (
-        <div style={{width: "n00%", height: "100%", position: "absolute", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <div style={{width: "100%", height: "100%", position: "absolute", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Lottie options={defaultOptions}
                 height={50}
                 width={50}
