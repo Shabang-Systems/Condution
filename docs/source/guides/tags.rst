@@ -17,6 +17,18 @@ Doing so will create a new tag with the name "New Tag". To rename it, simply cli
 Deleting Tags
 +++++++++++++
 
-Deleting tags is a very very useful feature that was missing in Condution for far too long. Many Condution veterans will recite bloodcurdling tales of mistyping a tag name only to end up with a typo tag. One that was impossible to be rid of and would almost always pop up in the dropdown instead of the desired one.
+Deleting tags is a very useful feature that was missing in Condution for far too long. Many Condution veterans will recite bloodcurdling tales of mistyping a tag name only to end up with a typo tag of similar name. One that was impossible to be rid of and would almost always pop up in the dropdown instead of the desired one.
 
+Thankfully, those dark ages have since passed and to delete a tag, all you have to do is navigate to the tags pane within any task and click the x button next to it. As mentioned before, you always have the option of renaming them too if you so wish.
+
+Tag Weights
+-----------
+
+Besides their use in filtering, tag weight is one of the most useful aspects of tags in general.
+
+So what are they? Tag weights are settable values that dictate the weight of the task they're assigned to. Tag weights are multiplicative meaning if I create a tag with weight 2named "hard", and assign it to a task with one other tag with weight 0.5 named "easy", the task will still have weight 1. Task weights are used to describe how time and energy intensive a given task is which is why it makes sense to be able to assign different tags describing the task and have those determine the overall weight.
+
+Setting a tag weight is easy. All you need to do is navigate to the tags pane within any task and click on the tag you want to set. Then as shown below, type the desired weight and hit enter.
+
+.. add image
 
