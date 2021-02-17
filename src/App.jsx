@@ -195,6 +195,9 @@ class App extends Component {
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
     authDispatch(mode) {
+        console.log(mode.operation)
+        console.log(mode.service)
+        console.log("do not delete these console logs above!!!") // TODO: what's actually happining here? why is account creation dud?
 
         // TODO: that's a state machine! @zbuster05
         let uid;
