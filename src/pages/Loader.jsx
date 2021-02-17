@@ -21,7 +21,7 @@ const defaultOptions = {
 
 function Loader(props) {
     return (
-        <div style={{width: "100%", height: "100%", position: "absolute", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <div style={{width: "n00%", height: "100%", position: "absolute", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Lottie options={defaultOptions}
                 height={50}
                 width={50}
@@ -29,7 +29,7 @@ function Loader(props) {
                 isPaused={false}
             />
             <div style={{position: "absolute", bottom: 15, color: "var(--decorative-light-alt)", fontSize: 8, paddingLeft:20, paddingRight:10}}>
-                ©2019-2020 Shabang Systems, LLC and the Condution Authors. Software released under GNU-GPLv3.
+                ©2019-2021 Shabang Systems, LLC and the Condution Authors. Software released under GNU-GPLv3.
             </div>
         </div>
     )

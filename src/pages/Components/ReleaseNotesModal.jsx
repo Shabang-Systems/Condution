@@ -38,7 +38,7 @@ function ReleaseNotesModal(props) {
     return (
         <IonModal ref={props.reference} isOpen={isShown} onDidDismiss={() => {}} style={{borderRadius: 5}} cssClass="releasenote-popover auto-height">
             <div className="inner-content releasenote-inside">
-                <div className="condution-callout"><span className="condution-name">Condution</span><span className="condution-vn">v1.0.1</span></div>
+                <div className="condution-callout"><span className="condution-name">Condution</span><span className="condution-vn">v1.0.2</span></div>
                 <div className="releasenotes">Release Notes</div>
                 <h1 className="header">👋 Hey, it's been a while.</h1>
                 <p className="content">Thanks for entrusting Condution for your task management. After a few months of working on the app, we are ready to release our <b>next major version.</b></p>
