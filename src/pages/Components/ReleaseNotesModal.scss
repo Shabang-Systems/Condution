@@ -13,20 +13,21 @@ ion-modal.auto-height {
         .inner-content {
             max-height: 70vh;
             overflow: auto;
-            padding: 10px;
+            padding: 2vh;
         }
     }
 }
 
 .releasenote-popover {
     --background: transparent;
-    --width: min(420px, 80vw);
+    --width: min(600px, 80vw);
     --box-shadow: 0 !important;
+    //--padding: 20px;
 }
 
 .releasenote-inside {
     background: var(--ion-background-color);
-    width: unquote("min(420px, 80vw)");
+    width: unquote("min(600px, 80vw)");
     border-radius: 5px;
     padding: 10px;
 }
@@ -52,7 +53,7 @@ ion-modal.auto-height {
     color: var(--content-normal);
     display: inline-block;
     font-weight: 600;
-    padding: 3px;
+    padding: 8px;
     border-radius: 5px;
     margin: 0 10px;
     transform: translateY(-2px);
@@ -72,6 +73,7 @@ ion-modal.auto-height {
     font-size: 15px;
     margin-bottom: 7px;
     color: var(--content-normal-alt);
+    padding: 8px;
 }
 
 
