@@ -3,7 +3,6 @@
 Anatomy of a Task
 *****************
 
-.. image:: ./task.png
 
 
 Tasks are the center of every productivity app which is why they're so crucial to understand. In this guide, we'll walk you through the different ways to add and interact with tasks.
@@ -12,14 +11,18 @@ Adding a task
 -------------
 
 There are two ways to make a task. If you're inside a project, you can simply press the add a task button. However, if in the moment simply want to add a task to your inbox for later sorting, you can use our FAB (Floating Action Button) as seen below.
+
 .. add image
-To make your life even easier, our FAB include natural language support. This means you can simply say things like "Wash the car from 8 to 9 on Sunday" and it'll add a task with the deffer date of Sunday at 8 and due date of Sunday at 9.
+To make your life even easier, our FAB includes natural language support. This means you can simply say things like "Wash the car from 8 to 9 on Sunday" and it'll add a task with the deffer date of Sunday at 8 and due date of Sunday at 9.
+
 .. add image
 
 Inside a task
 -------------
 
 Inside of the task there are quite a few elements as can be seen in the below diagram.
+
+.. image:: ./task.png
 
 The Delete Button
 +++++++++++++++++
