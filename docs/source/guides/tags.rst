@@ -11,7 +11,7 @@ There are two main ways to create a tag. The first and recommended way is to sim
 
 The second way is to navigate to the tags pane inside the task and hit "New Tag" as shown below.
 
-.. TODO maybe make smaller
+.. TODO maybe make smaller and also of different tasks.. This may be too personal
 .. image:: ./tagsnew.png
            :align: center
 
@@ -33,5 +33,5 @@ So what are they? Tag weights are settable values that dictate the weight of the
 
 Setting a tag weight is easy. All you need to do is navigate to the tags pane within any task and click on the tag you want to set. Then as shown below, type the desired weight and hit enter.
 
-.. add image
+.. image:: ./tagweights.png
 
