@@ -65,6 +65,7 @@ Clicking this arrow will reveal an option to choose what days in the week, or da
 .. image:: ./taskrepeatarrow.png
 
 Checking a repeating task off will cause it to re-appear due whenever you have set it to be next due.
+
 The Tags Pane Button
 ++++++++++++++++++++
 
