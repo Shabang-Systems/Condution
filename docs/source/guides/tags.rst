@@ -1,6 +1,6 @@
-*************
-Bloody Tags!!
-*************
+**************
+Utilizing Tags
+**************
 
 Tags are central to Condution since they're largely what inform perspectives and dictate task weight. In this guide, we'll guide you through the different ways to create and interact with tags as well as delete them.
 
@@ -10,7 +10,7 @@ Creating a Tag
 There are two main ways to create a tag. The first and recommended way is to simply move to the tags box within a task, type the tags name, and hit enter. If this name doesn't match the name of any other existing tag, it'll simply create a new one and assign it to that task.
 
 The second way is to navigate to the tags pane inside the task and hit "New Tag" as shown below.
-.. add image
+.. image:: ./tagsnew.png
 
 Doing so will create a new tag with the name "New Tag". To rename it, simply click on that tag and set the name box as shown below to the desired name.
 
