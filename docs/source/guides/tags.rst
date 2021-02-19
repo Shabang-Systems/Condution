@@ -10,7 +10,10 @@ Creating a Tag
 There are two main ways to create a tag. The first and recommended way is to simply move to the tags box within a task, type the tags name, and hit enter. If this name doesn't match the name of any other existing tag, it'll simply create a new one and assign it to that task.
 
 The second way is to navigate to the tags pane inside the task and hit "New Tag" as shown below.
+
+.. TODO maybe make smaller
 .. image:: ./tagsnew.png
+           :align: center
 
 Doing so will create a new tag with the name "New Tag". To rename it, simply click on that tag and set the name box as shown below to the desired name.
 
