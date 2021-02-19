@@ -1,7 +1,6 @@
 *********************************
 Navigating with the Quickswitcher
 *********************************
-
 When using Condution, the quickswitcher is the fastest way to move around. Activate it by pressing Command/Control - k.
 
 .. image:: ./quick1.png
@@ -24,3 +23,6 @@ Pressing esc or clicking outside will dismiss the quickswitcher.
 Activating the quickswitcher then instantly pressing enter will switch back to the previous page.
 
 .. image:: ./quick3.png
+
+
+.. TODO get these images in light mode please
