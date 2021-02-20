@@ -4,7 +4,9 @@
 name: Publish Documentation to AWS
 on:
   push:
-    branches: [ master ]
+    branches: 
+      - "*v[0-9].[0-9].[0-9]"
+      - main
 
 jobs:
   build_and_deploy:
