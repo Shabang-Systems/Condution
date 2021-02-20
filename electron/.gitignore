@@ -31,3 +31,5 @@ capacitor.config.json
 ionic.config.json
 src/*
 
+app/*
+

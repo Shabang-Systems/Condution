@@ -1,0 +1,51 @@
+.wy-side-nav-search, .wy-nav-top {
+    background: #434d5f;
+}
+
+.std.std-ref {
+    /*color: #eaedad;*/
+    border-bottom: 1px solid #e7eb96;
+}
+
+
+
+a {
+    color: #5a6578;
+}
+
+.wy-menu-vertical a {
+    color: #5a6578;
+}
+
+.reference.external {
+    border-bottom: 1px solid #e7eb96;
+}
+
+
+a:hover {
+    color: #4e6a96;
+}
+
+.wy-nav-side {
+    background-color: #f2f2f2;
+}
+
+.wy-menu-vertical a:hover {
+    background-color: #ededed;
+}
+
+.wy-menu-vertical a:active {
+    color: #4e6a96;
+}
+
+.wy-menu-vertical a:hover span.toctree-expand {
+    color: #434d5f;
+}
+
+a:visited {
+    color: #434d5f;
+}
+
+
+
+
