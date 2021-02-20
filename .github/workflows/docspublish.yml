@@ -24,6 +24,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: Upload to S3
       uses: reggionick/s3-deploy@v3
       with:
