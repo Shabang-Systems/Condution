@@ -19,6 +19,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Update submodules
+      run: git submodule init; git submodule update
     - name: Set Node.js 12.x
       uses: actions/setup-node@v1
       with:
