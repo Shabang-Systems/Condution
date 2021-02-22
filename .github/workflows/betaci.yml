@@ -23,6 +23,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
+    - name: Install Ionic
+      run: yarn global add @ionic/cli
     - name: Install dependencies
       run: yarn
     - name: Decrypt secret
