@@ -27,7 +27,7 @@ jobs:
       uses: actions/setup-python@v2.2.1
     - name: Install Sphinx
       run: pip install -U sphinx sphinx-rtd-theme recommonmark
-    - name: Build Docs
+    - name: Build docs
       run: cd docs; make html
     - name: Upload to S3
       uses: reggionick/s3-deploy@v3
