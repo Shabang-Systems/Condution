@@ -296,12 +296,6 @@ class Upcoming extends Component { // define the component
                                             })
                                     })()
                                 }
-                                {
-                                    (()=>{
-                                            if (this.state.timelineShown)
-                                            return <span style={{fontSize: 8, color:"var(--commitid)", paddingLeft:10, paddingTop:10}}>Commit ID: {process.env.REACT_APP_COMMIT_HASH}</span>
-                                    })()
-                                }
                             </div>
                                 <BlkArt visible={(this.state.inbox.length+this.state.dueSoon.length)==0 && !this.state.timelineShown && this.state.initialRenderingDone} title={"Nothing upcoming."} subtitle={"Expand the timeline to see more!"} />
                             <div className="bottom-helper">&nbsp;</div>
