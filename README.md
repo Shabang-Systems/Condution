@@ -6,8 +6,8 @@
 <a href=""><img src="https://img.shields.io/github/license/shabang-systems/condution"/> </a>
 
 <a href="https://www.producthunt.com/posts/condution?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-condution" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=285358&theme=light" alt="Condution - Open-source, cross-platform task management + collaboration | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-<a href="https://play.google.com/store/apps/details?id=cf.shabang.condution" target="_blank"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: 250px; height: auto;" width="250" /></a>
-<a href="https://apps.apple.com/us/app/condution/id1523249900" target="_blank"><img src="https://developer.apple.com/news/images/download-on-the-app-store-badge.png" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: 250px; height: auto;" width="250" /></a>
+<a href="https://play.google.com/store/apps/details?id=cf.shabang.condution" target="_blank"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: auto; height: 54px;" height="54" /></a>
+<a href="https://apps.apple.com/us/app/condution/id1523249900" target="_blank"><img src="https://developer.apple.com/news/images/download-on-the-app-store-badge.png" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: auto; height: 54px;" height="54" /></a>
 
 
 
