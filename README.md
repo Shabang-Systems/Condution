@@ -11,11 +11,9 @@
 <a href="https://apps.apple.com/us/app/condution/id1523249900" target="_blank"><img src="https://developer.apple.com/news/images/download-on-the-app-store-badge.png" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: auto; height: 54px;" height="54" /></a>
 </div>
 
-
+***
 
 **This. Is. Condution.** A project management system that makes sense and will not burn your pockets out.
-
-***
 
 ## Those Download Buttons?
 👉 [**Direct Download**](https://www.condution.com/#downloads) the latest version of Condution here! 👈 
