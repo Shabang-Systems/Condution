@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Publish Docs to AWS
+name: CI to AWS
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ on:
       - "main"
 
 jobs:
-  build_and_deploy_docs:
+  build_and_deploy_app:
     environment: s3-access
     runs-on: ubuntu-latest
           
@@ -19,22 +19,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Update submodules
+      run: git submodule init; git submodule update
     - name: Set Node.js 12.x
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - name: Setup Python
-      uses: actions/setup-python@v2.2.1
-    - name: Install Sphinx
-      run: pip install -U sphinx sphinx-rtd-theme recommonmark
-    - name: Build docs
-      run: cd docs; make html
+    - name: Install Ionic
+      run: yarn global add @ionic/cli
+    - name: Install dependencies
+      run: yarn
+    - name: Decrypt secret
+      run: ./decrypt.sh
+      env:
+        SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
+    - name: Build app
+      run: CI=false yarn ionic:dist
     - name: Upload to S3
       uses: reggionick/s3-deploy@v3
       with:
         # aws bucket name
-        bucket: docs.condution.com
+        bucket: beta.condution.com
         # directory to upload
-        folder: docs/build/html
+        folder: build
         # bucket location
         bucket-region: us-east-2
