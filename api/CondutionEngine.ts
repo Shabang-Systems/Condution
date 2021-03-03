@@ -23,7 +23,7 @@ async function test() {
     let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!
     //ws[0].name = "Heyo!"; // set its name
     console.log(ws[0].name); // get the name of the first workspace
-    ws[0].invite("anothertest@gmail.com");
+    ws[0].revoke("anothertest@gmail.com");
 
     //let tasks: Collection = cm.collection(["tasks", "saonehaoeusaonelu"]);
     //console.log(tasks.data());

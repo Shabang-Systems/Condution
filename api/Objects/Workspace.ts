@@ -68,7 +68,9 @@ export default class Workspace {
      */
 
     async revoke(email: string):Promise<void> {
-        console.error("TODO TODO this is WRONG!! IT DOES NOT ADD TO THE EDITOR LIST.");
+        if (this.data["meta"]["editors"].includes(email))
+            this.data["meta"]["editors"] = this.data["meta"]["editors"].filter((a:string)=>a!==email);
+        this.sync();
         let invitations:Collection= this.context.referenceManager.collection(["invitations", email, "invites"]);
         await invitations.add({email, workspace: this.id, type: "revoke", time: new Date()});
     }
