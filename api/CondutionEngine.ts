@@ -15,9 +15,9 @@ async function test() {
 
     let cm: Context = new Context(manager);
 
-    let tasks: Collection = cm.collection(["tasks"]);
-    //let oneProject: Page = cm.page(["projects", "JRZOFQQYSIzqB65eW5oX"]);
-    console.log(await tasks.data());
+    //let tasks: Collection = cm.collection(["tasks"]);
+    let oneTask: Page = cm.page(["tasks", "75lswWrsQQKZ4Yieyqi8"]);
+    console.log(await oneTask.get());
     //console.log(await oneProject.get());
 }
 

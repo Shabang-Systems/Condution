@@ -48,7 +48,7 @@ class FirebaseCollection extends Collection {
     /**
      *
      * @method pages
-     * Get a snapshot from the cache.
+     * Gets a page array from the database.
      *
      * @param   path    The valid path to the reference
      * @return  {Page[]} The result of calling `.get()` on the database reference
@@ -69,7 +69,7 @@ class FirebaseCollection extends Collection {
     /**
      *
      * @method data
-     * Get a snapshot from the cache.
+     * Gets a data snapshot from the database.
      *
      * @param   path    The valid path to the reference
      * @return  {object[]} The result of calling `.get()` on the database reference
@@ -157,28 +157,31 @@ class FirebasePage extends Page {
     path: string[];
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
+
+    private data: Promise<object>; 
     
     constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
-        const TODOstring = JSON.stringify(this.path);        //  strigify to hash array
-        if (!cache.has(TODOstring)) {                   //  if path string isn't cached
-            // TODO: comment this out someday \/
-            const ref = this.getFirebaseRef(path);           //  get the reference from the database
-            cache.set(TODOstring, ref.get());           //  save result in cache
-            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
-                                     ref.onSnapshot({
-                                         error: console.trace,
-                                         next: (snap:any) => {
-                                             cache.set(TODOstring, snap);
-                                             refreshCallback(Object.assign(snap.data(), {id:snap.id}));
-                                             // TODO TODO: requestRefresh
-                                         }
-                                     })
-                                    );
-        }
+        const ref = this.getFirebaseRef(path);           //  get the reference from the database
+
+        this.data = (async () : Promise<Object> => {
+            let snapshot = await ref.get();
+            return Object.assign(snapshot.data(), {id: snapshot.id});
+        })();
+
+        ref.onSnapshot({
+            error: console.trace,
+            next: (snap:any) => {
+                let data = Object.assign(snap.data(), {id:snap.id});
+                 // TODO janky AF resolving to a Promise of data b/c the original fetch is a promise
+                this.data = new Promise((res, _)=>res(data));
+                refreshCallback(data);
+                // TODO TODO: requestRefresh
+            }
+        })
     }
 
     get id() : string {
@@ -220,9 +223,7 @@ class FirebasePage extends Page {
      */
 
     async get() : Promise<object> {
-        const TODOstring = JSON.stringify(this.path);        //  strigify to hash array
-        const result = await cache.get(TODOstring);
-        return Object.assign(result.data(), {id: result.id});
+        return await this.data;
     }
 
     /**
