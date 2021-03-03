@@ -45,28 +45,6 @@ class FirebaseCollection extends Collection {
         return {identifier: null, payload: null, response: resultDocument};
     }
 
-    private getCachedAccessPoint() {
-        let path = this.path;
-        const TODOstring = JSON.stringify(path);        //  strigify to hash array
-        if (!cache.has(TODOstring)) {                   //  if path string isn't cached
-            // TODO: comment this out someday \/
-            const ref = this.getFirebaseRef(path);           //  get the reference from the database
-            cache.set(TODOstring, ref.get());           //  save result in cache
-            unsubscribeCallbacks.set(TODOstring,        //  TODO: comment this code, someday
-                                     ref.onSnapshot({
-                                         error: console.trace,
-                                         next: (snap:any) => {
-                                             cache.set(TODOstring, snap);
-                                             //requestRefresh();
-                                             // TODO TODO: requestRefresh
-                                         }
-                                     })
-                                    );
-        }
-
-        return cache.get(TODOstring);
-    }
-
     /**
      *
      * @method pages
@@ -83,7 +61,7 @@ class FirebaseCollection extends Collection {
      */
 
     async pages() : Promise<Page[]> {
-        return (await this.getCachedAccessPoint()).docs.map((page:any)=>{
+        return (await this.getFirebaseRef(this.path).get()).docs.map((page:any)=>{
             return new FirebasePage([...this.path, page.id], this.firebaseDB, this.firebaseRef);
         });
     }
@@ -104,7 +82,7 @@ class FirebaseCollection extends Collection {
      */
 
     async data() : Promise<object[]> {
-        return (await this.getCachedAccessPoint()).docs.map((page:any)=>{
+        return (await this.getFirebaseRef(this.path).get()).docs.map((page:any)=>{
             return Object.assign(page.data(), {id: page.id});
         });
     }

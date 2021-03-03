@@ -42,7 +42,7 @@ export class Context {
      *
      * use the specified provider in the context
      *
-     * @param {string} providerName: the name of the provider you wish to use
+     * @param {string} providerName the name of the provider you wish to use
      * @returns {void}
      *
      */
@@ -118,10 +118,10 @@ export class Context {
      * > let ref = manager.page("users, "test", "tasks", "434d5fab10129a");
      * > let values = ref.get();
      *
-     * @param {string[]} path: path that you desire to get a reference to
-     * @param {Function} refreshCallback: the callback to update when data gets refreshed
+     * @param {string[]} path path that you desire to get a reference to
+     * @param {Function} refreshCallback the callback to update when data gets refreshed
      * @param {boolean} forceUserland  return a page pointing to user db and not workspace db even if workspaces activated
-     * @returns {Page}: the page ye wished for
+     * @returns {Page} the page ye wished for
      *
      */
 
