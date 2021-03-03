@@ -203,7 +203,7 @@ abstract class Page {
 abstract class Collection {
     abstract pages(): Promise<Page[]>; // the... contents, but in pages form
     abstract data(): Promise<object[]>; // the... contents
-    abstract add(payload:object) : Promise<DataExchangeResult>; // Function to send a value to the page
+    abstract add(payload:object) : Promise<DataExchangeResult>; // add an array to a page
     abstract delete() : Promise<DataExchangeResult> ; // Function to delete a page
 }
 

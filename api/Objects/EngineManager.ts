@@ -1,3 +1,4 @@
+import Workspace from "./Workspace";
 import ReferenceManager from "../Storage/ReferenceManager";
 import { Page, Collection } from "../Storage/Backends/Backend"; 
 
@@ -23,7 +24,9 @@ export class Context {
     private ticketID:string; // current UID/Workspace ID
     private userID:string; // current UID
     private isWorkspace:boolean = false; // currently under workspaces mode
+    private _workspaces:string[]; // current workspace IDs
     private authenticatable:boolean = false; // are we currently authenticated?
+    private ready:boolean = false // are the workspaces loaded?
 
     constructor(refManager:ReferenceManager, initializeWithoutAuth:boolean=false) {
         this.rm = refManager;
@@ -35,6 +38,22 @@ export class Context {
             this.authenticatable = true;
         }
     }
+
+    /**
+     *
+     * @method start
+     *
+     * Start the context by loading user info and workspaces. 
+     * Call before doing anything!
+     *
+     * @returns {Promise<void>}
+     *
+     */
+
+    async start():Promise<void> {
+        this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
+    }
+
 
     /**
      * 
@@ -82,6 +101,29 @@ export class Context {
 
     get userIdentifier() {
         return this.userID;
+    }
+
+    /**
+     * @property referenceManager
+     *
+     * The current ReferenceManager
+     *
+     */
+
+    get referenceManager() {
+        return this.rm;
+    }
+
+
+    /**
+     * @method workspaces
+     *
+     * Get the current user's workspaces
+     *
+     */
+
+    async workspaces() {
+        return await Promise.all(this._workspaces.map(async i=>(await Workspace.fetch(this, i))));
     }
 
     /**
