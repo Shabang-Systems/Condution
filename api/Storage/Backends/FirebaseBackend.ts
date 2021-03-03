@@ -10,16 +10,14 @@ let cache = new Map();
 let unsubscribeCallbacks = new Map();
 
 /**
- * FirebaseCollection
- *
  * A firebase collection to operate on 
+ * 
  * Storage/Backend/Backend/Page/Collection abstract 
  * class for usage and documentation.
  *
  * @extends {Collection}
  * 
  */
-
 
 class FirebaseCollection extends Collection {
     path: string[];
@@ -46,17 +44,10 @@ class FirebaseCollection extends Collection {
     }
 
     /**
-     *
-     * @method pages
      * Gets a page array from the database.
      *
-     * @param   path    The valid path to the reference
-     * @return  {Page[]} The result of calling `.get()` on the database reference
-     *
-     * Logic:
-     *  If the path is cached, return from cache.
-     *  Else, register a snapshot listener to update the cache
-     *      and return the newly cached value.
+     * @param   path - The valid path to the reference
+     * @returns {Page[]} - The result of calling `.get()` on the database reference
      *
      */
 
@@ -67,17 +58,10 @@ class FirebaseCollection extends Collection {
     }
 
     /**
-     *
-     * @method data
      * Gets a data snapshot from the database.
      *
      * @param   path    The valid path to the reference
-     * @return  {object[]} The result of calling `.get()` on the database reference
-     *
-     * Logic:
-     *  If the path is cached, return from cache.
-     *  Else, register a snapshot listener to update the cache
-     *      and return the newly cached value.
+     * @returns  {object[]} The result of calling `.get()` on the database reference
      *
      */
 
@@ -89,12 +73,10 @@ class FirebaseCollection extends Collection {
 
 
     /**
-     *
-     * @method getFirebaseRef
      * Get a database reference.
      *
      * @param   path        A valid path array, see below.
-     * @return  reference   The generated reference
+     * @returns reference   The generated reference
      *
      * Examples of valid path arrays:
      *  [`collection/${docName}`] => DocumentReference
@@ -142,9 +124,8 @@ class FirebaseCollection extends Collection {
 }
 
 /**
- * FirebasePage
- *
  * A firebase page to operate on see 
+ * 
  * Storage/Backend/Backend/Page abstract 
  * class for usage and documentation.
  *
@@ -208,12 +189,10 @@ class FirebasePage extends Page {
     }
 
     /**
-     *
-     * @method get
      * Get a snapshot from the cache.
      *
-     * @param   path    The valid path to the reference
-     * @return  any     The result of calling `.get()` on the database reference
+     * @param   path - The valid path to the reference
+     * @returns  any - The result of calling `.get()` on the database reference
      *
      * Logic:
      *  If the path is cached, return from cache.
@@ -227,12 +206,10 @@ class FirebasePage extends Page {
     }
 
     /**
-     *
-     * @method getFirebaseRef
      * Get a database reference.
      *
-     * @param   path        A valid path array, see below.
-     * @return  reference   The generated reference
+     * @param   path - A valid path array, see below.
+     * @return  reference - The generated reference
      *
      * Examples of valid path arrays:
      *  [`collection/${docName}`] => DocumentReference
@@ -378,9 +355,6 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
 }
 
 /**
- * 
- * @Class FirebaseProvider.
- *
  * A backend provider that provides for Condution connection to Firebase
  *
  *
@@ -430,9 +404,6 @@ class FirebaseProvider extends Provider {
     }
 
     /**
-     *
-     * @method page
-     *
      * Gets a Page to operate on
      *
      * @param {string[]} path: path that you desire to get a reference to
@@ -446,11 +417,8 @@ class FirebaseProvider extends Provider {
     }
 
     /**
-     *
-     * @method collection
-     *
-     * Gets a collection, with is a
-     * list of pages, and some other stuff
+     * Gets a collection
+     * get a list of pages, and some other stuff
      * to operate on
      *
      * @param {string[]} path: path that you desire to get a reference to
@@ -464,8 +432,8 @@ class FirebaseProvider extends Provider {
 
 
     /**
-     *
-     * @property authenticationProvider
+     * The Authentication Providerj
+     * @property
      *
      * Return the AuthenticationProvider instance bundled with the Provider, 
      * if that is supposed to be a thing
@@ -477,10 +445,8 @@ class FirebaseProvider extends Provider {
     }
    
     /**
-     *
-     * @method flush
-     * 
      * Nuke the cache
+     * 
      * Used for logging out and general cleanup
      *
      */

@@ -15,9 +15,8 @@ export default class Workspace {
     }
 
     /**
-     * @static @method fetch
-     *
      * Fetch a workspace by Context and ID
+     * @static @method
      *
      * @param{Context} context    the context that you are fetching from
      * @param{string} identifier    the ID of the workspace you want to fetch
@@ -40,11 +39,9 @@ export default class Workspace {
     }
 
     /**
-     * @method invite
-     *
      * Invite a user to a workspace
      *
-     * @param{string} email    the invitee's email
+     * @param{string} email - the invitee's email
      * @returns{Promise<void>} 
      *
      */
@@ -58,11 +55,9 @@ export default class Workspace {
     }
 
     /**
-     * @method revoke
-     *
      * Revoke a user to a workspace
      *
-     * @param{string} email    the invitee's email
+     * @param{string} email - the revokee's email
      * @returns{Promise<void>} 
      *
      */
@@ -74,7 +69,6 @@ export default class Workspace {
         let invitations:Collection= this.context.referenceManager.collection(["invitations", email, "invites"]);
         await invitations.add({email, workspace: this.id, type: "revoke", time: new Date()});
     }
-
 
     /**
      * @property name
