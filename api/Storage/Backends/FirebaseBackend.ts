@@ -192,7 +192,7 @@ class FirebasePage extends Page {
     async set(payload:object, ...param:any):Promise<DataExchangeResult> {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
         const resultDocument = await ref.set(payload, ...param); // set the document
-        return {identifier: resultDocument.id, payload: payload, response: resultDocument};
+        return {identifier: ref.id, payload: payload, response: resultDocument};
     }
 
     async update(payload:object) {
