@@ -50,7 +50,9 @@ export default class Workspace {
      */
 
     async invite(email: string):Promise<void> {
-        console.error("TODO TODO this is WRONG!! IT DOES NOT ADD TO THE EDITOR LIST.");
+        if (!this.data["meta"]["editors"].includes(email))
+            this.data["meta"]["editors"].push(email);
+        this.sync();
         let invitations:Collection= this.context.referenceManager.collection(["invitations", email, "invites"]);
         await invitations.add({email, workspace: this.id, type: "invite", time: new Date()});
     }
@@ -92,6 +94,10 @@ export default class Workspace {
 
     set name(newName:string) {
         this.data["meta"]["name"] = newName;
+        this.sync();
+    }
+    
+    private sync = () => {
         this.page.set(this.data);
     }
 
