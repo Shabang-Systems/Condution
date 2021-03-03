@@ -4,10 +4,13 @@ import { Context } from "./EngineManager";
 export default class Workspace {
     private page:Page;
 
+    protected constructor(context:Context, identifier?:string, email?:string) {
+        if (identifier)
+            this.page = context.page(["workspaces", identifier], this.update, true);
+    }
+
     static fetch(context:Context, identifier:string):Workspace {
-        let w:Workspace = new this();
-        w.page = context.page_(["workspaces", identifier], w.update);
-        return w;
+        return new this(context, identifier=identifier);
     }
 
     private update(newData:object) {

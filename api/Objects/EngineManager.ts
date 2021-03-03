@@ -74,62 +74,15 @@ export class Context {
     }
 
     /**
-     * @property identifier
+     * @property userIdentifier
      *
      * The currentuser ID, regardless of workspace status
      *
      */
 
-    get identifier_() {
+    get userIdentifier() {
         return this.userID;
     }
-
-    /**
-     *
-     * @method collection_
-     *
-     * You probably don't want to use me use collection() instead
-     * Gets a collection, with is a list of pages, and some other stuff to operate on
-     * **ALWAYS USE USERMODE, AND NOT WORKSPACE MODE**
-     *
-     * Example:
-     *
-     * > let ref = manager.collection("users, "test", "tasks");
-     * > let pages = ref.pages();
-
-     *
-     * @param {string[]} path: path that you desire to get a reference to
-     * @returns {FirebaseCollection}: the collection ye wished for
-     *
-     */
-    
-    collection_(target:string[]): Collection {
-        return this.rm.collection(["users", this.userID].concat(target));
-    }
-
-    /**
-     *
-     * @method page_
-     *
-     * You probably don't want to use me. Use page() instead
-     * Gets a Page to operate on
-     * **ALWAYS USE USERMODE, AND NOT WORKSPACE MODE**
-     *
-     * Example:
-     *
-     * > let ref = manager.page("users, "test", "tasks", "434d5fab10129a");
-     * > let values = ref.get();
-     *
-     * @param {string[]} path: path that you desire to get a reference to
-     * @param {Function} refreshCallback: the callback to update when data gets refreshed
-     * @returns {Page}: the page ye wished for
-     *
-     */
-
-    page_(target:string[], refreshCallback?:Function): Page {
-        return this.rm.page(["users", this.userID].concat(target), refreshCallback);
-    }
-
 
     /**
      *
@@ -143,13 +96,14 @@ export class Context {
      * > let pages = ref.pages();
 
      *
-     * @param {string[]} path: path that you desire to get a reference to
-     * @returns {FirebaseCollection}: the collection ye wished for
+     * @param {string[]} path  path that you desire to get a reference to
+     * @param {boolean} forceUserland  return a page pointing to user db and not workspace db even if workspaces activated
+     * @returns {FirebaseCollection} the collection ye wished for
      *
      */
     
-    collection(target:string[]): Collection {
-        let top:string[] = this.isWorkspace ? ["workspaces", this.ticketID] : ["users", this.ticketID];
+    collection(target:string[], forceUserland:boolean=false): Collection {
+        let top:string[] = (this.isWorkspace && !forceUserland) ? ["workspaces", this.ticketID] : ["users", this.ticketID];
         return this.rm.collection(top.concat(target));
     }
 
@@ -166,12 +120,13 @@ export class Context {
      *
      * @param {string[]} path: path that you desire to get a reference to
      * @param {Function} refreshCallback: the callback to update when data gets refreshed
+     * @param {boolean} forceUserland  return a page pointing to user db and not workspace db even if workspaces activated
      * @returns {Page}: the page ye wished for
      *
      */
 
-    page(target:string[], refreshCallback?:Function): Page {
-        let top:string[] = this.isWorkspace ? ["workspaces", this.ticketID] : ["users", this.ticketID];
+    page(target:string[], refreshCallback?:Function, forceUserland:boolean=false): Page {
+        let top:string[] = (this.isWorkspace && !forceUserland) ? ["workspaces", this.ticketID] : ["users", this.ticketID];
         return this.rm.page(top.concat(target), refreshCallback);
     }
 }

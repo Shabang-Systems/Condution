@@ -180,7 +180,7 @@ class FirebasePage extends Page {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
     
-    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback?:Function) {
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;

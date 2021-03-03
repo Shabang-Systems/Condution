@@ -11,12 +11,10 @@ async function test() {
 
     await provider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
-    let cm: Context = new Context(manager);
 
-    //console.log((await cm.collection(["tasks"]).get()))
+    let cm: Context = new Context(manager);
 }
 
 test();
 
 export { ReferenceManager };
-
