@@ -22,12 +22,12 @@ async function test() {
     await cm.start(); // start our context
     let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!
     //ws[0].name = "Heyo!"; // set its name
-
-    console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
-    cm.useWorkspace(ws[0]);
-    console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
-    cm.usePersonalWorkspace();
-    console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
+    console.log(ws[0].collaborators);
+    //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
+    //cm.useWorkspace(ws[0]);
+    //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
+    //cm.usePersonalWorkspace();
+    //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
     //console.log(cm.collection(["tasks"])[0].data()[0]); // get the name of the first workspace
 
     //let tasks: Colection = cm.collection(["tasks", "saonehaoeusaonelu"]);

@@ -100,6 +100,16 @@ export default class Workspace {
     get id() {
         return this._id;
     }
+
+    /**
+     * Collaborators of the workspace
+     * @property
+     *
+     */
+
+    get collaborators() {
+        return this.data["meta"]["editors"];
+    }
     
     private sync = () => {
         this.page.set(this.data);
