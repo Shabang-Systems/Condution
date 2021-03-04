@@ -4,19 +4,19 @@ import { Context } from "./EngineManager";
 export default class Workspace {
     private static cache:Map<string, Workspace> = new Map();
 
-    private id:String;
+    private _id:string;
     private page:Page;
     private data:object;
     private context:Context;
 
     protected constructor(identifier:string, context:Context) {
-        this.id = identifier;
+        this._id = identifier;
         this.context = context;
     }
 
     /**
      * Fetch a workspace by Context and ID
-     * @static @method
+     * @static
      *
      * @param{Context} context    the context that you are fetching from
      * @param{string} identifier    the ID of the workspace you want to fetch
@@ -41,7 +41,7 @@ export default class Workspace {
     /**
      * Invite a user to a workspace
      *
-     * @param{string} email - the invitee's email
+     * @param{string} email    the invitee's email
      * @returns{Promise<void>} 
      *
      */
@@ -51,13 +51,13 @@ export default class Workspace {
             this.data["meta"]["editors"].push(email);
         this.sync();
         let invitations:Collection= this.context.referenceManager.collection(["invitations", email, "invites"]);
-        await invitations.add({email, workspace: this.id, type: "invite", time: new Date()});
+        await invitations.add({email, workspace: this._id, type: "invite", time: new Date()});
     }
 
     /**
      * Revoke a user to a workspace
      *
-     * @param{string} email - the revokee's email
+     * @param{string} email    the revokee's email
      * @returns{Promise<void>} 
      *
      */
@@ -67,13 +67,12 @@ export default class Workspace {
             this.data["meta"]["editors"] = this.data["meta"]["editors"].filter((a:string)=>a!==email);
         this.sync();
         let invitations:Collection= this.context.referenceManager.collection(["invitations", email, "invites"]);
-        await invitations.add({email, workspace: this.id, type: "revoke", time: new Date()});
+        await invitations.add({email, workspace: this._id, type: "revoke", time: new Date()});
     }
 
     /**
-     * @property name
-     *
      * The name of the workspace
+     * @property
      *
      */
 
@@ -82,15 +81,24 @@ export default class Workspace {
     }
 
     /**
-     * @property name
-     *
      * The name of the workspace
+     * @property
      *
      */
 
     set name(newName:string) {
         this.data["meta"]["name"] = newName;
         this.sync();
+    }
+
+    /**
+     * The identifier of the workspace
+     * @property
+     *
+     */
+
+    get id() {
+        return this._id;
     }
     
     private sync = () => {

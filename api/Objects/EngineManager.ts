@@ -56,12 +56,9 @@ export class Context {
 
 
     /**
-     * 
-     * @method useProvider
-     *
      * use the specified provider in the context
      *
-     * @param {string} providerName the name of the provider you wish to use
+     * @param {string} providerName     the name of the provider you wish to use
      * @returns {void}
      *
      */
@@ -80,11 +77,36 @@ export class Context {
             this.authenticatable = false;
         }
     }
-    
+
     /**
-     * @property identifier
-     *
+     * Switch data source to the given workspace
+     * 
+     * @param{Workspace?} workspace    workspace to use, pass nothing for personal workspace
+     * @returns{void}
+     */
+
+    useWorkspace(workspace?:Workspace):void {
+        if (workspace) 
+            this.ticketID = workspace.id;
+        else
+            this.ticketID = this.userID;
+        this.isWorkspace = workspace!==undefined;
+    }
+
+    /**
+     * Switch data source to the personal workspace
+     * 
+     * @param{Workspace?} workspace    workspace to use, pass nothing for personal workspace
+     * @returns{void}
+     */
+
+    usePersonalWorkspace():void {
+        this.useWorkspace();
+    }
+
+    /**
      * The current workspace/user ID
+     * @property
      *
      */
 
