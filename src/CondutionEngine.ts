@@ -20,9 +20,11 @@ async function test() {
 
     let cm: Context = new Context(manager); // create the context
     await cm.start(); // start our context
-    let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!
+    //let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!
     //ws[0].name = "Heyo!"; // set its name
-    console.log(ws[0].collaborators);
+    let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
+    cm.rescindWorkspace(ws);
+
     //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
     //cm.useWorkspace(ws[0]);
     //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace

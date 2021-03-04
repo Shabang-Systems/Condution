@@ -25,6 +25,7 @@ export class Context {
     private userID:string; // current UID
     private isWorkspace:boolean = false; // currently under workspaces mode
     private _workspaces:string[]; // current workspace IDs
+    private _chains:string[]; // current workspace IDs
     private authenticatable:boolean = false; // are we currently authenticated?
     private ready:boolean = false // are the workspaces loaded?
 
@@ -52,6 +53,7 @@ export class Context {
 
     async start():Promise<void> {
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
+        this._chains = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._chains = newPrefs["chains"]}).get())["chains"];
         this.ready = true;
     }
 
@@ -105,6 +107,16 @@ export class Context {
 
     usePersonalWorkspace():void {
         this.useWorkspace();
+    }
+
+    async acceptWorkspace(workspace:Workspace):Promise<void> {
+        this._workspaces.push(workspace.id);
+        await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
+    }
+
+    async rescindWorkspace(workspace:Workspace):Promise<void> {
+        this._workspaces = this._workspaces.filter((id:string) => id !== workspace.id);
+        await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
     }
 
     /**
