@@ -38,6 +38,16 @@ export default class Workspace {
         return wsp;
     }
 
+    /**
+     * Create a workspace based on context and owner email
+     * @static
+     *
+     * @param{Context} context    the context that you are creating from
+     * @param{string} email    the workspace owner's email
+     * @returns{Promise<Workspace>} the desired workspace
+     *
+     */
+
     static async create(context:Context, email:string):Promise<Workspace> {
         let newWorkspace:DataExchangeResult = await context.referenceManager.collection(["workspaces"]).add({meta: {editors: [email], name:""}});
 
