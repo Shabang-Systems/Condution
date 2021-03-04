@@ -15,6 +15,7 @@
   },
   "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" src --out-dir dist",
   "dependencies": {
+    "@babel/runtime": "^7.13.9",
     "firebase": "^8.2.1"
   },
   "devDependencies": {
