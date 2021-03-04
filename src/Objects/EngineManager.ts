@@ -52,6 +52,7 @@ export class Context {
 
     async start():Promise<void> {
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
+        this.ready = true;
     }
 
 
@@ -64,6 +65,8 @@ export class Context {
      */
 
     useProvider(providerName:string):void {
+        console.error("THIS IS LIKE, BROKEN. TODO TODO TODO TODO.");
+        // TODO TODO Swihing providers is just ... broken
         this.rm.use(providerName);
 
         if (this.rm.currentProvider.authSupported) {

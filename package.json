@@ -9,11 +9,11 @@
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "api:run": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" api/CondutionEngine.ts",
-    "api:tscomp": "tsc",
-    "api:dist": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist"
+    "start": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" src/CondutionEngine.ts",
+    "tscomp": "tsc",
+    "dist": "tsc && babel  --extensions \".ts\" --extensions \".js\" src --out-dir dist"
   },
-  "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" api --out-dir dist",
+  "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" src --out-dir dist",
   "dependencies": {
     "firebase": "^8.2.1"
   },
@@ -23,6 +23,7 @@
     "@babel/node": "^7.0.0-rc.1",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.13.9",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
     "babel-preset-minify": "^0.5.1",

@@ -150,3 +150,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+# Make Zach Happy
+.DS_Store
+

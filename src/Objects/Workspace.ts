@@ -1,4 +1,4 @@
-import { Page, Collection } from "../Storage/Backends/Backend";
+import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
 
 export default class Workspace {
@@ -35,6 +35,18 @@ export default class Workspace {
         wsp.page = page;
 
         Workspace.cache.set(identifier, wsp);
+        return wsp;
+    }
+
+    static async create(context:Context, email:string):Promise<Workspace> {
+        let newWorkspace:DataExchangeResult = await context.referenceManager.collection(["workspaces"]).add({meta: {editors: [email], name:""}});
+
+        let wsp:Workspace = new this(newWorkspace.identifier, context);
+        let page:Page = context.referenceManager.page(["workspaces", newWorkspace.identifier], wsp.update);
+        wsp.data = await page.get();
+        wsp.page = page;
+
+        Workspace.cache.set(newWorkspace.identifier, wsp);
         return wsp;
     }
 

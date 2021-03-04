@@ -7,10 +7,10 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "target": "es5",
-    "rootDir":"api",
+    "rootDir":"src",
     "outDir": "dist/"
   },
   "include": [
-    "api/**/*.ts"
+    "src/**/*.ts"
   ]
 }
