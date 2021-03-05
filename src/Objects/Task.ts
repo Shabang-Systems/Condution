@@ -40,6 +40,7 @@ export default class Task {
     }
 
     /**
+     * TODO
      * Create a workspace based on context and owner email
      * @static
      *
@@ -64,13 +65,34 @@ export default class Task {
     //}
 
     /**
-     * The identifier of the workspace
+     * The identifier of the task
      * @property
      *
      */
 
     get id() {
         return this._id;
+    }
+
+    /**
+     * The name of the task
+     * @property
+     *
+     */
+
+    get name() {
+        return this.data["name"];
+    }
+
+    /**
+     * The name of the task
+     * @property
+     *
+     */
+
+    set name(newName:string) {
+        this.data["name"] = newName;
+        this.sync();
     }
    
     private sync = () => {
@@ -80,10 +102,5 @@ export default class Task {
     private update = (newData:object) => {
         this.data = newData;
     }
-
-    get tempData() {
-        return this.data;
-    }
-
 }
 
