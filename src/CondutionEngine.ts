@@ -21,12 +21,25 @@ async function test() {
 
     let cm: Context = new Context(manager); // create the context
     await cm.start(); // start our context
-    //let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!
+    /*let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!*/
+
+
+    /*ws[0].name = "aonsteuhasoenut";*/
+    /*console.log(ws[0].collaborators);*/
+
     //ws[0].name = "Heyo!"; // set its name
     //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
+
+
     let task:Task = await Task.fetch(cm, "0IgYZQBCWaZdcnOTS7bM");
-    console.log(task.tempData);
-    /*console.log(task.name);*/
+    /*console.log(task.tempData);*/
+    /*console.log(task.defer);*/
+    console.log(task.defer);
+    /*task.defer = new Date();*/
+    /*console.log(task.defer);*/
+    /*console.log(task.due);*/
+    /*console.log(task.description);*/
+    /*task.description = "Are you DAVID??";*/
     /*task.name = "chicken!";*/
     /*console.log(task.name);*/
     //cm.rescindWorkspace(ws);

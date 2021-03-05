@@ -117,7 +117,72 @@ export default class Task {
         this.sync();
     }
 
-   
+    /**
+     * The due date of the task
+     * @property
+     *
+     * There exists special handling because
+     * for some reason dates were stored by secs + nanosecs
+     * in the past. IDK why
+     *
+     */
+
+    get due() {
+        if (this.data["due"])
+            return new Date(this.data["due"]["seconds"]*1000);
+        else return null;
+    }
+
+    /**
+     * The due date of the task
+     * @property
+     *
+     * There exists special handling because
+     * for some reason dates were stored by secs + nanosecs
+     * in the past. IDK why
+     *
+     */
+
+    set due(dueDate: Date) {
+        this.data["due"] = {seconds: Math.floor(dueDate.getTime()/1000), nanoseconds:0};
+        this.page.set({due: dueDate}, {merge:true}); // weird date handling
+                                                     // because IDK why this
+                                                     // this used to be so yeah
+    }
+
+    /**
+     * The defer date of the task
+     * @property
+     *
+     * There exists special handling because
+     * for some reason dates were stored by secs + nanosecs
+     * in the past. IDK why
+     *
+     */
+
+    get defer() {
+        if (this.data["defer"])
+            return new Date(this.data["defer"]["seconds"]*1000);
+        else return null;
+    }
+
+    /**
+     * The defer date of the task
+     * @property
+     *
+     * There exists special handling because
+     * for some reason dates were stored by secs + nanosecs
+     * in the past. IDK why
+     *
+     */
+
+    set defer(deferDate: Date) {
+        this.data["defer"] = {seconds: Math.floor(deferDate.getTime()/1000), nanoseconds:0};
+        this.page.set({defer: deferDate}, {merge:true}); // weird date handling
+                                                     // because IDK why this
+                                                     // this used to be so yeah
+    }
+
     private sync = () => {
         this.page.set(this.data);
     }
