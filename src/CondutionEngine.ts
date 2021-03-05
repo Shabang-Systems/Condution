@@ -1,6 +1,7 @@
 import ReferenceManager from "./Storage/ReferenceManager";
 import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 import Workspace from "./Objects/Workspace";
+import Task from "./Objects/Task";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
 
@@ -22,8 +23,10 @@ async function test() {
     await cm.start(); // start our context
     //let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!
     //ws[0].name = "Heyo!"; // set its name
-    let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
-    cm.rescindWorkspace(ws);
+    //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
+    let task:Task = await Task.fetch(cm, "0IgYZQBCWaZdcnOTS7bM");
+    console.log(task.tempData);
+    //cm.rescindWorkspace(ws);
 
     //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
     //cm.useWorkspace(ws[0]);
