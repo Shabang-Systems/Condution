@@ -94,6 +94,29 @@ export default class Task {
         this.data["name"] = newName;
         this.sync();
     }
+
+    
+    /**
+     * The description of the task
+     * @property
+     *
+     */
+
+    get description() {
+        return this.data["desc"];
+    }
+
+    /**
+     * The description of the task
+     * @property
+     *
+     */
+
+    set description(newDesc:string) {
+        this.data["desc"] = newDesc;
+        this.sync();
+    }
+
    
     private sync = () => {
         this.page.set(this.data);
@@ -101,6 +124,10 @@ export default class Task {
 
     private update = (newData:object) => {
         this.data = newData;
+    }
+
+    get tempData() {
+        return this.data;
     }
 }
 
