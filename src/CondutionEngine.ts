@@ -2,6 +2,7 @@ import ReferenceManager from "./Storage/ReferenceManager";
 import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 import Workspace from "./Objects/Workspace";
 import Task from "./Objects/Task";
+import { RepeatRule, RepeatRuleType } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
 
@@ -31,15 +32,14 @@ async function test() {
     //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
 
 
-    let task:Task = await Task.fetch(cm, "0IgYZQBCWaZdcnOTS7bM");
-    /*console.log(task.tempData);*/
+    let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
+    console.log(task.repeat);
     /*console.log(task.defer);*/
-    console.log(task.defer);
+    /*console.log(task.defer);*/
     /*task.defer = new Date();*/
     /*console.log(task.defer);*/
     /*console.log(task.due);*/
     /*console.log(task.description);*/
-    /*task.description = "Are you DAVID??";*/
     /*task.name = "chicken!";*/
     /*console.log(task.name);*/
     //cm.rescindWorkspace(ws);

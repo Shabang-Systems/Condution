@@ -1,5 +1,6 @@
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
+import { RepeatRule } from "./Utils";
 
 export default class Task {
     private static cache:Map<string, Task> = new Map();
@@ -181,6 +182,20 @@ export default class Task {
         this.page.set({defer: deferDate}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
+    }
+
+    get repeat() {
+        return RepeatRule.encode(this.data["repeat"]);
+    }
+
+    /**
+     * The completeness of a task
+     * @property
+     *
+     */
+
+    get isComplete() {
+        return this.data["isComplete"];
     }
 
     private sync = () => {
