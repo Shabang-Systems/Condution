@@ -2,6 +2,7 @@ enum RepeatRuleType {
     NONE = "none",
     DAY = "daily",
     WEEK = "weekly",
+    QUARTER = "quarterly",
     MONTH = "monthly",
     YEAR = "yearly"
 }
@@ -48,6 +49,14 @@ class RepeatRule {
         return r;
     }
 
+    private calculateRepeat_quarterly(date:Date) : number {
+        return Math.round((new Date(
+            date.getFullYear(), 
+            date.getMonth()+3, 
+            date.getDate()
+        ).getTime() - date.getTime())/(ONEDAY))
+    }
+
     /**
      * Execute a repeat date calculation, weekly
      *
@@ -69,6 +78,14 @@ class RepeatRule {
             return minNext;
         } else return 7;
     }
+
+    /**
+     * Execute a repeat date calculation, monthly
+     *
+     * @param{Date} date    the task's due date
+     * @returns{number} how many days later the task should be due again.
+     * 
+     */
 
     private calculateRepeat_monthly(date:Date) : number {
         let dayOfMonth : number = date.getDate();
@@ -92,12 +109,11 @@ class RepeatRule {
             });
             return minNext;
         } else {
-            return (new Date(
+            return Math.round((new Date(
                 date.getFullYear(), 
                 date.getMonth()+1, 
-                0 // get zeroeth day of next month
-                  // so. like. the last day of this month
-            ).getDate() - date.getDate())+date.getDate()
+                date.getDate()
+            ).getTime() - date.getTime())/(ONEDAY))
         }
     }
 
@@ -113,12 +129,20 @@ class RepeatRule {
     execute(due:Date, defer?:Date): Date[] {
         let increment:number;
         switch (this.ruleType) {
+            case RepeatRuleType.DAY: {
+                increment = 1;
+                break;
+            }
             case RepeatRuleType.WEEK: {
                 increment = this.calculateRepeat_weekly(due);
                 break;
             }
             case RepeatRuleType.MONTH: {
                 increment = this.calculateRepeat_monthly(due);
+                break;
+            }
+            case RepeatRuleType.QUARTER: {
+                increment = this.calculateRepeat_quarterly(due);
                 break;
             }
         }
