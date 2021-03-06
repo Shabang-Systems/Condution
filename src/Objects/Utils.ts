@@ -61,7 +61,7 @@ class RepeatRule {
         if (this.constraints) {
             let minNext : number = 7;
             this.constraints.forEach((val:string) => { // calculate all possible next day constraints. Get minimum
-                let constraintVal = WEEKDAYDECODE[val]; // decode weekday name value to a date number
+                let constraintVal : number = WEEKDAYDECODE[val]; // decode weekday name value to a date number
                 minNext = Math.min(minNext, constraintVal > dayOfWeek ? // if constraint value is higher than the current day...
                     constraintVal-dayOfWeek :  // just get the difference.
                     (7-dayOfWeek)+constraintVal); // if not, get the next time that day comes up in 1 week
@@ -71,20 +71,33 @@ class RepeatRule {
     }
 
     private calculateRepeat_monthly(date:Date) : number {
-        let dayOfWeek : number = date.getDay();
+        let dayOfMonth : number = date.getDate();
         if (this.constraints) {
-            let minNext : number = 7;
+            let minNext : number = 32;
             this.constraints.forEach((val:string) => { // calculate all possible next day constraints. Get minimum
-                let constraintVal = WEEKDAYDECODE[val]; // decode weekday name value to a date number
-                minNext = Math.min(minNext, constraintVal > dayOfWeek ? // if constraint value is higher than the current day...
-                    constraintVal-dayOfWeek :  // just get the difference.
-                    (7-dayOfWeek)+constraintVal); // if not, get the next time that day comes up in 1 week
+                let daysUntilLast : number = (new Date(
+                        date.getFullYear(), 
+                        date.getMonth()+1, 
+                        0 // get zeroeth day of next month
+                        // so. like. the last day of this month
+                    ).getDate() - date.getDate())
+                if (val == "last")
+                    minNext = Math.min(minNext, daysUntilLast); // if last is an option, ig just return days until last
+                else { 
+                    let constraintVal:number = Number(val); // cast the stupid string to an int
+                    minNext = Math.min(minNext, constraintVal > dayOfMonth ? // if constraint value is higher than the current day...
+                        constraintVal-dayOfMonth :  // just get the difference.
+                        (daysUntilLast)+constraintVal); // if not, get the next time that day comes up in 1 week
+                }
             });
             return minNext;
         } else {
-            let newDate:Date = date;
-            newDate.setMonth(newDate.getMonth()+1);
-            return Math.round(Math.abs((newDate.getTime() - date.getTime()) / ONEDAY));
+            return (new Date(
+                date.getFullYear(), 
+                date.getMonth()+1, 
+                0 // get zeroeth day of next month
+                  // so. like. the last day of this month
+            ).getDate() - date.getDate())+date.getDate()
         }
     }
 
