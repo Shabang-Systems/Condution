@@ -184,7 +184,7 @@ export default class Task {
                                                      // this used to be so yeah
     }
 
-    get repeat() {
+    get repeatRule() {
         return RepeatRule.encode(this.data["repeat"]);
     }
 

@@ -33,8 +33,7 @@ async function test() {
 
 
     let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
-    console.log(new Date(2021, 1, 18).toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
-    console.log(task.repeat.execute(new Date(2021, 1, 18), new Date(2021, 1, 18))[0].toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
+    console.log(task.repeatRule.decode());
     /*console.log(task.defer);*/
     /*console.log(task.defer);*/
     /*task.defer = new Date();*/

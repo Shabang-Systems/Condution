@@ -147,7 +147,7 @@ class RepeatRule {
 
 
     /**
-     * Execute a repeat date calculation
+     * Execute a repeat date calculation based on the repeat rule
      *
      * @param{Date} due    the task's original due date
      * @param{Date=} defer    the task's original defer date
@@ -156,7 +156,7 @@ class RepeatRule {
      */
 
     execute(due:Date, defer?:Date): Date[] {
-        let increment:number;
+        let increment:number = 0;
         switch (this.ruleType) {
             case RepeatRuleType.DAY: {
                 increment = 1;
@@ -186,8 +186,13 @@ class RepeatRule {
         return [due, defer?defer:null];
     }
 
-    //decode(): object {
-    //}
+    get isRepeating() {
+        return this.ruleType !== RepeatRuleType.NONE;
+    }
+
+    decode(): object {
+        return Object.assign({rule: this.ruleType}, this.constraints ? {on: this.constraints}:{})
+    }
 }
 
 
