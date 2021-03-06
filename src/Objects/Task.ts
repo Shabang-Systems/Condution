@@ -184,8 +184,25 @@ export default class Task {
                                                      // this used to be so yeah
     }
 
+    /**
+     * The repeat rule of the task
+     * @property
+     *
+     */
+
     get repeatRule() {
         return RepeatRule.encode(this.data["repeat"]);
+    }
+
+    /**
+     * The repeat rule of the task
+     * @property
+     *
+     */
+
+    set repeatRule(repeatRule:RepeatRule) {
+        this.data["repeat"] = repeatRule.decode();
+        this.sync();
     }
 
     /**
@@ -203,6 +220,11 @@ export default class Task {
             [this.due, this.defer] = this.repeatRule.execute(this.due, this.defer);
         else
             this.data["isComplete"] = true;
+        this.sync();
+    }
+
+    uncomplete() : void {
+        this.data["isComplete"] = false;
         this.sync();
     }
 
