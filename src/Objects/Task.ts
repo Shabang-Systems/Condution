@@ -198,6 +198,14 @@ export default class Task {
         return this.data["isComplete"];
     }
 
+    complete() : void {
+        if (this.repeatRule.isRepeating && this.due)
+            [this.due, this.defer] = this.repeatRule.execute(this.due, this.defer);
+        else
+            this.data["isComplete"] = true;
+        this.sync();
+    }
+
     private sync = () => {
         this.page.set(this.data);
     }

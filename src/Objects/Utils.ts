@@ -145,7 +145,6 @@ class RepeatRule {
         ).getTime() - date.getTime())/(ONEDAY))
     }
 
-
     /**
      * Execute a repeat date calculation based on the repeat rule
      *
@@ -186,9 +185,22 @@ class RepeatRule {
         return [due, defer?defer:null];
     }
 
+    /**
+     * Is the repeat rule repeating?
+     * @property
+     * 
+     */
+
     get isRepeating() {
         return this.ruleType !== RepeatRuleType.NONE;
     }
+
+    /**
+     * Decode the repeating rule to database object
+     *
+     * @returns{object} the desired database object
+     * 
+     */
 
     decode(): object {
         return Object.assign({rule: this.ruleType}, this.constraints ? {on: this.constraints}:{})
