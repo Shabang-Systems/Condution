@@ -6,6 +6,18 @@ enum RepeatRuleType {
     YEAR = "yearly"
 }
 
+// Let us fix jemoka's old, bad programming! 
+// Unfortunately, there is no way for us to go back in time
+// to ret-con the mistakes, because..... sigh..............
+// no database migrations are allowed.
+//
+// Object access, however, is O(1), so this _should_? 
+// be fine b/c is just doing one hash looku.
+//
+
+let WEEKDAYDECODE = {"M": 1, "T": 2, "W": 3, "Th": 4, "F": 5, "S": 6, "Su": 7};
+
+
 class RepeatRule {
     ruleType: RepeatRuleType; 
     constraints: string[];
@@ -18,11 +30,59 @@ class RepeatRule {
             this.constraints = null;
     }
 
-    static encode(repeatRule:object) {
+
+    /**
+     * Encode database object to RepeatRule
+     * @static
+     *
+     * @param{object} repeatRule    the repeat rule object from the database
+     * @returns{RepeatRule} the repeat rule you wanted
+     *
+     */
+
+    static encode(repeatRule:object): RepeatRule {
         if (!repeatRule) 
             return null;
         let r:RepeatRule = new RepeatRule(repeatRule["rule"], repeatRule["on"]);
         return r;
+    }
+
+    private calculateRepeat_weekly(date:Date) : number {
+        let dayOfWeek : number = date.getDay();
+        if (this.constraints) {
+            let minNext : number = 7;
+            this.constraints.forEach((val:string) => { // calculate all possible next day constraints. Get minimum
+                let constraintVal = WEEKDAYDECODE[val]; // decode weekday name value to a date number
+                minNext = Math.min(minNext, constraintVal > dayOfWeek ? // if constraint value is higher than the current day...
+                    constraintVal-dayOfWeek :  // just get the difference.
+                    (7-dayOfWeek)+constraintVal); // if not, get the next time that day comes up in 1 week
+            });
+            return minNext;
+        } else return 7;
+    }
+
+    /**
+     * Execute a repeat date calculation
+     *
+     * @param{Date} due    the task's original due date
+     * @param{Date=} defer    the task's original defer date
+     * @returns{Date[]} the calculated new due, defer pair. If no defer supplied, the latter will be null.
+     * 
+     */
+
+    execute(due:Date, defer?:Date): Date[] {
+        let increment:number;
+        switch (this.ruleType) {
+            case RepeatRuleType.WEEK: {
+                increment = this.calculateRepeat_weekly(due);
+                break;
+            }
+        }
+        due.setDate(due.getDate()+increment);
+        if (defer) {
+            defer.setDate(defer.getDate()+increment);
+        }
+        return [due, defer?defer:null];
     }
 
     //decode(): object {

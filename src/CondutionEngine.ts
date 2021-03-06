@@ -33,7 +33,7 @@ async function test() {
 
 
     let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
-    console.log(task.repeat);
+    console.log(task.repeat.execute(new Date(2021, 2, 8), new Date(2021, 1, 8)));
     /*console.log(task.defer);*/
     /*console.log(task.defer);*/
     /*task.defer = new Date();*/
