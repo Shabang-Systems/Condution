@@ -6,6 +6,8 @@ enum RepeatRuleType {
     YEAR = "yearly"
 }
 
+const ONEDAY = 24 * 60 * 60 * 1000;
+
 // Let us fix jemoka's old, bad programming! 
 // Unfortunately, there is no way for us to go back in time
 // to ret-con the mistakes, because..... sigh..............
@@ -15,7 +17,7 @@ enum RepeatRuleType {
 // be fine b/c is just doing one hash looku.
 //
 
-let WEEKDAYDECODE = {"M": 1, "T": 2, "W": 3, "Th": 4, "F": 5, "S": 6, "Su": 7};
+const WEEKDAYDECODE = {"M": 1, "T": 2, "W": 3, "Th": 4, "F": 5, "S": 6, "Su": 7};
 
 
 class RepeatRule {
@@ -29,7 +31,6 @@ class RepeatRule {
         else
             this.constraints = null;
     }
-
 
     /**
      * Encode database object to RepeatRule
@@ -47,6 +48,14 @@ class RepeatRule {
         return r;
     }
 
+    /**
+     * Execute a repeat date calculation, weekly
+     *
+     * @param{Date} date    the task's due date
+     * @returns{number} how many days later the task should be due again.
+     * 
+     */
+
     private calculateRepeat_weekly(date:Date) : number {
         let dayOfWeek : number = date.getDay();
         if (this.constraints) {
@@ -59,6 +68,24 @@ class RepeatRule {
             });
             return minNext;
         } else return 7;
+    }
+
+    private calculateRepeat_monthly(date:Date) : number {
+        let dayOfWeek : number = date.getDay();
+        if (this.constraints) {
+            let minNext : number = 7;
+            this.constraints.forEach((val:string) => { // calculate all possible next day constraints. Get minimum
+                let constraintVal = WEEKDAYDECODE[val]; // decode weekday name value to a date number
+                minNext = Math.min(minNext, constraintVal > dayOfWeek ? // if constraint value is higher than the current day...
+                    constraintVal-dayOfWeek :  // just get the difference.
+                    (7-dayOfWeek)+constraintVal); // if not, get the next time that day comes up in 1 week
+            });
+            return minNext;
+        } else {
+            let newDate:Date = date;
+            newDate.setMonth(newDate.getMonth()+1);
+            return Math.round(Math.abs((newDate.getTime() - date.getTime()) / ONEDAY));
+        }
     }
 
     /**
@@ -75,6 +102,10 @@ class RepeatRule {
         switch (this.ruleType) {
             case RepeatRuleType.WEEK: {
                 increment = this.calculateRepeat_weekly(due);
+                break;
+            }
+            case RepeatRuleType.MONTH: {
+                increment = this.calculateRepeat_monthly(due);
                 break;
             }
         }
