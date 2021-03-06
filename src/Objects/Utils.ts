@@ -49,16 +49,9 @@ class RepeatRule {
         return r;
     }
 
-    private calculateRepeat_quarterly(date:Date) : number {
-        return Math.round((new Date(
-            date.getFullYear(), 
-            date.getMonth()+3, 
-            date.getDate()
-        ).getTime() - date.getTime())/(ONEDAY))
-    }
-
     /**
      * Execute a repeat date calculation, weekly
+     * @private
      *
      * @param{Date} date    the task's due date
      * @returns{number} how many days later the task should be due again.
@@ -81,6 +74,7 @@ class RepeatRule {
 
     /**
      * Execute a repeat date calculation, monthly
+     * @private
      *
      * @param{Date} date    the task's due date
      * @returns{number} how many days later the task should be due again.
@@ -118,6 +112,41 @@ class RepeatRule {
     }
 
     /**
+     * Execute a repeat date calculation, quarterly
+     * @private
+     *
+     * @param{Date} date    the task's due date
+     * @returns{number} how many days later the task should be due again.
+     * 
+     */
+
+    private calculateRepeat_quarterly(date:Date) : number {
+        return Math.round((new Date(
+            date.getFullYear(), 
+            date.getMonth()+3, 
+            date.getDate()
+        ).getTime() - date.getTime())/(ONEDAY))
+    }
+
+    /**
+     * Execute a repeat date calculation, yearly
+     * @private
+     *
+     * @param{Date} date    the task's due date
+     * @returns{number} how many days later the task should be due again.
+     * 
+     */
+
+    private calculateRepeat_yearly(date:Date) : number {
+        return Math.round((new Date(
+            date.getFullYear()+1, 
+            date.getMonth(), 
+            date.getDate()
+        ).getTime() - date.getTime())/(ONEDAY))
+    }
+
+
+    /**
      * Execute a repeat date calculation
      *
      * @param{Date} due    the task's original due date
@@ -143,6 +172,10 @@ class RepeatRule {
             }
             case RepeatRuleType.QUARTER: {
                 increment = this.calculateRepeat_quarterly(due);
+                break;
+            }
+            case RepeatRuleType.YEAR: {
+                increment = this.calculateRepeat_yearly(due);
                 break;
             }
         }
