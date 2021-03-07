@@ -177,7 +177,7 @@ export class Context {
      *
      * @param {string[]} path  path that you desire to get a reference to
      * @param {boolean} forceUserland  return a page pointing to user db and not workspace db even if workspaces activated
-     * @returns {collection} the collection ye wished for
+     * @returns {Collection} the collection ye wished for
      *
      */
     
