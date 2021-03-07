@@ -96,7 +96,6 @@ export default class Task {
         this.sync();
     }
 
-    
     /**
      * The description of the task
      * @property
@@ -116,6 +115,62 @@ export default class Task {
     set description(newDesc:string) {
         this.data["desc"] = newDesc;
         this.sync();
+    }
+
+    /**
+     * Whether the task has a floating timezone
+     * @property
+     *
+     */
+
+    get isFloating() {
+        return this.data["isFloating"];
+    }
+
+    /**
+     * Whether the task has a floating timezone
+     * @property
+     *
+     */
+
+    set isFloating(isFloating:boolean) {
+        this.data["isFloating"] = isFloating;
+        this.sync();
+    }
+
+    /**
+     * Whether the task is flagged
+     * @property
+     *
+     */
+
+    get isFlagged() {
+        return this.data["isFloating"];
+    }
+
+    /**
+     * Whether the task is flagged
+     * @property
+     *
+     */
+
+    set isFlagged(isFlagged:boolean) {
+        this.data["isFlagged"] = isFlagged;
+        this.sync();
+    }
+
+    /**
+     * The timezone of the task.
+     * @property
+     *
+     * This property should be read only because it should only
+     * be set when due/defer dates are set and is therefore done 
+     * automagically when you do set those dates
+     *
+     */
+
+    get timezone() {
+        return this.data["timezone"];
     }
 
     /**
@@ -146,6 +201,7 @@ export default class Task {
 
     set due(dueDate: Date) {
         this.data["due"] = {seconds: Math.floor(dueDate.getTime()/1000), nanoseconds:0};
+        this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
         this.page.set({due: dueDate}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
@@ -179,6 +235,7 @@ export default class Task {
 
     set defer(deferDate: Date) {
         this.data["defer"] = {seconds: Math.floor(deferDate.getTime()/1000), nanoseconds:0};
+        this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
         this.page.set({defer: deferDate}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
@@ -215,6 +272,13 @@ export default class Task {
         return this.data["isComplete"];
     }
 
+    /**
+     * Complete the task!!
+     *
+     * @returns{void}
+     *
+     */
+
     complete() : void {
         if (this.repeatRule.isRepeating && this.due)
             [this.due, this.defer] = this.repeatRule.execute(this.due, this.defer);
@@ -222,6 +286,13 @@ export default class Task {
             this.data["isComplete"] = true;
         this.sync();
     }
+
+    /**
+     * uncomplete the task!!
+     *
+     * @returns{void}
+     *
+     */
 
     uncomplete() : void {
         this.data["isComplete"] = false;
