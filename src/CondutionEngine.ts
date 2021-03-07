@@ -22,6 +22,20 @@ async function test() {
 
     let cm: Context = new Context(manager); // create the context
     await cm.start(); // start our context
+
+
+    /*
+       * @lb's grand vision
+       * sourcesfilters => condition-based sorted set queried based on data. Deals with one condition
+           * Projects + tags => reverse table (and foward table.) static in object
+           * 
+       * agg => logic??
+       * 
+       *
+    */
+
+    // Query(Task, "prop", "<<", new Date()).execute()
+
     /*let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!*/
 
 
@@ -33,8 +47,10 @@ async function test() {
 
 
     let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
+    //CustomFilterQuery(Task, "due", "<", new Date());
+    //task.name = "nsatoehusaoe"
     //task.repeatRule = new RepeatRule(RepeatRuleType.WEEK);
-    console.log(task.tempData);
+    console.log(task.name);
     /*console.log(task.defer);*/
     /*console.log(task.defer);*/
     /*task.defer = new Date();*/
