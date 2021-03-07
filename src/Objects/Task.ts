@@ -202,7 +202,7 @@ export default class Task {
     set due(dueDate: Date) {
         this.data["due"] = {seconds: Math.floor(dueDate.getTime()/1000), nanoseconds:0};
         this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        this.page.set({due: dueDate}, {merge:true}); // weird date handling
+        this.page.set({due: dueDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
     }
@@ -235,8 +235,8 @@ export default class Task {
 
     set defer(deferDate: Date) {
         this.data["defer"] = {seconds: Math.floor(deferDate.getTime()/1000), nanoseconds:0};
-        this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        this.page.set({defer: deferDate}, {merge:true}); // weird date handling
+        this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone
+        this.page.set({defer: deferDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
     }
