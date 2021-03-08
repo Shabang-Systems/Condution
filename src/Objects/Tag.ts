@@ -50,28 +50,27 @@ export default class Tag {
     }
 
     /**
-     * Create a workspace based on context and owner email
+     * Create a tag based on context, name, and an optional weight
      * @static
      *
      * @param{ontext} context    the context that you are creating from
-     * @param{string} email    the workspace owner's email
-     * @returns{Promise<Workspace>} the desired workspace
+     * @param{string?} name    the tag's name
+     * @param{number?} weight    the tag's weight
+     * @returns{Promise<Tag>} the desired workspace
      *
      */
 
-  /*  static async create(context:Context, email:string):Promise<Workspace> {*/
-        /*let newWorkspace:DataExchangeResult = await context.referenceManager.collection(["workspaces"]).add({meta: {editors: [email], name:""}});*/
+    static async create(context:Context, name?:string, weight?:number):Promise<Tag> {
+        let newTag:DataExchangeResult = await context.collection(["tags"]).add({name, weight:weight?weight:1});
 
-        /*let wsp:Workspace = new this(newWorkspace.identifier, context);*/
-        /*let page:Page = context.referenceManager.page(["workspaces", newWorkspace.identifier], wsp.update);*/
-        /*wsp.data = await page.get();*/
-        /*wsp.page = page;*/
+        let nt:Tag = new this(newTag.identifier, context);
+        let page:Page = context.page(["tags", newTag.identifier], nt.update);
+        nt.data = await page.get();
+        nt.page = page;
 
-        /*context.acceptWorkspace(wsp);*/
-
-        /*Workspace.cache.set(newWorkspace.identifier, wsp);*/
-        /*return wsp;*/
-    /*}*/
+        Tag.cache.set(newTag.identifier, nt);
+        return nt;
+    }
 
     /**
      * The name of the tag
@@ -101,7 +100,7 @@ export default class Tag {
      */
 
     get weight() {
-        return this.data["weight"];
+        return this.data["weight"]?this.data["weight"]:1;
     }
 
     /**

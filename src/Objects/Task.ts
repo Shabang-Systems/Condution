@@ -1,6 +1,7 @@
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
 import { RepeatRule, RepeatRuleType } from "./Utils";
+import Tag from "./Tag";
 
 export default class Task {
     private static cache:Map<string, Task> = new Map();
@@ -56,7 +57,11 @@ export default class Task {
      * @static
      *
      * @param{Context} context    the context that you are creating from
-     * @param{string} email    the workspace owner's email
+     * @param{string?} name    the name of the new task
+     * @param{Project?} project    the project of the new task
+     * @param{Tag[]?} tags    the tags of the new task
+     * @param{due} due    the due date of the new task
+     * @param{defer} defer    the defer date of the new task
      * @returns{Promise<Workspace>} the desired workspace
      *
      */
