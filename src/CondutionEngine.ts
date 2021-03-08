@@ -2,6 +2,7 @@ import ReferenceManager from "./Storage/ReferenceManager";
 import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 import Workspace from "./Objects/Workspace";
 import Task from "./Objects/Task";
+import Tag from "./Objects/Tag";
 import { RepeatRule, RepeatRuleType } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
@@ -45,6 +46,8 @@ async function test() {
     //ws[0].name = "Heyo!"; // set its name
     //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
 
+    let tg:Tag = await Tag.fetch(cm, "EyAZKLxDeRCenp7Ryrr4");
+    console.log(tg.name);
 
     /*let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");*/
     //CustomFilterQuery(Task, "due", "<", new Date());
