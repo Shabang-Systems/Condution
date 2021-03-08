@@ -1,3 +1,17 @@
+import Task from "./Task";
+import Workspace from "./Workspace";
+
+/**
+ * Flush all caches, and cause everything to
+ * self-destruct. Used during account switching
+ * and the app's sleep time to prevent memory leak
+ */
+
+function GloballySelfDestruct() {
+    Task.SelfDestruct();
+    Workspace.SelfDestruct();
+}
+
 enum RepeatRuleType {
     NONE = "none",
     DAY = "daily",
@@ -208,5 +222,5 @@ class RepeatRule {
 }
 
 
-export { RepeatRule, RepeatRuleType };
+export { RepeatRule, RepeatRuleType, GloballySelfDestruct };
 

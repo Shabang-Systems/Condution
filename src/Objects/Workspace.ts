@@ -15,6 +15,17 @@ export default class Workspace {
     }
 
     /**
+     * Nuke the cache
+     * @static
+     *
+     */
+
+    static SelfDestruct() {
+        delete Workspace.cache;
+        Workspace.cache = null;
+    }
+
+    /**
      * Fetch a workspace by Context and ID
      * @static
      *

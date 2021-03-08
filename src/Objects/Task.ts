@@ -16,6 +16,17 @@ export default class Task {
     }
 
     /**
+     * Nuke the cache
+     * @static
+     *
+     */
+
+    static SelfDestruct() {
+        delete Task.cache;
+        Task.cache = null;
+    }
+
+    /**
      * Fetch a task by Context and ID
      * @static
      *

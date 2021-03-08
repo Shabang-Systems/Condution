@@ -46,11 +46,11 @@ async function test() {
     //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
 
 
-    let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
+    /*let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");*/
     //CustomFilterQuery(Task, "due", "<", new Date());
     //task.name = "nsatoehusaoe"
     //task.repeatRule = new RepeatRule(RepeatRuleType.WEEK);
-    Task.create(cm, "Heewwww");
+    /*Task.SelfDestruct()*/
     /*console.log(task.defer);*/
     /*console.log(task.defer);*/
     /*task.defer = new Date();*/
