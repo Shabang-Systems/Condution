@@ -1,6 +1,6 @@
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
-import { RepeatRule } from "./Utils";
+import { RepeatRule, RepeatRuleType } from "./Utils";
 
 export default class Task {
     private static cache:Map<string, Task> = new Map();
@@ -41,8 +41,7 @@ export default class Task {
     }
 
     /**
-     * TODO
-     * Create a workspace based on context and owner email
+     * Create a task based on a brouhaha of options
      * @static
      *
      * @param{Context} context    the context that you are creating from
@@ -51,19 +50,29 @@ export default class Task {
      *
      */
 
-    //static async create(context:Context, email:string):Promise<Workspace> {
-        //let newWorkspace:DataExchangeResult = await context.referenceManager.collection(["workspaces"]).add({meta: {editors: [email], name:""}});
+    static async create(context:Context, name?:String, project?:Project, tags?:Tag[], due?:Date, defer?:Date):Promise<Task> {
+        let blankRepeat:RepeatRule = new RepeatRule(RepeatRuleType.NONE);
+        let newTask:DataExchangeResult = await context.collection(["tasks"]).add({
+            name: name?name:"",
+            project: project?project.id:"",
+            tags: tags?tags.map((tag:Tag)=>tag.id):[],
+            due: due?due:null,
+            defer: defer?defer:new Date(),
+            order: 1,
+            isComplete: false,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            repeat: blankRepeat.decode()
+        });
 
-        //let wsp:Workspace = new this(newWorkspace.identifier, context);
-        //let page:Page = context.referenceManager.page(["workspaces", newWorkspace.identifier], wsp.update);
-        //wsp.data = await page.get();
-        //wsp.page = page;
+        let tsk:Task = new this(newTask.identifier, context);
+        let page:Page = context.page(["tasks", newTask.identifier], tsk.update);
 
-        //context.acceptWorkspace(wsp);
+        tsk.data = await page.get();
+        tsk.page = page;
 
-        //Workspace.cache.set(newWorkspace.identifier, wsp);
-        //return wsp;
-    //}
+        Task.cache.set(newTask.identifier, tsk);
+        return tsk;
+    }
 
     /**
      * The identifier of the task

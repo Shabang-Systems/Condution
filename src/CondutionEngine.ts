@@ -50,7 +50,7 @@ async function test() {
     //CustomFilterQuery(Task, "due", "<", new Date());
     //task.name = "nsatoehusaoe"
     //task.repeatRule = new RepeatRule(RepeatRuleType.WEEK);
-    console.log(task.tempData);
+    Task.create(cm, "Heewwww");
     /*console.log(task.defer);*/
     /*console.log(task.defer);*/
     /*task.defer = new Date();*/

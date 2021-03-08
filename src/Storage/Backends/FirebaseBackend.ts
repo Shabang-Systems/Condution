@@ -156,11 +156,14 @@ class FirebasePage extends Page {
         ref.onSnapshot({
             error: console.trace,
             next: (snap:any) => {
-                let data = Object.assign(snap.data(), {id:snap.id});
-                 // TODO janky AF resolving to a Promise of data b/c the original fetch is a promise
-                this.data = new Promise((res, _)=>res(data));
-                refreshCallback(data);
-                // TODO TODO: requestRefresh
+                let originalData = snap.data();
+                if (originalData) {
+                    let data = Object.assign(originalData, {id:snap.id});
+                     // TODO janky AF resolving to a Promise of data b/c the original fetch is a promise
+                    this.data = new Promise((res, _)=>res(data));
+                    refreshCallback(data);
+                    // TODO TODO: requestRefresh
+                }
             }
         })
     }
