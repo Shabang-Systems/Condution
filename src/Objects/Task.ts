@@ -75,7 +75,7 @@ export default class Task {
             tags: tags?tags.map((tag:Tag)=>tag.id):[],
             due: due?due:null,
             defer: defer?defer:new Date(),
-            order: 1,
+            order: 1, // TODO, actually set correct order
             isComplete: false,
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             repeat: blankRepeat.decode()
@@ -99,6 +99,27 @@ export default class Task {
 
     get id() {
         return this._id;
+    }
+
+    /**
+     * The order of the task
+     * @property
+     *
+     */
+
+    get order() {
+        return this.data["order"];
+    }
+
+    /**
+     * The order of the task
+     * @property
+     *
+     */
+
+    set order(newOrder:number) {
+        this.data["order"] = newOrder;
+        this.sync();
     }
 
     /**
