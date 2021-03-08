@@ -52,7 +52,7 @@ async function test() {
     /*console.log(tg.id);*/
 
     let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
-    let tags:Tag[] = await Promise.all(task.async_tags);
+    let tags:Tag[] = task.tags;
     console.log(tags[0].name);
     /*console.log(tags[0].name);*/
     //CustomFilterQuery(Task, "due", "<", new Date());
