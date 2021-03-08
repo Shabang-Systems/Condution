@@ -46,12 +46,12 @@ async function test() {
     //ws[0].name = "Heyo!"; // set its name
     //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
 
-    /*let tg:Tag = await Tag.fetch(cm, "EyAZKLxDeRCenp7Ryrr4");*/
+    /*let tg:Tag = await Tag.fetch(cm, "59BbV3uj5hZpmVPotAbE");*/
     /*console.log(tg.name);*/
-    let tg:Tag = await Tag.create(cm, "Bubububububububuubbu");
-    console.log(tg.weight);
+    /*let tg:Tag = await Tag.create(cm, "mmm");*/
+    /*console.log(tg.id);*/
 
-    /*let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");*/
+    let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
     //CustomFilterQuery(Task, "due", "<", new Date());
     //task.name = "nsatoehusaoe"
     //task.repeatRule = new RepeatRule(RepeatRuleType.WEEK);

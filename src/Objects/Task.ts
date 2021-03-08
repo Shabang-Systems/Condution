@@ -58,20 +58,20 @@ export default class Task {
      *
      * @param{Context} context    the context that you are creating from
      * @param{string?} name    the name of the new task
-     * @param{Project?} project    the project of the new task
-     * @param{Tag[]?} tags    the tags of the new task
+     * @param{string?} projectID    the project IDs of the new task
+     * @param{string[]?} tagIDs    the tag IDs of the new task
      * @param{due} due    the due date of the new task
      * @param{defer} defer    the defer date of the new task
      * @returns{Promise<Workspace>} the desired workspace
      *
      */
 
-    static async create(context:Context, name?:String, project?:Project, tags?:Tag[], due?:Date, defer?:Date):Promise<Task> {
+    static async create(context:Context, name?:string, projectID?:string, tagIDs?:string[], due?:Date, defer?:Date):Promise<Task> {
         let blankRepeat:RepeatRule = new RepeatRule(RepeatRuleType.NONE);
         let newTask:DataExchangeResult = await context.collection(["tasks"]).add({
             name: name?name:"",
-            project: project?project.id:"",
-            tags: tags?tags.map((tag:Tag)=>tag.id):[],
+            project: projectID?projectID:"",
+            tags: tagIDs?tagIDs:[],
             due: due?due:null,
             defer: defer?defer:new Date(),
             order: 1,
@@ -118,6 +118,27 @@ export default class Task {
 
     set name(newName:string) {
         this.data["name"] = newName;
+        this.sync();
+    }
+
+    /**
+     * The tag IDs of the task
+     * @property
+     *
+     */
+
+    get tagIDs() {
+        return this.data["tags"];
+    }
+
+    /**
+     * The tag IDs of the task
+     * @property
+     *
+     */
+
+    set tagIDs(newTags:string[]) {
+        this.data["tags"] = newTags;
         this.sync();
     }
 
