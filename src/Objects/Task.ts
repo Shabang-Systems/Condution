@@ -53,25 +53,52 @@ export default class Task {
     }
 
     /**
+     * Fetch a task by Context and ID without waiting database to load
+     * @static
+     *
+     * @param{Context} context    the context that you are fetching from
+     * @param{string} identifier    the ID of the task you want to fetch
+     * @returns{Promise<Task>} the desired task
+     *
+     */
+
+    static lazy_fetch(context:Context, identifier:string):Task {
+        let cachedTask:Task = Task.cache.get(identifier);
+        if (cachedTask)
+            return cachedTask;
+
+        let tsk:Task = new this(identifier, context);
+        let page:Page = context.page(["tasks", identifier], tsk.update);
+        tsk.page = page;
+        Task.cache.set(identifier, tsk);
+
+        page.get().then((data:object)=>{
+            tsk.data = data;
+        });
+
+        return tsk;
+    }
+
+    /**
      * Create a task based on a brouhaha of options
      * @static
      *
      * @param{Context} context    the context that you are creating from
      * @param{string?} name    the name of the new task
-     * @param{string?} projectID    the project IDs of the new task
-     * @param{string[]?} tagIDs    the tag IDs of the new task
+     * @param{Project?} project    the project IDs of the new task
+     * @param{Tag[]?} tags    the tag IDs of the new task
      * @param{due} due    the due date of the new task
      * @param{defer} defer    the defer date of the new task
      * @returns{Promise<Workspace>} the desired workspace
      *
      */
 
-    static async create(context:Context, name?:string, projectID?:string, tagIDs?:string[], due?:Date, defer?:Date):Promise<Task> {
+    static async create(context:Context, name?:string, project?:Project, tags?:Tag[], due?:Date, defer?:Date):Promise<Task> {
         let blankRepeat:RepeatRule = new RepeatRule(RepeatRuleType.NONE);
         let newTask:DataExchangeResult = await context.collection(["tasks"]).add({
             name: name?name:"",
-            project: projectID?projectID:"",
-            tags: tagIDs?tagIDs:[],
+            project: project?project.id:"",
+            tags: tags?tags.map((tag:Tag)=>tag.id):[],
             due: due?due:null,
             defer: defer?defer:new Date(),
             order: 1,
@@ -122,13 +149,13 @@ export default class Task {
     }
 
     /**
-     * The tag IDs of the task
+     * The tag IDs of the task, properly fetched
      * @property
      *
      */
 
-    get tagIDs() {
-        return this.data["tags"];
+    get async_tags() {
+        return this.data["tags"].map((tagID:string) => Tag.fetch(this.context, tagID));
     }
 
     /**
@@ -137,8 +164,18 @@ export default class Task {
      *
      */
 
-    set tagIDs(newTags:string[]) {
-        this.data["tags"] = newTags;
+    get tags() {
+        return this.data["tags"].map((tagID:string) => Tag.lazy_fetch(this.context, tagID));
+    }
+
+    /**
+     * The tag IDs of the task
+     * @property
+     *
+     */
+
+    set tags(newTags:Tag[]) {
+        this.data["tags"] = newTags.map((tag:Tag) => tag.id);
         this.sync();
     }
 

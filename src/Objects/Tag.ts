@@ -8,6 +8,7 @@ export default class Tag {
     private page:Page;
     private data:object;
     private context:Context;
+    private _ready:boolean;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -44,8 +45,38 @@ export default class Tag {
         let page:Page = context.page(["tags", identifier], tg.update);
         tg.data = await page.get();
         tg.page = page;
+        tg._ready = true;
 
         Tag.cache.set(identifier, tg);
+        return tg;
+    }
+
+    /**
+     * Fetch a tag by Context and ID without waiting database to load
+     * @static
+     *
+     * @param{Context} context    the context that you are fetching from
+     * @param{string} identifier    the ID of the tag you want to fetch
+     * @returns{Promise<Tag>} the desired tag
+     *
+     */
+
+    static lazy_fetch(context:Context, identifier:string):Tag {
+        let cachedWorkspace:Tag = Tag.cache.get(identifier);
+        if (cachedWorkspace)
+            return cachedWorkspace;
+
+        let tg:Tag= new this(identifier, context);
+        let page:Page = context.page(["tags", identifier], tg.update);
+
+        tg.page = page;
+        Tag.cache.set(identifier, tg);
+
+        page.get().then((data:object)=>{
+            tg.data = data;
+            tg._ready = true;
+        });
+
         return tg;
     }
 
@@ -67,6 +98,7 @@ export default class Tag {
         let page:Page = context.page(["tags", newTag.identifier], nt.update);
         nt.data = await page.get();
         nt.page = page;
+        nt._ready = true;
 
         Tag.cache.set(newTag.identifier, nt);
         return nt;
@@ -122,6 +154,16 @@ export default class Tag {
 
     get id() {
         return this._id;
+    }
+
+    /**
+     * The readiness of the data
+     * @property
+     *
+     */
+
+    get ready() {
+        return this._ready;
     }
 
     private sync = () => {
