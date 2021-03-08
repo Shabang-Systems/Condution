@@ -53,33 +53,6 @@ export default class Task {
     }
 
     /**
-     * Fetch a task by Context and ID without waiting database to load
-     * @static
-     *
-     * @param{Context} context    the context that you are fetching from
-     * @param{string} identifier    the ID of the task you want to fetch
-     * @returns{Promise<Task>} the desired task
-     *
-     */
-
-    static lazy_fetch(context:Context, identifier:string):Task {
-        let cachedTask:Task = Task.cache.get(identifier);
-        if (cachedTask)
-            return cachedTask;
-
-        let tsk:Task = new this(identifier, context);
-        let page:Page = context.page(["tasks", identifier], tsk.update);
-        tsk.page = page;
-        Task.cache.set(identifier, tsk);
-
-        page.get().then((data:object)=>{
-            tsk.data = data;
-        });
-
-        return tsk;
-    }
-
-    /**
      * Create a task based on a brouhaha of options
      * @static
      *
