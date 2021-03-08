@@ -1,6 +1,7 @@
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
 import { RepeatRule, RepeatRuleType } from "./Utils";
+import Project from "./Project";
 import Tag from "./Tag";
 
 export default class Task {

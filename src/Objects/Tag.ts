@@ -37,9 +37,9 @@ export default class Tag {
      */
 
     static async fetch(context:Context, identifier:string):Promise<Tag> {
-        let cachedWorkspace:Tag = Tag.cache.get(identifier);
-        if (cachedWorkspace)
-            return cachedWorkspace;
+        let cachedTag:Tag = Tag.cache.get(identifier);
+        if (cachedTag)
+            return cachedTag;
 
         let tg:Tag= new this(identifier, context);
         let page:Page = context.page(["tags", identifier], tg.update);
@@ -62,9 +62,9 @@ export default class Tag {
      */
 
     static lazy_fetch(context:Context, identifier:string):Tag {
-        let cachedWorkspace:Tag = Tag.cache.get(identifier);
-        if (cachedWorkspace)
-            return cachedWorkspace;
+        let cachedTag:Tag = Tag.cache.get(identifier);
+        if (cachedTag)
+            return cachedTag;
 
         let tg:Tag= new this(identifier, context);
         let page:Page = context.page(["tags", identifier], tg.update);
@@ -87,7 +87,7 @@ export default class Tag {
      * @param{ontext} context    the context that you are creating from
      * @param{string?} name    the tag's name
      * @param{number?} weight    the tag's weight
-     * @returns{Promise<Tag>} the desired workspace
+     * @returns{Promise<Tag>} the desired tag
      *
      */
 

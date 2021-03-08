@@ -3,6 +3,7 @@ import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 import Workspace from "./Objects/Workspace";
 import Task from "./Objects/Task";
 import Tag from "./Objects/Tag";
+import Project from "./Objects/Project";
 import { RepeatRule, RepeatRuleType } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
@@ -51,9 +52,13 @@ async function test() {
     /*let tg:Tag = await Tag.create(cm, "mmm");*/
     /*console.log(tg.id);*/
 
-    let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
-    let tags:Tag[] = task.tags;
-    console.log(tags[0].name);
+/*    let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");*/
+    /*let tags:Tag[] = task.tags;*/
+    /*console.log(tags[0].name);*/
+
+    let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
+    project.isComplete = false;
+    console.log(project.isComplete);
     /*console.log(tags[0].name);*/
     //CustomFilterQuery(Task, "due", "<", new Date());
     //task.name = "nsatoehusaoe"
