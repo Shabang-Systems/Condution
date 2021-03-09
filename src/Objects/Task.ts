@@ -11,6 +11,7 @@ export default class Task {
     private page:Page;
     private data:object;
     private context:Context;
+    private _ready:boolean;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -40,16 +41,35 @@ export default class Task {
 
     static async fetch(context:Context, identifier:string):Promise<Task> {
         let cachedTask:Task = Task.cache.get(identifier);
-        if (cachedTask)
+        if (cachedTask && cachedTask._ready == true)
             return cachedTask;
 
         let tsk:Task = new this(identifier, context);
         let page:Page = context.page(["tasks", identifier], tsk.update);
 
         tsk.data = await page.get();
+        tsk._ready = true;
         tsk.page = page;
 
         Task.cache.set(identifier, tsk);
+        return tsk;
+    }
+
+    static lazy_fetch(context:Context, identifier:string):Task {
+        let cachedTask:Task = Task.cache.get(identifier);
+        if (cachedTask)
+            return cachedTask;
+
+        let tsk:Task = new this(identifier, context);
+        let page:Page = context.page(["tasks", identifier], tsk.update);
+        tsk.page = page;
+        Task.cache.set(identifier, tsk);
+
+        page.get().then((data:object) => {
+            tsk.data = data;
+            tsk._ready = true;
+        });
+
         return tsk;
     }
 
@@ -108,7 +128,9 @@ export default class Task {
      */
 
     get order() {
-        return this.data["order"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["order"];
     }
 
     /**
@@ -129,7 +151,9 @@ export default class Task {
      */
 
     get name() {
-        return this.data["name"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["name"];
     }
 
     /**
@@ -150,7 +174,9 @@ export default class Task {
      */
 
     get async_tags() {
-        return this.data["tags"].map((tagID:string) => Tag.fetch(this.context, tagID));
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["tags"].map((tagID:string) => Tag.fetch(this.context, tagID));
     }
 
     /**
@@ -160,7 +186,9 @@ export default class Task {
      */
 
     get tags() {
-        return this.data["tags"].map((tagID:string) => Tag.lazy_fetch(this.context, tagID));
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["tags"].map((tagID:string) => Tag.lazy_fetch(this.context, tagID));
     }
 
     /**
@@ -181,7 +209,9 @@ export default class Task {
      */
 
     get description() {
-        return this.data["desc"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["desc"];
     }
 
     /**
@@ -202,7 +232,9 @@ export default class Task {
      */
 
     get isFloating() {
-        return this.data["isFloating"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["isFloating"];
     }
 
     /**
@@ -223,7 +255,9 @@ export default class Task {
      */
 
     get isFlagged() {
-        return this.data["isFloating"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["isFloating"];
     }
 
     /**
@@ -248,7 +282,9 @@ export default class Task {
      */
 
     get timezone() {
-        return this.data["timezone"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["timezone"];
     }
 
     /**
@@ -262,7 +298,8 @@ export default class Task {
      */
 
     get due() {
-        if (this.data["due"])
+        this.readiness_warn();
+        if (this._ready && this.data["due"])
             return new Date(this.data["due"]["seconds"]*1000);
         else return null;
     }
@@ -296,7 +333,8 @@ export default class Task {
      */
 
     get defer() {
-        if (this.data["defer"])
+        this.readiness_warn();
+        if (this._ready && this.data["defer"])
             return new Date(this.data["defer"]["seconds"]*1000);
         else return null;
     }
@@ -326,7 +364,9 @@ export default class Task {
      */
 
     get repeatRule() {
-        return RepeatRule.encode(this.data["repeat"]);
+        this.readiness_warn();
+        if (this._ready)
+            return RepeatRule.encode(this.data["repeat"]);
     }
 
     /**
@@ -347,7 +387,9 @@ export default class Task {
      */
 
     get isComplete() {
-        return this.data["isComplete"];
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["isComplete"];
     }
 
     /**
@@ -377,12 +419,31 @@ export default class Task {
         this.sync();
     }
 
+    /**
+     * calculate the weight of the task
+     *
+     * @returns{Promise<number>}
+     *
+     */
+
+    async calculateWeight() : Promise<number> {
+        let tags: Tag[] = await Promise.all(this.async_tags);
+        let weight = 1;
+        tags.forEach((tag: Tag) => weight *= tag.weight);
+        return weight;
+    }
+
     private sync = () => {
         this.page.set(this.data);
     }
 
     private update = (newData:object) => {
         this.data = newData;
+    }
+
+    private readiness_warn = () => {
+        if (!this._ready)
+            console.warn("CondutionEngine: you tried to access an object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
     }
 
     get tempData() {

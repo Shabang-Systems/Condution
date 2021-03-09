@@ -38,7 +38,7 @@ export default class Project {
 
     static async fetch(context:Context, identifier:string):Promise<Project> {
         let cachedProject:Project = Project.cache.get(identifier);
-        if (cachedProject)
+        if (cachedProject && cachedProject._ready == true)
             return cachedProject;
 
         let pj:Project = new this(identifier, context);
@@ -172,6 +172,80 @@ export default class Project {
     set isComplete(newCompleteness:boolean) {
         this.data["isComplete"] = newCompleteness;
         this.sync();
+    }
+    
+    /**
+     * The order of the project
+     * @property
+     *
+     */
+
+    get order() {
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["order"];
+    }
+
+    set order(newOrder:number) {
+        this.data["order"] = newOrder;
+        this.sync();
+    }
+
+    /**
+     * Whether the project is a top level project
+     * @property
+     *
+     */
+
+    get topLevel() {
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["top_level"];
+    }
+
+    /**
+     * The parent of the project
+     * @property
+     *
+     */
+
+    get parent() {
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["parent"] ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
+    }
+
+    set parent(parentProject:Project) {
+        if (parentProject) {
+            this.data["parent"] = parentProject.id;
+            this.data["top_level"] = false;
+        } else {
+            this.data["parent"] = "";
+            this.data["top_level"] = true;
+        }
+        // TODO TODO TODO ASSOCIATIONS ARE NOT WORKING!!
+        this.sync();
+    }
+
+    /**
+     * Bring the project to top level
+     *
+     * @returns{void}
+     *
+     */
+
+    bringToTop(): void {
+        this.parent = null;
+    }
+
+    /**
+     * The parent of the project, fetched traditionally but asyncronously
+     * @property
+     *
+     */
+
+    get async_parent() {
+        return this.data["parent"] ? Project.fetch(this.context, this.data["parent"]) : null;
     }
 
     /**

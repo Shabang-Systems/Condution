@@ -52,13 +52,16 @@ async function test() {
     /*let tg:Tag = await Tag.create(cm, "mmm");*/
     /*console.log(tg.id);*/
 
-/*    let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");*/
-    /*let tags:Tag[] = task.tags;*/
-    /*console.log(tags[0].name);*/
+    let task:Task = Task.lazy_fetch(cm, "kvrx4YVeeJTYjcVp2S00");
+    console.log(task.name);
 
     let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
-    project.isComplete = false;
-    console.log(project.isComplete);
+    //let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    project.name;
+
+    //project.parent = project1;
+    //project.isComplete = false;
+    //console.log(project.isComplete);
     /*console.log(tags[0].name);*/
     //CustomFilterQuery(Task, "due", "<", new Date());
     //task.name = "nsatoehusaoe"
