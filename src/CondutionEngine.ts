@@ -26,6 +26,7 @@ async function test() {
     await cm.start(); // start our context
 
 
+
     /*
        * @lb's grand vision
        * sourcesfilters => condition-based sorted set queried based on data. Deals with one condition
@@ -52,12 +53,19 @@ async function test() {
     /*let tg:Tag = await Tag.create(cm, "mmm");*/
     /*console.log(tg.id);*/
 
-    let task:Task = Task.lazy_fetch(cm, "kvrx4YVeeJTYjcVp2S00");
-    console.log(task.name);
+    //let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
+    //let rr:RepeatRule = new RepeatRule(RepeatRuleType.WEEK, ["M", "T"]);
+    //task.repeatRule = rr;
+    //console.log(task.repeatRule);
+    //console.log(task.repeatRule.execute(new Date()))
+    //console.log(task.name);
+
+    //let tags:Tag[] = task.tags;
+    //console.log(tags[0].id);
 
     let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
-    //let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
-    project.name;
+    ////let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    console.log(project.children[0]);
 
     //project.parent = project1;
     //project.isComplete = false;

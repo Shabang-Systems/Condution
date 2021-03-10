@@ -1,4 +1,5 @@
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
+import Task from "./Task";
 import { Context } from "./EngineManager";
 
 export default class Project {
@@ -246,6 +247,26 @@ export default class Project {
 
     get async_parent() {
         return this.data["parent"] ? Project.fetch(this.context, this.data["parent"]) : null;
+    }
+
+    /**
+     * Whether the project is a top level project
+     * @property
+     *
+     */
+
+    get children() {
+        this.readiness_warn();
+        let dataArray:(Project|Task)[] = [];
+        if (this._ready) {
+            for (let child in this.data["children"])
+                if (this.data["children"][child] == "task")
+                    dataArray.push(Task.lazy_fetch(this.context, child));
+                else if (this.data["children"][child] == "project")
+                    dataArray.push(Project.lazy_fetch(this.context, child));
+
+            return dataArray;
+        }
     }
 
     /**
