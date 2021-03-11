@@ -469,6 +469,17 @@ export default class Task {
     }
 
     /**
+     * Delete the task!!
+     *
+     * @returns{void}
+     *
+     */
+
+    delete() : void {
+        this.page.delete();
+    }
+
+    /**
      * uncomplete the task!!
      *
      * @returns{void}

@@ -71,7 +71,8 @@ async function test() {
     //let testTask:Task = await Task.fetch(cm, "ERCL6nYK8of8x0GVd7lH");
 
     //let newProject:Project = await Project.create(cm, "hewo 2!!!");
-    //let testTask:Task = await Task.create(cm, "tomcruise3", newProject);
+    //let testTask:Task = await Task.fetch(cm, "oTHnj9JUPCTGaDgTZJnG");
+    //testTask.delete();
     //console.log(testTask.id);
 
     //let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");

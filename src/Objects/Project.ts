@@ -353,6 +353,16 @@ export default class Project {
         this.sync();
     }
 
+    /**
+     * Delete the project!!
+     *
+     * @returns{void}
+     *
+     */
+
+    delete() : void {
+        this.page.delete();
+    }
 
     /**
      * The child(ren) of the project, fetched traditionally with promises

@@ -170,6 +170,19 @@ export default class Tag {
         return this._ready;
     }
 
+    /**
+     * Delete the tag!!
+     *
+     * @returns{void}
+     *
+     */
+
+    delete() : void {
+        this.page.delete();
+    }
+
+
+
     private readiness_warn = () => {
         if (!this._ready)
             console.warn("CondutionEngine: you tried to access an object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
