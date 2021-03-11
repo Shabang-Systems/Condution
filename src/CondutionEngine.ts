@@ -72,7 +72,7 @@ async function test() {
     //project.associate(testTask);
 
     //project.dissociate(testTask);
-    testTask.move(null);
+    testTask.inboxify();
 
     //project.parent = project1;
     //project.isComplete = false;

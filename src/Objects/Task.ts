@@ -195,7 +195,7 @@ export default class Task {
      * Move the task to...
      *
      * @param{Project?} to    to a project or, if null, to inbox
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
@@ -208,6 +208,18 @@ export default class Task {
             this.data["project"] = to.id;
         } else this.data["project"] = "";
         this.sync();
+    }
+
+
+    /**
+     * Move the task to the inbox
+     *
+     * @returns{Promise<void>}
+     *
+     */
+
+    async inboxify(): Promise<void> {
+        await this.move(null);
     }
 
     /**
