@@ -65,7 +65,7 @@ async function test() {
 
     let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
     ////let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
-    console.log(project.children[0] instanceof Task);
+    console.log(project.name);
 
     //project.parent = project1;
     //project.isComplete = false;

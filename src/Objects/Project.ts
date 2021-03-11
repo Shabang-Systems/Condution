@@ -272,6 +272,73 @@ export default class Project {
     }
 
     /**
+     * Associate a task/project with the project's index
+     *
+     * @param{Project|Task} item    the item you want to associate
+     * @param{number?} order    force a specific order
+     * @returns{void}
+     *
+     */
+
+    associate(item:Project|Task, order?:number): void {
+        if (!order)
+            order = Object.keys(this.children).length;
+        item.order = order;
+        this.children[item.id] = (item instanceof Task) ? "task" : "project";
+        this.sync();
+    }
+
+    /**
+     * Dissociate a task/project with the project's index
+     *
+     * @param{Project|Task} item    the item you want to dissociate
+     * @returns{void}
+     *
+     */
+
+    dissociate(item:Project|Task): void  {
+        delete this.children[item.id];
+        this.sync();
+    }
+
+    /**
+     * Associate a whole bunch of tasks/projects with the project's index
+     *
+     * @param{(Project|Task)[]} items    the items you want to associate
+     * @returns{void}
+     *
+     */
+
+    batch_associate(items:(Project|Task)[]): void {
+        let order:number = Object.keys(this.children).length
+
+        for (let i of items) {
+            i.order = order;
+            order++;
+            this.children[i.id] = (i instanceof Task) ? "task" : "project";
+        }
+
+        this.sync();
+    }
+
+    /**
+     * Dissociate a whole bunch of tasks/projects with the project's index
+     *
+     * @param{(Project|Task)[]} items    the items you want to dissociate
+     * @returns{void}
+     *
+     */
+
+    batch_dissociate(items:(Project|Task)[]): void {
+        for (let i of items) {
+            delete this.children[i.id];
+        }
+
+        this.sync();
+    }
+
+
+    /**
      * The child(ren) of the project, fetched traditionally with promises
      * @property
      *
