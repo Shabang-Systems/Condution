@@ -26,6 +26,10 @@ async function test() {
     await cm.start(); // start our context
 
 
+    //let ws:Workspace = (await cm.workspaces()).filter((workspace:Workspace)=>workspace.name=="aonsteuhasoenut")[0];
+    //cm.useWorkspace(ws);
+    //console.log();
+
 
     /*
        * @lb's grand vision
@@ -68,7 +72,7 @@ async function test() {
 
     //let newProject:Project = await Project.create(cm, "hewo 2!!!");
     //let testTask:Task = await Task.create(cm, "tomcruise3", newProject);
-    //console.log(newProject.id);
+    //console.log(testTask.id);
 
     //let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
     //testTask.move(newProject);
