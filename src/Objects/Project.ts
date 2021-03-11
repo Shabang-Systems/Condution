@@ -246,11 +246,13 @@ export default class Project {
      */
 
     get async_parent() {
-        return this.data["parent"] ? Project.fetch(this.context, this.data["parent"]) : null;
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["parent"] ? Project.fetch(this.context, this.data["parent"]) : null;
     }
 
     /**
-     * Whether the project is a top level project
+     * The child(ren) of the project
      * @property
      *
      */
@@ -265,6 +267,25 @@ export default class Project {
                 else if (this.data["children"][child] == "project")
                     dataArray.push(Project.lazy_fetch(this.context, child));
 
+            return dataArray;
+        }
+    }
+
+    /**
+     * The child(ren) of the project, fetched traditionally with promises
+     * @property
+     *
+     */
+
+    get async_children() {
+        this.readiness_warn();
+        let dataArray:(Promise<Project>|Promise<Task>)[] = [];
+        if (this._ready) {
+            for (let child in this.data["children"])
+                if (this.data["children"][child] == "task")
+                    dataArray.push(Task.fetch(this.context, child));
+                else if (this.data["children"][child] == "project")
+                    dataArray.push(Project.fetch(this.context, child));
             return dataArray;
         }
     }
