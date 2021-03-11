@@ -87,28 +87,40 @@ export default class Project {
     }
 
     /**
-     * Create a tag based on context, name, and an optional weight
+     * Create a project based on context, and optionally name and parent
      * @static
      *
-     * @param{ontext} context    the context that you are creating from
-     * @param{string?} name    the tag's name
-     * @param{number?} weight    the tag's weight
-     * @returns{Promise<Tag>} the desired workspace
+     * @param{Context} context    the context that you are creating from
+     * @param{string?} name    the new project's name
+     * @param{parent?} parent    the new project's weight
+     * @returns{Promise<Project>} the desired project
      *
      */
 
-    /*static async create(context:Context, name?:string, weight?:number):Promise<Tag> {*/
-        /*let newTag:DataExchangeResult = await context.collection(["tags"]).add({name, weight:weight?weight:1});*/
+    static async create(context:Context, name?:string, parent?:Project):Promise<Project> {
+        let newProject:DataExchangeResult = await context.collection(["projects"]).add({
+            name: name?name:"", 
+            parent: parent?parent.id:"",
+            top_level: parent?false:true,
+            isComplete: false, // HUXLEY! SNAKE CASE
+            is_sequential: false,
+            children: {}
+        });
 
-        /*let nt:Tag = new this(newTag.identifier, context);*/
-        /*let page:Page = context.page(["tags", newTag.identifier], nt.update);*/
-        /*nt.data = await page.get();*/
-        /*nt.page = page;*/
-        /*nt._ready = true;*/
+        let np:Project = new this(newProject.identifier, context);
+        let page:Page = context.page(["projects", newProject.identifier], np.update);
+        np.data = await page.get();
+        np.page = page;
+        np._ready = true;
 
-        /*Tag.cache.set(newTag.identifier, nt);*/
-        /*return nt;*/
-    /*}*/
+        if (parent) {
+            await parent._readiness;
+            parent.associate(np);
+        }
+
+        Project.cache.set(newProject.identifier, np);
+        return np;
+    }
 
     /**
      * The name of the tag
@@ -382,7 +394,7 @@ export default class Project {
     }
 
     /**
-     * readinessPromise
+     * A promise that tells you that the project is ready
      * @property
      *
      */

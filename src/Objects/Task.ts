@@ -107,6 +107,11 @@ export default class Task {
         tsk.data = await page.get();
         tsk.page = page;
 
+        if (project) {
+            await project.readinessPromise;
+            project.associate(tsk);
+        }
+
         Task.cache.set(newTask.identifier, tsk);
         return tsk;
     }

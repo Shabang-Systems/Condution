@@ -64,15 +64,21 @@ async function test() {
     //console.log(tags[0].id);
 
     //let testTask:Task = await Task.create(cm, "tomcruise");
-    let testTask:Task = await Task.fetch(cm, "ERCL6nYK8of8x0GVd7lH");
+    //let testTask:Task = await Task.fetch(cm, "ERCL6nYK8of8x0GVd7lH");
 
-    let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
+    //let newProject:Project = await Project.create(cm, "hewo 2!!!");
+    //let testTask:Task = await Task.create(cm, "tomcruise3", newProject);
+    //console.log(newProject.id);
+
+    //let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
+    //testTask.move(newProject);
+    //newProject.associate(testTask);
     ////let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
     //console.log(testTask.id);
     //project.associate(testTask);
 
     //project.dissociate(testTask);
-    testTask.inboxify();
+    //testTask.inboxify();
 
     //project.parent = project1;
     //project.isComplete = false;

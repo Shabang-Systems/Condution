@@ -1,5 +1,6 @@
 import Tag from "./Tag";
 import Task from "./Task";
+import Project from "./Project";
 import Workspace from "./Workspace";
 
 /**
@@ -12,6 +13,7 @@ function GloballySelfDestruct() {
     Task.SelfDestruct();
     Workspace.SelfDestruct();
     Tag.SelfDestruct();
+    Project.SelfDestruct();
 }
 
 enum RepeatRuleType {
