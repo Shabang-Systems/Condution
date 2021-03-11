@@ -168,6 +168,49 @@ export default class Task {
     }
 
     /**
+     * The project of the task
+     * @property
+     *
+     */
+
+    get project() {
+        this.readiness_warn();
+        if (this._ready)
+            return Project.lazy_fetch(this.context, this.data["project"]);
+    }
+
+    /**
+     * The project of the task, fetched traditionally/asycronously
+     * @property
+     *
+     */
+
+    get async_project() {
+        this.readiness_warn();
+        if (this._ready)
+            return Project.fetch(this.context, this.data["project"]);
+    }
+
+    /**
+     * Move the task to...
+     *
+     * @param{Project?} to    to a project or, if null, to inbox
+     * @returns{void}
+     *
+     */
+
+    async move(to?:Project): Promise<void> {
+        if (this.data["project"] !== "")
+            (await Project.fetch(this.context, this.data["project"])).dissociate(this);
+        if (to) {
+            await to.readinessPromise;
+            to.associate(this);
+            this.data["project"] = to.id;
+        } else this.data["project"] = "";
+        this.sync();
+    }
+
+    /**
      * The tag IDs of the task, properly fetched
      * @property
      *
@@ -180,7 +223,7 @@ export default class Task {
     }
 
     /**
-     * The tag IDs of the task
+     * The tag of the task
      * @property
      *
      */
@@ -190,6 +233,7 @@ export default class Task {
         if (this._ready)
             return this.data["tags"].map((tagID:string) => Tag.lazy_fetch(this.context, tagID));
     }
+
 
     /**
      * The tag IDs of the task

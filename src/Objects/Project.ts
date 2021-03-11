@@ -10,6 +10,7 @@ export default class Project {
     private data:object;
     private context:Context;
     private _ready:boolean;
+    private _readiness:Promise<void>;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -47,6 +48,7 @@ export default class Project {
         pj.data = await page.get();
         pj.page = page;
         pj._ready = true;
+        pj._readiness = new Promise((res, _) => res());
 
         Project.cache.set(identifier, pj);
         return pj;
@@ -73,10 +75,12 @@ export default class Project {
 
         pj.page = page;
         Project.cache.set(identifier, pj);
-
-        page.get().then((data:object)=>{
-            pj.data = data;
-            pj._ready = true;
+        pj._readiness = new Promise((res, _) => {
+            page.get().then((data:object)=>{
+                pj.data = data;
+                pj._ready = true;
+                res();
+            });
         });
 
         return pj;
@@ -284,7 +288,7 @@ export default class Project {
         if (!order)
             order = Object.keys(this.children).length;
         item.order = order;
-        this.children[item.id] = (item instanceof Task) ? "task" : "project";
+        this.data["children"][item.id] = (item instanceof Task) ? "task" : "project";
         this.sync();
     }
 
@@ -297,7 +301,7 @@ export default class Project {
      */
 
     dissociate(item:Project|Task): void  {
-        delete this.children[item.id];
+        delete this.data["children"][item.id];
         this.sync();
     }
 
@@ -315,7 +319,7 @@ export default class Project {
         for (let i of items) {
             i.order = order;
             order++;
-            this.children[i.id] = (i instanceof Task) ? "task" : "project";
+            this.data["children"][i.id] = (i instanceof Task) ? "task" : "project";
         }
 
         this.sync();
@@ -375,6 +379,16 @@ export default class Project {
 
     get ready() {
         return this._ready;
+    }
+
+    /**
+     * readinessPromise
+     * @property
+     *
+     */
+
+    get readinessPromise(): Promise<void> {
+        return this._readiness;
     }
 
     private readiness_warn = () => {

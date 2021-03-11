@@ -63,9 +63,16 @@ async function test() {
     //let tags:Tag[] = task.tags;
     //console.log(tags[0].id);
 
+    //let testTask:Task = await Task.create(cm, "tomcruise");
+    let testTask:Task = await Task.fetch(cm, "ERCL6nYK8of8x0GVd7lH");
+
     let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
     ////let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
-    console.log(project.name);
+    //console.log(testTask.id);
+    //project.associate(testTask);
+
+    //project.dissociate(testTask);
+    testTask.move(null);
 
     //project.parent = project1;
     //project.isComplete = false;
