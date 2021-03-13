@@ -150,7 +150,8 @@ class FirebasePage extends Page {
 
         this.data = (async () : Promise<Object> => {
             let snapshot = await ref.get();
-            return Object.assign(snapshot.data(), {id: snapshot.id});
+	    let data: Object = snapshot.data();
+            return Object.assign(data ? data : {}, {id: snapshot.id});
         })();
 
         ref.onSnapshot({
