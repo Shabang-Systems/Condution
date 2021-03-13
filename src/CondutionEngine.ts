@@ -14,7 +14,7 @@ require('dotenv').config();
 // - Missing collections/pages are not handled well
 // 
 
-async function test() {
+async function test(): Promise<void> {
     let provider: FirebaseProvider = new FirebaseProvider();
     let manager: ReferenceManager = new ReferenceManager([provider])
 
@@ -24,12 +24,6 @@ async function test() {
 
     let cm: Context = new Context(manager); // create the context
     await cm.start(); // start our context
-
-
-    //let ws:Workspace = (await cm.workspaces()).filter((workspace:Workspace)=>workspace.name=="aonsteuhasoenut")[0];
-    //cm.useWorkspace(ws);
-    //console.log();
-
 
     /*
        * @lb's grand vision
@@ -41,80 +35,19 @@ async function test() {
        *
     */
 
-    // Query(Task, "prop", "<<", new Date()).execute()
+    let tg:Tag = await Tag.create(cm, "mmm");
+    tg.weight = 3;
+    console.log(tg.id);
 
-    /*let ws:Workspace[] = await cm.workspaces(); // get yo workspaces!*/
-
-
-    /*ws[0].name = "aonsteuhasoenut";*/
-    /*console.log(ws[0].collaborators);*/
-
-    //ws[0].name = "Heyo!"; // set its name
-    //let ws:Workspace = await Workspace.fetch(cm,"tjnfCOZn03vj8GlO3vgg");
-
-    /*let tg:Tag = await Tag.fetch(cm, "59BbV3uj5hZpmVPotAbE");*/
-    /*console.log(tg.name);*/
-    /*let tg:Tag = await Tag.create(cm, "mmm");*/
-    /*console.log(tg.id);*/
-
-    //let task:Task = await Task.fetch(cm, "kvrx4YVeeJTYjcVp2S00");
-    //let rr:RepeatRule = new RepeatRule(RepeatRuleType.WEEK, ["M", "T"]);
-    //task.repeatRule = rr;
-    //console.log(task.repeatRule);
-    //console.log(task.repeatRule.execute(new Date()))
-    //console.log(task.name);
-
-    //let tags:Tag[] = task.tags;
-    //console.log(tags[0].id);
-
-    //let testTask:Task = await Task.create(cm, "tomcruise");
-    //let testTask:Task = await Task.fetch(cm, "ERCL6nYK8of8x0GVd7lH");
-
-    //let newProject:Project = await Project.create(cm, "hewo 2!!!");
-    //let testTask:Task = await Task.fetch(cm, "oTHnj9JUPCTGaDgTZJnG");
-    //testTask.delete();
-    //console.log(testTask.id);
-
-    //let project:Project = await Project.fetch(cm, "3XJznkFmRpMixcWKrHM1");
-    //testTask.move(newProject);
-    //newProject.associate(testTask);
-    ////let project1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
-    //console.log(testTask.id);
-    //project.associate(testTask);
-
-    //project.dissociate(testTask);
-    //testTask.inboxify();
-
-    //project.parent = project1;
-    //project.isComplete = false;
-    //console.log(project.isComplete);
-    /*console.log(tags[0].name);*/
-    //CustomFilterQuery(Task, "due", "<", new Date());
-    //task.name = "nsatoehusaoe"
-    //task.repeatRule = new RepeatRule(RepeatRuleType.WEEK);
-    /*Task.SelfDestruct()*/
-    /*console.log(task.defer);*/
-    /*console.log(task.defer);*/
-    /*task.defer = new Date();*/
-    /*console.log(task.defer);*/
-    /*console.log(task.due);*/
-    /*console.log(task.description);*/
-    /*task.name = "chicken!";*/
-    /*console.log(task.name);*/
-    //cm.rescindWorkspace(ws);
-
-    //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
-    //cm.useWorkspace(ws[0]);
-    //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
-    //cm.usePersonalWorkspace();
-    //console.log((await cm.collection(["tasks"]).data())[3]["id"]); // get the name of the first workspace
-    //console.log(cm.collection(["tasks"])[0].data()[0]); // get the name of the first workspace
-
-    //let tasks: Colection = cm.collection(["tasks", "saonehaoeusaonelu"]);
-    //console.log(tasks.data());
-    //let userPrefs: Page = cm.page([]);
-    //console.log(await userPrefs.get());
-    //console.log(await oneProject.get());
+    let task:Task = await Task.create(cm, "Run task test");
+    const actualtask:Task = await Task.fetch(cm, task.id);
+    actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];
+    let weight:number = await actualtask.calculateWeight();
+    let wtf = await actualtask.async_tags;
+    console.log(wtf);
+    console.log(weight);
+    actualtask.tags = actualtask.tags.concat([tg]);
+    console.log("Done! Exit me now.");
 }
 
 test();
