@@ -133,7 +133,7 @@ class TagEditor extends Component {
                 
                 {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
-                    {this.state.tagList.length == this.state.tagList.length ?(
+                    {true ?(
                         <>
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
