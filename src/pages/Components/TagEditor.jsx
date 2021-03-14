@@ -133,7 +133,7 @@ class TagEditor extends Component {
                 
                 {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
-                    {true ?(
+                    {true /*TODO Fix this bad solution later I'm too lazy*/? (
                         <>
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
