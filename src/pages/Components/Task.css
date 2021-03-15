@@ -400,6 +400,7 @@ button:focus {
     margin-bottom: 15px;
     margin-right: 30px;
     width: 75%;
+    color: var(--task-textbox-text);
 }
 
 
@@ -622,6 +623,7 @@ button:focus {
 
 .react-tagsinput-input {
     height: 0px;
+    color: var(--task-textbox-text);
 }
 
 .delegation-textbox  {
