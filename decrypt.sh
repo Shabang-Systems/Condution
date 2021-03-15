@@ -1,5 +1,4 @@
 #!/bin/sh
-
-gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" --output src/backend/secrets.json secrets.json.gpg
+gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" --output src/backend/secrets.json .secrets/secrets.json.gpg
 
 
