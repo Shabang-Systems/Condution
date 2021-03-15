@@ -65,6 +65,8 @@ class Repeat extends Component {
                           return (this.state.advanced ? "task-repeat__advanced-weekly" : "task-repeat__default");
                       case "monthly":
                           return (this.state.advanced ? "task-repeat__advanced-monthly" : "task-repeat__default");
+                      case "quarterly":
+                          return "task-repeat__default";
                       case "yearly":
                           return "task-repeat__default";
                   }
@@ -103,6 +105,7 @@ class Repeat extends Component {
                                 <IonSelectOption className="repeat-select__option" value="daily">{this.props.gruntman.localizations.repeat_every_day}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="weekly">{this.props.gruntman.localizations.repeat_every_week}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="monthly">{this.props.gruntman.localizations.repeat_every_month}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="quarterly">{this.props.gruntman.localizations.repeat_every_quarter}</IonSelectOption>
                                 <IonSelectOption className="repeat-select__option" value="yearly">{this.props.gruntman.localizations.repeat_every_year}</IonSelectOption>
                             </IonSelect>
                             </div>

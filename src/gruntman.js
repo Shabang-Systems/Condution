@@ -285,6 +285,15 @@ class Gruntman {
                                 }
                                 engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
                             }
+                        } else if (rRule === "quarterly") {
+                            if (defer) {
+                                let defDistance = due-defer;
+                                due.setMonth(due.getMonth() + 3);
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due, defer:(new Date(due-defDistance))});
+                            } else {
+                                due.setMonth(due.getMonth() + 3);
+                                engine.db.modifyTask(options.uid, options.tid, {isComplete: false, due:due});
+                            }
                         } else if (rRule === "yearly") {
                             if (defer) {
                                 let defDistance = due-defer;
