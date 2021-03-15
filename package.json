@@ -1,6 +1,6 @@
 {
   "name": "Condution",
-  "version": "1.0.3",
+  "version": ${CONDUTION_VERSION},
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/android": "^2.4.2",
@@ -53,15 +53,15 @@
     "typescript": "3.8.3"
   },
   "scripts": {
-    "electron:run": "cd electron; electron .",
-    "electron:pack": "yarn ionic:dist; electron-builder --dir",
-    "electron:dist": "PUBLIC_URL=./ ionic build --prod --aot --optimizejs; cp build/index.html build/404.html; cp -r build/* electron/src/; cp src/about.html electron/src/; cd electron; electron-builder -mwl",
-    "ionic:dist": "ionic build --prod --aot --optimizejs && cp build/index.html build/404.html",
-    "ionic:runserver": "ionic serve -l --external",
-    "ionic:runios": "ionic capacitor run ios -l --external",
-    "ionic:rundroid": "ionic capacitor run android -l --external",
-    "capacitor:dist": "yarn ionic:dist; cap sync",
-    "docs:run": "cd docs; rerun 'make clean html' -i build"
+    "electron:run": "source config.sh && cd electron && electron .",
+    "electron:pack": "source config.sh && yarn ionic:dist && electron-builder --dir",
+    "electron:dist": "source config.sh && PUBLIC_URL=./ ionic build --prod --aot --optimizejs && cp build/index.html build/404.html && cp -r build/* electron/src/ && cp src/about.html electron/src/ && cd electron && electron-builder -mwl",
+    "ionic:dist": "source config.sh && ionic build --prod --aot --optimizejs && cp build/index.html build/404.html",
+    "ionic:runserver": "source config.sh && ionic serve -l --external",
+    "ionic:runios": "source config.sh && ionic capacitor run ios -l --external",
+    "ionic:rundroid": "source config.sh && ionic capacitor run android -l --external",
+    "capacitor:dist": "source config.sh && yarn ionic:dist && cap sync",
+    "docs:run": "source config.sh && cd docs && rerun 'make clean html' -i build"
   },
   "postinstall": {
     "postinstall": "electron-builder install-app-deps"
