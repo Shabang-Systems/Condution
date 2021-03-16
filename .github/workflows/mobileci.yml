@@ -73,8 +73,10 @@ jobs:
           run: ./decrypt.sh
         - name: Chmoding secret
           run: chmod 400 id_rsa
-        - name: Install Ionic
+        - name: Install Ionic Tools
           run: yarn global add @ionic/cli @capacitor/cli
+        - name: Install Capacitor
+          run: yarn add @capacitor/core
         - name: Setup fastlane
           run: bundle install
         - name: Make build directory
