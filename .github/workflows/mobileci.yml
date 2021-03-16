@@ -57,8 +57,14 @@ jobs:
         steps:
         - name: Check out app
           uses: actions/checkout@v2
+          with:
+              token: ${{ secrets.ALL_POWERFUL_TOKEN }}
         - name: Update submodules
           run: git submodule init; git submodule update
+        - name: Configure CI Git User
+          run: |
+            git config --global user.name 'shabangbackend'
+            git config --global user.email 'backend@shabang.cf'
         - name: Setup Node.js 12.x
           uses: actions/setup-node@v1
           with:
