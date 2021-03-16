@@ -58,6 +58,8 @@ jobs:
           run: yarn global add @ionic/cli
         - name: Install dependencies
           run: yarn
+        - name: Source config
+          run: ./config.sh
         - name: Decrypt secret
           run: ./decrypt.sh
           env:

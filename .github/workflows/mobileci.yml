@@ -40,6 +40,8 @@ jobs:
           run: yarn
         - name: Setup fastlane
           run: bundle install
+        - name: Source config
+          run: ./config.sh
         - name: Decrypt secrets
           run: ./decrypt.sh
         - name: Build app
