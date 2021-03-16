@@ -77,10 +77,13 @@ jobs:
           run: yarn global add @ionic/cli @capacitor/cli
         - name: Setup fastlane
           run: bundle install
+        - name: Make build directory
+          run: mkdir build
         - name: Download built web assets
           uses: actions/download-artifact@v2
           with:
               name: built_web_assets
+              path: build
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish iOS to Testflight
