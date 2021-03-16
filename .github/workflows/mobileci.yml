@@ -35,7 +35,7 @@ jobs:
           with:
             ruby-version: 2.7
         - name: Source config
-          run: ./config.sh
+          run: source config.sh
         - name: Decrypt secrets
           run: ./decrypt.sh
         - name: Chmoding secret
