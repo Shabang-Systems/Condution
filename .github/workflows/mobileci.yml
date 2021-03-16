@@ -44,6 +44,8 @@ jobs:
           run: ./config.sh
         - name: Decrypt secrets
           run: ./decrypt.sh
+        - name: Chmoding secret
+          run: chmod 400 id_rsa
         - name: Build app
           run: CI=false yarn ionic:dist
         - name: Sync mobile
