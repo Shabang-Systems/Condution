@@ -63,10 +63,6 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: 12.x
-        - name: Setup Ruby 2.7
-          uses: ruby/setup-ruby@v1
-          with:
-            ruby-version: 2.7
         - name: Source config
           run: source config.sh
         - name: Decrypt secrets
@@ -78,7 +74,7 @@ jobs:
         - name: Install Capacitor
           run: yarn add @capacitor/core
         - name: Setup fastlane
-          run: bundle install
+          run: brew install fastlane
         - name: Make build directory
           run: mkdir build
         - name: Download built web assets
@@ -89,7 +85,7 @@ jobs:
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish iOS to Testflight
-          run: bundle exec fastlane build
+          run: fastlane build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
