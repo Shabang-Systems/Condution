@@ -4,7 +4,7 @@
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/android": "^2.4.2",
-    "@capacitor/core": "2.4.1",
+    "@capacitor/core": "^2.4.7",
     "@capacitor/ios": "^2.4.1",
     "@ionic/lab": "^3.2.9",
     "@ionic/react": "^5.0.7",

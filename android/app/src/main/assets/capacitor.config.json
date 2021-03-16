@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "cf.shabang.condution",
   "appName": "Condution",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
