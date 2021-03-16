@@ -125,4 +125,4 @@ We could not be here without this community, your insightful feedback, and the s
 
 ***
 
-Designed with :heart: and :green_salad: by #!/Shabang
+Designed with :heart: and :green_salad: by #!/Shabang.
