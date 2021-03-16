@@ -56,7 +56,7 @@ jobs:
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
               git pull github ${GITHUB_REF} --ff-only
-              git commit -a -m "[CI] Bump iOS build code"
+              git commit -a -m "[ci skip] [CI] Bump iOS build code"
               git push github HEAD:${GITHUB_REF}
 
 
