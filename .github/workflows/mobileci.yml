@@ -46,5 +46,13 @@ jobs:
           run: CI=false yarn ionic:dist
         - name: Sync mobile
           run: CI=false npx cap sync
+        - name: Build and publish iOS to Testflight
+          run: bundle exec fastlane beta
+        - name: Commit bumped build code
+          run: |
+              git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+              git pull github ${GITHUB_REF} --ff-only
+              git commit -a -m "[CI] Bump iOS build code"
+              git push github HEAD:${GITHUB_REF}
 
 
