@@ -18,6 +18,8 @@ jobs:
             FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
             FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
             FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+            FASTLANE_KEYCHAIN_NAME: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
+            FASTLANE_KEYCHAIN_PASSWORD: ${{ secrets.FASTLANE_KEYCHAIN_PASSWORD }}
             MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
             SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
 
@@ -51,7 +53,7 @@ jobs:
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish iOS to Testflight
-          run: bundle exec fastlane beta
+          run: bundle exec fastlane build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
