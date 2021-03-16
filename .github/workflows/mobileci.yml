@@ -1,0 +1,50 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Mobile CI
+on:
+  push:
+    branches:
+      - "*v[0-9].[0-9].[0-9]"
+      - "main"
+
+jobs:
+    - build_and_deploy_ios:
+        environment: ios-access
+        runs-on: macOS-latest
+              
+        env:
+            FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+            FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+            FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+            FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+            MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+            SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+
+        steps:
+        - name: Check out app
+          uses: actions/checkout@v2
+        - name: Update submodules
+          run: git submodule init; git submodule update
+        - name: Setup Node.js 12.x
+          uses: actions/setup-node@v1
+          with:
+            node-version: 12.x
+        - name: Setup Ruby 2.7
+          uses: actions/setup-ruby@v1
+          with:
+            ruby-version: '2.7'
+        - name: Install Ionic
+          run: yarn global add @ionic/cli
+        - name: Install dependencies
+          run: yarn
+        - name: Setup fastlane
+          run: bundle install
+        - name: Decrypt secrets
+          run: ./decrypt.sh
+        - name: Build app
+          run: CI=false yarn ionic:dist
+        - name: Sync mobile
+          run: CI=false npx cap sync
+
+

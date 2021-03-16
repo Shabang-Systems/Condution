@@ -20,7 +20,7 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to the App Store"
   lane :beta do
-    match(type: "appstore", readonly: is_ci)
+    match(type: "appstore", readonly: is_ci, git_private_key: 'id_rsa')
     increment_version_number( version_number: ENV['CONDUTION_VERSION'])
     increment_build_number(xcodeproj: "ios/App/App.xcodeproj")
     build_app(workspace: "ios/App/App.xcworkspace", scheme: "App")
