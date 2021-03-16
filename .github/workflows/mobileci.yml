@@ -9,9 +9,40 @@ on:
       - "main"
 
 jobs:
+    build_web_assets:
+        runs-on: ubuntu-latest
+        env:
+            SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+
+        steps:
+        - name: Check out app
+          uses: actions/checkout@v2
+        - name: Update submodules
+          run: git submodule init; git submodule update
+        - name: Setup Node.js 12.x
+          uses: actions/setup-node@v1
+          with:
+            node-version: 12.x
+        - name: Source config
+          run: source config.sh
+        - name: Decrypt secrets
+          run: ./decrypt.sh
+        - name: Install Ionic
+          run: yarn global add @ionic/cli
+        - name: Install dependencies
+          run: yarn
+        - name: Build app
+          run: CI=false yarn ionic:dist
+        - name: Upload built web assets
+          uses: actions/upload-artifact@v2
+          with:
+            name: built_web_assets
+            path: build
+
     build_and_deploy_ios:
         environment: ios-access
         runs-on: macOS-latest
+        needs: build_web_assets
               
         env:
             FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
@@ -28,10 +59,6 @@ jobs:
           uses: actions/checkout@v2
         - name: Update submodules
           run: git submodule init; git submodule update
-        - name: Setup Node.js 12.x
-          uses: actions/setup-node@v1
-          with:
-            node-version: 12.x
         - name: Setup Ruby 2.7
           uses: ruby/setup-ruby@v1
           with:
@@ -42,14 +69,12 @@ jobs:
           run: ./decrypt.sh
         - name: Chmoding secret
           run: chmod 400 id_rsa
-        - name: Install Ionic
-          run: yarn global add @ionic/cli
-        - name: Install dependencies
-          run: yarn
         - name: Setup fastlane
           run: bundle install
-        - name: Build app
-          run: CI=false yarn ionic:dist
+        - name: Download built web assets
+          uses: actions/download-artifact@v2
+          with:
+              name: built_web_assets
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish iOS to Testflight
