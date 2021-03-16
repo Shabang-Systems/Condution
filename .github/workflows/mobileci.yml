@@ -34,18 +34,18 @@ jobs:
           uses: ruby/setup-ruby@v1
           with:
             ruby-version: 2.7
-        - name: Install Ionic
-          run: yarn global add @ionic/cli
-        - name: Install dependencies
-          run: yarn
-        - name: Setup fastlane
-          run: bundle install
         - name: Source config
           run: ./config.sh
         - name: Decrypt secrets
           run: ./decrypt.sh
         - name: Chmoding secret
           run: chmod 400 id_rsa
+        - name: Install Ionic
+          run: yarn global add @ionic/cli
+        - name: Install dependencies
+          run: yarn
+        - name: Setup fastlane
+          run: bundle install
         - name: Build app
           run: CI=false yarn ionic:dist
         - name: Sync mobile
