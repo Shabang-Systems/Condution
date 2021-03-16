@@ -9,7 +9,7 @@ on:
       - "main"
 
 jobs:
-    - build_and_deploy_ios:
+    build_and_deploy_ios:
         environment: ios-access
         runs-on: macOS-latest
               
