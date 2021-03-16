@@ -4,7 +4,7 @@ storage_mode("git")
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["cf.shabang.condution-mobile"])
+app_identifier(["cf.shabang.condution-mobile", "cf.shabang.condution"])
 username("backend@shabang.cf") # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
