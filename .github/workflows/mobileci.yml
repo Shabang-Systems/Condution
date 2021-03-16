@@ -69,6 +69,8 @@ jobs:
           run: ./decrypt.sh
         - name: Chmoding secret
           run: chmod 400 id_rsa
+        - name: Install Ionic
+          run: yarn global add @ionic/cli
         - name: Setup fastlane
           run: bundle install
         - name: Download built web assets
