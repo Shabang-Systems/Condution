@@ -24,7 +24,7 @@ platform :ios do
   lane :beta do
     package = load_json(json_path: "package.json")
     match(type: "appstore", readonly: is_ci, git_private_key: 'id_rsa')
-    increment_version_number( version_number: package["version"] xcodeproj: "ios/App/App.xcodeproj")
+    increment_version_number( version_number: package["version"], xcodeproj: "ios/App/App.xcodeproj")
     increment_build_number(xcodeproj: "ios/App/App.xcodeproj")
     build_app(workspace: "ios/App/App.xcworkspace", scheme: "App")
     upload_to_testflight
@@ -33,7 +33,7 @@ platform :ios do
   lane :release do
     package = load_json(json_path: "package.json")
     match(type: "appstore", readonly: is_ci)
-    increment_version_number( version_number: package["version"] xcodeproj: "ios/App/App.xcodeproj")
+    increment_version_number( version_number: package["version"], xcodeproj: "ios/App/App.xcodeproj")
     increment_build_number(xcodeproj: "ios/App/App.xcodeproj")
     build_app(workspace: "ios/App/App.xcworkspace", scheme: "App")
     upload_to_app_store
