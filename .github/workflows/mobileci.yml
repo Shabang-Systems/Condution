@@ -31,9 +31,9 @@ jobs:
           with:
             node-version: 12.x
         - name: Setup Ruby 2.7
-          uses: actions/setup-ruby@v1
+          uses: ruby/setup-ruby@v1
           with:
-            ruby-version: '2.7'
+            ruby-version: 2.7
         - name: Install Ionic
           run: yarn global add @ionic/cli
         - name: Install dependencies

@@ -31,7 +31,7 @@ jobs:
     - name: Decrypt secret
       run: ./decrypt.sh
       env:
-        SECRETS_PASSPHRASE: ${{ secrets.SECRETS_PASSPHRASE }}
+        SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
     - name: Build app
       run: CI=false yarn ionic:dist
 
