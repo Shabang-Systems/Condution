@@ -15,7 +15,6 @@
 #
 # TODO compliance info
 #
-package = load_json(json_path: "package.json")
 
 
 default_platform(:ios)
@@ -23,6 +22,7 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to the App Store"
   lane :beta do
+    package = load_json(json_path: "package.json")
     match(type: "appstore", readonly: is_ci, git_private_key: 'id_rsa')
     increment_version_number( version_number: package["version"])
     increment_build_number(xcodeproj: "ios/App/App.xcodeproj")
@@ -31,6 +31,7 @@ platform :ios do
   end
   desc "Push a new release build to the App Store"
   lane :release do
+    package = load_json(json_path: "package.json")
     match(type: "appstore", readonly: is_ci)
     increment_version_number( version_number: package["version"])
     increment_build_number(xcodeproj: "ios/App/App.xcodeproj")
