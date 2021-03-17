@@ -32,7 +32,7 @@ jobs:
         - name: Install dependencies
           run: yarn
         - name: Build app
-          run: CI=false PUBLIC_URL=./ ionic build --prod --aot --optimizejs && cp build/index.html build/404.html
+          run: CI=false PUBLIC_URL=./ npx ionic build --prod --aot --optimizejs && cp build/index.html build/404.html
         - name: Upload built web assets
           uses: actions/upload-artifact@v2
           with:
