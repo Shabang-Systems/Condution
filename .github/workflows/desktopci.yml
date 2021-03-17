@@ -74,9 +74,7 @@ jobs:
         - name: Setup fastlane
           run: brew install fastlane
         - name: Install certificates
-          run: |
-              fastlane run create_keychain name:"${FASTLANE_KEYCHAIN_NAME}" password:"${FASTLANE_KEYCHAIN_PASSWORD}" default_keychain:true unlock:true timeout:3600 lock_when_sleeps:false
-              fastlane match developer_id keychain_name:"${FASTLANE_KEYCHAIN_NAME}" keychain_password:"${FASTLANE_KEYCHAIN_PASSWORD}" git_private_key:"id_rsa" --readonly
+          run: fastlane synccert
         - name: Install Electron dependencies
           run: |
               cd electron
