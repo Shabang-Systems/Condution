@@ -74,7 +74,7 @@ jobs:
         - name: Setup fastlane
           run: brew install fastlane
         - name: Install certificates
-          run: fastlane synccert
+          run: fastlane syncdevid
         - name: Install Electron dependencies
           run: |
               cd electron

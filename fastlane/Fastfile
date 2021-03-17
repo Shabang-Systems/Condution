@@ -20,11 +20,11 @@
 default_platform(:ios)
 
 desc "Sync Developer ID Certificates"
-lane :synccert do
+lane :syncdevid do
     fastkeychain_name = ENV["FASTLANE_KEYCHAIN_NAME"]
     fastkeychain_password = ENV["FASTLANE_KEYCHAIN_PASSWORD"]
     create_keychain(name: fastkeychain_name, password: fastkeychain_password, default_keychain: true, unlock: true, timeout: 3600, lock_when_sleeps: false)
-    match(type: "developer_id", readonly: is_ci, git_private_key: 'id_rsa', keychain_name: fastkeychain_name, keychain_password: fastkeychain_password)
+    match(type: "developer_id", readonly: is_ci, git_private_key: 'id_rsa', keychain_name: fastkeychain_name, keychain_password: fastkeychain_password, skip_provisioning_profiles: true)
 end
 
 
