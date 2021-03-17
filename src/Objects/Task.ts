@@ -8,6 +8,7 @@ export default class Task {
     private static cache:Map<string, Task> = new Map();
 
     private _id:string;
+    private _weight:number;
     private page:Page;
     private data:object;
     private context:Context;
@@ -50,6 +51,7 @@ export default class Task {
         tsk.data = await page.get();
         tsk._ready = true;
         tsk.page = page;
+        await tsk.flushweight();
 
         Task.cache.set(identifier, tsk);
         return tsk;
@@ -65,7 +67,8 @@ export default class Task {
         tsk.page = page;
         Task.cache.set(identifier, tsk);
 
-        page.get().then((data:object) => {
+        page.get().then(async (data:object) => {
+            await tsk.flushweight();
             tsk.data = data;
             tsk._ready = true;
         });
@@ -113,6 +116,7 @@ export default class Task {
             project.associate(tsk);
         }
 
+        await tsk.flushweight();
         Task.cache.set(newTask.identifier, tsk);
         return tsk;
     }
@@ -238,6 +242,18 @@ export default class Task {
         this.readiness_warn();
         if (this._ready)
             return this.data["tags"].map((tagID:string) => Tag.fetch(this.context, tagID));
+    }
+
+     /**
+     * The weight of the task
+     * @property
+     *
+     */
+
+    get weight() {
+        this.readiness_warn();
+        if (this._ready)
+            return this._weight;
     }
 
     /**
@@ -495,15 +511,15 @@ export default class Task {
     /**
      * calculate the weight of the task
      *
-     * @returns{Promise<number>}
+     * @returns{Promise<void>}
      *
      */
 
-    async calculateWeight() : Promise<number> {
+    private flushweight = async () : Promise<void> => {
         let tags: Tag[] = await Promise.all(this.async_tags);
         let weight = 1;
         tags.forEach((tag: Tag) => weight *= tag.weight);
-        return weight;
+        this._weight = weight;
     }
 
     private sync = () => {

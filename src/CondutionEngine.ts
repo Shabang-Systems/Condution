@@ -35,19 +35,24 @@ async function test(): Promise<void> {
        *
     */
 
-    let tg:Tag = await Tag.create(cm, "mmm");
-    tg.weight = 3;
-    console.log(tg.id);
+//    let tg:Tag = await Tag.create(cm, "mmm");
+    //tg.weight = 3;
+    //console.log(tg.id);
 
-    let task:Task = await Task.create(cm, "Run task test");
-    const actualtask:Task = await Task.fetch(cm, task.id);
-    actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];
-    let weight:number = await actualtask.calculateWeight();
-    let wtf = await actualtask.async_tags;
-    console.log(wtf);
-    console.log(weight);
-    actualtask.tags = actualtask.tags.concat([tg]);
-    console.log("Done! Exit me now.");
+    let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
+    console.log(task.weight);
+    //console.log(await task.calculateWeight())
+
+    //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+
+    //const actualtask:Task = await Task.fetch(cm, task.id);
+    //actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];
+    //let weight:number = await actualtask.calculateWeight();
+    //let wtf = await actualtask.async_tags;
+    //console.log(wtf);
+    //console.log(weight);
+    //actualtask.tags = actualtask.tags.concat([tg]);
+    //console.log("Done! Exit me now.");
 }
 
 test();
