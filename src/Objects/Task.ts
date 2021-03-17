@@ -276,7 +276,16 @@ export default class Task {
      */
 
     set tags(newTags:Tag[]) {
-        this.data["tags"] = newTags.map((tag:Tag) => tag.id);
+        let newWeight = 1;
+        this.data["tags"] = newTags.map((tag:Tag) => {
+            
+            if (!tag.ready)
+                console.warn("CondutionEngine: you provided a tag ${tag.id} that was fetched using lazy_fetch but not yet initialized. Treating weight as 1. This task's tag weight will therefore be wrong for a little. Womp Womp.");
+            else
+                newWeight*=tag.weight;
+            return tag.id
+        });
+        this._weight = newWeight;
         this.sync();
     }
 
@@ -527,6 +536,7 @@ export default class Task {
     }
 
     private update = (newData:object) => {
+        this.flushweight();
         this.data = newData;
     }
 
