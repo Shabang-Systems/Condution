@@ -39,7 +39,7 @@ jobs:
             name: built_electron_web_assets
             path: build
 
-    build_and_deploy_ios:
+    build_and_deploy_electron:
         environment: ios-access
         runs-on: macOS-latest
         needs: build_electron_web_assets
@@ -75,15 +75,19 @@ jobs:
           run: |
               cd electron
               yarn
-        - name: Make build directory
-          run: mkdir build
+        - name: Make build and target directories
+          run: |
+              mkdir build
+              mkdir electron/src
         - name: Download built electron web assets
           uses: actions/download-artifact@v2
           with:
               name: built_electron_web_assets
               path: build
         - name: Sync electron
-          run: cp -r build/* electron/src/ && cp src/about.html electron/src/
+          run: |
+              cp -r build/* electron/src/
+              cp src/about.html electron/src/
         - name: Build and notarize electron app
           run: |
               cd electron
