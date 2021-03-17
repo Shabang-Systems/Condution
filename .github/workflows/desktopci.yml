@@ -45,6 +45,8 @@ jobs:
         needs: build_electron_web_assets
               
         env:
+            FASTLANE_KEYCHAIN_NAME: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
+            FASTLANE_KEYCHAIN_PASSWORD: ${{ secrets.FASTLANE_KEYCHAIN_PASSWORD }}
             MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
             SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
 
@@ -71,6 +73,10 @@ jobs:
           run: chmod 400 id_rsa
         - name: Setup fastlane
           run: brew install fastlane
+        - name: Install certificates
+          run: |
+              fastlane run create_keychain name:"${FASTLANE_KEYCHAIN_NAME}" password:"${FASTLANE_KEYCHAIN_PASSWORD}" default_keychain:true unlock:true timeout:3600 lock_when_sleeps:false
+              fastlane match keychain_name:"${FASTLANE_KEYCHAIN_NAME}" keychain_password:"${FASTLANE_KEYCHAIN_PASSWORD}"  --readonly
         - name: Install Electron dependencies
           run: |
               cd electron
@@ -92,6 +98,8 @@ jobs:
           run: |
               cd electron
               npx electron-builder -mwl
+          env: 
+              CSC_KEYCHAIN: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
         - name: Upload built binaries
           uses: actions/upload-artifact@v2
           with:
