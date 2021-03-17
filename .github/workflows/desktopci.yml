@@ -49,7 +49,7 @@ jobs:
             FASTLANE_KEYCHAIN_PASSWORD: ${{ secrets.FASTLANE_KEYCHAIN_PASSWORD }}
             MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
             SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
-            GH_TOKEN: ${{ ALL_POWERFUL_TOKEN }}
+            GH_TOKEN: ${{ secrets.ALL_POWERFUL_TOKEN }}
 
         steps:
         - name: Check out app
