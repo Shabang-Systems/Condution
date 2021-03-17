@@ -119,7 +119,7 @@ We love contributions! You are welcome to contribute, just keep in mind that we 
 
 ## Thank you!
 Thank you for supporting us on this project. We want to give a special shout out to the parteons that have supported us. 
-Thanks to Greirson, cyberic, and Reidel Law Firm for their support
+Thanks to Greirson, cyberic, and Reidel Law Firm for their support!
 
 We could not be here without this community, your insightful feedback, and the support of our generous [Patrons](https://www.patreon.com/condution). Thank you for using our application, sticking with us, and supporting us along the way.
 
