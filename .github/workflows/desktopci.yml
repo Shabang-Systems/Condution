@@ -7,7 +7,6 @@ on:
     branches:
       - "*v[0-9].[0-9].[0-9]"
       - "main"
-  workflow_dispatch
 
 jobs:
     build_electron_web_assets:
