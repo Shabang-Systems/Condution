@@ -8,6 +8,7 @@ export default class Project {
     private _id:string;
     private page:Page;
     private data:object;
+    private _weight:number;
     private context:Context;
     private _ready:boolean;
     private _readiness:Promise<void>;
@@ -49,6 +50,7 @@ export default class Project {
         pj.page = page;
         pj._ready = true;
         pj._readiness = new Promise((res, _) => res());
+        await pj.flushweight();
 
         Project.cache.set(identifier, pj);
         return pj;
@@ -76,9 +78,10 @@ export default class Project {
         pj.page = page;
         Project.cache.set(identifier, pj);
         pj._readiness = new Promise((res, _) => {
-            page.get().then((data:object)=>{
+            page.get().then(async (data:object)=>{
                 pj.data = data;
                 pj._ready = true;
+                await pj.flushweight();
                 res();
             });
         });
@@ -92,7 +95,7 @@ export default class Project {
      *
      * @param{Context} context    the context that you are creating from
      * @param{string?} name    the new project's name
-     * @param{parent?} parent    the new project's weight
+     * @param{parent?} parent    the new project's parent
      * @returns{Promise<Project>} the desired project
      *
      */
@@ -118,6 +121,7 @@ export default class Project {
             parent.associate(np);
         }
 
+        await np.flushweight();
         Project.cache.set(newProject.identifier, np);
         return np;
     }
@@ -289,43 +293,48 @@ export default class Project {
 
     /**
      * Associate a task/project with the project's index
+     * @async
      *
      * @param{Project|Task} item    the item you want to associate
      * @param{number?} order    force a specific order
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    associate(item:Project|Task, order?:number): void {
+    async associate(item:Project|Task, order?:number): Promise<void> {
         if (!order)
             order = Object.keys(this.children).length;
         item.order = order;
         this.data["children"][item.id] = (item instanceof Task) ? "task" : "project";
+        await this.flushweight();
         this.sync();
     }
 
     /**
      * Dissociate a task/project with the project's index
+     * @async
      *
      * @param{Project|Task} item    the item you want to dissociate
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    dissociate(item:Project|Task): void  {
+    async dissociate(item:Project|Task): Promise<void> {
         delete this.data["children"][item.id];
+        await this.flushweight();
         this.sync();
     }
 
     /**
      * Associate a whole bunch of tasks/projects with the project's index
+     * @async
      *
      * @param{(Project|Task)[]} items    the items you want to associate
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    batch_associate(items:(Project|Task)[]): void {
+    async batch_associate(items:(Project|Task)[]): Promise<void> {
         let order:number = Object.keys(this.children).length
 
         for (let i of items) {
@@ -334,22 +343,25 @@ export default class Project {
             this.data["children"][i.id] = (i instanceof Task) ? "task" : "project";
         }
 
+        await this.flushweight();
         this.sync();
     }
 
     /**
      * Dissociate a whole bunch of tasks/projects with the project's index
+     * @async
      *
      * @param{(Project|Task)[]} items    the items you want to dissociate
      * @returns{void}
      *
      */
 
-    batch_dissociate(items:(Project|Task)[]): void {
+    async batch_dissociate(items:(Project|Task)[]): Promise<void> {
         for (let i of items) {
             delete this.children[i.id];
         }
 
+        await this.flushweight();
         this.sync();
     }
 
@@ -413,6 +425,31 @@ export default class Project {
         return this._readiness;
     }
 
+
+    /**
+     * get weight of the project
+     * @param
+     *
+     */
+
+    get weight() : number {
+        return this._weight;
+    }
+
+    /**
+     * DFS thought he project and calculate weight
+     * @async
+     * 
+     * @returns{Promise<void>}
+     *
+     */
+
+    private flushweight = async () : Promise<void> => {
+        let weights:number[] = await Promise.all(this.async_children.map(async (i):Promise<number> => (await i).weight ));
+        this._weight = 0;
+        weights.forEach((i:number) => this._weight+=i);
+    }
+
     private readiness_warn = () => {
         if (!this._ready)
             console.warn("CondutionEngine: you tried to access an object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
@@ -423,6 +460,7 @@ export default class Project {
     }
 
     private update = (newData:object) => {
+        this.flushweight();
         this.data = newData;
     }
 

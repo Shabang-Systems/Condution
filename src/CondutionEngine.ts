@@ -40,12 +40,13 @@ async function test(): Promise<void> {
     //tg.weight = 3;
     //console.log(tg.id);
 
-    let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
+    //let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
     //task.tags = [tg1];
-    console.log(task.weight);
+    //console.log(task.weight);
     //console.log(await task.calculateWeight())
 
-    //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    console.log(proj.weight);
 
     //const actualtask:Task = await Task.fetch(cm, task.id);
     //actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];

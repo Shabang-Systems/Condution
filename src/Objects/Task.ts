@@ -58,6 +58,7 @@ export default class Task {
     }
 
     static lazy_fetch(context:Context, identifier:string):Task {
+        console.log(identifier);
         let cachedTask:Task = Task.cache.get(identifier);
         if (cachedTask)
             return cachedTask;
@@ -68,9 +69,9 @@ export default class Task {
         Task.cache.set(identifier, tsk);
 
         page.get().then(async (data:object) => {
-            await tsk.flushweight();
             tsk.data = data;
             tsk._ready = true;
+            await tsk.flushweight();
         });
 
         return tsk;
