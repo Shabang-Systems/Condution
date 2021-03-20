@@ -40,13 +40,23 @@ async function test(): Promise<void> {
     //tg.weight = 3;
     //console.log(tg.id);
 
-    //let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
+    let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
     //task.tags = [tg1];
     //console.log(task.weight);
     //console.log(await task.calculateWeight())
 
+    //task.inboxify();
+    //console.log(task.name);
+
     let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    console.log(proj.weight);
+    let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    console.log(proj1.weight);
+    //console.log(proj.name);
+    //await task.inboxify();
+    //await task.move(proj);
+    await proj.move(proj1);
+    //await proj.bringToTop();
+    console.log(proj1.weight);
 
     //const actualtask:Task = await Task.fetch(cm, task.id);
     //actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];
@@ -60,4 +70,4 @@ async function test(): Promise<void> {
 
 test();
 
-export { ReferenceManager };
+export { ReferenceManager, FirebaseProvider, Task, Workspace, Tag, Project, Context, RepeatRule, RepeatRuleType, Collection, Page };

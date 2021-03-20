@@ -236,27 +236,38 @@ export default class Project {
             return this.data["parent"] ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
     }
 
-    set parent(parentProject:Project) {
-        if (parentProject) {
-            this.data["parent"] = parentProject.id;
+     /**
+     * Move the project to...
+     *
+     * @param{Project?} to    to a project or, if null, to inbox
+     * @returns{Promise<void>}
+     *
+     */
+
+    async move(to?:Project): Promise<void> {
+        if (this.data["parent"] !== "")
+            await (await Project.fetch(this.context, this.data["parent"])).dissociate(this);
+        if (to) {
+            await to.readinessPromise;
+            await to.associate(this);
+            this.data["parent"] = to.id;
             this.data["top_level"] = false;
         } else {
             this.data["parent"] = "";
             this.data["top_level"] = true;
         }
-        // TODO TODO TODO ASSOCIATIONS ARE NOT WORKING!!
         this.sync();
     }
 
     /**
      * Bring the project to top level
      *
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    bringToTop(): void {
-        this.parent = null;
+    async bringToTop(): Promise<void> {
+        await this.move();
     }
 
     /**
@@ -437,15 +448,23 @@ export default class Project {
     }
 
     /**
-     * DFS thought he project and calculate weight
+     * DFS though the project and calculate weight
      * @async
+     *
+     * Generally, you don't have a need to call this
+     * and you should simply let this happen automagically
+     * as tasks change and as other stuff happen like fetch
+     * or create. However, you could force a weight flush
+     * for your entertainment if you really wanted to.
      * 
      * @returns{Promise<void>}
      *
      */
 
-    private flushweight = async () : Promise<void> => {
-        let weights:number[] = await Promise.all(this.async_children.map(async (i):Promise<number> => (await i).weight ));
+    flushweight = async () : Promise<void> => {
+        let weights:number[] = await Promise.all(this.async_children.map(async (i):Promise<number> => {
+            return (await i).weight ;
+        }));
         this._weight = 0;
         weights.forEach((i:number) => this._weight+=i);
     }

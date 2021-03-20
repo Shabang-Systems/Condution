@@ -58,7 +58,6 @@ export default class Task {
     }
 
     static lazy_fetch(context:Context, identifier:string):Task {
-        console.log(identifier);
         let cachedTask:Task = Task.cache.get(identifier);
         if (cachedTask)
             return cachedTask;
@@ -186,7 +185,7 @@ export default class Task {
 
     get project() {
         this.readiness_warn();
-        if (this._ready)
+        if (this._ready && this.data["project"] !== '')
             return Project.lazy_fetch(this.context, this.data["project"]);
     }
 
@@ -212,10 +211,10 @@ export default class Task {
 
     async move(to?:Project): Promise<void> {
         if (this.data["project"] !== "")
-            (await Project.fetch(this.context, this.data["project"])).dissociate(this);
+            await (await Project.fetch(this.context, this.data["project"])).dissociate(this);
         if (to) {
             await to.readinessPromise;
-            to.associate(this);
+            await to.associate(this);
             this.data["project"] = to.id;
         } else this.data["project"] = "";
         this.sync();
@@ -482,16 +481,20 @@ export default class Task {
 
     /**
      * Complete the task!!
+     * @async
      *
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    complete() : void {
+    async complete() : Promise<void> {
         if (this.repeatRule.isRepeating && this.due)
             [this.due, this.defer] = this.repeatRule.execute(this.due, this.defer);
         else
             this.data["isComplete"] = true;
+
+        if (this.project)
+            await (await this.async_project).flushweight();
         this.sync();
     }
 
@@ -508,13 +511,16 @@ export default class Task {
 
     /**
      * uncomplete the task!!
+     * @async
      *
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    uncomplete() : void {
+    async uncomplete() : Promise<void> {
         this.data["isComplete"] = false;
+        if (this.project)
+            await (await this.async_project).flushweight();
         this.sync();
     }
 
