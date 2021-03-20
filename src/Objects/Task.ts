@@ -51,9 +51,12 @@ export default class Task {
         tsk.data = await page.get();
         tsk._ready = true;
         tsk.page = page;
-        await tsk.flushweight();
 
         Task.cache.set(identifier, tsk);
+
+        await tsk.flushweight();
+
+
         return tsk;
     }
 
@@ -116,8 +119,10 @@ export default class Task {
             project.associate(tsk);
         }
 
-        await tsk.flushweight();
         Task.cache.set(newTask.identifier, tsk);
+
+        await tsk.flushweight();
+
         return tsk;
     }
 
@@ -543,7 +548,8 @@ export default class Task {
     }
 
     private update = (newData:object) => {
-        this.flushweight();
+        if (this._ready)
+            this.flushweight();
         this.data = newData;
     }
 

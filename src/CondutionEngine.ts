@@ -36,11 +36,11 @@ async function test(): Promise<void> {
     */
 
     //let tg0:Tag = await Tag.create(cm, "hewo12", 12);
-    let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
+    //let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
     //tg.weight = 3;
     //console.log(tg.id);
 
-    let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
+    //let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
     //task.tags = [tg1];
     //console.log(task.weight);
     //console.log(await task.calculateWeight())
@@ -49,14 +49,17 @@ async function test(): Promise<void> {
     //console.log(task.name);
 
     let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
-    console.log(proj1.weight);
+    //let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+
+    console.log(proj.name);
+    //console.log(proj.available);
+    //console.log(proj1.weight);
     //console.log(proj.name);
     //await task.inboxify();
     //await task.move(proj);
-    await proj.move(proj1);
+    //await proj.move(proj1);
     //await proj.bringToTop();
-    console.log(proj1.weight);
+    //console.log(proj1.weight);
 
     //const actualtask:Task = await Task.fetch(cm, task.id);
     //actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];

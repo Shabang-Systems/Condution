@@ -11,6 +11,7 @@ export default class Project {
     private _weight:number;
     private context:Context;
     private _ready:boolean;
+    private _available:boolean;
     private _readiness:Promise<void>;
 
     protected constructor(identifier:string, context:Context) {
@@ -50,9 +51,12 @@ export default class Project {
         pj.page = page;
         pj._ready = true;
         pj._readiness = new Promise((res, _) => res());
-        await pj.flushweight();
 
         Project.cache.set(identifier, pj);
+
+        await pj.flushavailablility();
+        await pj.flushweight();
+
         return pj;
     }
 
@@ -82,6 +86,7 @@ export default class Project {
                 pj.data = data;
                 pj._ready = true;
                 await pj.flushweight();
+                await pj.flushavailablility();
                 res();
             });
         });
@@ -121,8 +126,12 @@ export default class Project {
             parent.associate(np);
         }
 
-        await np.flushweight();
         Project.cache.set(newProject.identifier, np);
+
+        await np.flushweight();
+        await np.flushavailablility();
+
+
         return np;
     }
 
@@ -318,6 +327,7 @@ export default class Project {
         item.order = order;
         this.data["children"][item.id] = (item instanceof Task) ? "task" : "project";
         await this.flushweight();
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -333,6 +343,7 @@ export default class Project {
     async dissociate(item:Project|Task): Promise<void> {
         delete this.data["children"][item.id];
         await this.flushweight();
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -355,6 +366,7 @@ export default class Project {
         }
 
         await this.flushweight();
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -373,6 +385,7 @@ export default class Project {
         }
 
         await this.flushweight();
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -447,6 +460,19 @@ export default class Project {
         return this._weight;
     }
 
+
+    /**
+     * get availablitiy of the project
+     * @param
+     *
+     */
+
+    get available() : boolean {
+        return this._available;
+    }
+
+
+
     /**
      * DFS though the project and calculate weight
      * @async
@@ -463,10 +489,34 @@ export default class Project {
 
     flushweight = async () : Promise<void> => {
         let weights:number[] = await Promise.all(this.async_children.map(async (i):Promise<number> => {
-            return (await i).weight ;
+            return (await i).weight;
         }));
         this._weight = 0;
         weights.forEach((i:number) => this._weight+=i);
+    }
+
+    /**
+     * Lift through tree to get availibility
+     * @async
+     *
+     * Generally, you don't have a need to call this
+     * and you should simply let this happen automagically
+     * as tasks change and as other stuff happen like fetch
+     * or create. However, you could force a weight flush
+     * for your entertainment if you really wanted to.
+     * 
+     * @returns{Promise<void>}
+     *
+     */
+
+    flushavailablility = async () : Promise<void> => {
+        let parent_proj:Project = await this.async_parent;
+        if (parent_proj) {
+            if (parent_proj.isSequential)
+                this._available = (parent_proj.available && this.order == 1);
+            else
+                this._available = parent_proj.available;
+        } else this._available = true;
     }
 
     private readiness_warn = () => {
@@ -479,7 +529,10 @@ export default class Project {
     }
 
     private update = (newData:object) => {
-        this.flushweight();
+        if (this._ready) {
+            this.flushweight();
+            this.flushavailablility();
+        }
         this.data = newData;
     }
 
