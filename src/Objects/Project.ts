@@ -211,13 +211,30 @@ export default class Project {
     }
 
     /**
-     * The completeness of the project
-     * @property
+     * Uncomplete the project
+     * @async
+     *
+     * @returns{Promise<void>}
      *
      */
 
-    set isComplete(newCompleteness:boolean) {
-        this.data["isComplete"] = newCompleteness;
+    async uncomplete() : Promise<void> {
+        this.data["isComplete"] = false;
+        await this.flushavailablility();
+        this.sync();
+    }
+
+    /**
+     * Complete the project
+     * @async
+     *
+     * @returns{Promise<void>}
+     *
+     */
+
+    async complete() : Promise<void> {
+        this.data["isComplete"] = true;
+        await this.flushavailablility();
         this.sync();
     }
     
@@ -233,8 +250,18 @@ export default class Project {
             return this.data["order"];
     }
 
-    set order(newOrder:number) {
+    /**
+     * Update the order of the task
+     * @async
+     *
+     * @param{number} newOrder    the new desired order
+     * @returns{Promise<void>}
+     *
+     */
+
+    async reorder(newOrder:number) : Promise<void> {
         this.data["order"] = newOrder;
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -341,7 +368,7 @@ export default class Project {
     async associate(item:Project|Task, order?:number): Promise<void> {
         if (!order)
             order = Object.keys(this.children).length;
-        item.order = order;
+        await item.reorder(order);
         this.data["children"][item.id] = (item instanceof Task) ? "task" : "project";
         await this.flushweight();
         await this.flushavailablility();
@@ -377,7 +404,7 @@ export default class Project {
         let order:number = Object.keys(this.children).length
 
         for (let i of items) {
-            i.order = order;
+            await i.reorder(order);
             order++;
             this.data["children"][i.id] = (i instanceof Task) ? "task" : "project";
         }

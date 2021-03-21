@@ -51,6 +51,8 @@ async function test(): Promise<void> {
     let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
     let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
 
+    proj1.uncomplete();
+
 
     //console.log(task.available)
 

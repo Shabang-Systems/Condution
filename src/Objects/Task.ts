@@ -152,13 +152,17 @@ export default class Task {
     }
 
     /**
-     * The order of the task
-     * @property
+     * Update the order of the task
+     * @async
+     *
+     * @param{number} newOrder    the new desired order
+     * @returns{Promise<void>}
      *
      */
 
-    set order(newOrder:number) {
+    async reorder(newOrder:number) : Promise<void> {
         this.data["order"] = newOrder;
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -503,6 +507,8 @@ export default class Task {
 
         if (this.project)
             await (await this.async_project).flushweight();
+
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -529,6 +535,7 @@ export default class Task {
         this.data["isComplete"] = false;
         if (this.project)
             await (await this.async_project).flushweight();
+        await this.flushavailablility();
         this.sync();
     }
 
