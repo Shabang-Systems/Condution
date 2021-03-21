@@ -13,6 +13,7 @@ export default class Task {
     private data:object;
     private context:Context;
     private _ready:boolean;
+    private _available:boolean;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -55,7 +56,7 @@ export default class Task {
         Task.cache.set(identifier, tsk);
 
         await tsk.flushweight();
-
+        await tsk.flushavailablility();
 
         return tsk;
     }
@@ -74,6 +75,7 @@ export default class Task {
             tsk.data = data;
             tsk._ready = true;
             await tsk.flushweight();
+            await tsk.flushavailablility();
         });
 
         return tsk;
@@ -122,6 +124,7 @@ export default class Task {
         Task.cache.set(newTask.identifier, tsk);
 
         await tsk.flushweight();
+        await tsk.flushavailablility();
 
         return tsk;
     }
@@ -530,6 +533,46 @@ export default class Task {
     }
 
     /**
+     * get availablitiy of the task
+     * @param
+     *
+     */
+
+    get available() : boolean {
+        return this._available;
+    }
+
+    /**
+     * Lift through tree to get availibility
+     * @async
+     *
+     * Generally, you don't have a need to call this
+     * and you should simply let this happen automagically
+     * as tasks change and as other stuff happen like fetch
+     * or create. However, you could force a weight flush
+     * for your entertainment if you really wanted to.
+     * 
+     * @returns{Promise<void>}
+     *
+     */
+
+    flushavailablility = async () : Promise<void> => {
+        let project:Project = await this.async_project;
+        if (project) {
+            if (project.isSequential)
+                this._available = (project.available && this.order == 0);
+            else
+                this._available = project.available;
+        } else if (this.isComplete == true)
+            this._available = false;
+        else {
+            if (new Date() > this.defer) this._available = true;
+            else this._available = false;
+        }
+    }
+
+
+    /**
      * calculate the weight of the task
      *
      * @returns{Promise<void>}
@@ -550,6 +593,7 @@ export default class Task {
     private update = (newData:object) => {
         if (this._ready)
             this.flushweight();
+            this.flushavailablility();
         this.data = newData;
     }
 

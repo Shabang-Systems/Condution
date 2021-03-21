@@ -40,7 +40,7 @@ async function test(): Promise<void> {
     //tg.weight = 3;
     //console.log(tg.id);
 
-    //let task:Task = await Task.fetch(cm, "aQ0D70UWhtjAqr9Wcatk");
+    let task:Task = await Task.fetch(cm, "mxzYDkA9gy3cWZCMVIt4");
     //task.tags = [tg1];
     //console.log(task.weight);
     //console.log(await task.calculateWeight())
@@ -49,9 +49,14 @@ async function test(): Promise<void> {
     //console.log(task.name);
 
     let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    //let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
 
-    console.log(proj.name);
+
+    //console.log(task.available)
+
+    //console.log(task.available)
+
+    //console.log(proj.name);
     //console.log(proj.available);
     //console.log(proj1.weight);
     //console.log(proj.name);

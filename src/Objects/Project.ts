@@ -171,13 +171,30 @@ export default class Project {
     }
 
     /**
-     * The sequentiality of the project
-     * @property
+     * Make the project sequential
+     * @async
+     *
+     * @returns{Promise<void>} 
      *
      */
 
-    set isSequential(newSequentiality:boolean) {
-        this.data["is_sequential"] = newSequentiality;
+    async sequential() : Promise<void> {
+        this.data["is_sequential"] = true;
+        await this.flushavailablility();
+        this.sync();
+    }
+
+    /**
+     * Make the project parallel
+     * @async
+     *
+     * @returns{Promise<void>} 
+     *
+     */
+
+    async parallel() : Promise<void> {
+        this.data["is_sequential"] = false;
+        await this.flushavailablility();
         this.sync();
     }
 
@@ -408,14 +425,16 @@ export default class Project {
 
     get async_children() {
         this.readiness_warn();
-        let dataArray:(Promise<Project>|Promise<Task>)[] = [];
         if (this._ready) {
-            for (let child in this.data["children"])
-                if (this.data["children"][child] == "task")
-                    dataArray.push(Task.fetch(this.context, child));
-                else if (this.data["children"][child] == "project")
-                    dataArray.push(Project.fetch(this.context, child));
-            return dataArray;
+            return (async () => {
+                let dataArray:(Project|Task)[] = [];
+                for (let child in this.data["children"])
+                    if (this.data["children"][child] == "task")
+                        dataArray.push(await Task.fetch(this.context, child));
+                    else if (this.data["children"][child] == "project")
+                        dataArray.push(await Project.fetch(this.context, child));
+                return dataArray;
+            })()
         }
     }
 
@@ -488,15 +507,15 @@ export default class Project {
      */
 
     flushweight = async () : Promise<void> => {
-        let weights:number[] = await Promise.all(this.async_children.map(async (i):Promise<number> => {
-            return (await i).weight;
+        let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
+            return i.weight;
         }));
         this._weight = 0;
         weights.forEach((i:number) => this._weight+=i);
     }
 
     /**
-     * Lift through tree to get availibility
+     * Lift and DFS through tree to refresh availibility
      * @async
      *
      * Generally, you don't have a need to call this
@@ -513,15 +532,19 @@ export default class Project {
         let parent_proj:Project = await this.async_parent;
         if (parent_proj) {
             if (parent_proj.isSequential)
-                this._available = (parent_proj.available && this.order == 1);
+                this._available = (parent_proj.available && this.order == 0);
             else
                 this._available = parent_proj.available;
-        } else this._available = true;
+        } else if (this.isComplete == true)
+            this._available = false;
+        else
+            this._available = true;
+        await Promise.all((await this.async_children).map(async (i:(Task|Project)) => await i.flushavailablility())) // AWAIT THESE TOO!!
     }
 
     private readiness_warn = () => {
         if (!this._ready)
-            console.warn("CondutionEngine: you tried to access an object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
+            console.warn("CondutionEngine: you tried to access a bubbubbubu object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
     }
 
     private sync = () => {
