@@ -152,20 +152,27 @@ class JSONPage extends Page {
         this.refresh = refreshCallback;
         this.path = path.length <= 2 ? [...path, "$docdata"] : path;
 
+        this.refreshDataAndCallback();
+    }
+
+    private refreshDataAndCallback() {
         this.data = (async () : Promise<object> => {
             let pointer = this.database;
             this.path.forEach(i => {
                 pointer = pointer[i];
             });
 
-            return Object.assign({id:path[path.length-1]}, pointer);
+            let finalData:object = Object.assign({id:path[path.length-1]}, pointer);
+            this.refresh(finalData);
+            return finalData;
         })();
     }
 
     async set(payload:object, ...param:any):Promise<DataExchangeResult> {
-        let task = this.path.pop();
+        let path = [...this.path];
+        let task = path.pop();
         let pointer = this.database;
-        this.path.forEach(i => {
+        path.forEach(i => {
             if(!pointer[i]) pointer[i] = {};
             pointer = pointer[i];
         });
@@ -180,7 +187,30 @@ class JSONPage extends Page {
             pointer[task] = payload;
 
         this.commit(this.database);
-        return {identifier: payload["id"], payload: payload, response: pointer};
+        this.refreshDataAndCallback();
+
+        return {identifier: this.id, payload: payload, response: pointer};
+    }
+
+    async update(payload:object) {
+        let path = [...this.path];
+        let task = path.pop();
+        let pointer = this.database;
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+        for (const key in payload) {
+            if (payload[key] instanceof Date) {
+                payload[key] = {seconds: Math.round(payload[key].getTime()/1000)-5} // The function runs a bit too quickly. Bump time forward by 5 ms.
+            }
+        }
+
+        pointer[task] = Object.assign(pointer[task], payload);
+        this.commit(this.database);
+        this.refreshDataAndCallback();
+
+        return {identifier: this.id, payload: payload, response: pointer};
     }
 
     get id() : string {
@@ -192,12 +222,6 @@ class JSONPage extends Page {
     }
 }
 
-
-    //async update(payload:object) {
-        //const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        //const resultDocument = await ref.update(payload); // update the document
-        //return {identifier: payload["id"], payload: payload, response: resultDocument};
-    //}
 
     //async delete() {
         //const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
