@@ -259,17 +259,20 @@ class JSONPage extends Page {
 
 class JSONProvider extends Provider {
     name: string;
+
+    private defaultUser: string;
     private filePath: string;
     private relDir: string;
     private data: object;
 
-    constructor(filePath:string, name:string="json", dirRelativeTo:string=__dirname) {
+    constructor(filePath:string, name:string="json", dirRelativeTo:string=__dirname, defaultUser:string="hard-storage-user") {
         super();
 
         // set our paths
         this.name = name;
         this.filePath = filePath;
         this.relDir = dirRelativeTo;
+        this.defaultUser = defaultUser;
 
         // No, we don't support auth
         this._authSupported = false;
@@ -327,8 +330,10 @@ class JSONProvider extends Provider {
      
     load = (): object => {
         this.data = JSON.parse(fs.readFileSync(path.join(this.relDir, this.filePath),{ encoding: 'utf8' }));
-        if (Object.keys(this.data).length === 0 && this.data.constructor === Object) 
+        if (Object.keys(this.data).length === 0 && this.data.constructor === Object)  {
             this.data = {users: {}, workspaces: {}, invitations:{}};
+            this.data["users"][this.defaultUser] = {};
+        }
         this.commit(this.data);
         return this.data;
     }

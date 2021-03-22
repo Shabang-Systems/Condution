@@ -16,14 +16,13 @@ require('dotenv').config();
 // 
 
 async function test(): Promise<void> {
-    let jsprovider: JSONProvider = new JSONProvider("../test.json", "json", __dirname);
-    console.log(jsprovider);
+    let jsprovider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
     //provider.commit(data);
     //console.log(provider.load());
-    //let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
-    let manager: ReferenceManager = new ReferenceManager([jsprovider])
+    let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
+    let manager: ReferenceManager = new ReferenceManager([fbprovider])
 
-    //await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
+    await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
     //// --- TODO everything called before this line needs to be refactored... :( ---
 
@@ -44,7 +43,7 @@ async function test(): Promise<void> {
    //tasktest.name = "VERY LARGE STRING SO THAT I COULD NOTICE THIS";
    //console.log(tasktest.name);
 
-    let tg0:Tag = await Tag.create(cm, "hewo12", 12);
+    //let tg0:Tag = await Tag.create(cm, "hewo12", 12);
     //let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
     ////tg.weight = 3;
     ////console.log(tg.id);
@@ -62,7 +61,8 @@ async function test(): Promise<void> {
     //console.log(manager.currentProvider);
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
     //cm.useProvider("json");
-    //proj = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    //console.log(proj.children[0].databaseBadge);
     //let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
     //console.log(proj.name);
     ////let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
@@ -77,8 +77,10 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    //let q:Query = new Query(cm, Task, (i:Task) => i.name=="yes");
-    //q.execute();
+    //let q:Query = new Query(cm, Task, (i:Task) => true);
+    //let q1:Query = new Query(cm, Project, (i:Project) => true);
+    //console.log((await q.execute()).length);
+    //console.log((await q1.execute()).length);
     //console.log(q.execute());
 
     //console.log(proj.name);
@@ -91,7 +93,10 @@ async function test(): Promise<void> {
     //await proj.bringToTop();
     //console.log(proj1.weight);
 
-    //const actualtask:Task = await Task.fetch(cm, task.id);
+    const actualtask:Task = await Task.fetch(cm, "Yuc9B6VuWNbQbbxAlnWp");
+    //await actualtask.complete();
+    //console.log(actualtask.completeDate.toLocaleString());
+    //console.log(actualtask.isComplete);
     //actualtask.tags = [tg, tg, tg, tg, tg, tg, tg];
     //let weight:number = await actualtask.calculateWeight();
     //let wtf = await actualtask.async_tags;

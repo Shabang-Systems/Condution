@@ -255,31 +255,26 @@ class Query {
         let data:Filterable[] = [];
 
         if (this.objType == Task) {
-            //let taskPages:Page[] = await this.cm.collection(["tasks"]).pages();
-            //console.log(await Promise.all(taskPages.map(async (p:Page) => Task.fetch(this.cm, p.id))))
-            //data = await Promise.all(taskPages.map(async (p:Page) => await Task.fetch(this.cm, p.id)));
+            let taskPages:Page[] = await this.cm.collection(["tasks"]).pages();
+            data = await Promise.all(taskPages.map(async (p:Page) => await Task.fetch(this.cm, p.id)));
         } 
 
-//        if (this.objType == Project) {
-            //console.log("I RAN!1!");
-            //let projectPages:Page[] = await this.cm.collection(["projects"]).pages();
-            //data = await Promise.all(projectPages.map(async (p:Page) => await Project.fetch(this.cm, p.id)));
-        //}
+        if (this.objType == Project) {
+            let projectPages:Page[] = await this.cm.collection(["projects"]).pages();
+            data = await Promise.all(projectPages.map(async (p:Page) => await Project.fetch(this.cm, p.id)));
+        }
 
-        //if (this.objType == Tag) {
-            //console.log("I RAN!2!");
-            //let tagPages:Page[] = await this.cm.collection(["tags"]).pages();
-            //data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
-        //}
+        if (this.objType == Tag) {
+            let tagPages:Page[] = await this.cm.collection(["tags"]).pages();
+            data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
+        }
 
-        //if (this.objType == Workspace) {
-            //console.log("I RAN!3!");
-            //let workspacePages:Page[] = await this.cm.collection(["workspaces"]).pages();
-            //data = await Promise.all(workspacePages.map(async (p:Page) => await Workspace.fetch(this.cm, p.id)));
-        //}
-        return data;
+        if (this.objType == Workspace) {
+            let workspacePages:Page[] = await this.cm.collection(["workspaces"]).pages();
+            data = await Promise.all(workspacePages.map(async (p:Page) => await Workspace.fetch(this.cm, p.id)));
+        }
 
-        //return data.filter(this.conditionFunc);
+        return data.filter(this.conditionFunc);
     }
 }
 

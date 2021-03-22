@@ -389,6 +389,23 @@ export default class Task {
             return this.data["timezone"];
     }
 
+     /**
+     * The complete date of the task
+     * @property
+     *
+     * There exists special handling because
+     * for some reason dates were stored by secs + nanosecs
+     * in the past. IDK why
+     *
+     */
+
+    get completeDate() {
+        this.readiness_warn();
+        if (this._ready && this.data["completeDate"])
+            return new Date(this.data["completeDate"]["seconds"]*1000);
+        else return null;
+    }
+
     /**
      * The due date of the task
      * @property
@@ -510,6 +527,10 @@ export default class Task {
 
         if (this.project)
             await (await this.async_project).flushweight();
+
+        let completeDate = new Date();
+        this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
+        await this.page.set({completeDate: completeDate}, {merge:true}); // weird date handling
 
         await this.flushavailablility();
         this.sync();
