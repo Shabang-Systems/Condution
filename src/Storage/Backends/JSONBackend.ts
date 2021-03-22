@@ -34,6 +34,15 @@ class JSONCollection extends Collection {
         this.path = path;
     }
 
+    private clean(obj:object) {
+        for (var propName in obj) {
+            if (obj[propName] === null || obj[propName] === undefined) {
+                delete obj[propName];
+            }
+        }
+        return obj
+    }
+
 
     async add(payload:object) {
         let path = [...this.path];
@@ -50,7 +59,7 @@ class JSONCollection extends Collection {
                 payload[key] = {seconds: Math.round(payload[key].getTime()/1000)-5} // The function runs a bit too quickly. Bump time forward by 5 ms.
             }
         }
-        pointer[id] = payload;
+        pointer[id] = this.clean(payload);
 
         this.commit(this.database);
 
@@ -159,7 +168,7 @@ class JSONPage extends Page {
                 pointer = pointer[i];
             });
 
-            let finalData:object = Object.assign(pointer, {id:this.path[this.path.length-1]});
+            let finalData:object = Object.assign(pointer?pointer:{}, {id:this.path[this.path.length-1]});
             this.refresh(finalData);
             return finalData;
         })();
@@ -306,9 +315,7 @@ class JSONProvider extends Provider {
      
     commit = (data:object) : void => {
         this.data = data;
-        return fs.writeFile(path.join(this.relDir, this.filePath), JSON.stringify(data), (err: any) => {
-            console.log(err);
-        });
+        return fs.writeFileSync(path.join(this.relDir, this.filePath), JSON.stringify(data), (_: any) => { });
     }
 
     /**

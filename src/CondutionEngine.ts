@@ -18,9 +18,9 @@ require('dotenv').config();
 async function test(): Promise<void> {
     let provider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
     //let datkingodata: Page = provider.page(["users", "hard-storage-user", "tasks", "y0ptg4qd05efgb9dp74sqp9sin503npn"]);
-    let test2: Collection = provider.collection(["users", "hard-storage-user", "tasks"]);
-    let test3: Page = provider.page(["users", "hard-storage-user", "tasks", "5cogizgn3wwhxausv1am7pddp5imvc8lh"]);
-    console.log(await test3.get());
+    //let test2: Collection = provider.collection(["users", "hard-storage-user", "tasks"]);
+    //let test3: Page = provider.page(["users", "hard-storage-user", "tasks", "5cogizgn3wwhxausv1am7pddp5imvc8lh"]);
+    //console.log(await test3.get());
     //let data:object = await (await test2.pages())[0].get();
     //data["name"] = "I AM COMPLETELY NEW";
     //console.log(await test2.add(data));
@@ -34,14 +34,14 @@ async function test(): Promise<void> {
     //provider.commit(data);
     //console.log(provider.load());
  //   let provider: FirebaseProvider k= new FirebaseProvider();
-    //let manager: ReferenceManager = new ReferenceManager([provider])
+    let manager: ReferenceManager = new ReferenceManager([provider])
 
     //await provider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
     //// --- TODO everything called before this line needs to be refactored... :( ---
 
-    //let cm: Context = new Context(manager); // create the context
-    //await cm.start(); // start our context
+    let cm: Context = new Context(manager); // create the context
+    await cm.start(); // start our context
 
     /*
        * @lb's grand vision
@@ -52,15 +52,19 @@ async function test(): Promise<void> {
        * 
        *
     */
+   //let tasktest = await Task.fetch(cm, "y0ptg4qd05efgb9dp74sqp9sin503npn");
+   //tasktest.name = "VERY LARGE STRING SO THAT I COULD NOTICE THIS";
+   //console.log(tasktest.name);
 
     //let tg0:Tag = await Tag.create(cm, "hewo12", 12);
     //let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
     //tg.weight = 3;
     //console.log(tg.id);
 
-    //let task:Task = await Task.fetch(cm, "mxzYDkA9gy3cWZCMVIt4");
+    let task:Task = await Task.create(cm, "heyo3");
     //task.tags = [tg1];
     //console.log(task.weight);
+    //console.log(task.name);
     //console.log(await task.calculateWeight())
 
     //task.inboxify();
@@ -68,7 +72,9 @@ async function test(): Promise<void> {
 
     //let a:Date = new Date();
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    //let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    //let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
+    //task.move(proj1);
+    //console.log(task.id);
     //let b:Date = new Date();
 
 

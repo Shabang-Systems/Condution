@@ -611,9 +611,10 @@ export default class Task {
     }
 
     private update = (newData:object) => {
-        if (this._ready)
+        if (this._ready) {
             this.flushweight();
             this.flushavailablility();
+        }
         this.data = newData;
     }
 

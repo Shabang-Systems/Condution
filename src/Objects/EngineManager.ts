@@ -29,7 +29,7 @@ export class Context {
     private authenticatable:boolean = false; // are we currently authenticated?
     private ready:boolean = false // are the workspaces loaded?
 
-    constructor(refManager:ReferenceManager, initializeWithoutAuth:boolean=false) {
+    constructor(refManager:ReferenceManager, initializeWithoutAuth:boolean=false, defaultUsername:string="hard-storage-user") {
         this.rm = refManager;
         
         if (!initializeWithoutAuth && this.rm.currentProvider.authSupported) {
@@ -37,6 +37,9 @@ export class Context {
             this.ticketID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
             this.userID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
             this.authenticatable = true;
+        } else {
+            this.ticketID = defaultUsername;
+            this.userID = defaultUsername;
         }
     }
 
