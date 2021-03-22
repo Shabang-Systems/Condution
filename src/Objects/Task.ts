@@ -115,6 +115,7 @@ export default class Task {
 
         tsk.data = await page.get();
         tsk.page = page;
+        tsk._ready = true;
 
 	// TODO: Investigate optimization impact
         if (project) {
