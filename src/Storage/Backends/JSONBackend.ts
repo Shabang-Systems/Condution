@@ -1,5 +1,5 @@
-import  { Provider, Page, Collection, AuthenticationProvider } from "./Backend";
-import type { AuthenticationResult, AuthenticationRequest, AuthenticationUser, DataExchangeResult } from "./Backend";
+import  { Provider, Page, Collection } from "./Backend";
+import type {  DataExchangeResult } from "./Backend";
 
 var fs = require('fs');
 var path = require('path');
@@ -121,96 +121,9 @@ class JSONCollection extends Collection {
 
 }
 
-    //async delete() {
-        //const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        //const resultDocument = await ref.delete(); // delete the document
-        //return {identifier: null, payload: null, response: resultDocument};
-    //}
-
-    /**
-     * Gets a page array from the database.
-     *
-     * @param   path - The valid path to the reference
-     * @returns {Page[]} - The result of calling `.get()` on the database reference
-     *
-     */
-
-    //async pages() : Promise<Page[]> {
-        //return (await this.getFirebaseRef(this.path).get()).docs.map((page:any)=>{
-            //return new FirebasePage([...this.path, page.id], this.firebaseDB, this.firebaseRef);
-        //});
-    //}
-
-    /**
-     * Gets a data snapshot from the database.
-     *
-     * @param   path    The valid path to the reference
-     * @returns  {object[]} The result of calling `.get()` on the database reference
-     *
-     */
-
-    //async data() : Promise<object[]> {
-        //return (await this.getFirebaseRef(this.path).get()).docs.map((page:any)=>{
-            //return Object.assign(page.data(), {id: page.id});
-        //});
-    //}
-
-
-
-
-    /**
-     * Get a database reference.
-     *
-     * @param   path        A valid path array, see below.
-     * @returns reference   The generated reference
-     *
-     * Examples of valid path arrays:
-     *  [`collection/${docName}`] => DocumentReference
-     *  ["collection", "docName"] => DocumentReference
-     *  ["collection", "docName", "collection"] => CollectionReference
-     *  ["collection", ["query", "params"], ["more", "params"]] => Query
-     *  ["collection", ["query", "params"], "docname"] => DocumentReference
-     * 
-     */
-
-    //getFirebaseRef(path:string[]) {
-        //let ref:any = this.firebaseDB;
-        //let fsRef:any = this.firebaseRef;
-
-        //// special handling for first collection from root
-        //console.assert(typeof path[0] === 'string');
-        //if (path[0].includes('/'))
-            //ref = ref.collectionGroup(path[0]);
-        //else
-            //ref = ref.collection(path[0]);
-        //// generic handling
-        //for (let n of path.slice(1)) {
-            //let nav:any = n;
-            //if (typeof nav === 'string') {
-                //if (ref instanceof fsRef.DocumentReference) {
-                    //ref = ref.collection(nav);
-                //} else if (ref instanceof fsRef.Query) {
-                    //ref = ref.doc(nav);
-                //} else {
-                    //throw new Error("Unknown reference");
-                //}
-            //} else if (Array.isArray(nav)) {                // query, TODO shouldn't need to query
-                //if (ref instanceof fsRef.Query) {
-                    //ref = ref.where(...nav);
-                //} else {
-                    //throw new Error("Cannot query with");
-                //}
-                //console.assert(ref instanceof fsRef.Query)
-            //} else {
-                //throw new Error("Cannot parse");
-            //}
-        //}
-        //return ref;
-    //}
-//}
 
 /**
- * A firebase page to operate on see 
+ * A JSON page to operate on see 
  * 
  * Storage/Backend/Backend/Page abstract 
  * class for usage and documentation.
@@ -246,7 +159,7 @@ class JSONPage extends Page {
                 pointer = pointer[i];
             });
 
-            let finalData:object = Object.assign({id:path[path.length-1]}, pointer);
+            let finalData:object = Object.assign(pointer, {id:this.path[this.path.length-1]});
             this.refresh(finalData);
             return finalData;
         })();

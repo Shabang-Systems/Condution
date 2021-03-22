@@ -19,7 +19,11 @@ async function test(): Promise<void> {
     let provider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
     //let datkingodata: Page = provider.page(["users", "hard-storage-user", "tasks", "y0ptg4qd05efgb9dp74sqp9sin503npn"]);
     let test2: Collection = provider.collection(["users", "hard-storage-user", "tasks"]);
-    console.log(await (await test2.pages())[0].get());
+    let test3: Page = provider.page(["users", "hard-storage-user", "tasks", "5cogizgn3wwhxausv1am7pddp5imvc8lh"]);
+    console.log(await test3.get());
+    //let data:object = await (await test2.pages())[0].get();
+    //data["name"] = "I AM COMPLETELY NEW";
+    //console.log(await test2.add(data));
     //datkingodata.delete();
     //let datkingo:object = await datkingodata.get();
     //datkingo["name"] = "hewo";
