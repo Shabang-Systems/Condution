@@ -20,19 +20,103 @@ let unsubscribeCallbacks = new Map();
 
 class JSONCollection extends Collection {
     path: string[];
-    private db: object;
-
-    constructor(path:string[], data:object) {
+    
+    private commit: Function;
+    private load: Function;
+    private database: object;
+    
+    constructor(path:string[], loadfunc:Function, commitfunc:Function) {
         super();
+
+        this.database = loadfunc();
+        this.load = loadfunc;
+        this.commit = commitfunc;
         this.path = path;
-        this.db = data;
     }
 
+
     async add(payload:object) {
-        //const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        //const resultDocument = await ref.add(payload); // add the document
-        //return {identifier: resultDocument.id, payload: payload, response: resultDocument};
-        return null;
+        let path = [...this.path];
+        let pointer = this.database;
+
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+        let id = this.generateRandomString();
+        while (pointer[id]) id = this.generateRandomString();
+        for (const key in payload) {
+            if (payload[key] instanceof Date) {
+                payload[key] = {seconds: Math.round(payload[key].getTime()/1000)-5} // The function runs a bit too quickly. Bump time forward by 5 ms.
+            }
+        }
+        pointer[id] = payload;
+
+        this.commit(this.database);
+
+        return {identifier: id, payload: payload, response: payload};
+    }
+
+    
+    async delete() {
+        let path = [...this.path];
+        let task = path.pop();
+        let pointer = this.database;
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+
+        delete pointer[task];
+        this.commit(this.database);
+
+        return {identifier: null, payload: null, response: pointer};
+    }
+
+    async pages() {
+        let path = [...this.path];
+        let task = path.pop();
+        let pointer = this.database;
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+        let resultDocuments: JSONPage[] = [];
+        for (let key in pointer[task]) {
+            resultDocuments.push(new JSONPage([...this.path, key], this.load, this.commit));
+        }
+        return resultDocuments;
+    }
+
+    async data() {
+        let path = [...this.path];
+        let task = path.pop();
+        let pointer = this.database;
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+        let resultDocuments: object[] = [];
+        for (let key in pointer[task]) {
+            resultDocuments.push(Object.assign(pointer[task][key], {id: key}));
+        }
+        return resultDocuments;
+    }
+
+
+    /**
+     * Generates a random string. Used for Ids.
+     * @private
+     *
+     * THIS IS NOT CRYPTOGRAPHICALLY SECURE
+     * But we are pretty sure it won't collide
+     *
+     * @returns{string}  The random string
+     *
+     */
+
+    private generateRandomString() : string {
+        return Math.random().toString(36).substring(2)+Math.random().toString(36).substring(2)+Math.random().toString(36).substring(2);
     }
 
 }
@@ -238,13 +322,6 @@ class JSONPage extends Page {
     }
 }
 
-
-    //async delete() {
-        //const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        //const resultDocument = await ref.delete(); // delete the document
-        //return {identifier: null, payload: null, response: resultDocument};
-    //}
-
 /**
  * A backend provider that provides for Condution connection to a JSON file
  *
@@ -303,7 +380,7 @@ class JSONProvider extends Provider {
      */
 
     collection(path: string[]) :  Collection {
-        return null;
+        return new JSONCollection(path, this.load, this.commit);
     }
 
     /**

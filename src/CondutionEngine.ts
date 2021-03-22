@@ -18,6 +18,8 @@ require('dotenv').config();
 async function test(): Promise<void> {
     let provider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
     //let datkingodata: Page = provider.page(["users", "hard-storage-user", "tasks", "y0ptg4qd05efgb9dp74sqp9sin503npn"]);
+    let test2: Collection = provider.collection(["users", "hard-storage-user", "tasks"]);
+    console.log(await (await test2.pages())[0].get());
     //datkingodata.delete();
     //let datkingo:object = await datkingodata.get();
     //datkingo["name"] = "hewo";
