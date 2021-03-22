@@ -4,7 +4,7 @@ import Workspace from "./Objects/Workspace";
 import Task from "./Objects/Task";
 import Tag from "./Objects/Tag";
 import Project from "./Objects/Project";
-import { RepeatRule, RepeatRuleType } from "./Objects/Utils";
+import { RepeatRule, RepeatRuleType, Query } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
 
@@ -40,7 +40,7 @@ async function test(): Promise<void> {
     //tg.weight = 3;
     //console.log(tg.id);
 
-    let task:Task = await Task.fetch(cm, "mxzYDkA9gy3cWZCMVIt4");
+    //let task:Task = await Task.fetch(cm, "mxzYDkA9gy3cWZCMVIt4");
     //task.tags = [tg1];
     //console.log(task.weight);
     //console.log(await task.calculateWeight())
@@ -48,15 +48,20 @@ async function test(): Promise<void> {
     //task.inboxify();
     //console.log(task.name);
 
-    let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    //let a:Date = new Date();
+    //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    //let proj1:Project = await Project.fetch(cm, "h1CQPoKdJkJ4PNxN9Gwg");
+    //let b:Date = new Date();
 
-    proj1.uncomplete();
 
+    //console.log(task.available)
+    //console.log(proj1.available);
 
     //console.log(task.available)
 
-    //console.log(task.available)
+    let q:Query = new Query(cm, Task, (i:Task) => i.name=="yes");
+    q.execute();
+    //console.log(q.execute());
 
     //console.log(proj.name);
     //console.log(proj.available);

@@ -4,6 +4,7 @@ import { Context } from "./EngineManager";
 
 export default class Project {
     private static cache:Map<string, Project> = new Map();
+    static readonly databaseBadge = "projects";
 
     private _id:string;
     private page:Page;
@@ -508,7 +509,7 @@ export default class Project {
 
 
     /**
-     * get availablitiy of the project
+     * availablitiy of the project
      * @param
      *
      */
@@ -517,7 +518,15 @@ export default class Project {
         return this._available;
     }
 
+    /**
+     * the DB badge of this object type
+     * @param
+     *
+     */
 
+    get databaseBadge() : string {
+        return "projects";
+    }
 
     /**
      * DFS though the project and calculate weight

@@ -3,6 +3,7 @@ import { Context } from "./EngineManager";
 
 export default class Tag {
     private static cache:Map<string, Tag> = new Map();
+    static readonly databaseBadge = "tags";
 
     private _id:string;
     private page:Page;
@@ -181,7 +182,15 @@ export default class Tag {
         this.page.delete();
     }
 
+    /**
+     * the DB badge of this object type
+     * @param
+     *
+     */
 
+    get databaseBadge() : string {
+        return "tags";
+    }
 
     private readiness_warn = () => {
         if (!this._ready)

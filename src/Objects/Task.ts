@@ -6,6 +6,7 @@ import Tag from "./Tag";
 
 export default class Task {
     private static cache:Map<string, Task> = new Map();
+    static readonly databaseBadge = "tasks";
 
     private _id:string;
     private _weight:number;
@@ -197,8 +198,9 @@ export default class Task {
 
     get project() {
         this.readiness_warn();
-        if (this._ready && this.data["project"] !== '')
+        if (this._ready && this.data["project"] !== '') {
             return Project.lazy_fetch(this.context, this.data["project"]);
+        }
     }
 
     /**
@@ -209,7 +211,7 @@ export default class Task {
 
     get async_project() {
         this.readiness_warn();
-        if (this._ready)
+        if (this._ready && this.data["project"] !== '')
             return Project.fetch(this.context, this.data["project"]);
     }
 
@@ -576,6 +578,17 @@ export default class Task {
             if (new Date() > this.defer) this._available = true;
             else this._available = false;
         }
+    }
+
+
+    /**
+     * the DB badge of this object type
+     * @param
+     *
+     */
+
+    get databaseBadge() : string {
+        return "tasks";
     }
 
 

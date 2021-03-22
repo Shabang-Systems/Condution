@@ -3,6 +3,7 @@ import { Context } from "./EngineManager";
 
 export default class Workspace {
     private static cache:Map<string, Workspace> = new Map();
+    static readonly databaseBadge = "workspaces";
 
     private _id:string;
     private page:Page;

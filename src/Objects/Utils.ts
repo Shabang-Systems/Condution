@@ -2,6 +2,8 @@ import Tag from "./Tag";
 import Task from "./Task";
 import Project from "./Project";
 import Workspace from "./Workspace";
+import { Context } from "./EngineManager";
+import { Page, Collection } from "../Storage/Backends/Backend";
 
 /**
  * Flush all caches, and cause everything to
@@ -225,6 +227,63 @@ class RepeatRule {
     }
 }
 
+type Filterable = Task|Workspace|Tag|Project;
 
-export { RepeatRule, RepeatRuleType, GloballySelfDestruct };
+class Query {
+    private cm: Context;
+    private objType: Function;
+    private conditionFunc:(i:Filterable)=>boolean;
+
+    // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
+    // ok look. I know. This should be a template function.
+    // But! The lack of std::is_same makes it rather difficult
+    // to actually know what type T is because somehow checking
+    // if two types are the same is a difficult proposition in
+    // the 21st century where blackmagic runs wild in the streets.
+    // 
+    // So, I pray thee, ask Microsoft for a type equality operator
+    // overload on Typescript types. And while you are at it ask
+    // Microsoft to make Windows better.
+
+    constructor(context:Context, objectType:Function, condition:(i:Filterable)=>boolean) {
+        this.conditionFunc = condition;
+        this.objType = objectType;
+        this.cm = context;
+    }
+
+    async execute(): Promise<Filterable[]> {
+        let data:Filterable[] = [];
+
+        if (this.objType == Task) {
+            //let taskPages:Page[] = await this.cm.collection(["tasks"]).pages();
+            //console.log(await Promise.all(taskPages.map(async (p:Page) => Task.fetch(this.cm, p.id))))
+            //data = await Promise.all(taskPages.map(async (p:Page) => await Task.fetch(this.cm, p.id)));
+        } 
+
+//        if (this.objType == Project) {
+            //console.log("I RAN!1!");
+            //let projectPages:Page[] = await this.cm.collection(["projects"]).pages();
+            //data = await Promise.all(projectPages.map(async (p:Page) => await Project.fetch(this.cm, p.id)));
+        //}
+
+        //if (this.objType == Tag) {
+            //console.log("I RAN!2!");
+            //let tagPages:Page[] = await this.cm.collection(["tags"]).pages();
+            //data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
+        //}
+
+        //if (this.objType == Workspace) {
+            //console.log("I RAN!3!");
+            //let workspacePages:Page[] = await this.cm.collection(["workspaces"]).pages();
+            //data = await Promise.all(workspacePages.map(async (p:Page) => await Workspace.fetch(this.cm, p.id)));
+        //}
+        return data;
+
+        //return data.filter(this.conditionFunc);
+    }
+}
+
+//new Query<Task>((i:Task) => {i.name == "chicken"}).execute();
+
+export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };
 
