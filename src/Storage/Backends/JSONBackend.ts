@@ -213,6 +213,22 @@ class JSONPage extends Page {
         return {identifier: this.id, payload: payload, response: pointer};
     }
 
+    async delete() {
+        let path = [...this.path];
+        let task = path.pop();
+        let pointer = this.database;
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+
+        delete pointer[task];
+        this.commit(this.database);
+        this.refreshDataAndCallback();
+
+        return {identifier: null, payload: null, response: pointer};
+    }
+
     get id() : string {
         return this.path[this.path.length-1]; // return the requested ID
     }
@@ -229,73 +245,8 @@ class JSONPage extends Page {
         //return {identifier: null, payload: null, response: resultDocument};
     //}
 
-    /**
-     * Get a snapshot from the cache.
-     *
-     * @param   path - The valid path to the reference
-     * @returns  any - The result of calling `.get()` on the database reference
-     *
-     * Logic:
-     *  If the path is cached, return from cache.
-     *  Else, register a snapshot listener to update the cache
-     *      and return the newly cached value.
-     *
-     */
-
-    /**
-     * Get a database reference.
-     *
-     * @param   path - A valid path array, see below.
-     * @return  reference - The generated reference
-     *
-     * Examples of valid path arrays:
-     *  [`collection/${docName}`] => DocumentReference
-     *  ["collection", "docName"] => DocumentReference
-     *  ["collection", "docName", "collection"] => CollectionReference
-     *  ["collection", ["query", "params"], ["more", "params"]] => Query
-     *  ["collection", ["query", "params"], "docname"] => DocumentReference
-     * 
-     */
-
-    //getFirebaseRef(path:string[]) {
-        //let ref:any = this.firebaseDB;
-        //let fsRef:any = this.firebaseRef;
-
-        //// special handling for first collection from root
-        //console.assert(typeof path[0] === 'string');
-        //if (path[0].includes('/'))
-            //ref = ref.collectionGroup(path[0]);
-        //else
-            //ref = ref.collection(path[0]);
-        //// generic handling
-        //for (let n of path.slice(1)) {
-            //let nav:any = n;
-            //if (typeof nav === 'string') {
-                //if (ref instanceof fsRef.DocumentReference) {
-                    //ref = ref.collection(nav);
-                //} else if (ref instanceof fsRef.Query) {
-                    //ref = ref.doc(nav);
-                //} else {
-                    //throw new Error("Unknown reference");
-                //}
-            //} else if (Array.isArray(nav)) {                // query, TODO shouldn't need to query
-                //if (ref instanceof fsRef.Query) {
-                    //ref = ref.where(...nav);
-                //} else {
-                    //throw new Error("Cannot query with");
-                //}
-                //console.assert(ref instanceof fsRef.Query)
-            //} else {
-                //throw new Error("Cannot parse");
-            //}
-        //}
-        //return ref;
-    //}
-//}
-
-
 /**
- * A backend provider that provides for Condution connection to Firebase
+ * A backend provider that provides for Condution connection to a JSON file
  *
  *
  * Example:
