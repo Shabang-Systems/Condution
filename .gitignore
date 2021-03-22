@@ -155,4 +155,7 @@ _deps
 .DS_Store
 .clinic/
 
+# demo
+demo.json
+
 

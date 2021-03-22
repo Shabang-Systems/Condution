@@ -1,5 +1,6 @@
 import ReferenceManager from "./Storage/ReferenceManager";
 import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
+import JSONProvider from "./Storage/Backends/JSONBackend";
 import Workspace from "./Objects/Workspace";
 import Task from "./Objects/Task";
 import Tag from "./Objects/Tag";
@@ -15,15 +16,24 @@ require('dotenv').config();
 // 
 
 async function test(): Promise<void> {
-    let provider: FirebaseProvider = new FirebaseProvider();
-    let manager: ReferenceManager = new ReferenceManager([provider])
+    let provider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
+    let datkingodata: Page = provider.page(["users", "hard-storage-user", "tasks", "y0ptg4qd05efgb9dp74sqp9sin503npn"]);
+    let datkingo:object = await datkingodata.get();
+    datkingo["name"] = "no!";
+    await datkingodata.set(datkingo);
+    console.log(await datkingodata.get());
 
-    await provider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
+    //provider.commit(data);
+    //console.log(provider.load());
+ //   let provider: FirebaseProvider = new FirebaseProvider();
+    //let manager: ReferenceManager = new ReferenceManager([provider])
 
-    // --- TODO everything called before this line needs to be refactored... :( ---
+    //await provider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
-    let cm: Context = new Context(manager); // create the context
-    await cm.start(); // start our context
+    //// --- TODO everything called before this line needs to be refactored... :( ---
+
+    //let cm: Context = new Context(manager); // create the context
+    //await cm.start(); // start our context
 
     /*
        * @lb's grand vision
@@ -59,8 +69,8 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    let q:Query = new Query(cm, Task, (i:Task) => i.name=="yes");
-    q.execute();
+    //let q:Query = new Query(cm, Task, (i:Task) => i.name=="yes");
+    //q.execute();
     //console.log(q.execute());
 
     //console.log(proj.name);

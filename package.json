@@ -9,7 +9,7 @@
   "author": "Shabang Systems, and the Condution Authors",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "start": "nodemon --exec babel-node  --extensions \".ts\" --extensions \".js\" src/CondutionEngine.ts",
+    "start": "nodemon  --ignore demo.json --exec babel-node  --extensions \".ts\" --extensions \".js\" src/CondutionEngine.ts",
     "tscomp": "tsc",
     "dist": "tsc && babel --env-name=\"production\" --extensions \".ts\" --extensions \".js\" src --out-dir dist",
     "compile": "tsc && babel --extensions \".ts\" --extensions \".js\" src --out-dir intermediate"
