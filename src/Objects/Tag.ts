@@ -24,7 +24,7 @@ export default class Tag {
 
     static SelfDestruct() {
         delete Tag.cache;
-        Tag.cache = null;
+        Tag.cache = new Map();
     }
 
     /**

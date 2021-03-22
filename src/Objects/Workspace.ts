@@ -23,7 +23,7 @@ export default class Workspace {
 
     static SelfDestruct() {
         delete Workspace.cache;
-        Workspace.cache = null;
+        Workspace.cache = new Map();
     }
 
     /**

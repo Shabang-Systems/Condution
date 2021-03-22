@@ -327,6 +327,9 @@ class JSONProvider extends Provider {
      
     load = (): object => {
         this.data = JSON.parse(fs.readFileSync(path.join(this.relDir, this.filePath),{ encoding: 'utf8' }));
+        if (Object.keys(this.data).length === 0 && this.data.constructor === Object) 
+            this.data = {users: {}, workspaces: {}, invitations:{}};
+        this.commit(this.data);
         return this.data;
     }
 

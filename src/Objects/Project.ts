@@ -28,7 +28,7 @@ export default class Project {
 
     static SelfDestruct() {
         delete Project.cache;
-        Project.cache = null;
+        Project.cache = new Map();
     }
 
     /**

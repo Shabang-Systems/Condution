@@ -1,4 +1,5 @@
 import Workspace from "./Workspace";
+import { GloballySelfDestruct } from "./Utils";
 import ReferenceManager from "../Storage/ReferenceManager";
 import { Page, Collection } from "../Storage/Backends/Backend"; 
 
@@ -28,9 +29,11 @@ export class Context {
     private _chains:string[]; // current workspace IDs
     private authenticatable:boolean = false; // are we currently authenticated?
     private ready:boolean = false // are the workspaces loaded?
+    private defaultUsername:string; // defaultUsername
 
     constructor(refManager:ReferenceManager, initializeWithoutAuth:boolean=false, defaultUsername:string="hard-storage-user") {
         this.rm = refManager;
+        this.defaultUsername = defaultUsername;
         
         if (!initializeWithoutAuth && this.rm.currentProvider.authSupported) {
             console.assert(this.rm.currentProvider.authenticationProvider.authenticated, "CondutionEngine: requested context initialization with auth but provider not authenticated.");
@@ -70,20 +73,21 @@ export class Context {
      */
 
     useProvider(providerName:string):void {
-        console.error("THIS IS LIKE, BROKEN. TODO TODO TODO TODO.");
-        // TODO TODO Swihing providers is just ... broken
+        // TODO TODO BROKEN
+        console.log("THIS IS VERY BROKEN");
+        GloballySelfDestruct();
         this.rm.use(providerName);
 
         if (this.rm.currentProvider.authSupported) {
-            console.assert(this.rm.currentProvider.authenticationProvider.authenticated, "CondutionEngine: requested context with auth but provider not authenticated.");
+            console.assert(this.rm.currentProvider.authenticationProvider.authenticated, "CondutionEngine: requested context initialization with auth but provider not authenticated.");
             this.ticketID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
             this.userID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
             this.authenticatable = true;
         } else {
-            this.ticketID = "hard-storage-user";
-            this.userID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
-            this.authenticatable = false;
+            this.ticketID = this.defaultUsername;
+            this.userID = this.defaultUsername;
         }
+
     }
 
     /**

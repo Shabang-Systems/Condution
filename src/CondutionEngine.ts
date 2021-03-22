@@ -16,31 +16,19 @@ require('dotenv').config();
 // 
 
 async function test(): Promise<void> {
-    let provider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
-    //let datkingodata: Page = provider.page(["users", "hard-storage-user", "tasks", "y0ptg4qd05efgb9dp74sqp9sin503npn"]);
-    //let test2: Collection = provider.collection(["users", "hard-storage-user", "tasks"]);
-    //let test3: Page = provider.page(["users", "hard-storage-user", "tasks", "5cogizgn3wwhxausv1am7pddp5imvc8lh"]);
-    //console.log(await test3.get());
-    //let data:object = await (await test2.pages())[0].get();
-    //data["name"] = "I AM COMPLETELY NEW";
-    //console.log(await test2.add(data));
-    //datkingodata.delete();
-    //let datkingo:object = await datkingodata.get();
-    //datkingo["name"] = "hewo";
-    //await datkingodata.update({"name": "don't mess up the mood!"});
-    //await datkingodata.set(datkingo);
-    //console.log(await datkingodata.get());
-
+    let jsprovider: JSONProvider = new JSONProvider("../test.json", "json", __dirname);
+    console.log(jsprovider);
     //provider.commit(data);
     //console.log(provider.load());
- //   let provider: FirebaseProvider k= new FirebaseProvider();
-    let manager: ReferenceManager = new ReferenceManager([provider])
+    //let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
+    let manager: ReferenceManager = new ReferenceManager([jsprovider])
 
-    //await provider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
+    //await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
     //// --- TODO everything called before this line needs to be refactored... :( ---
 
     let cm: Context = new Context(manager); // create the context
+    //cm.useProvider("firebase");
     await cm.start(); // start our context
 
     /*
@@ -58,24 +46,29 @@ async function test(): Promise<void> {
 
     let tg0:Tag = await Tag.create(cm, "hewo12", 12);
     //let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
-    //tg.weight = 3;
-    //console.log(tg.id);
+    ////tg.weight = 3;
+    ////console.log(tg.id);
 
-    let task:Task = await Task.create(cm, "another", null, [tg0]);
-    //task.tags = [tg1];
-    console.log(task.weight);
-    console.log(task.name);
-    //console.log(await task.calculateWeight())
-
-    //task.inboxify();
+    //let task:Task = await Task.create(cm, "another", null, [tg0]);
+    ////task.tags = [tg1];
+    //console.log(task.weight);
     //console.log(task.name);
+    ////console.log(await task.calculateWeight())
 
-    //let a:Date = new Date();
+    ////task.inboxify();
+    ////console.log(task.name);
+
+    ////let a:Date = new Date();
+    //console.log(manager.currentProvider);
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
-    task.move(proj1);
-    console.log(task.available);
-    //console.log(task.id);
+    //cm.useProvider("json");
+    //proj = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    //let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
+    //console.log(proj.name);
+    ////let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
+    //task.move(proj1);
+    //console.log(task.available);
+    ////console.log(task.id);
     //let b:Date = new Date();
 
 

@@ -29,7 +29,7 @@ export default class Task {
 
     static SelfDestruct() {
         delete Task.cache;
-        Task.cache = null;
+        Task.cache = new Map();
     }
 
     /**
