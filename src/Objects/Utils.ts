@@ -280,9 +280,12 @@ class Query {
         if (this.objType == Tag) {
             //data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
         }
-        return []
 
-        //return await Promise.all(data.filter(this.conditionFunc).map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter)=>await result.produce()));
+        TagSearchAdapter.cleanup();
+        TaskSearchAdapter.cleanup();
+        ProjectSearchAdapter.cleanup();
+
+        return await Promise.all(data.filter(this.conditionFunc).map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter)=>await result.produce()));
     }
 }
 

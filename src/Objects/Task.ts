@@ -60,8 +60,7 @@ class Task {
 
         Task.cache.set(identifier, tsk);
 
-        await tsk.flushweight();
-        await tsk.flushavailablility();
+        await tsk.calculateTreeParams();
 
         return tsk;
     }
@@ -79,8 +78,7 @@ class Task {
         page.get().then(async (data:object) => {
             tsk.data = data;
             tsk._ready = true;
-            await tsk.flushweight();
-            await tsk.flushavailablility();
+            await tsk.calculateTreeParams();
         });
 
         return tsk;
@@ -129,8 +127,7 @@ class Task {
 
         Task.cache.set(newTask.identifier, tsk);
 
-        await tsk.flushweight();
-        await tsk.flushavailablility();
+        await tsk.calculateTreeParams();
 
         return tsk;
     }
@@ -168,7 +165,7 @@ class Task {
 
     async reorder(newOrder:number) : Promise<void> {
         this.data["order"] = newOrder;
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -530,13 +527,13 @@ class Task {
             this.data["isComplete"] = true;
 
         if (this.project)
-            await (await this.async_project).flushweight();
+            await (await this.async_project).calculateTreeParams();
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
         await this.page.set({completeDate: completeDate}, {merge:true}); // weird date handling
 
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -562,8 +559,8 @@ class Task {
     async uncomplete() : Promise<void> {
         this.data["isComplete"] = false;
         if (this.project)
-            await (await this.async_project).flushweight();
-        await this.flushavailablility();
+            await (await this.async_project).calculateTreeParams();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -578,36 +575,6 @@ class Task {
     }
 
     /**
-     * Lift through tree to get availibility
-     * @async
-     *
-     * Generally, you don't have a need to call this
-     * and you should simply let this happen automagically
-     * as tasks change and as other stuff happen like fetch
-     * or create. However, you could force a weight flush
-     * for your entertainment if you really wanted to.
-     * 
-     * @returns{Promise<void>}
-     *
-     */
-
-    flushavailablility = async () : Promise<void> => {
-        let project:Project = await this.async_project;
-        if (project) {
-            if (project.isSequential)
-                this._available = (project.available && this.order == 0);
-            else
-                this._available = project.available;
-        } else if (this.isComplete == true)
-            this._available = false;
-        else {
-            if (new Date() > this.defer) this._available = true;
-            else this._available = false;
-        }
-    }
-
-
-    /**
      * the DB badge of this object type
      * @param
      *
@@ -617,19 +584,47 @@ class Task {
         return "tasks";
     }
 
-
     /**
-     * calculate the weight of the task
+     * DFS + lift to get weight and availibilty of the task wrt its directory
+     *
+     * Generally, you don't have a need to call this
+     * and you should simply let this happen automagically
+     * as tasks change and as other stuff happen like fetch
+     * or create. However, you could force a tree flush
+     * for your entertainment if you really wanted to.
      *
      * @returns{Promise<void>}
      *
      */
 
-    flushweight = async () : Promise<void> => {
+    calculateTreeParams = async () : Promise<void> => {
+        // Get the tags
         let tags: Tag[] = await Promise.all(this.async_tags ? this.async_tags : []);
+
+        // Set base weight
         let weight = 1;
+
+        // For each tag, multiply weight
         tags.forEach((tag: Tag) => weight *= tag.weight);
+
+        // Set the weight
         this._weight = weight;
+
+        // Get project parents
+        let project:Project = await this.async_project;
+
+        // If there is a parent
+        if (project) {
+
+            // If the parent is sequential
+            if (project.isSequential)
+                this._available = (project.available && this.order == 0 && new Date() > this.defer); // Availibilty is calculated based on order
+            else
+                this._available = (project.available && new Date() > this.defer); // The availibilty is only based on the availibilty of project
+        } else if (this.isComplete == true)
+            this._available = false; // otherwise, its not available
+        else  // if no parents
+            this._available = new Date() > this.defer // the availibilty is controlled only by defer
     }
 
     protected sync = () => {
@@ -637,10 +632,8 @@ class Task {
     }
 
     private update = (newData:object) => {
-        if (this._ready) {
-            this.flushweight();
-            this.flushavailablility();
-        }
+        if (this._ready) 
+            this.calculateTreeParams();
         this.data = newData;
     }
 
@@ -657,6 +650,7 @@ class Task {
 class TaskSearchAdapter extends Task {
 
     adaptorData: AdapterData;
+    private static adaptorCache:Map<string, TaskSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData) {
         super(id, context);
@@ -678,7 +672,6 @@ class TaskSearchAdapter extends Task {
     }
 
     get async_project() {
-        //console.log(this.data["project"] ? this.data["project"] : "boobbobo!");
         return this.data["project"] !== "" ? ProjectSearchAdapter.seed(this.context, this.data["project"], this.adaptorData) : null;
     }
 
@@ -705,12 +698,27 @@ class TaskSearchAdapter extends Task {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
+        let cachedTask:TaskSearchAdapter = TaskSearchAdapter.adaptorCache.get(identifier);
+        if (cachedTask) return cachedTask;
+
         let tsk:TaskSearchAdapter = new this(context, identifier, data);
 
-        await tsk.flushavailablility();
-        await tsk.flushweight();
+        TaskSearchAdapter.adaptorCache.set(identifier, tsk);
+        await tsk.calculateTreeParams();
 
         return tsk;
+    }
+
+    /**
+     * Nuke the cache
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static cleanup = () : void => {
+        delete TaskSearchAdapter.adaptorCache;
+        TaskSearchAdapter.adaptorCache = new Map();
     }
 }
 

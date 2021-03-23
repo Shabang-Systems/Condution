@@ -58,8 +58,7 @@ class Project {
 
         Project.cache.set(identifier, pj);
 
-        await pj.flushavailablility();
-        await pj.flushweight();
+        await pj.calculateTreeParams();
 
         return pj;
     }
@@ -89,8 +88,7 @@ class Project {
             page.get().then(async (data:object)=>{
                 pj.data = data;
                 pj._ready = true;
-                await pj.flushweight();
-                await pj.flushavailablility();
+                await pj.calculateTreeParams();
                 res();
             });
         });
@@ -132,9 +130,7 @@ class Project {
 
         Project.cache.set(newProject.identifier, np);
 
-        await np.flushweight();
-        await np.flushavailablility();
-
+        await np.calculateTreeParams();
 
         return np;
     }
@@ -184,7 +180,7 @@ class Project {
 
     async sequential() : Promise<void> {
         this.data["is_sequential"] = true;
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -198,7 +194,7 @@ class Project {
 
     async parallel() : Promise<void> {
         this.data["is_sequential"] = false;
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -224,7 +220,7 @@ class Project {
 
     async uncomplete() : Promise<void> {
         this.data["isComplete"] = false;
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -238,7 +234,7 @@ class Project {
 
     async complete() : Promise<void> {
         this.data["isComplete"] = true;
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
     
@@ -265,7 +261,7 @@ class Project {
 
     async reorder(newOrder:number) : Promise<void> {
         this.data["order"] = newOrder;
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -374,8 +370,7 @@ class Project {
             order = Object.keys(this.children).length;
         await item.reorder(order);
         this.data["children"][item.id] = (item instanceof Task) ? "task" : "project";
-        await this.flushweight();
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -390,8 +385,7 @@ class Project {
 
     async dissociate(item:Project|Task): Promise<void> {
         delete this.data["children"][item.id];
-        await this.flushweight();
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -413,8 +407,7 @@ class Project {
             this.data["children"][i.id] = (i instanceof Task) ? "task" : "project";
         }
 
-        await this.flushweight();
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -432,8 +425,7 @@ class Project {
             delete this.children[i.id];
         }
 
-        await this.flushweight();
-        await this.flushavailablility();
+        await this.calculateTreeParams();
         this.sync();
     }
 
@@ -532,53 +524,49 @@ class Project {
     }
 
     /**
-     * DFS though the project and calculate weight
-     * @async
+     * DFS + lift to get weight and availibilty of the project wrt its directory
      *
      * Generally, you don't have a need to call this
      * and you should simply let this happen automagically
      * as tasks change and as other stuff happen like fetch
-     * or create. However, you could force a weight flush
+     * or create. However, you could force a tree flush
      * for your entertainment if you really wanted to.
-     * 
+     *
      * @returns{Promise<void>}
      *
      */
 
-    flushweight = async () : Promise<void> => {
-        let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
-            return i.weight;
-        }));
-        this._weight = 0;
-        weights.forEach((i:number) => this._weight+=i);
-    }
-
-    /**
-     * Lift and DFS through tree to refresh availibility
-     * @async
-     *
-     * Generally, you don't have a need to call this
-     * and you should simply let this happen automagically
-     * as tasks change and as other stuff happen like fetch
-     * or create. However, you could force a weight flush
-     * for your entertainment if you really wanted to.
-     * 
-     * @returns{Promise<void>}
-     *
-     */
-
-    flushavailablility = async () : Promise<void> => {
+    calculateTreeParams = async () : Promise<void> => {
+        // Get the parent project
         let parent_proj:Project = await this.async_parent;
+
+        // If we have a parent project
         if (parent_proj) {
+
+            // ... and it's sequential
             if (parent_proj.isSequential)
-                this._available = (parent_proj.available && this.order == 0);
+                this._available = (parent_proj.available && this.order == 0 && this.isComplete == false); // availablitiy is based on order
             else
-                this._available = parent_proj.available;
-        } else if (this.isComplete == true)
-            this._available = false;
+                this._available = (parent_proj.available && this.isComplete == false); // and get the availibilty
+        } else if (this.isComplete !== undefined && this.isComplete !== null)// if its complete
+            this._available = !this.isComplete; // its availibilty is based on completenessk
         else
             this._available = true;
-        await Promise.all((await this.async_children).map(async (i:(Task|Project)) => await i.flushavailablility())) // AWAIT THESE TOO!!
+
+        // Get weights by DFS, while flushing the availibilty of children
+        let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
+            // Flush their availibilty
+            await i.calculateTreeParams();
+
+            // Return their weight
+            return i.weight;
+        }));
+
+        // Set weight to zero
+        this._weight = 0;
+
+        // Sum the weight as new weight
+        weights.forEach((i:number) => this._weight+=i);
     }
 
     private readiness_warn = () => {
@@ -591,10 +579,8 @@ class Project {
     }
 
     private update = (newData:object) => {
-        if (this._ready) {
-            this.flushweight();
-            this.flushavailablility();
-        }
+        if (this._ready)
+            this.calculateTreeParams();
         this.data = newData;
     }
 
@@ -603,6 +589,7 @@ class Project {
 class ProjectSearchAdapter extends Project {
 
     adaptorData: AdapterData;
+    private static adaptorCache:Map<string, ProjectSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData) {
         super(id, context);
@@ -623,6 +610,18 @@ class ProjectSearchAdapter extends Project {
                     dataArray.push(await ProjectSearchAdapter.seed(this.context, child, this.adaptorData));
             return dataArray;
         })()
+    }
+
+    /**
+     * Nuke the cache
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static cleanup = () : void => {
+        delete ProjectSearchAdapter.adaptorCache;
+        ProjectSearchAdapter.adaptorCache = new Map();
     }
 
     get async_parent() {
@@ -656,10 +655,13 @@ class ProjectSearchAdapter extends Project {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
+        let cachedProject:ProjectSearchAdapter = ProjectSearchAdapter.adaptorCache.get(identifier);
+        if (cachedProject) return cachedProject;
+
         let tsk:ProjectSearchAdapter = new this(context, identifier, data);
 
-        //await tsk.flushavailablility();
-        await tsk.flushweight();
+        ProjectSearchAdapter.adaptorCache.set(identifier, tsk);
+        await tsk.calculateTreeParams();
 
         return tsk;
     }

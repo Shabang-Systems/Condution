@@ -60,11 +60,13 @@ async function test(): Promise<void> {
     ////let a:Date = new Date();
     //console.log(manager.currentProvider);
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    //console.log(proj.available);
+    //proj.uncomplete();
     //cm.useProvider("json");
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
     //console.log(proj.children[0].databaseBadge);
     //let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
-    //console.log(proj.name);
+    //console.log(proj1.name);
     ////let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
     //task.move(proj1);
     //console.log(task.available);
@@ -77,10 +79,10 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    let q:Query = new Query(cm, Task, (i:Task) => i.name=="heyo");
+    let q:Query = new Query(cm, Task, (i:Task) => i.name=="amazing");
     //let q1:Query = new Query(cm, Project, (i:Project) => true);
-    //console.log((await q.execute()).length);
-    //console.log((await q1.execute()).length);
+    //console.log((await q.execute()));
+    console.log((await q.execute()));
     //console.log(q.execute());
 
     //console.log(proj.name);

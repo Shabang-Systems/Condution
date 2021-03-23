@@ -212,6 +212,9 @@ class Tag {
 
 class TagSearchAdapter extends Tag {
 
+
+    private static adaptorCache:Map<string, TagSearchAdapter> = new Map();
+
     constructor(context:Context, id:string, data:AdapterData) {
         super(id, context);
 
@@ -248,9 +251,25 @@ class TagSearchAdapter extends Tag {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
+        let cachedTag:TagSearchAdapter = TagSearchAdapter.adaptorCache.get(identifier);
+        if (cachedTag) return cachedTag;
+
         let tsk:TagSearchAdapter = new this(context, identifier, data);
+        TagSearchAdapter.adaptorCache.set(identifier, tsk);
 
         return tsk;
+    }
+
+    /**
+     * Nuke the cache
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static cleanup = () : void => {
+        delete TagSearchAdapter.adaptorCache;
+        TagSearchAdapter.adaptorCache = new Map();
     }
 }
 
