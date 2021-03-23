@@ -20,7 +20,7 @@ async function test(): Promise<void> {
     //provider.commit(data);
     //console.log(provider.load());
     let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
-    let manager: ReferenceManager = new ReferenceManager([fbprovider])
+    let manager: ReferenceManager = new ReferenceManager([jsprovider])
 
     await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
@@ -79,10 +79,12 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    let q:Query = new Query(cm, Task, (i:Task) => i.name=="amazing");
-    //let q1:Query = new Query(cm, Project, (i:Project) => true);
-    //console.log((await q.execute()));
-    console.log((await q.execute()));
+    let q:Query = new Query(cm, Task);
+    await q.index();
+    console.log((await q.batch_execute([
+        (i:Task) => i.name=="heyo3", 
+        (i:Task) => i.isComplete==false, 
+    ])));
     //console.log(q.execute());
 
     //console.log(proj.name);

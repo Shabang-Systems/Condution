@@ -238,7 +238,7 @@ type Filterable = Task|Tag|Project;
 class Query {
     private cm: Context;
     private objType: Function;
-    private conditionFunc:(i:Filterable)=>boolean;
+    private dataObject:AdapterData;
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
     // ok look. I know. This should be a template function.
@@ -251,42 +251,100 @@ class Query {
     // overload on Typescript types. And while you are at it ask
     // Microsoft to make Windows better.
 
-    constructor(context:Context, objectType:Function, condition:(i:Filterable)=>boolean) {
-        this.conditionFunc = condition;
+    constructor(context:Context, objectType:Function) {
         this.objType = objectType;
         this.cm = context;
     }
 
-    async execute(): Promise<Filterable[]> {
-        let data:Filterable[] = [];
+    /**
+     * Index the database so that... we have something to filter.
+     * @async
+     *
+     * You should probably call this before you execute.
+     *
+     * @returns {Promise<AdapterData>}
+     *
+     */
+
+    async index() : Promise<AdapterData> {
         let taskPages:object[] = await this.cm.collection(["tasks"]).data();
         let projectPages:object[] = await this.cm.collection(["projects"]).data();
         let tagPages:object[] = await this.cm.collection(["tags"]).pages();
 
-        let dataObject:AdapterData = {
+        this.dataObject = {
             taskCollection: taskPages,
             projectCollection: projectPages,
             tagCollection: tagPages,
         }
+
+        return this.dataObject;
+    }
+
+    /**
+     * Execute a filter query based on a function parameter
+     *
+     * @param{(i:Filterable)=>boolean} condition    the condition you are filtering on
+     * @param{((i:Filterable)=>boolean)[]?} conditions    a list of conditions you are filtering on
+     * @returns{Promise<Filterable>}
+     *
+     */
+
+    async execute(condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
+
+        console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
+
+        let data:Filterable[] = [];
+
+        let dataObject:AdapterData = this.dataObject;
+        if (!dataObject) {
+            console.warn("CondutionEngine: you forgot to call .index() before you executed a query. What am I supposed to do without data? Get it for you I guess. Calling .index() now. See? I am doing your work for you.");
+            await this.index();
+            dataObject = this.dataObject;
+        }
+
+
+        let taskPages:object[] = this.dataObject.taskCollection;
+        let projectPages:object[] = this.dataObject.projectCollection;
+        let tagPages:object[] = this.dataObject.tagCollection;
 
         if (this.objType == Task) {
             data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
         } 
 
         if (this.objType == Project) {
-            //data = await Promise.all(projectPages.map(async (p:Page) => await Project.fetch(this.cm, p.id)));
+            data = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
         }
 
         if (this.objType == Tag) {
-            //data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
+            data = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
         }
 
         TagSearchAdapter.cleanup();
         TaskSearchAdapter.cleanup();
         ProjectSearchAdapter.cleanup();
 
-        return await Promise.all(data.filter(this.conditionFunc).map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter)=>await result.produce()));
+        if (condition)
+            data = data.filter(condition)
+        else {
+            conditions.forEach((query:((i:Filterable)=>boolean)) => {
+                data = data.filter(query);
+            });
+        }
+        return await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter)=>await result.produce()));
     }
+
+   /**
+     * Execute a filter query based a bunch of function parametetrs
+     *
+     * @param{((i:Filterable)=>boolean)[]} conditions    a list of conditions you are filtering on
+     * @returns{Promise<Filterable>}
+     *
+     */
+
+    async batch_execute(conditions:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
+        return await this.execute(null, conditions);
+    };
+
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };
