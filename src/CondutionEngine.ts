@@ -79,12 +79,13 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    let q:Query = new Query(cm, Task);
-    await q.index();
-    console.log((await q.batch_execute([
-        (i:Task) => i.name=="heyo3", 
-        (i:Task) => i.isComplete==false, 
-    ])));
+    let q:Query = new Query(cm, Project); // create a query 
+    await q.index(); // O(n) through the whole damn database to cache parametres. 
+                     // this is expensive, so don't do it too much
+    console.log((await q.execute( // O(n) or O(logn) to find things. depending on what data you are filtering by.
+        (i:Project) => i.name=="woha!", // like, name!
+    ))[0].name);
+
     //console.log(q.execute());
 
     //console.log(proj.name);

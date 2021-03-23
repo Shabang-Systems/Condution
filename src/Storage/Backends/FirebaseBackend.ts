@@ -52,7 +52,6 @@ class FirebaseCollection extends Collection {
      */
 
     async pages() : Promise<Page[]> {
-        console.log("PAGING!!! ", this.path);
         return (await this.getFirebaseRef(this.path).get()).docs.map((page:any)=>{
             return new FirebasePage([...this.path, page.id], this.firebaseDB, this.firebaseRef);
         });
@@ -67,7 +66,6 @@ class FirebaseCollection extends Collection {
      */
 
     async data() : Promise<object[]> {
-        console.log("DATALING!!! ", this.path);
         return (await this.getFirebaseRef(this.path).get()).docs.map((page:any)=>{
             return Object.assign(page.data(), {id: page.id});
         });
@@ -151,7 +149,6 @@ class FirebasePage extends Page {
         const ref = this.getFirebaseRef(path);           //  get the reference from the database
 
         this.data = (async () : Promise<Object> => {
-            console.log("GETTING!!! ", path);
             let snapshot = await ref.get();
 	    let data: Object = snapshot.data();
             return Object.assign(data ? data : {}, {id: snapshot.id});
