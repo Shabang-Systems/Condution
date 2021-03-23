@@ -1,15 +1,18 @@
+import type { AdapterData } from "./Utils";
+
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
 
-export default class Tag {
+class Tag {
     private static cache:Map<string, Tag> = new Map();
     static readonly databaseBadge = "tags";
 
     private _id:string;
     private page:Page;
-    private data:object;
-    private context:Context;
-    private _ready:boolean;
+
+    protected data:object;
+    protected context:Context;
+    protected _ready:boolean;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -197,7 +200,7 @@ export default class Tag {
             console.warn("CondutionEngine: you tried to access an object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
     }
 
-    private sync = () => {
+    protected sync = () => {
         this.page.set(this.data);
     }
 
@@ -207,4 +210,51 @@ export default class Tag {
 
 }
 
+class TagSearchAdapter extends Tag {
+
+    constructor(context:Context, id:string, data:AdapterData) {
+        super(id, context);
+
+        this.data = data.tagCollection.filter((obj:object)=> obj["id"] === id)[0];
+        if (!this.data) 
+            this.data = {}
+        this._ready = true;
+    }
+
+    protected sync = () => {
+        console.warn("You tried to edit the value of an object in the middle of a search adaptor. That's an awfully bad idea. Don't do that. No stop.");
+    }
+
+    /**
+     * Produce the desired object
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    async produce() : Promise<Tag> {
+        return await Tag.fetch(this.context, this.id);
+    }
+
+    /**
+     * Seed a searchable item
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    static async seed(context:Context, identifier:string, data:AdapterData) {
+        let tsk:TagSearchAdapter = new this(context, identifier, data);
+
+        return tsk;
+    }
+}
+
+
+export { TagSearchAdapter };
+export default Tag;
 

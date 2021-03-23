@@ -1,6 +1,6 @@
-import Tag from "./Tag";
-import Task from "./Task";
-import Project from "./Project";
+import Tag, { TagSearchAdapter } from "./Tag";
+import Task, { TaskSearchAdapter } from "./Task";
+import Project, { ProjectSearchAdapter } from "./Project";
 import Workspace from "./Workspace";
 import { Context } from "./EngineManager";
 import { Page, Collection } from "../Storage/Backends/Backend";
@@ -227,7 +227,13 @@ class RepeatRule {
     }
 }
 
-type Filterable = Task|Workspace|Tag|Project;
+interface AdapterData {
+    taskCollection: object[],
+    projectCollection: object[],
+    tagCollection: object[],
+}
+
+type Filterable = Task|Tag|Project;
 
 class Query {
     private cm: Context;
@@ -253,32 +259,33 @@ class Query {
 
     async execute(): Promise<Filterable[]> {
         let data:Filterable[] = [];
+        let taskPages:object[] = await this.cm.collection(["tasks"]).data();
+        let projectPages:object[] = await this.cm.collection(["projects"]).data();
+        let tagPages:object[] = await this.cm.collection(["tags"]).pages();
+
+        let dataObject:AdapterData = {
+            taskCollection: taskPages,
+            projectCollection: projectPages,
+            tagCollection: tagPages,
+        }
 
         if (this.objType == Task) {
-            let taskPages:Page[] = await this.cm.collection(["tasks"]).pages();
-            data = await Promise.all(taskPages.map(async (p:Page) => await Task.fetch(this.cm, p.id)));
+            data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
         } 
 
         if (this.objType == Project) {
-            let projectPages:Page[] = await this.cm.collection(["projects"]).pages();
-            data = await Promise.all(projectPages.map(async (p:Page) => await Project.fetch(this.cm, p.id)));
+            //data = await Promise.all(projectPages.map(async (p:Page) => await Project.fetch(this.cm, p.id)));
         }
 
         if (this.objType == Tag) {
-            let tagPages:Page[] = await this.cm.collection(["tags"]).pages();
-            data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
+            //data = await Promise.all(tagPages.map(async (p:Page) => await Tag.fetch(this.cm, p.id)));
         }
+        return []
 
-        if (this.objType == Workspace) {
-            let workspacePages:Page[] = await this.cm.collection(["workspaces"]).pages();
-            data = await Promise.all(workspacePages.map(async (p:Page) => await Workspace.fetch(this.cm, p.id)));
-        }
-
-        return data.filter(this.conditionFunc);
+        //return await Promise.all(data.filter(this.conditionFunc).map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter)=>await result.produce()));
     }
 }
 
-//new Query<Task>((i:Task) => {i.name == "chicken"}).execute();
-
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };
+export type { AdapterData };
 

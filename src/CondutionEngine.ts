@@ -77,7 +77,7 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    //let q:Query = new Query(cm, Task, (i:Task) => true);
+    let q:Query = new Query(cm, Task, (i:Task) => i.name=="heyo");
     //let q1:Query = new Query(cm, Project, (i:Project) => true);
     //console.log((await q.execute()).length);
     //console.log((await q1.execute()).length);
@@ -93,7 +93,7 @@ async function test(): Promise<void> {
     //await proj.bringToTop();
     //console.log(proj1.weight);
 
-    const actualtask:Task = await Task.fetch(cm, "Yuc9B6VuWNbQbbxAlnWp");
+    //const actualtask:Task = await Task.fetch(cm, "Yuc9B6VuWNbQbbxAlnWp");
     //await actualtask.complete();
     //console.log(actualtask.completeDate.toLocaleString());
     //console.log(actualtask.isComplete);

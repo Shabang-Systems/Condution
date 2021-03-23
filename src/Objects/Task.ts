@@ -1,20 +1,24 @@
+import type { AdapterData } from "./Utils";
+
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
 import { RepeatRule, RepeatRuleType } from "./Utils";
-import Project from "./Project";
-import Tag from "./Tag";
+import Project, { ProjectSearchAdapter } from "./Project";
+import Tag, { TagSearchAdapter } from "./Tag";
 
-export default class Task {
+class Task {
     private static cache:Map<string, Task> = new Map();
     static readonly databaseBadge = "tasks";
 
     private _id:string;
-    private _weight:number;
     private page:Page;
-    private data:object;
-    private context:Context;
-    private _ready:boolean;
-    private _available:boolean;
+
+    protected data:object;
+    protected _ready:boolean;
+    protected _weight:number;
+    protected _available:boolean;
+    protected context:Context;
+
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -621,14 +625,14 @@ export default class Task {
      *
      */
 
-    private flushweight = async () : Promise<void> => {
-        let tags: Tag[] = await Promise.all(this.async_tags);
+    flushweight = async () : Promise<void> => {
+        let tags: Tag[] = await Promise.all(this.async_tags ? this.async_tags : []);
         let weight = 1;
         tags.forEach((tag: Tag) => weight *= tag.weight);
         this._weight = weight;
     }
 
-    private sync = () => {
+    protected sync = () => {
         this.page.set(this.data);
     }
 
@@ -649,4 +653,68 @@ export default class Task {
         return this.data;
     }
 }
+
+class TaskSearchAdapter extends Task {
+
+    adaptorData: AdapterData;
+
+    constructor(context:Context, id:string, data:AdapterData) {
+        super(id, context);
+
+        this.data = data.taskCollection.filter((obj:object)=> obj["id"] === id)[0];
+        if (!this.data) 
+            this.data = {}
+
+        this.adaptorData = data;
+        this._ready = true;
+    }
+
+    protected sync = () => {
+        console.warn("You tried to edit the value of an object in the middle of a search adaptor. That's an awfully bad idea. Don't do that. No stop.");
+    }
+
+    get async_tags() {
+        return this.data["tags"] ? this.data["tags"].map((tagID:string) => TagSearchAdapter.seed(this.context, tagID, this.adaptorData)) : null;
+    }
+
+    get async_project() {
+        //console.log(this.data["project"] ? this.data["project"] : "boobbobo!");
+        return this.data["project"] !== "" ? ProjectSearchAdapter.seed(this.context, this.data["project"], this.adaptorData) : null;
+    }
+
+    /**
+     * Produce the desired object
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    async produce() : Promise<Task> {
+        return await Task.fetch(this.context, this.id);
+    }
+
+    /**
+     * Seed a searchable item
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    static async seed(context:Context, identifier:string, data:AdapterData) {
+        let tsk:TaskSearchAdapter = new this(context, identifier, data);
+
+        await tsk.flushavailablility();
+        await tsk.flushweight();
+
+        return tsk;
+    }
+}
+
+
+export { TaskSearchAdapter };
+export default Task;
 

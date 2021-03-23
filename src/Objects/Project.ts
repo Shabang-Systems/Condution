@@ -1,19 +1,22 @@
+import type { AdapterData } from "./Utils";
+
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
-import Task from "./Task";
+import Task, { TaskSearchAdapter } from "./Task";
 import { Context } from "./EngineManager";
 
-export default class Project {
+class Project {
     private static cache:Map<string, Project> = new Map();
     static readonly databaseBadge = "projects";
 
     private _id:string;
     private page:Page;
-    private data:object;
-    private _weight:number;
-    private context:Context;
-    private _ready:boolean;
-    private _available:boolean;
-    private _readiness:Promise<void>;
+
+    protected data:object;
+    protected _weight:number;
+    protected context:Context;
+    protected _ready:boolean;
+    protected _available:boolean;
+    protected _readiness:Promise<void>;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -287,7 +290,7 @@ export default class Project {
     get parent() {
         this.readiness_warn();
         if (this._ready)
-            return this.data["parent"] ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
+            return this.data["parent"] !== "" ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
     }
 
      /**
@@ -333,7 +336,7 @@ export default class Project {
     get async_parent() {
         this.readiness_warn();
         if (this._ready)
-            return this.data["parent"] ? Project.fetch(this.context, this.data["parent"]) : null;
+            return this.data["parent"] !== "" ? Project.fetch(this.context, this.data["parent"]) : null;
     }
 
     /**
@@ -583,7 +586,7 @@ export default class Project {
             console.warn("CondutionEngine: you tried to access a bubbubbubu object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
     }
 
-    private sync = () => {
+    protected sync = () => {
         this.page.set(this.data);
     }
 
@@ -597,4 +600,71 @@ export default class Project {
 
 }
 
+class ProjectSearchAdapter extends Project {
+
+    adaptorData: AdapterData;
+
+    constructor(context:Context, id:string, data:AdapterData) {
+        super(id, context);
+        this.data = data.projectCollection.filter((obj:object)=> obj["id"] === id)[0];
+        if (!this.data)
+            this.data = {};
+        this.adaptorData = data;
+        this._ready = true;
+    }
+
+    get async_children() {
+        return (async () => {
+            let dataArray:(Project|Task)[] = [];
+            for (let child in this.data["children"])
+                if (this.data["children"][child] == "task")
+                    dataArray.push(await TaskSearchAdapter.seed(this.context, child, this.adaptorData));
+                else if (this.data["children"][child] == "project")
+                    dataArray.push(await ProjectSearchAdapter.seed(this.context, child, this.adaptorData));
+            return dataArray;
+        })()
+    }
+
+    get async_parent() {
+        return this.data["parent"] !== "" ? ProjectSearchAdapter.seed(this.context, this.data["parent"], this.adaptorData) : null;
+    }
+
+    protected sync = () => {
+        console.warn("You tried to edit the value of an object in the middle of a search adaptor. That's an awfully bad idea. Don't do that. No stop.");
+    }
+
+    /**
+     * Produce the desired object
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    async produce() : Promise<Project> {
+        return await Project.fetch(this.context, this.id);
+    }
+
+    /**
+     * Seed a searchable item
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    static async seed(context:Context, identifier:string, data:AdapterData) {
+        let tsk:ProjectSearchAdapter = new this(context, identifier, data);
+
+        //await tsk.flushavailablility();
+        await tsk.flushweight();
+
+        return tsk;
+    }
+}
+
+export { ProjectSearchAdapter };
+export default Project;
 
