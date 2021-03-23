@@ -43,12 +43,12 @@ async function test(): Promise<void> {
    //tasktest.name = "VERY LARGE STRING SO THAT I COULD NOTICE THIS";
    //console.log(tasktest.name);
 
-    //let tg0:Tag = await Tag.create(cm, "hewo12", 12);
+    let tg0:Tag = await Tag.create(cm, "hewo12", 12);
     //let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
     ////tg.weight = 3;
     ////console.log(tg.id);
 
-    //let task:Task = await Task.create(cm, "another", null, [tg0]);
+    let task:Task = await Task.create(cm, "another", null, [tg0]);
     ////task.tags = [tg1];
     //console.log(task.weight);
     //console.log(task.name);
@@ -60,6 +60,8 @@ async function test(): Promise<void> {
     ////let a:Date = new Date();
     //console.log(manager.currentProvider);
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
+    let proj:Project = await Project.create(cm, "NO SLOW!");
+    task.move(proj);
     //console.log(proj.available);
     //proj.uncomplete();
     //cm.useProvider("json");

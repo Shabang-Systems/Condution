@@ -1,7 +1,11 @@
 {
     "env": {
         "production": {
-            "presets": ["minify"],
+            "presets": [["minify", {
+              builtIns: false,
+              evaluate: false,
+              mangle: false,
+            }]],
         },
     },
     "presets": [
