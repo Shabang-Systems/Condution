@@ -1,3 +1,5 @@
+import type { Filterable } from "./Utils";
+
 import Task from "./Task";
 import Tag from "./Tag";
 import Project from "./Project";
@@ -10,12 +12,39 @@ class LogicGroup {
     rawString:string;
 
     private simpleGroup: RegExp = /\[.*?\]/; // query for the "simple" part of the capture group
+    private directionality: RegExp = /^\(*\$/; // $PARAM <=> [FILTER]$PARAM should match; not the other way
+    private logicParameterComponent: RegExp = /\[.*?\]\$(\w+)/; // query for the parametered part of the logic [#this .that]$THIS_PART_HERE
+    private independentParameterComponent: RegExp = /[^\])]\$(\w+)/; // query for the independent parameter of the logic $THAT_OTHER_PART
+    private operatorTest: RegExp = /([>=<])/; // the operator >, =, <
 
     private query:Query;
+    private simple:SimpleGroup;
 
-    constructor(query:Query, querySting:string) {
-        this.rawString = querySting;
+    private operator:string;
+    private logicParameter:string;
+    private indepParameter:string;
+
+    constructor(query:Query, queryString:string) {
+        this.rawString = queryString;
         this.query = query;
+
+        this.simple = new SimpleGroup(query, [...queryString.match(this.simpleGroup)][0]);
+
+        this.logicParameter = [...this.logicParameterComponent.exec(queryString)][1];
+        this.indepParameter = [...this.independentParameterComponent.exec(queryString)][1];
+
+        let operator: string = [...this.operatorTest.exec(queryString)][1];
+
+        let directionality:boolean = this.directionality.test(queryString);
+
+        if (!directionality) { // flip the sign
+            if (operator == "<") operator = ">";
+            else if (operator == ">") operator = "<";
+        }
+
+        this.operator = operator;
+            
+        console.log(this);
     }
 }
 
@@ -39,16 +68,18 @@ class SimpleGroup {
      * Sythesize the filter functions needed
      * @async
      *
-     * @returns{((i:Filterable)=>boolean)[][]}
+     * @returns{Promise<((i:Filterable)=>boolean)[][]>}
      *
      */
 
-    async synthesize() {
+    async synthesize() : Promise<((i:Filterable)=>boolean)[][]> {
         let positiveprojects:Project[] = [];
         let negateprojects:Project[] = [];
 
         let positivetags:Tag[] = [];
         let negatetags:Tag[] = [];
+
+        let result:((i:Filterable)=>boolean)[][] = [];
 
         await Promise.all(this.filters.map(async (filter:string) => {
             // Check for negate condition
@@ -118,15 +149,28 @@ class SimpleGroup {
                 // Get the zeroeth matching tag TODO bad idea?
                 let tags:Tag[] = await this.query.execute(Tag, (i:Tag) => i.name === filter) as Tag[];
                 let tag:Tag = tags[0];
-                console.log(tags, filter);
 
-                // That's it! Horray!
+                // That's it! Horray! That was easy.
                 if (negate) negatetags.push(tag);
                 else positivetags.push(tag);
             }
         }));
 
-        console.log(positivetags, negatetags);
+        for (let i:number=0; i<=(positiveprojects.length > 0 ? positiveprojects.length-1 : 0 ); i++) {
+            let tempResult: ((i:Filterable)=>boolean)[] = [];
+
+            if (i !== positiveprojects.length) tempResult.push((t:Task) => t.project == positiveprojects[i]);
+
+            negateprojects.forEach((j:Project) => tempResult.push((t:Task) => t.project != j));
+
+            positivetags.forEach((h:Tag) => tempResult.push((t:Task) => t.tags.includes(h)));
+
+            negatetags.forEach((h:Tag) => tempResult.push((t:Task) => !t.tags.includes(h)));
+
+            result.push(tempResult);
+        }
+
+        return result;
     }
 }
 
@@ -162,7 +206,22 @@ class PerspectiveQuery {
         // index the database
         await this.queryEngine.index();
 
-        await this.simpleGroups[0].synthesize();
+        // Get parsed queries
+        let parsedQueries:((i:Filterable)=>boolean)[][] = [];
+
+        // Calculate all the queries
+        (await Promise.all(
+
+            // And flatten the query list
+            this.simpleGroups.map(
+                async (i:SimpleGroup) => 
+                (await i.synthesize()).forEach(
+                    (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
+                )
+            )
+        ));
+
+        //console.log(parsedQueries);
     }
 }
 
