@@ -43,7 +43,6 @@ class LogicGroup {
         }
 
         this.operator = operator;
-            
         console.log(this);
     }
 }
@@ -179,7 +178,7 @@ class PerspectiveQuery {
     rawString:string;
 
     private groupCapture: RegExp = /(\[.*?\]|\(.*?\))/g; // query for the capture units like [#this] or ([#that]$due < $defer)
-    private logicGroup: RegExp = /\(\[[^()]+?]\$.*?\)/; // query test for whether the capture group is a logic group, ([#that]$due < $defer)
+    private logicGroup: RegExp = /\(.*?\[[^()]+?]\$.*?\)/; // query test for whether the capture group is a logic group, ([#that]$due < $defer)
 
     logicGroups:LogicGroup[];
     simpleGroups:SimpleGroup[];
