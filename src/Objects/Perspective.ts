@@ -14,8 +14,9 @@ class LogicGroup {
     private simpleGroup: RegExp = /\[.*?\]/; // query for the "simple" part of the capture group
     private directionality: RegExp = /^\(*\$/; // $PARAM <=> [FILTER]$PARAM should match; not the other way
     private logicParameterComponent: RegExp = /\[.*?\]\$(\w+)/; // query for the parametered part of the logic [#this .that]$THIS_PART_HERE
-    private independentParameterComponent: RegExp = /[^\])]\$(\w+)/; // query for the independent parameter of the logic $THAT_OTHER_PART
-    private operatorTest: RegExp = /([>=<])/; // the operator >, =, <
+    private independentParameterComponent: RegExp = /[^\])]\$([\w- :+-/]+)/; // query for the independent parameter of the logic $THAT_OTHER_PART
+    private independentParameterGroupComponent: RegExp = /(\w+) *([+-]*) *(\d*)/; // query for the three parts of the independent parameter. Like today+13
+    private operatorTest: RegExp = /([>=<|])/; // the operator >, =, <
 
     private query:Query;
     private simple:SimpleGroup;
@@ -23,6 +24,9 @@ class LogicGroup {
     private operator:string;
     private logicParameter:string;
     private indepParameter:string;
+    private indepParameterGroups:string[];
+
+    private indepParamData: any;
 
     constructor(query:Query, queryString:string) {
         this.rawString = queryString;
@@ -31,7 +35,8 @@ class LogicGroup {
         this.simple = new SimpleGroup(query, [...queryString.match(this.simpleGroup)][0]);
 
         this.logicParameter = [...this.logicParameterComponent.exec(queryString)][1];
-        this.indepParameter = [...this.independentParameterComponent.exec(queryString)][1];
+        this.indepParameter = [...this.independentParameterComponent.exec(queryString)][1].trim();
+        this.indepParameterGroups = [...this.independentParameterGroupComponent.exec(queryString)];
 
         let operator: string = [...this.operatorTest.exec(queryString)][1];
 
@@ -50,8 +55,96 @@ class LogicGroup {
         this.independentParameterComponent.lastIndex = 0;
         this.operatorTest.lastIndex = 0;
         this.directionality.lastIndex = 0;
+        this.independentParameterGroupComponent.lastIndex = 0;
 
-        console.log(this);
+        this.parseIndepParam();
+    }
+
+    private parseIndepParam() {
+        // Get the param to parse
+        let param:string = this.indepParameter;
+
+        // Try to parse as string parameter
+        switch (this.indepParameterGroups[1]) {
+            case "today": // this is literally the only macro param we have  :(
+                let today = new Date(); // today
+                // if no more operators, just return
+                if (this.indepParameterGroups[2] == '') return this.indepParamData=today, null;
+                // if + operator, add the correct number of days
+                else if (this.indepParameterGroups[2] == "+") {
+                    today.setDate(today.getDate()+parseInt(this.indepParameterGroups[3]));
+                    return this.indepParamData=today, null
+                }
+                // if - operator, subtract the correct number of days
+                else if (this.indepParameterGroups[2] == "-") {
+                    today.setDate(today.getDate()-parseInt(this.indepParameterGroups[3]));
+                    return this.indepParamData=today, null
+                }
+
+                break;
+        }
+
+        // Early date parse exceptions
+        if (param.includes("/") || param.includes("-")) {
+            let unixDate:number = Date.parse(param);
+            console.log(unixDate);
+            if (!isNaN(unixDate)) return this.indepParamData=new Date(unixDate), null;
+        }
+
+        // Try to parse as a number
+        let intParam:number = parseFloat(param);
+        if (!isNaN(intParam)) return this.indepParamData=intParam, null;
+
+        // Late last-ditch heuristic date parse
+        let unixDate:number = Date.parse(param);
+        if (!isNaN(unixDate)) return this.indepParamData=new Date(unixDate), null;
+
+        // And finally, we give up
+        this.indepParamData = param;
+    }
+
+     /**
+     * Sythesize the filter functions needed
+     * @async
+     *
+     * @returns{Promise<((i:Filterable)=>boolean)[][]>}
+     *
+     */
+
+    async synthesize() : Promise<((i:Filterable)=>boolean)[][]> {
+        let coreFilters: ((i:Filterable)=>boolean)[][] = await this.simple.synthesize();
+        let compoundAddition: ((i:Filterable)=>boolean);
+
+        switch (this.logicParameter) {
+            case "due":
+                if (this.operator == "<") compoundAddition = (i:Task) => i.due < this.indepParamData;
+                else if (this.operator == ">") compoundAddition = (i:Task) => i.due > this.indepParamData;
+                else if (this.operator == "=") compoundAddition = (i:Task) => i.due == this.indepParamData;
+                break;
+            case "defer":
+                if (this.operator == "<") compoundAddition = (i:Task) => i.defer < this.indepParamData;
+                else if (this.operator == ">") compoundAddition = (i:Task) => i.defer > this.indepParamData;
+                else if (this.operator == "=") compoundAddition = (i:Task) => i.defer == this.indepParamData;
+                break;
+            case "weight":
+                if (this.operator == "<") compoundAddition = (i:Task) => i.weight < this.indepParamData;
+                else if (this.operator == ">") compoundAddition = (i:Task) => i.weight > this.indepParamData;
+                else if (this.operator == "=") compoundAddition = (i:Task) => i.weight == this.indepParamData;
+                break;
+            case "name":
+                if (this.operator == "=") compoundAddition = (i:Task) => i.name == this.indepParamData;
+                else if (this.operator == "") compoundAddition = (i:Task) => i.name.includes(this.indepParamData);
+                break;
+            case "description":
+            case "desc":
+                if (this.operator == "=") compoundAddition = (i:Task) => i.description == this.indepParamData;
+                else if (this.operator == "") compoundAddition = (i:Task) => i.description.includes(this.indepParamData);
+                break;
+
+        }
+
+        coreFilters.forEach((i:Function[]) => i.push(compoundAddition));
+        return coreFilters;
     }
 }
 
@@ -227,6 +320,8 @@ class PerspectiveQuery {
                 )
             )
         ));
+
+        //console.log(await this.logicGroups[0].synthesize());
 
         //console.log(parsedQueries);
     }
