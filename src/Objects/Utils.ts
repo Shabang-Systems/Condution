@@ -267,7 +267,7 @@ class Query {
     async index() : Promise<AdapterData> {
         let taskPages:object[] = await this.cm.collection(["tasks"]).data();
         let projectPages:object[] = await this.cm.collection(["projects"]).data();
-        let tagPages:object[] = await this.cm.collection(["tags"]).pages();
+        let tagPages:object[] = await this.cm.collection(["tags"]).data();
 
         this.dataObject = {
             taskCollection: taskPages,

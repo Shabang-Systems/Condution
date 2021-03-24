@@ -44,11 +44,24 @@ class SimpleGroup {
      */
 
     async synthesize() {
-        this.filters.map(async (filter:string) => {
+        let positiveprojects:Project[] = [];
+        let negateprojects:Project[] = [];
+
+        let positivetags:Tag[] = [];
+        let negatetags:Tag[] = [];
+
+        await Promise.all(this.filters.map(async (filter:string) => {
+            // Check for negate condition
             let negate:boolean = filter[0] === "!";
+
+            // Then, slice for negate
             if (negate)
                 filter = filter.slice(1);
+
+            // Get the operation (tag? project?)
             let operation:string = filter[0];
+            
+            // Slice out the operation
             filter = filter.slice(1);
 
             switch (operation) {
@@ -60,11 +73,11 @@ class SimpleGroup {
                 let projects:Project[] = await this.query.execute(Project, (i:Project) => i.name === filter) as Project[];
 
                 // List the IDs
-                let targetIDs:string[] = [];
+                let targets:Project[] = [];
 
                 // Get project children
                 let children:(Project|Task)[][] = await Promise.all(projects.map(async (proj:Project) => {
-                    targetIDs.push(proj.id);
+                    targets.push(proj);
                     return await proj.async_children;
                 }));
 
@@ -76,7 +89,7 @@ class SimpleGroup {
                     // check if project
                     if (item.databaseBadge === "projects") {
                         // push the ID to target
-                        targetIDs.push(item.id);
+                        targets.push(item as Project);
                         // push project to list
                         subprojects.push(item as Project);
                     }
@@ -89,18 +102,31 @@ class SimpleGroup {
                         // check if project
                         if (item.databaseBadge === "projects") {
                             // push the ID to target
-                            targetIDs.push(item.id);
+                            targets.push(item as Project);
                             // push project to list
                             subprojects.push(item as Project);
                         }
                     })
                 }
 
-                
+                if (negate) negateprojects = [...negateprojects, ...targets];
+                else positiveprojects = [...positiveprojects, ...targets];
 
                 break;
+
+                case "#": 
+                // Get the zeroeth matching tag TODO bad idea?
+                let tags:Tag[] = await this.query.execute(Tag, (i:Tag) => i.name === filter) as Tag[];
+                let tag:Tag = tags[0];
+                console.log(tags, filter);
+
+                // That's it! Horray!
+                if (negate) negatetags.push(tag);
+                else positivetags.push(tag);
             }
-        });
+        }));
+
+        console.log(positivetags, negatetags);
     }
 }
 

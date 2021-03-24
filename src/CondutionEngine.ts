@@ -33,7 +33,7 @@ async function test(): Promise<void> {
     //cm.useProvider("firebase");
     await cm.start(); // start our context
 
-    let p:PerspectiveQuery = new PerspectiveQuery(cm, "[!.woha #hewo12] [!#how] [#goes .it] ([#it .is]$due < $defer)");
+    let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha #hewo12] [!#how] [#goes .it] ([#it .is]$due < $defer)");
     p.execute();
     /*
        * @lb's grand vision
