@@ -1,12 +1,13 @@
-import type { Filterable } from "./Utils";
+import type { Filterable, AdapterData } from "./Utils";
 
 import Task from "./Task";
 import Tag from "./Tag";
 import Project from "./Project";
 
 import { Query } from "./Utils";
-
 import { Context } from "./EngineManager";
+
+import { Page, Collection } from "../Storage/Backends/Backend";
 
 class LogicGroup {
     rawString:string;
@@ -310,7 +311,7 @@ class PerspectiveQuery {
      *
      */
 
-    async execute(): Promise<Task[]> {
+    async execute() { //:Promise<Task[]>  but goshdarn it messes up my vim colours
         // Index the database
         await this.queryEngine.index();
 
@@ -356,7 +357,253 @@ class PerspectiveQuery {
 
 }
 
-export { PerspectiveQuery };
+class Perspective {
+    private static cache:Map<string, Perspective> = new Map();
+    static readonly databaseBadge = "perspectives";
 
+    private _id:string;
+    private page:Page;
+
+    protected data:object;
+    protected context:Context;
+    protected _ready:boolean;
+
+    protected constructor(identifier:string, context:Context) {
+        this._id = identifier;
+        this.context = context;
+    }
+
+    /**
+     * Nuke the cache
+     * @static
+     *
+     */
+
+    static SelfDestruct() {
+        delete Perspective.cache;
+        Perspective.cache = new Map();
+    }
+
+    /**
+     * Fetch a tag by Context and ID
+     * @static
+     *
+     * @param{Context} context    the context that you are fetching from
+     * @param{string} identifier    the ID of the tag you want to fetch
+     * @returns{Promise<Workspace>} the desired tag
+     *
+     */
+
+    static async fetch(context:Context, identifier:string):Promise<Perspective> {
+        let cachedPerspective:Perspective = Perspective .cache.get(identifier);
+        if (cachedPerspective)
+            return cachedPerspective;
+
+        let persp:Perspective = new this(identifier, context);
+        let page:Page = context.page(["perspectives", identifier], persp.update);
+
+        persp.data = await page.get();
+        persp.page = page;
+        persp._ready = true;
+
+        Perspective.cache.set(identifier, persp);
+        return persp;
+    }
+
+    /**
+     * Fetch a tag by Context and ID without waiting database to load
+     * @static
+     *
+     * @param{Context} context    the context that you are fetching from
+     * @param{string} identifier    the ID of the tag you want to fetch
+     * @returns{Promise<Tag>} the desired tag
+     *
+     */
+
+    //static lazy_fetch(context:Context, identifier:string):Tag {
+        //let cachedTag:Tag = Tag.cache.get(identifier);
+        //if (cachedTag)
+            //return cachedTag;
+
+        //let tg:Tag= new this(identifier, context);
+        //let page:Page = context.page(["tags", identifier], tg.update);
+
+        //tg.page = page;
+        //Tag.cache.set(identifier, tg);
+
+        //page.get().then((data:object)=>{
+            //tg.data = data;
+            //tg._ready = true;
+        //});
+
+        //return tg;
+    //}
+
+    /**
+     * Create a tag based on context, name, and an optional weight
+     * @static
+     *
+     * @param{ontext} context    the context that you are creating from
+     * @param{string?} name    the tag's name
+     * @param{number?} weight    the tag's weight
+     * @returns{Promise<Tag>} the desired tag
+     *
+     */
+
+    //static async create(context:Context, name?:string, weight?:number):Promise<Tag> {
+        //let newTag:DataExchangeResult = await context.collection(["tags"]).add({name, weight:weight?weight:1});
+
+        //let nt:Tag = new this(newTag.identifier, context);
+        //let page:Page = context.page(["tags", newTag.identifier], nt.update);
+        //nt.data = await page.get();
+        //nt.page = page;
+        //nt._ready = true;
+
+        //Tag.cache.set(newTag.identifier, nt);
+        //return nt;
+    //}
+
+    /**
+     * The name of the tag
+     * @property
+     *
+     */
+
+    get name() {
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["name"];
+    }
+
+    /**
+     * The name of the tag
+     * @property
+     *
+     */
+
+    set name(newName:string) {
+        this.data["name"] = newName;
+        this.sync();
+    }
+
+    /**
+     * The identifier of the tag
+     * @property
+     *
+     */
+
+    get id() {
+        return this._id;
+    }
+
+    /**
+     * The readiness of the data
+     * @property
+     *
+     */
+
+    get ready() {
+        return this._ready;
+    }
+
+    /**
+     * Delete the tag!!
+     *
+     * @returns{void}
+     *
+     */
+
+    delete() : void {
+        this.page.delete();
+    }
+
+    /**
+     * the DB badge of this object type
+     * @param
+     *
+     */
+
+    get databaseBadge() : string {
+        return "perspectives";
+    }
+
+    private readiness_warn = () => {
+        if (!this._ready)
+            console.warn("CondutionEngine: you tried to access an object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
+    }
+
+    protected sync = () => {
+        this.page.set(this.data);
+    }
+
+    private update = (newData:object) => {
+        this.data = newData;
+    }
+
+}
+
+class PerspectiveSearchAdapter extends Perspective {
+    private static adaptorCache:Map<string, PerspectiveSearchAdapter> = new Map();
+
+    constructor(context:Context, id:string, data:AdapterData) {
+        super(id, context);
+
+        this.data = data.tagCollection.filter((obj:object)=> obj["id"] === id)[0];
+        if (!this.data) 
+            this.data = {}
+        this._ready = true;
+    }
+
+    protected sync = () => {
+        console.warn("You tried to edit the value of an object in the middle of a search adaptor. That's an awfully bad idea. Don't do that. No stop.");
+    }
+
+    /**
+     * Produce the desired object
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    async produce() : Promise<Perspective> {
+        return await Perspective.fetch(this.context, this.id);
+    }
+
+    /**
+     * Seed a searchable item
+     *
+     * @param{Context} context    the context that you are seeding from
+     * @param{string} id    the id of the object desired
+     * @param{object} data    the seed data
+     *
+     */
+
+    static async seed(context:Context, identifier:string, data:AdapterData) {
+        let cachedPerspective:PerspectiveSearchAdapter = PerspectiveSearchAdapter.adaptorCache.get(identifier);
+        if (cachedPerspective) return cachedPerspective;
+
+        let tsk:PerspectiveSearchAdapter = new this(context, identifier, data);
+        PerspectiveSearchAdapter.adaptorCache.set(identifier, tsk);
+
+        return tsk;
+    }
+
+    /**
+     * Nuke the cache
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static cleanup = () : void => {
+        delete PerspectiveSearchAdapter.adaptorCache;
+        PerspectiveSearchAdapter.adaptorCache = new Map();
+    }
+}
+
+export { PerspectiveQuery, PerspectiveSearchAdapter };
+export default Perspective;
 
 

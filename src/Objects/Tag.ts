@@ -211,8 +211,6 @@ class Tag {
 }
 
 class TagSearchAdapter extends Tag {
-
-
     private static adaptorCache:Map<string, TagSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData) {

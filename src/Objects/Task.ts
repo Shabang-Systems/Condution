@@ -648,7 +648,6 @@ class Task {
 }
 
 class TaskSearchAdapter extends Task {
-
     adaptorData: AdapterData;
     private static adaptorCache:Map<string, TaskSearchAdapter> = new Map();
 

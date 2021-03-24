@@ -1,6 +1,7 @@
 import Tag, { TagSearchAdapter } from "./Tag";
 import Task, { TaskSearchAdapter } from "./Task";
 import Project, { ProjectSearchAdapter } from "./Project";
+import Perspective, { PerspectiveSearchAdapter } from "./Perspective";
 import Workspace from "./Workspace";
 import { Context } from "./EngineManager";
 import { Page, Collection } from "../Storage/Backends/Backend";
@@ -231,9 +232,10 @@ interface AdapterData {
     taskCollection: object[],
     projectCollection: object[],
     tagCollection: object[],
+    perspectiveCollection: object[],
 }
 
-type Filterable = Task|Tag|Project;
+type Filterable = Task|Tag|Project|Perspective;
 
 class Query {
     private cm: Context;
@@ -268,11 +270,13 @@ class Query {
         let taskPages:object[] = await this.cm.collection(["tasks"]).data();
         let projectPages:object[] = await this.cm.collection(["projects"]).data();
         let tagPages:object[] = await this.cm.collection(["tags"]).data();
+        let perspectivePages:object[] = await this.cm.collection(["perspectives"]).data();
 
         this.dataObject = {
             taskCollection: taskPages,
             projectCollection: projectPages,
             tagCollection: tagPages,
+            perspectiveCollection: perspectivePages,
         }
 
         return this.dataObject;
@@ -281,7 +285,7 @@ class Query {
     /**
      * Execute a filter query based on a function parameter
      *
-     * @param{Function} objType    the type of object you want to filter on. Task, Project, or Tag.
+     * @param{Function} objType    the type of object you want to filter on. Task, Project, Perspective, or Tag.
      * @param{(i:Filterable)=>boolean} condition    the condition you are filtering on
      * @param{((i:Filterable)=>boolean)[]?} conditions    a list of conditions you are filtering on
      * @returns{Promise<Filterable>}
@@ -305,6 +309,7 @@ class Query {
         let taskPages:object[] = this.dataObject.taskCollection;
         let projectPages:object[] = this.dataObject.projectCollection;
         let tagPages:object[] = this.dataObject.tagCollection;
+        let perspectivePages:object[] = this.dataObject.perspectiveCollection;
 
         if (objType == Task) {
             data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
@@ -318,9 +323,14 @@ class Query {
             data = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
         }
 
+        if (objType == Perspective) {
+            data = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
+        }
+
         TagSearchAdapter.cleanup();
         TaskSearchAdapter.cleanup();
         ProjectSearchAdapter.cleanup();
+        PerspectiveSearchAdapter.cleanup();
 
         if (condition)
             data = data.filter(condition)
@@ -329,7 +339,8 @@ class Query {
                 data = data.filter(query);
             });
         }
-        return await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter)=>await result.produce()));
+
+        return await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter|PerspectiveSearchAdapter)=>await result.produce()));
     }
 
    /**

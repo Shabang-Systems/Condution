@@ -9,7 +9,7 @@ import { RepeatRule, RepeatRuleType, Query } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
 
-import { PerspectiveQuery } from "./Objects/Perspective";
+import Perspective, { PerspectiveQuery } from "./Objects/Perspective";
 
 require('dotenv').config();
 
@@ -33,8 +33,12 @@ async function test(): Promise<void> {
     //cm.useProvider("firebase");
     await cm.start(); // start our context
 
-    let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)");
-    console.log(await p.execute());
+    let queryEngine:Query = new Query(cm);
+    await queryEngine.index();
+    let allofeveryperspective:Perspective[] = await queryEngine.execute(Perspective, (_:Perspective)=>true) as Perspective[];
+    allofeveryperspective.map((p:Perspective) => console.log(p.id, p.name));
+    //let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)");
+    //console.log(await p.execute());
     /*
        * @lb's grand vision
        * sourcesfilters => condition-based sorted set queried based on data. Deals with one condition
