@@ -43,6 +43,14 @@ class LogicGroup {
         }
 
         this.operator = operator;
+
+        // Clean all indexes
+        this.simpleGroup.lastIndex = 0;
+        this.logicParameterComponent.lastIndex = 0;
+        this.independentParameterComponent.lastIndex = 0;
+        this.operatorTest.lastIndex = 0;
+        this.directionality.lastIndex = 0;
+
         console.log(this);
     }
 }
