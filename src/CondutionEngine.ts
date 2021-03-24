@@ -34,7 +34,7 @@ async function test(): Promise<void> {
     await cm.start(); // start our context
 
     let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)");
-    p.execute();
+    console.log(await p.execute());
     /*
        * @lb's grand vision
        * sourcesfilters => condition-based sorted set queried based on data. Deals with one condition

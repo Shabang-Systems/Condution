@@ -302,8 +302,16 @@ class PerspectiveQuery {
         this.queryEngine = query;
     }
 
-    async execute() {
-        // index the database
+
+    /**
+     * Execute the query per request
+     *
+     * @returns{Promise<Task[][]>}
+     *
+     */
+
+    async execute(): Promise<Task[][]> {
+        // Index the database
         await this.queryEngine.index();
 
         // Get parsed queries
@@ -311,20 +319,32 @@ class PerspectiveQuery {
 
         // Calculate all the queries
         (await Promise.all(
-
-            // And flatten the query list
-            this.simpleGroups.map(
-                async (i:SimpleGroup) => 
-                (await i.synthesize()).forEach(
-                    (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
-                )
-            )
+            [
+                ...this.simpleGroups.map(
+                    async (i:SimpleGroup) => 
+                    (await i.synthesize()).forEach(
+                        (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
+                    )
+                ), 
+                ...this.logicGroups.map(
+                    async (i:LogicGroup) => 
+                    (await i.synthesize()).forEach(
+                        (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
+                    )
+                ),
+            ]
         ));
 
-        //console.log(await this.logicGroups[0].synthesize());
+        // And now... Query!
+        let results:Task[][] = await Promise.all(
+            parsedQueries.map(
+                (i:any) => this.queryEngine.batch_execute(Task, i)
+            )
+        ) as Task[][];
 
-        //console.log(parsedQueries);
+        return results;
     }
+
 }
 
 export { PerspectiveQuery };
