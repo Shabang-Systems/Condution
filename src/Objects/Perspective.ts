@@ -16,7 +16,7 @@ class LogicGroup {
     private logicParameterComponent: RegExp = /\[.*?\]\$(\w+)/; // query for the parametered part of the logic [#this .that]$THIS_PART_HERE
     private independentParameterComponent: RegExp = /[^\])]\$([\w- :+-/]+)/; // query for the independent parameter of the logic $THAT_OTHER_PART
     private independentParameterGroupComponent: RegExp = /(\w+) *([+-]*) *(\d*)/; // query for the three parts of the independent parameter. Like today+13
-    private operatorTest: RegExp = /([>=<|])/; // the operator >, =, <
+    private operatorTest: RegExp = /([>=<|])/; // the operator >, =, <, |
 
     private query:Query;
     private simple:SimpleGroup;
@@ -306,11 +306,11 @@ class PerspectiveQuery {
     /**
      * Execute the query per request
      *
-     * @returns{Promise<Task[][]>}
+     * @returns{Promise<Task[]>}
      *
      */
 
-    async execute(): Promise<Task[][]> {
+    async execute(): Promise<Task[]> {
         // Index the database
         await this.queryEngine.index();
 
@@ -342,7 +342,16 @@ class PerspectiveQuery {
             )
         ) as Task[][];
 
-        return results;
+        // And lastly, flatten and uniquitize the query
+        let taskSet: Set<Task> = new Set<Task>();
+        results.forEach(
+            (i:Task[]) => 
+                i.forEach((j:Task)=>
+                    taskSet.add(j)
+                ))
+
+        let flattened:Task[] = Array.from(taskSet.values());
+        return flattened;
     }
 
 }
