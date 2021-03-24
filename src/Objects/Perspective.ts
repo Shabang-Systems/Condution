@@ -311,7 +311,7 @@ class PerspectiveQuery {
      *
      */
 
-    async execute() { //:Promise<Task[]>  but goshdarn it messes up my vim colours
+    async execute():Promise<Task[]> {
         // Index the database
         await this.queryEngine.index();
 
@@ -355,6 +355,20 @@ class PerspectiveQuery {
         return flattened;
     }
 
+}
+
+enum AvailabilityTypes {
+    AVAIL = "avail",
+    REMAIN = "remain",
+    FLAGGED = "flagged"
+}
+
+enum OrderTypes {
+    DUE_ASCEND = "duas",
+    DUE_DESCEND = "duds",
+    DEFER_ASCEND = "deas",
+    DEFER_DESCEND = "deds",
+    ALPHABETICAL = "alph",
 }
 
 class Perspective {
@@ -540,6 +554,9 @@ class Perspective {
         this.data = newData;
     }
 
+    get tempdata() {
+        return this.data;
+    }
 }
 
 class PerspectiveSearchAdapter extends Perspective {

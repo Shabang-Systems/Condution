@@ -33,10 +33,13 @@ async function test(): Promise<void> {
     //cm.useProvider("firebase");
     await cm.start(); // start our context
 
-    let queryEngine:Query = new Query(cm);
-    await queryEngine.index();
-    let allofeveryperspective:Perspective[] = await queryEngine.execute(Perspective, (_:Perspective)=>true) as Perspective[];
-    allofeveryperspective.map((p:Perspective) => console.log(p.id, p.name));
+
+    let testPersp:Perspective = await Perspective.fetch(cm, "xv1iy9gx89fsyfhl5xhrfaqcsmpz2zhe");
+    console.log(testPersp.tempdata);
+//    let queryEngine:Query = new Query(cm);
+    //await queryEngine.index();
+    //let allofeveryperspective:Perspective[] = await queryEngine.execute(Perspective, (_:Perspective)=>true) as Perspective[];
+    //allofeveryperspective.map((p:Perspective) => console.log(p.id, p.name));
     //let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)");
     //console.log(await p.execute());
     /*
