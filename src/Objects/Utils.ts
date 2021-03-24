@@ -237,7 +237,6 @@ type Filterable = Task|Tag|Project;
 
 class Query {
     private cm: Context;
-    private objType: Function;
     private dataObject:AdapterData;
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
@@ -251,8 +250,7 @@ class Query {
     // overload on Typescript types. And while you are at it ask
     // Microsoft to make Windows better.
 
-    constructor(context:Context, objectType:Function) {
-        this.objType = objectType;
+    constructor(context:Context) {
         this.cm = context;
     }
 
@@ -283,13 +281,14 @@ class Query {
     /**
      * Execute a filter query based on a function parameter
      *
+     * @param{Function} objType    the type of object you want to filter on. Task, Project, or Tag.
      * @param{(i:Filterable)=>boolean} condition    the condition you are filtering on
      * @param{((i:Filterable)=>boolean)[]?} conditions    a list of conditions you are filtering on
      * @returns{Promise<Filterable>}
      *
      */
 
-    async execute(condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
+    async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
 
         console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
 
@@ -307,15 +306,15 @@ class Query {
         let projectPages:object[] = this.dataObject.projectCollection;
         let tagPages:object[] = this.dataObject.tagCollection;
 
-        if (this.objType == Task) {
+        if (objType == Task) {
             data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
         } 
 
-        if (this.objType == Project) {
+        if (objType == Project) {
             data = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
         }
 
-        if (this.objType == Tag) {
+        if (objType == Tag) {
             data = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
         }
 
@@ -336,17 +335,18 @@ class Query {
    /**
      * Execute a filter query based a bunch of function parametetrs
      *
+     * @param{Function} objType    the type of object you want to filter on. Task, Project, or Tag.
      * @param{((i:Filterable)=>boolean)[]} conditions    a list of conditions you are filtering on
      * @returns{Promise<Filterable>}
      *
      */
 
-    async batch_execute(conditions:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
-        return await this.execute(null, conditions);
+    async batch_execute(objType:Function, conditions:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
+        return await this.execute(objType, null, conditions);
     };
 
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };
-export type { AdapterData };
+export type { AdapterData, Filterable };
 

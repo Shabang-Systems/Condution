@@ -9,20 +9,23 @@ import { RepeatRule, RepeatRuleType, Query } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
 
+import { PerspectiveQuery } from "./Objects/Perspective";
+
 require('dotenv').config();
 
 // #!/Shabang | Condution at home:
 // - Missing collections/pages are not handled well
 // 
 
+
 async function test(): Promise<void> {
     let jsprovider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
     //provider.commit(data);
     //console.log(provider.load());
-    let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
+    //let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
     let manager: ReferenceManager = new ReferenceManager([jsprovider])
 
-    await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
+    //await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
     //// --- TODO everything called before this line needs to be refactored... :( ---
 
@@ -30,6 +33,8 @@ async function test(): Promise<void> {
     //cm.useProvider("firebase");
     await cm.start(); // start our context
 
+    let p:PerspectiveQuery = new PerspectiveQuery(cm, "[!.woha #hewo12] [!#how] [#goes .it] ([#it .is]$due < $defer)");
+    p.execute();
     /*
        * @lb's grand vision
        * sourcesfilters => condition-based sorted set queried based on data. Deals with one condition
@@ -43,12 +48,12 @@ async function test(): Promise<void> {
    //tasktest.name = "VERY LARGE STRING SO THAT I COULD NOTICE THIS";
    //console.log(tasktest.name);
 
-    let tg0:Tag = await Tag.create(cm, "hewo12", 12);
+    //let tg0:Tag = await Tag.create(cm, "hewo12", 12);
     //let tg1:Tag = await Tag.fetch(cm, "wtTISSFQylNpeZI5xosX");
     ////tg.weight = 3;
     ////console.log(tg.id);
 
-    let task:Task = await Task.create(cm, "another", null, [tg0]);
+    //let task:Task = await Task.create(cm, "another", null, [tg0]);
     ////task.tags = [tg1];
     //console.log(task.weight);
     //console.log(task.name);
@@ -60,14 +65,15 @@ async function test(): Promise<void> {
     ////let a:Date = new Date();
     //console.log(manager.currentProvider);
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
-    let proj:Project = await Project.create(cm, "NO SLOW!");
-    task.move(proj);
+//    let proj:Project = await Project.create(cm, "NO SLOW!");
+    //task.move(proj);
     //console.log(proj.available);
     //proj.uncomplete();
     //cm.useProvider("json");
     //let proj:Project = await Project.fetch(cm, "HxgywDvXypqaatjnFsFV");
     //console.log(proj.children[0].databaseBadge);
     //let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
+    //let proj2:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
     //console.log(proj1.name);
     ////let proj1:Project = await Project.fetch(cm, "ri3c5bssrwb29eptavlbnfs87pzsf141f");
     //task.move(proj1);
@@ -81,12 +87,13 @@ async function test(): Promise<void> {
 
     //console.log(task.available)
 
-    let q:Query = new Query(cm, Project); // create a query 
-    await q.index(); // O(n) through the whole damn database to cache parametres. 
-                     // this is expensive, so don't do it too much
-    console.log((await q.execute( // O(n) or O(logn) to find things. depending on what data you are filtering by.
-        (i:Project) => i.name=="woha!", // like, name!
-    ))[0].name);
+   // let q:Query = new Query(cm); // create a query 
+    ////await q.index(); // O(n) through the whole damn database to cache parametres. 
+                     //// this is expensive, so don't do it too much
+    //console.log((await q.execute( // O(n) or O(logn) to find things. depending on what data you are filtering by.
+         //Project,
+        //(i:Project) => i.name=="woha!", // like, name!
+    //))[0].name);
 
     //console.log(q.execute());
 
