@@ -140,7 +140,7 @@ import Perspective, { PerspectiveQuery, AvailabilityTypes, OrderTypes } from "./
 import { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct } from "./Objects/Utils";
 import type { AdapterData, Filterable } from "./Objects/Utils";
 
-let Internal:object = { Collection, Page, Provider, ReferenceManager }
+let Internal:object = { Collection, Page, Provider }
 let Repeat:object = { RepeatRule, RepeatRuleType }
 let Utilities:object = { GloballySelfDestruct }
 
@@ -154,7 +154,8 @@ export {
     Tag, TagSearchAdapter,
     Project, ProjectSearchAdapter, Query,
     Perspective, PerspectiveQuery, AvailabilityTypes, OrderTypes,
-    FirebaseProvider, JSONProvider
+    FirebaseProvider, JSONProvider,
+    ReferenceManager
 };
 
 export type { AdapterData, Filterable };
