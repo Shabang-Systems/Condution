@@ -489,14 +489,132 @@ class Perspective {
             return this.data["name"];
     }
 
+    set name(newName:string) {
+        this.data["name"] = newName;
+        this.sync();
+    }
+
     /**
-     * The name of the tag
+     * The availability of perspective tasks
      * @property
      *
      */
 
-    set name(newName:string) {
-        this.data["name"] = newName;
+    get availability(): AvailabilityTypes  {
+        return this.data["avail"];
+    }
+
+    set availability(newAvailibility:AvailabilityTypes) {
+        this.data["avail"] = newAvailibility;
+        this.sync();
+    }
+
+    /**
+     * The task ordering of perspective tasks
+     * @property
+     *
+     */
+
+    get taskorder(): OrderTypes {
+        return this.data["tord"];
+    }
+
+    set taskorder(neworder: OrderTypes) {
+        this.data["tord"] = neworder;
+        this.sync();
+    }
+
+    /**
+     * query
+     * @property
+     *
+     */
+
+    get query(): string {
+        return this.data["query"];
+    }
+
+    set query(newQuery:string) {
+        this.data["query"] = newQuery;
+        this.sync();
+    }
+
+    get parsedQuery(): PerspectiveQuery {
+        return new PerspectiveQuery(this.context, this.query);
+    }
+
+    /**
+     * Execute the Perspective query
+     * @async
+     * 
+     * @returns{Promise<Task[]>}
+     *
+     */
+
+    async execute(): Promise<Task[]> {
+        let baseTasks:Task[] = await this.parsedQuery.execute();
+
+        switch (this.availability) {
+            case AvailabilityTypes.AVAIL:
+                baseTasks = baseTasks.filter((i:Task) => i.available);
+                break;
+            case AvailabilityTypes.REMAIN:
+                baseTasks = baseTasks.filter((i:Task) => !i.isComplete);
+                break;
+            case AvailabilityTypes.FLAGGED:
+                baseTasks = baseTasks.filter((i:Task) => i.isFlagged);
+                break;
+        }
+
+        // TODO BAD BAD CODING INCOMING. SHIELD YOUR SEEING BALLS!
+        // This is done to be able to chuck the items without a due
+        // date onto the bottom of the page.
+
+        switch (this.taskorder) {
+            case OrderTypes.DUE_ASCEND:
+                baseTasks.sort((a:Task,b:Task) =>
+                    (a.due ? a.due.getTime() : 10000000000) -
+                    (b.due ? b.due.getTime() : 10000000000)
+                ); break;
+            case OrderTypes.DUE_DESCEND:
+                baseTasks.sort((a:Task,b:Task) =>
+                    (b.due ? b.due.getTime() : 1) -
+                    (a.due ? a.due.getTime() : 1)
+                ); break;
+            case OrderTypes.DEFER_ASCEND:
+                baseTasks.sort((a:Task,b:Task) =>
+                    (a.defer ? a.defer.getTime() : 10000000000) -
+                    (b.defer ? b.defer.getTime() : 10000000000)
+                ); break;
+            case OrderTypes.DEFER_DESCEND:
+                baseTasks.sort((a:Task,b:Task) =>
+                    (b.defer ? b.defer.getTime() : 1) -
+                    (a.defer ? a.defer.getTime() : 1)
+                ); break;
+            case OrderTypes.ALPHABETICAL:
+                baseTasks.sort((a:Task,b:Task) =>
+                    (a.name < b.name) ? 1 : -1
+                ); break;
+        }
+
+        return baseTasks;
+    }
+
+    
+    /**
+     * The order of the project
+     * @property
+     *
+     */
+
+    get order() {
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["order"];
+    }
+
+    set order(newOrder:number) {
+        this.data["order"] = newOrder;
         this.sync();
     }
 
@@ -620,7 +738,6 @@ class PerspectiveSearchAdapter extends Perspective {
     }
 }
 
-export { PerspectiveQuery, PerspectiveSearchAdapter };
+export { PerspectiveQuery, PerspectiveSearchAdapter, AvailabilityTypes, OrderTypes };
 export default Perspective;
-
 

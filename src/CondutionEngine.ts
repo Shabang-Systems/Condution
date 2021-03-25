@@ -9,7 +9,7 @@ import { RepeatRule, RepeatRuleType, Query } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import { Collection, Page } from "./Storage/Backends/Backend";
 
-import Perspective, { PerspectiveQuery } from "./Objects/Perspective";
+import Perspective, { PerspectiveQuery, AvailabilityTypes, OrderTypes } from "./Objects/Perspective";
 
 require('dotenv').config();
 
@@ -35,7 +35,9 @@ async function test(): Promise<void> {
 
 
     let testPersp:Perspective = await Perspective.fetch(cm, "xv1iy9gx89fsyfhl5xhrfaqcsmpz2zhe");
-    console.log(testPersp.tempdata);
+    //testPersp.query = "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)";
+    console.log(await testPersp.execute());
+    //console.log(testPersp.availability == AvailabilityTypes.REMAIN);
 //    let queryEngine:Query = new Query(cm);
     //await queryEngine.index();
     //let allofeveryperspective:Perspective[] = await queryEngine.execute(Perspective, (_:Perspective)=>true) as Perspective[];
