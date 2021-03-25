@@ -153,6 +153,7 @@ class FirebasePage extends Page {
     
     constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
         super();
+
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
@@ -177,6 +178,9 @@ class FirebasePage extends Page {
                 }
             }
         })
+
+        cache.set(JSON.stringify(path), this);
+
     }
 
     get id() : string {
@@ -427,6 +431,8 @@ class FirebaseProvider extends Provider {
      */
 
     page(path: string[], refreshCallback?:Function) : FirebasePage {
+        if (cache.has(JSON.stringify(path))) // TODO
+            return cache.get(JSON.stringify(path))
         return new FirebasePage(path, this.firebaseDB, this.firebaseRef, refreshCallback);
     }
 
@@ -472,6 +478,11 @@ class FirebaseProvider extends Provider {
     }
 }
 
+function TODOFlushFirebaseData() {
+    cache = new Map();
+    unsubscribeCallbacks = new Map();
+}
+
 export default FirebaseProvider;
-export { FirebasePage, FirebaseCollection };
+export { FirebasePage, FirebaseCollection, TODOFlushFirebaseData };
 

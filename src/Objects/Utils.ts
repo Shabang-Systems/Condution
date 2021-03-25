@@ -4,7 +4,7 @@ import Project, { ProjectSearchAdapter } from "./Project";
 import Perspective, { PerspectiveSearchAdapter } from "./Perspective";
 import Workspace from "./Workspace";
 import { Context } from "./EngineManager";
-import { Page, Collection } from "../Storage/Backends/Backend";
+import { TODOFlushFirebaseData } from "../Storage/Backends/FirebaseBackend";
 
 
 enum RepeatRuleType {
@@ -382,6 +382,7 @@ function GloballySelfDestruct() {
     Project.SelfDestruct();
     Query.SelfDestruct();
     Perspective.SelfDestruct();
+    TODOFlushFirebaseData();
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };
