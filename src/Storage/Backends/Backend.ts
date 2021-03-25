@@ -121,11 +121,12 @@ abstract class Provider {
      * to operate on
      *
      * @param {string[]} path
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {Collection}
      *
      */
     
-    abstract collection(path: string[]) : Collection;
+    abstract collection(path: string[], refreshCallback?:Function) : Collection;
 
     /**
      *

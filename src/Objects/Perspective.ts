@@ -222,6 +222,7 @@ class SimpleGroup {
                 // Get project children
                 let children:(Project|Task)[][] = await Promise.all(projects.map(async (proj:Project) => {
                     targets.push(proj);
+                    await proj.readinessPromise;
                     return await proj.async_children;
                 }));
 
@@ -339,9 +340,6 @@ class PerspectiveQuery {
      */
 
     async execute():Promise<Task[]> {
-        // Index the database
-        await this.queryEngine.index();
-
         // Get parsed queries
         let parsedQueries:((i:Filterable)=>boolean)[][] = [];
 

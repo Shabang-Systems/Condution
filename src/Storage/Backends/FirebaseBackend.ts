@@ -24,11 +24,21 @@ class FirebaseCollection extends Collection {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
-    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore)) {
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
+
+        const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
+        ref.onSnapshot({
+            error: console.trace,
+            next: (snap:any) => {
+                refreshCallback(snap.docs.map((page:any)=>{
+                    return Object.assign(page.data(), {id: page.id});
+                }));
+            }
+        })
     }
 
     async add(payload:object) {
@@ -426,12 +436,13 @@ class FirebaseProvider extends Provider {
      * to operate on
      *
      * @param {string[]} path: path that you desire to get a reference to
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {FirebaseCollection}: the collection ye wished for
      *
      */
 
-    collection(path: string[]) : FirebaseCollection {
-        return new FirebaseCollection(path, this.firebaseDB, this.firebaseRef);
+    collection(path: string[], refreshCallback?:Function) : FirebaseCollection {
+        return new FirebaseCollection(path, this.firebaseDB, this.firebaseRef, refreshCallback);
     }
 
 

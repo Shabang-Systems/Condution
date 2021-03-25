@@ -184,13 +184,14 @@ export class Context {
      *
      * @param {string[]} path  path that you desire to get a reference to
      * @param {boolean} forceUserland  return a page pointing to user db and not workspace db even if workspaces activated
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {Collection} the collection ye wished for
      *
      */
     
-    collection(target:string[], forceUserland:boolean=false): Collection {
+    collection(target:string[], forceUserland:boolean=false, refreshCallback?:Function): Collection {
         let top:string[] = (this.isWorkspace && !forceUserland) ? ["workspaces", this.ticketID] : ["users", this.ticketID];
-        return this.rm.collection(top.concat(target));
+        return this.rm.collection(top.concat(target), refreshCallback);
     }
 
     /**

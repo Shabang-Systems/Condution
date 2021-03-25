@@ -101,12 +101,13 @@ export default class ReferenceManager {
      * > let pages = ref.pages();
      *
      * @param {string[]} path
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {Collection}
      *
      */
 
-    collection(path: string[]) : Collection {
-        return this.currentProvider.collection(path);
+    collection(path: string[], refreshCallback?:Function) : Collection {
+        return this.currentProvider.collection(path, refreshCallback);
     }
 }
 

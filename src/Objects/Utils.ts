@@ -6,18 +6,6 @@ import Workspace from "./Workspace";
 import { Context } from "./EngineManager";
 import { Page, Collection } from "../Storage/Backends/Backend";
 
-/**
- * Flush all caches, and cause everything to
- * self-destruct. Used during account switching
- * and the app's sleep time to prevent memory leak
- */
-
-function GloballySelfDestruct() {
-    Task.SelfDestruct();
-    Workspace.SelfDestruct();
-    Tag.SelfDestruct();
-    Project.SelfDestruct();
-}
 
 enum RepeatRuleType {
     NONE = "none",
@@ -239,7 +227,11 @@ type Filterable = Task|Tag|Project|Perspective;
 
 class Query {
     private cm: Context;
-    private dataObject:AdapterData;
+
+    private static taskPages:object[];
+    private static projectPages:object[];
+    private static perspectivePages:object[];
+    private static tagPages:object[];
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
     // ok look. I know. This should be a template function.
@@ -256,30 +248,47 @@ class Query {
         this.cm = context;
     }
 
+
+    /**
+     * Nuke the cache
+     * @static
+     *
+     */
+
+    static SelfDestruct() {
+        delete Query.taskPages;
+        delete Query.projectPages;
+        delete Query.perspectivePages;
+        delete Query.tagPages;
+    }
+
     /**
      * Index the database so that... we have something to filter.
      * @async
      *
      * You should probably call this before you execute.
      *
-     * @returns {Promise<AdapterData>}
+     * @returns {Promise<void>}
      *
      */
 
-    async index() : Promise<AdapterData> {
-        let taskPages:object[] = await this.cm.collection(["tasks"]).data();
-        let projectPages:object[] = await this.cm.collection(["projects"]).data();
-        let tagPages:object[] = await this.cm.collection(["tags"]).data();
-        let perspectivePages:object[] = await this.cm.collection(["perspectives"]).data();
+    async index() : Promise<void> {
+        Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
+            console.log("HOPE!");
+            Query.taskPages = await this.cm.collection(["tasks"]).data();
+        }).data();
 
-        this.dataObject = {
-            taskCollection: taskPages,
-            projectCollection: projectPages,
-            tagCollection: tagPages,
-            perspectiveCollection: perspectivePages,
-        }
+        Query.projectPages = await this.cm.collection(["projects"], false, async () => {
+            Query.projectPages = await this.cm.collection(["projects"]).data();
+        }).data();
 
-        return this.dataObject;
+        Query.tagPages = await this.cm.collection(["tags"], false, async () => {
+            Query.tagPages = await this.cm.collection(["tags"]).data();
+        }).data();
+
+        Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
+            Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
+        }).data();
     }
 
     /**
@@ -298,18 +307,20 @@ class Query {
 
         let data:Filterable[] = [];
 
-        let dataObject:AdapterData = this.dataObject;
-        if (!dataObject) {
-            console.warn("CondutionEngine: you forgot to call .index() before you executed a query. What am I supposed to do without data? Get it for you I guess. Calling .index() now. See? I am doing your work for you.");
+        if (!Query.taskPages)
             await this.index();
-            dataObject = this.dataObject;
+
+        let dataObject:AdapterData = {
+            taskCollection: Query.taskPages,
+            projectCollection: Query.projectPages,
+            tagCollection: Query.tagPages,
+            perspectiveCollection: Query.perspectivePages,
         }
 
-
-        let taskPages:object[] = this.dataObject.taskCollection;
-        let projectPages:object[] = this.dataObject.projectCollection;
-        let tagPages:object[] = this.dataObject.tagCollection;
-        let perspectivePages:object[] = this.dataObject.perspectiveCollection;
+        let taskPages:object[] = dataObject.taskCollection;
+        let projectPages:object[] = dataObject.projectCollection;
+        let tagPages:object[] = dataObject.tagCollection;
+        let perspectivePages:object[] = dataObject.perspectiveCollection;
 
         if (objType == Task) {
             data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
@@ -356,6 +367,22 @@ class Query {
         return await this.execute(objType, null, conditions);
     };
 
+}
+
+
+/**
+ * Flush all caches, and cause everything to
+ * self-destruct. Used during account switching
+ * and the app's sleep time to prevent memory leak
+ */
+
+function GloballySelfDestruct() {
+    Task.SelfDestruct();
+    Workspace.SelfDestruct();
+    Tag.SelfDestruct();
+    Project.SelfDestruct();
+    Query.SelfDestruct();
+    Perspective.SelfDestruct();
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };

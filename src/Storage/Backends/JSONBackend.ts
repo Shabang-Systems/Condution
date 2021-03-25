@@ -6,7 +6,7 @@ var path = require('path');
 
 
 // TODO TODO the maps should go to somewhere better than this.
-let unsubscribeCallbacks = new Map();
+let callbacks:Function[] = [];
 
 /**
  * A firebase collection to operate on 
@@ -25,13 +25,15 @@ class JSONCollection extends Collection {
     private load: Function;
     private database: object;
     
-    constructor(path:string[], loadfunc:Function, commitfunc:Function) {
+    constructor(path:string[], loadfunc:Function, commitfunc:Function, refreshCallback:Function=()=>{}) {
         super();
 
         this.database = loadfunc();
         this.load = loadfunc;
         this.commit = commitfunc;
         this.path = path;
+
+        callbacks.push(refreshCallback);
     }
 
     private clean(obj:object) {
@@ -63,6 +65,8 @@ class JSONCollection extends Collection {
 
         this.commit(this.database);
 
+        callbacks.forEach((i:Function) => i(this.data()));
+
         return {identifier: id, payload: payload, response: payload};
     }
 
@@ -79,6 +83,7 @@ class JSONCollection extends Collection {
         delete pointer[task];
         this.commit(this.database);
 
+        callbacks.forEach((i:Function) => i(this.data()));
         return {identifier: null, payload: null, response: pointer};
     }
 
@@ -172,6 +177,7 @@ class JSONPage extends Page {
             this.refresh(finalData);
             return finalData;
         })();
+        callbacks.forEach((i:Function) => i());
     }
 
     async set(payload:object, ...param:any):Promise<DataExchangeResult> {
@@ -300,12 +306,13 @@ class JSONProvider extends Provider {
      * to operate on
      *
      * @param {string[]} path: path that you desire to get a reference to
+     * @param {Function} refreshCallback: the callback to update when data gets refreshed
      * @returns {FirebaseCollection}: the collection ye wished for
      *
      */
 
-    collection(path: string[]) :  Collection {
-        return new JSONCollection(path, this.load, this.commit);
+    collection(path: string[], refreshCallback?:Function) :  Collection {
+        return new JSONCollection(path, this.load, this.commit, refreshCallback);
     }
 
     /**
