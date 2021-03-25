@@ -550,7 +550,7 @@ class Perspective {
      */
 
     async execute(): Promise<Task[]> {
-        let baseTasks:Task[];
+        let baseTasks:Task[] = [];
         try {
             baseTasks = await this.parsedQuery.execute();
         } catch (e) {

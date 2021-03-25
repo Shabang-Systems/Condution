@@ -13,6 +13,8 @@ class Task {
     private _id:string;
     private page:Page;
 
+    private hooks:((arg0: Task)=>any)[];
+
     protected data:object;
     protected _ready:boolean;
     protected _weight:number;
@@ -625,6 +627,30 @@ class Task {
             this._available = false; // otherwise, its not available
         else  // if no parents
             this._available = new Date() > this.defer // the availibilty is controlled only by defer
+    }
+
+    /**
+     * Hook a callback to whence this task updates
+     *
+     * @param{((arg0: Task)=>any)} hookFn    the function you want to hook in
+     * @returns{void}
+     *
+     */
+
+    hook(hookFn: ((arg0: Task)=>any)): void {
+        this.hooks.push(hookFn);
+    }
+
+    /**
+     * Unook a hooked callback to whence this task updates
+     *
+     * @param{((arg0: Task)=>any)} hookFn    the function you want to unhook
+     * @returns{void}
+     *
+     */
+
+    unhook(hookFn: ((arg0: Task)=>any)): void {
+        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
     }
 
     protected sync = () => {

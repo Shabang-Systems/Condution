@@ -34,15 +34,16 @@ async function test(): Promise<void> {
     await cm.start(); // start our context
 
 
-    let testPersp:Perspective = await Perspective.fetch(cm, "rq90pycahccjoddke4mg7957s9dhwj05b");
-    console.log((await testPersp.execute()).length);
+    //let testPersp:Perspective = await Perspective.fetch(cm, "rq90pycahccjoddke4mg7957s9dhwj05b");
+    //console.log((await testPersp.execute()).length);
     //let perspective2:Perspective = await Perspective.create(cm, "Electric Boogaloo");
     //testPersp.query = "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)";
     //console.log(testPersp.tempdata);
     //console.log(testPersp.availability == AvailabilityTypes.REMAIN);
-//    let queryEngine:Query = new Query(cm);
+    //let queryEngine:Query = new Query(cm);
     //await queryEngine.index();
     //let allofeveryperspective:Perspective[] = await queryEngine.execute(Perspective, (_:Perspective)=>true) as Perspective[];
+    //console.log(await allofeveryperspective[0].execute());
     //allofeveryperspective.map((p:Perspective) => console.log(p.id, p.name));
     //let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)");
     //console.log(await p.execute());
