@@ -153,7 +153,8 @@ export {
     Task, TaskSearchAdapter,
     Tag, TagSearchAdapter,
     Project, ProjectSearchAdapter, Query,
-    Perspective, PerspectiveQuery, AvailabilityTypes, OrderTypes
+    Perspective, PerspectiveQuery, AvailabilityTypes, OrderTypes,
+    FirebaseProvider, JSONProvider
 };
 
 export type { AdapterData, Filterable };
