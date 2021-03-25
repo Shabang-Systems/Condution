@@ -129,15 +129,13 @@ async function test(): Promise<void> {
 
 
     console.log("we are here");
-    let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.Testv]");
-    console.log(await p.execute());
     //console.log(p.simpleGroups[0].filters);
-    //let testPersp:Perspective = await Perspective.fetch(cm, "r3dQARV8E4w7h4EnBDX5");
+    let testPersp:Perspective = await Perspective.fetch(cm, "r3dQARV8E4w7h4EnBDX5");
    //let tasktest = await Task.fetch(cm, "y0ptg4qd05efgb9dp74sqp9sin503npn");
-    //console.log("we are here2");
-    //console.log(testPersp.query);
-    //console.log(await testPersp.execute());
-    //console.log("done");
+    console.log("we are here2");
+    console.log(testPersp.query);
+    console.log(await testPersp.execute());
+    console.log("done");
     //tasktest.name = "apple!";
     //console.log(await testPersp.execute());
     //let perspective2:Perspective = await Perspective.create(cm, "Electric Boogaloo");
