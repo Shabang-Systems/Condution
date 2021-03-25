@@ -9,6 +9,8 @@ import { Context } from "./EngineManager";
 
 import { Page, Collection } from "../Storage/Backends/Backend";
 
+import { DataExchangeResult } from "../Storage/Backends/Backend";
+
 class LogicGroup {
     rawString:string;
 
@@ -116,20 +118,30 @@ class LogicGroup {
         let coreFilters: ((i:Filterable)=>boolean)[][] = await this.simple.synthesize();
         let compoundAddition: ((i:Filterable)=>boolean);
 
+        // Question: Holy heck why are the operators all backwards??? Oh no!!
+        // Answer: look at the directionality test. The "correct" direction is
+        // independent_param operator task_param
+        // but all the queries are shaped as
+        // task_param operator independent_param
+        //
+        // Because jack is dumb.
+        //
+        // So, here we are. the operators are backwards, but it works™
+
         switch (this.logicParameter) {
             case "due":
-                if (this.operator == "<") compoundAddition = (i:Task) => i.due < this.indepParamData;
-                else if (this.operator == ">") compoundAddition = (i:Task) => i.due > this.indepParamData;
+                if (this.operator == ">") compoundAddition = (i:Task) => i.due < this.indepParamData;
+                else if (this.operator == "<") compoundAddition = (i:Task) => i.due > this.indepParamData;
                 else if (this.operator == "=") compoundAddition = (i:Task) => i.due == this.indepParamData;
                 break;
             case "defer":
-                if (this.operator == "<") compoundAddition = (i:Task) => i.defer < this.indepParamData;
-                else if (this.operator == ">") compoundAddition = (i:Task) => i.defer > this.indepParamData;
+                if (this.operator == ">") compoundAddition = (i:Task) => i.defer < this.indepParamData;
+                else if (this.operator == "<") compoundAddition = (i:Task) => i.defer > this.indepParamData;
                 else if (this.operator == "=") compoundAddition = (i:Task) => i.defer == this.indepParamData;
                 break;
             case "weight":
-                if (this.operator == "<") compoundAddition = (i:Task) => i.weight < this.indepParamData;
-                else if (this.operator == ">") compoundAddition = (i:Task) => i.weight > this.indepParamData;
+                if (this.operator == ">") compoundAddition = (i:Task) => i.weight < this.indepParamData;
+                else if (this.operator == "<") compoundAddition = (i:Task) => i.weight > this.indepParamData;
                 else if (this.operator == "=") compoundAddition = (i:Task) => i.weight == this.indepParamData;
                 break;
             case "name":
@@ -275,6 +287,15 @@ class SimpleGroup {
     }
 }
 
+class PerspectiveParseError extends Error {
+    constructor(m: string) {
+        super(m);
+
+        // Set the prototype explicitly.
+        Object.setPrototypeOf(this, PerspectiveParseError.prototype);
+    }
+}
+
 
 class PerspectiveQuery {
     rawString:string;
@@ -295,10 +316,16 @@ class PerspectiveQuery {
 
         const query:Query = new Query(context);
 
-        // get and parse logic capture group
-        this.logicGroups = groups.filter((s:string)=>this.logicGroup.test(s)).map((i:string)=>new LogicGroup(query, i));
-        // get and parse simple groups
-        this.simpleGroups = groups.filter((s:string)=>!this.logicGroup.test(s)).map((i:string) => new SimpleGroup(query, i));
+        try {
+            // get and parse logic capture group
+            this.logicGroups = groups.filter((s:string)=>this.logicGroup.test(s)).map((i:string)=>new LogicGroup(query, i));
+            // get and parse simple groups
+            this.simpleGroups = groups.filter((s:string)=>!this.logicGroup.test(s)).map((i:string) => new SimpleGroup(query, i));
+        } catch {
+            this.logicGroups = [];
+            this.simpleGroups = [];
+            throw new PerspectiveParseError("CondutionEngine: ah welp. Your perspective query is dud and so I don't know what the heck to do with it.");
+        }
 
         this.queryEngine = query;
     }
@@ -425,57 +452,28 @@ class Perspective {
     }
 
     /**
-     * Fetch a tag by Context and ID without waiting database to load
-     * @static
-     *
-     * @param{Context} context    the context that you are fetching from
-     * @param{string} identifier    the ID of the tag you want to fetch
-     * @returns{Promise<Tag>} the desired tag
-     *
-     */
-
-    //static lazy_fetch(context:Context, identifier:string):Tag {
-        //let cachedTag:Tag = Tag.cache.get(identifier);
-        //if (cachedTag)
-            //return cachedTag;
-
-        //let tg:Tag= new this(identifier, context);
-        //let page:Page = context.page(["tags", identifier], tg.update);
-
-        //tg.page = page;
-        //Tag.cache.set(identifier, tg);
-
-        //page.get().then((data:object)=>{
-            //tg.data = data;
-            //tg._ready = true;
-        //});
-
-        //return tg;
-    //}
-
-    /**
-     * Create a tag based on context, name, and an optional weight
+     * Create a new perspective based on name and query
      * @static
      *
      * @param{ontext} context    the context that you are creating from
-     * @param{string?} name    the tag's name
-     * @param{number?} weight    the tag's weight
-     * @returns{Promise<Tag>} the desired tag
+     * @param{string?} name    the perspective's name
+     * @param{string?} query    the perspective's query
+     * @returns{Promise<Perspective>} the desired perspective
      *
      */
 
-    //static async create(context:Context, name?:string, weight?:number):Promise<Tag> {
-        //let newTag:DataExchangeResult = await context.collection(["tags"]).add({name, weight:weight?weight:1});
+    static async create(context:Context, name?:string, query?:string):Promise<Perspective> {
+        let newPerspective:DataExchangeResult = await context.collection(["perspectives"]).add({name:name?name:"", query:query?query:"[]"});
 
-        //let nt:Tag = new this(newTag.identifier, context);
-        //let page:Page = context.page(["tags", newTag.identifier], nt.update);
-        //nt.data = await page.get();
-        //nt.page = page;
-        //nt._ready = true;
+        let np:Perspective = new this(newPerspective.identifier, context);
+        let page:Page = context.page(["perspectives", newPerspective.identifier], np.update);
+        np.data = await page.get();
+        np.page = page;
+        np._ready = true;
 
-        //Tag.cache.set(newTag.identifier, nt);
-        //return nt;
-    //}
+        Perspective.cache.set(newPerspective.identifier, np);
+        return np;
+    }
 
     /**
      * The name of the tag
@@ -552,7 +550,13 @@ class Perspective {
      */
 
     async execute(): Promise<Task[]> {
-        let baseTasks:Task[] = await this.parsedQuery.execute();
+        let baseTasks:Task[];
+        try {
+            baseTasks = await this.parsedQuery.execute();
+        } catch (e) {
+            console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else.");
+            if (e instanceof PerspectiveParseError) return [];
+        }
 
         switch (this.availability) {
             case AvailabilityTypes.AVAIL:
