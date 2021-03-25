@@ -5,6 +5,8 @@ export default class Workspace {
     private static cache:Map<string, Workspace> = new Map();
     static readonly databaseBadge = "workspaces";
 
+    private hooks:((arg0: Workspace)=>any)[] = [];
+
     private _id:string;
     private page:Page;
     private data:object;
@@ -146,12 +148,38 @@ export default class Workspace {
     get collaborators() {
         return this.data["meta"]["editors"];
     }
-    
+
+        /**
+     * Hook a callback to whence this task updates
+     *
+     * @param{((arg0: Task)=>any)} hookFn    the function you want to hook in
+     * @returns{void}
+     *
+     */
+
+    hook(hookFn: ((arg0: Workspace)=>any)): void {
+        this.hooks.push(hookFn);
+    }
+
+    /**
+     * Unook a hooked callback to whence this task updates
+     *
+     * @param{((arg0: Task)=>any)} hookFn    the function you want to unhook
+     * @returns{void}
+     *
+     */
+
+    unhook(hookFn: ((arg0: Workspace)=>any)): void {
+        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+    }
+
     private sync = () => {
+        this.hooks.forEach((i:Function)=>i(this));
         this.page.set(this.data);
     }
 
     private update = (newData:object) => {
+        this.hooks.forEach((i:Function)=>i(this));
         this.data = newData;
     }
 

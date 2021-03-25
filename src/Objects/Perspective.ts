@@ -402,6 +402,8 @@ class Perspective {
     private static cache:Map<string, Perspective> = new Map();
     static readonly databaseBadge = "perspectives";
 
+    private hooks:((arg0: Perspective)=>any)[] = [];
+
     private _id:string;
     private page:Page;
 
@@ -652,6 +654,30 @@ class Perspective {
         this.page.delete();
     }
 
+        /**
+     * Hook a callback to whence this perspective updates
+     *
+     * @param{((arg0: Perspective)=>any)} hookFn    the function you want to hook in
+     * @returns{void}
+     *
+     */
+
+    hook(hookFn: ((arg0: Perspective)=>any)): void {
+        this.hooks.push(hookFn);
+    }
+
+    /**
+     * Unook a hooked callback to whence this perspective updates
+     *
+     * @param{((arg0: Perspective)=>any)} hookFn    the function you want to unhook
+     * @returns{void}
+     *
+     */
+
+    unhook(hookFn: ((arg0: Perspective)=>any)): void {
+        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+    }
+
     /**
      * the DB badge of this object type
      * @param
@@ -669,9 +695,11 @@ class Perspective {
 
     protected sync = () => {
         this.page.set(this.data);
+        this.hooks.forEach((i:Function)=>i(this));
     }
 
     private update = (newData:object) => {
+        this.hooks.forEach((i:Function)=>i(this));
         this.data = newData;
     }
 

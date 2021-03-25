@@ -13,7 +13,7 @@ class Task {
     private _id:string;
     private page:Page;
 
-    private hooks:((arg0: Task)=>any)[];
+    private hooks:((arg0: Task)=>any)[] = [];
 
     protected data:object;
     protected _ready:boolean;
@@ -655,11 +655,14 @@ class Task {
 
     protected sync = () => {
         this.page.set(this.data);
+        this.hooks.forEach((i:Function)=>i(this));
     }
 
     private update = (newData:object) => {
-        if (this._ready) 
+        if (this._ready)  {
+            this.hooks.forEach((i:Function)=>i(this));
             this.calculateTreeParams();
+        }
         this.data = newData;
     }
 

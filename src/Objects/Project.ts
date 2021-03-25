@@ -11,6 +11,8 @@ class Project {
     private _id:string;
     private page:Page;
 
+    private hooks:((arg0: Project)=>any)[] = [];
+
     protected data:object;
     protected _weight:number;
     protected context:Context;
@@ -575,6 +577,31 @@ class Project {
         weights.forEach((i:number) => this._weight+=i);
     }
 
+    
+    /**
+     * Hook a callback to whence this task updates
+     *
+     * @param{((arg0: Task)=>any)} hookFn    the function you want to hook in
+     * @returns{void}
+     *
+     */
+
+    hook(hookFn: ((arg0: Project)=>any)): void {
+        this.hooks.push(hookFn);
+    }
+
+    /**
+     * Unook a hooked callback to whence this task updates
+     *
+     * @param{((arg0: Project)=>any)} hookFn    the function you want to unhook
+     * @returns{void}
+     *
+     */
+
+    unhook(hookFn: ((arg0: Project)=>any)): void {
+        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+    }
+
     private readiness_warn = () => {
         if (!this._ready)
             console.warn("CondutionEngine: you tried to access a bubbubbubu object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
@@ -582,11 +609,14 @@ class Project {
 
     protected sync = () => {
         this.page.set(this.data);
+        this.hooks.forEach((i:Function)=>i(this));
     }
 
     private update = (newData:object) => {
-        if (this._ready)
+        if (this._ready) {
             this.calculateTreeParams();
+            this.hooks.forEach((i:Function)=>i(this));
+        }
         this.data = newData;
     }
 
