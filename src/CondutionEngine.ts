@@ -22,10 +22,10 @@ async function test(): Promise<void> {
     let jsprovider: JSONProvider = new JSONProvider("../demo.json", "json", __dirname);
     //provider.commit(data);
     //console.log(provider.load());
-    //let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
-    let manager: ReferenceManager = new ReferenceManager([jsprovider])
+    let fbprovider: FirebaseProvider = new FirebaseProvider("firebase");
+    let manager: ReferenceManager = new ReferenceManager([fbprovider])
 
-    //await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
+    await fbprovider.authenticationProvider.authenticate({ payload: { email: process.env.USERNAME, password: process.env.PASSWORD } });
 
     //// --- TODO everything called before this line needs to be refactored... :( ---
 
@@ -34,16 +34,20 @@ async function test(): Promise<void> {
     await cm.start(); // start our context
 
 
-    //let testPersp:Perspective = await Perspective.fetch(cm, "rq90pycahccjoddke4mg7957s9dhwj05b");
-    //console.log((await testPersp.execute()).length);
+    let testPersp:Perspective = await Perspective.fetch(cm, "FVBcMBZnBNb09M6OwOK1");
     //let perspective2:Perspective = await Perspective.create(cm, "Electric Boogaloo");
     //testPersp.query = "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)";
     //console.log(testPersp.tempdata);
     //console.log(testPersp.availability == AvailabilityTypes.REMAIN);
+    //console.log("we are here");
     //let queryEngine:Query = new Query(cm);
+    //console.log("we are here2");
     //await queryEngine.index();
+    //console.log("we are here3");
     //let allofeveryperspective:Perspective[] = await queryEngine.execute(Perspective, (_:Perspective)=>true) as Perspective[];
-    //console.log(await allofeveryperspective[0].execute());
+    //console.log("we are here4");
+    ////console.log(allofeveryperspective[0]);
+    //console.log("DONE::::", (await allofeveryperspective[0].execute()).length);
     //allofeveryperspective.map((p:Perspective) => console.log(p.id, p.name));
     //let p:PerspectiveQuery = new PerspectiveQuery(cm, "[.woha !.no #hewo12] [!#how] [#goes .it] ($519913 > [.woha #hewo12]$due)");
     //console.log(await p.execute());

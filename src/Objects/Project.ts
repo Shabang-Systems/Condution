@@ -46,19 +46,25 @@ class Project {
 
     static async fetch(context:Context, identifier:string):Promise<Project> {
         let cachedProject:Project = Project.cache.get(identifier);
-        if (cachedProject && cachedProject._ready == true)
+
+        if (cachedProject) {
+            await cachedProject.readinessPromise;
             return cachedProject;
+        }
 
         let pj:Project = new this(identifier, context);
-        let page:Page = context.page(["projects", identifier], pj.update);
-        pj.data = await page.get();
-        pj.page = page;
-        pj._ready = true;
-        pj._readiness = new Promise((res, _) => res());
+        pj._readiness = new Promise(async (res, _) => {
+            Project.cache.set(identifier, pj);
+            let page:Page = context.page(["projects", identifier], pj.update);
+            pj.data = await page.get();
+            pj.page = page;
+            pj._ready = true;
 
-        Project.cache.set(identifier, pj);
+            await pj.calculateTreeParams();
+            res();
+        });
 
-        await pj.calculateTreeParams();
+        //await pj._readiness;
 
         return pj;
     }
@@ -298,7 +304,7 @@ class Project {
      */
 
     async move(to?:Project): Promise<void> {
-        if (this.data["parent"] !== "")
+        if (this.data["parent"] && this.data["parent"] !== "")
             await (await Project.fetch(this.context, this.data["parent"])).dissociate(this);
         if (to) {
             await to.readinessPromise;
@@ -332,7 +338,7 @@ class Project {
     get async_parent() {
         this.readiness_warn();
         if (this._ready)
-            return this.data["parent"] !== "" ? Project.fetch(this.context, this.data["parent"]) : null;
+            return (this.data["parent"] && this.data["parent"] !== "") ? Project.fetch(this.context, this.data["parent"]) : null;
     }
 
     /**

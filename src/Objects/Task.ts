@@ -215,7 +215,7 @@ class Task {
 
     get async_project() {
         this.readiness_warn();
-        if (this._ready && this.data["project"] !== '')
+        if (this._ready && this.data["parent"] && this.data["project"] !== '')
             return Project.fetch(this.context, this.data["project"]);
     }
 
@@ -228,7 +228,7 @@ class Task {
      */
 
     async move(to?:Project): Promise<void> {
-        if (this.data["project"] !== "")
+        if (this.data["parent"] && this.data["project"] !== "")
             await (await Project.fetch(this.context, this.data["project"])).dissociate(this);
         if (to) {
             await to.readinessPromise;

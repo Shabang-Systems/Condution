@@ -554,10 +554,9 @@ class Perspective {
         try {
             baseTasks = await this.parsedQuery.execute();
         } catch (e) {
-            console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else.");
-            if (e instanceof PerspectiveParseError) return [];
+            if (e instanceof PerspectiveParseError) 
+                return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
         }
-
         switch (this.availability) {
             case AvailabilityTypes.AVAIL:
                 baseTasks = baseTasks.filter((i:Task) => i.available);
