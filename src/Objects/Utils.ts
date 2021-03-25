@@ -274,7 +274,6 @@ class Query {
 
     async index() : Promise<void> {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
-            console.log("HOPE!");
             Query.taskPages = await this.cm.collection(["tasks"]).data();
         }).data();
 
