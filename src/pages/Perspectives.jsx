@@ -42,6 +42,7 @@ class Perspectives extends Component {
         super(props);
 
         this.state = {
+            perspectiveName: "",
             initialRenderingDone: false,
             perspectiveObject: null,
             taskList:[]
@@ -72,7 +73,8 @@ class Perspectives extends Component {
         this.setState({
             perspectiveObject: perspective,
             taskList: tasks,
-            initialRenderingDone: true
+            initialRenderingDone: true,
+            perspectiveName: perspective.name
         });
     }
 
