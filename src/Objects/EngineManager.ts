@@ -25,8 +25,8 @@ export class Context {
     private ticketID:string; // current UID/Workspace ID
     private userID:string; // current UID
     private isWorkspace:boolean = false; // currently under workspaces mode
-    private _workspaces:string[]; // current workspace IDs
-    private _chains:string[]; // current workspace IDs
+    private _workspaces:string[] = []; // current workspace IDs
+    private _chains:string[] = []; // current workspace IDs
     private authenticatable:boolean = false; // are we currently authenticated?
     private ready:boolean = false // are the workspaces loaded?
     private defaultUsername:string; // defaultUsername
