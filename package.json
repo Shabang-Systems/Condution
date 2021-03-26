@@ -13,6 +13,7 @@
     "tscomp": "tsc",
     "dist": "tsc && babel --env-name=\"production\" --extensions \".ts\" --extensions \".js\" src --out-dir dist",
     "send": "yarn dist && npm publish",
+    "test": "jest",
     "compile": "tsc && babel --extensions \".ts\" --extensions \".js\" src --out-dir intermediate"
   },
   "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" src --out-dir dist",
