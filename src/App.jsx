@@ -39,8 +39,10 @@ import { Plugins } from '@capacitor/core';
 import $ from "jquery";
 
 /* Our Lovley Core Engine */
-import Engine from './backend/CondutionEngine';
-import Gruntman from './gruntman';
+//import Engine from './backend/CondutionEngine';
+//import Gruntman from './gruntman';
+
+import { FirebaseProvider, Context, ReferenceManager } from "./backend/src/CondutionEngine";
 
 /* Firebase */
 import * as firebase from "firebase/app";
@@ -90,6 +92,11 @@ const { Storage } = Plugins;
 
 setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we implemented our own
 
+const providers = {
+    "firebase": new FirebaseProvider(),
+}
+
+let refMgr = new ReferenceManager([providers["firebase"]]);
 
 class App extends Component {
     constructor(props) {
@@ -99,6 +106,8 @@ class App extends Component {
             zh: require("./static/I18n/zh-CN.json"),
             de: require("./static/I18n/de-DE.json"),
         });
+
+        this.cm = new Context(refMgr, true);
 
         // TODO TODO remove this
         //localizations.setLanguage("zh");
@@ -117,9 +126,10 @@ class App extends Component {
             }
 
             // Make ourselves a nice gruntman
-            this.gruntman = new Gruntman(Engine);
-            this.gruntman.localizations = localizations;
+            //this.gruntman = new Gruntman(Engine);
+            //this.gruntman.localizations = localizations;
             // And AutoBind any and all functions
+        
             autoBind(this);
         }
 
@@ -130,7 +140,7 @@ class App extends Component {
             // Light the fire, kick the tires an instance 
             // of {firebase}, and initializing the firebase 
             // and json engines
-            await Engine.start({firebase}, "firebase", "json");
+            //await Engine.start({firebase}, "firebase", "json");
 
             let url = (new URL(document.URL))
             let uri = url.pathname.split("/");
@@ -158,7 +168,7 @@ class App extends Component {
                                 view.authDispatch({operation:"logout"});
                             // If we have one, shift the engine into firebase mode
                             else {
-                                Engine.use("firebase", view.gruntman.requestRefresh);
+                                view.cm.useProvider("firebase");
                                 // Load the authenticated state, set authmode as "firebase" and supply the UID
                                 view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
                             }
@@ -167,23 +177,23 @@ class App extends Component {
                     // If its json
                 case "json":
                     // Shift the engine into json mode
-                    Engine.use("json", view.gruntman.requestRefresh);
+                    this.cm.useProvider("json");
                     // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
                     this.setState({authMode: "json", uid:"hard-storage-user"});
                     break;
                 // If its workspace preload
-                case "workspace":
-                    if (uri[1] !== "workspaces") {
-                        Engine.use("firebase", view.gruntman.requestRefresh);
-                        this.setState({authMode: "workspace", workspace:(await Storage.get({key: 'condution_workspace'})).value});
-                        break;
-                    }
+//                case "workspace": TODO
+                    //if (uri[1] !== "workspaces") {
+                        //this.cm.useProvider("firebase");
+                        //this.setState({authMode: "workspace", workspace:(await Storage.get({key: 'condution_workspace'})).value});
+                        //break;
+                    //}
                 // If there is nothing, well, set the authmode as "none"
                 default:
                     if (uri[1] !== "workspaces")
                         this.setState({authMode: "none", uid:undefined});
                     else {
-                        Engine.use("firebase", view.gruntman.requestRefresh);
+                        this.cm.useProvider("firebase");
                         Storage.set({key: 'condution_stotype', value: "workspace"});
                         Storage.set({key: 'condution_workspace', value: uri[2]});
                         this.setState({authMode: "workspace", workspace:uri[2]});
@@ -206,7 +216,8 @@ class App extends Component {
             // operation mode login
             case "login":
                 // shift the engine into whatever mode we just logged into
-                Engine.use(mode.service, this.gruntman.requestRefresh);
+                //Engine.use(mode.service, this.gruntman.requestRefresh);
+                this.cm.useProvider(mode.service);
                 // write the login state into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 // get the UID
@@ -230,7 +241,8 @@ class App extends Component {
             // operation mode create
             case "create":
                 // setthe engine as whatever service
-                Engine.use(mode.service, this.gruntman.requestRefresh);
+                //Engine.use(mode.service, this.gruntman.requestRefresh);
+                this.cm.useProvider(mode.service);
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 switch (mode.service) {
                     // if its firebase
@@ -283,16 +295,16 @@ class App extends Component {
                 return <Loader />
             // if we did not authenticate yet, load the auth view:
             case "none":
-                return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} engine={Engine} />;
+                return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} cm={this.cm} />;
             case "form":
-                return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true} engine={Engine}/>;
+                //return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true} engine={Engine}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
+                return <Home cm={this.cm} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
             case "workspace":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
+                //return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
             case "json":
-                return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
+                //return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
             // wut esta this auth mode? load the loader with an error
             case "onboarding":
                 return <Onboarding  localizations={this.state.localizations}/>
