@@ -223,7 +223,7 @@ interface AdapterData {
     perspectiveCollection: object[],
 }
 
-type Filterable = Task|Tag|Project|Perspective;
+type Filterable = Task|Tag|Project|Perspective|(Task|Project);
 
 class Query {
     private cm: Context;
