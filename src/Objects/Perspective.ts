@@ -210,12 +210,15 @@ class SimpleGroup {
 
             switch (operation) {
                 case ".": 
+                console.log("hewo", filter);
                 // GET READY FOR LOTS OF CODE!! ITS TIME TO: BFS THROUGH THE PROJECT LIST 
                 // SO THAT WE GET ALL OF THE SUBPROJECTS!  FUN TIMES AGLORE!!
 
+                console.log("hewo", filter);
                 // Get matching projects
                 let projects:Project[] = await this.query.execute(Project, (i:Project) => i.name === filter) as Project[];
 
+                console.log("hewo", filter);
                 // List the IDs
                 let targets:Project[] = [];
 
@@ -242,6 +245,7 @@ class SimpleGroup {
 
                 // BFS through project list to get all children
                 while (subprojects.length > 0) {
+                    console.log(subprojects, "hewo");
                     // Pop the top
                     (await subprojects.pop().async_children).map(async (item:Project|Task) => {
                         // check if project
@@ -347,16 +351,18 @@ class PerspectiveQuery {
         (await Promise.all(
             [
                 ...this.simpleGroups.map(
-                    async (i:SimpleGroup) => 
+                    async (i:SimpleGroup) =>  {
                     (await i.synthesize()).forEach(
                         (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
                     )
+                    }
                 ), 
                 ...this.logicGroups.map(
-                    async (i:LogicGroup) => 
+                    async (i:LogicGroup) => {
                     (await i.synthesize()).forEach(
                         (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
                     )
+                    }
                 ),
             ]
         ));
@@ -551,12 +557,16 @@ class Perspective {
 
     async execute(): Promise<Task[]> {
         let baseTasks:Task[] = [];
+
         try {
             baseTasks = await this.parsedQuery.execute();
         } catch (e) {
             if (e instanceof PerspectiveParseError) 
                 return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
         }
+
+        console.log("HEWO!!");
+
         switch (this.availability) {
             case AvailabilityTypes.AVAIL:
                 baseTasks = baseTasks.filter((i:Task) => i.available);

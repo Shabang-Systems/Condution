@@ -180,6 +180,7 @@ abstract class Page {
     abstract set(payload:object, ...param:any) : Promise<DataExchangeResult> ; // Function to set a value of a page
     abstract update(payload:object) : Promise<DataExchangeResult> ; // Function to update the value of a page
     abstract delete() : Promise<DataExchangeResult> ; // Function to delete a page
+    abstract get exists() : boolean ; // Get if page exists
 }
 
 

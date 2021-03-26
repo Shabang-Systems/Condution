@@ -58,6 +58,9 @@ class Project {
         pj._readiness = new Promise(async (res, _) => {
             Project.cache.set(identifier, pj);
             let page:Page = context.page(["projects", identifier], pj.update);
+            if (!page.exists)
+                res()
+
             pj.data = await page.get();
             pj.page = page;
             pj._ready = true;

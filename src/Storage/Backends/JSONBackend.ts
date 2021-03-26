@@ -241,6 +241,20 @@ class JSONPage extends Page {
         return {identifier: null, payload: null, response: pointer};
     }
 
+    get exists(): boolean {
+        let path = [...this.path];
+        let task = path.pop();
+        let pointer = this.database;
+        path.forEach(i => {
+            if(!pointer[i]) pointer[i] = {};
+            pointer = pointer[i];
+        });
+
+        if (!pointer[task])
+            return false;
+        else return true;
+    }
+
     get id() : string {
         return this.path[this.path.length-1]; // return the requested ID
     }

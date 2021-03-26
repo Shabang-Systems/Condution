@@ -149,6 +149,7 @@ class FirebasePage extends Page {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
+    private _exists: boolean;
     private data: Promise<object>; 
     
     constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
@@ -161,7 +162,8 @@ class FirebasePage extends Page {
 
         this.data = (async () : Promise<Object> => {
             let snapshot = await ref.get();
-	    let data: Object = snapshot.data();
+            this._exists = snapshot.exists;
+            let data: Object = snapshot.data();
             return Object.assign(data ? data : {}, {id: snapshot.id});
         })();
 
@@ -169,6 +171,7 @@ class FirebasePage extends Page {
             error: console.trace,
             next: (snap:any) => {
                 let originalData = snap.data();
+                this._exists = snap.exists;
                 if (originalData) {
                     let data = Object.assign(originalData, {id:snap.id});
                      // TODO janky AF resolving to a Promise of data b/c the original fetch is a promise
@@ -204,6 +207,10 @@ class FirebasePage extends Page {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
         const resultDocument = await ref.delete(); // delete the document
         return {identifier: null, payload: null, response: resultDocument};
+    }
+
+    get exists() {
+        return this._exists;
     }
 
     /**
