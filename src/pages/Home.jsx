@@ -83,8 +83,8 @@ class Home extends Component {
         this.perspectivemenuWidget = new PerspectivesMenuWidget(this.props.cm);
         this.projectmenuWidget = new ProjectMenuWidget(this.props.cm);
 
-//        this.perspectivemenuWidget.hook(this.refresh);
-        //this.projectmenuWidget.hook(this.refresh);
+        this.perspectivemenuWidget.hook(this.refresh);
+        this.projectmenuWidget.hook(this.refresh);
 
 
         this.abtibRef = React.createRef();
@@ -135,6 +135,11 @@ class Home extends Component {
 
     }
 
+    componentWillUnmount() {
+        this.perspectivemenuWidget.unhook(this.refresh);
+        this.projectmenuWidget.unhook(this.refresh);
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.to !== this.state.to && this.state.to !== undefined)
             this.setState({sends:{to:undefined, id:undefined}})
@@ -148,8 +153,8 @@ class Home extends Component {
         /*this.props.engine.userlandify()*/
     }
 
-    async refresh() {
-
+    async refresh(hewo) {
+        console.log(hewo);
 
         //        // Load the top level projects and perspectives
         //// to set into the state and to add to the menu
