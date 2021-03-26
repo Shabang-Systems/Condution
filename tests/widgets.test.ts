@@ -23,6 +23,10 @@ import JSONBackend from "../src/Storage/Backends/JSONBackend";
 import ReferenceManager from "../src/Storage/ReferenceManager";
 import { Context } from "../src/Objects/EngineManager";
 
+import Project from "../src/Objects/Project";
+
+import { ProjectMenuWidget, PerspectivesMenuWidget } from "../src/Widgets/Widget";
+
 let cm:Context;
 
 beforeAll(async (done) => {
@@ -34,6 +38,30 @@ beforeAll(async (done) => {
 
     done();
 });
+
+test("perspectives menu widget", async (done) => {
+    let widget:PerspectivesMenuWidget = new PerspectivesMenuWidget(cm);
+    expect(await widget.execute()).toEqual(expect.anything());
+    
+    done();
+});
+
+test("project menu widget", async (done) => {
+    let widget:ProjectMenuWidget = new ProjectMenuWidget(cm);
+    let projectResult:Project[] = await widget.execute();
+
+    let result:boolean = true;
+    projectResult.map((i:Project) => i.topLevel)
+        .forEach((i:boolean) => result = result && i);
+
+    projectResult.map((i:Project) => !i.isComplete)
+        .forEach((i:boolean) => result = result && i);
+
+    expect(result).toBe(true);
+    
+    done();
+});
+
 
 
 

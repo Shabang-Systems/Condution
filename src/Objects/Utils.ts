@@ -227,6 +227,7 @@ type Filterable = Task|Tag|Project|Perspective;
 
 class Query {
     private cm: Context;
+    private static hooks:Function[] = [];
 
     private static taskPages:object[];
     private static projectPages:object[];
@@ -275,19 +276,50 @@ class Query {
     async index() : Promise<void> {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
+            Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
+            Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
+            Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
+            Query.hooks.map((i:Function)=>i(this));
         }).data();
+    }
+
+    
+    /**
+     * Hook a callback to whence this Query updates
+     * @static
+     *
+     * @param{Function} hookFn    the function you want to hook in
+     * @returns{void}
+     *
+     */
+
+    static hook(hookFn: Function): void {
+        Query.hooks.push(hookFn);
+    }
+
+    /**
+     * Unook a hooked callback to whence this Query updates
+     * @static
+     *
+     * @param{Function} hookFn    the function you want to unhook
+     * @returns{void}
+     *
+     */
+
+    static unhook(hookFn: Function): void {
+        Query.hooks = Query.hooks.filter((i:any) => i !== hookFn);
     }
 
     /**
