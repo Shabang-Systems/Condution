@@ -45,7 +45,8 @@ class Perspectives extends Component {
             perspectiveName: "",
             initialRenderingDone: false,
             perspectiveObject: null,
-            taskList:[]
+            taskList:[],
+            showEdit: false
         };
 
 
@@ -64,36 +65,40 @@ class Perspectives extends Component {
     } // util func for hiding repeat
 
     componentWillUnmount() {
+        if (this.state.perspectiveObject)
+            this.state.perspectiveObject.unhook(this.reloadData);
     }
 
-    async refresh() {
+    async load() {
         let perspective = await Perspective.fetch(this.props.cm, this.props.id);
-        let tasks = await perspective.execute();
+        perspective.hook(this.reloadData);
 
         this.setState({
-            perspectiveObject: perspective,
-            taskList: tasks,
-            initialRenderingDone: true,
-            perspectiveName: perspective.name
-        });
+            perspectiveObject: perspective 
+        }, this.reloadData);
     }
 
-    updateName(e) {
-
-    } 
-
+    async reloadData() {
+        this.setState({
+            taskList: await this.state.perspectiveObject.execute(),
+            initialRenderingDone: true,
+            perspectiveName: this.state.perspectiveObject.name
+        });
+    }
 
     handleDelete() {
          
     }
 
+    
+
     componentDidMount() {
-        this.refresh()
+        this.load()
     }
 
     componentDidUpdate(prevProps, prevState, _) {
         if (prevProps.id !== this.props.id) 
-            this.refresh();
+            this.load();
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -103,21 +108,14 @@ class Perspectives extends Component {
             <IonPage>
 		{/* the perspective editor! */}
                 {/*<PerspectiveEdit 
+                    cm={this.cm}
                     reference={this.repeater} 
                     isShown={this.state.showEdit} 
                     onDidDismiss={this.hideEdit}
-                    uid={this.props.uid} 
-                    engine={this.props.engine} 
-                    gruntman={this.props.gruntman}
-                    id={this.props.id}
-                    perspectiveName={this.state.perspectiveName}
-                    query={this.state.perspectiveQuery}
-                    avail={this.state.perspectiveAvail}
-                    tord={this.state.perspectiveTord}
-                    menuRefresh={this.props.menuRefresh}
-                    updateName={this.updateName}
+                    perspective={this.state.perspectiveObject}
                     startHighlighted={this.props.options === "do"}
-                />*/}
+                    localizations={this.props.localizations}
+                />*/} 
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds
@@ -153,7 +151,8 @@ class Perspectives extends Component {
                                         className="fas fa-layer-group">
                                     </i>
                                     <input className="editable-title" 
-                                        onChange={(e)=> {e.persist(); this.updateName(e)}}
+                                        onChange={(e)=> {this.setState({perspectiveName:e.target.value})}}
+                                        onBlur={(_)=>{this.state.perspectiveObject.name = this.state.perspectiveName}}
                                         value={this.state.perspectiveName} // TODO: jack this is hecka hacky
                                     />
                                 </h1> 
