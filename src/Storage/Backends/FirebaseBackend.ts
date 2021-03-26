@@ -297,6 +297,13 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
         }
     }
 
+    refreshAuthentication() {
+        if (this.firebaseAuthPointer.currentUser)
+            this._authenticated = true;
+        else
+            this._authenticated = false;
+    }
+
     async authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult> {
         if (request.requestType == "email_pass" || !request.requestType) {
             await this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password)        
