@@ -97,8 +97,10 @@ class Perspectives extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, _) {
-        if (prevProps.id !== this.props.id) 
+        if (prevProps.id !== this.props.id) {
+            prevState.perspectiveObject.unhook(this.reloadData);
             this.load();
+        }
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}

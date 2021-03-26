@@ -208,6 +208,20 @@ class Home extends Component {
         //console.log("ready to execute!")
         //await this.projectmenuWidget.execute()
         //console.log("executed")
+        //
+        // .execute actually runs the widget
+        // like, it returns a list of tasks
+        // I WILL SHOW YOU!!!
+        //
+        //
+        //
+        //so, widgets typically are just hidden
+        //.Queries behind the scenes. meaning that
+        //widgets.execute() are, at a minimum, a shorthand
+        // for a very very long Query.execute()
+        //
+        // Let's write a widget together. the Inbox.
+        
         this.setState({projects: await this.projectmenuWidget.execute(), perspectives: await this.perspectivemenuWidget.execute()});
     }
 
