@@ -279,22 +279,26 @@ class Query {
     async index() : Promise<void> {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
-            Query.hooks.map((i:Function)=>i(this));
+            if (Query.hasIndexed)
+                Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
-            Query.hooks.map((i:Function)=>i(this));
+            if (Query.hasIndexed)
+                Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
-            Query.hooks.map((i:Function)=>i(this));
+            if (Query.hasIndexed)
+                Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
-            Query.hooks.map((i:Function)=>i(this));
+            if (Query.hasIndexed)
+                Query.hooks.map((i:Function)=>i(this));
         }).data();
 
         Query.hasIndexed = true;

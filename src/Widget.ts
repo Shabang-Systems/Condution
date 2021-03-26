@@ -18,9 +18,9 @@ import type { Filterable } from "./Objects/Utils";
  */
 
 abstract class Widget {
+    protected abstract name:string;
     protected query:Query;
     protected hooks:Function[] = [];
-    protected static cache:Map<string, Filterable[]>;
 
     /**
      * Execute the widget
@@ -35,17 +35,6 @@ abstract class Widget {
         this.query = new Query(context);
     }
 
-    /**
-     * Nuke the cache
-     * @static
-     *
-     */
-
-    static SelfDestruct() {
-        delete Widget.cache;
-        Widget.cache = new Map();
-    }
-    
     /**
      * Hook a callback to whence this Query updates
      *
@@ -74,14 +63,19 @@ abstract class Widget {
 }
 
 class PerspectivesMenuWidget extends Widget {
+    name = "persp-menu-widget"
+
     async execute() {
         let allPerspectives:Perspective[] = await this.query.execute(Perspective, (_:Perspective)=>true) as Perspective[];
         allPerspectives.sort((a: Perspective, b: Perspective) => a.order-b.order);
+
         return allPerspectives;
     }
 }
 
 class ProjectMenuWidget extends Widget {
+    name = "project-menu-widget"
+
     async execute() {
         let topProjects:Project[] = await this.query.execute(Project, (i:Project)=> i.topLevel && !i.isComplete) as Project[];
         topProjects.sort((a: Project, b: Project) => a.order-b.order);
