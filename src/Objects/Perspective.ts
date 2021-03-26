@@ -666,6 +666,7 @@ class Perspective {
 
     hook(hookFn: ((arg0: Perspective)=>any)): void {
         this.hooks.push(hookFn);
+        Query.hook(hookFn);
     }
 
     /**
@@ -678,6 +679,7 @@ class Perspective {
 
     unhook(hookFn: ((arg0: Perspective)=>any)): void {
         this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Query.unhook(hookFn);
     }
 
     /**
