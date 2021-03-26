@@ -1,6 +1,6 @@
 {
   "name": "@condution/engine",
-  "version": "1.0.0-prealpha.2",
+  "version": "1.0.0-prealpha.5",
   "description": "The thing that powers the magic that's Condution",
   "main": "dist/CondutionEngine.js",
   "types": "dist/CondutionEngine.d.ts",
@@ -12,6 +12,7 @@
     "start": "nodemon  --ignore demo.json --ignore test.json --exec babel-node  --extensions \".ts\" --extensions \".js\" src/CondutionEngine.ts",
     "tscomp": "tsc",
     "dist": "tsc && babel --env-name=\"production\" --extensions \".ts\" --extensions \".js\" src --out-dir dist",
+    "send": "yarn dist && npm publish",
     "compile": "tsc && babel --extensions \".ts\" --extensions \".js\" src --out-dir intermediate"
   },
   "prepublish": "tsc && babel  --extensions \".ts\" --extensions \".js\" src --out-dir dist",
