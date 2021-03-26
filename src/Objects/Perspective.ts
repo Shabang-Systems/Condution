@@ -90,7 +90,6 @@ class LogicGroup {
         // Early date parse exceptions
         if (param.includes("/") || param.includes("-")) {
             let unixDate:number = Date.parse(param);
-            console.log(unixDate);
             if (!isNaN(unixDate)) return this.indepParamData=new Date(unixDate), null;
         }
 
@@ -210,15 +209,12 @@ class SimpleGroup {
 
             switch (operation) {
                 case ".": 
-                console.log("hewo", filter);
                 // GET READY FOR LOTS OF CODE!! ITS TIME TO: BFS THROUGH THE PROJECT LIST 
                 // SO THAT WE GET ALL OF THE SUBPROJECTS!  FUN TIMES AGLORE!!
 
-                console.log("hewo", filter);
                 // Get matching projects
                 let projects:Project[] = await this.query.execute(Project, (i:Project) => i.name === filter) as Project[];
 
-                console.log("hewo", filter);
                 // List the IDs
                 let targets:Project[] = [];
 
@@ -245,7 +241,6 @@ class SimpleGroup {
 
                 // BFS through project list to get all children
                 while (subprojects.length > 0) {
-                    console.log(subprojects, "hewo");
                     // Pop the top
                     (await subprojects.pop().async_children).map(async (item:Project|Task) => {
                         // check if project
@@ -565,7 +560,6 @@ class Perspective {
                 return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
         }
 
-        console.log("HEWO!!");
 
         switch (this.availability) {
             case AvailabilityTypes.AVAIL:
