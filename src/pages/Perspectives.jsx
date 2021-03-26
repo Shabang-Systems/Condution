@@ -66,11 +66,8 @@ class Perspectives extends Component {
     }
 
     async refresh() {
-        console.log("hewo", this.props);
         let perspective = await Perspective.fetch(this.props.cm, this.props.id);
         let tasks = await perspective.execute();
-
-        console.log(tasks);
 
         this.setState({
             perspectiveObject: perspective,
@@ -193,7 +190,7 @@ class Perspectives extends Component {
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         {this.state.taskList.map(i => {
                             return <div>{i.name}</div>
-                        })};
+                        })}
                         <Spinner ready={this.state.initialRenderingDone} />
                         <BlkArt visible={this.state.initialRenderingDone} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
