@@ -1,9 +1,9 @@
-import Perspective from "../Objects/Perspective";
-import Project from "../Objects/Project";
+import Perspective from "./Objects/Perspective";
+import Project from "./Objects/Project";
 
-import { Query } from "../Objects/Utils";
-import { Context } from "../Objects/EngineManager";
-import type { Filterable } from "../Objects/Utils";
+import { Query } from "./Objects/Utils";
+import { Context } from "./Objects/EngineManager";
+import type { Filterable } from "./Objects/Utils";
 
 /**
  * Collections of Elements

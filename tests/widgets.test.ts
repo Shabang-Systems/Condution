@@ -25,7 +25,7 @@ import { Context } from "../src/Objects/EngineManager";
 
 import Project from "../src/Objects/Project";
 
-import { ProjectMenuWidget, PerspectivesMenuWidget } from "../src/Widgets/Widget";
+import { ProjectMenuWidget, PerspectivesMenuWidget } from "../src/Widget";
 
 let cm:Context;
 
