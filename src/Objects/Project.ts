@@ -236,6 +236,23 @@ class Project {
     }
 
     /**
+     * The complete date of the project
+     * @property
+     *
+     * There exists special handling because
+     * for some reason dates were stored by secs + nanosecs
+     * in the past. IDK why
+     *
+     */
+
+    get completeDate() {
+        this.readiness_warn();
+        if (this._ready && this.data["completeDate"])
+            return new Date(this.data["completeDate"]["seconds"]*1000);
+        else return null;
+    }
+
+    /**
      * Complete the project
      * @async
      *
@@ -246,6 +263,11 @@ class Project {
     async complete() : Promise<void> {
         this.data["isComplete"] = true;
         await this.calculateTreeParams();
+
+        let completeDate = new Date();
+        this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
+        await this.page.set({completeDate: completeDate}, {merge:true}); // weird date handling
+
         this.sync();
     }
     
