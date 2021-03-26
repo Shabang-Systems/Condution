@@ -154,7 +154,6 @@ class Home extends Component {
     }
 
     async refresh(hewo) {
-        console.log(hewo);
 
         //        // Load the top level projects and perspectives
         //// to set into the state and to add to the menu
@@ -558,10 +557,11 @@ class Home extends Component {
                                         <Route path="/calendar" exact render={() => <Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
                                         <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} gruntman={this.props.gruntman} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email} />} />
                                         <Route path="/completed" exact render={() => <Completed engine={this.props.engine} uid={this.state.workspace} history={history} paginate={this.paginate} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
+                                        */}
 
-                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives engine={this.props.engine} paginate={this.paginate} id={match.params.id} uid={this.state.workspace} gruntman={this.props.gruntman} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} />} />
+                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} />} />
 
-                                        <Route path="/projects/:id/:create?" render={({match}) => <Projects engine={this.props.engine} id={match.params.id} uid={this.state.workspace} gruntman={this.props.gruntman} menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations} />} />
+                                        {/*<Route path="/projects/:id/:create?" render={({match}) => <Projects engine={this.props.engine} id={match.params.id} uid={this.state.workspace} gruntman={this.props.gruntman} menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations} />} />
                                         */}
                                     </Switch>
                                 </IonRouterOutlet>

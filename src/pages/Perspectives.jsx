@@ -11,6 +11,8 @@ import BlkArt from './Components/BlkArt';
 import Task from './Components/Task';
 import PerspectiveEdit from './Components/PerspectiveEditor';
 
+import Perspective from "../backend/src/Objects/Perspective";
+
 import Spinner from './Components/Spinner';
 
 const autoBind = require('auto-bind/react');
@@ -40,22 +42,9 @@ class Perspectives extends Component {
         super(props);
 
         this.state = {
-            taskList: [], // what tasks should we display? 
-            perspectiveName: "", // whats the perspective name? 
-            perspectiveQuery: "", // whats the perspective query (whats in the text box)?
-            perspectiveAvail: {}, // whats the perspective availability? 
-            perspectiveTord: {},  // whats the perspective ordering?
-            // not truth or dare. jack doent even know what that is! ^^ 
-            showEdit: this.props.options === "do", // are we showing? on do, we are.
-            possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
-            possibleTags:{}, 
-            possibleProjectsRev:{}, 
-            possibleTagsRev:{}, 
-            availability: [], 
-            projectSelects:[], 
-            tagSelects: [], 
-            projectDB: {},
-            initialRenderingDone: false
+            initialRenderingDone: false,
+            perspectiveObject: null,
+            taskList:[]
         };
 
 
@@ -74,130 +63,38 @@ class Perspectives extends Component {
     } // util func for hiding repeat
 
     componentWillUnmount() {
-        this.props.gruntman.halt(); // when we unmount, halt gruntman? idk what this does  
     }
 
     async refresh() {
-        let possiblePerspectives = await this.props.engine.db.getPerspectives(this.props.uid); // get all possible perspectives
-        let perspectiveObject = possiblePerspectives[0][this.props.id] // get the one we want based on page id 
-        let taskList = await this.props.engine.perspective.calc(this.props.uid, perspectiveObject.query, perspectiveObject.avail, perspectiveObject.tord) // then get the tasks from that perspective
+        console.log("hewo", this.props);
+        let perspective = await Perspective.fetch(this.props.cm, this.props.id);
+        let tasks = await perspective.execute();
 
-
-        let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-
-
-        let projectList = []; // define the project list
-        let tagsList = []; // define the tag list
-
-        for (let pid in pPandT[1][0]) // tag nd project stuff 
-            tagsList.push({value: pid, label: pPandT[1][0][pid]});
-        let views = this;
-        let projectDB = await (async function() {
-            let pdb = [];
-            let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-            for (let key in topLevels) {
-                pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-            }
-            return pdb;
-        }());
-
-        let buildSelectString = function(p, level) {
-            if (!level)
-                level = ""
-            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-            if (p.children)
-                for (let e of p.children)
-                    if (e.type === "project")
-                        buildSelectString(e.content, level+":: ");
-        };
-
-        projectDB.map(proj=>buildSelectString(proj));
+        console.log(tasks);
 
         this.setState({
-            taskList: taskList,                           // set the tasklist, 
-            perspectiveName: perspectiveObject.name,     // set the perspective name 
-	    perspectiveQuery: perspectiveObject.query,  // set the perspective query 
-	    perspectiveAvail: perspectiveObject.avail, // set the perspective avail 
-	    perspectiveTord: perspectiveObject.tord,  // set the perspective tord 
-            possibleProjects: pPandT[0][0],	     // set the project stuff
-            possibleTags: pPandT[1][0],		    // set the tag stuff  
-            possibleProjectsRev: pPandT[0][1],	   // set more projects stuff  
-            possibleTagsRev: pPandT[1][1],	  // set more tags stuff  
-            availability: avail,		 // set the avail
-            projectSelects: projectList,	// set the project list  
-            tagSelects: tagsList,	       // set the tag list
-            projectDB, 			      // and the project db 
+            perspectiveObject: perspective,
+            taskList: tasks,
             initialRenderingDone: true
-        }); // once we finish, set the state
+        });
     }
 
     updateName(e) {
-        if (e) { // if the name if defined, 
-            this.props.gruntman.registerScheduler(() => {
-                // Register a scheduler to deal with React's onChange
-                // check out the FANCYCHANGE in task.jsx
-                this.props.gruntman.do( // call a gruntman function
-                    "perspective.update__perspective", { 
-			// pass it the things 
-                        uid: this.props.uid, // the user id 
-                        id: this.props.id,  // the perspective id 
-                        payload: {name: e.target.value} // the action, setting name to the new value 
-                    }
-                ).then(this.props.menuRefresh) // call the homebar refresh
-            }, `perspective.this.${this.props.id}-update`) // give it a custom id
-            this.setState({perspectiveName: e.target.value}) // set the perspectiveName
-        }
+
     } 
 
 
     handleDelete() {
-        this.props.history.push("/upcoming"); // go back
-        this.props.paginate("upcoming"); // idk man 
-        this.props.gruntman.do( // call a gruntman function
-            "perspective.delete__perspective", { 
-                uid: this.props.uid, // pass it the user id 
-                id: this.props.id, // and the current id 
-            }
-        ).then(()=>{
-            this.props.menuRefresh(); // refresh menubar
-
-        }) // call the homebar refresh
+         
     }
 
     componentDidMount() {
         this.refresh()
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        // flush styles
-        if (prevProps.id !== this.props.id) { // if we updated the defer date
-            this.setState({
-                taskList: [], // what tasks should we display? 
-                perspectiveName: "", // whats the perspective name? 
-                perspectiveQuery: "", // whats the perspective query (whats in the text box)?
-                perspectiveAvail: {}, // whats the perspective availability? 
-                perspectiveTord: {},  // whats the perspective ordering?
-                // not truth or dare. jack doent even know what that is! ^^ 
-                showEdit: this.props.options === "do", // are we showing? on do, we are.
-                possibleProjects:{}, // stuff for tasks and projects to work: see jacks comments in upcoming 
-                possibleTags:{}, 
-                possibleProjectsRev:{}, 
-                possibleTagsRev:{}, 
-                availability: [], 
-                projectSelects:[], 
-                tagSelects: [], 
-                projectDB: {}
-
-            });
-
-            this.refresh(); // switching between perspectives are a prop update and not a rerender
-        }
-        // so we want to refresh the perspective that's rendered
-        if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
-            this.setState({showEdit: true});
-
+    componentDidUpdate(prevProps, prevState, _) {
+        if (prevProps.id !== this.props.id) 
+            this.refresh();
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -206,7 +103,7 @@ class Perspectives extends Component {
         return (
             <IonPage>
 		{/* the perspective editor! */}
-                <PerspectiveEdit 
+                {/*<PerspectiveEdit 
                     reference={this.repeater} 
                     isShown={this.state.showEdit} 
                     onDidDismiss={this.hideEdit}
@@ -221,7 +118,7 @@ class Perspectives extends Component {
                     menuRefresh={this.props.menuRefresh}
                     updateName={this.updateName}
                     startHighlighted={this.props.options === "do"}
-                />
+                />*/}
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds
@@ -294,27 +191,11 @@ class Perspectives extends Component {
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
+                        {this.state.taskList.map(i => {
+                            return <div>{i.name}</div>
+                        })};
                         <Spinner ready={this.state.initialRenderingDone} />
-
-                        {this.state.taskList.map(id => (
-                            <Task 
-                                tid={id}
-                                key={id+"-"+this.updatePrefix} 
-                                uid={this.props.uid} 
-                                engine={this.props.engine} 
-                                gruntman={this.props.gruntman} 
-                                availability={this.state.availability[id]} 
-                                datapack={[
-                                    this.state.tagSelects, 
-                                    this.state.projectSelects, 
-                                    this.state.possibleProjects, 
-                                    this.state.possibleProjectsRev, 
-                                    this.state.possibleTags, 
-                                    this.state.possibleTagsRev
-                                ]}
-                            />
-                        ))}
-                        <BlkArt visible={(this.state.taskList.length)==0&& this.state.initialRenderingDone} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
+                        <BlkArt visible={this.state.initialRenderingDone} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
                     </div>
                 </div>
