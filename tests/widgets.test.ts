@@ -23,9 +23,10 @@ import JSONBackend from "../src/Storage/Backends/JSONBackend";
 import ReferenceManager from "../src/Storage/ReferenceManager";
 import { Context } from "../src/Objects/EngineManager";
 
+import Task from "../src/Objects/Project";
 import Project from "../src/Objects/Project";
 
-import { ProjectMenuWidget, PerspectivesMenuWidget } from "../src/Widget";
+import { ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget } from "../src/Widget";
 
 let cm:Context;
 
@@ -48,18 +49,24 @@ test("perspectives menu widget", async (done) => {
 
 test("project menu widget", async (done) => {
     let widget:ProjectMenuWidget = new ProjectMenuWidget(cm);
-    let projectResult:Project[] = await widget.execute();
+    let projectResult:Project[] = await widget.execute() ;
 
     let result:boolean = true;
-    projectResult.map((i:Project) => i.topLevel)
-        .forEach((i:boolean) => result = result && i);
+    projectResult.map((i:Project) => i.topLevel) // get the top-level-ness of project
+        .forEach((i:boolean) => result = result && i); // and then make sure they are all true
 
-    projectResult.map((i:Project) => !i.isComplete)
-        .forEach((i:boolean) => result = result && i);
+    projectResult.map((i:Project) => !i.isComplete) // get the completeness
+        .forEach((i:boolean) => result = result && i); // and then make sure they are all uncomplete
 
     expect(result).toBe(true);
     
     done();
+});
+
+test("inbox menu widget", async (done) => {
+    let widget:InboxWidget = new InboxWidget(cm);
+    //let inboxTasks:Task[] = await widget.execute();
+    // Frick it TODO
 });
 
 

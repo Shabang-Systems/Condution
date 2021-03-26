@@ -1,4 +1,5 @@
 import Perspective from "./Objects/Perspective";
+import Task from "./Objects/Task";
 import Project from "./Objects/Project";
 
 import { Query } from "./Objects/Utils";
@@ -84,5 +85,17 @@ class ProjectMenuWidget extends Widget {
     }
 }
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget };
+class InboxWidget extends Widget {
+    name = "inbox-widget"
+
+    async execute() {
+        let inboxTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.project === null) && !i.isComplete) as Task[];
+
+        inboxTasks.sort((a: Task, b: Task) => a.order-b.order);
+
+        return inboxTasks;
+    }
+}
+
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget };
 
