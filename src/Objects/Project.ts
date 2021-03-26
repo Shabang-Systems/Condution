@@ -561,20 +561,24 @@ class Project {
         else
             this._available = true;
 
-        // Get weights by DFS, while flushing the availibilty of children
-        let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
-            // Flush their availibilty
-            await i.calculateTreeParams();
-
-            // Return their weight
-            return i.weight;
-        }));
-
         // Set weight to zero
         this._weight = 0;
 
-        // Sum the weight as new weight
-        weights.forEach((i:number) => this._weight+=i);
+        if (this && this.async_children) {
+            // Get weights by DFS, while flushing the availibilty of children
+            let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
+                // Flush their availibilty
+                await i.calculateTreeParams();
+
+                // Return their weight
+                return i.weight;
+            }));
+
+            // Sum the weight as new weight
+            weights.forEach((i:number) => this._weight+=i);
+
+        }
+
     }
 
     

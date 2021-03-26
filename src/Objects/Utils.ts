@@ -228,6 +228,7 @@ type Filterable = Task|Tag|Project|Perspective;
 class Query {
     private cm: Context;
     private static hooks:Function[] = [];
+    private static hasIndexed:boolean = false;
 
     private static taskPages:object[];
     private static projectPages:object[];
@@ -261,6 +262,8 @@ class Query {
         delete Query.projectPages;
         delete Query.perspectivePages;
         delete Query.tagPages;
+
+        Query.hasIndexed = false;
     }
 
     /**
@@ -293,6 +296,8 @@ class Query {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
             Query.hooks.map((i:Function)=>i(this));
         }).data();
+
+        Query.hasIndexed = true;
     }
 
     
@@ -338,7 +343,7 @@ class Query {
 
         let data:Filterable[] = [];
 
-        if (!Query.taskPages)
+        if (!Query.hasIndexed)
             await this.index();
 
         let dataObject:AdapterData = {

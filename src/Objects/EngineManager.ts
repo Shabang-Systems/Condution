@@ -79,7 +79,6 @@ export class Context {
         this.rm.use(providerName);
 
         if (this.rm.currentProvider.authSupported) {
-            console.assert(this.rm.currentProvider.authenticationProvider.authenticated, "CondutionEngine: requested context initialization with auth but provider not authenticated.");
             this.ticketID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
             this.userID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
             this.authenticatable = true;
