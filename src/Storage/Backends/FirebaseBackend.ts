@@ -293,7 +293,8 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
         return {
             identifier: this.firebaseAuthPointer.currentUser.uid,
             displayName: this.firebaseAuthPointer.currentUser.displayName,
-            email: this.firebaseAuthPointer.currentUser.email
+            email: this.firebaseAuthPointer.currentUser.email,
+            emailVerified: this.firebaseAuthPointer.currentUser.emailVerified
         }
     }
 

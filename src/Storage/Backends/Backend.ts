@@ -33,7 +33,8 @@ interface AuthenticationRequest {
 interface AuthenticationUser {
     identifier: string,
     displayName: string,
-    email: string
+    email: string,
+    emailVerified: boolean
 }
 
 interface DataExchangeResult {
