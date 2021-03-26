@@ -88,7 +88,7 @@ class ProjectMenuWidget extends Widget {
 class InboxWidget extends Widget {
     name = "inbox-widget"
 
-    async execute() {
+    async execute(): Promise<Task[]> {
         let inboxTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.project === null) && !i.isComplete) as Task[];
 
         inboxTasks.sort((a: Task, b: Task) => a.order-b.order);

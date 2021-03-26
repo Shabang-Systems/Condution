@@ -64,9 +64,8 @@ test("project menu widget", async (done) => {
 });
 
 test("inbox menu widget", async (done) => {
-    let widget:InboxWidget = new InboxWidget(cm);
-    //let inboxTasks:Task[] = await widget.execute();
-    // Frick it TODO
+    let inboxwidget:InboxWidget = new InboxWidget(cm);
+    let inboxTasks:Task[] = await inboxwidget.execute() as unknown as Task[];
 });
 
 
