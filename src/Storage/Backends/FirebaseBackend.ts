@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
@@ -298,7 +298,7 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
         }
     }
 
-    refreshAuthentication() {
+    refreshAuthentication = () => {
         if (this.firebaseAuthPointer.currentUser)
             this._authenticated = true;
         else
@@ -427,6 +427,16 @@ class FirebaseProvider extends Provider {
 
         // Enable Persistance
         this.firebaseDB.enablePersistence({synchronizeTabs: true}).catch((e)=>console.log(`CondutionEngine (FirebaseProvider): persistance enabling failed due to code "${e.code}"`));
+    }
+
+    /**
+     * Gets the FB pointer. B/c why not?
+     * @property
+     *
+     */
+
+    get fbPointer() {
+        return firebase;
     }
 
     /**

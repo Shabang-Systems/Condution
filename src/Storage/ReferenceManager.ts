@@ -58,7 +58,9 @@ export default class ReferenceManager {
      */
 
     use(providerName: string) : Number {
-        let providerCanidates:Provider[] = this.providers.filter(p => p.name === providerName);
+        let providerCanidates:Provider[] = this.providers.filter((p:Provider) => {
+            if (p && p.name === providerName) return true;
+        });
         if (providerCanidates.length > 0) {
             this.currentProvider = providerCanidates[0];
             return 0;
