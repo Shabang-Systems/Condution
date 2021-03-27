@@ -5,6 +5,7 @@ import './Completed.css';
 import './Pages.css';
 import Spinner from './Components/Spinner';
 import Task from './Components/Task';
+import { CompletedWidget } from "../backend/src/Widget";
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
 /*
@@ -49,69 +50,83 @@ class Completed extends Component {
 
         this.updatePrefix = this.random();
         autoBind(this);
-    }
 
-    componentWillUnmount() {
-        this.props.gruntman.halt();
-    }
-
-    async refresh() {
-        let taskArr = []; // define temp array
-        let full = await this.props.engine.db.getCompletedItems(this.props.uid); // get the tasks from the database 
-
-        let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-        // loop through the tasks, converting to objects and inserting labels between each cat
-        full.forEach((cat, i) => {
-            taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
-	    // if item[0] == task, ... else, ...
-            cat.forEach(item => { // this loops through each cat
-		if (item[1] == "task") {
-		    // convert each task to an object then push it to the temp arr
-		    taskArr.push(new TaskObject("task", item[0])) 
-		} else if (item[1] == "project")
-		{
-		    taskArr.push(new TaskObject("project", item[0])) 
-		}
-            })
-        });
-
-        let projectList = []; // define the project list
-        let tagsList = []; // define the tag list
-
-        for (let pid in pPandT[1][0]) 
-            tagsList.push({value: pid, label: pPandT[1][0][pid]});
-        let views = this;
-        let projectDB = await (async function() {
-            let pdb = [];
-            let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-            for (let key in topLevels) {
-                pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-            }
-            return pdb;
-        }());
-
-        let buildSelectString = function(p, level) {
-            if (!level)
-                level = ""
-            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-            if (p.children)
-                for (let e of p.children)
-                    if (e.type === "project")
-                        buildSelectString(e.content, level+":: ");
-        };
-        projectDB.map(proj=>buildSelectString(proj));
-
-        this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
-
-        // also set rendering to false. 
-        // This is a hacky solution instead of creating an entirely new async function.
+	this.completedWidget = new CompletedWidget(this.props.cm);
+	this.completedWidget.hook(this.refresh);
     }
 
     async componentDidMount() {
-        this.refresh(); // refresh when the component mounts
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
+	await this.props.cm.start();
+
+	this.refresh();
+
     }
+
+    async refresh(){
+	//await this.completedWidget.execute()
+    }
+
+    //componentWillUnmount() {
+    //    this.props.gruntman.halt();
+    //}
+
+    //async refresh() {
+    //    let taskArr = []; // define temp array
+    //    let full = await this.props.engine.db.getCompletedItems(this.props.uid); // get the tasks from the database 
+
+    //    let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
+    //    let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
+    //    // loop through the tasks, converting to objects and inserting labels between each cat
+    //    full.forEach((cat, i) => {
+    //        taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
+    //        // if item[0] == task, ... else, ...
+    //        cat.forEach(item => { // this loops through each cat
+    //            if (item[1] == "task") {
+    //                // convert each task to an object then push it to the temp arr
+    //                taskArr.push(new TaskObject("task", item[0])) 
+    //            } else if (item[1] == "project")
+    //            {
+    //                taskArr.push(new TaskObject("project", item[0])) 
+    //            }
+    //        })
+    //    });
+
+    //    let projectList = []; // define the project list
+    //    let tagsList = []; // define the tag list
+
+    //    for (let pid in pPandT[1][0]) 
+    //        tagsList.push({value: pid, label: pPandT[1][0][pid]});
+    //    let views = this;
+    //    let projectDB = await (async function() {
+    //        let pdb = [];
+    //        let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
+    //        for (let key in topLevels) {
+    //            pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
+    //        }
+    //        return pdb;
+    //    }());
+
+    //    let buildSelectString = function(p, level) {
+    //        if (!level)
+    //            level = ""
+    //        projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
+    //        if (p.children)
+    //            for (let e of p.children)
+    //                if (e.type === "project")
+    //                    buildSelectString(e.content, level+":: ");
+    //    };
+    //    projectDB.map(proj=>buildSelectString(proj));
+
+    //    this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
+
+    //    // also set rendering to false. 
+    //    // This is a hacky solution instead of creating an entirely new async function.
+    //}
+
+    //async componentDidMount() {
+    //    this.refresh(); // refresh when the component mounts
+    //    this.props.gruntman.registerRefresher((this.refresh).bind(this));
+    //}
 
     handleFetchMore() {
         this.setState({rendering: true}) // trigger loading screen
