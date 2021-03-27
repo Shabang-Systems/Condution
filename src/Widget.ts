@@ -97,5 +97,55 @@ class InboxWidget extends Widget {
     }
 }
 
+class CompletedWidget extends Widget {
+    name = "completed-widget"
+
+    async execute() {
+	let completedTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.isComplete)) as Task[];
+	let completedProjects:Project[] = await this.query.execute(Project, (i:Project) => (i.isComplete)) as Project[];
+
+	let completedItems = [...completedTasks, ...completedProjects]
+
+	const cpSorted = completedItems.sort(function(b:Task|Project, a:Task|Project) { return a.completeDate.getTime() - b.completeDate.getTime() })
+
+	let today = new Date();
+	let yesterday = new Date();
+	let thisWeek = new Date();
+	let thisMonth = new Date();
+	today.setHours(0,0,0,0);
+	yesterday.setDate(yesterday.getDate()-1);
+	yesterday.setHours(0,0,0,0);
+	thisWeek.setDate(thisWeek.getDate()-7);
+	thisWeek.setHours(0,0,0,0);
+	thisMonth.setMonth(thisMonth.getMonth()-1);
+	thisMonth.setHours(0,0,0,0);
+	let tasksToday = cpSorted.filter(function (a) {
+	    let tsks = a;
+	    return tsks.completeDate ? new Date(tsks.completeDate.getTime() * 1000) >= today : false;
+	});
+	let tasksYesterday = cpSorted.filter(function (a) {
+	    let tsks = a;
+	    return tsks.completeDate ? new Date(tsks.completeDate.getTime() * 1000) >= yesterday && new Date(tsks.completeDate.getTime() * 1000) < today : false;
+	});
+	let tasksWeek = cpSorted.filter(function (a) {
+	    let tsks = a;
+	    return tsks.completeDate ? new Date(tsks.completeDate.getTime() * 1000) >= thisWeek && new Date(tsks.completeDate.getTime() * 1000) < yesterday : false;
+	});
+	let tasksMonth = cpSorted.filter(function (a) {
+	    let tsks = a;
+	    return tsks.completeDate ? new Date(tsks.completeDate.getTime() * 1000) >= thisMonth && new Date(tsks.completeDate.getTime() * 1000) < thisWeek : false;
+	});
+	let evenBefore = cpSorted.filter(function (a) {
+	    let tsks = a;
+	    return tsks.completeDate ? new Date(tsks.completeDate.getTime() * 1000) < thisMonth : true;
+	});
+
+	return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
+    }
+}
+
+
+
+
 export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget };
 
