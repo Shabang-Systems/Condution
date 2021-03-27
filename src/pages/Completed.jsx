@@ -34,7 +34,8 @@ class Completed extends Component {
         this.state = {
             taskList: [], // the objects we render
             tasksShown: 1, // track the number of times we have fetched more
-            taskCats: this.props.gruntman.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+            //taskCats: this.props.gruntman.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+            taskCats: this.props.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
             rendering: true, // define whether or not the element is rendering 
             possibleProjects:{}, // see jacks comments in upcoming 
             possibleTags:{}, 
@@ -63,7 +64,9 @@ class Completed extends Component {
     }
 
     async refresh(){
-	//await this.completedWidget.execute()
+	//console.log("whheee")
+	let i = await this.completedWidget.execute()
+	//console.log(i, "whrsfj")
     }
 
     //componentWillUnmount() {
@@ -244,7 +247,7 @@ class Completed extends Component {
 
 			    <div className="fetch-more" > 
 				{/* define the fetch more button */}
-				{this.state.rendering? <p className="loader" >{this.props.gruntman.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.gruntman.localizations.fetchmore}</p>}
+				{this.state.rendering? <p className="loader" >{this.props.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.localizations.fetchmore}</p>}
 			    </div> 
 			    <div className="bottom-helper">&nbsp;</div>
 			</div>
