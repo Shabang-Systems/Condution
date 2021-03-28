@@ -106,7 +106,19 @@ class CompletedWidget extends Widget {
 
 	let completedItems = [...completedTasks, ...completedProjects]
 
-	const cpSorted = completedItems.sort(function(b:Task|Project, a:Task|Project) { return a.completeDate.getTime() - b.completeDate.getTime() })
+	const cpSorted = completedItems.sort(function(b:Task|Project, a:Task|Project) { 
+	    //return a.completeDate.getTime() - b.completeDate.getTime() 
+	    return ((
+		(a.completeDate) ?
+		    (a.completeDate.getTime()) :
+		    1
+	    )-(
+	    (b.completeDate) ?
+		(b).completeDate.getTime() :
+		1
+	    ));
+	})
+	console.log(cpSorted)
 
 	let today = new Date();
 	let yesterday = new Date();
@@ -139,6 +151,7 @@ class CompletedWidget extends Widget {
 	    let tsks = a;
 	    return tsks.completeDate ? new Date(tsks.completeDate.getTime() * 1000) < thisMonth : true;
 	});
+	console.log([tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore])
 
 	return [tasksToday, tasksYesterday, tasksWeek, tasksMonth, evenBefore];
     }
@@ -147,5 +160,5 @@ class CompletedWidget extends Widget {
 
 
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget };
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget };
 
