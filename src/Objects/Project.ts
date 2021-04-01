@@ -632,8 +632,9 @@ class Project {
     }
 
     private readiness_warn = () => {
-        if (!this._ready)
-            console.warn("CondutionEngine: you tried to access a bubbubbubu object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
+        // TODO
+//        if (!this._ready)
+            //console.warn("CondutionEngine: you tried to access a bubbubbubu object that was fetched syncronously via lazy_fetch yet the underlying data has not yet been downloaded. You could only access the ID for the moment until data is downloaded. For Shame.");
     }
 
     protected sync = () => {
