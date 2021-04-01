@@ -44,22 +44,16 @@ class Completed extends Component {
         autoBind(this);
 
         this.completedWidget = new CompletedWidget(this.props.cm);
-        this.completedWidget.hook(this.refresh);
     }
 
     async componentDidMount() {
         this.refresh();
+        this.completedWidget.hook(this.refresh);
     }
 
     async refresh(){
-	//console.log("whheee")
         let i = await this.completedWidget.execute()
-        i.map((e) => {
-            e.map(h => {
-                console.log(h.databaseBadge);
-            });
-        });
-	//console.log(i, "whrsfj")
+        this.setState({taskList:i, initialRenderingDone: true});
     }
 
     handleFetchMore() {
