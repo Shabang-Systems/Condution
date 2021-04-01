@@ -12,6 +12,8 @@ import Task from './Components/Task';
 import PerspectiveEdit from './Components/PerspectiveEditor';
 
 import Perspective from "../backend/src/Objects/Perspective";
+import Project from "../backend/src/Objects/Project";
+
 
 import Spinner from './Components/Spinner';
 
@@ -71,6 +73,7 @@ class Perspectives extends Component {
 
     async load() {
         let perspective = await Perspective.fetch(this.props.cm, this.props.id);
+        //perspective.query = "[.amazin]"
         perspective.hook(this.reloadData);
 
         this.setState({
@@ -79,8 +82,6 @@ class Perspectives extends Component {
     }
 
     async reloadData() {
-        //this.state.perspectiveObject.query = "[.new proj]"
-        console.log(this.state.perspectiveObject.query);
         this.setState({
             taskList: await this.state.perspectiveObject.execute(),
             initialRenderingDone: true,
@@ -194,7 +195,7 @@ class Perspectives extends Component {
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         {this.state.taskList.map(i => {
-                            return <div>{i.name}</div>
+                            return <div key={i.id}>{i.name}</div>
                         })}
                         <Spinner ready={this.state.initialRenderingDone} />
                         <BlkArt visible={this.state.initialRenderingDone} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
