@@ -37,99 +37,30 @@ class Completed extends Component {
             //taskCats: this.props.gruntman.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
             taskCats: this.props.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
             rendering: true, // define whether or not the element is rendering 
-            possibleProjects:{}, // see jacks comments in upcoming 
-            possibleTags:{}, 
-            possibleProjectsRev:{}, 
-            possibleTagsRev:{}, 
-            availability: [], 
-            projectSelects:[], 
-            tagSelects: [], 
-            projectDB: {},
-	    pPandT: '',
             initialRenderingDone: false,
         };
 
         this.updatePrefix = this.random();
         autoBind(this);
 
-	this.completedWidget = new CompletedWidget(this.props.cm);
-	this.completedWidget.hook(this.refresh);
+        this.completedWidget = new CompletedWidget(this.props.cm);
+        this.completedWidget.hook(this.refresh);
     }
 
     async componentDidMount() {
-	await this.props.cm.start();
-
-	this.refresh();
-
+        this.refresh();
     }
 
     async refresh(){
 	//console.log("whheee")
-	let i = await this.completedWidget.execute()
+        let i = await this.completedWidget.execute()
+        i.map((e) => {
+            e.map(h => {
+                console.log(h.databaseBadge);
+            });
+        });
 	//console.log(i, "whrsfj")
     }
-
-    //componentWillUnmount() {
-    //    this.props.gruntman.halt();
-    //}
-
-    //async refresh() {
-    //    let taskArr = []; // define temp array
-    //    let full = await this.props.engine.db.getCompletedItems(this.props.uid); // get the tasks from the database 
-
-    //    let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-    //    let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-    //    // loop through the tasks, converting to objects and inserting labels between each cat
-    //    full.forEach((cat, i) => {
-    //        taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
-    //        // if item[0] == task, ... else, ...
-    //        cat.forEach(item => { // this loops through each cat
-    //            if (item[1] == "task") {
-    //                // convert each task to an object then push it to the temp arr
-    //                taskArr.push(new TaskObject("task", item[0])) 
-    //            } else if (item[1] == "project")
-    //            {
-    //                taskArr.push(new TaskObject("project", item[0])) 
-    //            }
-    //        })
-    //    });
-
-    //    let projectList = []; // define the project list
-    //    let tagsList = []; // define the tag list
-
-    //    for (let pid in pPandT[1][0]) 
-    //        tagsList.push({value: pid, label: pPandT[1][0][pid]});
-    //    let views = this;
-    //    let projectDB = await (async function() {
-    //        let pdb = [];
-    //        let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-    //        for (let key in topLevels) {
-    //            pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-    //        }
-    //        return pdb;
-    //    }());
-
-    //    let buildSelectString = function(p, level) {
-    //        if (!level)
-    //            level = ""
-    //        projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-    //        if (p.children)
-    //            for (let e of p.children)
-    //                if (e.type === "project")
-    //                    buildSelectString(e.content, level+":: ");
-    //    };
-    //    projectDB.map(proj=>buildSelectString(proj));
-
-    //    this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
-
-    //    // also set rendering to false. 
-    //    // This is a hacky solution instead of creating an entirely new async function.
-    //}
-
-    //async componentDidMount() {
-    //    this.refresh(); // refresh when the component mounts
-    //    this.props.gruntman.registerRefresher((this.refresh).bind(this));
-    //}
 
     handleFetchMore() {
         this.setState({rendering: true}) // trigger loading screen
@@ -183,7 +114,7 @@ class Completed extends Component {
                         <div className="header-container">
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle>
-                                    <i class="fas fa-bars" 
+                                    <i className="fas fa-bars" 
                                         style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
@@ -201,9 +132,9 @@ class Completed extends Component {
                         {/* Otherwise, render a fetch more.*/}
                         <div style={{overflowY: "scroll"}}>
                             <Spinner ready={this.state.initialRenderingDone} />
-                            {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
+                            {/*{this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
-                                    {(content.type == "label")?  
+                                    (content.type == "label")?  
 
 					(this.state.taskList[i+1] ? 
 					    ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
@@ -215,7 +146,7 @@ class Completed extends Component {
 						>{content.contents}</p>) 
 					    : "")
 					: (content.type == "task"? 
-					    <Task 
+                        <Task 
 						tid={content.contents} 
 						startingCompleted={true}
 						key={content.contents+"-"+this.updatePrefix} 
@@ -237,13 +168,13 @@ class Completed extends Component {
 							this.props.paginate("projects", content.contents);
 							this.props.history.push(`/projects/${content.contents}`)
 						    }}
-						>
+                        >
 						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
 					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
 					)
 				    }
 				</div>
-			    ))}
+                ))}*/}
 
 			    <div className="fetch-more" > 
 				{/* define the fetch more button */}
