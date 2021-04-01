@@ -541,12 +541,15 @@ class Task {
 
     /**
      * Delete the task!!
+     * @async
      *
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    delete() : void {
+    async delete() : Promise<void> {
+        if (this.project)
+            await this.project.dissociate(this);
         this.page.delete();
     }
 

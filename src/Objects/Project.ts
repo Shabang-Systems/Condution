@@ -56,10 +56,9 @@ class Project {
 
         let pj:Project = new this(identifier, context);
         pj._readiness = new Promise(async (res, _) => {
-            Project.cache.set(identifier, pj);
             let page:Page = context.page(["projects", identifier], pj.update);
-            if (!page.exists)
-                res()
+//            if (!page.exists)
+                //res()
 
             pj.data = await page.get();
             pj.page = page;
@@ -68,8 +67,7 @@ class Project {
             await pj.calculateTreeParams();
             res();
         });
-
-        //await pj._readiness;
+        Project.cache.set(identifier, pj);
 
         return pj;
     }
@@ -464,12 +462,15 @@ class Project {
 
     /**
      * Delete the project!!
+     * @async
      *
-     * @returns{void}
+     * @returns{Promise<void>}
      *
      */
 
-    delete() : void {
+    async delete() : Promise<void> {
+        if (this.parent)
+            await this.parent.dissociate(this);
         this.page.delete();
     }
 
