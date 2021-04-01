@@ -82,6 +82,23 @@ class Perspectives extends Component {
     }
 
     async reloadData() {
+        // WHY IS THIS SO SLOW????!??!? You ask.
+        // There is a bug whereby things like "flagged" is
+        // filtered by caching every task, THEN filtering by flaggedness
+        // in the backend, because Jack is dumb. 
+        //
+        // The correct behavior should be that filtering by flaggedness
+        // should be done BEFORE the task info is fully cached. Refer to
+        // src/backend/src/Objects/Perspective.ts to see how this was
+        // implemented. 
+        //
+        // Unfortunately, I can't bother to fix this right now, so perspcetives
+        // that filter for every task (like [!._]) is just going to suck for
+        // a few days until I bug Huxley enough to fix it for me. Thx XOXO.
+        //
+        //
+        // @jemoka
+        
         this.setState({
             taskList: await this.state.perspectiveObject.execute(),
             initialRenderingDone: true,
