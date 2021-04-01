@@ -273,13 +273,15 @@ class SimpleGroup {
         for (let i:number=0; i<=(positiveprojects.length > 0 ? positiveprojects.length-1 : 0 ); i++) {
             let tempResult: ((i:Filterable)=>boolean)[] = [];
 
-            if (i !== positiveprojects.length) tempResult.push((t:Task) => t.project == positiveprojects[i]);
+            if (i !== positiveprojects.length) tempResult.push((t:Task) => (t.project && t.project.id == positiveprojects[i].id));
 
-            negateprojects.forEach((j:Project) => tempResult.push((t:Task) => t.project != j));
+            negateprojects.forEach((j:Project) => tempResult.push((t:Task) => ((t.project && t.project.id != j.id))));
 
-            positivetags.forEach((h:Tag) => tempResult.push((t:Task) => t.tags.includes(h)));
+            positivetags.forEach((h:Tag) => tempResult.push((t:Task) => (h ? t.tags.map((a:Tag)=>a.id).includes(h.id) : false)));
 
-            negatetags.forEach((h:Tag) => tempResult.push((t:Task) => !t.tags.includes(h)));
+            negatetags.forEach((h:Tag) => tempResult.push((t:Task) => (
+                h ? !t.tags.map((a:Tag)=>a.id).includes(h.id) : false
+            )));
 
             result.push(tempResult);
         }
@@ -354,7 +356,9 @@ class PerspectiveQuery {
         ]);
 
         // Flatten and store the queries 
-        parsedQueries = Array.prototype.concat.apply([], queries);
+        queries.forEach((i:any) => 
+            i.forEach((j:any)=>parsedQueries.push(j))
+        );
 
         // And now... Query!
         let results:Task[][] = await Promise.all(
@@ -431,7 +435,7 @@ class Perspective {
      */
 
     static async fetch(context:Context, identifier:string):Promise<Perspective> {
-        let cachedPerspective:Perspective = Perspective .cache.get(identifier);
+        let cachedPerspective:Perspective = Perspective.cache.get(identifier);
         if (cachedPerspective)
             return cachedPerspective;
 
@@ -545,14 +549,17 @@ class Perspective {
      */
 
     async execute(): Promise<Task[]> {
+        console.log("HEWO!!");
         let baseTasks:Task[] = [];
 
-        try {
-            baseTasks = await this.parsedQuery.execute();
-        } catch (e) {
-            if (e instanceof PerspectiveParseError) 
-                return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
-        }
+        //try {
+        baseTasks = await this.parsedQuery.execute();
+//        } catch (e) {
+            //if (e instanceof PerspectiveParseError) 
+                //return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
+            //else 
+                //console.log(e)
+        //}
 
         switch (this.availability) {
             case AvailabilityTypes.AVAIL:
@@ -566,6 +573,9 @@ class Perspective {
                 break;
         }
 
+        let nodueTasks = baseTasks.filter((i:Task) => !i.due);
+        baseTasks = baseTasks.filter((i:Task) => i.due);
+
         // TODO BAD BAD CODING INCOMING. SHIELD YOUR SEEING BALLS!
         // This is done to be able to chuck the items without a due
         // date onto the bottom of the page.
@@ -573,13 +583,11 @@ class Perspective {
         switch (this.taskorder) {
             case OrderTypes.DUE_ASCEND:
                 baseTasks.sort((a:Task,b:Task) =>
-                    (a.due ? a.due.getTime() : 10000000000) -
-                    (b.due ? b.due.getTime() : 10000000000)
+                    a.due.getTime() - b.due.getTime() 
                 ); break;
             case OrderTypes.DUE_DESCEND:
                 baseTasks.sort((a:Task,b:Task) =>
-                    (b.due ? b.due.getTime() : 1) -
-                    (a.due ? a.due.getTime() : 1)
+                    b.due.getTime() - a.due.getTime()
                 ); break;
             case OrderTypes.DEFER_ASCEND:
                 baseTasks.sort((a:Task,b:Task) =>
@@ -597,7 +605,7 @@ class Perspective {
                 ); break;
         }
 
-        return baseTasks;
+        return [...baseTasks, ...nodueTasks];
     }
 
     
