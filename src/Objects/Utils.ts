@@ -228,7 +228,7 @@ interface AdapterData {
 type Filterable = Task|Tag|Project|Perspective|(Task | Project)[];
 
 class Query {
-    private cm: Context;
+    cm: Context;
     private static hooks:Function[] = [];
     private static hasIndexed:boolean = false;
 

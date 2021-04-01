@@ -420,7 +420,7 @@ class FirebaseProvider extends Provider {
 
         // Initialize the correct version of the database
         if (process.env.NODE_ENV === "development")
-            firebase.initializeApp(obj.dbkeys.debug);
+            firebase.initializeApp(obj.dbkeys.deploy);
         else if (process.env.NODE_ENV === "production")
             firebase.initializeApp(obj.dbkeys.deploy);
         else

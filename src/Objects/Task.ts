@@ -202,9 +202,9 @@ class Task {
 
     get project() {
         this.readiness_warn();
-        if (this._ready && this.data["project"] !== '') {
+        if (this._ready && this.data["project"] && this.data["project"] !== '') {
             return Project.lazy_fetch(this.context, this.data["project"]);
-        }
+        } return null
     }
 
     /**
@@ -362,7 +362,7 @@ class Task {
     get isFlagged() {
         this.readiness_warn();
         if (this._ready)
-            return this.data["isFloating"];
+            return this.data["isFlagged"];
     }
 
     /**

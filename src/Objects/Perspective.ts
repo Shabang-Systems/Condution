@@ -220,9 +220,10 @@ class SimpleGroup {
 
                 // Get project children
                 let children:(Project|Task)[][] = await Promise.all(projects.map(async (proj:Project) => {
-                    targets.push(proj);
                     await proj.readinessPromise;
-                    return await proj.async_children;
+                    targets.push(proj);
+                    let projChildren = await proj.async_children;
+                    return projChildren;
                 }));
 
                 // Get subproject list
@@ -343,24 +344,17 @@ class PerspectiveQuery {
         let parsedQueries:((i:Filterable)=>boolean)[][] = [];
 
         // Calculate all the queries
-        (await Promise.all(
-            [
-                ...this.simpleGroups.map(
-                    async (i:SimpleGroup) =>  {
-                    (await i.synthesize()).forEach(
-                        (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
-                    )
-                    }
-                ), 
-                ...this.logicGroups.map(
-                    async (i:LogicGroup) => {
-                    (await i.synthesize()).forEach(
-                        (j:((e:Filterable)=>boolean)[])=>parsedQueries.push(j)
-                    )
-                    }
-                ),
-            ]
-        ));
+        let queries:((i:Filterable)=>boolean)[][][] = await Promise.all([
+            ...this.simpleGroups.map(
+                async (i:SimpleGroup) => (await i.synthesize())
+            ), 
+            ...this.logicGroups.map(
+                async (i:LogicGroup) => (await i.synthesize())
+            ),
+        ]);
+
+        // Flatten and store the queries 
+        parsedQueries = Array.prototype.concat.apply([], queries);
 
         // And now... Query!
         let results:Task[][] = await Promise.all(
@@ -560,7 +554,6 @@ class Perspective {
                 return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
         }
 
-
         switch (this.availability) {
             case AvailabilityTypes.AVAIL:
                 baseTasks = baseTasks.filter((i:Task) => i.available);
@@ -569,7 +562,7 @@ class Perspective {
                 baseTasks = baseTasks.filter((i:Task) => !i.isComplete);
                 break;
             case AvailabilityTypes.FLAGGED:
-                baseTasks = baseTasks.filter((i:Task) => i.isFlagged);
+                baseTasks = baseTasks.filter((i:Task) => (i.isFlagged === true && !i.isComplete));
                 break;
         }
 
