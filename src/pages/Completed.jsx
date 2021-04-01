@@ -51,6 +51,10 @@ class Completed extends Component {
         this.completedWidget.hook(this.refresh);
     }
 
+    async componentWillUnmount() {
+        this.completedWidget.unhook(this.refresh);
+    }
+
     async refresh(){
         let i = await this.completedWidget.execute()
         this.setState({taskList:i, initialRenderingDone: true});
