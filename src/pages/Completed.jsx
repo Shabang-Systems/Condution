@@ -52,7 +52,8 @@ class Completed extends Component {
     }
 
     async componentWillUnmount() {
-        this.completedWidget.unhook(this.refresh);
+        if (this.completedWidget)
+            this.completedWidget.unhook(this.refresh);
     }
 
     async refresh(){

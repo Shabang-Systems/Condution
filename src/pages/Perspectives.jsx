@@ -79,6 +79,8 @@ class Perspectives extends Component {
     }
 
     async reloadData() {
+        //this.state.perspectiveObject.query = "[.new proj]"
+        console.log(this.state.perspectiveObject.query);
         this.setState({
             taskList: await this.state.perspectiveObject.execute(),
             initialRenderingDone: true,
