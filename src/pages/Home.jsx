@@ -153,75 +153,7 @@ class Home extends Component {
         /*this.props.engine.userlandify()*/
     }
 
-    async refresh(hewo) {
-
-        //        // Load the top level projects and perspectives
-        //// to set into the state and to add to the menu
-        //let tlp = await this.props.engine.db.getTopLevelProjects(this.state.workspace);
-        ////console.log(tlp)
-        //let psp = await this.props.engine.db.getPerspectives(this.state.workspace);
-        //if (this.props.authType === "firebase" && !this.state.isWorkspace) {
-        //let invites = await this.props.engine.db.getInvitations(this.props.email);
-        //let delegations = await this.props.engine.db.getDelegations(this.props.email);
-        //let top = invites.sort((a, b)=>a.time.seconds<b.time.seconds)[invites.length-1];
-        //this.props.gruntman.lockUpdates();
-        //let lastSeen = [null, null];
-        //await Promise.all(delegations.sort((a, b)=>a.time.seconds>b.time.seconds).map((async function(delegation) {
-        //if (lastSeen[0] == delegation.task && lastSeen[1] == delegation.type) 
-        //return; // fix duplicate deligation bug
-
-        //if (delegation.type === "delegation") {
-        //let chains = await this.props.engine.db.getChainedTasks(this.props.uid);
-        //if (chains[delegation.task] === undefined) {
-        //await this.props.engine.db.newChainedTask(this.props.uid, delegation.workspace, delegation.task);
-        //await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
-        //} else {
-        //await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
-        //}
-        //} else if (delegation.type === "dedelegation") {
-        //await this.props.engine.db.deleteChainedTask(this.props.uid, delegation.task);
-        //await this.props.engine.db.resolveDelegation(delegation.id, this.props.email);
-        //}
-
-        //lastSeen = [delegation.task, delegation.type];
-
-        //}).bind(this)));
-        //this.props.gruntman.unlockUpdates();
-        //if (top) {
-        //this.props.gruntman.lockUpdates();
-        //if (top.type === "revoke") {
-        //let newWorkspaces = (await this.props.engine.db.getWorkspaces(this.props.uid)).filter(e=>(e != top.workspace));
-        //await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
-        //await invites.filter(i=>i.workspace===top.workspace).forEach(i=>this.props.engine.db.resolveInvitation(i.id, this.props.email)) // simply accept all rejections and anything that happened before, and...
-        //this.switch("userland");
-        //// TODO potenially prompt the user
-        //} else if (top.type === "invite")
-        //this.setState({isWorkspaceRequestShown: [true, [top.workspace,  (await this.props.engine.db.getWorkspace(top.workspace)).meta.name, top.id]]});
-        //this.props.gruntman.unlockUpdates();
-        //}
-        //}
-        ////for (let i in psp[2]) 
-        ////{
-        ////console.log(psp[2][i].name)
-        ////}
-
-        //console.log("ready to execute!")
-        //await this.projectmenuWidget.execute()
-        //console.log("executed")
-        //
-        // .execute actually runs the widget
-        // like, it returns a list of tasks
-        // I WILL SHOW YOU!!!
-        //
-        //
-        //
-        //so, widgets typically are just hidden
-        //.Queries behind the scenes. meaning that
-        //widgets.execute() are, at a minimum, a shorthand
-        // for a very very long Query.execute()
-        //
-        // Let's write a widget together. the Inbox.
-        
+    async refresh() {
         this.setState({projects: await this.projectmenuWidget.execute(), perspectives: await this.perspectivemenuWidget.execute()});
     }
 

@@ -72,13 +72,12 @@ class Perspectives extends Component {
     }
 
     async load() {
-        let perspective = await Perspective.fetch(this.props.cm, this.props.id);
-        //perspective.query = "[.amazin]"
-        perspective.hook(this.reloadData);
+        let perspective = await Perspective.fetch(this.props.cm, this.props.id)
+        //perspective.hook(this.reloadData);
 
         this.setState({
             perspectiveObject: perspective 
-        }, this.reloadData);
+        }, this.reloadData)
     }
 
     async reloadData() {
@@ -99,8 +98,9 @@ class Perspectives extends Component {
         //
         // @jemoka
         
+        let taskList = await this.state.perspectiveObject.execute();
         this.setState({
-            taskList: await this.state.perspectiveObject.execute(),
+            taskList,
             initialRenderingDone: true,
             perspectiveName: this.state.perspectiveObject.name
         });
