@@ -623,9 +623,9 @@ class Task {
 
             // If the parent is sequential
             if (project.isSequential)
-                this._available = (project.available && this.order == 0 && new Date() > this.defer); // Availibilty is calculated based on order
+                this._available = (!this.isComplete && project.available && this.order == 0 && new Date() > this.defer); // Availibilty is calculated based on order
             else
-                this._available = (project.available && new Date() > this.defer); // The availibilty is only based on the availibilty of project
+                this._available = (!this.isComplete && project.available && new Date() > this.defer); // The availibilty is only based on the availibilty of project
         } else if (this.isComplete == true)
             this._available = false; // otherwise, its not available
         else  // if no parents

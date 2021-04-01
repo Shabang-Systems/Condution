@@ -337,11 +337,13 @@ class PerspectiveQuery {
     /**
      * Execute the query per request
      *
+     * @param{((i:Filterable)=>boolean)?} additionalFilter    any supplimentary filters to the perspective query
+     *
      * @returns{Promise<Task[]>}
      *
      */
 
-    async execute():Promise<Task[]> {
+    async execute(additionalFilter?:((i:Filterable)=>boolean)):Promise<Task[]> {
         // Get parsed queries
         let parsedQueries:((i:Filterable)=>boolean)[][] = [];
 
@@ -363,7 +365,7 @@ class PerspectiveQuery {
         // And now... Query!
         let results:Task[][] = await Promise.all(
             parsedQueries.map(
-                (i:any) => this.queryEngine.batch_execute(Task, i)
+                (i:any) => this.queryEngine.batch_execute(Task, additionalFilter?[...i, additionalFilter]:i)
             )
         ) as Task[][];
 
@@ -549,11 +551,21 @@ class Perspective {
      */
 
     async execute(): Promise<Task[]> {
-        console.log("HEWO!!");
-        let baseTasks:Task[] = [];
 
+        let additionalFilter:any = () => true;
+        switch (this.availability) {
+            case AvailabilityTypes.AVAIL:
+                additionalFilter = ((i:Task) => i.available);
+                break;
+            case AvailabilityTypes.REMAIN:
+                additionalFilter = ((i:Task) => !i.isComplete);
+                break;
+            case AvailabilityTypes.FLAGGED:
+                additionalFilter = ((i:Task) => (i.isFlagged === true && !i.isComplete));
+                break;
+        }
         //try {
-        baseTasks = await this.parsedQuery.execute();
+        let baseTasks:Task[] = await this.parsedQuery.execute(additionalFilter);
 //        } catch (e) {
             //if (e instanceof PerspectiveParseError) 
                 //return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
@@ -561,17 +573,7 @@ class Perspective {
                 //console.log(e)
         //}
 
-        switch (this.availability) {
-            case AvailabilityTypes.AVAIL:
-                baseTasks = baseTasks.filter((i:Task) => i.available);
-                break;
-            case AvailabilityTypes.REMAIN:
-                baseTasks = baseTasks.filter((i:Task) => !i.isComplete);
-                break;
-            case AvailabilityTypes.FLAGGED:
-                baseTasks = baseTasks.filter((i:Task) => (i.isFlagged === true && !i.isComplete));
-                break;
-        }
+
 
         let nodueTasks = baseTasks.filter((i:Task) => !i.due);
         baseTasks = baseTasks.filter((i:Task) => i.due);
