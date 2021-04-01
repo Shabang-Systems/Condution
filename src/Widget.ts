@@ -106,7 +106,7 @@ class CompletedWidget extends Widget {
 
         let completedItems = [...completedTasks, ...completedProjects]
 
-        const cpSorted = completedItems.sort(function(b:Task|Project, a:Task|Project) { return (!a.completeDate || !b.completeDate) ? 1 :  a.completeDate.getTime() - b.completeDate.getTime() })
+        const cpSorted = completedItems.sort(function(b:Task|Project, a:Task|Project) { return (!a.completeDate || !b.completeDate) ? -1 :  a.completeDate.getTime() - b.completeDate.getTime() })
 
         let today = new Date();
         let yesterday = new Date();
