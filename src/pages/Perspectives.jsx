@@ -73,7 +73,7 @@ class Perspectives extends Component {
 
     async load() {
         let perspective = await Perspective.fetch(this.props.cm, this.props.id)
-        //perspective.hook(this.reloadData);
+        perspective.hook(this.reloadData);
 
         this.setState({
             perspectiveObject: perspective 
@@ -212,10 +212,10 @@ class Perspectives extends Component {
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
                         {this.state.taskList.map(i => {
-                            return <div key={i.id}>{i.name}</div>
+                            return <div key={i.id}>{i.name}{this.state.initialRenderingDone}</div>
                         })}
                         <Spinner ready={this.state.initialRenderingDone} />
-                        <BlkArt visible={this.state.initialRenderingDone} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
+                        <BlkArt visible={this.state.initialRenderingDone && this.state.taskList.length === 0} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
                     </div>
                 </div>
