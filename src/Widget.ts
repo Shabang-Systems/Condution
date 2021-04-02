@@ -157,53 +157,53 @@ class ProjectDatapackWidget extends Widget {
     name = "project-datapack-widget"
     private static dataPromise:Promise<object[]>;
 
-    constructor(context:Context) {
-        super(context);
-
-        ProjectDatapackWidget.dataPromise = this.calculate();
-
-        Query.hook(() => { 
-            // Whence new data comes in, recalculate
-            ProjectDatapackWidget.dataPromise = this.calculate();
-        });
-    }
-
     async execute() {
-        return await ProjectDatapackWidget.dataPromise;
+        if (!ProjectDatapackWidget.dataPromise)
+            ProjectDatapackWidget.dataPromise = this.calculate();
+
+        let data = await ProjectDatapackWidget.dataPromise;
+        return data;
     }
 
-    async calculate() {
-        let topProjectsWidget:ProjectMenuWidget = new ProjectMenuWidget(this.query.cm);
+    private async calculate() {
+        // Get a list of top-level projects
+        let topProjects:Project[] = await this.query.execute(Project, (i:Project)=> i.topLevel && !i.isComplete) as Project[];
+        topProjects.sort((a: Project, b: Project) => a.order-b.order);
 
         // Task: DFS through the list to get projects
         let result:object[] = [];
 
         // First, map the depth of all top projects to 0. Stack looks like [obj, depth]
-        let topProjects:Project[] = [];
-        topProjects = await topProjectsWidget.execute()
         let stack:any[] = topProjects.map((i:Project)=>[i, 0]);
 
-        //// Reverse stack, b/c we want to process the top one first
-        //stack.reverse();
+        // Reverse stack, b/c we want to process the top one first
+        stack.reverse();
 
-        //while (stack.length > 0) {
-            //// Pop the top of the stack and push name and level to result
-            //let popped:[Project,number] = stack.pop();
-            //result.push({value: popped[0], label:(":: ".repeat(popped[1]))+popped[0].name});
+        while (stack.length > 0) {
+            // Pop the top of the stack and push name and level to result
+            let popped:[Project,number] = stack.pop();
 
-            //// Query for children
-            //let async_children:(Project|Task)[] = await popped[0].async_children;
+            if (!popped[0]) // if the data does not exist
+                continue;
 
-            //// Get the children that's projects
-            //async_children = async_children.filter((i:Task|Project) => (i instanceof Project) && (i.isComplete !== true)) as Project[];
+            await popped[0].readinessPromise;
 
-            //// Reverse the gosh darn list b/c we want to process the top one first
-            //async_children.reverse();
+            result.push({value: popped[0], label:(":: ".repeat(popped[1]))+popped[0].name});
+
+            // Query for children
+            let async_children:(Project|Task)[] = await popped[0].async_children;
+
+            // Get the children that's projects
+            async_children = async_children.filter((i:Task|Project) => (i instanceof Project) && (i.isComplete !== true)) as Project[];
+
+            // Reverse the gosh darn list b/c we want to process the top one first
+            async_children.reverse();
             
-            //// And then, push the children to the stack
-            //async_children.forEach((i:Project) => stack.push([i, popped[1]+1]));
-        //}
+            // And then, push the children to the stack
+            async_children.forEach((i:Project) => stack.push([i, popped[1]+1]));
+        }
 
+        console.log(result);
         return result
     }
 }

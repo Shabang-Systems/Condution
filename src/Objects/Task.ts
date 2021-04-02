@@ -56,8 +56,8 @@ class Task {
         let tsk:Task = new this(identifier, context);
         let page:Page = context.page(["tasks", identifier], tsk.update);
 
-        tsk.data = await page.get();
-        tsk._ready = true;
+        tsk.data = page.exists ? await page.get() : {};
+        tsk._ready = page.exists;
         tsk.page = page;
 
         Task.cache.set(identifier, tsk);
