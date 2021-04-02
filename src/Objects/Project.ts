@@ -57,8 +57,8 @@ class Project {
         let pj:Project = new this(identifier, context);
         pj._readiness = new Promise(async (res, _) => {
             let page:Page = context.page(["projects", identifier], pj.update);
-//            if (!page.exists)
-                //res()
+            if (!page.exists)
+                res()
 
             pj.data = await page.get();
             pj.page = page;
@@ -709,7 +709,9 @@ class ProjectSearchAdapter extends Project {
      */
 
     async produce() : Promise<Project> {
-        return await Project.fetch(this.context, this.id);
+        let project:Project = await Project.fetch(this.context, this.id);
+        await project.readinessPromise;
+        return project;
     }
 
     /**
