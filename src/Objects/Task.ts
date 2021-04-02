@@ -437,11 +437,17 @@ class Task {
      */
 
     set due(dueDate: Date) {
+        if (!dueDate || dueDate === null) {
+            delete this.data["due"];
+            this.sync();
+            return;
+        }
         this.data["due"] = {seconds: Math.floor(dueDate.getTime()/1000), nanoseconds:0};
         this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
         this.page.set({due: dueDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
+        this.calculateTreeParams();
     }
 
     /**
@@ -477,6 +483,7 @@ class Task {
         this.page.set({defer: deferDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
+        this.calculateTreeParams();
     }
 
     /**
