@@ -579,9 +579,9 @@ class Project {
 
             // ... and it's sequential
             if (parent_proj.isSequential)
-                this._available = (parent_proj.available && this.order == 0 && this.isComplete == false); // availablitiy is based on order
+                this._available = (parent_proj.available && this.order == 0 && !this.isComplete); // availablitiy is based on order
             else
-                this._available = (parent_proj.available && this.isComplete == false); // and get the availibilty
+                this._available = (parent_proj.available && !this.isComplete); // and get the availibilty
         } else if (this.isComplete !== undefined && this.isComplete !== null)// if its complete
             this._available = !this.isComplete; // its availibilty is based on completenessk
         else
