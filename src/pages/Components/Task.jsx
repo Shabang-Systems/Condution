@@ -36,6 +36,9 @@ import CalendarPopover from './CalendarPopover';
 // Our very own CSS
 import './Task.css';
 
+// Our very own Backend Objects
+import T from "../../backend/src/Objects/Task.ts";
+
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
 
@@ -154,6 +157,7 @@ class Task extends Component {
         autoBind(this);
 
         this.state = { 
+            taskObj: null, // the object we are reading from
             expanded: false, // are we expanded?
             deferDate: undefined, // what's our defer date?
             dueDate: undefined, // what's our due date?
@@ -171,7 +175,7 @@ class Task extends Component {
             deferPopoverShown: false, // is the defer calendar popover shown?
             duePopoverShown: false, // is the due calendar popover shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
-            possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
+            //possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
             haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false), // did we render the edit part yet? optimization
             notificationPopoverShown: [false, null], // is our notification popover shown?
             notificationCalendarShown: false, // is the notification calendar shown?
@@ -207,44 +211,25 @@ class Task extends Component {
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
-
         // Obviously we need this, the task info
-        let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
+        let task = this.props.taskObject;
 
         // Setting state to update the rest of them elements
         this.setState({
-            name: taskInfo.name, // Set name field
-            desc: taskInfo.desc, // Set task description
-            project: taskInfo.project,  // Set project ID
-            tags: taskInfo.tags, // Set tag ID array
-            isFloating: taskInfo.isFloating, // Set isFloating bool
-            isFlagged: taskInfo.isFlagged, // Set is Flagged bool
-            isComplete: taskInfo.isComplete, // Set is complete style
-            dueDate: (
-                taskInfo.due ? // If we have a due date
-                (taskInfo.isFloating ? // and if we are floating
-                    new Date(taskInfo.due.seconds*1000) : // then the due date in just... the due date
-                    parseFromTimeZone( // otherwise, we stringify the date to remove timezone info
-                        (new Date(taskInfo.due.seconds*1000)).toISOString(), 
-                        {timeZone: taskInfo.timezone} // and cast it to the right time zone
-                    )
-                ):
-                undefined 
-            ), 
-            deferDate: (
-                taskInfo.defer ? // If we have a defer date
-                (taskInfo.isFloating ?  // and if we are floating
-                    new Date(taskInfo.defer.seconds*1000) : // then the defer date is just... the defer date
-                    parseFromTimeZone( // otherwise, we stringify the date to remove timezone info
-                        (new Date(taskInfo.defer.seconds*1000)).toISOString(), 
-                        {timeZone: taskInfo.timezone} // and cast it to the right time zone
-                    )
-                ): undefined
-            ),
-            hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
-            delegations: taskInfo.delegations ? taskInfo.delegations : [],
-            delegatedWorkspace: taskInfo.delegatedWorkspace ? taskInfo.delegatedWorkspace : "",
-            delegatedTaskID: taskInfo.delegatedTaskID ? taskInfo.delegatedTaskID : "",
+            taskObj: task, // set task object
+            name: task.name, // Set name field
+            desc: task.desc, // Set task description
+            project: task.project,  // Set project ID
+            tags: task.tags, // Set tag ID array
+            isFloating: task.isFloating, // Set isFloating bool
+            isFlagged: task.isFlagged, // Set is Flagged bool
+            isComplete: task.isComplete, // Set is complete style
+            dueDate: task.due, 
+            deferDate: task.defer,
+            hasNotification: true, // TODO
+            delegations: [], // TODO
+            delegatedWorkspace: "", // TODO
+            delegatedTaskID: "" // TODO,
         }, this.refreshDecorations);
         this.initialRenderDone = true;
     }
@@ -260,13 +245,13 @@ class Task extends Component {
         else
             this.setState({decoration: base}); // give 'em an nothing badge
 
-        if (this.state.deferDate&&this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
-            this.setState({availability: false}); // tell 'em it's not avaliable
-        else if (this.state.deferDate&&this.props.availability === true) //  otherwise, if this thing's avaliable
-            this.setState({availability: true}); // set it to be so!
-        else if (!this.props.availability) // or if my props make me disabled
-            this.setState({availability: false}); // well then you gotta follow them props, no?
-
+//        if (this.state.deferDate&&this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
+            //this.setState({availability: false}); // tell 'em it's not avaliable
+        //else if (this.state.deferDate&&this.props.availability === true) //  otherwise, if this thing's avaliable
+            //this.setState({availability: true}); // set it to be so!
+        //else if (!this.props.availability) // or if my props make me disabled
+            // // well then you gotta follow them props, no?
+        this.setState({availability: this.state.taskObj.available});
         
     }
 
@@ -363,14 +348,14 @@ class Task extends Component {
                 document.getElementById("abtib").style.display = "none";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(false); // disable drag
-            this.props.gruntman.lockUpdates(); // tell gruntman to chill
+            //this.props.gruntman.lockUpdates(); // tell gruntman to chill
         }
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) { // if we closed a task
             if (getPlatforms().includes("mobile"))
                 document.getElementById("abtib").style.display = "block";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(true); // enable drag
-            this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
+            //this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
         }
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
             this.openTask(); // open task
@@ -434,9 +419,9 @@ class Task extends Component {
 
                                 {/* Gotta get those on hover tips */}
                                 {/* And load up + hide the repeat UI, too! */}
-                                <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                                {/*<Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>*/}
                                 {/* As well as load up + hide the tag editor!*/}
-                                <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
+                                {/*<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>*/}
                                 
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
@@ -517,7 +502,7 @@ class Task extends Component {
                                     readOnly={(!this.state.expanded)} 
                                     type="text" 
                                     autoComplete="off" 
-                                    placeholder={this.props.gruntman.localizations.nt} 
+                                    placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
 				    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
 				    />
@@ -531,7 +516,7 @@ class Task extends Component {
                                                 {/* First, task description field */}
                                                 <textarea 
 						    tabIndex='0'
-                                                    placeholder={this.props.gruntman.localizations.desc} 
+                                                    placeholder={this.props.localizations.desc} 
                                                     className="task-desc" 
                                                     style={{marginBottom: 10}} 
                                                     defaultValue={this.state.desc}
@@ -564,7 +549,7 @@ class Task extends Component {
                                                     }}><i className="fas fa-trash" style={{margin: 3, fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
 
                                                     {/* Flagged icon */}
-                                                    <a data-tip={this.props.gruntman.psp_flg} className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
+                                                    <a className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
                                                         // On change, set the flagged state to the opposite of whatever it is
                                                         // Both on the db...
                                                         this.props.gruntman.do(
@@ -593,12 +578,12 @@ class Task extends Component {
                                                     <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
 
                                                     {/* Notification icon that, on click, shows notify popover */}
-                                                    <CalendarPopover  gruntman={this.props.gruntman} reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                    {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
                                                         this.props.gruntman.cancelNotification(this.props.tid).then(()=>{
                                                             this.props.gruntman.scheduleNotification(this.props.tid, this.props.uid, this.state.name, this.state.desc, d);
                                                             this.setState({hasNotification: true});
                                                         });
-                                                    }}/>
+                                                    }}/>*/}
                                                     <IonPopover
                                                         showBackdrop={false}
                                                         isOpen={this.state.notificationPopoverShown[0]}
@@ -616,10 +601,11 @@ class Task extends Component {
                                                             <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true, notificationPopoverShown:[false, null]})}>Change Notification</div>
                                                         </div>
                                                     </IonPopover>
-                                                    {(()=>{
+                                                    {/*(()=>{
                                                         if (this.props.gruntman.notifPermissionGranted && !(getPlatforms().includes("mobileweb") || getPlatforms().includes("desktop")))
                                                             return <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
-                                                    })()}
+                                                    })()*/}
+                                                    notifs tho
 
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
@@ -634,13 +620,13 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                         {/* The. Defer. Date. */}
                                                         <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
-                                                        <CalendarPopover  gruntman={this.props.gruntman} reference={this.deferPopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
+                                                        {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.deferPopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
                                                             this.props.gruntman.do(
                                                                 "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
                                                             )
                                                             this.setState({deferDate: d});
 
-                                                        }}/>
+                                                        }}/>*/}
                                                         {(() => {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
@@ -717,13 +703,13 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
                                                         <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {/* Due date popover */}
-                                                        <CalendarPopover  gruntman={this.props.gruntman} reference={this.duePopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                        {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.duePopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
                                                             this.props.gruntman.do(
                                                                 "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
                                                             )
                                                             this.setState({dueDate: d});
 
-                                                        }}/>
+                                                        }}/>*/}
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
@@ -797,6 +783,8 @@ class Task extends Component {
                                                         })()}
                                                     </div>
                                                 </div>
+                                                delegation tho
+                                                {/*
                                                 <div className="tag-container" style={{display: this.props.engine.db.getWorkspaceMode() ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
                                                     <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
@@ -820,15 +808,14 @@ class Task extends Component {
                                                                 }
                                                             )
                                                             this.setState({delegations: list});
-                                                        }}} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.gruntman.localizations.workspace_email}} />
+                                                        }}} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.localizations.workspace_email}} />
                                                 </div>
+                                                */}
 
+                                                {/*
                                                 <div>
-                                                    {/* Task project container */}
                                                     <span className="task-project-container">
-                                                        {/* Icon */}
                                                         <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
-                                                        {/* Project select */}
                                                         <Select 
                                                             options={this.props.datapack[1]}
                                                             className='task-project'
@@ -841,19 +828,13 @@ class Task extends Component {
                                                             menuPortalTarget={document.body}
                                                             value={this.props.datapack[1].filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
-                                                                {/* :point up: filter for only options with this project and set that to be the value */}
-                                                                {/* Actually update the project */}
                                                                 this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.state.project===""?undefined:this.state.project, project: (e?e.value:"")})
-                                                                {/* And set the state, too! */}
                                                                 this.setState({project:(e?e.value:"")});
                                                             }}
                                                         />
                                                     </span>
-                                                    {/* Task tag container */}
                                                     <span className="task-tag-container">
-                                                        {/* Icon */}
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
-                                                        {/* Tag select */}
                                                         <CreatableSelect
                                                             options={this.props.datapack[0]}
                                                             className='task-tag'
@@ -898,6 +879,7 @@ class Task extends Component {
                                                         />
                                                     </span>
                                                 </div>
+                                                */}
                                             </animated.div>
                                         )
                                 })()}
