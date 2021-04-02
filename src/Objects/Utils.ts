@@ -266,6 +266,7 @@ class Query {
         delete Query.tagPages;
 
         Query.hasIndexed = false;
+        Query.hooks.map((i:Function)=>i(this));
     }
 
     /**

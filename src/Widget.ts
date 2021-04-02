@@ -30,7 +30,7 @@ abstract class Widget {
      *
      */
 
-    abstract execute():Promise<Filterable[]>;
+    abstract execute():Promise<Filterable[]>|Promise<object>;
 
     constructor(context:Context) {
         this.query = new Query(context);
@@ -144,8 +144,70 @@ class CompletedWidget extends Widget {
     }
 }
 
+/**
+ * Widget for tasks' project dropdown datapack
+ *
+ * Because of the relative heaviness of DFS, this widget has special
+ * merging rules such that recent concurrent calls listen to the same 
+ * promise.
+ *
+ */
+
+class ProjectDatapackWidget extends Widget {
+    name = "project-datapack-widget"
+    private static dataPromise:Promise<object[]>;
+
+    constructor(context:Context) {
+        super(context);
+
+        ProjectDatapackWidget.dataPromise = this.calculate();
+
+        Query.hook(() => { 
+            // Whence new data comes in, recalculate
+            ProjectDatapackWidget.dataPromise = this.calculate();
+        });
+    }
+
+    async execute() {
+        return await ProjectDatapackWidget.dataPromise;
+    }
+
+    async calculate() {
+        let topProjectsWidget:ProjectMenuWidget = new ProjectMenuWidget(this.query.cm);
+
+        // Task: DFS through the list to get projects
+        let result:object[] = [];
+
+        // First, map the depth of all top projects to 0. Stack looks like [obj, depth]
+        let topProjects:Project[] = [];
+        topProjects = await topProjectsWidget.execute()
+        let stack:any[] = topProjects.map((i:Project)=>[i, 0]);
+
+        //// Reverse stack, b/c we want to process the top one first
+        //stack.reverse();
+
+        //while (stack.length > 0) {
+            //// Pop the top of the stack and push name and level to result
+            //let popped:[Project,number] = stack.pop();
+            //result.push({value: popped[0], label:(":: ".repeat(popped[1]))+popped[0].name});
+
+            //// Query for children
+            //let async_children:(Project|Task)[] = await popped[0].async_children;
+
+            //// Get the children that's projects
+            //async_children = async_children.filter((i:Task|Project) => (i instanceof Project) && (i.isComplete !== true)) as Project[];
+
+            //// Reverse the gosh darn list b/c we want to process the top one first
+            //async_children.reverse();
+            
+            //// And then, push the children to the stack
+            //async_children.forEach((i:Project) => stack.push([i, popped[1]+1]));
+        //}
+
+        return result
+    }
+}
 
 
-
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget };
-
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget };
+//new line here
