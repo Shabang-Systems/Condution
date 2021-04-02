@@ -230,7 +230,7 @@ class SimpleGroup {
                 let subprojects:Project[] = [];
 
                 // Get the IDs of subprojects
-                await Promise.all(children.map(async (projectChildren) => await Promise.all(projectChildren.map(async (item:Project|Task) => {
+                await Promise.all(children.map(async (projectChildren) => projectChildren ? await Promise.all(projectChildren.map(async (item:Project|Task) => {
                     // check if project
                     if (item.databaseBadge === "projects") {
                         // push the ID to target
@@ -238,7 +238,7 @@ class SimpleGroup {
                         // push project to list
                         subprojects.push(item as Project);
                     }
-                }))));
+                })) : null));
 
                 // BFS through project list to get all children
                 while (subprojects.length > 0) {
