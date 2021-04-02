@@ -469,7 +469,7 @@ class Task extends Component {
                                 <animated.input 
                                     defaultValue={this.state.name} 
                                     onChange={(e)=>this.setState({name:e.target.value})} 
-                                    onBlur={(_)=>{this.state.taskObj.name = this.state.name}}
+                                    onBlur={(_)=>{if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name}}
                                     onFocus={(e)=>{ 
                                         // open the task if its not open already
                                         if(!this.state.expanded) { 
@@ -500,7 +500,7 @@ class Task extends Component {
                                                     style={{marginBottom: 10}} 
                                                     defaultValue={this.state.desc}
                                                     onChange={(e)=>this.setState({desc:e.target.value})} 
-                                                    onBlur={(_)=>{this.state.taskObj.description = this.state.desc}}
+                                                    onBlur={(_)=>{if (this.state.description !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc}}
                                                 >
                                                 </textarea>
 
