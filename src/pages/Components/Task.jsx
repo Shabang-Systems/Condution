@@ -218,7 +218,7 @@ class Task extends Component {
         this.setState({
             taskObj: task, // set task object
             name: task.name, // Set name field
-            desc: task.desc, // Set task description
+            desc: task.description, // Set task description
             project: task.project,  // Set project ID
             tags: task.tags, // Set tag ID array
             isFloating: task.isFloating, // Set isFloating bool
@@ -231,7 +231,6 @@ class Task extends Component {
             delegatedWorkspace: "", // TODO
             delegatedTaskID: "" // TODO,
         }, this.refreshDecorations);
-        this.initialRenderDone = true;
     }
 
     refreshDecorations() {
@@ -245,18 +244,18 @@ class Task extends Component {
         else
             this.setState({decoration: base}); // give 'em an nothing badge
 
-//        if (this.state.deferDate&&this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
-            //this.setState({availability: false}); // tell 'em it's not avaliable
-        //else if (this.state.deferDate&&this.props.availability === true) //  otherwise, if this thing's avaliable
-            //this.setState({availability: true}); // set it to be so!
-        //else if (!this.props.availability) // or if my props make me disabled
-            // // well then you gotta follow them props, no?
         this.setState({availability: this.state.taskObj.available});
         
     }
 
+    componentWillUnmount() {
+        this.props.taskObject.unhook(this.loadTask);
+    }
+
     componentDidMount() {
         this.loadTask(); // load the task when we mount   
+        this.props.taskObject.hook(this.loadTask);
+        this.initialRenderDone = true;
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
     }
 
@@ -469,28 +468,8 @@ class Task extends Component {
                                 {/* The animated input box */}
                                 <animated.input 
                                     defaultValue={this.state.name} 
-                                    onChange={
-                                        (e)=>{
-                                            // THIS. REFER TO THIS. YOU ARE HERE. STOP SEARCHING.
-                                            // :point down: is FANCYCHANGE
-
-                                            // If somebody dares to do the complicated action of task name change
-                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-
-                                            // Register a scheduler to watch for more changes
-                                            // because dang react calls onChange on every freaking change
-                                            // TODO TODO destruct all schedulers on view change
-                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                                "task.update", // the scheduler actually updates the task
-                                                {
-                                                    uid: this.props.uid, 
-                                                    tid: this.props.tid, 
-                                                    query:{name: e.target.value} // setting the name to the name
-                                                }
-                                            ), `task-name-${this.props.tid}-update`) // and we will schedule it as this
-                                        }
-                                    } 
-
+                                    onChange={(e)=>this.setState({name:e.target.value})} 
+                                    onBlur={(_)=>{this.state.taskObj.name = this.state.name}}
                                     onFocus={(e)=>{ 
                                         // open the task if its not open already
                                         if(!this.state.expanded) { 
@@ -520,21 +499,8 @@ class Task extends Component {
                                                     className="task-desc" 
                                                     style={{marginBottom: 10}} 
                                                     defaultValue={this.state.desc}
-                                                    onChange={
-                                                        (e)=>{
-                                                            // Register a scheduler to deal with React's onChange
-                                                            // Search for the word FANCYCHANGE to read my spheal on this
-                                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                                                "task.update", 
-                                                                {
-                                                                    uid: this.props.uid, 
-                                                                    tid: this.props.tid, 
-                                                                    query:{desc: e.target.value}
-                                                                }
-                                                            ), `task-desc-${this.props.tid}-update`)
-                                                        }
-                                                    }
+                                                    onChange={(e)=>this.setState({desc:e.target.value})} 
+                                                    onBlur={(_)=>{this.state.taskObj.description = this.state.desc}}
                                                 >
                                                 </textarea>
 
@@ -549,30 +515,10 @@ class Task extends Component {
                                                     }}><i className="fas fa-trash" style={{margin: 3, fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
 
                                                     {/* Flagged icon */}
-                                                    <a className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        // On change, set the flagged state to the opposite of whatever it is
-                                                        // Both on the db...
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFlagged: !this.state.isFlagged}}
-                                                        )
-                                                        // And the task!
-                                                        this.setState({isFlagged: !this.state.isFlagged});
-
-                                                    }}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+                                                    <a className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{this.setState({isFlagged:!this.state.isFlagged}, ()=>this.state.taskObj.isFlagged = this.state.isFlagged)}}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Floating icon */}
-                                                    <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        // On change, set the floating state to the opposite of whatever it is
-                                                        // Both on the db... TODO flush the timezone too?
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
-                                                        )
-                                                        // And the task!
-                                                        this.setState({isFloating: !this.state.isFloating});
-
-                                                    }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+                                                    <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{this.setState({isFloating:!this.state.isFloating}, ()=>this.state.taskObj.isFloating = this.state.isFloating)}}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Repeat icon that, on click, shows repeat */}
                                                     <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
