@@ -761,6 +761,9 @@ class Task extends Component {
                                                             }}
                                                         />
                                                     </span>
+
+                                                */}
+                                                {/*
                                                     <span className="task-tag-container">
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
                                                         <CreatableSelect
