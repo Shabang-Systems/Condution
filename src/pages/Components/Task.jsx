@@ -578,28 +578,23 @@ class Task extends Component {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
                                                                     <input 
-									tabIndex='0'
-									className={"task-datebox "+this.state.decoration}
-									readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
-                                                                        // Register a scheduler to deal with React's onChange
-                                                                        // Search for the word FANCYCHANGE to read my spheal on this
-                                                                        // DATEHANDLING is here too. If you are looking for that, stop searching
-
-                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                                        this.props.gruntman.registerScheduler(() => {
+                                                                        tabIndex='0'
+                                                                        className={"task-datebox "+this.state.decoration}
+                                                                        readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
+                                                                            // Register a scheduler to deal with React's onChange
+                                                                            // Search for the word FANCYCHANGE to read my spheal on this
+                                                                            // DATEHANDLING is here too. If you are looking for that, stop searching
                                                                             let d = chrono.parseDate(e.target.value); // NLP that date!
                                                                             if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
-                                                                            if (d) // and update the database too!
-                                                                                this.props.gruntman.do(
-                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                                )
-                                                                        }, `task-defer-${this.props.tid}-update`)
-                                                                    }} onFocus={(e) => {
-                                                                        if (getPlatforms().includes("mobile"))
-                                                                            this.setState({deferPopoverShown: true})
-                                                                        else {
-                                                                            onClick();
-                                                                            e.target.focus();
+                                                                        }} onBlur={()=>{
+                                                                            if (this.state.deferDate)
+                                                                                this.state.taskObj.defer = this.state.deferDate;
+                                                                        }} onFocus={(e) => {
+                                                                            if (getPlatforms().includes("mobile"))
+                                                                                this.setState({deferPopoverShown: true})
+                                                                            else {
+                                                                                onClick();
+                                                                                e.target.focus();
                                                                         }
 
                                                                     }}
@@ -630,12 +625,7 @@ class Task extends Component {
                                                                     onChange={date => {
                                                                         // If the calendar got a new date, set it
                                                                         this.setState({deferDate: date});
-
-                                                                        // No longer needed. State updates handle decoration udpates. Kept here for decorative purposes:
-                                                                        // and hit the DB too!
-                                                                        this.props.gruntman.do(
-                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                        )
+                                                                        this.state.taskObj.defer = date;
                                                                     }}
                                                                     showTimeInput
                                                                     dateFormat="MM/dd/yyyy h:mm aa"
@@ -660,24 +650,18 @@ class Task extends Component {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
                                                                     <input 
-									tabIndex='0'
-									className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
-                                                                        // Register a scheduler to deal with React's onChange
-                                                                        // Search for the word FANCYCHANGE to read my spheal on this
-                                                                        // Search for the word DATEHANDLING for what the heck the code actually does
+                                                                        tabIndex='0'
+                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
+                                                                            // Register a scheduler to deal with React's onChange
+                                                                            // Search for the word FANCYCHANGE to read my spheal on this
+                                                                            // Search for the word DATEHANDLING for what the heck the code actually does
 
-                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                                        this.props.gruntman.registerScheduler(() => {
                                                                             let d = chrono.parseDate(e.target.value);
                                                                             if (d) this.setState({dueDate: d});
-                                                                            if (d)
-                                                                                this.props.gruntman.do(
-                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                                )
-
-                                                                        }, `task-due-${this.props.tid}-update`)
-                                                                    }
-                                                                        } onFocus={(e) => {
+                                                                        }} onBlur={()=>{
+                                                                            if (this.state.dueDate)
+                                                                                this.state.taskObj.due = this.state.dueDate;
+                                                                        }} onFocus={(e) => {
                                                                             if (getPlatforms().includes("mobile"))
                                                                                 this.setState({duePopoverShown: true})
                                                                             else {
@@ -720,9 +704,7 @@ class Task extends Component {
                                                                         this.setState({dueDate: date});
 
                                                                         // and hit the DB too!
-                                                                        this.props.gruntman.do(
-                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                        )
+                                                                        this.state.taskObj.due = date;
                                                                     }}
                                                                 />
                                                             )
