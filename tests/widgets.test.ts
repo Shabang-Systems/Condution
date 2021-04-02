@@ -26,7 +26,7 @@ import { Context } from "../src/Objects/EngineManager";
 import Task from "../src/Objects/Project";
 import Project from "../src/Objects/Project";
 
-import { ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget } from "../src/Widget";
+import { ProjectMenuWidget, PerspectivesMenuWidget } from "../src/Widget";
 
 let cm:Context;
 
@@ -49,7 +49,7 @@ test("perspectives menu widget", async (done) => {
 
 test("project menu widget", async (done) => {
     let widget:ProjectMenuWidget = new ProjectMenuWidget(cm);
-    let projectResult:Project[] = await widget.execute() ;
+    let projectResult:Project[] = await widget.execute();
 
     let result:boolean = true;
     projectResult.map((i:Project) => i.topLevel) // get the top-level-ness of project
@@ -61,11 +61,6 @@ test("project menu widget", async (done) => {
     expect(result).toBe(true);
     
     done();
-});
-
-test("inbox menu widget", async (done) => {
-    let inboxwidget:InboxWidget = new InboxWidget(cm);
-    let inboxTasks:Task[] = await inboxwidget.execute() as unknown as Task[];
 });
 
 
