@@ -154,9 +154,7 @@ class Completed extends Component {
 				    map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
 				    {/*console.log("something here??", this.state.taskList[4])*/}
-				    <p> {content.type} </p>
-
-				    {/*(content.type == "label")?  
+				    {(content.type == "label")?  
 
 					(this.state.taskList[i+1] ? 
 					    ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
@@ -167,34 +165,28 @@ class Completed extends Component {
 						    style={{marginBottom:0}}
 						>{content.contents}</p>) 
 					    : "")
-					: (content.type == "task"? 
-                        <Task 
-						tid={content.contents} 
-						startingCompleted={true}
-						key={content.contents+"-"+this.updatePrefix} 
-						uid={this.props.uid} 
-						engine={this.props.engine} 
-						gruntman={this.props.gruntman} 
-						availability={this.state.availability[content.contents]} 
-						datapack={[this.state.tagSelects,
-							this.state.projectSelects, 
-							this.state.possibleProjects, 
-							this.state.possibleProjectsRev, 
-							this.state.possibleTags, 
-							this.state.possibleTagsRev]}
-					    />
+					    : (content.type == "task"? 
+						(<div 
+						    key={content.contents}>
+						    <Task 
+							cm={this.props.cm} 
+							localizations={this.props.localizations} 
+							taskObject={content.contents} />
+						</div>)
+
+
 					    : 
 						<a className="subproject" 
 						    //style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
 						    onClick={()=>{
-							this.props.paginate("projects", content.contents);
-							this.props.history.push(`/projects/${content.contents}`)
+							//this.props.paginate("projects", content.contents);
+							//this.props.history.push(`/projects/${content.contents}`)
 						    }}
                         >
 						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
-					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
+					    {content.type}</div></div></a>
 					)
-				    } */}
+				    } 
 				</div>
 				    ))) : ""}
 
