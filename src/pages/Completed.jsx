@@ -171,7 +171,10 @@ class Completed extends Component {
 						    <Task 
 							cm={this.props.cm} 
 							localizations={this.props.localizations} 
-							taskObject={content.contents} />
+							taskObject={content.contents} 
+							startingCompleted={true}
+						    />
+							
 						</div>)
 
 
