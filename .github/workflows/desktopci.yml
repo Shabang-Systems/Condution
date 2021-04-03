@@ -96,7 +96,8 @@ jobs:
         - name: Build and notarize electron app
           run: |
               cd electron
-              npx electron-builder -mwl
+              npx electron-builder -mwl --arm64
+              
           env: 
               CSC_KEYCHAIN: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
         - name: Upload built binaries
