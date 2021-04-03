@@ -72,6 +72,8 @@ jobs:
           run: ./decrypt.sh
         - name: Chmoding secret
           run: chmod 400 id_rsa
+        - name: Setup Snapcraft
+          run: brew install snapcraft
         - name: Setup fastlane
           run: brew install fastlane
         - name: Install certificates
