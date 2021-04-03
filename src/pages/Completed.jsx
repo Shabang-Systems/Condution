@@ -47,6 +47,7 @@ class Completed extends Component {
     }
 
     async componentDidMount() {
+	this.setState({rendering: false})
         this.refresh();
         this.completedWidget.hook(this.refresh);
     }
@@ -59,6 +60,7 @@ class Completed extends Component {
     async refresh(){
         let i = await this.completedWidget.execute()
         this.setState({taskList:i, initialRenderingDone: true});
+	console.log(this.state.taskList, "tasksss")
     }
 
     handleFetchMore() {
@@ -131,9 +133,14 @@ class Completed extends Component {
                         {/* Otherwise, render a fetch more.*/}
                         <div style={{overflowY: "scroll"}}>
                             <Spinner ready={this.state.initialRenderingDone} />
-                            {/*{this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
+                            {this.state.taskList[4]? (this.state.taskList[4].
+				    //slice(0, 10*this.state.tasksShown).
+				    map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
-                                    (content.type == "label")?  
+				    {/*console.log("something here??", this.state.taskList[4])*/}
+				    <p> {content.id} </p>
+
+				    {/*(content.type == "label")?  
 
 					(this.state.taskList[i+1] ? 
 					    ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
@@ -171,9 +178,9 @@ class Completed extends Component {
 						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
 					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
 					)
-				    }
+				    } */}
 				</div>
-                ))}*/}
+				    ))) : ""}
 
 			    <div className="fetch-more" > 
 				{/* define the fetch more button */}
