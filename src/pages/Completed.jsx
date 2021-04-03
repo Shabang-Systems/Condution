@@ -58,8 +58,24 @@ class Completed extends Component {
     }
 
     async refresh(){
+	let taskArr = [];
         let i = await this.completedWidget.execute()
-        this.setState({taskList:i, initialRenderingDone: true});
+	i.forEach((cat, i) => {
+            taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
+	    // if item[0] == task, ... else, ...
+            cat.forEach(item => { // this loops through each cat
+		if (item.databaseBadge == "tasks") {
+		    // convert each task to an object then push it to the temp arr
+		    taskArr.push(new TaskObject("task", item)) 
+		} else if (item.databaseBadge == "projects")
+		{
+		    taskArr.push(new TaskObject("project", item)) 
+		}
+            })
+        });
+
+
+        this.setState({taskList: taskArr, initialRenderingDone: true});
 	console.log(this.state.taskList, "tasksss")
     }
 
@@ -133,12 +149,12 @@ class Completed extends Component {
                         {/* Otherwise, render a fetch more.*/}
                         <div style={{overflowY: "scroll"}}>
                             <Spinner ready={this.state.initialRenderingDone} />
-                            {this.state.taskList[4]? (this.state.taskList[4].
-				    //slice(0, 10*this.state.tasksShown).
+                            {this.state.taskList? (this.state.taskList.
+				    slice(0, 10*this.state.tasksShown).
 				    map((content, i) => (
                                 <div style={{marginLeft: 10, marginRight: 10}}>
 				    {/*console.log("something here??", this.state.taskList[4])*/}
-				    <p> {content.id} </p>
+				    <p> {content.type} </p>
 
 				    {/*(content.type == "label")?  
 
