@@ -27,7 +27,10 @@ import ABTIB from './Components/FloatingActionButton';
 import Keybinds from './Components/KeybindManager';
 import ReleaseNotesModal from './Components/ReleaseNotesModal';
 
+
 import { ProjectMenuWidget, PerspectivesMenuWidget } from "../backend/src/Widget";
+import Project from "../backend/src/Objects/Project";
+
 
 // Our very own CSS
 import './Home.css';
@@ -39,15 +42,15 @@ import ReactTooltip from 'react-tooltip';
 const autoBind = require('auto-bind/react');
 const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
-/* 
+/*
  *
  * Hello, human
  * Good morning
  * Read me please.
  *
- * Use the **state**'s itemSelected 
+ * Use the **state**'s itemSelected
  *     to manage the menu
- * use the **React Router URL** 
+ * use the **React Router URL**
  *     to manage the page
  *
  * Otherwise, unreload-reload won't work.
@@ -156,7 +159,10 @@ class Home extends Component {
     }
 
     async refresh() {
-        this.setState({projects: await this.projectmenuWidget.execute(), perspectives: await this.perspectivemenuWidget.execute()});
+        this.setState({
+	    projects: await this.projectmenuWidget.execute(), 
+	    perspectives: await this.perspectivemenuWidget.execute()
+	});
     }
 
 
@@ -197,8 +203,6 @@ class Home extends Component {
 
 
     }
-
-
 
     onDragEndPrj = result => {
         if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
@@ -398,11 +402,11 @@ class Home extends Component {
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-                                            let npid = (await this.props.gruntman.do(
-                                                "project.create", {
-                                                    uid: this.state.workspace,
-                                                },
-                                            )).pid;
+
+
+					    let np = await Project.create(this.props.cm)
+					    let npid = np.id
+
                                             history.push(`/projects/${npid}/do`);
                                             this.paginate("projects", npid);
                                             this.refresh();
