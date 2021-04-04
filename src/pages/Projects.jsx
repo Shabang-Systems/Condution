@@ -344,7 +344,7 @@ class Projects extends Component { // define the component
 
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
 			{console.log(this.state.itemList)}
-                        <SortableProjectList 
+			{/*<SortableProjectList 
 			    //list={this.state.itemList} 
 			    list={[]}
 			    prefix={this.updatePrefix} 
@@ -368,7 +368,7 @@ class Projects extends Component { // define the component
 			    parentComplete={this.state.projectObject.isComplete} 
 			    localizations={this.props.localizations}
 			    //activeTaskID={this.state.activeTask}
-			/>
+			/>*/}
 
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
