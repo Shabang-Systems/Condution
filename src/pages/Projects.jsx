@@ -143,7 +143,13 @@ class Projects extends Component { // define the component
 	//    //perspectiveName: this.state.perspectiveObject.name
 	//});
 	//console.log(this.state.itemList)
-	console.log(this.state.projectObject)
+
+	let itemList = await this.state.projectObject.children
+	
+	this.setState({
+	    itemList: itemList,
+	})
+	console.log(this.state.itemList)
 
     }
 
@@ -152,18 +158,20 @@ class Projects extends Component { // define the component
 
     updateName(e) {
         if (e) {
-            this.props.gruntman.registerScheduler(() => { 
-                console.log("DID IT!");
-                // Register a scheduler to deal with React's onChange
-                // check out the FANCYCHANGE in task.jsx
-                this.props.gruntman.do( // call a gruntman function
-                    "project.update__name", { 
-                        uid: this.props.uid, // pass it the things vvv
-                        id: this.props.id, 
-                        name: e.target.value
-                    }
-                ).then(this.props.menuRefresh) // call the homebar refresh
-            }, `project.name.${this.props.id}-update`, 1500) // give it a custom id
+            //this.props.gruntman.registerScheduler(() => { 
+            //    console.log("DID IT!");
+            //    // Register a scheduler to deal with React's onChange
+            //    // check out the FANCYCHANGE in task.jsx
+            //    this.props.gruntman.do( // call a gruntman function
+            //        "project.update__name", { 
+            //            uid: this.props.uid, // pass it the things vvv
+            //            id: this.props.id, 
+            //            name: e.target.value
+            //        }
+            //    ).then(this.props.menuRefresh) // call the homebar refresh
+            //}, `project.name.${this.props.id}-update`, 1500) // give it a custom id
+	    this.state.projectObject.name = e.target.value
+
             this.setState({name: e.target.value})
         } else { console.log(e)}
     } 
@@ -243,7 +251,7 @@ class Projects extends Component { // define the component
                                     </i>
                                     <input className="editable-title" 
                                         onChange={(e)=> {e.persist(); this.updateName(e)}}
-                                        value={this.state.name} // TODO: jack this is hecka hacky
+                                        value={this.state.projectObject.name} // TODO: jack this is hecka hacky
                                         style={{transform: "transformY(-2px)"}}
                                         ref={this.name}
                                     />
