@@ -101,13 +101,13 @@ const SortableTaskList = (props)=>{
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             moveApplied.current = 0; // moves applied
             currentIndex.current = 0; // currentIndex
-            await props.gruntman.do( // call a gruntman function
-                "macro.applyOrder", { 
-                    uid: props.uid, // pass it the things vvv
-                    order: order.current, 
-                    items: props.list.map(i=>{return {type:"task", content:i}}),
-                }
-            );
+            //await props.gruntman.do( // call a gruntman function
+            //    "macro.applyOrder", { 
+            //        uid: props.uid, // pass it the things vvv
+            //        order: order.current, 
+            //        items: props.list.map(i=>{return {type:"task", content:i}}),
+            //    }
+            //);
 
             if (props.onSortEnd)
                 props.onSortEnd({sorted: index, sortedID: props.list[index], newOrder: order.current, movementY, moveBy, list:props.list});
@@ -137,7 +137,12 @@ const SortableTaskList = (props)=>{
                     }
                 }}
             >
-                <Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} envelope={dragEnvelope} setDragEnabled={setDragEnabled} />
+		{/*<Task ref={objRefs[i]} tid={id} key={id+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} envelope={dragEnvelope} setDragEnabled={setDragEnabled} /> */}
+
+                <Task cm={this.props.cm} localizations={this.props.localizations} taskObject={i} />
+
+
+
             </animated.div>
             </div>
     )
@@ -157,7 +162,7 @@ const SortableProjectList = (props)=>{
     const [dragEnabled, setDragEnabled] = useState(true);
 
 
-    let objRefs = props.list.map(_ => React.createRef());
+    //let objRefs = props.list.map(_ => React.createRef());
 
     const getAnimationDestinationFromIndex = (activeIndex, mY, currentOrder, noAnim, down) => (indx) => {
         return activeIndex === indx ?  {
@@ -256,7 +261,7 @@ const SortableProjectList = (props)=>{
                             }
                         }}
                     >
-                        <Task ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} envelope={dragEnvelope} setDragEnabled={setDragEnabled}/>
+			{/*<Task ref={props.activeTaskID===item.content ? props.activeTaskRef : objRefs[i]} tid={item.content} key={item.content+"-"+props.prefix} datapack={props.datapack} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[item.content]} envelope={dragEnvelope} setDragEnabled={setDragEnabled}/>*/}
                     </animated.div>
                 </div>
             )

@@ -519,8 +519,8 @@ class Home extends Component {
 					    render={({match}) => 
 						<Projects 
 						    cm={this.props.cm}
-						    engine={this.props.engine} 
-						    id={match.params.id} 
+						    //engine={this.props.engine} 
+						    //id={match.params.id} 
 						    //uid={this.state.workspace} 
 						    //gruntman={this.props.gruntman} 
 						    menuRefresh={this.refresh} 

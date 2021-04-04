@@ -172,7 +172,6 @@ class Projects extends Component { // define the component
             //}, `project.name.${this.props.id}-update`, 1500) // give it a custom id
 	    this.state.projectObject.name = e.target.value
 
-            this.setState({name: e.target.value})
         } else { console.log(e)}
     } 
 
@@ -340,11 +339,36 @@ class Projects extends Component { // define the component
                         </div>
                     </div>
 
-                    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
-                                                <Spinner ready={this.state.initialRenderingDone} />
+		    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
+			<Spinner ready={this.state.initialRenderingDone} />
 
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
-                        <SortableProjectList list={this.state.currentProject.children} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]} possibleProjects={this.state.possibleProjects} history={this.props.history} paginate={this.props.paginate} activeTaskRef={this.activeTask} parentComplete={this.state.isComplete} activeTaskID={this.state.activeTask}/>
+			{console.log(this.state.itemList)}
+                        <SortableProjectList 
+			    //list={this.state.itemList} 
+			    list={[]}
+			    prefix={this.updatePrefix} 
+			    //uid={this.props.uid} 
+			    //engine={this.props.engine} 
+			    //gruntman={this.props.gruntman} 
+			    //availability={this.state.availability} 
+			    //datapack={[
+			    //    this.state.tagSelects, 
+			    //    this.state.projectSelects, 
+			    //    this.state.possibleProjects, 
+			    //    this.state.possibleProjectsRev, 
+			    //    this.state.possibleTags, 
+			    //    this.state.possibleTagsRev
+			    //]} 
+			    //possibleProjects={this.state.possibleProjects} 
+			    history={this.props.history} 
+			    paginate={this.props.paginate} 
+			    //activeTaskRef={this.activeTask} 
+			    //parentComplete={this.state.isComplete} 
+			    parentComplete={this.state.projectObject.isComplete} 
+			    localizations={this.props.localizations}
+			    //activeTaskID={this.state.activeTask}
+			/>
 
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
