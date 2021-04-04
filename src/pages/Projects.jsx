@@ -19,6 +19,8 @@ import { SortableProjectList } from './Components/Sortable';
 
 import Spinner from './Components/Spinner';
 
+import Project from "../backend/src/Objects/Project";
+
 const autoBind = require('auto-bind/react'); // autobind things! 
 
 class Projects extends Component { // define the component
@@ -41,9 +43,14 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
-	          isComplete: '', // TODO: replace this
-	          animClass: '',
-            initialRenderingDone: false
+	    isComplete: '', // TODO: replace this
+	    animClass: '',
+            initialRenderingDone: false,
+
+
+	    projectObject: "",
+	    itemList: [],
+
         };
 
         this.updatePrefix = this.random();
@@ -59,61 +66,87 @@ class Projects extends Component { // define the component
     }
 
     componentWillUnmount() {
-        this.props.gruntman.halt();
+        //this.props.gruntman.halt();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
-        if (prevProps.id !== this.props.id) // if we updated the defer date
-            this.refresh(); // switching between perspectives are a prop update and not a rerender
+	if (prevProps.id !== this.props.id) {
+	    prevState.projectObject.unhook(this.reloadData);
+	    this.load();
+	}
 
         if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
             this.name.current.focus(); // focus the name
     }
 
     async refresh() {
-        let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
+        //let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
+        //let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
 
-        let projectList = []; // define the project list
-        let tagsList = []; // define the tag list
+        //let projectList = []; // define the project list
+        //let tagsList = []; // define the tag list
 
-        for (let pid in pPandT[1][0]) 
-            tagsList.push({value: pid, label: pPandT[1][0][pid]});
-        let views = this;
-        let projectDB = await (async function() {
-            let pdb = [];
-            let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-            for (let key in topLevels) {
-                pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-            }
-            return pdb;
-        }());
+        //for (let pid in pPandT[1][0]) 
+        //    tagsList.push({value: pid, label: pPandT[1][0][pid]});
+        //let views = this;
+        //let projectDB = await (async function() {
+        //    let pdb = [];
+        //    let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
+        //    for (let key in topLevels) {
+        //        pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
+        //    }
+        //    return pdb;
+        //}());
 
-        let buildSelectString = function(p, level) {
-            if (!level)
-                level = ""
-            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-            if (p.children)
-                for (let e of p.children)
-                    if (e.type === "project")
-                        buildSelectString(e.content, level+":: ");
-        };
+        //let buildSelectString = function(p, level) {
+        //    if (!level)
+        //        level = ""
+        //    projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
+        //    if (p.children)
+        //        for (let e of p.children)
+        //            if (e.type === "project")
+        //                buildSelectString(e.content, level+":: ");
+        //};
 	
 	
-        projectDB.map(proj=>buildSelectString(proj));
-        this.updatePrefix = this.random();
-        let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
+        //projectDB.map(proj=>buildSelectString(proj));
+	this.updatePrefix = this.random();
+        //let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
 
-        this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight, initialRenderingDone: true});
+        //this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight, initialRenderingDone: true});
     }
 
     componentDidMount() {
-	this.props.gruntman.registerRefresher((this.refresh).bind(this));
-        this.refresh();
-        if (this.props.options === "do") // if we are trying to create
-            this.name.current.focus(); // focus the name
+	//this.props.gruntman.registerRefresher((this.refresh).bind(this));
+        //this.refresh();
+        //if (this.props.options === "do") // if we are trying to create
+        //    this.name.current.focus(); // focus the name
+	this.load()
+	console.log("moounting")
     }
+
+    async load() {
+	let project = await Project.fetch(this.props.cm, this.props.id)
+	project.hook(this.reloadData);
+
+	this.setState({
+	    projectObject: project
+	}, this.reloadData)
+    }
+
+    async reloadData() {
+	//let itemList = await this.state.projectObject.execute();
+	//this.setState({
+	//    itemList: itemList,
+	//    initialRenderingDone: true,
+	//    //perspectiveName: this.state.perspectiveObject.name
+	//});
+	//console.log(this.state.itemList)
+	console.log(this.state.projectObject)
+
+    }
+
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 

@@ -514,8 +514,23 @@ class Home extends Component {
 
                                         <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} />} />
 
-                                        {/*<Route path="/projects/:id/:create?" render={({match}) => <Projects engine={this.props.engine} id={match.params.id} uid={this.state.workspace} gruntman={this.props.gruntman} menuRefresh={this.refresh} paginate={this.paginate} options={match.params.create} localizations={this.props.localizations} />} />
-                                        */}
+                                        <Route 
+					    path="/projects/:id/:create?" 
+					    render={({match}) => 
+						<Projects 
+						    cm={this.props.cm}
+						    engine={this.props.engine} 
+						    id={match.params.id} 
+						    //uid={this.state.workspace} 
+						    //gruntman={this.props.gruntman} 
+						    menuRefresh={this.refresh} 
+						    paginate={this.paginate} 
+						    options={match.params.create} 
+						    localizations={this.props.localizations} 
+						/>
+						} 
+					    />
+                                        
                                     </Switch>
                                 </IonRouterOutlet>
                             </IonPage>
