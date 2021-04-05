@@ -153,6 +153,7 @@ class Projects extends Component { // define the component
 	    initialRenderingDone: true,
 
 	})
+	console.log(this.state.projectObject, "parnent")
 	//console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
 
     }
@@ -314,22 +315,15 @@ class Projects extends Component { // define the component
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
                                         onClick={()=>{
-                                            this.props.gruntman.do( // call a gruntman function
-                                                "project.delete", { 
-                                                    uid: this.props.uid, // pass it the things vvv
-                                                    pid: this.props.id, 
-                                                    parent: (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent
-                                                }
-                                            ).then(()=>{
-						this.props.menuRefresh(); // refresh menubar
-						if (this.state.isComplete) {
-						    this.props.history.push("/completed", ""); // go back
-						    this.props.paginate("/completed");
-						} else {
-						    this.props.history.push((this.state.parent === "" || this.state.parent === undefined) ? "/upcoming/" : `/projects/${this.state.parent}`); // go back
-						    this.props.paginate((this.state.parent === "" || this.state.parent === undefined) ? "upcoming" : `projects`, (this.state.parent === "" || this.state.parent === undefined) ? undefined : this.state.parent);}
-                                            }) // call the homebar refresh
-                                        }}
+					    this.state.projectObject.delete()
+					    if (this.state.projectObject.isComplete) {
+						this.props.history.push("/completed", ""); // go back
+						this.props.paginate("/completed");
+					    } else {
+						this.props.history.push(
+						    (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
+						this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
+					}}
                                         style={{borderColor: "var(--task-icon-ring)", 
                                             cursor: "pointer", marginLeft: 5}}>
                                         <i className="fas fa-trash"
