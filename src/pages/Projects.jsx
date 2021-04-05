@@ -131,7 +131,7 @@ class Projects extends Component { // define the component
 	project.hook(this.reloadData);
 
 	this.setState({
-	    projectObject: project
+	    projectObject: project,
 	}, this.reloadData)
     }
 
@@ -148,8 +148,11 @@ class Projects extends Component { // define the component
 	
 	this.setState({
 	    itemList: itemList,
+	    is_sequential: this.state.projectObject.isSequential
+	    //TODO: for some reason this doensnt update the direction of the arrow until you upate the state some other way?
+
 	})
-	console.log(this.state.itemList)
+	console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
 
     }
 
@@ -282,13 +285,19 @@ class Projects extends Component { // define the component
                                     <a 
                                         onClick={()=> {
                                             this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
-                                                this.props.gruntman.do( // call a gruntman function
-                                                    "project.update__pstate", { 
-                                                        uid: this.props.uid, // pass it the things vvv
-                                                        id: this.props.id, 
-                                                        is_sequential: this.state.is_sequential
-                                                    }
-                                                );
+                                                //this.props.gruntman.do( // call a gruntman function
+                                                //    "project.update__pstate", { 
+                                                //        uid: this.props.uid, // pass it the things vvv
+                                                //        id: this.props.id, 
+                                                //        is_sequential: this.state.is_sequential
+                                                //    }
+                                                //);
+						this.state.projectObject.isSequential? 
+						    this.state.projectObject.parallel()
+						    : 
+						    this.state.projectObject.sequential()
+
+
                                             }); // change the icon
                                         }} 
                                         data-tip="LOCALIZE: Sequencial/Paralellel"
