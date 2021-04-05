@@ -244,11 +244,11 @@ class Projects extends Component { // define the component
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
                                     {(()=> {
-					if (this.state.isComplete) {
+					if (this.state.projectObject.isComplete) {
                                             return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("/completed", "");this.props.history.push("/completed")}} />
 
-					} else if (this.state.parent !== "") 
-                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.parent);this.props.history.push(`/projects/${this.state.parent}`)}} />
+					} else if (this.state.projectObject.data && this.state.projectObject.data.parent !== "") 
+                                            return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.projectObject.data.parent); this.props.history.push(`/projects/${this.state.projectObject.data.parent}`)}} />
                                     })()}
                                     <i style={{paddingRight: 4}} 
                                         className="fas fa-tasks">
