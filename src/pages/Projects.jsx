@@ -148,11 +148,12 @@ class Projects extends Component { // define the component
 	
 	this.setState({
 	    itemList: itemList,
-	    is_sequential: this.state.projectObject.isSequential
+	    is_sequential: this.state.projectObject.isSequential,
 	    //TODO: for some reason this doensnt update the direction of the arrow until you upate the state some other way?
+	    initialRenderingDone: true,
 
 	})
-	console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
+	//console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
 
     }
 
@@ -378,6 +379,33 @@ class Projects extends Component { // define the component
 			    localizations={this.props.localizations}
 			    //activeTaskID={this.state.activeTask}
 			/>*/}
+			{this.state.itemList? this.state.itemList.map((item, i) =>  (
+
+			    (item.databaseBadge == "tasks"? 
+				(<div 
+				    key={item.id}>
+				    <Task 
+					cm={this.props.cm} 
+					localizations={this.props.localizations} 
+					taskObject={item} 
+					startingCompleted={this.state.projectObject.isComplete}
+				    />
+
+				</div>)
+
+				: 
+				    <a className="subproject" 
+					//style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+					onClick={()=>{
+					    this.props.paginate("projects", item.id);
+					    this.props.history.push(`/projects/${item.id}`)
+					}}
+				    >
+					<div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
+					    {item.name}</div></div></a>
+			    )
+
+			)) : "" }
 
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" onClick={()=>{
