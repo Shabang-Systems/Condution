@@ -153,7 +153,7 @@ class Projects extends Component { // define the component
 	    initialRenderingDone: true,
 
 	})
-	console.log(this.state.projectObject, "parnent")
+	//console.log(this.state.projectObject, "parnent")
 	//console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
 
     }
@@ -264,11 +264,13 @@ class Projects extends Component { // define the component
 				<div className="complete-container">
 				    <a className={"complete-name " + this.state.animClass}
 					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
-					onClick={() => { 
-					    if (this.state.isComplete) {
-						this.uncompleteProject()
+					onClick={async () => { 
+					    if (this.state.projectObject.data && this.state.projectObject.data.isComplete) {
+						console.log("uncompleting")
+						await this.state.projectObject.uncomplete()
 					    } else {
-						this.completeProject()
+						console.log("completing")
+						await this.state.projectObject.complete()
 					    }
 					    this.setState({animClass: "complete-anim"})
 					    setTimeout(() => {
@@ -276,8 +278,8 @@ class Projects extends Component { // define the component
 					    }, 1000);
 					}}
 				    >{(window.screen.width >= 400)? 
-					(this.state.isComplete? "Uncomplete" : "Complete") :
-					(this.state.isComplete? <i className="fas fa-times"></i> : <i className="fas fa-check"></i>) 
+					(this.state.projectObject.data && this.state.projectObject.data.isComplete? "Uncomplete" : "Complete") :
+					(this.state.projectObject.data && this.state.projectObject.data.isComplete? <i className="fas fa-times"></i> : <i className="fas fa-check"></i>) 
 				    } </a>
 				</div>
 				</div>
@@ -333,7 +335,9 @@ class Projects extends Component { // define the component
                                         </i>
                                     </a>
                                     <div className="progressbar">
-                                        <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
+					{/*<Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
+					*/}
+                                        <Spring native to={{width: this.state.projectObject.width}}>
                                             {props =>
                                                 <animated.div className="pcontent" style={{...props}}>&nbsp;</animated.div>}
                                         </Spring>
@@ -347,7 +351,6 @@ class Projects extends Component { // define the component
 			<Spinner ready={this.state.initialRenderingDone} />
 
                         {/*{this.state.pendingWeight}/{this.state.weight}*/}
-			{console.log(this.state.itemList)}
 			{/*<SortableProjectList 
 			    //list={this.state.itemList} 
 			    list={[]}
