@@ -20,6 +20,7 @@ import { SortableProjectList } from './Components/Sortable';
 import Spinner from './Components/Spinner';
 
 import Project from "../backend/src/Objects/Project";
+import DbTask from "../backend/src/Objects/Task";
 
 const autoBind = require('auto-bind/react'); // autobind things! 
 
@@ -108,8 +109,8 @@ class Projects extends Component { // define the component
         //            if (e.type === "project")
         //                buildSelectString(e.content, level+":: ");
         //};
-	
-	
+
+
         //projectDB.map(proj=>buildSelectString(proj));
 	this.updatePrefix = this.random();
         //let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
@@ -267,10 +268,12 @@ class Projects extends Component { // define the component
 					onClick={async () => { 
 					    if (this.state.projectObject.data && this.state.projectObject.data.isComplete) {
 						console.log("uncompleting")
-						await this.state.projectObject.uncomplete()
+						//await this.state.projectObject.uncomplete()
+						//    .then(console.log(this.state.projectObject.isComplete))
 					    } else {
 						console.log("completing")
 						await this.state.projectObject.complete()
+						    .then(console.log(this.state.projectObject.isComplete))
 					    }
 					    this.setState({animClass: "complete-anim"})
 					    setTimeout(() => {
@@ -404,21 +407,28 @@ class Projects extends Component { // define the component
 
 			)) : "" }
 
-                        <div style={{marginTop: 10}}>
-                            <a className="newbutton" onClick={()=>{
-                                this.props.gruntman.do( // call a gruntman function
-                                    "task.create", { 
-                                        uid: this.props.uid, // pass it the things vvv
-                                        pid: this.props.id, 
-                                    },
-                                    true // bypass updates to manually do it + make it quicker
-                                ).then((result)=>{
-                                    let cProject = this.state.currentProject; // get current project
-                                    let avail = this.state.availability; // get current availibilty
-                                    avail[result.tid] = true; // set the current one to be available, temporarily so that people could write in it
-                                    cProject.children.push({type: "task", content:result.tid}); // add our new task
-                                    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
-                                }) // call the homebar refresh
+			<div style={{marginTop: 10}}>
+			    <a className="newbutton" 
+				onClick={ async ()=>{
+				    //this.props.gruntman.do( // call a gruntman function
+				    //    "task.create", { 
+				    //        uid: this.props.uid, // pass it the things vvv
+				    //        pid: this.props.id, 
+				    //    },
+				    //    true // bypass updates to manually do it + make it quicker
+				    //).then((result)=>{
+				    //    let cProject = this.state.currentProject; // get current project
+				    //    let avail = this.state.availability; // get current availibilty
+				    //    avail[result.tid] = true; // set the current one to be available, temporarily so that people could write in it
+				    //    cProject.children.push({type: "task", content:result.tid}); // add our new task
+				    //    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
+				    //}) // call the homebar refresh
+
+				let newTask = await DbTask.create(this.props.cm, "", this.state.projectObject)
+
+
+				
+				
                             }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
                             <a className="newbutton" onClick={async function() {
                                 let npid = (await this.props.gruntman.do( // call a gruntman function
