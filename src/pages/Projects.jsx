@@ -268,8 +268,8 @@ class Projects extends Component { // define the component
 					onClick={async () => { 
 					    if (this.state.projectObject.data && this.state.projectObject.data.isComplete) {
 						console.log("uncompleting")
-						//await this.state.projectObject.uncomplete()
-						//    .then(console.log(this.state.projectObject.isComplete))
+						await this.state.projectObject.uncomplete()
+						    .then(console.log(this.state.projectObject.isComplete))
 					    } else {
 						console.log("completing")
 						await this.state.projectObject.complete()
@@ -430,15 +430,26 @@ class Projects extends Component { // define the component
 				
 				
                             }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
-                            <a className="newbutton" onClick={async function() {
-                                let npid = (await this.props.gruntman.do( // call a gruntman function
-                                    "project.create", { 
-                                        uid: this.props.uid, // pass it the things vvv
-                                        parent: this.props.id, 
-                                    },
-                                )).pid;
-                                this.props.history.push(`/projects/${npid}/do`);
-                            }.bind(this)}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
+                            <a className="newbutton" 
+				onClick={
+				    //async function() {
+				    //    let npid = (await this.props.gruntman.do( // call a gruntman function
+				    //        "project.create", { 
+				    //            uid: this.props.uid, // pass it the things vvv
+				    //            parent: this.props.id, 
+				    //        },
+				    //    )).pid;
+				    //    this.props.history.push(`/projects/${npid}/do`);
+				    //}.bind(this)
+				    async () => {
+					let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
+					    //.then(this.props.history.push(`/projects/${newProject.id}/do`))
+					this.props.history.push(`/projects/${newProject.id}/do`)
+
+				    }
+
+
+			    }><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
 
 			    <BlkArt visible={(this.state.currentProject.children.length)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
                             <div className="bottom-helper">&nbsp;</div>

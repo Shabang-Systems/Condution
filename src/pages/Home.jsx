@@ -527,7 +527,7 @@ class Home extends Component {
 						    paginate={this.paginate} 
 						    options={match.params.create} 
 						    localizations={this.props.localizations} 
-						    hitory={history}
+						    history={history}
 						    
 						/>
 						} 
