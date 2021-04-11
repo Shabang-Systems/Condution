@@ -254,6 +254,7 @@ class Task extends Component {
     }
 
     componentWillUnmount() {
+        // TODO this seems to not work???
         this.props.taskObject.unhook(this.loadTask);
     }
 
@@ -437,7 +438,7 @@ class Task extends Component {
                                         type="checkbox" 
 
      ref={this.actualCheck}
-                                        id={"task-check-"+this.props.tid} 
+                                        id={"task-check-"+this.props.taskObject.id} 
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
@@ -469,7 +470,7 @@ class Task extends Component {
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.taskObject.id} htmlFor={"task-check-"+this.props.taskObject.id}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
@@ -762,7 +763,14 @@ class Task extends Component {
                                                             menuPortalTarget={document.body}
                                                             value={this.state.projectDatapack.filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
-                                                                console.log(e);
+                                                                if (!e) {
+                                                                    this.setState({project: null});
+                                                                    this.state.taskObj.moveTo(null);
+                                                                    return;
+                                                                }
+
+                                                                this.setState({project: e.value});
+                                                                this.state.taskObj.moveTo(e.value);
                                                             }}
                                                         />
                                                     </span>

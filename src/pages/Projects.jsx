@@ -149,7 +149,7 @@ class Projects extends Component { // define the component
 	let itemList = await this.state.projectObject.children
 	
 	this.setState({
-	    itemList: itemList,
+        itemList: this.state.projectObject.isComplete ? itemList : itemList.filter((i)=>!i.isComplete),
 	    is_sequential: this.state.projectObject.isSequential,
 	    //TODO: for some reason this doensnt update the direction of the arrow until you upate the state some other way?
 	    initialRenderingDone: true,
@@ -381,7 +381,7 @@ class Projects extends Component { // define the component
 			    localizations={this.props.localizations}
 			    //activeTaskID={this.state.activeTask}
 			/>*/}
-			{this.state.itemList? this.state.itemList.map((item, i) =>  (
+                {this.state.itemList? this.state.itemList.map(item =>  (
 
 			    (item.databaseBadge == "tasks"? 
 				(<div 
