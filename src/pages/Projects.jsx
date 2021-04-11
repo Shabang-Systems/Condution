@@ -258,7 +258,7 @@ class Projects extends Component { // define the component
                                     <input className="editable-title" 
                                         onChange={(e)=> {this.setState({name: e.target.value})}}
                                         onBlur={(_)=>{this.state.projectObject.name = this.state.name}}
-                                        value={this.state.name} // TODO: jack this is hecka hacky
+                                        value={this.state.name}
                                         style={{transform: "transformY(-2px)"}}
                                         ref={this.name}
                                     />
