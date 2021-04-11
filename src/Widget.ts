@@ -186,7 +186,7 @@ class ProjectDatapackWidget extends Widget {
             if (!popped[0]) // if the data does not exist
                 continue;
 
-            await popped[0].readinessPromise;
+            //await popped[0].readinessPromise;
 
             result.push({value: popped[0], label:(":: ".repeat(popped[1]))+popped[0].name});
 

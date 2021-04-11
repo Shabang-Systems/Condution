@@ -345,7 +345,6 @@ class Query {
      */
 
     async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
-
         console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
 
         let data:Filterable[] = [];
@@ -394,7 +393,10 @@ class Query {
             });
         }
 
-        return await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter|PerspectiveSearchAdapter)=>await result.produce()));
+        let results:Filterable[] = await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter|PerspectiveSearchAdapter)=>await result.produce()));
+
+        // filter+return for any non-existant objects/dead pointers
+        return results.filter((i:Filterable) => i !== null);
     }
 
    /**

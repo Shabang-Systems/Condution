@@ -241,7 +241,7 @@ class JSONPage extends Page {
         return {identifier: null, payload: null, response: pointer};
     }
 
-    get exists(): boolean {
+    async exists(): Promise<boolean> {
         let path = [...this.path];
         let task = path.pop();
         let pointer = this.database;

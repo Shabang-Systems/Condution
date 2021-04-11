@@ -220,7 +220,7 @@ class SimpleGroup {
 
                 // Get project children
                 let children:(Project|Task)[][] = await Promise.all(projects.map(async (proj:Project) => {
-                    await proj.readinessPromise;
+                    //await proj.readinessPromise;
                     targets.push(proj);
                     let projChildren = await proj.async_children;
                     return projChildren;
@@ -298,7 +298,6 @@ class PerspectiveParseError extends Error {
         Object.setPrototypeOf(this, PerspectiveParseError.prototype);
     }
 }
-
 
 class PerspectiveQuery {
     rawString:string;

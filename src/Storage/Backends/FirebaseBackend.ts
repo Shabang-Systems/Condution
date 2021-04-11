@@ -149,7 +149,6 @@ class FirebasePage extends Page {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
-    private _exists: boolean;
     private data: Promise<object>; 
     
     constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
@@ -162,18 +161,16 @@ class FirebasePage extends Page {
 
         this.data = (async () : Promise<Object> => {
             let snapshot = await ref.get();
-            this._exists = snapshot.exists;
             let data: Object = snapshot.data();
-            return Object.assign(data ? data : {}, {id: snapshot.id});
+            return Object.assign(data ? data : {}, {id: snapshot.id, exists: snapshot.exists});
         })();
 
         ref.onSnapshot({
             error: console.trace,
             next: (snap:any) => {
                 let originalData = snap.data();
-                this._exists = snap.exists;
                 if (originalData) {
-                    let data = Object.assign(originalData, {id:snap.id});
+                    let data = Object.assign(originalData, {id:snap.id, exists: snap.exists});
                      // TODO janky AF resolving to a Promise of data b/c the original fetch is a promise
                     this.data = new Promise((res, _)=>res(data));
                     refreshCallback(data);
@@ -209,8 +206,13 @@ class FirebasePage extends Page {
         return {identifier: null, payload: null, response: resultDocument};
     }
 
-    get exists() {
-        return this._exists;
+    /**
+     * Look in the database for the object
+     *
+     */
+
+    async exists() : Promise<boolean> {
+        return (await this.data)["exists"];
     }
 
     /**
@@ -227,7 +229,9 @@ class FirebasePage extends Page {
      */
 
     async get() : Promise<object> {
-        return await this.data;
+        // TODO Janky AF javasccipt to strip prop "exists" from the data
+        let {["exists"]:_, ...data} = await this.data as any;
+        return data;
     }
 
     /**

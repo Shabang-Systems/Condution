@@ -8,6 +8,7 @@ import Tag, { TagSearchAdapter } from "./Tag";
 
 class Task {
     private static cache:Map<string, Task> = new Map();
+    private static loadBuffer:Map<string, Promise<Task>> = new Map();
     static readonly databaseBadge = "tasks";
 
     private _id:string;
@@ -49,39 +50,66 @@ class Task {
      */
 
     static async fetch(context:Context, identifier:string):Promise<Task> {
-        let cachedTask:Task = Task.cache.get(identifier);
-        if (cachedTask && cachedTask._ready == true)
-            return cachedTask;
+        if (Task.cache.has(identifier))
+            return Task.cache.get(identifier); 
+
+        if (Task.loadBuffer.has(identifier))
+            return await Task.loadBuffer.get(identifier); 
 
         let tsk:Task = new this(identifier, context);
-        let page:Page = context.page(["tasks", identifier], tsk.update);
+        tsk._ready = false;
 
-        tsk.data = page.exists ? await page.get() : {};
-        tsk._ready = page.exists;
+        let page:Page = context.page(["tasks", identifier], tsk.update);
         tsk.page = page;
 
-        Task.cache.set(identifier, tsk);
+        let loadTask:Promise<Task> = new Promise(async (res, _) => {
+            if (!(await page.exists())) {
+                Task.cache.set(identifier, null);
+                res(null);
+            }
 
-        await tsk.calculateTreeParams();
+            tsk.data = await page.get();
+            tsk._ready = true;
 
-        return tsk;
+            Task.cache.set(identifier, tsk);
+            await tsk.calculateTreeParams();
+
+            res(tsk);
+        });
+
+        Task.loadBuffer.set(identifier, loadTask); 
+
+        let finalTask = await loadTask;
+
+        return finalTask;
     }
 
     static lazy_fetch(context:Context, identifier:string):Task {
-        let cachedTask:Task = Task.cache.get(identifier);
-        if (cachedTask)
-            return cachedTask;
+        if (Task.cache.has(identifier))
+            return Task.cache.get(identifier); 
 
         let tsk:Task = new this(identifier, context);
+        tsk._ready = false;
+
         let page:Page = context.page(["tasks", identifier], tsk.update);
         tsk.page = page;
-        Task.cache.set(identifier, tsk);
 
-        page.get().then(async (data:object) => {
-            tsk.data = data;
+        if (!page.exists) {
+            Task.cache.set(identifier, null);
+            return null;
+        }
+
+        let loadTask:Promise<Task> = new Promise(async (res, _) => {
+            tsk.data = await page.get();
             tsk._ready = true;
+
             await tsk.calculateTreeParams();
+
+            Task.cache.set(identifier, tsk);
+            res(tsk);
         });
+
+        Task.loadBuffer.set(identifier, loadTask); 
 
         return tsk;
     }
@@ -115,23 +143,28 @@ class Task {
         });
 
         let tsk:Task = new this(newTask.identifier, context);
+        tsk._ready = false;
+
         let page:Page = context.page(["tasks", newTask.identifier], tsk.update);
-
-        tsk.data = await page.get();
         tsk.page = page;
-        tsk._ready = true;
 
-	// TODO: Investigate optimization impact
-        if (project) {
-            await project.readinessPromise;
-            project.associate(tsk);
-        }
+        let loadTask:Promise<Task> = new Promise(async (res, _) => {
+            tsk.data = await page.get();
+            tsk._ready = true;
 
-        Task.cache.set(newTask.identifier, tsk);
+            await tsk.calculateTreeParams();
 
-        await tsk.calculateTreeParams();
+            Task.cache.set(newTask.identifier, tsk);
+            res(tsk);
+        });
 
-        return tsk;
+        Task.loadBuffer.set(newTask.identifier, loadTask); 
+        let finalTask:Task = await loadTask;
+
+        if (project)
+            project.associate(finalTask);
+
+        return finalTask;
     }
 
     /**
@@ -217,6 +250,7 @@ class Task {
         this.readiness_warn();
         if (this._ready && this.data["parent"] && this.data["project"] !== '')
             return Project.fetch(this.context, this.data["project"]);
+        else return null;
     }
 
     /**
@@ -228,13 +262,16 @@ class Task {
      */
 
     async move(to?:Project): Promise<void> {
-        if (this.data["parent"] && this.data["project"] !== "")
-            await (await Project.fetch(this.context, this.data["project"])).dissociate(this);
+        if (this.data["parent"] && this.data["project"] !== "") {
+            let project:Project = await Project.fetch(this.context, this.data["project"])
+            if(project) await (project).dissociate(this);
+        }
+
         if (to) {
-            await to.readinessPromise;
             await to.associate(this);
             this.data["project"] = to.id;
         } else this.data["project"] = "";
+
         this.sync();
     }
 
@@ -258,6 +295,18 @@ class Task {
 
     get async_tags() {
         this.readiness_warn();
+
+        // Some stupidity resulted in a limited set of
+        // tasks not having a list of tags. This is 
+        // unexected behaviour that has only been reproduced 
+        // in our (backend@..) dev account. This likely 
+        // means that someone fricked up somewhere sometime ago.
+        //
+        // This is to check for that, but #wontfix:.
+
+        if (!this.data["tags"])
+            return [];
+
         if (this._ready)
             return this.data["tags"].map((tagID:string) => Tag.fetch(this.context, tagID));
     }
@@ -282,6 +331,18 @@ class Task {
 
     get tags() {
         this.readiness_warn();
+
+        // Some stupidity resulted in a limited set of
+        // tasks not having a list of tags. This is 
+        // unexected behaviour that has only been reproduced 
+        // in our (backend@..) dev account. This likely 
+        // means that someone fricked up somewhere sometime ago.
+        //
+        // This is to check for that, but #wontfix:.
+
+        if (!this.data["tags"])
+            return [];
+
         if (this._ready)
             return this.data["tags"].map((tagID:string) => Tag.lazy_fetch(this.context, tagID));
     }
@@ -691,10 +752,10 @@ class TaskSearchAdapter extends Task {
     adaptorData: AdapterData;
     private static adaptorCache:Map<string, TaskSearchAdapter> = new Map();
 
-    constructor(context:Context, id:string, data:AdapterData) {
+    constructor(context:Context, id:string, data:AdapterData, taskData:object) {
         super(id, context);
 
-        this.data = data.taskCollection.filter((obj:object)=> obj["id"] === id)[0];
+        this.data = taskData;
         if (!this.data) 
             this.data = {}
 
@@ -740,7 +801,11 @@ class TaskSearchAdapter extends Task {
         let cachedTask:TaskSearchAdapter = TaskSearchAdapter.adaptorCache.get(identifier);
         if (cachedTask) return cachedTask;
 
-        let tsk:TaskSearchAdapter = new this(context, identifier, data);
+        let tskObj:object = data.taskCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+        if (!tskObj)
+            return null;
+
+        let tsk:TaskSearchAdapter = new this(context, identifier, data, tskObj);
 
         TaskSearchAdapter.adaptorCache.set(identifier, tsk);
         await tsk.calculateTreeParams();

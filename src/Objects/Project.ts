@@ -6,6 +6,7 @@ import { Context } from "./EngineManager";
 
 class Project {
     private static cache:Map<string, Project> = new Map();
+    private static loadBuffer:Map<string, Promise<Project>> = new Map();
     static readonly databaseBadge = "projects";
 
     private _id:string;
@@ -18,7 +19,6 @@ class Project {
     protected context:Context;
     protected _ready:boolean;
     protected _available:boolean;
-    protected _readiness:Promise<void>;
 
     protected constructor(identifier:string, context:Context) {
         this._id = identifier;
@@ -47,29 +47,40 @@ class Project {
      */
 
     static async fetch(context:Context, identifier:string):Promise<Project> {
-        let cachedProject:Project = Project.cache.get(identifier);
+        if (Project.cache.has(identifier))
+            return Project.cache.get(identifier); 
 
-        if (cachedProject) {
-            await cachedProject.readinessPromise;
-            return cachedProject;
-        }
+        if (Project.loadBuffer.has(identifier))
+            return await Project.loadBuffer.get(identifier); 
+
 
         let pj:Project = new this(identifier, context);
-        pj._readiness = new Promise(async (res, _) => {
-            let page:Page = context.page(["projects", identifier], pj.update);
-            if (!page.exists)
-                res()
+        pj._ready = false;
+
+        let page:Page = context.page(["projects", identifier], pj.update);
+        pj.page = page;
+
+        let loadProject:Promise<Project> = new Promise(async (res, _) => {
+            if (!(await page.exists())) {
+                Project.cache.set(identifier, null);
+                res(null);
+            }
 
             pj.data = await page.get();
-            pj.page = page;
             pj._ready = true;
 
-            await pj.calculateTreeParams();
-            res();
-        });
-        Project.cache.set(identifier, pj);
+            Project.cache.set(identifier, pj);
 
-        return pj;
+            await pj.calculateTreeParams();
+
+            res(pj);
+        });
+
+        Project.loadBuffer.set(identifier, loadProject); 
+
+        let finalProject = await loadProject;
+
+        return finalProject;
     }
 
     /**
@@ -83,24 +94,31 @@ class Project {
      */
 
     static lazy_fetch(context:Context, identifier:string):Project {
-        let cachedProject:Project = Project.cache.get(identifier);
-        if (cachedProject)
-            return cachedProject;
+        if (Project.cache.has(identifier))
+            return Project.cache.get(identifier); 
 
         let pj:Project = new this(identifier, context);
+        pj._ready = false;
+
         let page:Page = context.page(["projects", identifier], pj.update);
-
-
         pj.page = page;
-        Project.cache.set(identifier, pj);
-        pj._readiness = new Promise((res, _) => {
-            page.get().then(async (data:object)=>{
-                pj.data = data;
-                pj._ready = true;
-                await pj.calculateTreeParams();
-                res();
-            });
+
+        if (!page.exists) {
+            Project.cache.set(identifier, null);
+            return null;
+        }
+
+        let loadProject:Promise<Project> = new Promise(async (res, _) => {
+            pj.data = await page.get();
+            pj._ready = true;
+
+            await pj.calculateTreeParams();
+
+            Project.cache.set(identifier, pj);
+            res(pj);
         });
+
+        Project.loadBuffer.set(identifier, loadProject); 
 
         return pj;
     }
@@ -128,20 +146,22 @@ class Project {
 
         let np:Project = new this(newProject.identifier, context);
         let page:Page = context.page(["projects", newProject.identifier], np.update);
-        np.data = await page.get();
         np.page = page;
-        np._ready = true;
 
-        if (parent) {
-            await parent._readiness;
-            parent.associate(np);
-        }
+        let loadProject:Promise<Project> = new Promise(async (res, _) => {
+            np.data = await page.get();
+            np._ready = true;
 
-        Project.cache.set(newProject.identifier, np);
+            await np.calculateTreeParams();
 
-        await np.calculateTreeParams();
+            Project.cache.set(newProject.identifier, np);
+            res(np);
+        });
 
-        return np;
+        Project.loadBuffer.set(newProject.identifier, loadProject); 
+        let finalProject = await loadProject;
+
+        return finalProject;
     }
 
     /**
@@ -308,18 +328,6 @@ class Project {
             return this.data["top_level"];
     }
 
-    /**
-     * The parent of the project
-     * @property
-     *
-     */
-
-    get parent() {
-        this.readiness_warn();
-        if (this._ready)
-            return this.data["parent"] !== "" ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
-    }
-
      /**
      * Move the project to...
      *
@@ -329,10 +337,12 @@ class Project {
      */
 
     async move(to?:Project): Promise<void> {
-        if (this.data["parent"] && this.data["parent"] !== "")
-            await (await Project.fetch(this.context, this.data["parent"])).dissociate(this);
+        if (this.data["parent"] && this.data["parent"] !== "") {
+            let project:Project = await Project.fetch(this.context, this.data["parent"])
+            if(project) await (project).dissociate(this);
+        }
+
         if (to) {
-            await to.readinessPromise;
             await to.associate(this);
             this.data["parent"] = to.id;
             this.data["top_level"] = false;
@@ -340,6 +350,7 @@ class Project {
             this.data["parent"] = "";
             this.data["top_level"] = true;
         }
+
         this.sync();
     }
 
@@ -355,6 +366,18 @@ class Project {
     }
 
     /**
+     * The parent of the project
+     * @property
+     *
+     */
+
+    get parent() {
+        this.readiness_warn();
+        if (this._ready)
+            return this.data["parent"] !== "" ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
+    }
+
+    /**
      * The parent of the project, fetched traditionally but asyncronously
      * @property
      *
@@ -363,12 +386,14 @@ class Project {
     get async_parent() {
         this.readiness_warn();
         if (this._ready)
-            return (this.data["parent"] && this.data["parent"] !== "") ? Project.fetch(this.context, this.data["parent"]) : null;
+            return (async ()=>(this.data["parent"] && this.data["parent"] !== "") ? await Project.fetch(this.context, this.data["parent"]) : null)();
     }
 
     /**
      * The child(ren) of the project
      * @property
+     *
+     * TODO ugly
      *
      */
 
@@ -377,13 +402,48 @@ class Project {
         let dataArray:(Project|Task)[] = [];
         if (this._ready) {
             for (let child in this.data["children"])
-                if (this.data["children"][child] == "task")
-                    dataArray.push(Task.lazy_fetch(this.context, child));
-                else if (this.data["children"][child] == "project")
-                    dataArray.push(Project.lazy_fetch(this.context, child));
+                if (this.data["children"][child] == "task") {
+                    let task:Task = Task.lazy_fetch(this.context, child);
+                    if(task) dataArray.push(task);
+                } else if (this.data["children"][child] == "project") {
+                    let project:Project = Project.lazy_fetch(this.context, child);
+                    if(project) dataArray.push(project);
+                }
 
             return dataArray;
         }
+    }
+
+    /**
+     * The child(ren) of the project, fetched traditionally with promises
+     * @property
+     *
+     * TODO ugly
+     *
+     */
+
+    get async_children() {
+        this.readiness_warn();
+        if (this._ready) {
+            return (async () => {
+                let dataArray:(Project|Task)[] = [];
+                for (let child in this.data["children"])
+                    if (this.data["children"][child] == "task") {
+                        let task:Task = await Task.fetch(this.context, child);
+                        if(task) dataArray.push(task);
+                    } else if (this.data["children"][child] == "project") {
+                        let project:Project = await Project.fetch(this.context, child);
+                        if(project) dataArray.push(project);
+                    }
+                return dataArray;
+            })()
+        }
+  //      if (this.id == "0FDknRdMkhKnDm5urIoy")
+            //console.log("sad", i);
+        //if (this.id == "oygNp1o5npKjVpquTIOJ")
+            //console.log("oygNp1o5npKjVpquTIOJ hath fetched")
+        return null;
+
     }
 
     /**
@@ -474,26 +534,6 @@ class Project {
         this.page.delete();
     }
 
-    /**
-     * The child(ren) of the project, fetched traditionally with promises
-     * @property
-     *
-     */
-
-    get async_children() {
-        this.readiness_warn();
-        if (this._ready) {
-            return (async () => {
-                let dataArray:(Project|Task)[] = [];
-                for (let child in this.data["children"])
-                    if (this.data["children"][child] == "task")
-                        dataArray.push(await Task.fetch(this.context, child));
-                    else if (this.data["children"][child] == "project")
-                        dataArray.push(await Project.fetch(this.context, child));
-                return dataArray;
-            })()
-        }
-    }
 
     /**
      * The identifier of the tag
@@ -514,17 +554,6 @@ class Project {
     get ready() {
         return this._ready;
     }
-
-    /**
-     * A promise that tells you that the project is ready
-     * @property
-     *
-     */
-
-    get readinessPromise(): Promise<void> {
-        return this._readiness;
-    }
-
 
     /**
      * get weight of the project
@@ -604,7 +633,6 @@ class Project {
             weights.forEach((i:number) => this._weight+=i);
 
         }
-
     }
 
     
@@ -658,11 +686,13 @@ class ProjectSearchAdapter extends Project {
     adaptorData: AdapterData;
     private static adaptorCache:Map<string, ProjectSearchAdapter> = new Map();
 
-    constructor(context:Context, id:string, data:AdapterData) {
+    constructor(context:Context, id:string, data:AdapterData, taskData:object) {
         super(id, context);
-        this.data = data.projectCollection.filter((obj:object)=> obj["id"] === id)[0];
+        this.data = taskData;
+
         if (!this.data)
             this.data = {};
+
         this.adaptorData = data;
         this._ready = true;
     }
@@ -710,7 +740,6 @@ class ProjectSearchAdapter extends Project {
 
     async produce() : Promise<Project> {
         let project:Project = await Project.fetch(this.context, this.id);
-        await project.readinessPromise;
         return project;
     }
 
@@ -727,7 +756,12 @@ class ProjectSearchAdapter extends Project {
         let cachedProject:ProjectSearchAdapter = ProjectSearchAdapter.adaptorCache.get(identifier);
         if (cachedProject) return cachedProject;
 
-        let tsk:ProjectSearchAdapter = new this(context, identifier, data);
+        let projectData:object = data.projectCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+
+        if (!projectData)
+            return null;
+
+        let tsk:ProjectSearchAdapter = new this(context, identifier, data, projectData);
 
         ProjectSearchAdapter.adaptorCache.set(identifier, tsk);
         await tsk.calculateTreeParams();
