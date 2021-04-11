@@ -203,7 +203,6 @@ class ProjectDatapackWidget extends Widget {
             async_children.forEach((i:Project) => stack.push([i, popped[1]+1]));
         }
 
-        console.log(result);
         return result
     }
 }
