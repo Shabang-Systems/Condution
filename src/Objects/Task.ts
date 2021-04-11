@@ -273,7 +273,7 @@ class Task {
 
     get async_project() {
         this.readiness_warn();
-        if (this._ready && this.data["parent"] && this.data["project"] !== '')
+        if (this._ready && this.data["project"] && this.data["project"] !== '')
             return Project.fetch(this.context, this.data["project"]);
         else return null;
     }
@@ -287,7 +287,7 @@ class Task {
      */
 
     async move(to?:Project): Promise<void> {
-        if (this.data["parent"] && this.data["project"] !== "") {
+        if (this.data["project"] && this.data["project"] !== "") {
             let project:Project = await Project.fetch(this.context, this.data["project"])
             if(project) await (project).dissociate(this);
         }
@@ -713,16 +713,16 @@ class Task {
 
         // If there is a parent
         if (project) {
-
             // If the parent is sequential
             if (project.isSequential)
                 this._available = (!this.isComplete && project.available && this.order == 0 && new Date() > this.defer); // Availibilty is calculated based on order
             else
                 this._available = (!this.isComplete && project.available && new Date() > this.defer); // The availibilty is only based on the availibilty of project
-        } else if (this.isComplete == true)
+        } else if (this.isComplete == true) {
             this._available = false; // otherwise, its not available
-        else  // if no parents
+        } else {  // if no parents
             this._available = new Date() > this.defer // the availibilty is controlled only by defer
+        }
     }
 
     /**
