@@ -38,6 +38,7 @@ import './Task.css';
 
 // Our very own Backend Objects
 import T from "../../backend/src/Objects/Task.ts";
+import { ProjectDatapackWidget } from  "../../backend/src/Widget";
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -165,7 +166,7 @@ class Task extends Component {
             desc: "",  // what's our description string?
             isFlagged: false, // are we flagged?
             isFloating: false, // are we floating? or just eating jello?
-            project:"", // what's our project ID?
+            project:null, // what's our project?
             tags: [], // what are the IDs of our tags?
             decoration: "",  // are we "od" "ds" or just just good ol' ""?
             availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
@@ -182,7 +183,9 @@ class Task extends Component {
             hasNotification: false, // do we have a notification scheudled?
             delegations: [], // task is delegated to...
             delegatedWorkspace: "", // task is delegated to workspace...
-            delegatedTaskID: "" // the ID of the shadow task
+            delegatedTaskID: "", // the ID of the shadow task
+            projectDatapackWidget: new ProjectDatapackWidget(), // the project datapack widget
+            projectDatapack: [] // the calculated datapack
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -211,6 +214,7 @@ class Task extends Component {
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
+
         // Obviously we need this, the task info
         let task = this.props.taskObject;
 
@@ -219,8 +223,8 @@ class Task extends Component {
             taskObj: task, // set task object
             name: task.name, // Set name field
             desc: task.description, // Set task description
-            project: task.project,  // Set project ID
-            tags: task.tags, // Set tag ID array
+            project: task.project,  // Set project
+            tags: task.tags, // Set tag array
             isFloating: task.isFloating, // Set isFloating bool
             isFlagged: task.isFlagged, // Set is Flagged bool
             isComplete: task.isComplete, // Set is complete style
@@ -229,7 +233,8 @@ class Task extends Component {
             hasNotification: true, // TODO
             delegations: [], // TODO
             delegatedWorkspace: "", // TODO
-            delegatedTaskID: "" // TODO,
+            delegatedTaskID: "", // TODO,
+            projectDatapack: await this.state.projectDatapackWidget.execute()
         }, this.refreshDecorations);
     }
 
@@ -253,9 +258,11 @@ class Task extends Component {
     }
 
     componentDidMount() {
+
         this.loadTask(); // load the task when we mount   
         this.props.taskObject.hook(this.loadTask);
         this.initialRenderDone = true;
+
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
     }
 
@@ -740,12 +747,11 @@ class Task extends Component {
                                                 </div>
                                                 */}
 
-                                                {/*
                                                 <div>
                                                     <span className="task-project-container">
                                                         <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
                                                         <Select 
-                                                            options={this.props.datapack[1]}
+                                                            options={this.state.projectDatapack}
                                                             className='task-project'
                                                             classNamePrefix='task-select'
                                                             isClearable
@@ -754,15 +760,14 @@ class Task extends Component {
                                                                 menuPortal: provided => ({ ...provided, zIndex: "99999 !important" })
                                                             }}
                                                             menuPortalTarget={document.body}
-                                                            value={this.props.datapack[1].filter(option => option.value === this.state.project)}
+                                                            value={this.state.projectDatapack.filter(option => option.value === this.state.project)}
                                                             onChange={(e)=>{
-                                                                this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.state.project===""?undefined:this.state.project, project: (e?e.value:"")})
-                                                                this.setState({project:(e?e.value:"")});
+                                                                console.log(e);
                                                             }}
                                                         />
                                                     </span>
 
-                                                */}
+
                                                 {/*
                                                     <span className="task-tag-container">
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
@@ -809,8 +814,8 @@ class Task extends Component {
                                                             }}
                                                         />
                                                     </span>
-                                                </div>
                                                 */}
+                                                </div>
                                             </animated.div>
                                         )
                                 })()}
