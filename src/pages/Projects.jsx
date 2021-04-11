@@ -133,6 +133,7 @@ class Projects extends Component { // define the component
 
 	this.setState({
 	    projectObject: project,
+        name: project.name
 	}, this.reloadData)
     }
 
@@ -255,8 +256,9 @@ class Projects extends Component { // define the component
                                         className="fas fa-tasks">
                                     </i>
                                     <input className="editable-title" 
-                                        onChange={(e)=> {e.persist(); this.updateName(e)}}
-                                        value={this.state.projectObject.name} // TODO: jack this is hecka hacky
+                                        onChange={(e)=> {this.setState({name: e.target.value})}}
+                                        onBlur={(_)=>{this.state.projectObject.name = this.state.name}}
+                                        value={this.state.name} // TODO: jack this is hecka hacky
                                         style={{transform: "transformY(-2px)"}}
                                         ref={this.name}
                                     />
