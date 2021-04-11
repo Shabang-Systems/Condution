@@ -74,7 +74,7 @@ class Project {
 
             if (!projectData || projectData == undefined) {
                 Project.cache.set(identifier, null);
-                res(null);
+                res(null); return
             }
 
             pj.data = projectData;
@@ -347,7 +347,7 @@ class Project {
      *
      */
 
-    async move(to?:Project): Promise<void> {
+    async moveTo(to?:Project): Promise<void> {
         if (this.data["parent"] && this.data["parent"] !== "") {
             let project:Project = await Project.fetch(this.context, this.data["parent"])
             if(project) await (project).dissociate(this);
@@ -373,7 +373,7 @@ class Project {
      */
 
     async bringToTop(): Promise<void> {
-        await this.move();
+        await this.moveTo();
     }
 
     /**
@@ -396,6 +396,7 @@ class Project {
 
     get async_parent() {
         this.readiness_warn();
+
         if (this._ready)
             return (async ()=>(this.data["parent"] && this.data["parent"] !== "") ? await Project.fetch(this.context, this.data["parent"]) : null)();
     }

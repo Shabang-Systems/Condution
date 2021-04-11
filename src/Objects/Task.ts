@@ -286,7 +286,7 @@ class Task {
      *
      */
 
-    async move(to?:Project): Promise<void> {
+    async moveTo(to?:Project): Promise<void> {
         if (this.data["project"] && this.data["project"] !== "") {
             let project:Project = await Project.fetch(this.context, this.data["project"])
             if(project) await (project).dissociate(this);
@@ -309,7 +309,7 @@ class Task {
      */
 
     async inboxify(): Promise<void> {
-        await this.move(null);
+        await this.moveTo(null);
     }
 
     /**
