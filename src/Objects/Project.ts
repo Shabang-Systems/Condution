@@ -2,6 +2,7 @@ import type { AdapterData } from "./Utils";
 
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import Task, { TaskSearchAdapter } from "./Task";
+import { Query } from "./Utils";
 import { Context } from "./EngineManager";
 
 class Project {
@@ -10,7 +11,7 @@ class Project {
     static readonly databaseBadge = "projects";
 
     private _id:string;
-    private page:Page;
+    private _page:Page;
 
     private hooks:((arg0: Project)=>any)[] = [];
 
@@ -53,20 +54,30 @@ class Project {
         if (Project.loadBuffer.has(identifier))
             return await Project.loadBuffer.get(identifier); 
 
-
         let pj:Project = new this(identifier, context);
         pj._ready = false;
 
-        let page:Page = context.page(["projects", identifier], pj.update);
-        pj.page = page;
+
+        let queryEngine:Query = new Query(context);
+        let staticData:AdapterData = await queryEngine.orderStaticData();
 
         let loadProject:Promise<Project> = new Promise(async (res, _) => {
-            if (!(await page.exists())) {
+            let projectData:object = staticData.projectCollection.filter((i:object)=>i["id"] === identifier)[0];
+         
+            // TODO janky AF this is to wait
+            // until the context loads. Someone
+            // somewhere on the frontend team forgot
+            // to warm up the context before state
+            // propergates
+            
+            await context.workspaces();
+
+            if (!projectData || projectData == undefined) {
                 Project.cache.set(identifier, null);
                 res(null);
             }
 
-            pj.data = await page.get();
+            pj.data = projectData;
             pj._ready = true;
 
             Project.cache.set(identifier, pj);
@@ -645,6 +656,8 @@ class Project {
      */
 
     hook(hookFn: ((arg0: Project)=>any)): void {
+        if (this._page == null) // on hook, make sure that the task is live
+            this._page = this.context.page(["projects", this.id], this.update);
         this.hooks.push(hookFn);
     }
 
@@ -658,6 +671,16 @@ class Project {
 
     unhook(hookFn: ((arg0: Project)=>any)): void {
         this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+    }
+
+    private get page() {
+        if (this._page == null)
+            this._page = this.context.page(["projects", this.id], this.update);
+        return this._page;
+    }
+
+    private set page(newPage:Page) {
+        this._page = newPage;
     }
 
     private readiness_warn = () => {

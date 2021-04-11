@@ -335,20 +335,20 @@ class Query {
     }
 
     /**
-     * Execute a filter query based on a function parameter
+     * Semi-internal function to order a set of static data
+     * @async
      *
-     * @param{Function} objType    the type of object you want to filter on. Task, Project, Perspective, or Tag.
-     * @param{(i:Filterable)=>boolean} condition    the condition you are filtering on
-     * @param{((i:Filterable)=>boolean)[]?} conditions    a list of conditions you are filtering on
-     * @returns{Promise<Filterable>}
+     * Because hitting the database per page is hard, Tasks
+     * especially have a special way of lazy loading whereby
+     * their actual underlying data is not loaded until 
+     * strictly necessary.
      *
+     * but! For things like weights to work, all tasks must need
+     * to be loaded. So we return a copy of the static data to seed
+     * those tasks.
      */
 
-    async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[]): Promise<Filterable[]> {
-        console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
-
-        let data:Filterable[] = [];
-
+    async orderStaticData(): Promise<AdapterData> {
         if (!Query.hasIndexed)
             await this.index();
 
@@ -358,6 +358,27 @@ class Query {
             tagCollection: Query.tagPages,
             perspectiveCollection: Query.perspectivePages,
         }
+
+        return dataObject;
+    }
+
+    /**
+     * Execute a filter query based on a function parameter
+     *
+     * @param{Function} objType    the type of object you want to filter on. Task, Project, Perspective, or Tag.
+     * @param{(i:Filterable)=>boolean} condition    the condition you are filtering on
+     * @param{((i:Filterable)=>boolean)[]?} conditions    a list of conditions you are filtering on
+     * @param{boolean} returnLiveObjects    default true. Optionally False to return readonly "ghost" objects to save memory during indexing
+     * @returns{Promise<Filterable>}
+     *
+     */
+
+    async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[], returnLiveObjects:boolean=true): Promise<Filterable[]> {
+        console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
+
+        let data:Filterable[] = [];
+
+        let dataObject:AdapterData = await this.orderStaticData();
 
         let taskPages:object[] = dataObject.taskCollection;
         let projectPages:object[] = dataObject.projectCollection;
@@ -393,10 +414,12 @@ class Query {
             });
         }
 
-        let results:Filterable[] = await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter|PerspectiveSearchAdapter)=>await result.produce()));
+        if (returnLiveObjects) {
+            let results:Filterable[] = await Promise.all(data.map(async (result:TaskSearchAdapter|TagSearchAdapter|ProjectSearchAdapter|PerspectiveSearchAdapter)=>await result.produce()));
 
-        // filter+return for any non-existant objects/dead pointers
-        return results.filter((i:Filterable) => i !== null);
+            // filter+return for any non-existant objects/dead pointers
+            return results.filter((i:Filterable) => i !== null);
+        } else return data;
     }
 
    /**

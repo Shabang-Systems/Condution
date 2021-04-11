@@ -2,7 +2,7 @@ import type { AdapterData } from "./Utils";
 
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
-import { RepeatRule, RepeatRuleType } from "./Utils";
+import { RepeatRule, RepeatRuleType, Query } from "./Utils";
 import Project, { ProjectSearchAdapter } from "./Project";
 import Tag, { TagSearchAdapter } from "./Tag";
 
@@ -12,7 +12,7 @@ class Task {
     static readonly databaseBadge = "tasks";
 
     private _id:string;
-    private page:Page;
+    private _page:Page = null;
 
     private hooks:((arg0: Task)=>any)[] = [];
 
@@ -41,7 +41,7 @@ class Task {
 
     /**
      * Fetch a task by Context and ID
-     * @static
+     * @static @async
      *
      * @param{Context} context    the context that you are fetching from
      * @param{string} identifier    the ID of the task you want to fetch
@@ -56,19 +56,29 @@ class Task {
         if (Task.loadBuffer.has(identifier))
             return await Task.loadBuffer.get(identifier); 
 
+        let queryEngine:Query = new Query(context);
+        let staticData:AdapterData = await queryEngine.orderStaticData();
+
         let tsk:Task = new this(identifier, context);
         tsk._ready = false;
 
-        let page:Page = context.page(["tasks", identifier], tsk.update);
-        tsk.page = page;
-
         let loadTask:Promise<Task> = new Promise(async (res, _) => {
-            if (!(await page.exists())) {
+            let taskData:object = staticData.taskCollection.filter((i:object)=>i["id"] === identifier)[0];
+            
+            // TODO janky AF this is to wait
+            // until the context loads. Someone
+            // somewhere on the frontend team forgot
+            // to warm up the context before state
+            // propergates
+
+            await context.workspaces();
+
+            if (!taskData || taskData == undefined) {
                 Task.cache.set(identifier, null);
                 res(null);
             }
 
-            tsk.data = await page.get();
+            tsk.data = taskData;
             tsk._ready = true;
 
             Task.cache.set(identifier, tsk);
@@ -83,6 +93,21 @@ class Task {
 
         return finalTask;
     }
+
+    /**
+     * Fetch a task by Context and ID, but like not async
+     * @static
+     *
+     * Psst. Why no static data ordering, you ask? Well...
+     * 1. Jack is lazy
+     * 2. This is loaded asyncronously, so the data loads 
+     *    in the background anyways so no need.
+     *
+     * @param{Context} context    the context that you are fetching from
+     * @param{string} identifier    the ID of the task you want to fetch
+     * @returns{Promise<Task>} the desired task
+     *
+     */
 
     static lazy_fetch(context:Context, identifier:string):Task {
         if (Task.cache.has(identifier))
@@ -709,6 +734,8 @@ class Task {
      */
 
     hook(hookFn: ((arg0: Task)=>any)): void {
+        if (this._page == null) // on hook, make sure that the task is live
+            this._page = this.context.page(["tasks", this.id], this.update);
         this.hooks.push(hookFn);
     }
 
@@ -722,6 +749,16 @@ class Task {
 
     unhook(hookFn: ((arg0: Task)=>any)): void {
         this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+    }
+
+    private get page() {
+        if (this._page == null)
+            this._page = this.context.page(["tasks", this.id], this.update);
+        return this._page;
+    }
+
+    private set page(newPage:Page) {
+        this._page = newPage;
     }
 
     protected sync = () => {
