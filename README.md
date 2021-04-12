@@ -1,8 +1,10 @@
 <h1>#!/Shabang | Condution</h1>
 
 <a href=""><img src="https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen.svg"/> </a>
+<!--
 <a href="https://github.com/Shabang-Systems/Condution/releases/"><img src="https://img.shields.io/github/package-json/v/shabang-systems/condution"/> </a>
 <a href="https://github.com/Shabang-Systems/Condution/releases/"><img src="https://img.shields.io/github/downloads/shabang-systems/condution/total"/> </a>
+-->
 <a href=""><img src="https://img.shields.io/github/license/shabang-systems/condution"/> </a>
 
 <div style="display: flex; align-items: center; width: 100%">
