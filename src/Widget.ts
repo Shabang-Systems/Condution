@@ -1,6 +1,7 @@
 import Perspective from "./Objects/Perspective";
 import Task from "./Objects/Task";
 import Project from "./Objects/Project";
+import Tag from "./Objects/Tag";
 
 import { Query } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
@@ -145,6 +146,20 @@ class CompletedWidget extends Widget {
 }
 
 /**
+ * Widget for tags pane get tag collection.
+ */
+
+class TagsPaneWidget extends Widget {
+    name = "tags-pane-widget"
+
+    async execute(): Promise<Tag[]> {
+        let tags:Tag[] = await this.query.execute(Tag, (i: Tag) => (true)) as Tag[];
+        return tags;
+    }
+}
+
+
+/**
  * Widget for tasks' project dropdown datapack
  *
  * Because of the relative heaviness of DFS, this widget has special
@@ -207,6 +222,5 @@ class ProjectDatapackWidget extends Widget {
     }
 }
 
-
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget };
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget };
 //new line here

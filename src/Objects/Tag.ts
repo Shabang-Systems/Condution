@@ -4,6 +4,8 @@ import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backen
 import { Context } from "./EngineManager";
 
 class Tag {
+    public tempname: string; // modern problems require modern solutions, dw about it
+
     private static cache:Map<string, Tag> = new Map();
     static readonly databaseBadge = "tags";
 
