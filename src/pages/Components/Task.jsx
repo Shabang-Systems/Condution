@@ -428,7 +428,7 @@ class Task extends Component {
                                 {/* And load up + hide the repeat UI, too! */}
                                 {/*<Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>*/}
                                 {/* As well as load up + hide the tag editor!*/}
-                                {/*<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>*/}
+                                {<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm}/>}
                                 
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
