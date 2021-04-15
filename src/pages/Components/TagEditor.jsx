@@ -4,7 +4,9 @@ import React, { Component } from 'react';
 import './TagEditor.css';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
-import Select from 'react-select'
+import Select from 'react-select';
+import { TagsPaneWidget } from "../backend/src/Widget";
+import { Tag } from "../backend/src/Objects/Tag.ts";
 
 import BlkArt from './BlkArt';
 
@@ -39,28 +41,32 @@ class TagEditor extends Component {
             tagList: [],
             settingState: -1
         }
+        this.tagsPaneWidget = new TagsPaneWidget(this.props.cm);
     }
     // TODO make not bad and actually set tag state
     async setTagState() {
-        this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
+        //this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
+        this.state.tagList = this.tagsPaneWidget.execute();
+        console.log(this.state.tagList);
     }
    // TODO BADDD 
     componentDidMount() {
         this.setTagState();
     }
     
+    // TODO: uncomment
     async newTagClicked() {
-        let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
-        let temp = this.state.tagList;
-        temp.push(
-            {
-                name: this.props.gruntman.localizations.new_tag_button,
-                tempname: this.props.gruntman.localizations.new_tag_button,
-                weight: 1,
-                id: tagid
-            }
-        )
-        this.setState({tagList: temp});
+        // let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
+        // let temp = this.state.tagList;
+        // temp.push(
+        //     {
+        //         name: this.props.gruntman.localizations.new_tag_button,
+        //         tempname: this.props.gruntman.localizations.new_tag_button,
+        //         weight: 1,
+        //         id: tagid
+        //     }
+        // )
+        // this.setState({tagList: temp});
     }
 
     tagClicked(i) {
@@ -68,22 +74,22 @@ class TagEditor extends Component {
         this.setState({settingState: i});
     }
 
+    // TODO: uncomment
     tagNameChanged(e, index) {
-        e.persist();
-        this.props.gruntman.registerScheduler(() => {
-            this.state.tagList[index].name = this.state.tagList[index].tempname; 
-            let newName = this.state.tagList;
-            newName[index].name = e.target.value;
-            this.setState({tagList: newName});
-            this.props.gruntman.do(
-                "tag.update", // the scheduler actually updates the task
-                {
-                    uid: this.props.uid, 
-                    tid: this.state.tagList[index].id, 
-                    query: {name: e.target.value},
-                }
-            )}, `tag-name-${this.props.tid}-update`) // and we will schedule it as this
-
+        // e.persist();
+        // this.props.gruntman.registerScheduler(() => {
+        //     this.state.tagList[index].name = this.state.tagList[index].tempname; 
+        //     let newName = this.state.tagList;
+        //     newName[index].name = e.target.value;
+        //     this.setState({tagList: newName});
+        //     this.props.gruntman.do(
+        //         "tag.update", // the scheduler actually updates the task
+        //         {
+        //             uid: this.props.uid, 
+        //             tid: this.state.tagList[index].id, 
+        //             query: {name: e.target.value},
+        //         }
+        //     )}, `tag-name-${this.props.tid}-update`) // and we will schedule it as this
     }
 
     tagNameEdited(e, index) {
@@ -97,12 +103,12 @@ class TagEditor extends Component {
         if (this.state.settingState == i) {
             this.state.settingState = 0;
         }
-        this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
+        this.state.tagList[i].delete();
+        //this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
         let tagexclu = this.state.tagList;
         tagexclu.splice(i,1);
 
         this.setState({tagList: tagexclu});
-        
     }
 
     render() {
