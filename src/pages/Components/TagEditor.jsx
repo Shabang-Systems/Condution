@@ -54,19 +54,12 @@ class TagEditor extends Component {
         this.setTagState();
     }
     
-    // TODO: uncomment
     async newTagClicked() {
-        // let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
-        // let temp = this.state.tagList;
-        // temp.push(
-        //     {
-        //         name: this.props.gruntman.localizations.new_tag_button,
-        //         tempname: this.props.gruntman.localizations.new_tag_button,
-        //         weight: 1,
-        //         id: tagid
-        //     }
-        // )
-        // this.setState({tagList: temp});
+        let newTag = await Tag.create(this.props.cm, this.props.localizations.new_tag_button);
+        //let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
+        let temp = this.state.tagList;
+        temp.push(newTag);
+        this.setState({tagList: temp});
     }
 
     tagClicked(i) {
@@ -134,7 +127,7 @@ class TagEditor extends Component {
                         })}
                         <div className="new-tag-button" onClick={ () => {this.newTagClicked()}}>
                             <i class="fas fa-plus" style={{marginLeft: "2px"}}></i>
-                            <div className="new-tag-text">{this.props.gruntman.localizations.new_tag_button}</div>
+                            <div className="new-tag-text">{this.props.localizations.new_tag_button}</div>
                         </div>
                     </div>
                     <div className="tag-settings">
@@ -180,7 +173,7 @@ class TagEditor extends Component {
                         )}
                     </div>
                             </>
-                    ):(<BlkArt visible={this.state.tagList.length<=0} title={this.props.gruntman.localizations.blk_art_tags} subtitle={this.props.gruntman.localizations.blk_art_tags_subtitle} />)}
+                    ):(<BlkArt visible={this.state.tagList.length<=0} title={this.props.localizations.blk_art_tags} subtitle={this.props.localizations.blk_art_tags_subtitle} />)}
                 </div>
             </IonModal>
         )
