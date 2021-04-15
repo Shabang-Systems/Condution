@@ -31,18 +31,7 @@ import BlkArt from './BlkArt';
  * */
 
 const autoBind = require('auto-bind/react');
-/*
-class TagEditor extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
 
-    render() {
-        return null
-    }
-}
-*/
 class TagEditor extends Component {
     constructor(props) {
         super(props)
@@ -51,7 +40,6 @@ class TagEditor extends Component {
             settingState: -1
         }
     }
-    // TODO make not freak out if there aren't any tags
     // TODO make not bad and actually set tag state
     async setTagState() {
         this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
