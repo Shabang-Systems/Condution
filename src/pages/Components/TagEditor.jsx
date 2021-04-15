@@ -5,10 +5,12 @@ import './TagEditor.css';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select';
-import { TagsPaneWidget } from "../backend/src/Widget";
-import { Tag } from "../backend/src/Objects/Tag.ts";
+import { TagsPaneWidget } from "../../backend/src/Widget";
+import Tag from "../../backend/src/Objects/Tag";
+
 
 import BlkArt from './BlkArt';
+import { isThisTypeNode } from 'typescript';
 
 /*
  * Although I do not agree
@@ -46,7 +48,7 @@ class TagEditor extends Component {
     // TODO make not bad and actually set tag state
     async setTagState() {
         //this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
-        this.state.tagList = this.tagsPaneWidget.execute();
+        this.state.tagList = await this.tagsPaneWidget.execute();
         console.log(this.state.tagList);
     }
    // TODO BADDD 
@@ -104,14 +106,31 @@ class TagEditor extends Component {
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
+        // e.stopPropagation();
+        // // if (this.state.settingState == i) {
+        // //     this.state.settingState = 0;
+        // // }
+        // let newState;
+        // if (this.state.settingState != 0) { newState = this.state.settingState - 1; }
+        // else { newState = 0; }
+
+        // let toDelete = this.state.tagList[i];
+
+        // let tagexclu = this.state.tagList;
+        // tagexclu.splice(i, 1);
+        // this.setState({tagList: tagexclu, settingState});
+
+        // toDelete.delete();
+
+        // //this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
+
         e.stopPropagation();
-        if (this.state.settingState == i) {
+        if (this.state.settingState == i) 
             this.state.settingState = 0;
-        }
+        
         this.state.tagList[i].delete();
-        //this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
         let tagexclu = this.state.tagList;
-        tagexclu.splice(i,1);
+        tagexclu.splice(i, 1);
 
         this.setState({tagList: tagexclu});
     }
