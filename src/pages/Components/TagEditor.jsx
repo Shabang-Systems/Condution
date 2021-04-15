@@ -74,22 +74,12 @@ class TagEditor extends Component {
         this.setState({settingState: i});
     }
 
-    // TODO: uncomment
     tagNameChanged(e, index) {
-        // e.persist();
-        // this.props.gruntman.registerScheduler(() => {
-        //     this.state.tagList[index].name = this.state.tagList[index].tempname; 
-        //     let newName = this.state.tagList;
-        //     newName[index].name = e.target.value;
-        //     this.setState({tagList: newName});
-        //     this.props.gruntman.do(
-        //         "tag.update", // the scheduler actually updates the task
-        //         {
-        //             uid: this.props.uid, 
-        //             tid: this.state.tagList[index].id, 
-        //             query: {name: e.target.value},
-        //         }
-        //     )}, `tag-name-${this.props.tid}-update`) // and we will schedule it as this
+        e.persist();
+        this.state.tagList[index].name = this.state.tagList[index].tempname; // TODO: e.target.value instead of tempname?
+        let newName = this.state.tagList;
+        newName[index].name = e.target.value;
+        this.setState({tagList: newName});
     }
 
     tagNameEdited(e, index) {
