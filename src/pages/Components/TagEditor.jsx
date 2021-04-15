@@ -75,20 +75,6 @@ class TagEditor extends Component {
         let temp = this.state.tagList;
         temp[index].weight = Number(e.target.value);
         this.setState({tagList: temp});
-
-        // this.props.gruntman.registerScheduler(() => {
-        //     let tl = this.state.tagList;
-        //     tl[index].weight = Number(e.target.value);
-        //     this.setState({tagList: tl});
-        //     this.props.gruntman.do(
-        //         "tag.update", // the scheduler actually updates the task
-        //         {
-        //             uid: this.props.uid, 
-        //             tid: this.state.tagList[index].id, 
-        //             query: {weight: Number(e.target.value)},
-        //         }
-        //     );
-        // }, `tagweight-${index}-update`);
     }
 
     tagNameChanged(e, index) {
@@ -106,24 +92,6 @@ class TagEditor extends Component {
     }
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
-        // e.stopPropagation();
-        // // if (this.state.settingState == i) {
-        // //     this.state.settingState = 0;
-        // // }
-        // let newState;
-        // if (this.state.settingState != 0) { newState = this.state.settingState - 1; }
-        // else { newState = 0; }
-
-        // let toDelete = this.state.tagList[i];
-
-        // let tagexclu = this.state.tagList;
-        // tagexclu.splice(i, 1);
-        // this.setState({tagList: tagexclu, settingState});
-
-        // toDelete.delete();
-
-        // //this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
-
         e.stopPropagation();
         if (this.state.settingState == i) 
             this.state.settingState = 0;
