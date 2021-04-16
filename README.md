@@ -15,7 +15,7 @@
 
 ***
 
-**This. Is. Condution.** A project management system that makes sense and will not burn your pockets out.
+**This. Is. Condution.** A project management system that makes sense and will not burn your pockets out!
 
 ## Those Download Buttons?
 👉 [**Direct Download**](https://www.condution.com/#downloads) the latest version of Condution here! 👈 
