@@ -541,8 +541,9 @@ class Project {
      */
 
     async delete() : Promise<void> {
-        if (this.parent)
-            await this.parent.dissociate(this);
+        if (this.async_parent)
+            await (await this.async_parent).dissociate(this);
+
         this.page.delete();
     }
 
