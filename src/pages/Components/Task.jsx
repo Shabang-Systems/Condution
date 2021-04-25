@@ -517,8 +517,8 @@ class Task extends Component {
                                                     
                                                 {/*Delete icon*/}
                                                     <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
                                                         this.closeTask();
+                                                        this.props.taskObject.delete();
 
                                                     }}><i className="fas fa-trash" style={{margin: 3, fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
 
