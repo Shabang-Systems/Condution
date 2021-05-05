@@ -172,6 +172,9 @@ class Project {
         Project.loadBuffer.set(newProject.identifier, loadProject); 
         let finalProject = await loadProject;
 
+        if (parent)
+            parent.associate(finalProject);
+
         return finalProject;
     }
 
