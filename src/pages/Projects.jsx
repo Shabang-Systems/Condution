@@ -426,7 +426,9 @@ class Projects extends Component { // define the component
 				    //    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
 				    //}) // call the homebar refresh
 
-				let newTask = await DbTask.create(this.props.cm, "", this.state.projectObject)
+                            let newTask = await DbTask.create(this.props.cm, "", this.state.projectObject)
+                            console.log("test!"); 
+                            this.setState({itemList:[...this.state.itemList, newTask]});
 
 
 				
