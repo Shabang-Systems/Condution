@@ -691,11 +691,13 @@ class Task {
      * or create. However, you could force a tree flush
      * for your entertainment if you really wanted to.
      *
+     * @param{boolean?} withHook    call hooks on flush
+     *
      * @returns{Promise<void>}
      *
      */
 
-    calculateTreeParams = async () : Promise<void> => {
+    calculateTreeParams = async (withHook:boolean=false) : Promise<void> => {
         // Get the tags
         let tags: Tag[] = await Promise.all(this.async_tags ? this.async_tags : []);
 
@@ -723,6 +725,9 @@ class Task {
         } else {  // if no parents
             this._available = new Date() > this.defer // the availibilty is controlled only by defer
         }
+
+        if (withHook)
+            this.hooks.forEach((i:Function)=>i(this));
     }
 
     /**

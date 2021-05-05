@@ -611,11 +611,13 @@ class Project {
      * or create. However, you could force a tree flush
      * for your entertainment if you really wanted to.
      *
+     * @param{boolean?} withHook    call hooks on flush
+     *
      * @returns{Promise<void>}
      *
      */
 
-    calculateTreeParams = async () : Promise<void> => {
+    calculateTreeParams = async (withHook:boolean=false) : Promise<void> => {
         // Get the parent project
         let parent_proj:Project = await this.async_parent;
 
@@ -639,7 +641,7 @@ class Project {
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
                 // Flush their availibilty
-                await i.calculateTreeParams();
+                await i.calculateTreeParams(true);
 
                 // Return their weight
                 return i.weight;
@@ -649,6 +651,9 @@ class Project {
             weights.forEach((i:number) => this._weight+=i);
 
         }
+
+        if (withHook)
+            this.hooks.forEach((i:Function)=>i(this));
     }
 
     
