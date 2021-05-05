@@ -397,7 +397,7 @@ class Projects extends Component { // define the component
 
 				: 
 				    <a className="subproject" 
-					//style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+                        style={{opacity:item.available?"1":"0.35"}} 
 					onClick={()=>{
 					    this.props.paginate("projects", item.id);
 					    this.props.history.push(`/projects/${item.id}`)
