@@ -38,7 +38,8 @@ import './Task.css';
 
 // Our very own Backend Objects
 import T from "../../backend/src/Objects/Task.ts";
-import { ProjectDatapackWidget } from  "../../backend/src/Widget";
+import Tag from "../../backend/src/Objects/Tag.ts";
+import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Widget";
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -184,8 +185,10 @@ class Task extends Component {
             delegations: [], // task is delegated to...
             delegatedWorkspace: "", // task is delegated to workspace...
             delegatedTaskID: "", // the ID of the shadow task
-            projectDatapackWidget: new ProjectDatapackWidget(), // the project datapack widget
-            projectDatapack: [] // the calculated datapack
+            projectDatapackWidget: new ProjectDatapackWidget(props.cm), // the project datapack widget
+            tagDatapackWidget: new TagDatapackWidget(props.cm), // the tag datapack widget
+            projectDatapack: [], // the calculated project datapack
+            tagDatapack: [] // the calculated tag datapack
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -234,7 +237,8 @@ class Task extends Component {
             delegations: [], // TODO
             delegatedWorkspace: "", // TODO
             delegatedTaskID: "", // TODO,
-            projectDatapack: await this.state.projectDatapackWidget.execute()
+            projectDatapack: await this.state.projectDatapackWidget.execute(),
+            tagDatapack: await this.state.tagDatapackWidget.execute()
         }, this.refreshDecorations);
     }
 
@@ -256,6 +260,8 @@ class Task extends Component {
     componentWillUnmount() {
         // TODO this seems to not work???
         this.props.taskObject.unhook(this.loadTask);
+        this.state.tagDatapackWidget.unhook(this.loadTask);
+        this.state.projectDatapack.unhook(this.loadTask);
     }
 
     componentDidMount() {
@@ -444,26 +450,10 @@ class Task extends Component {
                                         onChange={()=>{
 
                                             // If we are uncompleting a task (that is, currently task is complete)
-                                            if (this.state.isComplete) {
-                                                this.props.gruntman.lockUpdates();
-                                                // Well, first, uncomplete it
-                                                this.setState({isComplete: false})
-                                                // Update the database, registering a gruntman action while you are at it.
-                                                this.props.gruntman.do("task.update__uncomplete", { uid: this.props.uid, tid: this.props.tid}, true)
-                                                // Whatever this is
-                                                this.props.gruntman.unlockUpdates(1000)
-                                            }
-                                            // If we are completing a task (that is, currently task is incomplete)
-                                            else if (!this.state.isComplete) {
-                                                // Lock updates so that animation could finish
-                                                this.props.gruntman.lockUpdates();
-                                                // Complete it
-                                                this.setState({isComplete: true})
-                                                // Update the database, registering a gruntman action while you are at it.
-                                                this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
-                                                //TODO wait for animation to finish before state update??
-                                                this.props.gruntman.unlockUpdates(1000)
-                                            }
+                                            if (this.state.isComplete)
+                                                this.setState({isComplete: false}, ()=>this.state.taskObj.uncomplete());
+                                            else
+                                                this.setState({isComplete: true}, ()=>this.state.taskObj.complete());
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
                                     />
@@ -776,53 +766,62 @@ class Task extends Component {
                                                     </span>
 
 
-                                                {/*
                                                     <span className="task-tag-container">
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
                                                         <CreatableSelect
-                                                            options={this.props.datapack[0]}
+                                                            options={this.state.tagDatapack}
                                                             className='task-tag'
                                                             classNamePrefix='task-select'
                                                             isClearable
                                                             isMulti
                                                             styles={{ menuPortal: base => ({ ...base, zIndex: "99999 !important" }) }}
                                                             menuPortalTarget={document.body}
-                                                            value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
-                                                            onChange={(newValue, actionMeta) => {
-                                                                let view = this;
-                                                                let tids = newValue?newValue.map(async function (e) { // for each tag
-                                                                    if (e.__isNew__) { // if it's a new tag
-                                                                        let tagID = (await view.props.gruntman.do( // create it!
-                                                                            "tag.create",
-                                                                            {
-                                                                                uid: view.props.uid,
-                                                                                name: e.label,
-                                                                            } 
-                                                                        )).id;
+                                                            value={this.state.tagDatapack.filter(option => this.state.tags.includes(option.value))}
+                                                            onChange={async (newValue, _) => {
+                                                                let tags = await Promise.all(newValue?newValue.map(async (e) => { // for each tag
+                                                                    if (e.__isNew__) {// if it's a new tag
+                                                                        // TODO TODO
+                                                                        let newTag = await Tag.create(this.props.cm, e.label);
+                                                                        this.setState({tagDatapack: [...this.state.tagDatapack, newTag]});
+                                                                        return (newTag);
+                                                                    } else {
+                                                                        return e.value
+                                                                    }
+                                                                }):[]);
+                                                                this.state.taskObj.tags = tags;
+                                                                this.setState({tagDatapack: tags});
+                                                                        
 
-                                                                        // TODO new tags don't show up to tags pane
-                                                                        let originalTags = view.state.possibleTags; // get tags
-                                                                        originalTags.push({label: e.label, value: tagID}); // add our new tag
-                                                                        view.setState({possibleTags: originalTags}); // sax-a-boom!
-                                                                        return tagID;
-                                                                    } else
-                                                                        return e.value;
-                                                                }):[]; // find the correct tags sets, or set it to an empty set
-                                                                Promise.all(tids).then(tagIDs => {
-                                                                    this.setState({tags: tagIDs}); // set the state
-                                                                    this.props.gruntman.do(
-                                                                        "task.update", 
-                                                                        {
-                                                                            uid: this.props.uid, 
-                                                                            tid: this.props.tid, 
-                                                                            query:{tags: tagIDs} // set a taskID
-                                                                        }
-                                                                    )
-                                                                });
+                                                                            //"tag.create",
+                                                                            //{
+                                                                                //uid: view.props.uid,
+                                                                                //name: e.label,
+                                                                            //} 
+                                                                        //)).id;
+
+                                                                        //// TODO new tags don't show up to tags pane
+                                                                        //let originalTags = view.state.possibleTags; // get tags
+//                                                                        originalTags.push({label: e.label, value: tagID}); // add our new tag
+                                                                        //view.setState({possibleTags: originalTags}); // sax-a-boom!
+                                                                        //return tagID;
+                                                                    //} else
+                                                                        //return e.value;
+                                                                //}):[]; // find the correct tags sets, or set it to an empty set
+                                                                // TODO TODO
+//                                                                Promise.all(tids).then(tagIDs => {
+                                                                    //this.setState({tags: tagIDs}); // set the state
+                                                                    //this.props.gruntman.do(
+                                                                        //"task.update", 
+                                                                        //{
+                                                                            //uid: this.props.uid, 
+                                                                            //tid: this.props.tid, 
+                                                                            //query:{tags: tagIDs} // set a taskID
+                                                                        //}
+                                                                    //)
+                                                                //});
                                                             }}
                                                         />
                                                     </span>
-                                                */}
                                                 </div>
                                             </animated.div>
                                         )
