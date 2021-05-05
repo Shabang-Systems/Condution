@@ -463,7 +463,7 @@ class Perspective {
      */
 
     static async create(context:Context, name?:string, query?:string):Promise<Perspective> {
-        let newPerspective:DataExchangeResult = await context.collection(["perspectives"]).add({name:name?name:"", query:query?query:"[]"});
+        let newPerspective:DataExchangeResult = await context.collection(["perspectives"]).add({name:name?name:"", query:query?query:"[]", tord: "duds", avail: "remain"});
 
         let np:Perspective = new this(newPerspective.identifier, context);
         let page:Page = context.page(["perspectives", newPerspective.identifier], np.update);
@@ -568,7 +568,7 @@ class Perspective {
             baseTasks = await this.parsedQuery.execute(additionalFilter);
         } catch (e) {
             if (e instanceof PerspectiveParseError) 
-                return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
+                return console.log("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
             else 
                 console.log(e)
         }

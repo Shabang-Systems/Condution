@@ -642,8 +642,9 @@ class Task {
      */
 
     async delete() : Promise<void> {
-        if (this.async_project)
-            await (await this.async_project).dissociate(this);
+        let async_project = await this.async_project;
+        if (async_project)
+            await (async_project).dissociate(this);
         this.page.delete();
     }
 
