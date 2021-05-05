@@ -132,7 +132,7 @@ class Perspectives extends Component {
         return (
             <IonPage>
 		{/* the perspective editor! */}
-                {/*<PerspectiveEdit 
+                <PerspectiveEdit 
                     cm={this.cm}
                     reference={this.repeater} 
                     isShown={this.state.showEdit} 
@@ -140,7 +140,7 @@ class Perspectives extends Component {
                     perspective={this.state.perspectiveObject}
                     startHighlighted={this.props.options === "do"}
                     localizations={this.props.localizations}
-                />*/} 
+                />
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds
