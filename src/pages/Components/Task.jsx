@@ -41,6 +41,8 @@ import T from "../../backend/src/Objects/Task.ts";
 import Tag from "../../backend/src/Objects/Tag.ts";
 import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Widget";
 
+import { RepeatRule, RepeatRuleType }  from "../../backend/src/Objects/Utils.ts";
+
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
 
@@ -172,6 +174,7 @@ class Task extends Component {
             decoration: "",  // are we "od" "ds" or just just good ol' ""?
             availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
             isComplete: false, // are we completed?
+            repeatRule: null, // do we have a repeatRule
             showRepeat: false, // is our repeat UI shown?
             showTagEditor: false, // is our TagEditor UI shown?
             deferPopoverShown: false, // is the defer calendar popover shown?
@@ -231,6 +234,7 @@ class Task extends Component {
             isFloating: task.isFloating, // Set isFloating bool
             isFlagged: task.isFlagged, // Set is Flagged bool
             isComplete: task.isComplete, // Set is complete style
+            repeatRule:task.repeatRule, // Set the repeat rule
             dueDate: task.due, 
             deferDate: task.defer,
             hasNotification: true, // TODO
@@ -448,12 +452,16 @@ class Task extends Component {
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
-
-                                            // If we are uncompleting a task (that is, currently task is complete)
-                                            if (this.state.isComplete)
-                                                this.setState({isComplete: false}, ()=>this.state.taskObj.uncomplete());
-                                            else
-                                                this.setState({isComplete: true}, ()=>this.state.taskObj.complete());
+                                            //console.log(this.state.taskObj.isComplete)//;
+                                            if (this.state.isComplete) {
+                                                this.setState({isComplete: false}, ()=>{
+                                                    this.state.taskObj.uncomplete()
+                                                });
+                                            } else {
+                                                this.setState({isComplete: true}, ()=>{
+                                                    this.state.taskObj.complete();
+                                                });
+                                            }
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
                                     />
