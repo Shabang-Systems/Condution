@@ -450,7 +450,7 @@ class Project {
                         let project:Project = await Project.fetch(this.context, child);
                         if(project) dataArray.push(project);
                     }
-                return dataArray;
+                return dataArray.sort((a:(Project|Task), b:(Project|Task)) => a.order-b.order);
             })()
         }
   //      if (this.id == "0FDknRdMkhKnDm5urIoy")
