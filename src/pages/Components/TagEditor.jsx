@@ -49,7 +49,6 @@ class TagEditor extends Component {
     async setTagState() {
         //this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
         this.state.tagList = await this.tagsPaneWidget.execute();
-        console.log(this.state.tagList);
     }
    // TODO BADDD 
     componentDidMount() {

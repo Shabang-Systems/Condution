@@ -237,6 +237,8 @@
     --task-checkmark-ds: #f4721a;
     --task-checkmark-od: #d32f19;
     --task-border-delegated: #81b6ef;
+    --task-border-repeat: #81b6ef;
+    --task-border-repeat: #2ac9c4;
 
     /* Task Datepicker */
     --task-datepicker-elems: #aab1ba;

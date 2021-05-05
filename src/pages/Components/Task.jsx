@@ -191,7 +191,8 @@ class Task extends Component {
             projectDatapackWidget: new ProjectDatapackWidget(props.cm), // the project datapack widget
             tagDatapackWidget: new TagDatapackWidget(props.cm), // the tag datapack widget
             projectDatapack: [], // the calculated project datapack
-            tagDatapack: [] // the calculated tag datapack
+            tagDatapack: [], // the calculated tag datapack
+            activelyRepeating: false // are we actively playing the repeating animation?
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -445,9 +446,9 @@ class Task extends Component {
 
                                 {/* Gotta get those on hover tips */}
                                 {/* And load up + hide the repeat UI, too! */}
-                                {/*<Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>*/}
+                                <Repeat taskObj={this.props.taskObject} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
                                 {/* As well as load up + hide the tag editor!*/}
-                                {<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm}/>}
+                                {<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm} localizations={this.props.localizations}/>}
                                 
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
@@ -459,15 +460,22 @@ class Task extends Component {
      ref={this.actualCheck}
                                         id={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} 
                                         className="task-check"
-                                        defaultChecked={this.props.startingCompleted}
+                                        checked={this.state.isComplete}
                                         onChange={()=>{
                                             //console.log(this.state.taskObj.isComplete)//;
                                             if (this.state.isComplete) {
                                                 this.setState({isComplete: false});
                                                 this.state.taskObj.uncomplete()
                                             } else {
-                                                this.setState({isComplete: true});
-                                                this.state.taskObj.complete();
+                                                if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
+                                                    this.setState({activelyRepeating: true}, async ()=> {
+                                                        await this.state.taskObj.complete()
+                                                        this.setState({activelyRepeating: false});
+                                                    });
+                                                else {
+                                                    this.setState({isComplete: true});
+                                                    this.state.taskObj.complete();
+                                                }
                                             }
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
@@ -475,7 +483,7 @@ class Task extends Component {
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} htmlFor={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration+((this.state.activelyRepeating)?" repeat":"")} id={"task-pseudocheck-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} htmlFor={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
