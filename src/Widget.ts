@@ -153,7 +153,7 @@ class TagsPaneWidget extends Widget {
     name = "tags-pane-widget"
 
     async execute(): Promise<Tag[]> {
-        let tags:Tag[] = await this.query.execute(Tag, (i: Tag) => (true)) as Tag[];
+        let tags:Tag[] = await this.query.execute(Tag, (_: Tag) => (true)) as Tag[];
         return tags;
     }
 }
@@ -180,7 +180,7 @@ class ProjectDatapackWidget extends Widget {
         return data;
     }
 
-    private async calculate() {
+    async calculate() {
         // Get a list of top-level projects
         let topProjects:Project[] = await this.query.execute(Project, (i:Project)=> i.topLevel && !i.isComplete) as Project[];
         topProjects.sort((a: Project, b: Project) => a.order-b.order);
@@ -218,9 +218,50 @@ class ProjectDatapackWidget extends Widget {
             async_children.forEach((i:Project) => stack.push([i, popped[1]+1]));
         }
 
-        return result
+        // Clear the promise after a second for a refetch
+        setTimeout(()=>{ProjectDatapackWidget.dataPromise = null}, 1000);
+
+        return result;
     }
 }
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget };
+/**
+ * Widget for tags' project dropdown datapack
+ *
+ * Because of the relative heaviness of DFS, this widget has special
+ * merging rules such that recent concurrent calls listen to the same 
+ * promise.
+ *
+ */
+
+class TagDatapackWidget extends Widget {
+    name = "tag-datapack-widget"
+    private static dataPromise:Promise<object[]>;
+
+
+    async execute() {
+        if (!TagDatapackWidget.dataPromise)
+            TagDatapackWidget.dataPromise = this.calculate();
+
+        let data = await TagDatapackWidget.dataPromise;
+        return data;
+    }
+
+    async calculate() {
+        // Get a list of all tags
+        let allTags:Tag[] = await this.query.execute(Tag, (_:Tag) => true) as Tag[];
+
+        // Task: DFS through the list to get all tags
+        let result:object[] = allTags.map((i:Tag)=>({value: i, label:i.name}));
+        
+        // Clear the promise after a second for a refetch
+        setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 1000);
+
+        return result;
+    }
+}
+
+
+
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget };
 //new line here
