@@ -2,6 +2,11 @@
 Condution Developer
 ********************
 
-We ♥️ developers. At least I think.
+Welcome, fellow human. If you want to write intergrations, automations, build, host, or test Condution, you are at the right place!
 
-This page is currently under construction. Please refer to https://www.notion.so/Developer-Docs-ec5a44b29d0c4e8dbb596ae82d6bc857 for current docs
+Get your `Text Editor`_ up, pull up a lovely `Terminal`_, and let's get crackin'!
+
+.. _Text Editor: https://www.vim.org/
+.. _Terminal: https://st.suckless.org/
+
+
