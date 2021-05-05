@@ -364,7 +364,7 @@ class PerspectiveQuery {
         // And now... Query!
         let results:Task[][] = await Promise.all(
             parsedQueries.map(
-                (i:any) => this.queryEngine.batch_execute(Task, additionalFilter?[...i, additionalFilter]:i)
+                (i:any) => i.length > 0 ? this.queryEngine.batch_execute(Task, additionalFilter?[...i, additionalFilter]:i) : []
             )
         ) as Task[][];
 
@@ -563,14 +563,15 @@ class Perspective {
                 additionalFilter = ((i:Task) => (i.isFlagged === true && !i.isComplete));
                 break;
         }
-        //try {
-        let baseTasks:Task[] = await this.parsedQuery.execute(additionalFilter);
-//        } catch (e) {
-            //if (e instanceof PerspectiveParseError) 
-                //return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
-            //else 
-                //console.log(e)
-        //}
+        let baseTasks:Task[] = [];
+        try {
+            baseTasks = await this.parsedQuery.execute(additionalFilter);
+        } catch (e) {
+            if (e instanceof PerspectiveParseError) 
+                return console.error("CondutionEngine: your perspective query is dud! Use queries correctly or else."), [];
+            else 
+                console.log(e)
+        }
 
 
 

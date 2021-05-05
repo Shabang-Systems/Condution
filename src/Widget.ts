@@ -219,7 +219,7 @@ class ProjectDatapackWidget extends Widget {
         }
 
         // Clear the promise after a second for a refetch
-        setTimeout(()=>{ProjectDatapackWidget.dataPromise = null}, 1000);
+        setTimeout(()=>{ProjectDatapackWidget.dataPromise = null}, 5000);
 
         return result;
     }
@@ -255,7 +255,7 @@ class TagDatapackWidget extends Widget {
         let result:object[] = allTags.map((i:Tag)=>({value: i, label:i.name}));
         
         // Clear the promise after a second for a refetch
-        setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 1000);
+        setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 5000);
 
         return result;
     }
