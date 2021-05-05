@@ -655,7 +655,6 @@ class Project {
         if (withHook)
             this.hooks.forEach((i:Function)=>i(this));
     }
-
     
     /**
      * Hook a callback to whence this task updates

@@ -621,6 +621,8 @@ class Task {
         else
             this.data["isComplete"] = true;
 
+        this.sync();
+
         if (this.project)
             await (await this.async_project).calculateTreeParams();
 
@@ -629,7 +631,6 @@ class Task {
         await this.page.set({completeDate: completeDate}, {merge:true}); // weird date handling
 
         await this.calculateTreeParams();
-        this.sync();
     }
 
     /**
