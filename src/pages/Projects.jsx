@@ -44,14 +44,12 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
-	    isComplete: '', // TODO: replace this
-	    animClass: '',
+            isComplete: '', // TODO: replace this
+            animClass: '',
             initialRenderingDone: false,
-
-
-	    projectObject: "",
-	    itemList: [],
-
+            projectObject: "",
+            itemList: [], 
+            onTaskCreate: false // are we in the middle of task creation? so, should we hang the refreshes?
         };
 
         this.updatePrefix = this.random();
@@ -138,6 +136,7 @@ class Projects extends Component { // define the component
     }
 
     async reloadData() {
+        if (this.state.onTaskCreate) return;
 	//let itemList = await this.state.projectObject.execute();
 	//this.setState({
 	//    itemList: itemList,
@@ -383,14 +382,20 @@ class Projects extends Component { // define the component
 			/>*/}
                 {this.state.itemList? this.state.itemList.map(item =>  (
 
-			    (item.databaseBadge == "tasks"? 
+			    ((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
 				(<div 
 				    key={item.id}>
 				    <Task 
 					cm={this.props.cm} 
 					localizations={this.props.localizations} 
-					taskObject={item} 
+                    taskObject={(item != null && typeof item.then === 'function') ? null : item} 
+                    asyncObject={(item != null && typeof item.then === 'function') ? item : null} 
+                    startOpen={(item != null && typeof item.then === 'function')} 
 					startingCompleted={this.state.projectObject.isComplete}
+                        refreshHook={()=>{
+                            this.setState({onTaskCreate: false}, ()=>this.reloadData());
+                        }}
+
 				    />
 
 				</div>)
@@ -411,7 +416,7 @@ class Projects extends Component { // define the component
 
 			<div style={{marginTop: 10}}>
 			    <a className="newbutton" 
-				onClick={ async ()=>{
+				onClick={ ()=>{
 				    //this.props.gruntman.do( // call a gruntman function
 				    //    "task.create", { 
 				    //        uid: this.props.uid, // pass it the things vvv
@@ -426,9 +431,8 @@ class Projects extends Component { // define the component
 				    //    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
 				    //}) // call the homebar refresh
 
-                            let newTask = await DbTask.create(this.props.cm, "", this.state.projectObject)
-                            console.log("test!"); 
-                            this.setState({itemList:[...this.state.itemList, newTask]});
+                            let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
+                    this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
 
 
 				

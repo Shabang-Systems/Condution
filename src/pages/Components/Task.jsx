@@ -220,9 +220,15 @@ class Task extends Component {
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
+        let task;
 
         // Obviously we need this, the task info
-        let task = this.props.taskObject;
+        if (this.props.asyncObject) {
+            this.openTask();
+            task = await this.props.asyncObject;
+        } else  {
+            task = this.props.taskObject;
+        }
 
         // Setting state to update the rest of them elements
         this.setState({
@@ -271,7 +277,8 @@ class Task extends Component {
     componentDidMount() {
 
         this.loadTask(); // load the task when we mount   
-        this.props.taskObject.hook(this.loadTask);
+        if (this.props.taskObject)
+            this.props.taskObject.hook(this.loadTask);
         this.initialRenderDone = true;
 
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
@@ -372,6 +379,8 @@ class Task extends Component {
                 document.getElementById("abtib").style.display = "block";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(true); // enable drag
+            if (this.props.refreshHook)
+                setTimeout(()=>this.props.refreshHook(), 300); // let the task close, then refresh
             //this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
         }
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
@@ -448,19 +457,17 @@ class Task extends Component {
                                         type="checkbox" 
 
      ref={this.actualCheck}
-                                        id={"task-check-"+this.props.taskObject.id} 
+                                        id={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} 
                                         className="task-check"
                                         defaultChecked={this.props.startingCompleted}
                                         onChange={()=>{
                                             //console.log(this.state.taskObj.isComplete)//;
                                             if (this.state.isComplete) {
-                                                this.setState({isComplete: false}, ()=>{
-                                                    this.state.taskObj.uncomplete()
-                                                });
+                                                this.setState({isComplete: false});
+                                                this.state.taskObj.uncomplete()
                                             } else {
-                                                this.setState({isComplete: true}, ()=>{
-                                                    this.state.taskObj.complete();
-                                                });
+                                                this.setState({isComplete: true});
+                                                this.state.taskObj.complete();
                                             }
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
@@ -468,7 +475,7 @@ class Task extends Component {
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.taskObject.id} htmlFor={"task-check-"+this.props.taskObject.id}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} htmlFor={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
