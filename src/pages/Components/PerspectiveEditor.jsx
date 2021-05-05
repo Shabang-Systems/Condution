@@ -48,19 +48,19 @@ class PerspectiveEdit extends Component {
 
     componentDidMount() {
         this.fetchData();
-        if (this.props.startHighlighted) // if we are trying to create
+        if (this.props.startHighlighted && this.name.current) // if we are trying to create
             this.name.current.focus(); // focus the name
     }
 
     fetchData() {
-        if (this.props.perspective)
-            console.log(this.props.perspective.query);
         this.setState({perspectiveQuery: this.props.perspective ? this.props.perspective.query: "", perspectiveName: this.props.perspective ? this.props.perspective.name: ""})
     }
 
     componentDidUpdate(prevProps, _, __) {
         if (this.props.perspective !== prevProps.perspective)
             this.fetchData();
+        if (this.props.startHighlighted !== prevProps.startHighlighted && this.name.current)
+            this.name.current.focus(); // focus the name
     }
 
     async getItems(){

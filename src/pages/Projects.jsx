@@ -320,8 +320,8 @@ class Projects extends Component { // define the component
                                     <a 
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
-                                        onClick={()=>{
-					    this.state.projectObject.delete()
+                                        onClick={async ()=>{
+					    await this.state.projectObject.delete()
 					    if (this.state.projectObject.isComplete) {
 						this.props.history.push("/completed", ""); // go back
 						this.props.paginate("/completed");

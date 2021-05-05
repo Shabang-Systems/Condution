@@ -30,6 +30,7 @@ import ReleaseNotesModal from './Components/ReleaseNotesModal';
 
 import { ProjectMenuWidget, PerspectivesMenuWidget } from "../backend/src/Widget";
 import Project from "../backend/src/Objects/Project";
+import Perspective from "../backend/src/Objects/Perspective";
 
 
 // Our very own CSS
@@ -307,17 +308,28 @@ class Home extends Component {
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-                                            let npid = (await this.props.gruntman.do(
-                                                "perspective.create", {
-                                                    uid: this.state.workspace,
-                                                },
-                                                true
-                                            )).pid;
+                                            let np = await Perspective.create(this.props.cm)
+                                            let npid = np.id
+
                                             history.push(`/perspectives/${npid}/do`);
                                             this.paginate("perspectives", npid);
                                             this.refresh();
                                         }).bind(this);
                                         f();
+                                        //if (this.menu.current)
+                                            //this.menu.current.close();
+                                        //let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+                                            //let npid = (await this.props.gruntman.do(
+                                                //"perspective.create", {
+                                                    //uid: this.state.workspace,
+                                                //},
+                                                //true
+                                            //)).pid;
+                                            //history.push(`/perspectives/${npid}/do`);
+                                            //this.paginate("perspectives", npid);
+                                            //this.refresh();
+                                        //}).bind(this);
+                                        //f();
 
                                     }} className="fa fa-plus add"></a></div>
 
@@ -400,10 +412,8 @@ class Home extends Component {
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-
-
-					    let np = await Project.create(this.props.cm)
-					    let npid = np.id
+                                            let np = await Project.create(this.props.cm)
+                                            let npid = np.id
 
                                             history.push(`/projects/${npid}/do`);
                                             this.paginate("projects", npid);
@@ -510,7 +520,7 @@ class Home extends Component {
                                         */}
                                         <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
 
-                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} />} />
+                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history}/>} />
 
                                         <Route 
 					    path="/projects/:id/:create?" 
