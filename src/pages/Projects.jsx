@@ -146,7 +146,8 @@ class Projects extends Component { // define the component
 	//});
 	//console.log(this.state.itemList)
 
-	let itemList = await this.state.projectObject.children
+        let itemList = await this.state.projectObject.async_children;
+        console.log(itemList.map(i=>i.order));
 	
 	this.setState({
         itemList: this.state.projectObject.isComplete ? itemList : itemList.filter((i)=>!i.isComplete),
