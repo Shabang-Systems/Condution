@@ -17,6 +17,7 @@ class Project {
 
     protected data:object;
     protected _weight:number;
+    protected _uncompleteWeight:number;
     protected context:Context;
     protected _ready:boolean;
     protected _available:boolean;
@@ -582,6 +583,16 @@ class Project {
         return this._weight;
     }
 
+    /**
+     * get the uncompleted task weight of the project
+     * @param
+     *
+     */
+
+    get uncompleteWeight() : number {
+        return this._uncompleteWeight;
+    }
+
 
     /**
      * availablitiy of the project
@@ -635,12 +646,16 @@ class Project {
         else
             this._available = true;
 
-        // Set weight to zero
+        // Set weight variables to zero
         this._weight = 0;
+        this._uncompleteWeight = 0;
 
         if (this && this.async_children) {
+            // Get async children
+            let children:(Project|Task)[] = (await this.async_children);
+
             // Get weights by DFS, while flushing the availibilty of children
-            let weights:number[] = await Promise.all((await this.async_children).map(async (i):Promise<number> => {
+            let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
                 // Flush their availibilty
                 await i.calculateTreeParams(true);
 
@@ -648,9 +663,20 @@ class Project {
                 return i.weight;
             }));
 
+            // Get uncompleted weights by DFS
+            let uncompletedWeights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
+                // Return their weight
+                if (i.databaseBadge==="tasks" && i.isComplete)
+                    return 0;
+                else if (i.databaseBadge==="tasks")
+                    return i.weight;
+                else
+                    return (i as Project).uncompleteWeight;
+            }));
+
             // Sum the weight as new weight
             weights.forEach((i:number) => this._weight+=i);
-
+            uncompletedWeights.forEach((i:number) => this._uncompleteWeight+=i);
         }
 
         if (withHook)
