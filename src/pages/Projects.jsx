@@ -131,7 +131,7 @@ class Projects extends Component { // define the component
 
 	this.setState({
 	    projectObject: project,
-        name: project.name
+        name: project.name,
 	}, this.reloadData)
     }
 
@@ -152,6 +152,8 @@ class Projects extends Component { // define the component
 	    is_sequential: this.state.projectObject.isSequential,
 	    //TODO: for some reason this doensnt update the direction of the arrow until you upate the state some other way?
 	    initialRenderingDone: true,
+        weight: this.state.projectObject.weight,
+        pendingWeight: this.state.projectObject.uncompleteWeight,
 
 	})
 	//console.log(this.state.projectObject, "parnent")
@@ -341,9 +343,7 @@ class Projects extends Component { // define the component
                                         </i>
                                     </a>
                                     <div className="progressbar">
-					{/*<Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
-					*/}
-                                        <Spring native to={{width: this.state.projectObject.width}}>
+                                        <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
                                             {props =>
                                                 <animated.div className="pcontent" style={{...props}}>&nbsp;</animated.div>}
                                         </Spring>
@@ -396,6 +396,9 @@ class Projects extends Component { // define the component
 					startingCompleted={this.state.projectObject.isComplete}
                         refreshHook={()=>{
                             this.setState({onTaskCreate: false}, ()=>this.reloadData());
+                        }}
+                        completeHook={async ()=>{
+                            await this.state.projectObject.calculateTreeParams();
                         }}
 
 				    />

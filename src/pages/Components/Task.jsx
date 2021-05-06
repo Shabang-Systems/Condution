@@ -464,7 +464,11 @@ class Task extends Component {
                                         onChange={()=>{
                                             //console.log(this.state.taskObj.isComplete)//;
                                             if (this.state.isComplete) {
-                                                this.setState({isComplete: false});
+                                                this.setState({isComplete: false}, ()=>{
+                                                        if (this.props.completeHook)
+                                                            setTimeout(()=>this.props.completeHook(), 1000); // let the task complete, then refresh
+
+                                                    });
                                                 this.state.taskObj.uncomplete()
                                             } else {
                                                 if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
@@ -473,10 +477,15 @@ class Task extends Component {
                                                         this.setState({activelyRepeating: false});
                                                     });
                                                 else {
-                                                    this.setState({isComplete: true});
+                                                    this.setState({isComplete: true}, ()=>{
+                                                        if (this.props.completeHook)
+                                                            setTimeout(()=>this.props.completeHook(), 1000); // let the task complete, then refresh
+
+                                                    });
                                                     this.state.taskObj.complete();
                                                 }
                                             }
+
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
                                     />
