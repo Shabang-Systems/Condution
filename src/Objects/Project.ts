@@ -294,13 +294,13 @@ class Project {
 
     async complete() : Promise<void> {
         this.data["isComplete"] = true;
+        this.sync();
         await this.calculateTreeParams();
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
         await this.page.set({completeDate: completeDate}, {merge:true}); // weird date handling
 
-        this.sync();
     }
     
     /**
