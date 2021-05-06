@@ -267,19 +267,21 @@ class Projects extends Component { // define the component
 				    <a className={"complete-name " + this.state.animClass}
 					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
 					onClick={async () => { 
-					    if (this.state.projectObject.data && this.state.projectObject.data.isComplete) {
-						console.log("uncompleting")
-						await this.state.projectObject.uncomplete()
-						    .then(console.log(this.state.projectObject.isComplete))
-					    } else {
-						console.log("completing")
-						await this.state.projectObject.complete()
-						    .then(console.log(this.state.projectObject.isComplete))
-					    }
 					    this.setState({animClass: "complete-anim"})
 					    setTimeout(() => {
 						this.setState({animClass: ""})
 					    }, 1000);
+
+					    if (this.state.projectObject.data.isComplete)
+                            this.state.projectObject.uncomplete()
+					    else if (!this.state.projectObject.data.isComplete)
+                            this.state.projectObject.complete()
+
+						//} else {
+						//console.log("completing")
+						//this.state.projectObject.complete()
+							//.then(console.log(this.state.projectObject.isComplete))
+						//}
 					}}
 				    >{(window.screen.width >= 400)? 
 					(this.state.projectObject.data && this.state.projectObject.data.isComplete? "Uncomplete" : "Complete") :
