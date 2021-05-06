@@ -101,13 +101,13 @@ function CalendarPopover(props) {
             <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
                 <div id="calendar-wrapper-popover">
                     <div id="calendar-daterow">
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[0]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[1]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[2]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[3]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[4]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[5]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[6]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[0]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[1]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[2]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[3]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[4]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[5]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[6]}</span>
                     </div>
                     <div id="calendar-container">
                         {[...daysBefore,...contentDays,...daysAfter].map(i =>
@@ -186,7 +186,7 @@ function CalendarPopover(props) {
                         if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
-                    }}>{props.gruntman.localizations.clbtd}</div>
+                    }}>{props.localizations.clbtd}</div>
                         <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={()=>{
                             if (dateSelected)
                                 props.onDateSelected(dateSelected);
@@ -283,13 +283,13 @@ function CalendarUnit(props) {
         <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
             <div id="calendar-wrapper-popover">
                 <div id="calendar-daterow">
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[0]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[1]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[2]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[3]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[4]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[5]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[6]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[0]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[1]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[2]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[3]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[4]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[5]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[6]}</span>
                 </div>
                 <div id="calendar-container">
                     {[...daysBefore,...contentDays,...daysAfter].map(i =>
@@ -318,8 +318,8 @@ function CalendarUnit(props) {
                 </div>
                 <div id="calendar-infopanel">
                     <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), {  weekday: 'long' })}</div>
-                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), { month: 'long' })}</div>
+                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString(props.localizations.getLanguage(), {  weekday: 'long' })}</div>
+                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString(props.localizations.getLanguage(), { month: 'long' })}</div>
                     <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
                 </div>
                 {(()=>{
@@ -368,7 +368,7 @@ function CalendarUnit(props) {
                         if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
-                    }}>{props.gruntman.localizations.clbtd}</div>
+                    }}>{props.localizations.clbtd}</div>
                     <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={()=>{
                         if (dateSelected)
                             props.onDateSelected(dateSelected);

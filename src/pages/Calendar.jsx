@@ -241,7 +241,6 @@ class Calendar extends Component {
     } // util func for hiding repeat
 
     componentWillUnmount() {
-        this.props.gruntman.halt(); // when we unmount, halt gruntman? idk what this does  
     }
 
     async refresh() {
@@ -320,10 +319,11 @@ class Calendar extends Component {
                         <div id="calendar-page-wrapper">
                             {(()=>{
                                 if (this.props.isMobile())
-                                    return <CalendarUnit localizations={this.props.localizations} uid={this.props.uid} engine={this.props.engine} isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
+                                    return <CalendarUnit localizations={this.props.localizations} uid={this.props.uid} cm={this.props.cm} isShown={this.state.popoverIsVisible} onDidDismiss={()=>this.setState({popoverIsVisible: false})}  onDateSelected={(async function(d){
                                         let endDate = new Date(d.getTime());
                                         endDate.setHours(23,59,59,60);
-                                        let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, d, endDate);
+                                        let q = new Query(this.props.cm);
+                                        let taskList = (await q.execute(T, (t)=>(d <= t.due && t.due <= endDate)));
                                         this.setState({currentDate: d, taskList});
                                     }).bind(this)}/>
                                 else 
@@ -337,8 +337,8 @@ class Calendar extends Component {
                                     <div class="calendar-page-title">tasks due on</div>
                                     <div class="calendar-page-date">{this.state.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
                                 </span>
-                                {this.state.taskList.map(id=>(
-                                    <Task tid={id} key={id+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine}  availability={this.state.availability[id]} />
+                                {this.state.taskList.map(tsk=>(
+                                    <Task cm={this.props.cm} localizations={this.props.localizations} key={tsk.id} taskObject={tsk}  />
                                 ))}
                             </div>
                             })()}
