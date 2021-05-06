@@ -349,7 +349,7 @@ class Task extends Component {
             return;
 
         if (this.props.onModal)
-            if (document.getElementById("airplane-hanger").contains(e.target))
+            if (document.getElementById("airplane-hanger") && document.getElementById("airplane-hanger").contains(e.target))
                 return;
 
         if (this.state.showRepeat) // if we are showing our repeat

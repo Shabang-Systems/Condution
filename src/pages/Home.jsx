@@ -514,10 +514,9 @@ class Home extends Component {
 
                                         {/* TODO
                                         <Route path="/upcoming" exact render={() => <Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
-                                        <Route path="/calendar" exact render={() => <Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
                                         <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} gruntman={this.props.gruntman} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email} />} />
-                                        <Route path="/completed" exact render={() => <Completed engine={this.props.engine} uid={this.state.workspace} history={history} paginate={this.paginate} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
                                         */}
+                                        <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} localizations={this.props.localizations} />} />
                                         <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
 
                                         <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history}/>} />
