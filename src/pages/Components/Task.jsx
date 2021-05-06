@@ -587,13 +587,14 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                         {/* The. Defer. Date. */}
                                                         <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
-                                                        {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.deferPopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
-                                                            this.props.gruntman.do(
-                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                            )
+                                                        <CalendarPopover localizations={this.props.localizations} cm={this.props.cm} reference={this.deferPopover} uid={this.props.uid} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
+                                                            this.state.taskObj.defer = d;
+//                                                            this.props.gruntman.do(
+                                                                //"task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            //)
                                                             this.setState({deferDate: d});
 
-                                                        }}/>*/}
+                                                        }}/>
                                                         {(() => {
                                                             {/* The. Defer. Date. Input. */}
                                                             const DateInput = ({ value, onClick }) => { 
@@ -660,13 +661,14 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
                                                         <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {/* Due date popover */}
-                                                        {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.duePopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
-                                                            this.props.gruntman.do(
-                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                            )
+                                                        <CalendarPopover localizations={this.props.localizations} reference={this.duePopover} uid={this.props.uid} cm={this.props.cm} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                            this.state.taskObj.due = d;
+//                                                            this.props.gruntman.do(
+                                                                //"task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            //)
                                                             this.setState({dueDate: d});
 
-                                                        }}/>*/}
+                                                        }}/>
                                                         {(() => {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
