@@ -76,6 +76,9 @@
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
 }
+.CodeMirror { 
+    height: 50px !important;
+}
 
     .task-desc:focus{
         background-color: var(--task-textbox-background);
