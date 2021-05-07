@@ -443,15 +443,13 @@ class Query {
      */
 
     static triggerHooks(): void {
-        Hookifier.rude_call(`QueryEngine`);
+        Hookifier.call(`QueryEngine`);
     }
 }
 
 class Hookifier {
     private static hooks: Map<string, Set<Function>> = new Map<string, Set<Function>>();
     private static pendingCalls: Map<string, ReturnType<typeof setTimeout>> = new Map<string, ReturnType<typeof setTimeout>>();
-    private static lastTrigger: Date = new Date();
-    static globalBuffer:number = 100;
 
     /**
      * Push a hook onto the ledger
@@ -492,19 +490,18 @@ class Hookifier {
      */
 
     static call(id:string, timeout:number=200): void {
+        //console.log(`Call requested for ${id}`);
         // If we have a previous call OR there was recently a call
-        if (Hookifier.pendingCalls.has(id))
+        if (Hookifier.pendingCalls.has(id)) {
+            //console.log(`Previous call rejected for ${id}`);
             clearTimeout(Hookifier.pendingCalls.get(id));
+        }
 
         Hookifier.pendingCalls.set(id, setTimeout(()=>{
             if (!Hookifier.hooks.has(id)) return;
-            if (((new Date()).getTime() - Hookifier.lastTrigger.getTime()) < Hookifier.globalBuffer) {
-                Hookifier.call(id, timeout); return;
-            } else {
-                Hookifier.lastTrigger = new Date();
-                let hooks:Set<Function> = Hookifier.hooks.get(id);
-                hooks.forEach((i:Function)=>i());
-            }
+            //console.log(`Calling hooks for ${id}!`);
+            let hooks:Set<Function> = Hookifier.hooks.get(id);
+            //hooks.forEach((i:Function)=>i());
         }, timeout));
     }
 
@@ -518,7 +515,6 @@ class Hookifier {
      */
 
     static rude_call(id:string): void {
-        Hookifier.lastTrigger = new Date();
         let hooks:Set<Function> = Hookifier.hooks.get(id);
         hooks.forEach((i:Function)=>i());
     }
