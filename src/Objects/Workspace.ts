@@ -1,11 +1,10 @@
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
+import { Hookifier } from "./Utils";
 
 export default class Workspace {
     private static cache:Map<string, Workspace> = new Map();
     static readonly databaseBadge = "workspaces";
-
-    private hooks:((arg0: Workspace)=>any)[] = [];
 
     private _id:string;
     private page:Page;
@@ -158,7 +157,7 @@ export default class Workspace {
      */
 
     hook(hookFn: ((arg0: Workspace)=>any)): void {
-        this.hooks.push(hookFn);
+        Hookifier.push(`workspace.${this.id}`, hookFn);
     }
 
     /**
@@ -170,16 +169,16 @@ export default class Workspace {
      */
 
     unhook(hookFn: ((arg0: Workspace)=>any)): void {
-        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`workspace.${this.id}`, hookFn);
     }
 
     private sync = () => {
-        this.hooks.forEach((i:Function)=>i(this));
+        Hookifier.call(`workspace.${this.id}`);
         this.page.set(this.data);
     }
 
     private update = (newData:object) => {
-        this.hooks.forEach((i:Function)=>i(this));
+        Hookifier.call(`workspace.${this.id}`);
         this.data = newData;
     }
 

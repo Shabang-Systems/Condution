@@ -1,5 +1,7 @@
 import type { AdapterData } from "./Utils";
 
+import { Hookifier } from "./Utils";
+
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
 
@@ -8,8 +10,6 @@ class Tag {
 
     private static cache:Map<string, Tag> = new Map();
     static readonly databaseBadge = "tags";
-
-    private hooks:((arg0: Tag)=>any)[] = [];
 
     private _id:string;
     private page:Page;
@@ -199,7 +199,7 @@ class Tag {
      */
 
     hook(hookFn: ((arg0: Tag)=>any)): void {
-        this.hooks.push(hookFn);
+        Hookifier.push(`tag.${this.id}`, hookFn);
     }
 
     /**
@@ -211,7 +211,7 @@ class Tag {
      */
 
     unhook(hookFn: ((arg0: Tag)=>any)): void {
-        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`tag.${this.id}`, hookFn);
     }
     /**
      * the DB badge of this object type
@@ -231,12 +231,12 @@ class Tag {
 
     protected sync = () => {
         this.page.set(this.data);
-        this.hooks.forEach((i:Function)=>i(this));
+        Hookifier.call(`tag.${this.id}`);
     }
 
     private update = (newData:object) => {
         if (this._ready)
-            this.hooks.forEach((i:Function)=>i(this));
+            Hookifier.call(`tag.${this.id}`);
         this.data = newData;
     }
 

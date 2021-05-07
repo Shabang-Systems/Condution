@@ -2,7 +2,7 @@ import type { AdapterData } from "./Utils";
 
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
-import { RepeatRule, RepeatRuleType, Query } from "./Utils";
+import { RepeatRule, RepeatRuleType, Query, Hookifier } from "./Utils";
 import Project, { ProjectSearchAdapter } from "./Project";
 import Tag, { TagSearchAdapter } from "./Tag";
 
@@ -13,8 +13,6 @@ class Task {
 
     private _id:string;
     private _page:Page = null;
-
-    private hooks:((arg0: Task)=>any)[] = [];
 
     protected data:object;
     protected _ready:boolean;
@@ -287,13 +285,12 @@ class Task {
      */
 
     async moveTo(to?:Project): Promise<void> {
-        if (this.data["project"] && this.data["project"] !== "") {
-            let project:Project = await Project.fetch(this.context, this.data["project"])
-            if(project) await (project).dissociate(this);
-        }
+        let project:Project = this.project;
+        if(project) (project).dissociate(this);
+//await 
 
         if (to) {
-            await to.associate(this);
+            to.associate(this);
             this.data["project"] = to.id;
         } else this.data["project"] = "";
 
@@ -382,6 +379,7 @@ class Task {
     set tags(newTags:Tag[]) {
         let newWeight = 1;
         this.data["tags"] = newTags.map((tag:Tag) => {
+            if (!tag) return;
             
             if (!tag.ready)
                 console.warn("CondutionEngine: you provided a tag ${tag.id} that was fetched using lazy_fetch but not yet initialized. Treating weight as 1. This task's tag weight will therefore be wrong for a little. Womp Womp.");
@@ -729,7 +727,7 @@ class Task {
         }
 
         if (withHook)
-            this.hooks.forEach((i:Function)=>i(this));
+            Hookifier.call(`task.${this.id}`);
     }
 
     /**
@@ -743,7 +741,7 @@ class Task {
     hook(hookFn: ((arg0: Task)=>any)): void {
         if (this._page == null) // on hook, make sure that the task is live
             this._page = this.context.page(["tasks", this.id], this.update);
-        this.hooks.push(hookFn);
+        Hookifier.push(`task.${this.id}`, hookFn);
     }
 
     /**
@@ -755,7 +753,7 @@ class Task {
      */
 
     unhook(hookFn: ((arg0: Task)=>any)): void {
-        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`task.${this.id}`, hookFn);
     }
 
     private get page() {
@@ -770,13 +768,13 @@ class Task {
 
     protected sync = () => {
         this.page.set(this.data);
-        this.hooks.forEach((i:Function)=>i(this));
+        Hookifier.call(`task.${this.id}`);
         Query.triggerHooks();
     }
 
     private update = (newData:object) => {
         if (this._ready)  {
-            this.hooks.forEach((i:Function)=>i(this));
+            Hookifier.call(`task.${this.id}`);
             this.calculateTreeParams(true);
         }
         this.data = newData;

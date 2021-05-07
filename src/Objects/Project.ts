@@ -2,7 +2,7 @@ import type { AdapterData } from "./Utils";
 
 import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
 import Task, { TaskSearchAdapter } from "./Task";
-import { Query } from "./Utils";
+import { Query, Hookifier } from "./Utils";
 import { Context } from "./EngineManager";
 
 class Project {
@@ -12,8 +12,6 @@ class Project {
 
     private _id:string;
     private _page:Page;
-
-    private hooks:((arg0: Project)=>any)[] = [];
 
     protected data:object;
     protected _weight:number;
@@ -680,7 +678,7 @@ class Project {
         }
 
         if (withHook)
-            this.hooks.forEach((i:Function)=>i("calculate"));
+            Hookifier.call(`project.${this.id}`);
     }
     
     /**
@@ -694,7 +692,7 @@ class Project {
     hook(hookFn: ((arg0: Project)=>any)): void {
         if (this._page == null) // on hook, make sure that the task is live
             this._page = this.context.page(["projects", this.id], this.update);
-        this.hooks.push(hookFn);
+        Hookifier.push(`project.${this.id}`, hookFn);
     }
 
     /**
@@ -706,7 +704,7 @@ class Project {
      */
 
     unhook(hookFn: ((arg0: Project)=>any)): void {
-        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`project.${this.id}`, hookFn);
     }
 
     private get page() {
@@ -727,12 +725,12 @@ class Project {
 
     protected sync = () => {
         this.page.set(this.data);
-        this.hooks.forEach((i:Function)=>i("sync"));
+        Hookifier.call(`project.${this.id}`);
     }
 
     private update = (newData:object) => {
         if (this._ready) {
-            this.hooks.forEach((i:Function)=>i("update"));
+            Hookifier.call(`project.${this.id}`);
             this.calculateTreeParams(true);
         }
         this.data = newData;

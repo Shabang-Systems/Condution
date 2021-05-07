@@ -229,7 +229,6 @@ type Filterable = Task|Tag|Project|Perspective|(Task | Project)[];
 
 class Query {
     cm: Context;
-    private static hooks:Function[] = [];
     private static hasIndexed:boolean = false;
 
     private static taskPages:object[];
@@ -266,7 +265,7 @@ class Query {
         delete Query.tagPages;
 
         Query.hasIndexed = false;
-        Query.hooks.map((i:Function)=>i(this));
+        Hookifier.call(`QueryEngine`);
     }
 
     /**
@@ -283,25 +282,25 @@ class Query {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
             if (Query.hasIndexed)
-                Query.hooks.map((i:Function)=>i(this));
+                Hookifier.call(`QueryEngine`);
         }).data();
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
             if (Query.hasIndexed)
-                Query.hooks.map((i:Function)=>i(this));
+                Hookifier.call(`QueryEngine`);
         }).data();
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
             if (Query.hasIndexed)
-                Query.hooks.map((i:Function)=>i(this));
+                Hookifier.call(`QueryEngine`);
         }).data();
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
             if (Query.hasIndexed)
-                Query.hooks.map((i:Function)=>i(this));
+                Hookifier.call(`QueryEngine`);
         }).data();
 
         Query.hasIndexed = true;
@@ -318,7 +317,7 @@ class Query {
      */
 
     static hook(hookFn: Function): void {
-        Query.hooks.push(hookFn);
+        Hookifier.push(`QueryEngine`, hookFn);
     }
 
     /**
@@ -331,7 +330,7 @@ class Query {
      */
 
     static unhook(hookFn: Function): void {
-        Query.hooks = Query.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`QueryEngine`, hookFn);
     }
 
     /**
@@ -444,10 +443,86 @@ class Query {
      */
 
     static triggerHooks(): void {
-        Query.hooks.map((i:Function)=>i(this));
+        Hookifier.rude_call(`QueryEngine`);
     }
 }
 
+class Hookifier {
+    private static hooks: Map<string, Set<Function>> = new Map<string, Set<Function>>();
+    private static pendingCalls: Map<string, ReturnType<typeof setTimeout>> = new Map<string, ReturnType<typeof setTimeout>>();
+    private static lastTrigger: Date = new Date();
+    static globalBuffer:number = 100;
+
+    /**
+     * Push a hook onto the ledger
+     *
+     * @param{string} id     the id of the hook collection
+     * @param{Function} fn     the hook function to run 
+     * @returns{void}
+     */
+
+    static push(id:string, fn:Function): void {
+        if (!Hookifier.hooks.has(id))
+            Hookifier.hooks.set(id, new Set<Function>());
+        let hooks:Set<Function> = Hookifier.hooks.get(id);
+        hooks.add(fn);
+        Hookifier.hooks.set(id, hooks);
+    }
+
+    /**
+     * Remove a hook onto the ledger
+     *
+     * @param{string} id     the id of the hook collection
+     * @param{Function} fn     the hook function to run 
+     * @returns{void}
+     */
+
+    static remove(id:string, fn:Function): void {
+        let hooks:Set<Function> = Hookifier.hooks.get(id);
+        hooks.delete(fn);
+        Hookifier.hooks.set(id, hooks);
+    }
+
+    /**
+     * Gracefully call hook collection
+     *
+     * @param{string} id    the id of the hook collection
+     * @param{number?} timeout    the buffer time for hook call
+     * @returns{void}
+     */
+
+    static call(id:string, timeout:number=200): void {
+        // If we have a previous call OR there was recently a call
+        if (Hookifier.pendingCalls.has(id))
+            clearTimeout(Hookifier.pendingCalls.get(id));
+
+        Hookifier.pendingCalls.set(id, setTimeout(()=>{
+            if (!Hookifier.hooks.has(id)) return;
+            if (((new Date()).getTime() - Hookifier.lastTrigger.getTime()) < Hookifier.globalBuffer) {
+                Hookifier.call(id, timeout); return;
+            } else {
+                Hookifier.lastTrigger = new Date();
+                let hooks:Set<Function> = Hookifier.hooks.get(id);
+                hooks.forEach((i:Function)=>i());
+            }
+        }, timeout));
+    }
+
+
+    /**
+     * Call hook collection right this second
+     *
+     * @param{string} id    the id of the hook collection
+     * @param{number?} timeout    the buffer time for hook call
+     * @returns{void}
+     */
+
+    static rude_call(id:string): void {
+        Hookifier.lastTrigger = new Date();
+        let hooks:Set<Function> = Hookifier.hooks.get(id);
+        hooks.forEach((i:Function)=>i());
+    }
+}
 
 /**
  * Flush all caches, and cause everything to
@@ -465,6 +540,6 @@ function GloballySelfDestruct() {
     TODOFlushFirebaseData();
 }
 
-export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct };
+export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct, Hookifier };
 export type { AdapterData, Filterable };
 

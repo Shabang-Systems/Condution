@@ -3,7 +3,7 @@ import Task from "./Objects/Task";
 import Project from "./Objects/Project";
 import Tag from "./Objects/Tag";
 
-import { Query } from "./Objects/Utils";
+import { Query, Hookifier } from "./Objects/Utils";
 import { Context } from "./Objects/EngineManager";
 import type { Filterable } from "./Objects/Utils";
 
@@ -22,7 +22,6 @@ import type { Filterable } from "./Objects/Utils";
 abstract class Widget {
     protected abstract name:string;
     protected query:Query;
-    protected hooks:Function[] = [];
 
     /**
      * Execute the widget
@@ -46,7 +45,7 @@ abstract class Widget {
      */
 
     hook(hookFn: Function): void {
-        this.hooks.push(hookFn);
+        Hookifier.push(`Widget.${this.name}`, hookFn);
         Query.hook(hookFn);
     }
 
@@ -59,7 +58,7 @@ abstract class Widget {
      */
 
     unhook(hookFn: Function): void {
-        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`Widget.${this.name}`, hookFn);
         Query.unhook(hookFn);
     }
 }

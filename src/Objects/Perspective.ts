@@ -4,7 +4,7 @@ import Task from "./Task";
 import Tag from "./Tag";
 import Project from "./Project";
 
-import { Query } from "./Utils";
+import { Query, Hookifier } from "./Utils";
 import { Context } from "./EngineManager";
 
 import { Page, Collection } from "../Storage/Backends/Backend";
@@ -400,8 +400,6 @@ class Perspective {
     private static cache:Map<string, Perspective> = new Map();
     static readonly databaseBadge = "perspectives";
 
-    private hooks:((arg0: Perspective)=>any)[] = [];
-
     private _id:string;
     private page:Page;
 
@@ -668,7 +666,7 @@ class Perspective {
      */
 
     hook(hookFn: ((arg0: Perspective)=>any)): void {
-        this.hooks.push(hookFn);
+        Hookifier.push(`perspective.${this.id}`, hookFn);
         Query.hook(hookFn);
     }
 
@@ -681,7 +679,7 @@ class Perspective {
      */
 
     unhook(hookFn: ((arg0: Perspective)=>any)): void {
-        this.hooks = this.hooks.filter((i:any) => i !== hookFn);
+        Hookifier.remove(`perspective.${this.id}`, hookFn);
         Query.unhook(hookFn);
     }
 
@@ -702,11 +700,11 @@ class Perspective {
 
     protected sync = () => {
         this.page.set(this.data);
-        this.hooks.forEach((i:Function)=>i(this));
+        Hookifier.call(`perspective.${this.id}`);
     }
 
     private update = (newData:object) => {
-        this.hooks.forEach((i:Function)=>i(this));
+        Hookifier.call(`perspective.${this.id}`);
         this.data = newData;
     }
 
