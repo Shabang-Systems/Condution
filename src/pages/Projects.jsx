@@ -137,6 +137,7 @@ class Projects extends Component { // define the component
     }
 
     async reloadData(he) {
+        console.log("this got called for ", this.state.name);
         if (this.state.onTaskCreate) return;
 	//let itemList = await this.state.projectObject.execute();
 	//this.setState({
@@ -147,7 +148,6 @@ class Projects extends Component { // define the component
 	//console.log(this.state.itemList)
 
         let itemList = await this.state.projectObject.async_children;
-        console.log(this.state.projectObject.uncompleteWeight, this.state.projectObject.weight, he);
 	
 	this.setState({
         itemList: this.state.projectObject.isComplete ? itemList : itemList.filter((i)=>!i.isComplete),

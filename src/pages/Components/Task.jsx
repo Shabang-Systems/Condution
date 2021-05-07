@@ -631,24 +631,21 @@ class Task extends Component {
                                                                     <input 
                                                                         tabIndex='0'
                                                                         className={"task-datebox "+this.state.decoration}
-                                                                        readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
-                                                                            // Register a scheduler to deal with React's onChange
-                                                                            // Search for the word FANCYCHANGE to read my spheal on this
-                                                                            // DATEHANDLING is here too. If you are looking for that, stop searching
-                                                                            let d = chrono.parseDate(e.target.value); // NLP that date!
-                                                                            if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
-                                                                        }} onBlur={()=>{
-                                                                            if (this.state.deferDate)
-                                                                                this.state.taskObj.defer = this.state.deferDate;
-                                                                        }} onFocus={(e) => {
+                                                                        readOnly={(getPlatforms().includes("mobile"))} defaultValue={value} onKeyPress={(e)=>{
+                                                                            let d = chrono.parseDate(e.target.value);
+                                                                            if (e.key==="Enter" && d)
+                                                                                this.setState({deferDate: d}, ()=>{this.state.taskObj.defer = this.state.deferDate});
+
+                                                                        }} 
+                                                                        onFocus={(e) => {
                                                                             if (getPlatforms().includes("mobile"))
                                                                                 this.setState({deferPopoverShown: true})
                                                                             else {
                                                                                 onClick();
                                                                                 e.target.focus();
-                                                                        }
+                                                                            }
 
-                                                                    }}
+                                                                        }}
                                                                     />
                                                                 );
                                                             };
@@ -703,17 +700,15 @@ class Task extends Component {
                                                                 return (
                                                                     <input 
                                                                         tabIndex='0'
-                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
-                                                                            // Register a scheduler to deal with React's onChange
-                                                                            // Search for the word FANCYCHANGE to read my spheal on this
-                                                                            // Search for the word DATEHANDLING for what the heck the code actually does
-
+                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onKeyPress={(e)=>{
                                                                             let d = chrono.parseDate(e.target.value);
-                                                                            if (d) this.setState({dueDate: d});
-                                                                        }} onBlur={()=>{
-                                                                            if (this.state.dueDate)
-                                                                                this.state.taskObj.due = this.state.dueDate;
-                                                                        }} onFocus={(e) => {
+                                                                            if (e.key==="Enter" && d)
+                                                                                this.setState({dueDate: d}, ()=>{this.state.taskObj.due= this.state.deferDate});
+
+                                                                        }}
+
+
+onFocus={(e) => {
                                                                             if (getPlatforms().includes("mobile"))
                                                                                 this.setState({duePopoverShown: true})
                                                                             else {
@@ -805,16 +800,16 @@ class Task extends Component {
                                                                 menuPortal: provided => ({ ...provided, zIndex: "99999 !important" })
                                                             }}
                                                             menuPortalTarget={document.body}
-                                                            value={this.state.projectDatapack.filter(option => option.value === this.state.project)}
+                                                            value={{value: this.state.project, label: this.state.project?this.state.project.name:""}}
                                                             onChange={(e)=>{
                                                                 if (!e) {
                                                                     this.setState({project: null});
-                                                                    this.state.taskObj.moveTo(null);
+     this.state.taskObj.moveTo(null);
                                                                     return;
                                                                 }
 
                                                                 this.setState({project: e.value});
-                                                                this.state.taskObj.moveTo(e.value);
+ this.state.taskObj.moveTo(e.value);
                                                             }}
                                                         />
                                                     </span>
