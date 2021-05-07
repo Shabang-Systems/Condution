@@ -53,7 +53,7 @@
     transition-timing-function: ease-in-out;
     border: 5px solid red;
 }
-.task-desc {
+.cm-s-task-desc {
     border: 5px solid red;
     font-size: 10pt;
     font-weight:300;
@@ -76,17 +76,58 @@
     transition-duration: 200ms;
     transition-timing-function: ease-in-out;
 }
-.CodeMirror { 
-    height: 50px !important;
+
+.box {
+    background-color: red;
 }
 
-    .task-desc:focus{
-        background-color: var(--task-textbox-background);
-    }
+.cm-content {
+    background-color: red;
 
-    .task-desc::placeholder{
-        color: var(--task-textbox-placeholder);
-    }
+}
+
+.CodeMirror { 
+    /*height: 50px !important;*/
+    /*background-color: red !important;*/
+    /*border: 1px solid red;*/
+    /*border: 5px solid red;*/
+    font-size: 10pt !important;
+    font-weight:300 !important;
+    background-color:inherit !important;
+    color: var(--task-textbox-text) !important;
+    margin: 5px 5px 0 0 !important;
+    padding: 2px 1px 0 5px !important;
+    border: 0px !important;
+    display: block !important;
+    width: 100% !important;
+    height: 50px !important;
+    resize: none !important;
+    -moz-border-radius: 3px !important;
+    -webkit-border-radius: 3px !important;
+    border-radius: 3px !important;
+    -webkit-transition-property: all !important;
+    -webkit-transition-duration: 200ms !important;
+    -webkit-transition-timing-function: ease-in-out !important;
+    transition-property: all !important;
+    transition-duration: 200ms !important;
+    transition-timing-function: ease-in-out !important;
+}
+.CodeMirror:focus{
+    /*background-color: var(--task-textbox-background) !important;*/
+    background-color: red !important;
+}
+
+.CodeMirror::placeholder{
+    color: var(--task-textbox-placeholder) !important;
+}
+
+.task-desc:focus{
+    background-color: var(--task-textbox-background);
+}
+
+.task-desc::placeholder{
+    color: var(--task-textbox-placeholder);
+}
 
 .task-name {
     font-weight:400;
