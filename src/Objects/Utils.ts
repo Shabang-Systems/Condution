@@ -435,6 +435,17 @@ class Query {
         return await this.execute(objType, null, conditions);
     };
 
+
+    /**
+     * Trigger all hooks
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static triggerHooks(): void {
+        Query.hooks.map((i:Function)=>i(this));
+    }
 }
 
 

@@ -771,6 +771,7 @@ class Task {
     protected sync = () => {
         this.page.set(this.data);
         this.hooks.forEach((i:Function)=>i(this));
+        Query.triggerHooks();
     }
 
     private update = (newData:object) => {

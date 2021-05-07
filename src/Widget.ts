@@ -187,6 +187,11 @@ class TagsPaneWidget extends Widget {
 class ProjectDatapackWidget extends Widget {
     name = "project-datapack-widget"
     private static dataPromise:Promise<object[]>;
+    
+    constructor(context:Context) {
+        super(context);
+        this.calculate();
+    }
 
     async execute() {
         if (!ProjectDatapackWidget.dataPromise)
@@ -254,6 +259,10 @@ class TagDatapackWidget extends Widget {
     name = "tag-datapack-widget"
     private static dataPromise:Promise<object[]>;
 
+    constructor(context:Context) {
+        super(context);
+        this.calculate();
+    }
 
     async execute() {
         if (!TagDatapackWidget.dataPromise)
