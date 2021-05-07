@@ -285,7 +285,43 @@ class TagDatapackWidget extends Widget {
     }
 }
 
+/**
+ * Widget for Upcoming timeline
+ */
 
+class TimelineWidget extends Widget {
+    name = "timeline-pane-widget"
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget };
+    async execute() {
+        let timeline:Task[] = await this.query.execute(Task, (t:Task)=>(t.due && new Date() < t.due && t.due < new Date(3021, 1,1))) as Task[];
+        let DSWidget = new DueSoonWidget(this.query.cm);
+        let ds:Task[] = await DSWidget.execute();
+
+        timeline = timeline.filter((x)=>!(ds.includes(x[0])));
+        timeline = timeline.sort((a:Task, b:Task) => a.due.getTime() - b.due.getTime());
+        
+        let isSameDateAs:Function = function(aDate:Date, pDate:Date) {
+            return (
+                aDate.getFullYear() === pDate.getFullYear() &&
+                aDate.getMonth() === pDate.getMonth() &&
+                aDate.getDate() === pDate.getDate()
+            );
+        }
+
+        let refrenceDate = new Date();
+        let tcontent = [];
+        for (let task of timeline) {
+            let due = task.due;
+            if (!isSameDateAs(due,refrenceDate)) {
+                tcontent.push({type:"label", content: due});
+                refrenceDate = due;
+            }
+            tcontent.push({type:"task", content: task});
+        }
+
+        return tcontent;
+    }
+}
+
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget };
 //new line here
