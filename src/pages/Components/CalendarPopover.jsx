@@ -76,7 +76,7 @@ function CalendarPopover(props) {
             let taskList = await q.execute(T, (tsk => (firstDayMonth <= tsk.due && tsk.due <= lastDayMonth && !tsk.isComplete)));
             await Promise.all(taskList.map(task => {
                 let weight = task.weight;
-                let date = task.due;
+                let date = task.due ? task.due : new Date();
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
                 if(map.has(time))

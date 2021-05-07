@@ -446,7 +446,7 @@ class Task extends Component {
 
                                 {/* Gotta get those on hover tips */}
                                 {/* And load up + hide the repeat UI, too! */}
-                                <Repeat taskObj={this.props.taskObject} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
+                                <Repeat taskObj={this.state.taskObj} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
                                 {/* As well as load up + hide the tag editor!*/}
                                 {<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm} localizations={this.props.localizations}/>}
                                 
@@ -464,28 +464,18 @@ class Task extends Component {
                                         onChange={()=>{
                                             //console.log(this.state.taskObj.isComplete)//;
                                             if (this.state.isComplete) {
-                                                this.setState({isComplete: false}, ()=>{
-                                                        if (this.props.completeHook)
-                                                            setTimeout(()=>this.props.completeHook(), 1000); // let the task complete, then refresh
-
-                                                    });
-                                                this.state.taskObj.uncomplete()
+                                                this.setState({isComplete: false}, ()=>setTimeout(()=>this.state.taskObj.uncomplete(), 800));
+                                                
                                             } else {
                                                 if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
-                                                    this.setState({activelyRepeating: true}, async ()=> {
-                                                        await this.state.taskObj.complete()
+                                                    this.setState({activelyRepeating: true, isComplete:true}, async ()=> {
+                                                        setTimeout(()=>this.state.taskObj.complete(), 800)
                                                         this.setState({activelyRepeating: false});
                                                     });
                                                 else {
-                                                    this.setState({isComplete: true}, ()=>{
-                                                        if (this.props.completeHook)
-                                                            setTimeout(()=>this.props.completeHook(), 1000); // let the task complete, then refresh
-
-                                                    });
-                                                    this.state.taskObj.complete();
+                                                    this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
                                                 }
                                             }
-
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
                                     />
@@ -539,7 +529,8 @@ class Task extends Component {
                                                     
                                                 {/*Delete icon*/}
                                                     <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
+                                                        this.state.taskObj.delete();
+                                                        //this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
                                                         this.closeTask();
 
                                                     }}><i className="fas fa-trash" style={{margin: 3, fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
@@ -551,7 +542,7 @@ class Task extends Component {
                                                     <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{this.setState({isFloating:!this.state.isFloating}, ()=>this.state.taskObj.isFloating = this.state.isFloating)}}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
+                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: (this.state.taskObj && this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due)? "var(--task-icon-ring-highlighted)" : "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: (this.state.taskObj && this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due)?"var(--task-icon-highlighted)": "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
 
                                                     {/* Notification icon that, on click, shows notify popover */}
                                                     {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{

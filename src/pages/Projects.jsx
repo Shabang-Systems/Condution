@@ -128,6 +128,7 @@ class Projects extends Component { // define the component
     async load() {
 	let project = await Project.fetch(this.props.cm, this.props.id)
 	project.hook(this.reloadData);
+    project.calculateTreeParams(true);
 
 	this.setState({
 	    projectObject: project,
@@ -135,7 +136,7 @@ class Projects extends Component { // define the component
 	}, this.reloadData)
     }
 
-    async reloadData() {
+    async reloadData(he) {
         if (this.state.onTaskCreate) return;
 	//let itemList = await this.state.projectObject.execute();
 	//this.setState({
@@ -146,6 +147,7 @@ class Projects extends Component { // define the component
 	//console.log(this.state.itemList)
 
         let itemList = await this.state.projectObject.async_children;
+        console.log(this.state.projectObject.uncompleteWeight, this.state.projectObject.weight, he);
 	
 	this.setState({
         itemList: this.state.projectObject.isComplete ? itemList : itemList.filter((i)=>!i.isComplete),
@@ -154,7 +156,6 @@ class Projects extends Component { // define the component
 	    initialRenderingDone: true,
         weight: this.state.projectObject.weight,
         pendingWeight: this.state.projectObject.uncompleteWeight,
-
 	})
 	//console.log(this.state.projectObject, "parnent")
 	//console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
@@ -269,15 +270,16 @@ class Projects extends Component { // define the component
 				    <a className={"complete-name " + this.state.animClass}
 					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
 					onClick={async () => { 
-					    this.setState({animClass: "complete-anim"})
-					    setTimeout(() => {
-						this.setState({animClass: ""})
-					    }, 1000);
+                        this.setState({animClass: "complete-anim"})
+                        setTimeout(() => {
+                            this.setState({animClass: ""}, ()=>{
+                                if (this.state.projectObject.data.isComplete)
+                                    this.state.projectObject.uncomplete()
+                                else if (!this.state.projectObject.data.isComplete)
+                                    this.state.projectObject.complete()
+                            });
+                        }, 100);
 
-					    if (this.state.projectObject.data.isComplete)
-                            this.state.projectObject.uncomplete()
-					    else if (!this.state.projectObject.data.isComplete)
-                            this.state.projectObject.complete()
 
 						//} else {
 						//console.log("completing")
@@ -396,9 +398,6 @@ class Projects extends Component { // define the component
 					startingCompleted={this.state.projectObject.isComplete}
                         refreshHook={()=>{
                             this.setState({onTaskCreate: false}, ()=>this.reloadData());
-                        }}
-                        completeHook={async ()=>{
-                            await this.state.projectObject.calculateTreeParams();
                         }}
 
 				    />
