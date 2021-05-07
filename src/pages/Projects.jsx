@@ -137,7 +137,6 @@ class Projects extends Component { // define the component
     }
 
     async reloadData(he) {
-        console.log("this got called for ", this.state.name);
         if (this.state.onTaskCreate) return;
 	//let itemList = await this.state.projectObject.execute();
 	//this.setState({
