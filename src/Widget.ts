@@ -293,7 +293,7 @@ class TimelineWidget extends Widget {
     name = "timeline-pane-widget"
 
     async execute() {
-        let timeline:Task[] = await this.query.execute(Task, (t:Task)=>(t.due && new Date() < t.due && t.due < new Date(3021, 1,1))) as Task[];
+        let timeline:Task[] = await this.query.execute(Task, (t:Task)=>(!t.isComplete && t.due && new Date() < t.due && t.due < new Date(3021, 1,1))) as Task[];
         let DSWidget = new DueSoonWidget(this.query.cm);
         let ds:Task[] = await DSWidget.execute();
 
