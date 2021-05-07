@@ -635,7 +635,7 @@ class Task extends Component {
                                                                         readOnly={(getPlatforms().includes("mobile"))} defaultValue={value} onKeyPress={(e)=>{
                                                                             let d = chrono.parseDate(e.target.value);
                                                                             if (e.key==="Enter" && d)
-                                                                                this.setState({deferDate: d}, ()=>{this.state.taskObj.defer = this.state.deferDate});
+                                                                                this.setState({deferDate: d}, ()=>{this.state.taskObj.defer = d});
 
                                                                         }} 
                                                                         onFocus={(e) => {
@@ -704,7 +704,7 @@ class Task extends Component {
                                                                         className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onKeyPress={(e)=>{
                                                                             let d = chrono.parseDate(e.target.value);
                                                                             if (e.key==="Enter" && d)
-                                                                                this.setState({dueDate: d}, ()=>{this.state.taskObj.due= this.state.deferDate});
+                                                                                this.setState({dueDate: d}, ()=>{this.state.taskObj.due= d});
 
                                                                         }}
 
