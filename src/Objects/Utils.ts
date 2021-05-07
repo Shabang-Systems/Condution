@@ -486,10 +486,6 @@ class Hookifier {
      */
 
     static push(id:string, fn:Function): void {
-        if (Hookifier._frozen) {
-            Hookifier.freezeStack.add(id); return;
-        }
-
         if (!Hookifier.hooks.has(id))
             Hookifier.hooks.set(id, new Set<Function>());
         let hooks:Set<Function> = Hookifier.hooks.get(id);
@@ -529,6 +525,10 @@ class Hookifier {
 
         Hookifier.pendingCalls.set(id, setTimeout(()=>{
             if (!Hookifier.hooks.has(id)) return;
+            if (Hookifier._frozen) {
+                Hookifier.freezeStack.add(id); return;
+            }
+
             //console.log(`Calling hooks for ${id}!`);
             let hooks:Set<Function> = Hookifier.hooks.get(id);
             hooks.forEach((i:Function)=>i());
@@ -545,6 +545,9 @@ class Hookifier {
      */
 
     static rude_call(id:string): void {
+        if (Hookifier._frozen) {
+            Hookifier.freezeStack.add(id); return;
+        }
         let hooks:Set<Function> = Hookifier.hooks.get(id);
         hooks.forEach((i:Function)=>i());
     }
