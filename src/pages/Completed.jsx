@@ -76,7 +76,6 @@ class Completed extends Component {
 
 
         this.setState({taskList: taskArr, initialRenderingDone: true});
-	console.log(this.state.taskList, "tasksss")
     }
 
     handleFetchMore() {
@@ -152,7 +151,7 @@ class Completed extends Component {
                             {this.state.taskList? (this.state.taskList.
 				    slice(0, 10*this.state.tasksShown).
 				    map((content, i) => (
-                                <div style={{marginLeft: 10, marginRight: 10}}>
+                        <div key={i} style={{marginLeft: 10, marginRight: 10}}>
 				    {/*console.log("something here??", this.state.taskList[4])*/}
 				    {(content.type == "label")?  
 

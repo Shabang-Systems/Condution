@@ -14,7 +14,7 @@ import BlkArt from './Components/BlkArt';
 
 import T from "../backend/src/Objects/Task.ts";
 import W from "../backend/src/Objects/Workspace.ts";
-import { InboxWidget, DueSoonWidget }  from "../backend/src/Widget.ts";
+import { InboxWidget, DueSoonWidget, TimelineWidget }  from "../backend/src/Widget.ts";
 
 import WorkspaceModal from './Components/WorkspaceModal';
 
@@ -61,6 +61,7 @@ class Upcoming extends Component { // define the component
             initialRenderingDone: false,
             inboxWidget: new InboxWidget(this.props.cm),
             dsWidget: new DueSoonWidget(this.props.cm),
+            timelineWidget: new TimelineWidget(this.props.cm),
         };
 
         this.updatePrefix = this.random();
@@ -103,7 +104,7 @@ class Upcoming extends Component { // define the component
         //};
         //projectDB.map(proj=>buildSelectString(proj));
 
-        //this.updatePrefix = this.random();
+        //this.up//datePrefix = this.random();
 
         //let timeline = await this.props.engine.db.selectTasksInRange(this.props.uid, new Date(), new Date(2100, 1, 1), true);
         
@@ -152,7 +153,7 @@ class Upcoming extends Component { // define the component
         let ds = (await this.state.dsWidget.execute());
         let dsids = ds.map(i=>i.id);
         inbox = inbox.filter(i=>!dsids.includes(i.id));
-        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds});
+        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute())});
     }
 
     componentDidMount() {
@@ -309,9 +310,15 @@ class Upcoming extends Component { // define the component
                                         if (this.state.timelineShown)
                                             return this.state.timeline.map(timelineItem => {
                                                 if (timelineItem.type === "task")
-                                                    return <Task tid={timelineItem.content} key={timelineItem.content+"-"+this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability[timelineItem.content]} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>
-                                                        else if (timelineItem.type === "label")
-                                                    return <div className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString(this.props.localizations.getLanguage(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
+                                                    return (<Task 
+                                                        key={timelineItem.content.id}
+                                                        cm={this.props.cm} 
+                                                        localizations={this.props.localizations} 
+                                                        taskObject={timelineItem.content} 
+                                                    />)
+
+                                                else if (timelineItem.type === "label")
+                                                    return <div key={`timeline-${timelineItem.content.getTime()}-${this.random()}`} className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString(this.props.localizations.getLanguage(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
 
 
                                             })
