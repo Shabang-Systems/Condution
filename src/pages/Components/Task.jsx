@@ -41,7 +41,7 @@ import T from "../../backend/src/Objects/Task.ts";
 import Tag from "../../backend/src/Objects/Tag.ts";
 import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Widget";
 
-import { RepeatRule, RepeatRuleType }  from "../../backend/src/Objects/Utils.ts";
+import { RepeatRule, RepeatRuleType, Hookifier }  from "../../backend/src/Objects/Utils.ts";
 import {Controlled as CodeMirror} from 'react-codemirror2'
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
@@ -304,7 +304,7 @@ class Task extends Component {
         if (this.state.haveBeenExpanded)
             this.setState({expanded: true});
         else 
-            this.setState({haveBeenExpanded: true}, ()=>this.setState({expanded: true}));
+            this.setState({haveBeenExpanded: true, expanded:true});
     }// util function to open a task
 
     _explode() {
@@ -314,7 +314,6 @@ class Task extends Component {
     }
 
     detectOutsideClick(e) {
-
         if (this.me.current) // if we are mounted
             if (this.me.current.contains(e.target)) // if we are clicking me
                 return; //click inside
@@ -363,7 +362,7 @@ class Task extends Component {
 
         if (this.state.showTagEditor) // if we are showing TagEditor
             return; // click inside
-
+        //
         //otherwise,
         this.closeTask();
     }
@@ -379,6 +378,7 @@ class Task extends Component {
                 document.getElementById("abtib").style.display = "none";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(false); // disable drag
+            Hookifier.freeze();
             //this.props.gruntman.lockUpdates(); // tell gruntman to chill
         }
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) { // if we closed a task
@@ -389,6 +389,7 @@ class Task extends Component {
             if (this.props.refreshHook)
                 setTimeout(()=>this.props.refreshHook(), 300); // let the task close, then refresh
             //this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
+            setTimeout(()=>Hookifier.unfreeze(), 500);
         }
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
             this.openTask(); // open task
@@ -400,7 +401,7 @@ class Task extends Component {
     render() {
 
         return (
-            <div>
+            <div ref={this.me}>
 
                 {/*animation factory to orchistrate animations*/}
 
@@ -433,7 +434,7 @@ class Task extends Component {
                                 }}
                                 className={"task "+(this.state.expanded?"expanded":"collapsed")} 
 
-                                ref={this.me} 
+                                
 
                                 style={{
                                     minHeight: animatedProps.taskHeight, 

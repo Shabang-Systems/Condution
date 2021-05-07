@@ -123,14 +123,12 @@ class TagEditor extends Component {
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
-                                <>
-                                    <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
-                                        <div className="tag-name">
-                                            {tag.name}
-                                        </div>
-                                        <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e, index)}><i className="fa fa-times x"></i></a>
+                                <div key={index} className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
+                                    <div className="tag-name">
+                                        {tag.name}
                                     </div>
-                                </>
+                                    <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e, index)}><i className="fa fa-times x"></i></a>
+                                </div>
                             )
                         })}
                         <div className="new-tag-button" onClick={ () => {this.newTagClicked()}}>

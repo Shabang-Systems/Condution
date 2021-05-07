@@ -259,6 +259,7 @@ class Upcoming extends Component { // define the component
                                     {this.state.inbox.map(t=>
                                         (
                                         <Task 
+                                            key={t.id}
                                             cm={this.props.cm} 
                                             localizations={this.props.localizations} 
                                             taskObject={t} 
@@ -274,6 +275,7 @@ class Upcoming extends Component { // define the component
                                     {this.state.dueSoon.map(t=>
                                         (
                                             <Task 
+                                                key={t.id}
                                                 cm={this.props.cm} 
                                                 localizations={this.props.localizations} 
                                                 taskObject={t} 
