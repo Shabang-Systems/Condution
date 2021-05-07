@@ -223,6 +223,7 @@ class Project {
     async sequential() : Promise<void> {
         this.data["is_sequential"] = true;
         await this.calculateTreeParams(true);
+        this.callHooks();
         this.sync();
     }
 
@@ -237,6 +238,7 @@ class Project {
     async parallel() : Promise<void> {
         this.data["is_sequential"] = false;
         await this.calculateTreeParams(true);
+        this.callHooks();
         this.sync();
     }
 
@@ -655,7 +657,7 @@ class Project {
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
                 // Flush their availibilty
-                await i.calculateTreeParams(withHook);
+                await i.calculateTreeParams();
 
                 // Return their weight
                 return i.weight;
@@ -705,6 +707,21 @@ class Project {
 
     unhook(hookFn: ((arg0: Project)=>any)): void {
         Hookifier.remove(`project.${this.id}`, hookFn);
+    }
+
+    /**
+     * Util function to call hooks
+     * @async
+     *
+     * @param{boolean} recursive    call child's hooks?
+     * @returns{Promise<void>}
+     */
+
+    async callHooks(): Promise<void> {
+        Hookifier.call(`project.${this.id}`);
+
+        let children:(Project|Task)[] = await this.async_children;
+        children.map((i:(Project|Task)) => i.callHooks());
     }
 
     private get page() {

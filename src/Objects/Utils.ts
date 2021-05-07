@@ -489,7 +489,7 @@ class Hookifier {
      * @returns{void}
      */
 
-    static call(id:string, timeout:number=200): void {
+    static call(id:string, timeout:number=100): void {
         //console.log(`Call requested for ${id}`);
         // If we have a previous call OR there was recently a call
         if (Hookifier.pendingCalls.has(id)) {

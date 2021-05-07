@@ -622,7 +622,7 @@ class Task {
         this.sync();
 
         if (this.project)
-            await (await this.async_project).calculateTreeParams();
+            await (await this.async_project).calculateTreeParams(true);
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
@@ -754,6 +754,16 @@ class Task {
 
     unhook(hookFn: ((arg0: Task)=>any)): void {
         Hookifier.remove(`task.${this.id}`, hookFn);
+    }
+
+    /**
+     * Util function to call hooks
+     *
+     * @returns{Promise<void>}
+     */
+
+    async callHooks(): Promise<void> {
+        Hookifier.call(`task.${this.id}`);
     }
 
     private get page() {
