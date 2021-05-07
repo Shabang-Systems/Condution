@@ -450,6 +450,32 @@ class Query {
 class Hookifier {
     private static hooks: Map<string, Set<Function>> = new Map<string, Set<Function>>();
     private static pendingCalls: Map<string, ReturnType<typeof setTimeout>> = new Map<string, ReturnType<typeof setTimeout>>();
+    private static _frozen:boolean = false;
+    private static freezeStack:Set<string> = new Set<string>();
+
+    /**
+     * Freeze all hooks
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static freeze(): void {
+        Hookifier._frozen = true;
+    }
+
+    /**
+     * Unfreeze all hooks
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static unfreeze(): void {
+        Hookifier._frozen = false;
+        Hookifier.freezeStack.forEach((i:string) => Hookifier.call(i));
+        Hookifier.freezeStack = new Set<string>();
+    }
 
     /**
      * Push a hook onto the ledger
@@ -460,6 +486,10 @@ class Hookifier {
      */
 
     static push(id:string, fn:Function): void {
+        if (Hookifier._frozen) {
+            Hookifier.freezeStack.add(id); return;
+        }
+
         if (!Hookifier.hooks.has(id))
             Hookifier.hooks.set(id, new Set<Function>());
         let hooks:Set<Function> = Hookifier.hooks.get(id);
