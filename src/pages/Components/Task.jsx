@@ -503,6 +503,7 @@ class Task extends Component {
 
                                 {/* The animated input box */}
 				{/*	
+				*/}
                                 <animated.input 
                                     defaultValue={this.state.name} 
                                     onChange={(e)=>this.setState({name:e.target.value})} 
@@ -522,22 +523,6 @@ class Task extends Component {
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
 				    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
 				/>
-				*/}
-				<CodeMirror
-				    value={this.state.name}
-				    //options={options}
-				    options={{
-					mode: 'markdown',
-					theme: 'material',
-					lineNumbers: true
-				    }}
-				    onBeforeChange={(editor, data, value) => {
-					this.setState({name: value});
-					console.log(value, editor, data)
-				    }}
-				    //onChange={(editor, data, value) => {
-				    //}}
-				/>
 
 				{/* Task edit. The thing that slides open on edit. */}
 				{(() => {
@@ -546,6 +531,7 @@ class Task extends Component {
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
 
                                                 {/* First, task description field */}
+						{/*
                                                 <textarea 
 						    tabIndex='0'
                                                     placeholder={this.props.localizations.desc} 
@@ -555,11 +541,31 @@ class Task extends Component {
                                                     onChange={(e)=>this.setState({desc:e.target.value})} 
                                                     onBlur={(_)=>{if (this.state.description !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc}}
                                                 >
-                                                </textarea>
+						</textarea>
+						*/}
+						<CodeMirror
+						    tabIndex='0'
+                                                    //className="task-desc" 
+						    className="cm-content task-desc"
+						    style={{marginBottom: 10, borderColor: "red"}} 
+						    value={this.state.desc}
+						    //options={options}
+						    options={{
+							mode: 'markdown',
+							theme: 'cobalt',
+							lineNumbers: false
+						    }}
+						    onBeforeChange={(editor, data, value) => {
+							this.setState({desc: value});
+							console.log(value, editor, data)
+						    }}
+						    //onChange={(editor, data, value) => {
+						    //}}
+						/>
 
-                                                {/* Task icon set. TODO delete task */}
-                                                <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
-                                                    
+						{/* Task icon set. TODO delete task */}
+						<div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
+
                                                 {/*Delete icon*/}
                                                     <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
                                                         this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
