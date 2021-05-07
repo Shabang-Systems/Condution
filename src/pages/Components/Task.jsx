@@ -42,6 +42,12 @@ import Tag from "../../backend/src/Objects/Tag.ts";
 import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Widget";
 
 import { RepeatRule, RepeatRuleType }  from "../../backend/src/Objects/Utils.ts";
+import {Controlled as CodeMirror} from 'react-codemirror2'
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/javascript/javascript');
+require('codemirror/mode/markdown/markdown');
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -496,6 +502,7 @@ class Task extends Component {
                                 </div>
 
                                 {/* The animated input box */}
+				{/*	
                                 <animated.input 
                                     defaultValue={this.state.name} 
                                     onChange={(e)=>this.setState({name:e.target.value})} 
@@ -514,10 +521,26 @@ class Task extends Component {
                                     placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
 				    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
-				    />
+				/>
+				*/}
+				<CodeMirror
+				    value={this.state.name}
+				    //options={options}
+				    options={{
+					mode: 'markdown',
+					theme: 'material',
+					lineNumbers: true
+				    }}
+				    onBeforeChange={(editor, data, value) => {
+					this.setState({name: value});
+					console.log(value, editor, data)
+				    }}
+				    //onChange={(editor, data, value) => {
+				    //}}
+				/>
 
-                                {/* Task edit. The thing that slides open on edit. */}
-                                {(() => {
+				{/* Task edit. The thing that slides open on edit. */}
+				{(() => {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
