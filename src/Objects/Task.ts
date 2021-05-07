@@ -622,7 +622,7 @@ class Task {
         this.sync();
 
         if (this.project)
-            await (await this.async_project).calculateTreeParams(true);
+            await (await this.async_project).calculateTreeParams();
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};

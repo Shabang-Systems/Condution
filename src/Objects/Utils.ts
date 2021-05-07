@@ -501,7 +501,7 @@ class Hookifier {
             if (!Hookifier.hooks.has(id)) return;
             //console.log(`Calling hooks for ${id}!`);
             let hooks:Set<Function> = Hookifier.hooks.get(id);
-            //hooks.forEach((i:Function)=>i());
+            hooks.forEach((i:Function)=>i());
         }, timeout));
     }
 

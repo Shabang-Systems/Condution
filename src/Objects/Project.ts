@@ -475,7 +475,7 @@ class Project {
             order = Object.keys(this.children).length;
         await item.reorder(order);
         this.data["children"][item.id] = (item instanceof Task) ? "task" : "project";
-        await this.calculateTreeParams();
+        await this.calculateTreeParams(true);
         this.sync();
     }
 
@@ -490,7 +490,7 @@ class Project {
 
     async dissociate(item:Project|Task): Promise<void> {
         delete this.data["children"][item.id];
-        await this.calculateTreeParams();
+        await this.calculateTreeParams(true);
         this.sync();
     }
 
@@ -512,7 +512,7 @@ class Project {
             this.data["children"][i.id] = (i instanceof Task) ? "task" : "project";
         }
 
-        await this.calculateTreeParams();
+        await this.calculateTreeParams(true);
         this.sync();
     }
 
@@ -530,7 +530,7 @@ class Project {
             delete this.children[i.id];
         }
 
-        await this.calculateTreeParams();
+        await this.calculateTreeParams(true);
         this.sync();
     }
 
@@ -655,7 +655,7 @@ class Project {
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
                 // Flush their availibilty
-                await i.calculateTreeParams(true);
+                await i.calculateTreeParams();
 
                 // Return their weight
                 return i.weight;
