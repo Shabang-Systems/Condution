@@ -117,7 +117,8 @@ class Home extends Component {
                 display: none;
             }
         `;
-        content.shadowRoot.appendChild(styles);
+        if(content)
+            content.shadowRoot.appendChild(styles);
 
         // This is, indeed, the view
         // Get the current URI to set which view is selected
@@ -513,9 +514,10 @@ class Home extends Component {
                                         {/* upcoming renders upcoming */}
 
                                         {/* TODO
-                                        <Route path="/upcoming" exact render={() => <Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
                                         <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} gruntman={this.props.gruntman} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email} />} />
                                         */}
+
+                                        <Route path="/upcoming" exact render={() => <Upcoming cm={this.props.cm} uid={this.state.workspace} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
                                         <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} localizations={this.props.localizations} />} />
                                         <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
 

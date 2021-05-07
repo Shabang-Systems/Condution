@@ -58,11 +58,11 @@ function WorkspaceModal(props) {
         <IonModal ref={props.reference} isOpen={props.isShown} onDidPresent={()=>{update()}} onDidDismiss={() => {if(props.onDidDismiss) props.onDidDismiss()}} style={{borderRadius: 5}} cssClass="workspace-popover auto-height">
             <div className="inner-content workspace-inside">
                 <div className="workspace-header">
-                    <span className="workspace-callout">{props.gruntman.localizations.perspective_build_callout}</span>
+                    <span className="workspace-callout">{props.localizations.perspective_build_callout}</span>
                     <input className="editable-title workspace-input" 
                         value={workspaceName} 
                         style={{minWidth: 0}}
-                        placeholder={props.gruntman.localizations.workspace_modal_placeholder}
+                        placeholder={props.localizations.workspace_modal_placeholder}
                         onChange={(e)=>{
                             setWorkspaceName(e.target.value);
                             e.persist();
@@ -87,7 +87,7 @@ function WorkspaceModal(props) {
                             props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: list, name: workspaceName, is_public: isPublic ? true : false}});
                             setWorkspaceEditors(list);
                         }
-                    }} renderInput={autosizingRenderInput} inputProps={{placeholder: props.gruntman.localizations.workspace_email}} />
+                    }} renderInput={autosizingRenderInput} inputProps={{placeholder: props.localizations.workspace_email}} />
                 </div>
                 <div style={{display: "flex", alignItems: "center", marginLeft: 5, marginTop: 5}}>
                     {isPublic ? (
@@ -113,7 +113,7 @@ function WorkspaceModal(props) {
                             <a className="linkaccess" onClick={()=>{
                                 props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: workspaceName, is_public: true}});
                                 setIsPublic(true);
-                            }}>{props.gruntman.localizations.publicify}</a>
+                            }}>{props.localizations.publicify}</a>
                         </>
                     )}
                 </div>
