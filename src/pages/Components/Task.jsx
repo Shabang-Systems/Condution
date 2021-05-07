@@ -803,13 +803,11 @@ onFocus={(e) => {
                                                             value={{value: this.state.project, label: this.state.project?this.state.project.name:""}}
                                                             onChange={(e)=>{
                                                                 if (!e) {
-                                                                    this.setState({project: null});
-     this.state.taskObj.moveTo(null);
+                                                                    this.setState({project: null}, ()=>this.state.taskObj.moveTo(null));
                                                                     return;
                                                                 }
 
-                                                                this.setState({project: e.value});
- this.state.taskObj.moveTo(e.value);
+                                                                this.setState({project: e.value}, ()=>this.state.taskObj.moveTo(e.value));
                                                             }}
                                                         />
                                                     </span>
@@ -831,14 +829,13 @@ onFocus={(e) => {
                                                                     if (e.__isNew__) {// if it's a new tag
                                                                         // TODO TODO
                                                                         let newTag = await Tag.create(this.props.cm, e.label);
-                                                                        this.setState({tagDatapack: [...this.state.tagDatapack, newTag]});
+                                                                        this.setState({tagDatapack: [...this.state.tagDatapack, {value: newTag, label:e.label}]});
                                                                         return (newTag);
                                                                     } else {
                                                                         return e.value
                                                                     }
                                                                 }):[]);
-                                                                this.state.taskObj.tags = tags;
-                                                                this.setState({tagDatapack: tags});
+                                                                this.setState({tags}, ()=>{this.state.taskObj.tags = tags});
                                                                         
 
                                                                             //"tag.create",
