@@ -680,7 +680,7 @@ class Project {
         }
 
         if (withHook)
-            this.hooks.forEach((i:Function)=>i(this));
+            this.hooks.forEach((i:Function)=>i("calculate"));
     }
     
     /**
@@ -727,13 +727,13 @@ class Project {
 
     protected sync = () => {
         this.page.set(this.data);
-        this.hooks.forEach((i:Function)=>i(this));
+        this.hooks.forEach((i:Function)=>i("sync"));
     }
 
     private update = (newData:object) => {
         if (this._ready) {
-            this.calculateTreeParams();
-            this.hooks.forEach((i:Function)=>i(this));
+            this.hooks.forEach((i:Function)=>i("update"));
+            this.calculateTreeParams(true);
         }
         this.data = newData;
     }

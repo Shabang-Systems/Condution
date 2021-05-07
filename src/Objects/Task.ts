@@ -624,7 +624,7 @@ class Task {
         this.sync();
 
         if (this.project)
-            await (await this.async_project).calculateTreeParams();
+            await (await this.async_project).calculateTreeParams(true);
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
@@ -776,7 +776,7 @@ class Task {
     private update = (newData:object) => {
         if (this._ready)  {
             this.hooks.forEach((i:Function)=>i(this));
-            this.calculateTreeParams();
+            this.calculateTreeParams(true);
         }
         this.data = newData;
     }
