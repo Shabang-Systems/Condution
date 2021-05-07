@@ -536,18 +536,18 @@ class Task extends Component {
 						<CodeMirror
 						    tabIndex='0'
                                                     //className="task-desc" 
-						    className="cm-content task-desc"
+						    className="cm-something cm-s-task-desc"
 						    style={{marginBottom: 10, borderColor: "red"}} 
 						    value={this.state.desc}
 						    //options={options}
 						    options={{
 							mode: 'markdown',
-							theme: 'cobalt',
+							//theme: 'cobalt task-desc',
 							lineNumbers: false
 						    }}
 						    onBeforeChange={(editor, data, value) => {
 							this.setState({desc: value});
-							console.log(value, editor, data)
+							//console.log(value, editor, data)
 						    }}
 						    //onChange={(editor, data, value) => {
 						    //}}
