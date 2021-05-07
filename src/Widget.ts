@@ -90,11 +90,27 @@ class InboxWidget extends Widget {
     name = "inbox-widget"
 
     async execute(): Promise<Task[]> {
-        let inboxTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.project === null) && !i.isComplete) as Task[];
+        let inboxTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.async_project === null) && !i.isComplete) as Task[];
 
         inboxTasks.sort((a: Task, b: Task) => a.order-b.order);
 
         return inboxTasks;
+    }
+}
+
+class DueSoonWidget extends Widget {
+    name = "duesoon-widget"
+
+    async execute(): Promise<Task[]> {
+        let tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate()+1);
+
+        let DSTasks:Task[] = await this.query.execute(Task, (i:Task) => i.available && i.due && i.due < tomorrow && !i.isComplete) as Task[];
+
+
+        DSTasks.sort((b: Task, a: Task) => (a.due && b.due) ? a.due.getTime()-b.due.getTime() : 0);
+
+        return DSTasks;
     }
 }
 
@@ -263,5 +279,5 @@ class TagDatapackWidget extends Widget {
 
 
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget };
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget };
 //new line here
