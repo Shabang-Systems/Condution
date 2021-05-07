@@ -222,7 +222,7 @@ class Project {
 
     async sequential() : Promise<void> {
         this.data["is_sequential"] = true;
-        await this.calculateTreeParams();
+        await this.calculateTreeParams(true);
         this.sync();
     }
 
@@ -236,7 +236,7 @@ class Project {
 
     async parallel() : Promise<void> {
         this.data["is_sequential"] = false;
-        await this.calculateTreeParams();
+        await this.calculateTreeParams(true);
         this.sync();
     }
 
@@ -655,7 +655,7 @@ class Project {
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
                 // Flush their availibilty
-                await i.calculateTreeParams();
+                await i.calculateTreeParams(withHook);
 
                 // Return their weight
                 return i.weight;
