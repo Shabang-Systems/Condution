@@ -56,7 +56,9 @@
 
 .cm-s-expanded {
     height: 350px !important;
+    background-color: var(--task-textbox-background) !important;
 }
+
 
 .CodeMirror-wrap pre {
     word-break: break-word;
@@ -79,7 +81,7 @@
     /*border-left: 1px solid #434d5f;*/
 }
 
-.cm-s-condution:hover { 
+.cm-s-condution:hover {
     background-color: var(--task-textbox-background) !important;
 }
 
@@ -102,8 +104,14 @@
 
 .rotated {
     transform: rotate(180deg);
+    color: var(--task-datepicker-icon);
+
 }
 
+.cm-s-bghvr {
+    background-color: var(--task-textbox-background) !important;
+    /*border: 1px solid red;*/
+}
 
 .task-desc::placeholder{
     color: var(--task-textbox-placeholder);

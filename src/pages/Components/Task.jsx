@@ -202,6 +202,7 @@ class Task extends Component {
             tagDatapack: [], // the calculated tag datapack
             activelyRepeating: false, // are we actively playing the repeating animation?
 	    descExpanded: false,
+	    iconHovering: false,
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -544,10 +545,11 @@ class Task extends Component {
 						<CodeMirror
 						    tabIndex='0'
 						    value={this.state.desc}
+						    
 						    //options={options}
 						    options={{
 							mode: 'markdown',
-							theme: `condution ${this.state.descExpanded? "expanded" : ""}`,
+							theme: `condution ${this.state.descExpanded? "expanded" : ""} ${this.state.iconHovering? "bghvr" : ""}`,
 							lineNumbers: false,
 							lineWrapping: true,
 							placeholder: this.props.localizations.desc,
@@ -567,6 +569,8 @@ class Task extends Component {
                                                 <i 
 						    className={`fas fa-chevron-down expand-icon ${this.state.descExpanded? "rotated" : ""}`}
 						    onClick={() => {this.setState({descExpanded: !this.state.descExpanded})}}
+						    onMouseEnter={() => { this.setState({ iconHovering: true  })}}
+						    onMouseLeave={() => { this.setState({ iconHovering: false })}}
 						    //style={{transform: `${this.state.descExpanded? "rotate(180)" : "rotate(0)"}`}}
 						></i>
 
