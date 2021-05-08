@@ -257,6 +257,18 @@ export class Context {
         return this.userID;
     }
 
+
+    /**
+     * The user's email
+     * @property
+     */
+
+    get userEmail() {
+        if (this.rm.currentProvider.authSupported) {
+            return this.rm.currentProvider.authenticationProvider.currentUser.email;
+        } else return null;
+    }
+
     /**
      * @property referenceManager
      *

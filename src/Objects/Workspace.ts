@@ -102,9 +102,25 @@ export default class Workspace {
     async revoke(email: string):Promise<void> {
         if (this.data["meta"]["editors"].includes(email))
             this.data["meta"]["editors"] = this.data["meta"]["editors"].filter((a:string)=>a!==email);
-        this.sync();
         let invitations:Collection= this.context.referenceManager.collection(["invitations", email, "invites"]);
         await invitations.add({email, workspace: this._id, type: "revoke", time: new Date()});
+        if ((this.data["meta"]["editors"]).length == 0) {
+            this.delete();
+        } else {
+            this.sync();
+        }
+    }
+    
+    /**
+     * Delete the workspace!!
+     * @async
+     *
+     * @returns{Promise<void>}
+     *
+     */
+
+    async delete() : Promise<void> {
+        this.page.delete();
     }
 
     /**
