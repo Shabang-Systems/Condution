@@ -254,11 +254,11 @@ class Query {
 
     /**
      * Nuke the cache
-     * @static
+     * @static @async
      *
      */
 
-    static SelfDestruct() {
+    static async SelfDestruct() {
         delete Query.taskPages;
         delete Query.projectPages;
         delete Query.perspectivePages;
@@ -451,6 +451,7 @@ class Hookifier {
     private static hooks: Map<string, Set<Function>> = new Map<string, Set<Function>>();
     private static pendingCalls: Map<string, ReturnType<typeof setTimeout>> = new Map<string, ReturnType<typeof setTimeout>>();
     private static _frozen:boolean = false;
+    private static lastFreeze:Date = new Date();
     private static freezeStack:Set<string> = new Set<string>();
 
     /**
@@ -462,6 +463,7 @@ class Hookifier {
 
     static freeze(): void {
         Hookifier._frozen = true;
+        Hookifier.lastFreeze = new Date();
     }
 
     /**
@@ -472,6 +474,8 @@ class Hookifier {
      */
 
     static unfreeze(): void {
+        if (((new Date).getTime() - Hookifier.lastFreeze.getTime()) < 500) 
+            return;
         Hookifier._frozen = false;
         Hookifier.freezeStack.forEach((i:string) => Hookifier.call(i));
         Hookifier.freezeStack = new Set<string>();
@@ -557,16 +561,18 @@ class Hookifier {
  * Flush all caches, and cause everything to
  * self-destruct. Used during account switching
  * and the app's sleep time to prevent memory leak
+ *
+ * The order here _does_ matter!
  */
 
 function GloballySelfDestruct() {
+    TODOFlushFirebaseData();
     Task.SelfDestruct();
     Workspace.SelfDestruct();
     Tag.SelfDestruct();
     Project.SelfDestruct();
-    Query.SelfDestruct();
     Perspective.SelfDestruct();
-    TODOFlushFirebaseData();
+    Query.SelfDestruct();
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct, Hookifier };
