@@ -76,6 +76,7 @@
 
 .CodeMirror-cursor {
     border-left: 1px solid var(--decorative-light-accent);
+    /*border-left: 1px solid #434d5f;*/
 }
 
 .cm-s-condution:hover { 
