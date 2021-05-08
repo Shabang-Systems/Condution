@@ -252,7 +252,7 @@ class Upcoming extends Component { // define the component
                                     let val = await W.create(this.props.cm, this.props.cm.userEmail);
                                     this.props.cm.useWorkspace(val);
                                     this.workspaceButton.current.dismiss();
-                                    this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true, currentWorkspace: val.name});
+                                    this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true, currentWorkspace: "New Workspace"});
                                 }).bind(this)}><i className="fas fa-plus-circle" style={{marginRight: 10}} />{this.props.localizations.new_workspace}</div></div>
                             </div>
                         </IonPopover>
