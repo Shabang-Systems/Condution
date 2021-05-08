@@ -47,6 +47,9 @@ import {Controlled as CodeMirror} from 'react-codemirror2'
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/mode/markdown/markdown');
+require('codemirror/addon/display/placeholder');
+require('codemirror/addon/scroll/simplescrollbars');
+require('codemirror/addon/display/fullscreen');
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -197,7 +200,8 @@ class Task extends Component {
             tagDatapackWidget: new TagDatapackWidget(props.cm), // the tag datapack widget
             projectDatapack: [], // the calculated project datapack
             tagDatapack: [], // the calculated tag datapack
-            activelyRepeating: false // are we actively playing the repeating animation?
+            activelyRepeating: false, // are we actively playing the repeating animation?
+	    descExpanded: false,
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -543,9 +547,12 @@ class Task extends Component {
 						    //options={options}
 						    options={{
 							mode: 'markdown',
-                            theme: 'condution',
+							theme: `condution ${this.state.descExpanded? "expanded" : ""}`,
 							lineNumbers: false,
-                                lineWrapping: true
+							lineWrapping: true,
+							placeholder: this.props.localizations.desc,
+							scrollbarStyle: "null",
+							//fullScreen: true,
 						    }}
 						    onBeforeChange={(editor, data, value) => {
 							this.setState({desc: value});
@@ -554,6 +561,11 @@ class Task extends Component {
 						    //onChange={(editor, data, value) => {
 						    //}}
 						/>
+                                                <i 
+						    className={`fas fa-chevron-down expand-icon ${this.state.descExpanded? "rotated" : ""}`}
+						    onClick={() => {this.setState({descExpanded: !this.state.descExpanded})}}
+						    //style={{transform: `${this.state.descExpanded? "rotate(180)" : "rotate(0)"}`}}
+						></i>
 
 						{/* Task icon set. TODO delete task */}
 						<div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
