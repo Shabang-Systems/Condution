@@ -286,6 +286,8 @@ class Task extends Component {
         this.loadTask(); // load the task when we mount   
         if (this.props.taskObject)
             this.props.taskObject.hook(this.loadTask);
+        this.state.tagDatapackWidget.hook(this.loadTask);
+        this.state.projectDatapackWidget.hook(this.loadTask);
         this.initialRenderDone = true;
 
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
