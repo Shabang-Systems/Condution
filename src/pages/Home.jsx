@@ -74,7 +74,7 @@ class Home extends Component {
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
             isWorkspace:false, // current workspace
             workspace: this.props.authType==="workspace" ? this.props.workspace : this.props.uid, // current workspace/uid
-            isWorkspaceRequestShown: [false, null] // is the workspace toast shown
+            pendingAcceptances: [] // pending acceptance toasts to show
         };
 
         //        if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -89,6 +89,7 @@ class Home extends Component {
 
         this.perspectivemenuWidget.hook(this.refresh);
         this.projectmenuWidget.hook(this.refresh);
+        this.props.cm.hookInvite(this.updateInvites);
 
 
         this.abtibRef = React.createRef();
@@ -140,9 +141,15 @@ class Home extends Component {
 
     }
 
+    updateInvites() {
+        let inviteNotes = this.props.cm.pendingAcceptances;
+        this.setState({pendingAcceptances: inviteNotes});
+    }
+
     componentWillUnmount() {
         this.perspectivemenuWidget.unhook(this.refresh);
         this.projectmenuWidget.unhook(this.refresh);
+        this.props.cm.unhookInvite(this.updateInvites);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -474,26 +481,29 @@ class Home extends Component {
                                 <IonToast
                                     mode="ios"
                                     cssClass="workspace-toast"
-                                    isOpen={this.state.isWorkspaceRequestShown[0]}
-                                    message={`Invitation to join workspace ${this.state.isWorkspaceRequestShown[1] ? this.state.isWorkspaceRequestShown[1][1] : ""}`}
+                                    isOpen={this.state.pendingAcceptances.length > 0}
+                                    message={`Invitation to join workspace ${this.state.pendingAcceptances[0]? this.state.pendingAcceptances[0].ws.name: ""}`}
                                     position="bottom"
                                     buttons={[
                                         {
                                             text: 'Reject',
                                                 role: 'cancel',
                                                 handler: (async function () {
-                                                    await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                    this.setState({isWorkspaceRequestShown: [false, null]});
+                                                    this.props.cm.rescindWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
+                                                    //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                    //this.setState({isWorkspaceRequestShown: [false, null]});
                                                 }).bind(this)
                                         },
                                         {
                                             text: 'Accept',
                                             handler: (async function () {
-                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
-                                                let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
-                                                await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
-                                                await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                this.setState({isWorkspaceRequestShown: [false, null]});
+                                                                                                    this.props.cm.acceptWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
+
+//                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
+                                                //let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
+                                                //await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
+                                                //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                //this.setState({isWorkspaceRequestShown: [false, null]});
                                             }).bind(this)
                                         }
                                     ]}
