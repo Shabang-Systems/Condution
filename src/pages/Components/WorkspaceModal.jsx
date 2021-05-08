@@ -41,13 +41,13 @@ function WorkspaceModal(props) {
 
 
     let update = (async function() {
-            if (props.currentWorkspace) {
-                let wsp = await props.engine.db.getWorkspace(props.currentWorkspace);
-                setWorkspaceName(wsp.meta.name);
-                setWorkspaceEditors(wsp.meta.editors);
-                setIsPublic(wsp.meta.is_public);
-            }
-        });
+        let wsp = props.currentWorkspace;
+        if (props.currentWorkspace) {
+            setWorkspaceName(wsp.name);
+            setWorkspaceEditors(wsp.collaborators);
+            setIsPublic(wsp.isPublic);
+        }
+    });
 
     useEffect(()=>{
         update();
@@ -66,7 +66,9 @@ function WorkspaceModal(props) {
                         onChange={(e)=>{
                             setWorkspaceName(e.target.value);
                             e.persist();
-                            props.gruntman.registerScheduler(() => props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: e.target.value, is_public: isPublic ? true : false}}), `workspace-${props.currentWorkspace}-update`)
+                        }}
+                        onBlur={()=>{
+                            props.currentWorkspace.name = workspaceName;
                         }}
                     />
                 </div>
@@ -76,24 +78,21 @@ function WorkspaceModal(props) {
                         let isValid = true;
                         list.filter(e=>!workspaceEditors.includes(e)).forEach(newAccount => {
                             if (/\w+@\w+\.\w+/.test(newAccount))
-                                props.engine.db.inviteToWorkspace(props.currentWorkspace, newAccount);
+                                props.currentWorkspace.invite(newAccount);
                             else 
                                 isValid = false;
                         });
                         workspaceEditors.filter(e=>!list.includes(e)).forEach(removedAccount => {
-                            props.engine.db.revokeToWorkspace(props.currentWorkspace, removedAccount);
+                            props.currentWorkspace.revoke(removedAccount);
                         });
-                        if (isValid) {
-                            props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: list, name: workspaceName, is_public: isPublic ? true : false}});
-                            setWorkspaceEditors(list);
-                        }
+                        setWorkspaceEditors(list);
                     }} renderInput={autosizingRenderInput} inputProps={{placeholder: props.localizations.workspace_email}} />
                 </div>
                 <div style={{display: "flex", alignItems: "center", marginLeft: 5, marginTop: 5}}>
                     {isPublic ? (
                         <>
                             <i class="fas fa-link" style={{color: "var(--content-normal-alt)"}} />
-                            <input value={`https://app.condution.com/workspaces/${props.currentWorkspace}`} className="workspace-link" readOnly={true} onClick={(e)=>{
+                            <input value={`https://app.condution.com/workspaces/${props.currentWorkspace.id}`} className="workspace-link" readOnly={true} onClick={(e)=>{
                               /* Select the text field */
                               e.nativeEvent.target.select();
                               e.nativeEvent.target.setSelectionRange(0, 99999); /*For mobile devices*/
@@ -102,7 +101,7 @@ function WorkspaceModal(props) {
                               document.execCommand("copy");
                             }} />
                             <i class="fas fa-unlink" style={{marginLeft: 10, marginRight: 5, color: "var(--decorative-light-alt)", cursor: "pointer"}} onClick={()=>{
-                                props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: workspaceName, is_public: false}});
+                                props.currentWorkspace.privatize();
                                 setIsPublic(false);
 
                             }}/>
@@ -111,7 +110,7 @@ function WorkspaceModal(props) {
                         <>
                             <i class="fas fa-link" style={{color: "var(--decorative-light-alt)"}}/>
                             <a className="linkaccess" onClick={()=>{
-                                props.engine.db.editWorkspace(props.currentWorkspace, {meta: {editors: workspaceEditors, name: workspaceName, is_public: true}});
+                                props.currentWorkspace.publicify();
                                 setIsPublic(true);
                             }}>{props.localizations.publicify}</a>
                         </>

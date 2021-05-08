@@ -153,7 +153,7 @@ class Upcoming extends Component { // define the component
         let ds = (await this.state.dsWidget.execute());
         let dsids = ds.map(i=>i.id);
         inbox = inbox.filter(i=>!dsids.includes(i.id));
-        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute())});
+        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces())});
     }
 
     componentDidMount() {
@@ -231,18 +231,21 @@ class Upcoming extends Component { // define the component
                             <div><div className="workspace-name-container">
                                 <div className="workspace-name-selection" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.props.switch("personal");
+                                    this.props.switch(null);
                                     this.setState({currentWorkspace: this.props.localizations.personal_workspace});
                                 }}><i className="fas fa-stream" style={{marginRight: 10}} />{this.props.localizations.personal_workspace}</div></div>
-                                {this.state.workspaces.map(([id, name])=><div className="workspace-name-container"><div onClick={()=>{
+                                {this.state.workspaces.map((val)=><div key={val.id} className="workspace-name-container">
+                                <div onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.props.switch("workspace", id);
-                                    this.setState({currentWorkspace: name});
-                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{name}</div><a className="workspace-edit fas fa-pen" onClick={()=>{
+                                    this.props.switch(val);
+                                    this.setState({currentWorkspace: val.name});
+                                }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{val.name}</div><a className="workspace-edit fas fa-pen" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.setState({currentlyEditedWorkspace: id, workspaceModalShown: true});
-                                }} /></div>)}
+                                    this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true});
+                                }} />
+                                </div>)}
                                 <div className="workspace-name-container" style={{borderTop: "1px solid var(--decorative-light)", fontWeight: 600}}><div className="workspace-name-selection" onClick={(async function(){
+                                    // TODO
                                     let id = await this.props.engine.db.generateWorkspace(this.props.actualUID, this.props.email);
                                     this.workspaceButton.current.dismiss();
                                     this.props.switch("workspace", id);
