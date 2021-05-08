@@ -189,7 +189,7 @@ class ProjectDatapackWidget extends Widget {
     
     constructor(context:Context) {
         super(context);
-        this.calculate();
+        ProjectDatapackWidget.dataPromise = this.calculate();
     }
 
     async execute() {
@@ -260,7 +260,7 @@ class TagDatapackWidget extends Widget {
 
     constructor(context:Context) {
         super(context);
-        this.calculate();
+        TagDatapackWidget.dataPromise = this.calculate();
     }
 
     async execute() {
@@ -293,12 +293,12 @@ class TimelineWidget extends Widget {
     name = "timeline-pane-widget"
 
     async execute() {
-        let timeline:Task[] = await this.query.execute(Task, (t:Task)=>(!t.isComplete && t.due && new Date() < t.due && t.due < new Date(3021, 1,1))) as Task[];
-        let DSWidget = new DueSoonWidget(this.query.cm);
-        let ds:Task[] = await DSWidget.execute();
+        let tomorrow:Date = new Date();
+        tomorrow.setDate(tomorrow.getDate()+1);
 
-        timeline = timeline.filter((x)=>!(ds.includes(x[0])));
-        timeline = timeline.sort((a:Task, b:Task) => a.due.getTime() - b.due.getTime());
+        let timeline:Task[] = await this.query.execute(Task, (t:Task)=>(!t.isComplete && t.due && tomorrow < t.due && t.due < new Date(3021, 1,1))) as Task[];
+
+        timeline = timeline.sort((a:Task, b:Task) => (a.due && b.due) ?a.due.getTime() - b.due.getTime():0);
         
         let isSameDateAs:Function = function(aDate:Date, pDate:Date) {
             return (

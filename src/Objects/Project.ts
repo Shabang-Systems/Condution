@@ -56,7 +56,6 @@ class Project {
         let pj:Project = new this(identifier, context);
         pj._ready = false;
 
-
         let queryEngine:Query = new Query(context);
         let staticData:AdapterData = await queryEngine.orderStaticData();
 
@@ -758,6 +757,7 @@ class Project {
 class ProjectSearchAdapter extends Project {
 
     adaptorData: AdapterData;
+    private static loadCache:Map<string, Promise<ProjectSearchAdapter>> = new Map();
     private static adaptorCache:Map<string, ProjectSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData, taskData:object) {
@@ -827,20 +827,26 @@ class ProjectSearchAdapter extends Project {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
-        let cachedProject:ProjectSearchAdapter = ProjectSearchAdapter.adaptorCache.get(identifier);
-        if (cachedProject) return cachedProject;
+        if (ProjectSearchAdapter.adaptorCache.has(identifier)) return ProjectSearchAdapter.adaptorCache.get(identifier);
+        if (ProjectSearchAdapter.loadCache.has(identifier)) return await ProjectSearchAdapter.loadCache.get(identifier);
 
-        let projectData:object = data.projectCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+        let loadProject:Promise<ProjectSearchAdapter> = (async () => {
+            let projectData:object = data.projectCollection.filter((obj:object)=> obj["id"] === identifier)[0];
 
-        if (!projectData)
-            return null;
+            if (!projectData)
+                return null;
 
-        let tsk:ProjectSearchAdapter = new this(context, identifier, data, projectData);
+            let tsk:ProjectSearchAdapter = new this(context, identifier, data, projectData);
 
-        ProjectSearchAdapter.adaptorCache.set(identifier, tsk);
-        await tsk.calculateTreeParams();
+            ProjectSearchAdapter.adaptorCache.set(identifier, tsk);
+            await tsk.calculateTreeParams();
+            return tsk;
+        })();
+        
+        ProjectSearchAdapter.loadCache.set(identifier, loadProject);
+        
 
-        return tsk;
+        return await loadProject;
     }
 }
 

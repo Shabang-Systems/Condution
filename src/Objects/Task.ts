@@ -779,7 +779,6 @@ class Task {
     protected sync = () => {
         this.page.set(this.data);
         Hookifier.call(`task.${this.id}`);
-        Query.triggerHooks();
     }
 
     private update = (newData:object) => {
@@ -803,6 +802,7 @@ class Task {
 
 class TaskSearchAdapter extends Task {
     adaptorData: AdapterData;
+    private static loadCache:Map<string, Promise<TaskSearchAdapter>> = new Map();
     private static adaptorCache:Map<string, TaskSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData, taskData:object) {
@@ -821,7 +821,7 @@ class TaskSearchAdapter extends Task {
     }
 
     get async_tags() {
-        return this.data["tags"] ? this.data["tags"].map((tagID:string) => TagSearchAdapter.seed(this.context, tagID, this.adaptorData)) : null;
+        return (this.data["tags"] ? this.data["tags"].map((tagID:string) => TagSearchAdapter.seed(this.context, tagID, this.adaptorData)) : []);
     }
 
     get async_project() {
@@ -851,19 +851,24 @@ class TaskSearchAdapter extends Task {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
-        let cachedTask:TaskSearchAdapter = TaskSearchAdapter.adaptorCache.get(identifier);
-        if (cachedTask) return cachedTask;
+        if (TaskSearchAdapter.adaptorCache.has(identifier)) return TaskSearchAdapter.adaptorCache.get(identifier);
+        if (TaskSearchAdapter.loadCache.has(identifier)) return await TaskSearchAdapter.loadCache.get(identifier);
 
-        let tskObj:object = data.taskCollection.filter((obj:object)=> obj["id"] === identifier)[0];
-        if (!tskObj)
-            return null;
+        let loadTask:Promise<TaskSearchAdapter> = (async () => {
+            let tskObj:object = data.taskCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+            if (!tskObj)
+                return null;
 
-        let tsk:TaskSearchAdapter = new this(context, identifier, data, tskObj);
+            let tsk:TaskSearchAdapter = new this(context, identifier, data, tskObj);
 
-        TaskSearchAdapter.adaptorCache.set(identifier, tsk);
-        await tsk.calculateTreeParams();
+            TaskSearchAdapter.adaptorCache.set(identifier, tsk);
+            await tsk.calculateTreeParams();
+            return tsk;
+        })();
 
-        return tsk;
+        TaskSearchAdapter.loadCache.set(identifier, loadTask);
+
+        return await loadTask;
     }
 
     /**
@@ -875,7 +880,9 @@ class TaskSearchAdapter extends Task {
 
     static cleanup = () : void => {
         delete TaskSearchAdapter.adaptorCache;
+        delete TaskSearchAdapter.loadCache;
         TaskSearchAdapter.adaptorCache = new Map();
+        TaskSearchAdapter.loadCache = new Map();
     }
 }
 

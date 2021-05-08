@@ -265,7 +265,7 @@ class Query {
         delete Query.tagPages;
 
         Query.hasIndexed = false;
-        Hookifier.call(`QueryEngine`);
+        //Hookifier.call(`QueryEngine`);
     }
 
     /**
@@ -290,6 +290,7 @@ class Query {
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
+
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
