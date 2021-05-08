@@ -265,7 +265,7 @@ class Query {
         delete Query.tagPages;
 
         Query.hasIndexed = false;
-        //Hookifier.call(`QueryEngine`);
+        Hookifier.call(`QueryEngine`);
     }
 
     /**
