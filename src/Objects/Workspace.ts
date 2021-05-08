@@ -148,6 +148,38 @@ export default class Workspace {
         return this.data["meta"]["editors"];
     }
 
+    /**
+     * Whether the workspace is public
+     * @property
+     *
+     */
+
+    get isPublic() {
+        return this.data["meta"]["is_public"];
+    }
+
+    /**
+     * Publicfy the workspace
+     *
+     * @returns{void} 
+     */
+
+    publicify():void {
+        this.data["meta"]["is_public"] = true;
+        this.sync();
+    }
+
+    /**
+     * Privatize the workspace
+     *
+     * @returns{void} 
+     */
+
+    privatize():void {
+        this.data["meta"]["is_public"] = false;
+        this.sync();
+    }
+
         /**
      * Hook a callback to whence this task updates
      *

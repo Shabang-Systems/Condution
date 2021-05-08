@@ -24,21 +24,24 @@ class FirebaseCollection extends Collection {
     firebaseDB: firebase.firestore.Firestore;
     firebaseRef: typeof firebase.firestore;
 
-    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback?:Function) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
         this.firebaseRef = firebaseRef;
 
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
-        ref.onSnapshot({
-            error: console.trace,
-            next: (snap:any) => {
-                refreshCallback(snap.docs.map((page:any)=>{
-                    return Object.assign(page.data(), {id: page.id});
-                }));
-            }
-        })
+
+        if (refreshCallback) {
+            ref.onSnapshot({
+                error: console.trace,
+                next: (snap:any) => {
+                    refreshCallback(snap.docs.map((page:any)=>{
+                        return Object.assign(page.data(), {id: page.id});
+                    }));
+                }
+            });
+        }
     }
 
     async add(payload:object) {
