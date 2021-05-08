@@ -237,6 +237,8 @@ class Task extends Component {
             task = this.props.taskObject;
         }
 
+        let [pdp, tdp] = await Promise.all([this.state.projectDatapackWidget.execute(), this.state.tagDatapackWidget.execute()]);
+
         // Setting state to update the rest of them elements
         this.setState({
             taskObj: task, // set task object
@@ -254,8 +256,8 @@ class Task extends Component {
             delegations: [], // TODO
             delegatedWorkspace: "", // TODO
             delegatedTaskID: "", // TODO,
-            projectDatapack: await this.state.projectDatapackWidget.execute(),
-            tagDatapack: await this.state.tagDatapackWidget.execute()
+            projectDatapack: pdp,
+            tagDatapack: tdp
         }, this.refreshDecorations);
     }
 
