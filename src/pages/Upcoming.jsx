@@ -160,6 +160,7 @@ class Upcoming extends Component { // define the component
         this.refresh();
         this.state.inboxWidget.hook(this.refresh);
         this.state.dsWidget.hook(this.refresh);
+        this.props.cm.hookInvite(this.refresh);
         //this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
@@ -171,6 +172,7 @@ class Upcoming extends Component { // define the component
     componentWillUnmount() {
         this.state.inboxWidget.unhook(this.refresh);
         this.state.dsWidget.unhook(this.refresh);
+        this.props.cm.unhookInvite(this.refresh);
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
