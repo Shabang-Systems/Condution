@@ -76,6 +76,28 @@
     background-color: var(--task-textbox-background) !important;
 }
 
+.expand-icon {
+    position: relative;
+    float: right;
+    right: 8px;
+    bottom: 27px;
+    transition: 0.3s;
+    /*pointer-events: auto;*/
+    z-index: 300;
+    color: var(--task-datepicker-selected);
+    /*color: var(--content-normal);*/
+}
+
+.expand-icon:hover {
+    color: var(--task-datepicker-feature);
+
+}
+
+.rotated {
+    transform: rotate(180deg);
+}
+
+
 .task-desc::placeholder{
     color: var(--task-textbox-placeholder);
 }

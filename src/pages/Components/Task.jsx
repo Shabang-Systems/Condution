@@ -551,6 +551,9 @@ class Task extends Component {
 							this.setState({desc: value});
 							//console.log(value, editor, data)
 						    }}
+						    onBlur={(_)=>{
+							if (this.state.desc !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc
+						    }}
 						    //onChange={(editor, data, value) => {
 						    //}}
 						/>
