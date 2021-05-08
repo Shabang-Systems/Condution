@@ -170,6 +170,7 @@ class Upcoming extends Component { // define the component
 
     componentWillUnmount() {
         this.state.inboxWidget.unhook(this.refresh);
+        this.state.dsWidget.unhook(this.refresh);
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -231,13 +232,13 @@ class Upcoming extends Component { // define the component
                             <div><div className="workspace-name-container">
                                 <div className="workspace-name-selection" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.props.switch(null);
+                                    this.props.cm.usePersonalWorkspace();
                                     this.setState({currentWorkspace: this.props.localizations.personal_workspace});
                                 }}><i className="fas fa-stream" style={{marginRight: 10}} />{this.props.localizations.personal_workspace}</div></div>
                                 {this.state.workspaces.map((val)=><div key={val.id} className="workspace-name-container">
                                 <div onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.props.switch(val);
+                                    this.props.cm.useWorkspace(val);
                                     this.setState({currentWorkspace: val.name});
                                 }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{val.name}</div><a className="workspace-edit fas fa-pen" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
