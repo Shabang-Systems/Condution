@@ -1,5 +1,5 @@
 import Workspace from "./Workspace";
-import { GloballySelfDestruct } from "./Utils";
+import { GloballySelfDestruct, Hookifier } from "./Utils";
 import ReferenceManager from "../Storage/ReferenceManager";
 import { Page, Collection } from "../Storage/Backends/Backend"; 
 
@@ -102,6 +102,7 @@ export class Context {
         else
             this.ticketID = this.userID;
         this.isWorkspace = workspace!==undefined;
+        GloballySelfDestruct();
     }
 
     /**
@@ -113,9 +114,11 @@ export class Context {
 
     usePersonalWorkspace():void {
         this.useWorkspace();
+        GloballySelfDestruct();
     }
 
     async acceptWorkspace(workspace:Workspace):Promise<void> {
+
         this._workspaces.push(workspace.id);
         await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
     }
