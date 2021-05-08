@@ -108,6 +108,31 @@ export class Context {
                         needResponse.push({ws: await Workspace.fetch(this, i["workspace"]), inviteID: i["id"]});
                     }
                 }));
+                
+                let seenChains: string[] = [];
+
+                // Get all invites
+                let chainsData: object[] = await this.rm.collection(["invitations", email, "delegations"]).data();
+
+                // Sort most recent invite on top
+                chainsData = chainsData.sort((b:object, a:object) => a["time"]["seconds"] - b["time"]["seconds"]);
+
+                await Promise.all(chainsData.map(async (i:object) => {
+                    // If we have seen it already, its an older invite
+                    // so delete it
+                    if(seenChains.includes(i["task"])) {
+                        this.rm.page(["invitations", email, "delegations", i["id"]]).delete(); return;
+                    }
+                    seenChains.push(i["task"]);
+
+                    // If its a revocation, revoke it and move on
+                    if (i["type"] === "delegation") {
+                        this.rm.page(["invitations", email, "delegations", i["id"]]).delete();
+                        let taskObj:object = await this.rm.page(["workspaces", i["workspace"], "tasks", i["task"]]).get()
+                        this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:""}));
+                    } else {
+                    }
+                }));
 
                 this._pendingAcceptances = needResponse;
                 Hookifier.call("context.workspace");
@@ -290,6 +315,16 @@ export class Context {
 
     async workspaces() {
         return await Promise.all(this._workspaces.map(async i=>(await Workspace.fetch(this, i))));
+    }
+
+    /**
+     * User is in workspace or no
+     * @property
+     *
+     */
+
+    get isInWorkspace() {
+        return this.isWorkspace;
     }
 
     /**

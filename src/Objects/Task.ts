@@ -1,6 +1,7 @@
 import type { AdapterData } from "./Utils";
 
 import { Page, DataExchangeResult } from "../Storage/Backends/Backend";
+import ReferenceManager from "../Storage/ReferenceManager";
 import { Context } from "./EngineManager";
 import { RepeatRule, RepeatRuleType, Query, Hookifier, Ticket } from "./Utils";
 import Project, { ProjectSearchAdapter } from "./Project";
@@ -91,51 +92,6 @@ class Task {
 
         return finalTask;
     }
-
-    /**
-     * Fetch a task by Context and ID, but like not async
-     * @static
-     *
-     * Psst. Why no static data ordering, you ask? Well...
-     * 1. Jack is lazy
-     * 2. This is loaded asyncronously, so the data loads 
-     *    in the background anyways so no need.
-     *
-     * @param{Context} context    the context that you are fetching from
-     * @param{string} identifier    the ID of the task you want to fetch
-     * @returns{Promise<Task>} the desired task
-     *
-     */
-
-    //static lazy_fetch(context:Context, identifier:string):Task {
-        //if (Task.cache.has(identifier))
-            //return Task.cache.get(identifier); 
-
-        //let tsk:Task = new this(identifier, context);
-        //tsk._ready = false;
-
-        //let page:Page = context.page(["tasks", identifier], tsk.update);
-        //tsk.page = page;
-
-        //if (!page.exists) {
-            //Task.cache.set(identifier, null);
-            //return null;
-        //}
-
-        //let loadTask:Promise<Task> = new Promise(async (res, _) => {
-            //tsk.data = await page.get();
-            //tsk._ready = true;
-
-            //await tsk.calculateTreeParams();
-
-            //Task.cache.set(identifier, tsk);
-            //res(tsk);
-        //});
-
-        //Task.loadBuffer.set(identifier, loadTask); 
-
-        //return tsk;
-    //}
 
     /**
      * Create a task based on a brouhaha of options
@@ -297,6 +253,59 @@ class Task {
         this.sync();
     }
 
+    /**
+     * Delegate the task to...
+     *
+     * @param{string?} email    the email of the delegate
+     * @returns{Promise<void>}
+     *
+     */
+
+    async delegateTo(email:string): Promise<void> {
+        let rm:ReferenceManager = this.context.referenceManager;
+        this.data["delegations"] = [...(this.data["delegations"]?this.data["delegations"]:[]), email];
+        this.sync();
+
+        await rm.collection(["invitations", email, "delegations"]).add({
+            email: email,
+            workspace: this.context.identifier, 
+            type: "delegation", 
+            time: new Date(), 
+            task: this.id
+        });
+    }
+
+    /**
+     * Dedelegate the task from...
+     *
+     * @param{string?} email    the email of the dedelegate
+     * @returns{Promise<void>}
+     *
+     */
+
+    async dedelegateFrom(email:string): Promise<void> {
+        let rm:ReferenceManager = this.context.referenceManager;
+        this.data["delegations"] = (this.data["delegations"]?this.data["delegations"].filter((i:string)=>!(i===email)):[]);
+        this.sync();
+
+        await rm.collection(["invitations", email, "delegations"]).add({
+            email: email,
+            workspace: this.context.identifier, 
+            type: "dedelegation", 
+            time: new Date(), 
+            task: this.id
+        });
+    }
+
+    /**
+     * Get the delegates
+     * @property
+     *
+     */
+
+    get delegates() {
+        return (this.data["delegations"]?this.data["delegations"] : []);
+    }
 
     /**
      * Move the task to the inbox
