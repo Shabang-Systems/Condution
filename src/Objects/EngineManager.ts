@@ -3,6 +3,11 @@ import { GloballySelfDestruct, Hookifier } from "./Utils";
 import ReferenceManager from "../Storage/ReferenceManager";
 import { Page, Collection } from "../Storage/Backends/Backend"; 
 
+interface InviteNote {
+    ws: Workspace ;
+    inviteID: string;
+};
+
 /*
  * Hello Human,
  * I am Context!!
@@ -30,6 +35,7 @@ export class Context {
     private authenticatable:boolean = false; // are we currently authenticated?
     private ready:boolean = false // are the workspaces loaded?
     private defaultUsername:string; // defaultUsername
+    private _pendingAcceptances:InviteNote[] = []; // pending workspaces to accept
 
     constructor(refManager:ReferenceManager, initializeWithoutAuth:boolean=false, defaultUsername:string="hard-storage-user") {
         this.rm = refManager;
@@ -58,8 +64,56 @@ export class Context {
      */
 
     async start():Promise<void> {
+        // Get workspaces
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
+
+        // Get chains
         this._chains = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._chains = newPrefs["chains"]}).get())["chains"];
+
+        // If authentication is supported, then
+        // get chains and workspaces
+        if (this.rm.currentProvider.authSupported) {
+
+            // Get user email
+            let email:string = this.rm.currentProvider.authenticationProvider.currentUser.email;
+
+            // Get collection of invites
+            this.rm.collection(["invitations", email, "invites"], async ()=>{
+                // Get all invites
+                let inviteData: object[] = await this.rm.collection(["invitations", email, "invites"]).data();
+
+                // Sort most recent invite on top
+                inviteData = inviteData.sort((b:object, a:object) => a["time"]["seconds"] - b["time"]["seconds"]);
+
+                // Track whether or not item is seen
+                // and reject all rejectinos while
+                // tracking all pending invites
+
+                let seen: string[] = [];
+                let needResponse: InviteNote[] = [];
+
+                await Promise.all(inviteData.map(async (i:object) => {
+                    // If we have seen it already, its an older invite
+                    // so delete it
+                    if(seen.includes(i["workspace"])) {
+                        this.rm.page(["invitations", email, "invites", i["id"]]).delete(); return;
+                    }
+                    seen.push(i["workspace"]);
+
+                    // If its a revocation, revoke it and move on
+                    if (i["type"] === "revoke") {
+                        this.rescindWorkspace(i["workspace"], i["id"]);
+                    } else {
+                        // Finally, its probably a pending invite, so add it to the list
+                        needResponse.push({ws: await Workspace.fetch(this, i["workspace"]), inviteID: i["id"]});
+                    }
+                }));
+
+                this._pendingAcceptances = needResponse;
+                Hookifier.call("context.workspace");
+            });
+        }
+
         this.ready = true;
     }
 
@@ -117,15 +171,69 @@ export class Context {
         GloballySelfDestruct();
     }
 
-    async acceptWorkspace(workspace:Workspace):Promise<void> {
+    /**
+     * Accept a workspace invite
+     * 
+     * @param{string} workspaceID    workspace ID to accept
+     * @param{string?} inviteID    invite ID to delete
+     */
 
-        this._workspaces.push(workspace.id);
+    async acceptWorkspace(workspaceID:string, inviteID?:string):Promise<void> {
+        let email:string = this.rm.currentProvider.authenticationProvider.currentUser.email;
+        this._workspaces.push(workspaceID);
         await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
+        if (inviteID)
+            this.rm.page(["invitations", email, "invites", inviteID]).delete();
+
     }
 
-    async rescindWorkspace(workspace:Workspace):Promise<void> {
-        this._workspaces = this._workspaces.filter((id:string) => id !== workspace.id);
+    /**
+     * Reject a workspace invite
+     * 
+     * @param{string} workspaceID    workspace ID to reject
+     * @param{string?} inviteID    invite ID to delete
+     */
+
+    async rescindWorkspace(workspaceID:string, inviteID?:string):Promise<void> {
+        let email:string = this.rm.currentProvider.authenticationProvider.currentUser.email;
+        this._workspaces = this._workspaces.filter((id:string) => id !== workspaceID);
         await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
+        if (inviteID)
+            this.rm.page(["invitations", email, "invites", inviteID]).delete();
+    }
+
+    /**
+     * Hook a function to invite changes
+     *
+     * @param{Function} hookFn    the fnuction to hook
+     *
+     * @returns{void}
+     */
+
+    hookInvite(hookFn:Function):void {
+        Hookifier.push("context.workspace", hookFn);
+    }
+
+    /**
+     * Unook a function to invite changes
+     *
+     * @param{Function} hookFn    the fnuction to unhook
+     *
+     * @returns{void}
+     */
+
+    unhookInvite(hookFn:Function):void {
+        Hookifier.remove("context.workspace", hookFn);
+    }
+
+    /**
+     * Pending workspace acceptances
+     * @property
+     *
+     */
+
+    get pendingAcceptances():InviteNote[] {
+        return this._pendingAcceptances;
     }
 
     /**

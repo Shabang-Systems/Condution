@@ -69,7 +69,7 @@ export default class Workspace {
         wsp.data = await page.get();
         wsp.page = page;
 
-        context.acceptWorkspace(wsp);
+        context.acceptWorkspace(wsp.id);
 
         Workspace.cache.set(newWorkspace.identifier, wsp);
         return wsp;
