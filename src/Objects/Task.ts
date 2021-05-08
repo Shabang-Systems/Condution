@@ -1,8 +1,8 @@
 import type { AdapterData } from "./Utils";
 
-import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
+import { Page, DataExchangeResult } from "../Storage/Backends/Backend";
 import { Context } from "./EngineManager";
-import { RepeatRule, RepeatRuleType, Query, Hookifier } from "./Utils";
+import { RepeatRule, RepeatRuleType, Query, Hookifier, Ticket } from "./Utils";
 import Project, { ProjectSearchAdapter } from "./Project";
 import Tag, { TagSearchAdapter } from "./Tag";
 
@@ -107,35 +107,35 @@ class Task {
      *
      */
 
-    static lazy_fetch(context:Context, identifier:string):Task {
-        if (Task.cache.has(identifier))
-            return Task.cache.get(identifier); 
+    //static lazy_fetch(context:Context, identifier:string):Task {
+        //if (Task.cache.has(identifier))
+            //return Task.cache.get(identifier); 
 
-        let tsk:Task = new this(identifier, context);
-        tsk._ready = false;
+        //let tsk:Task = new this(identifier, context);
+        //tsk._ready = false;
 
-        let page:Page = context.page(["tasks", identifier], tsk.update);
-        tsk.page = page;
+        //let page:Page = context.page(["tasks", identifier], tsk.update);
+        //tsk.page = page;
 
-        if (!page.exists) {
-            Task.cache.set(identifier, null);
-            return null;
-        }
+        //if (!page.exists) {
+            //Task.cache.set(identifier, null);
+            //return null;
+        //}
 
-        let loadTask:Promise<Task> = new Promise(async (res, _) => {
-            tsk.data = await page.get();
-            tsk._ready = true;
+        //let loadTask:Promise<Task> = new Promise(async (res, _) => {
+            //tsk.data = await page.get();
+            //tsk._ready = true;
 
-            await tsk.calculateTreeParams();
+            //await tsk.calculateTreeParams();
 
-            Task.cache.set(identifier, tsk);
-            res(tsk);
-        });
+            //Task.cache.set(identifier, tsk);
+            //res(tsk);
+        //});
 
-        Task.loadBuffer.set(identifier, loadTask); 
+        //Task.loadBuffer.set(identifier, loadTask); 
 
-        return tsk;
-    }
+        //return tsk;
+    //}
 
     /**
      * Create a task based on a brouhaha of options
@@ -259,7 +259,7 @@ class Task {
     get project() {
         this.readiness_warn();
         if (this._ready && this.data["project"] && this.data["project"] !== '') {
-            return Project.lazy_fetch(this.context, this.data["project"]);
+            return new Ticket(Project, this.context, this.data["project"]);
         } return null
     }
 
@@ -285,7 +285,7 @@ class Task {
      */
 
     async moveTo(to?:Project): Promise<void> {
-        let project:Project = this.project;
+        let project:Project = await this.async_project;
         if(project) (project).dissociate(this);
 //await 
 
@@ -366,7 +366,7 @@ class Task {
             return [];
 
         if (this._ready)
-            return this.data["tags"].map((tagID:string) => Tag.lazy_fetch(this.context, tagID));
+            return this.data["tags"].map((tagID:string) => new Ticket(Tag, this.context, tagID));
     }
 
 

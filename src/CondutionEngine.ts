@@ -137,12 +137,12 @@ import Perspective, { PerspectiveQuery, AvailabilityTypes, OrderTypes } from "./
  * Bugger that I am bleeding now
  */
 
-import { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct } from "./Objects/Utils";
+import { RepeatRule, RepeatRuleType, Query, Hookifier, Ticket, GloballySelfDestruct } from "./Objects/Utils";
 import type { AdapterData, Filterable } from "./Objects/Utils";
 
 let Internal:object = { Collection, Page, Provider }
 let Repeat:object = { RepeatRule, RepeatRuleType }
-let Utilities:object = { GloballySelfDestruct }
+let Utilities:object = { GloballySelfDestruct, Hookifier, Ticket }
 
 export {
     Internal,

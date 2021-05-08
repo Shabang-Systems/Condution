@@ -1,8 +1,8 @@
 import type { AdapterData } from "./Utils";
 
-import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend";
+import { Page, DataExchangeResult } from "../Storage/Backends/Backend";
 import Task, { TaskSearchAdapter } from "./Task";
-import { Query, Hookifier } from "./Utils";
+import { Query, Hookifier, Ticket } from "./Utils";
 import { Context } from "./EngineManager";
 
 class Project {
@@ -103,35 +103,35 @@ class Project {
      *
      */
 
-    static lazy_fetch(context:Context, identifier:string):Project {
-        if (Project.cache.has(identifier))
-            return Project.cache.get(identifier); 
+    //static lazy_fetch(context:Context, identifier:string):Project {
+        //if (Project.cache.has(identifier))
+            //return Project.cache.get(identifier); 
 
-        let pj:Project = new this(identifier, context);
-        pj._ready = false;
+        //let pj:Project = new this(identifier, context);
+        //pj._ready = false;
 
-        let page:Page = context.page(["projects", identifier], pj.update);
-        pj.page = page;
+        //let page:Page = context.page(["projects", identifier], pj.update);
+        //pj.page = page;
 
-        if (!page.exists) {
-            Project.cache.set(identifier, null);
-            return null;
-        }
+        //if (!page.exists) {
+            //Project.cache.set(identifier, null);
+            //return null;
+        //}
 
-        let loadProject:Promise<Project> = new Promise(async (res, _) => {
-            pj.data = await page.get();
-            pj._ready = true;
+        //let loadProject:Promise<Project> = new Promise(async (res, _) => {
+            //pj.data = await page.get();
+            //pj._ready = true;
 
-            await pj.calculateTreeParams();
+            //await pj.calculateTreeParams();
 
-            Project.cache.set(identifier, pj);
-            res(pj);
-        });
+            //Project.cache.set(identifier, pj);
+            //res(pj);
+        //});
 
-        Project.loadBuffer.set(identifier, loadProject); 
+        //Project.loadBuffer.set(identifier, loadProject); 
 
-        return pj;
-    }
+        //return pj;
+    //}
 
     /**
      * Create a project based on context, and optionally name and parent
@@ -389,7 +389,7 @@ class Project {
     get parent() {
         this.readiness_warn();
         if (this._ready)
-            return this.data["parent"] !== "" ? Project.lazy_fetch(this.context, this.data["parent"]) : null;
+            return this.data["parent"] !== "" ? new Ticket(Project, this.context, this.data["parent"]) : null;
     }
 
     /**
@@ -415,14 +415,14 @@ class Project {
 
     get children() {
         this.readiness_warn();
-        let dataArray:(Project|Task)[] = [];
+        let dataArray:(Ticket)[] = [];
         if (this._ready) {
             for (let child in this.data["children"])
                 if (this.data["children"][child] == "task") {
-                    let task:Task = Task.lazy_fetch(this.context, child);
+                    let task:Ticket = new Ticket(Task, this.context, child); 
                     if(task) dataArray.push(task);
                 } else if (this.data["children"][child] == "project") {
-                    let project:Project = Project.lazy_fetch(this.context, child);
+                    let project:Ticket = new Ticket(Project, this.context, child); 
                     if(project) dataArray.push(project);
                 }
 

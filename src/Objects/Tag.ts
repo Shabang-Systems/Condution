@@ -69,24 +69,24 @@ class Tag {
      *
      */
 
-    static lazy_fetch(context:Context, identifier:string):Tag {
-        let cachedTag:Tag = Tag.cache.get(identifier);
-        if (cachedTag)
-            return cachedTag;
+    //static lazy_fetch(context:Context, identifier:string):Tag {
+        //let cachedTag:Tag = Tag.cache.get(identifier);
+        //if (cachedTag)
+            //return cachedTag;
 
-        let tg:Tag= new this(identifier, context);
-        let page:Page = context.page(["tags", identifier], tg.update);
+        //let tg:Tag= new this(identifier, context);
+        //let page:Page = context.page(["tags", identifier], tg.update);
 
-        tg.page = page;
-        Tag.cache.set(identifier, tg);
+        //tg.page = page;
+        //Tag.cache.set(identifier, tg);
 
-        page.get().then((data:object)=>{
-            tg.data = data;
-            tg._ready = true;
-        });
+        //page.get().then((data:object)=>{
+            //tg.data = data;
+            //tg._ready = true;
+        //});
 
-        return tg;
-    }
+        //return tg;
+    //}
 
     /**
      * Create a tag based on context, name, and an optional weight

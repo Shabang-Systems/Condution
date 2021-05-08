@@ -557,6 +557,50 @@ class Hookifier {
     }
 }
 
+class Ticket {
+    private objPromise: Promise<Project|Task|Tag>;
+    private _id: string;
+
+    /**
+     * A database ticket
+     *
+     * @param{Function} objType    object type Task|Project|Tag
+     * @param{Context} cm    the context
+     * @param{string} id    the ID of the object
+     */
+
+    constructor(objType:Function, cm:Context, id:string) {
+        this._id = id;
+        if (objType === Task) 
+            this.objPromise = Task.fetch(cm, id);
+        else if (objType === Project)
+            this.objPromise = Project.fetch(cm, id);
+        else if (objType === Tag)
+            this.objPromise = Tag.fetch(cm, id);
+    }
+
+    /**
+     * The ID of the object
+     * @property
+     *
+     * @returns{string}
+     */
+
+    get id():string {
+        return this._id;
+    }
+
+    /**
+     * Return the fetched object
+     *
+     * @returns{Promise<Project|Task|Tag>}
+     */
+
+    async fetch():Promise<Project|Task|Tag> {
+        return await this.objPromise;
+    }
+}
+
 /**
  * Flush all caches, and cause everything to
  * self-destruct. Used during account switching
@@ -575,6 +619,6 @@ function GloballySelfDestruct() {
     Query.SelfDestruct();
 }
 
-export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct, Hookifier };
+export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct, Ticket, Hookifier };
 export type { AdapterData, Filterable };
 
