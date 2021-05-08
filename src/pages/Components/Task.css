@@ -68,6 +68,10 @@
     background-color: var(--task-textbox-background) !important;
 }
 
+.CodeMirror-cursor {
+    border-left: 1px solid pink;
+}
+
 .cm-s-condution:hover { 
     background-color: var(--task-textbox-background) !important;
 }
