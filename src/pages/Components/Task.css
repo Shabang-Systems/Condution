@@ -1,3 +1,5 @@
+@import '../../../node_modules/codemirror/lib/codemirror.css';
+
 .task {
     border-width: 0px;
     border-style: 0;
@@ -30,99 +32,44 @@
     transform: scale(0.55);
 }
 
-.cm-editor .cm-content {
-    font-size: 10pt;
-    font-weight:300;
-    background-color:inherit;
+
+.cm-s-condution { 
+    background-color: inherit;
     color: var(--task-textbox-text);
-    margin: 5px 5px 0 0;
-    padding: 2px 1px 0 5px;
     border: 0px;
     display: block;
     width: 100%;
     height: 50px;
-    resize: none;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
+    font-size: 12px;
+    /*resize: none !important;*/
     border-radius: 3px;
-    -webkit-transition-property: all;
+    -webkit-transition-property: background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
-    transition-property: all;
-    transition-duration: 200ms;
+    transition-property: background-color;
+    transition-duration: 200;
     transition-timing-function: ease-in-out;
-    border: 5px solid red;
-}
-.cm-s-task-desc {
-    border: 5px solid red;
-    font-size: 10pt;
-    font-weight:300;
-    background-color:inherit;
-    color: var(--task-textbox-text);
-    margin: 5px 5px 0 0;
-    padding: 2px 1px 0 5px;
-    border: 0px;
-    display: block;
-    width: 100%;
-    height: 50px;
-    resize: none;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 200ms;
-    -webkit-transition-timing-function: ease-in-out;
-    transition-property: all;
-    transition-duration: 200ms;
-    transition-timing-function: ease-in-out;
+    margin-bottom: 5px;
 }
 
-.box {
-    background-color: red;
+.CodeMirror-wrap pre {
+    word-break: break-word;
 }
 
-.cm-content {
-    background-color: red;
-
+.cm-header-1 {
+    font-size: 17px;
 }
 
-.CodeMirror { 
-    /*height: 50px !important;*/
-    /*background-color: red !important;*/
-    /*border: 1px solid red;*/
-    /*border: 5px solid red;*/
-    font-size: 10pt !important;
-    font-weight:300 !important;
-    background-color:inherit !important;
-    color: var(--task-textbox-text) !important;
-    margin: 5px 5px 0 0 !important;
-    padding: 2px 1px 0 5px !important;
-    border: 0px !important;
-    display: block !important;
-    width: 100% !important;
-    height: 50px !important;
-    resize: none !important;
-    -moz-border-radius: 3px !important;
-    -webkit-border-radius: 3px !important;
-    border-radius: 3px !important;
-    -webkit-transition-property: all !important;
-    -webkit-transition-duration: 200ms !important;
-    -webkit-transition-timing-function: ease-in-out !important;
-    transition-property: all !important;
-    transition-duration: 200ms !important;
-    transition-timing-function: ease-in-out !important;
-}
-.CodeMirror:focus{
-    /*background-color: var(--task-textbox-background) !important;*/
-    background-color: red !important;
+.cm-header-2 {
+    font-size: 15px;
 }
 
-.CodeMirror::placeholder{
-    color: var(--task-textbox-placeholder) !important;
+.CodeMirror-focused {
+    background-color: var(--task-textbox-background) !important;
 }
 
-.task-desc:focus{
-    background-color: var(--task-textbox-background);
+.cm-s-condution:hover { 
+    background-color: var(--task-textbox-background) !important;
 }
 
 .task-desc::placeholder{

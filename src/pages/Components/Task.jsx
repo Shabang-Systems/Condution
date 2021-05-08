@@ -43,8 +43,7 @@ import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Wid
 
 import { RepeatRule, RepeatRuleType, Hookifier }  from "../../backend/src/Objects/Utils.ts";
 import {Controlled as CodeMirror} from 'react-codemirror2'
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
+//import 'codemirror/theme/material.css';
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/mode/markdown/markdown');
@@ -540,15 +539,13 @@ class Task extends Component {
 						*/}
 						<CodeMirror
 						    tabIndex='0'
-                                                    //className="task-desc" 
-						    className="cm-something cm-s-task-desc"
-						    style={{marginBottom: 10, borderColor: "red"}} 
 						    value={this.state.desc}
 						    //options={options}
 						    options={{
 							mode: 'markdown',
-							//theme: 'cobalt task-desc',
-							lineNumbers: false
+                            theme: 'condution',
+							lineNumbers: false,
+                                lineWrapping: true
 						    }}
 						    onBeforeChange={(editor, data, value) => {
 							this.setState({desc: value});
