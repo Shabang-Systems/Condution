@@ -257,7 +257,7 @@ class Task extends Component {
             dueDate: task.due, 
             deferDate: task.defer,
             hasNotification: true, // TODO
-            delegations: [], // TODO
+            delegations: task.delegates, // TODO
             delegatedWorkspace: "", // TODO
             delegatedTaskID: "", // TODO,
             projectDatapack: pdp,
@@ -579,9 +579,9 @@ class Task extends Component {
 
                                                 {/*Delete icon*/}
                                                     <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        this.state.taskObj.delete();
                                                         //this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
                                                         this.closeTask();
+                                                        this.props.taskObject.delete();
 
                                                     }}><i className="fas fa-trash" style={{margin: 3, fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
 
@@ -619,10 +619,10 @@ class Task extends Component {
                                                         </div>
                                                     </IonPopover>
                                                     {/*(()=>{
+                                                    we are just not going to talk about it
                                                         if (this.props.gruntman.notifPermissionGranted && !(getPlatforms().includes("mobileweb") || getPlatforms().includes("desktop")))
                                                             return <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
                                                     })()*/}
-                                                    notifs tho
 
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
@@ -779,34 +779,24 @@ onFocus={(e) => {
                                                         })()}
                                                     </div>
                                                 </div>
-                                                delegation tho
-                                                {/*
-                                                <div className="tag-container" style={{display: this.props.engine.db.getWorkspaceMode() ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
+                                                <div className="tag-container" style={{display: this.props.cm.isInWorkspace ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
                                                     <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
                                                         let isValid = true;
                                                         list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
                                                             if (/\w+@\w+\.\w+/.test(newAccount))
-                                                                this.props.engine.db.delegateTaskToUser(this.props.uid, newAccount, this.props.tid);
+                                                                this.state.taskObj.delegateTo(newAccount);
                                                             else 
                                                                 isValid = false;
                                                         });
                                                         this.state.delegations.filter(e=>!list.includes(e)).forEach(removedAccount => {
-                                                            this.props.engine.db.revokeTaskToUser(this.props.uid, removedAccount, this.props.tid);
+                                                            this.state.taskObj.dedelegateFrom(removedAccount);
                                                         });
-                                                        if (isValid) {
-                                                            this.props.gruntman.do(
-                                                                "task.update", // the scheduler actually updates the task
-                                                                {
-                                                                    uid: this.props.uid, 
-                                                                    tid: this.props.tid, 
-                                                                    query:{delegations: list} // setting the name to the name
-                                                                }
-                                                            )
+
+                                                        if (isValid)
                                                             this.setState({delegations: list});
-                                                        }}} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.localizations.workspace_email}} />
+                                                        }} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.localizations.workspace_email}} />
                                                 </div>
-                                                */}
 
                                                 <div>
                                                     <span className="task-project-container">
