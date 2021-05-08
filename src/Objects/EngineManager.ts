@@ -1,7 +1,7 @@
 import Workspace from "./Workspace";
 import { GloballySelfDestruct, Hookifier } from "./Utils";
 import ReferenceManager from "../Storage/ReferenceManager";
-import { Page, Collection } from "../Storage/Backends/Backend"; 
+import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend"; 
 
 interface InviteNote {
     ws: Workspace ;
@@ -31,7 +31,7 @@ export class Context {
     private userID:string; // current UID
     private isWorkspace:boolean = false; // currently under workspaces mode
     private _workspaces:string[] = []; // current workspace IDs
-    private _chains:string[] = []; // current workspace IDs
+    private _chains:object = {}; // current workspace IDs
     private authenticatable:boolean = false; // are we currently authenticated?
     private ready:boolean = false // are the workspaces loaded?
     private defaultUsername:string; // defaultUsername
@@ -125,11 +125,12 @@ export class Context {
                     }
                     seenChains.push(i["task"]);
 
-                    // If its a revocation, revoke it and move on
                     if (i["type"] === "delegation") {
                         this.rm.page(["invitations", email, "delegations", i["id"]]).delete();
-                        let taskObj:object = await this.rm.page(["workspaces", i["workspace"], "tasks", i["task"]]).get()
-                        this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:""}));
+                        let taskObj:object = await this.rm.page(["workspaces", i["workspace"], "tasks", i["task"]]).get();
+                        let result:DataExchangeResult = await this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:""}));
+                        this._chains[i["task"]] = result.identifier;
+                        await this.rm.page(["users", this.userID, "tasks"]).set({chains:this._chains, workspaces: this._workspaces});
                     } else {
                     }
                 }));
