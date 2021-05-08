@@ -249,10 +249,10 @@ class Upcoming extends Component { // define the component
                                 </div>)}
                                 <div className="workspace-name-container" style={{borderTop: "1px solid var(--decorative-light)", fontWeight: 600}}><div className="workspace-name-selection" onClick={(async function(){
                                     // TODO
-                                    let id = await this.props.engine.db.generateWorkspace(this.props.actualUID, this.props.email);
+                                    let val = await W.create(this.props.cm, this.props.cm.userEmail);
+                                    this.props.cm.useWorkspace(val);
                                     this.workspaceButton.current.dismiss();
-                                    this.props.switch("workspace", id);
-                                    this.setState({currentlyEditedWorkspace: id, workspaceModalShown: true});
+                                    this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true, currentWorkspace: val.name});
                                 }).bind(this)}><i className="fas fa-plus-circle" style={{marginRight: 10}} />{this.props.localizations.new_workspace}</div></div>
                             </div>
                         </IonPopover>

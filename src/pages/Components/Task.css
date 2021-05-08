@@ -69,7 +69,7 @@
 }
 
 .CodeMirror-cursor {
-    border-left: 1px solid pink;
+    border-left: 1px solid #434d5f;
 }
 
 .cm-s-condution:hover { 
