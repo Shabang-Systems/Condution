@@ -44,14 +44,12 @@ class Projects extends Component { // define the component
             activeTask: "",
             weight: 0, // total weight
             pendingWeight: 0, // weight yet to complete
-	    isComplete: '', // TODO: replace this
-	    animClass: '',
+            isComplete: '', // TODO: replace this
+            animClass: '',
             initialRenderingDone: false,
-
-
-	    projectObject: "",
-	    itemList: [],
-
+            projectObject: "",
+            itemList: [], 
+            onTaskCreate: false // are we in the middle of task creation? so, should we hang the refreshes?
         };
 
         this.updatePrefix = this.random();
@@ -130,14 +128,16 @@ class Projects extends Component { // define the component
     async load() {
 	let project = await Project.fetch(this.props.cm, this.props.id)
 	project.hook(this.reloadData);
+    project.calculateTreeParams(true);
 
 	this.setState({
 	    projectObject: project,
-        name: project.name
+        name: project.name,
 	}, this.reloadData)
     }
 
-    async reloadData() {
+    async reloadData(he) {
+        if (this.state.onTaskCreate) return;
 	//let itemList = await this.state.projectObject.execute();
 	//this.setState({
 	//    itemList: itemList,
@@ -146,14 +146,15 @@ class Projects extends Component { // define the component
 	//});
 	//console.log(this.state.itemList)
 
-	let itemList = await this.state.projectObject.children
+        let itemList = await this.state.projectObject.async_children;
 	
 	this.setState({
         itemList: this.state.projectObject.isComplete ? itemList : itemList.filter((i)=>!i.isComplete),
 	    is_sequential: this.state.projectObject.isSequential,
 	    //TODO: for some reason this doensnt update the direction of the arrow until you upate the state some other way?
 	    initialRenderingDone: true,
-
+        weight: this.state.projectObject.weight,
+        pendingWeight: this.state.projectObject.uncompleteWeight,
 	})
 	//console.log(this.state.projectObject, "parnent")
 	//console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
@@ -268,19 +269,22 @@ class Projects extends Component { // define the component
 				    <a className={"complete-name " + this.state.animClass}
 					style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
 					onClick={async () => { 
-					    if (this.state.projectObject.data && this.state.projectObject.data.isComplete) {
-						console.log("uncompleting")
-						await this.state.projectObject.uncomplete()
-						    .then(console.log(this.state.projectObject.isComplete))
-					    } else {
-						console.log("completing")
-						await this.state.projectObject.complete()
-						    .then(console.log(this.state.projectObject.isComplete))
-					    }
-					    this.setState({animClass: "complete-anim"})
-					    setTimeout(() => {
-						this.setState({animClass: ""})
-					    }, 1000);
+                        this.setState({animClass: "complete-anim"})
+                        setTimeout(() => {
+                            this.setState({animClass: ""}, ()=>{
+                                if (this.state.projectObject.data.isComplete)
+                                    this.state.projectObject.uncomplete()
+                                else if (!this.state.projectObject.data.isComplete)
+                                    this.state.projectObject.complete()
+                            });
+                        }, 100);
+
+
+						//} else {
+						//console.log("completing")
+						//this.state.projectObject.complete()
+							//.then(console.log(this.state.projectObject.isComplete))
+						//}
 					}}
 				    >{(window.screen.width >= 400)? 
 					(this.state.projectObject.data && this.state.projectObject.data.isComplete? "Uncomplete" : "Complete") :
@@ -321,8 +325,8 @@ class Projects extends Component { // define the component
                                     <a 
                                         data-tip="LOCALIZE: Delete"
                                         className="perspective-icon" 
-                                        onClick={()=>{
-					    this.state.projectObject.delete()
+                                        onClick={async ()=>{
+					    await this.state.projectObject.delete()
 					    if (this.state.projectObject.isComplete) {
 						this.props.history.push("/completed", ""); // go back
 						this.props.paginate("/completed");
@@ -340,9 +344,7 @@ class Projects extends Component { // define the component
                                         </i>
                                     </a>
                                     <div className="progressbar">
-					{/*<Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
-					*/}
-                                        <Spring native to={{width: this.state.projectObject.width}}>
+                                        <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
                                             {props =>
                                                 <animated.div className="pcontent" style={{...props}}>&nbsp;</animated.div>}
                                         </Spring>
@@ -383,21 +385,27 @@ class Projects extends Component { // define the component
 			/>*/}
                 {this.state.itemList? this.state.itemList.map(item =>  (
 
-			    (item.databaseBadge == "tasks"? 
+			    ((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
 				(<div 
 				    key={item.id}>
 				    <Task 
 					cm={this.props.cm} 
 					localizations={this.props.localizations} 
-					taskObject={item} 
+                    taskObject={(item != null && typeof item.then === 'function') ? null : item} 
+                    asyncObject={(item != null && typeof item.then === 'function') ? item : null} 
+                    startOpen={(item != null && typeof item.then === 'function')} 
 					startingCompleted={this.state.projectObject.isComplete}
+                        refreshHook={()=>{
+                            this.setState({onTaskCreate: false}, ()=>this.reloadData());
+                        }}
+
 				    />
 
 				</div>)
 
 				: 
 				    <a className="subproject" 
-					//style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
+                        style={{opacity:item.available?"1":"0.35"}} 
 					onClick={()=>{
 					    this.props.paginate("projects", item.id);
 					    this.props.history.push(`/projects/${item.id}`)
@@ -411,7 +419,7 @@ class Projects extends Component { // define the component
 
 			<div style={{marginTop: 10}}>
 			    <a className="newbutton" 
-				onClick={ async ()=>{
+				onClick={ ()=>{
 				    //this.props.gruntman.do( // call a gruntman function
 				    //    "task.create", { 
 				    //        uid: this.props.uid, // pass it the things vvv
@@ -426,7 +434,8 @@ class Projects extends Component { // define the component
 				    //    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
 				    //}) // call the homebar refresh
 
-				let newTask = await DbTask.create(this.props.cm, "", this.state.projectObject)
+                            let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
+                    this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
 
 
 				
@@ -453,7 +462,7 @@ class Projects extends Component { // define the component
 
 			    }><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
 
-			    <BlkArt visible={(this.state.currentProject.children.length)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
+                <BlkArt visible={(this.state.itemList)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
                             <div className="bottom-helper">&nbsp;</div>
                         </div>
                     </div>

@@ -1,3 +1,5 @@
+@import '../../../node_modules/codemirror/lib/codemirror.css';
+
 .task {
     border-width: 0px;
     border-style: 0;
@@ -30,36 +32,53 @@
     transform: scale(0.55);
 }
 
-.task-desc {
-    font-size: 10pt;
-    font-weight:300;
-    background-color:inherit;
+
+.cm-s-condution { 
+    background-color: inherit;
     color: var(--task-textbox-text);
-    margin: 5px 5px 0 0;
-    padding: 2px 1px 0 5px;
     border: 0px;
     display: block;
     width: 100%;
     height: 50px;
-    resize: none;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
+    font-size: 12px;
+    /*resize: none !important;*/
     border-radius: 3px;
-    -webkit-transition-property: all;
+    -webkit-transition-property: background-color;
     -webkit-transition-duration: 200ms;
     -webkit-transition-timing-function: ease-in-out;
-    transition-property: all;
-    transition-duration: 200ms;
+    transition-property: background-color;
+    transition-duration: 200;
     transition-timing-function: ease-in-out;
+    margin-bottom: 5px;
 }
 
-    .task-desc:focus{
-        background-color: var(--task-textbox-background);
-    }
+.CodeMirror-wrap pre {
+    word-break: break-word;
+}
 
-    .task-desc::placeholder{
-        color: var(--task-textbox-placeholder);
-    }
+.cm-header-1 {
+    font-size: 17px;
+}
+
+.cm-header-2 {
+    font-size: 15px;
+}
+
+.CodeMirror-focused {
+    background-color: var(--task-textbox-background) !important;
+}
+
+.CodeMirror-cursor {
+    border-left: 1px solid #434d5f;
+}
+
+.cm-s-condution:hover { 
+    background-color: var(--task-textbox-background) !important;
+}
+
+.task-desc::placeholder{
+    color: var(--task-textbox-placeholder);
+}
 
 .task-name {
     font-weight:400;
@@ -165,6 +184,7 @@
     width: 1em; height: 1em;
     border: 1px solid var(--task-checkbox);
     border-radius: 4px;
+    transition: border-color 0.1s linear;
     /*box-shadow: inset 0 1px 3px rgba(0,0,0,.1);*/
 }
 
@@ -195,6 +215,11 @@
 .task-check:not(:checked) + label.delegated:before,
 .task-check:checked + label.delegated:before {
     border: 1px solid var(--task-border-delegated);
+}
+
+.task-check:not(:checked) + label.repeat:before,
+.task-check:checked + label.repeat:before {
+    border: 1px solid var(--task-border-repeat);
 }
 
 /* checked mark aspect */

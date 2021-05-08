@@ -33,14 +33,12 @@ class PerspectiveEdit extends Component {
         autoBind(this);
 
         this.state = {
-            inputEvent: "", // define our input event for the perspective title 
             expanded: false,
             items: [],
             inited: false,
-            query: '', // this is the searhbar query 
             selected: 0,
-            inputValue: '', // really the value of the perspective query 
-            idStore: '',
+            perspectiveName: '',
+            perspectiveQuery: '',
         }
 
         this.name = React.createRef();
@@ -49,21 +47,20 @@ class PerspectiveEdit extends Component {
     }
 
     componentDidMount() {
-        this.setState({idStore: this.props.perspective ? this.props.perspective.id : ""})
-        if (this.props.startHighlighted) // if we are trying to create
+        this.fetchData();
+        if (this.props.startHighlighted && this.name.current) // if we are trying to create
             this.name.current.focus(); // focus the name
-        this.setState({inputValue: this.props.perspective ? this.props.perspective.query: ""})
     }
 
-    componentDidUpdate() {
-        if (this.props.perspective && this.props.perspective.id != this.state.idStore) {
-            this.setState({inited: false, idStore: this.props.perspective.id, inputEvent: "", inputValue: ''}) 
-        }
-        if (this.props.query != this.state.inputValue && !this.state.inited) {
-            if (this.props.query) { 
-                this.setState({inputValue: this.props.query, inited: true})
-            } else { this.setState({inputValue: '', inited: true}) }
-        }
+    fetchData() {
+        this.setState({perspectiveQuery: this.props.perspective ? this.props.perspective.query: "", perspectiveName: this.props.perspective ? this.props.perspective.name: ""})
+    }
+
+    componentDidUpdate(prevProps, _, __) {
+        if (this.props.perspective !== prevProps.perspective)
+            this.fetchData();
+        if (this.props.startHighlighted !== prevProps.startHighlighted && this.name.current)
+            this.name.current.focus(); // focus the name
     }
 
     async getItems(){
@@ -146,7 +143,6 @@ class PerspectiveEdit extends Component {
                 isOpen={this.props.isShown} 
                 onWillPresent={() => {}}
                 onDidDismiss={() => {
-                    this.props.perspective = this.state.inputEvent.target.value;
                     if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}
                 } 
                 cssClass={`perspective-modal ${this.state.expanded? "expanded" : ""}`}
@@ -161,9 +157,9 @@ class PerspectiveEdit extends Component {
                                 <b className="bold-prefix" >{this.props.localizations.perspective_build_callout}</b> 
                                 <input className="editable-title pbuilder-pname" 
                                     ref={this.name}
-                                    defaultValue={this.props.perspective ? this.props.perspective.name : ""} 
-                                    onChange={(e)=> {e.persist(); this.setState({inputEvent: e})}}
-                                    onBlur={(e)=>{this.props.perspective = this.state.inputEvent.target.value}}
+                                    value={this.state.perspectiveName} 
+                                    onChange={(e)=> {this.setState({perspectiveName: e.target.value})}}
+                                    onBlur={(e)=>{this.props.perspective.name = this.state.perspectiveName}}
                                     style={{minWidth: 0}}
                                     placeholder={this.props.localizations.perspective_modal_placeholder}
                                 />
@@ -180,22 +176,22 @@ class PerspectiveEdit extends Component {
                             <input 
                                 className="build-input-edit"
                                 //defaultValue={this.props.perspective.query}
-                                value={this.state.inputValue}
+                                value={this.state.perspectiveQuery}
                                 //value={this.props.query}
                                 onChange={(e)=> {
                                     e.persist(); 
-                                    this.setState({inputValue: e.target.value})}
+                                    this.setState({perspectiveQuery: e.target.value})}
                                 }
-                                onBlur={(e)=>{this.props.query = this.state.inputValue}}
+                                onBlur={(e)=>{this.props.perspective.query = this.state.perspectiveQuery}}
 
                                 placeholder={this.props.localizations.perspective_query_placeholder}
                             >
                             </input> 
-                            <i 
+                            {/*<i 
                                 className="fas fa-plus-circle check" 
                                 style={{marginTop: "10px", marginLeft: "8px"}}
                                 onClick={()=>this.setState({expanded: !this.state.expanded})}
-                            ></i>
+                            ></i>*/}
                         </div>
 
 
@@ -252,7 +248,7 @@ class PerspectiveEdit extends Component {
                             </span>
                         </div> 
                     </div>
-                    <div className="dropdown">
+                    {/*<div className="dropdown">
                         {this.state.expanded?
                             <div style={{overflowY: "hidden"}}>
                                 <div className='pmodal-content-wrapper'>
@@ -298,7 +294,7 @@ class PerspectiveEdit extends Component {
                                     </div> 
                                 </div>
                             </div> : null }
-                    </div>
+                    </div>*/}
                 </div>
             </IonModal>
         )

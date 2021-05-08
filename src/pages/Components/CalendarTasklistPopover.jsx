@@ -1,7 +1,7 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { createRef, useEffect, useRef } from 'react';
+import React, { createRef, useEffect, useRef, useState } from 'react';
 import '../Calendar.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,6 +9,7 @@ import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
 import Task from '../Components/Task';
+import T from '../../backend/src/Objects/Task.ts';
 
 /*
  * Hello human,
@@ -28,9 +29,11 @@ import Task from '../Components/Task';
 function CalendarTasklistPopover(props) {
 
     let refs = useRef([]);
+    let [tasks, setTasks] = useState([]);
 
     useEffect(()=>{
         refs.current=props.list.map((_)=>createRef());
+        Promise.all(props.list.map(async (i)=> await T.fetch(props.cm, i))).then(l => setTasks(l));
     }, [props.list]);
 
     return (
@@ -43,9 +46,9 @@ function CalendarTasklistPopover(props) {
                     <div class="calendar-page-date" >{props.currentDate.toLocaleString('en-us', {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'  })}</div>
                 </span>
 
-                {props.list.map((id, i)=>
+                {tasks.map((item, i)=>
                     <div ref={refs.current[i]}>
-                        <Task tid={id} key={id} uid={props.uid} engine={props.engine} gruntman={props.gruntman} availability={props.availability[id]} datapack={props.datapack} envelope={refs.current[i]} onModal={true}/>
+                        <Task cm={props.cm} localizations={props.localizations} key={item.id} taskObject={item} envelope={refs.current[i]} onModal={true}/>
                     </div>
                 )}
 

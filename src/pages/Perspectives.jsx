@@ -110,13 +110,16 @@ class Perspectives extends Component {
     }
 
     handleDelete() {
-         
+        this.state.perspectiveObject.delete();
+        this.props.history.push("/upcoming/");
     }
 
     
 
     componentDidMount() {
         this.load()
+        this.setState({showEdit: this.props.options === "do"});
+
     }
 
     componentDidUpdate(prevProps, prevState, _) {
@@ -124,6 +127,8 @@ class Perspectives extends Component {
             prevState.perspectiveObject.unhook(this.reloadData);
             this.load();
         }
+        if (prevProps.options !== this.props.options)
+            this.setState({showEdit: this.props.options === "do"});
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -132,7 +137,7 @@ class Perspectives extends Component {
         return (
             <IonPage>
 		{/* the perspective editor! */}
-                {/*<PerspectiveEdit 
+                <PerspectiveEdit 
                     cm={this.cm}
                     reference={this.repeater} 
                     isShown={this.state.showEdit} 
@@ -140,7 +145,7 @@ class Perspectives extends Component {
                     perspective={this.state.perspectiveObject}
                     startHighlighted={this.props.options === "do"}
                     localizations={this.props.localizations}
-                />*/} 
+                />
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds

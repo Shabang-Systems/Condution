@@ -30,6 +30,7 @@ import ReleaseNotesModal from './Components/ReleaseNotesModal';
 
 import { ProjectMenuWidget, PerspectivesMenuWidget } from "../backend/src/Widget";
 import Project from "../backend/src/Objects/Project";
+import Perspective from "../backend/src/Objects/Perspective";
 
 
 // Our very own CSS
@@ -73,7 +74,7 @@ class Home extends Component {
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
             isWorkspace:false, // current workspace
             workspace: this.props.authType==="workspace" ? this.props.workspace : this.props.uid, // current workspace/uid
-            isWorkspaceRequestShown: [false, null] // is the workspace toast shown
+            pendingAcceptances: [] // pending acceptance toasts to show
         };
 
         //        if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -88,6 +89,7 @@ class Home extends Component {
 
         this.perspectivemenuWidget.hook(this.refresh);
         this.projectmenuWidget.hook(this.refresh);
+        this.props.cm.hookInvite(this.updateInvites);
 
 
         this.abtibRef = React.createRef();
@@ -116,7 +118,8 @@ class Home extends Component {
                 display: none;
             }
         `;
-        content.shadowRoot.appendChild(styles);
+        if(content)
+            content.shadowRoot.appendChild(styles);
 
         // This is, indeed, the view
         // Get the current URI to set which view is selected
@@ -138,9 +141,15 @@ class Home extends Component {
 
     }
 
+    updateInvites() {
+        let inviteNotes = this.props.cm.pendingAcceptances;
+        this.setState({pendingAcceptances: inviteNotes});
+    }
+
     componentWillUnmount() {
         this.perspectivemenuWidget.unhook(this.refresh);
         this.projectmenuWidget.unhook(this.refresh);
+        this.props.cm.unhookInvite(this.updateInvites);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -307,17 +316,28 @@ class Home extends Component {
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-                                            let npid = (await this.props.gruntman.do(
-                                                "perspective.create", {
-                                                    uid: this.state.workspace,
-                                                },
-                                                true
-                                            )).pid;
+                                            let np = await Perspective.create(this.props.cm)
+                                            let npid = np.id
+
                                             history.push(`/perspectives/${npid}/do`);
                                             this.paginate("perspectives", npid);
                                             this.refresh();
                                         }).bind(this);
                                         f();
+                                        //if (this.menu.current)
+                                            //this.menu.current.close();
+                                        //let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+                                            //let npid = (await this.props.gruntman.do(
+                                                //"perspective.create", {
+                                                    //uid: this.state.workspace,
+                                                //},
+                                                //true
+                                            //)).pid;
+                                            //history.push(`/perspectives/${npid}/do`);
+                                            //this.paginate("perspectives", npid);
+                                            //this.refresh();
+                                        //}).bind(this);
+                                        //f();
 
                                     }} className="fa fa-plus add"></a></div>
 
@@ -400,10 +420,8 @@ class Home extends Component {
                                         if (this.menu.current)
                                             this.menu.current.close();
                                         let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-
-
-					    let np = await Project.create(this.props.cm)
-					    let npid = np.id
+                                            let np = await Project.create(this.props.cm)
+                                            let npid = np.id
 
                                             history.push(`/projects/${npid}/do`);
                                             this.paginate("projects", npid);
@@ -463,26 +481,29 @@ class Home extends Component {
                                 <IonToast
                                     mode="ios"
                                     cssClass="workspace-toast"
-                                    isOpen={this.state.isWorkspaceRequestShown[0]}
-                                    message={`Invitation to join workspace ${this.state.isWorkspaceRequestShown[1] ? this.state.isWorkspaceRequestShown[1][1] : ""}`}
+                                    isOpen={this.state.pendingAcceptances.length > 0}
+                                    message={`Invitation to join workspace ${this.state.pendingAcceptances[0]? this.state.pendingAcceptances[0].ws.name: ""}`}
                                     position="bottom"
                                     buttons={[
                                         {
                                             text: 'Reject',
                                                 role: 'cancel',
                                                 handler: (async function () {
-                                                    await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                    this.setState({isWorkspaceRequestShown: [false, null]});
+                                                    this.props.cm.rescindWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
+                                                    //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                    //this.setState({isWorkspaceRequestShown: [false, null]});
                                                 }).bind(this)
                                         },
                                         {
                                             text: 'Accept',
                                             handler: (async function () {
-                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
-                                                let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
-                                                await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
-                                                await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                this.setState({isWorkspaceRequestShown: [false, null]});
+                                                                                                    this.props.cm.acceptWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
+
+//                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
+                                                //let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
+                                                //await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
+                                                //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+                                                //this.setState({isWorkspaceRequestShown: [false, null]});
                                             }).bind(this)
                                         }
                                     ]}
@@ -503,14 +524,14 @@ class Home extends Component {
                                         {/* upcoming renders upcoming */}
 
                                         {/* TODO
-                                        <Route path="/upcoming" exact render={() => <Upcoming engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
-                                        <Route path="/calendar" exact render={() => <Calendar engine={this.props.engine} uid={this.state.workspace} gruntman={this.props.gruntman} />} localizations={this.props.localizations} />
                                         <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome engine={this.props.engine} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} gruntman={this.props.gruntman} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} email={this.props.email} />} />
-                                        <Route path="/completed" exact render={() => <Completed engine={this.props.engine} uid={this.state.workspace} history={history} paginate={this.paginate} gruntman={this.props.gruntman} localizations={this.props.localizations} />} />
                                         */}
+
+                                        <Route path="/upcoming" exact render={() => <Upcoming cm={this.props.cm} uid={this.state.workspace} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
+                                        <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} localizations={this.props.localizations} />} />
                                         <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
 
-                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} />} />
+                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history}/>} />
 
                                         <Route 
 					    path="/projects/:id/:create?" 
