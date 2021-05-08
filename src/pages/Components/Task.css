@@ -89,7 +89,15 @@
     right: 8px;
     bottom: 27px;
     transition: 0.3s;
-    pointer-events: auto;
+    /*pointer-events: auto;*/
+    z-index: 300;
+    color: var(--task-datepicker-selected);
+    /*color: var(--content-normal);*/
+}
+
+.expand-icon:hover {
+    color: var(--task-datepicker-feature);
+
 }
 
 .rotated {
