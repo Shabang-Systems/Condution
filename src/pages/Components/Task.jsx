@@ -264,8 +264,8 @@ class Task extends Component {
             deferDate: task.defer,
             hasNotification: true, // TODO
             delegations: task.delegates, // TODO
-            delegatedWorkspace: "", // TODO
-            delegatedTaskID: "", // TODO,
+            delegatedWorkspace: task.delegatedWorkspace, // TODO
+            delegatedTaskID: task.delegatedTaskID, // TODO,
             projectDatapack: pdp,
             tagDatapack: tdp
         }, this.refreshDecorations);
@@ -273,7 +273,7 @@ class Task extends Component {
 
     refreshDecorations() {
         let base = ""
-        if (this.state.delegatedWorkspace !== "") 
+        if (this.state.delegatedWorkspace && this.state.delegatedWorkspace !== "") 
             base = "delegated"
         if (this.state.dueDate && this.state.dueDate-(new Date()) < 0)
             this.setState({decoration: base+" od"}); // give 'em a red badge
@@ -311,9 +311,9 @@ class Task extends Component {
                 e = e.target;                   //assign the element clicked to e
             }
 
-            if (e.className && e.className.indexOf('cm-link') != -1) {
+            if (e.className && (e.className.indexOf('cm-link') != -1 || e.className.indexOf('cm-url') != -1)) {
                 //if the element has a class name, and that is 'someclass' then...
-                window.location.href = e.innerText;
+                window.open(e.innerText, "_blank");
             }
         }
 
@@ -865,7 +865,7 @@ onFocus={(e) => {
                                                                 menuPortal: provided => ({ ...provided, zIndex: "99999 !important" })
                                                             }}
                                                             menuPortalTarget={document.body}
-                                                            value={{value: this.state.project, label: this.state.project?this.state.project.name:""}}
+                                                            value={this.state.project ? {value: this.state.project, label: this.state.project?this.state.project.name:""} : null}
                                                             onChange={(e)=>{
                                                                 if (!e) {
                                                                     this.setState({project: null}, ()=>this.state.taskObj.moveTo(null));
