@@ -58,8 +58,7 @@ class Projects extends Component { // define the component
         this.activeTask = React.createRef();
 
         this.name = React.createRef();
-	      this.checkbox = React.createRef(); // what's my pseudocheck
-
+	this.checkbox = React.createRef(); // what's my pseudocheck
 
         autoBind(this);
     }
