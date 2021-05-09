@@ -269,7 +269,10 @@ class App extends Component {
                         ////name = ""
                         //break;
                 //}
-                this.setState({authMode: mode.service, uid, displayName: name});
+                this.cm.start().then((_) => {
+                    this.setState({authMode: mode.service, uid, displayName: name});
+                });
+
                 // Here
                 //this.setState({authMode: "onboarding", uid, displayName: name});
                 //Engine.db.onBoard(uid, Intl.DateTimeFormat().resolvedOptions().timeZone, this.gruntman.localizations.getLanguage()==="en" ? "there": "", this.gruntman.localizations.onboarding_content).then(e=>this.setState({authMode: mode.service, uid, displayName: name}));

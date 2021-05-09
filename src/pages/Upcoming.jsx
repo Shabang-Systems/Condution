@@ -250,7 +250,7 @@ class Upcoming extends Component { // define the component
                                 </div>)}
                                 <div className="workspace-name-container" style={{borderTop: "1px solid var(--decorative-light)", fontWeight: 600}}><div className="workspace-name-selection" onClick={(async function(){
                                     // TODO
-                                    let val = await W.create(this.props.cm, this.props.cm.userEmail);
+                                    let val = await W.create(this.props.cm, (await this.props.cm.userEmail()));
                                     this.props.cm.useWorkspace(val);
                                     this.workspaceButton.current.dismiss();
                                     this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true, currentWorkspace: "New Workspace"});

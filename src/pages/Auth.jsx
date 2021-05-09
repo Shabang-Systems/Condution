@@ -50,49 +50,33 @@ function Auth(props) {
                             else
                                 setRegularMessage(res.payload.msg);
                         });
-//                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-                            //firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-                                //if (firebase.auth().currentUser.emailVerified)
-                                    //props.dispatch({service: "firebase", operation: "login"});
-                                //else {
-                                    //firebase.auth().currentUser.sendEmailVerification();
-                                    //setRegularMessage(props.localizations.auth_email_unverified_message);
-                                //}
-                            //}).catch(function(error) {
-                                //// Handle Errors here.
-                                //const errorMessage = error.message;
-                                //setRegularMessage(errorMessage);
-                            //});
-                        //});
                         break;
                     case 1:
-                        let problem = false
-                        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                            const errorMessage = error.message;
-                            setSpecialMessage(errorMessage);
-                            problem = true;
-                        }).then(function() {
-                            if (!problem) {
-                                firebase.auth().currentUser.sendEmailVerification();
-                                firebase.auth().currentUser.updateProfile({displayName: name});
-                                props.engine.use("firebase", props.gruntman.requestRefresh);
-                                props.engine.db.onBoard(firebase.auth().currentUser.uid, Intl.DateTimeFormat().resolvedOptions().timeZone, props.localizations.getLanguage()==="en" ? "there": "", props.localizations.onboarding_content);
-                                setMinorMode(2);
+                        props.cm.auth.createUser({payload: { email, password, displayName: name }}).then((res) => {
+                            if (res.actionSuccess) {
+                                // TODO onboarding
                                 setSpecialMessage(props.localizations.auth_verification_message);
+                                setMinorMode(2);
+                            } else {
+                                setSpecialMessage(res.payload.msg);
                             }
-                        }); break;
+                        });
+                        break;
                     case 2:
-                        firebase.auth().currentUser.reload().then(()=>{
-                            if (firebase.auth().currentUser.emailVerified)
-                                props.dispatch({service: "firebase", operation: "create"});
-                            else
-                                setSpecialMessage(props.localizations.auth_verification_check_message);
-                        }); break;
+                        props.cm.auth.refreshAuthentication().then(() => {
+                            props.cm.auth.currentUser.then((user) => {
+                                if (user.emailVerified)
+                                    props.dispatch({service: "firebase", operation: "create"});
+                                else
+                                    setSpecialMessage(props.localizations.auth_verification_check_message);
+                            });
+                        });
+                        break;
                     case 3:
                         let recProblem = false;
                         firebase.auth().sendPasswordResetEmail(email).catch(function(error) {
                             setRecoveryMessage(error.message);
-                            problem=true;
+                            recProblem=true;
                         }).then(function() {
                             if (!recProblem) {
                                 setRecoveryMessage(props.localizations.auth_recovery_check_message);
