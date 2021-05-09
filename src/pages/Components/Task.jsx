@@ -567,9 +567,6 @@ class Task extends Component {
                             ref={this.codeMirriscription}
 						    tabIndex='0'
 						    value={this.state.desc}
-						    onDblClick={(e) => console.log(e, "skree")}
-						    
-						    
 						    //options={options}
 						    options={{
 							mode: 'gfm',
@@ -596,7 +593,10 @@ class Task extends Component {
 						/>
                                                 <i 
 						    className={`fas fa-chevron-down expand-icon ${this.state.descExpanded? "rotated" : ""}`}
-						    onClick={() => {this.setState({descExpanded: !this.state.descExpanded})}}
+						    onClick={() => {
+							this.setState({descExpanded: !this.state.descExpanded}); 
+							//setTimeout(() => {this.forceUpdate()}, 3000);
+						    }}
 						    onMouseEnter={() => { this.setState({ iconHovering: true  })}}
 						    onMouseLeave={() => { this.setState({ iconHovering: false })}}
 						    //style={{transform: `${this.state.descExpanded? "rotate(180)" : "rotate(0)"}`}}
