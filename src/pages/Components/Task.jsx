@@ -7,7 +7,7 @@ import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, Ion
 import { getPlatforms } from '@ionic/react';
 
 // Like, your heart and soul
-import React, { Component } from 'react';
+import React, { Component, findDOMNode } from 'react';
 
 // React Spring animation packages
 import { Spring, animated, Keyframes } from 'react-spring/renderprops'
@@ -297,6 +297,17 @@ class Task extends Component {
         this.initialRenderDone = true;
 
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
+	//document.addEventListener('click', 
+	//const timer = setTimeout(() => {
+	//    const element = document.querySelector("pre");
+	//    console.log("element!", element)
+	//    //}, 2000)
+	//console.log(findDOMNode("CodeMirror"))
+	//console.log(document.getElementsByClassName("cm-link"))
+
+	//element.addEventListener("click", () => {
+	//    console.log("clicked element");
+	//});
     }
 
     componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false); // remove the listener... no memory leaks plez
@@ -545,6 +556,8 @@ class Task extends Component {
 						<CodeMirror
 						    tabIndex='0'
 						    value={this.state.desc}
+						    onDblClick={(e) => console.log(e, "skree")}
+						    
 						    
 						    //options={options}
 						    options={{
