@@ -22,10 +22,10 @@ let snapshots: any[] = [];
 
 class FirebaseCollection extends Collection {
     path: string[];
-    firebaseDB: firebase.default.firestore.Firestore;
-    firebaseRef: typeof firebase.default.firestore;
+    firebaseDB: firebase.firestore.Firestore;
+    firebaseRef: typeof firebase.firestore;
 
-    constructor(path:string[], firebaseDB:firebase.default.firestore.Firestore, firebaseRef:(typeof firebase.default.firestore), refreshCallback?:Function) {
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback?:Function) {
         super();
         this.path = path;
         this.firebaseDB = firebaseDB;
@@ -150,12 +150,12 @@ class FirebaseCollection extends Collection {
 
 class FirebasePage extends Page {
     path: string[];
-    firebaseDB: firebase.default.firestore.Firestore;
-    firebaseRef: typeof firebase.default.firestore;
+    firebaseDB: firebase.firestore.Firestore;
+    firebaseRef: typeof firebase.firestore;
 
     private data: Promise<object>; 
     
-    constructor(path:string[], firebaseDB:firebase.default.firestore.Firestore, firebaseRef:(typeof firebase.default.firestore), refreshCallback:Function=()=>{}) {
+    constructor(path:string[], firebaseDB:firebase.firestore.Firestore, firebaseRef:(typeof firebase.firestore), refreshCallback:Function=()=>{}) {
         super();
 
         this.path = path;
@@ -290,11 +290,11 @@ class FirebasePage extends Page {
 }
 
 class FirebaseAuthenticationProvider extends AuthenticationProvider {
-    private firebaseAuthPointer: firebase.default.auth.Auth;
+    private firebaseAuthPointer: firebase.auth.Auth;
 
     constructor() {
         super();
-        this.firebaseAuthPointer = firebase.default.auth();
+        this.firebaseAuthPointer = firebase.auth();
 
         if (this.firebaseAuthPointer.currentUser)
             this._authenticated = true;
@@ -304,7 +304,7 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
 
     get currentUser() : Promise<AuthenticationUser> {
         return new Promise((res, _) => {
-            firebase.default.auth().onAuthStateChanged((user:any) => {
+            firebase.auth().onAuthStateChanged((user:any) => {
                 if (user)
                     res({
                         identifier: user.uid,
@@ -318,7 +318,7 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
     }
 
     refreshAuthentication = async () => {
-        await firebase.default.auth().currentUser.reload();
+        await firebase.auth().currentUser.reload();
         if (this.firebaseAuthPointer.currentUser)
             this._authenticated = true;
         else
@@ -327,7 +327,7 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
 
     async authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult> {
         if (request.requestType == "email_pass" || !request.requestType) {
-            await this.firebaseAuthPointer.setPersistence(firebase.default.auth.Auth.Persistence.LOCAL);
+            await this.firebaseAuthPointer.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
             let e_code:string;
             let e_msg:string;
@@ -437,8 +437,8 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
 
 class FirebaseProvider extends Provider {
     name: string;
-    firebaseDB: firebase.default.firestore.Firestore;
-    firebaseRef: typeof firebase.default.firestore;
+    firebaseDB: firebase.firestore.Firestore;
+    firebaseRef: typeof firebase.firestore;
 
     private authProvider: AuthenticationProvider;
 
@@ -455,17 +455,17 @@ class FirebaseProvider extends Provider {
 
         // Initialize the correct version of the database
         if (process.env.NODE_ENV === "development")
-            firebase.default.initializeApp(obj.dbkeys.debug);
+            firebase.initializeApp(obj.dbkeys.debug);
         else if (process.env.NODE_ENV === "production")
-            firebase.default.initializeApp(obj.dbkeys.deploy);
+            firebase.initializeApp(obj.dbkeys.deploy);
         else
-            firebase.default.initializeApp(obj.dbkeys.debug);
+            firebase.initializeApp(obj.dbkeys.debug);
 
         // Initialize and add the provider
         this.authProvider = new FirebaseAuthenticationProvider();
 
         // Get firestore references
-        [ this.firebaseDB, this.firebaseRef ] = [firebase.default.firestore(), firebase.default.firestore];
+        [ this.firebaseDB, this.firebaseRef ] = [firebase.firestore(), firebase.firestore];
 
         // Enable Persistance
         this.firebaseDB.enablePersistence({synchronizeTabs: true}).catch((e)=>console.log(`CondutionEngine (FirebaseProvider): persistance enabling failed due to code "${e.code}"`));
