@@ -51,7 +51,7 @@
  *
  */
 
-import { Collection, Page, Provider } from "./Storage/Backends/Backend";
+import { Collection, Page, Provider, AuthenticationUser, AuthenticationResult, AuthenticationRequest, AuthenticationProvider } from "./Storage/Backends/Backend";
 
 /*
  * Chapter 1: Built-in Providers
@@ -151,8 +151,9 @@ export {
     Collection, Page, Provider,
     RepeatRule, RepeatRuleType,
     GloballySelfDestruct, Hookifier, Ticket,
+    AuthenticationProvider,
     ReferenceManager
 };
 
-export type { AdapterData, Filterable };
+export type { AdapterData, Filterable, AuthenticationUser, AuthenticationResult, AuthenticationRequest };
 
