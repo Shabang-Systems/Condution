@@ -47,6 +47,8 @@ function Auth(props) {
                                 props.dispatch({service: "firebase", operation: "login"});
                             else if (res.payload.code === "email_verification_needed")
                                 setRegularMessage(props.localizations.auth_email_unverified_message);
+                            else
+                                setRegularMessage(res.payload.msg);
                         });
 //                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
                             //firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
