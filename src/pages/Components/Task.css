@@ -50,12 +50,19 @@
     /*resize: none !important;*/
     border-radius: 3px;
     margin-bottom: 5px;
+    transition-property: height;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
 }
 
 .cm-s-expanded {
     height: 350px !important;
     max-height: 350px !important;
     background-color: var(--task-textbox-background) !important;
+    transition-property: all;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+
 }
 
 
@@ -106,7 +113,7 @@
 }
 
 .CodeMirror-focused {
-    transition-property: background-color;
+    transition-property: all;
     transition-duration: 0.3s;
     transition-timing-function: ease-in-out;
 
@@ -119,7 +126,7 @@
 }
 
 .cm-s-condution:hover {
-    transition-property: background-color;
+    transition-property: all;
     transition-duration: 0.3s;
     transition-timing-function: ease-in-out;
     background-color: var(--task-textbox-background) !important;
