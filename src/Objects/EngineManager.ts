@@ -108,7 +108,12 @@ export class Context {
                         needResponse.push({ws: await Workspace.fetch(this, i["workspace"]), inviteID: i["id"]});
                     }
                 }));
+
+                this._pendingAcceptances = needResponse;
+                Hookifier.call("context.workspace");
+            });
                 
+            this.rm.collection(["invitations", email, "delegations"], async ()=>{
                 let seenChains: string[] = [];
 
                 // Get all invites
@@ -125,18 +130,48 @@ export class Context {
                     }
                     seenChains.push(i["task"]);
 
+                    // If its a delegation
                     if (i["type"] === "delegation") {
-                        this.rm.page(["invitations", email, "delegations", i["id"]]).delete();
+                        // get the task
                         let taskObj:object = await this.rm.page(["workspaces", i["workspace"], "tasks", i["task"]]).get();
-                        let result:DataExchangeResult = await this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:""}));
+                        // Add the task to current user
+                        let result:DataExchangeResult = await this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:"", delegatedWorkspace: i["workspace"]}));
+                        // Get the ID of new task, and set it to chains
                         this._chains[i["task"]] = result.identifier;
-                        await this.rm.page(["users", this.userID, "tasks"]).set({chains:this._chains, workspaces: this._workspaces});
+
+                        // Commit the chains and remove invite
+                        await this.rm.page(["users", this.userID]).set({chains:this._chains, workspaces: this._workspaces});
+                        await this.rm.page(["invitations", email, "delegations", i["id"]]).delete();
                     } else {
+                        // Get the chained ID of the task
+                        let taskID:string = this._chains[i["task"]];
+                        if (!taskID) {
+                            await this.rm.page(["invitations", email, "delegations", i["id"]]).delete(); return;
+                        }
+
+                        // Get the task
+                        let taskPage:Page = this.rm.page(["users", this.userID, "tasks", taskID]);
+                        let taskInfo:object = await taskPage.get();
+
+                        // If there's a parent
+                        if (taskInfo["project"] && taskInfo["project"] !== "") {
+                            // Get the parent
+                            let projectPage:Page = this.rm.page(["users", this.userID, "projects", taskInfo["project"]]);
+                            let projectData:object = await projectPage.get();
+                            // Remove the child ("dissociate")
+                            let children:object = projectData["children"];
+                            delete children[taskID];
+                            projectData = Object.assign(projectData, {children});
+                            // Commit to DB
+                            projectPage.set(projectData);
+                        }
+
+                        // Delete task and delegation
+                        await this.rm.page(["users", this.userID, "tasks", taskID]).delete();
+                        await this.rm.page(["invitations", email, "delegations", i["id"]]).delete();
                     }
                 }));
 
-                this._pendingAcceptances = needResponse;
-                Hookifier.call("context.workspace");
             });
         }
 
