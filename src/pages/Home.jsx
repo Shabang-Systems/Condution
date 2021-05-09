@@ -249,16 +249,19 @@ class Home extends Component {
                 {/* The central router that controls the routing of views */}
                 <Router history={history}>
                     {/* @TheEnquirer TODO
-                    <Keybinds 
-                        paginate={this.paginate} 
+		    */}
+		    <Keybinds 
+			paginate={this.paginate} 
                         ref={this.keybindRef} 
                         perspectives={this.state.perspectives}
                         projects={this.state.projects}
                         abtib={this.abtibRef} 
-                        engine={this.props.engine} 
-                        uid={this.state.workspace} 
-                        gruntman={this.props.gruntman} 
-                    />*/}
+			localizations={this.props.localizations}
+			cm={this.props.cm}
+                        /*engine={this.props.engine} */
+                        /*uid={this.state.workspace} */
+                        /*gruntman={this.props.gruntman} */
+                    />
                     {/* OoIp */}
                     <ReactTooltip />
                     {/* App container */}
