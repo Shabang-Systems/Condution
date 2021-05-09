@@ -327,16 +327,34 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
     async authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult> {
         if (request.requestType == "email_pass" || !request.requestType) {
             await this.firebaseAuthPointer.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-            await this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password)        
-            if (this.firebaseAuthPointer.currentUser.emailVerified)
-                this._authenticated = true;
-            else
-                this.firebaseAuthPointer.currentUser.sendEmailVerification();
-            return {
-                actionDesired: "authenticate", 
-                actionSuccess: this.firebaseAuthPointer.currentUser.emailVerified ? true : false, 
-                identifier: this.firebaseAuthPointer.currentUser.uid, 
-                payload: this.firebaseAuthPointer.currentUser.emailVerified ? null : {msg: "User email unverified", code: "email_verification_needed"}
+
+            let e_code:string;
+            let e_msg:string;
+
+            (await this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password).catch((err) => {
+                e_code = err["code"];
+                e_msg = err["message"];
+            }));
+
+            if (e_code) {
+                return {
+                    actionDesired: "authenticate", 
+                    actionSuccess: false, 
+                    identifier: null, 
+                    payload: {msg: e_msg, code: e_code}
+                }
+            } else {
+                if (this.firebaseAuthPointer.currentUser.emailVerified)
+                    this._authenticated = true;
+                else
+                    this.firebaseAuthPointer.currentUser.sendEmailVerification();
+
+                return {
+                    actionDesired: "authenticate", 
+                    actionSuccess: this.firebaseAuthPointer.currentUser.emailVerified ? true : false, 
+                    identifier: this.firebaseAuthPointer.currentUser.uid, 
+                    payload: this.firebaseAuthPointer.currentUser.emailVerified ? null : {msg: "User email unverified", code: "email_verification_needed"}
+                }
             }
         }
         else 

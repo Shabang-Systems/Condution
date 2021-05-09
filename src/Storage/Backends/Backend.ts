@@ -146,7 +146,8 @@ abstract class Provider {
     /**
      * @method flush
      *
-     * Used during log out and wipes. Do whatever to clean up after yourself.
+     * Used during log out and wipes. Do whatever to clean up after yourself. 
+     * This should be static
      *
      * @returns {void}
      */
