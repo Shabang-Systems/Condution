@@ -254,8 +254,8 @@ class Task extends Component {
             taskObj: task, // set task object
             name: task.name, // Set name field
             desc: task.description, // Set task description
-            project: task.project,  // Set project
-            tags: task.tags, // Set tag array
+            project: await task.async_project,  // Set project
+            tags: await Promise.all(task.async_tags), // Set tag array
             isFloating: task.isFloating, // Set isFloating bool
             isFlagged: task.isFlagged, // Set is Flagged bool
             isComplete: task.isComplete, // Set is complete style
