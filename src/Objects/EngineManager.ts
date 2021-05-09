@@ -77,9 +77,15 @@ export class Context {
 
         // Get workspaces
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
+        if (!this._workspaces)
+            this._workspaces = [];
 
         // Get chains
         this._chains = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._chains = newPrefs["chains"]}).get())["chains"];
+
+        if (!this._chains)
+            this._chains = [];
+
 
         // If authentication is supported, then
         // get chains and workspaces
@@ -240,7 +246,7 @@ export class Context {
     async acceptWorkspace(workspaceID:string, inviteID?:string):Promise<void> {
         let email:string = await this.userEmail();
         this._workspaces.push(workspaceID);
-        await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
+        await this.rm.page(["users", this.userID]).set({"workspaces": this._workspaces}, {merge:true});
         if (inviteID)
             this.rm.page(["invitations", email, "invites", inviteID]).delete();
 

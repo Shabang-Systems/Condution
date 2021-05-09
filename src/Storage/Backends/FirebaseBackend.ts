@@ -317,7 +317,8 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
         });
     }
 
-    refreshAuthentication = () => {
+    refreshAuthentication = async () => {
+        await firebase.auth().currentUser.reload();
         if (this.firebaseAuthPointer.currentUser)
             this._authenticated = true;
         else
@@ -375,6 +376,7 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
         try {
             await this.firebaseAuthPointer.createUserWithEmailAndPassword(request.payload.email, request.payload.password);
             // TODO should we remove email verification requirement??
+            this.firebaseAuthPointer.currentUser.updateProfile({displayName: request.payload.displayName});
             this.firebaseAuthPointer.currentUser.sendEmailVerification();
             this._authenticated = true;
             return {

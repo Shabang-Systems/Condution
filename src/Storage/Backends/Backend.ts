@@ -57,6 +57,8 @@ abstract class AuthenticationProvider {
 
     abstract createUser(request: AuthenticationRequest) : Promise<AuthenticationResult>;
     abstract updateUserProfile(request: AuthenticationRequest) : Promise<AuthenticationResult>;
+
+    abstract async refreshAuthentication(): Promise<void>;
 }
 
 /**
