@@ -109,8 +109,6 @@ class Home extends Component {
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
 
    async componentDidMount() {
-        await this.props.cm.start();
-
         const content = this.menuContent.current;
         const styles = document.createElement('style');
         styles.textContent = `

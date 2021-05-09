@@ -51,6 +51,7 @@ class Upcoming extends Component { // define the component
             inbox: [], // define the inbox
             dueSoon: [], // whats due soon? 
             timeline: [],
+            displayName: "",
             timelineShown: false,
             greeting: greetings[Math.floor(Math.random() * greetings.length)],
             workspaces: [],
@@ -153,7 +154,7 @@ class Upcoming extends Component { // define the component
         let ds = (await this.state.dsWidget.execute());
         let dsids = ds.map(i=>i.id);
         inbox = inbox.filter(i=>!dsids.includes(i.id));
-        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces())});
+        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces()), displayName: (await this.props.cm.userDisplayName())});
     }
 
     componentDidMount() {
@@ -219,7 +220,7 @@ class Upcoming extends Component { // define the component
                             
 
 
-                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600, marginRight: 10}}>{this.props.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
+                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600, marginRight: 10}}>{this.state.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
                             </div>
                         </div>
                         <IonPopover

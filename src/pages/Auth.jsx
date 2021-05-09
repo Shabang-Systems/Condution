@@ -42,20 +42,26 @@ function Auth(props) {
             case 1:
                 switch (minorMode) {
                     case 0:
-                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-                            firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-                                if (firebase.auth().currentUser.emailVerified)
-                                    props.dispatch({service: "firebase", operation: "login"});
-                                else {
-                                    firebase.auth().currentUser.sendEmailVerification();
-                                    setRegularMessage(props.localizations.auth_email_unverified_message);
-                                }
-                            }).catch(function(error) {
-                                // Handle Errors here.
-                                const errorMessage = error.message;
-                                setRegularMessage(errorMessage);
-                            });
+                        props.cm.auth.authenticate({requestType:"email_pass", payload: { email, password }}).then((res) => {
+                            if (res.actionSuccess)
+                                props.dispatch({service: "firebase", operation: "login"});
+                            else if (res.payload.code === "email_verification_needed")
+                                setRegularMessage(props.localizations.auth_email_unverified_message);
                         });
+//                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+                            //firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+                                //if (firebase.auth().currentUser.emailVerified)
+                                    //props.dispatch({service: "firebase", operation: "login"});
+                                //else {
+                                    //firebase.auth().currentUser.sendEmailVerification();
+                                    //setRegularMessage(props.localizations.auth_email_unverified_message);
+                                //}
+                            //}).catch(function(error) {
+                                //// Handle Errors here.
+                                //const errorMessage = error.message;
+                                //setRegularMessage(errorMessage);
+                            //});
+                        //});
                         break;
                     case 1:
                         let problem = false
@@ -132,7 +138,10 @@ function Auth(props) {
                                     case 0:
                                         return (
                                             <>
-                                                <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐  in the cloud</div>
+                                                <div className="auth-click-button" onClick={()=>{
+                                                    props.cm.useProvider("firebase");
+                                                    setMajorMode(1)
+                                                }}>🌐  in the cloud</div>
                                                 <div className="auth-click-button" onClick={()=>props.dispatch({service: "json", operation: "login"})}>💾  on your device</div>
                                             </>
                                         );

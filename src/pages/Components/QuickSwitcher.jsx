@@ -189,6 +189,7 @@ class QuickSwitcher extends Component {
 			{this.filterItems(this.state.query).map((item, i) => {
 			    return (
 				<div 
+                    key={i}
 				    className="option-line"
 				    className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
 				    ref={(this.state.selected == i)? this.currentlySelected : null}

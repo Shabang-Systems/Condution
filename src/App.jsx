@@ -42,14 +42,15 @@ import $ from "jquery";
 //import Engine from './backend/CondutionEngine';
 //import Gruntman from './gruntman';
 
-import { FirebaseProvider, Context, ReferenceManager } from "./backend/src/CondutionEngine";
+import { FirebaseProvider, Context, ReferenceManager, Utilities } from "./backend/src/CondutionEngine";
+
 
 /* Firebase */
-import * as firebase from "firebase/app";
+//import * as firebase from "firebase/app";
 
 /* Auth and store modules */
-import "firebase/auth";
-import "firebase/firestore";
+//import "firebase/auth";
+//import "firebase/firestore";
 
 /* Views that we need */
 import Auth from './pages/Auth';
@@ -160,47 +161,49 @@ class App extends Component {
             // So, do we have a condution_stotype? 
             Storage.get({key: 'condution_stotype'}).then((async function(dbType) {
                 switch (dbType.value) {
-                    // If its firebase 
+                        // If its firebase 
                     case "firebase":
                         // Check if we actually has a user
-                        firebase.auth().onAuthStateChanged(function(user) {
-                            if (!user)
-                                view.authDispatch({operation:"logout"});
+                        //firebase.auth().onAuthStateChanged(function(user) {
+                            //if (!user)
+                                //view.authDispatch({operation:"logout"});
                             // If we have one, shift the engine into firebase mode
-                            else {
-                                view.cm.useProvider("firebase");
+                            //else {
+                        view.cm.useProvider("firebase");
                                 // Load the authenticated state, set authmode as "firebase" and supply the UID
-                                view.setState({authMode: "firebase", uid: user.uid, displayName: user.displayName});
-                            }
-                        })
+                        await view.cm.start();
+                        view.setState({authMode: "firebase"});
+                        //uid: user.uid, displayName: user.displayName
+                            //}
+                        //})
                         break;
-                    // If its json
-                case "json":
-                    // Shift the engine into json mode
-                    this.cm.useProvider("json");
-                    // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
-                    this.setState({authMode: "json", uid:"hard-storage-user"});
-                    break;
-                // If its workspace preload
-//                case "workspace": TODO
-                    //if (uri[1] !== "workspaces") {
+                        // If its json
+                    case "json":
+                        // Shift the engine into json mode
+                        this.cm.useProvider("json");
+                        // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
+                        this.setState({authMode: "json", uid:"hard-storage-user"});
+                        break;
+                        // If its workspace preload
+                        //                case "workspace": TODO
+                        //if (uri[1] !== "workspaces") {
                         //this.cm.useProvider("firebase");
                         //this.setState({authMode: "workspace", workspace:(await Storage.get({key: 'condution_workspace'})).value});
                         //break;
-                    //}
-                // If there is nothing, well, set the authmode as "none"
-                default:
-                    if (uri[1] !== "workspaces")
-                        this.setState({authMode: "none", uid:undefined});
-                    else {
-                        this.cm.useProvider("firebase");
-                        Storage.set({key: 'condution_stotype', value: "workspace"});
-                        Storage.set({key: 'condution_workspace', value: uri[2]});
-                        this.setState({authMode: "workspace", workspace:uri[2]});
-                    }
-                    break;
-            }
-        }).bind(this));
+                        //}
+                        // If there is nothing, well, set the authmode as "none"
+                    default:
+                        if (uri[1] !== "workspaces")
+                            this.setState({authMode: "none", uid:undefined});
+                        else {
+                            this.cm.useProvider("firebase");
+                            Storage.set({key: 'condution_stotype', value: "workspace"});
+                            Storage.set({key: 'condution_workspace', value: uri[2]});
+                            this.setState({authMode: "workspace", workspace:uri[2]});
+                        }
+                        break;
+                }
+            }).bind(this));
     }
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
@@ -217,26 +220,28 @@ class App extends Component {
             case "login":
                 // shift the engine into whatever mode we just logged into
                 //Engine.use(mode.service, this.gruntman.requestRefresh);
-                this.cm.useProvider(mode.service);
+                //this.cm.useProvider(mode.service);
                 // write the login state into cookies
                 Storage.set({key: 'condution_stotype', value: mode.service});
                 // get the UID
 
-                switch (mode.service) {
+                //switch (mode.service) {
                     // if its firebase
-                    case "firebase":
+                    //case "firebase":
                         // set the UID as the UID
-                        uid = firebase.auth().currentUser.uid;
-                        name = firebase.auth().currentUser.displayName
-                        break;
-                    default:
+                        //uid = this.props.cm.auth.currentUser
+                        //name = firebase.auth().currentUser.displayName
+                        //break;
+                    //default:
                         // set the UID as "hard-storage-user"
-                        uid = "hard-storage-user";
-                        name = ""
-                        break;
-                }
+                        //uid = "hard-storage-user";
+                        //name = ""
+                        //break;
+                //}
                 // load the authenicated state and supply the UID
-                this.setState({authMode: mode.service, uid, displayName: name});
+                this.cm.start().then((_) => {
+                    this.setState({authMode: mode.service});
+                });
                 break;
             // operation mode create
             case "create":
@@ -244,19 +249,19 @@ class App extends Component {
                 //Engine.use(mode.service, this.gruntman.requestRefresh);
                 this.cm.useProvider(mode.service);
                 Storage.set({key: 'condution_stotype', value: mode.service});
-                switch (mode.service) {
-                    // if its firebase
-                    case "firebase":
-                        // set the UID as the UID
-                        uid = firebase.auth().currentUser.uid;
-                        name = firebase.auth().currentUser.displayName
-                        break;
-                    default:
-                        // set the UID as "hard-storage-user"
-                        uid = "hard-storage-user";
-                        name = ""
-                        break;
-                }
+//                switch (mode.service) {
+                    //// if its firebase
+                    //case "firebase":
+                        //// set the UID as the UID
+                        ////uid = firebase.auth().currentUser.uid;
+                        ////name = firebase.auth().currentUser.displayName
+                        //break;
+                    //default:
+                        //// set the UID as "hard-storage-user"
+                        ////uid = "hard-storage-user";
+                        ////name = ""
+                        //break;
+                //}
                 this.setState({authMode: mode.service, uid, displayName: name});
                 // Here
                 //this.setState({authMode: "onboarding", uid, displayName: name});
@@ -266,10 +271,13 @@ class App extends Component {
                 // load the authenicated state and TODO supply the UID
                 break;
             case "logout":
+                Utilities.GloballySelfDestruct();
                 // Set the storage type to nada and write it into cookies
                 Storage.set({key: 'condution_stotype', value: "none"});
                 // Sign out if we are signed in
-                firebase.auth().signOut();
+                //firebase.auth().signOut();
+                if (this.cm.auth)
+                    this.cm.auth.deauthenticate();
                 // Load the auth view
                 this.setState({authMode: "none", name: ""});
                 break;
@@ -295,12 +303,13 @@ class App extends Component {
                 return <Loader />
             // if we did not authenticate yet, load the auth view:
             case "none":
-                return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} cm={this.cm} />;
+                return <Auth dispatch={this.authDispatch} localizations={this.state.localizations} cm={this.cm} />;
             case "form":
                 //return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true} engine={Engine}/>;
             // if we did auth, load it up and get the party going
             case "firebase":
-                return <Home cm={this.cm} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} email={firebase.auth().currentUser.email}/>;
+                return <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
+ //email={firebase.auth().currentUser.email}
             case "workspace":
                 //return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
             case "json":
