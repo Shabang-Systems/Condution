@@ -8,6 +8,7 @@ import { getPlatforms } from '@ionic/react';
 
 // Like, your heart and soul
 import React, { Component, findDOMNode } from 'react';
+import ReactDOM from "react-dom";
 
 // React Spring animation packages
 import { Spring, animated, Keyframes } from 'react-spring/renderprops'
@@ -214,6 +215,7 @@ class Task extends Component {
         this.deferPopover = React.createRef(); // what's my defer popover?
         this.notificationPopover = React.createRef(); // what's my notification popover?
         this.notificationCalender = React.createRef(); // what's my notification calandar?
+        this.codeMirriscription = React.createRef(); // what's my description?
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -387,6 +389,13 @@ class Task extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.codeMirriscription.current) {
+            let urls = ReactDOM.findDOMNode(this.codeMirriscription.current).getElementsByClassName('cm-url') // Returns the elements
+            for (let url of urls) {
+                console.log(url.innerText, url.innerHTML);
+            }
+        }
+            //console.log(this.codeMirriscription);
         // flush styles
         if (prevState.deferDate !== this.state.deferDate) // if we updated the defer date
             this.refreshDecorations();
@@ -554,6 +563,7 @@ class Task extends Component {
 						</textarea>
 						*/}
 						<CodeMirror
+                            ref={this.codeMirriscription}
 						    tabIndex='0'
 						    value={this.state.desc}
 						    onDblClick={(e) => console.log(e, "skree")}

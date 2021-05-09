@@ -9,6 +9,10 @@
     color: var(--task-name-text);
 }
 
+.cm-url {
+    cursor: pointer;
+}
+
 .task.collapsed {
 }
 
