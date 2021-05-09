@@ -42,7 +42,7 @@ import $ from "jquery";
 //import Engine from './backend/CondutionEngine';
 //import Gruntman from './gruntman';
 
-import { FirebaseProvider, Context, ReferenceManager, Utilities } from "./backend/src/CondutionEngine";
+import { FirebaseProvider, Context, ReferenceManager, GloballySelfDestruct } from "./backend/src/CondutionEngine";
 
 
 /* Firebase */
@@ -281,7 +281,7 @@ class App extends Component {
                 // load the authenicated state and TODO supply the UID
                 break;
             case "logout":
-                Utilities.GloballySelfDestruct();
+                GloballySelfDestruct();
                 // Set the storage type to nada and write it into cookies
                 Storage.set({key: 'condution_stotype', value: "none"});
                 // Sign out if we are signed in
