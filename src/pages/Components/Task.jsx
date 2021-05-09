@@ -388,6 +388,10 @@ class Task extends Component {
         if (this.state.showTagEditor) // if we are showing TagEditor
             return; // click inside
         //
+	if (e.target.className == " CodeMirror-line ") {
+	    return;
+	}
+
         //otherwise,
         this.closeTask();
     }
@@ -582,7 +586,7 @@ class Task extends Component {
 							//xml: true,
 							highlightFormatting: true,
 							spellcheck: true,
-							matchBrackets: false,
+							matchBrackets: true,
 							continueList: true,
 							newineAndIndentContinueMarkdownList: true,
 							//vimMode: true,
