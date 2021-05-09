@@ -1,7 +1,7 @@
 import Workspace from "./Workspace";
 import { GloballySelfDestruct, Hookifier } from "./Utils";
 import ReferenceManager from "../Storage/ReferenceManager";
-import { Page, Collection, DataExchangeResult } from "../Storage/Backends/Backend"; 
+import { Page, Collection, DataExchangeResult, AuthenticationUser } from "../Storage/Backends/Backend"; 
 
 interface InviteNote {
     ws: Workspace ;
@@ -37,19 +37,20 @@ export class Context {
     private defaultUsername:string; // defaultUsername
     private _pendingAcceptances:InviteNote[] = []; // pending workspaces to accept
 
-    constructor(refManager:ReferenceManager, initializeWithoutAuth:boolean=false, defaultUsername:string="hard-storage-user") {
+    constructor(refManager:ReferenceManager, defaultUsername:string="hard-storage-user") {
         this.rm = refManager;
         this.defaultUsername = defaultUsername;
         
-        if (!initializeWithoutAuth && this.rm.currentProvider.authSupported) {
-            console.assert(this.rm.currentProvider.authenticationProvider.authenticated, "CondutionEngine: requested context initialization with auth but provider not authenticated.");
-            this.ticketID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
-            this.userID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
-            this.authenticatable = true;
-        } else {
-            this.ticketID = defaultUsername;
-            this.userID = defaultUsername;
-        }
+        //if (!initializeWithoutAuth && this.rm.currentProvider.authSupported) {
+            //console.assert(this.rm.currentProvider.authenticationProvider.authenticated, "CondutionEngine: requested context initialization with auth but provider not authenticated.");
+            //let user:AuthenticationUser = await this.auth.currentUser;
+            //this.ticketID = this.auth.currentUser.identifier;
+            //this.userID = this.auth.currentUser.identifier;
+            //this.authenticatable = true;
+        //} else {
+            //this.ticketID = defaultUsername;
+            //this.userID = defaultUsername;
+        //}
     }
 
     /**
@@ -64,6 +65,16 @@ export class Context {
      */
 
     async start():Promise<void> {
+        if (this.rm.currentProvider.authSupported) {
+            let user:AuthenticationUser = await this.auth.currentUser;
+            this.ticketID = user.identifier;
+            this.userID = user.identifier;
+            this.authenticatable = true;
+        } else {
+            this.ticketID = this.defaultUsername;
+            this.userID = this.defaultUsername;
+        }
+
         // Get workspaces
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
 
@@ -75,7 +86,7 @@ export class Context {
         if (this.rm.currentProvider.authSupported) {
 
             // Get user email
-            let email:string = this.rm.currentProvider.authenticationProvider.currentUser.email;
+            let email:string = (await this.auth.currentUser).email;
 
             // Get collection of invites
             this.rm.collection(["invitations", email, "invites"], async ()=>{
@@ -188,20 +199,7 @@ export class Context {
      */
 
     useProvider(providerName:string):void {
-        // TODO TODO BROKEN
-        console.log("THIS IS VERY BROKEN");
-        GloballySelfDestruct();
         this.rm.use(providerName);
-
-        if (this.rm.currentProvider.authSupported) {
-            this.ticketID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
-            this.userID = this.rm.currentProvider.authenticationProvider.currentUser.identifier;
-            this.authenticatable = true;
-        } else {
-            this.ticketID = this.defaultUsername;
-            this.userID = this.defaultUsername;
-        }
-
     }
 
     /**
@@ -240,7 +238,7 @@ export class Context {
      */
 
     async acceptWorkspace(workspaceID:string, inviteID?:string):Promise<void> {
-        let email:string = this.rm.currentProvider.authenticationProvider.currentUser.email;
+        let email:string = await this.userEmail();
         this._workspaces.push(workspaceID);
         await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
         if (inviteID)
@@ -256,7 +254,7 @@ export class Context {
      */
 
     async rescindWorkspace(workspaceID:string, inviteID?:string):Promise<void> {
-        let email:string = this.rm.currentProvider.authenticationProvider.currentUser.email;
+        let email:string = await this.userEmail();
         this._workspaces = this._workspaces.filter((id:string) => id !== workspaceID);
         await this.rm.page(["users", this.userID]).update({"workspaces": this._workspaces});
         if (inviteID)
@@ -324,9 +322,21 @@ export class Context {
      * @property
      */
 
-    get userEmail() {
+    async userEmail() {
         if (this.rm.currentProvider.authSupported) {
-            return this.rm.currentProvider.authenticationProvider.currentUser.email;
+            return (await this.auth.currentUser).email;
+        } else return null;
+    }
+
+
+    /**
+     * The user's name
+     * @property
+     */
+
+    async userDisplayName() {
+        if (this.rm.currentProvider.authSupported) {
+            return (await this.auth.currentUser).displayName;
         } else return null;
     }
 
@@ -351,6 +361,16 @@ export class Context {
 
     async workspaces() {
         return await Promise.all(this._workspaces.map(async i=>(await Workspace.fetch(this, i))));
+    }
+
+    /**
+     * Authentication provider
+     * @property
+     *
+     */
+
+    get auth() {
+        return this.rm.currentProvider.authenticationProvider;
     }
 
     /**

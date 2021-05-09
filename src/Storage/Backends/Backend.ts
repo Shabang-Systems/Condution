@@ -46,7 +46,7 @@ interface DataExchangeResult {
 abstract class AuthenticationProvider {
     protected _authenticated : boolean;
 
-    abstract get currentUser() : AuthenticationUser;
+    abstract get currentUser() : Promise<AuthenticationUser>;
 
     get authenticated() : boolean {
         return this._authenticated;

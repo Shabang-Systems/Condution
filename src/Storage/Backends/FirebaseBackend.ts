@@ -8,6 +8,7 @@ import type { AuthenticationResult, AuthenticationRequest, AuthenticationUser, D
 // TODO TODO the maps should go to somewhere better than this.
 let cache = new Map();
 let unsubscribeCallbacks = new Map();
+let snapshots: any[] = [];
 
 /**
  * A firebase collection to operate on 
@@ -33,14 +34,14 @@ class FirebaseCollection extends Collection {
         const ref = this.getFirebaseRef(this.path);           //  get the reference from the database
 
         if (refreshCallback) {
-            ref.onSnapshot({
+            snapshots.push(ref.onSnapshot({
                 error: console.trace,
                 next: (snap:any) => {
                     refreshCallback(snap.docs.map((page:any)=>{
                         return Object.assign(page.data(), {id: page.id});
                     }));
                 }
-            });
+            }));
         }
     }
 
@@ -168,7 +169,7 @@ class FirebasePage extends Page {
             return Object.assign(data ? data : {}, {id: snapshot.id, exists: snapshot.exists});
         })();
 
-        ref.onSnapshot({
+        snapshots.push(ref.onSnapshot({
             error: console.trace,
             next: (snap:any) => {
                 let originalData = snap.data();
@@ -180,7 +181,7 @@ class FirebasePage extends Page {
                     // TODO TODO: requestRefresh
                 }
             }
-        })
+        }));
 
         cache.set(JSON.stringify(path), this);
 
@@ -301,15 +302,19 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
             this._authenticated = false;
     }
 
-    get currentUser() : AuthenticationUser {
-        if (!this.firebaseAuthPointer.currentUser) return null;
-
-        return {
-            identifier: this.firebaseAuthPointer.currentUser.uid,
-            displayName: this.firebaseAuthPointer.currentUser.displayName,
-            email: this.firebaseAuthPointer.currentUser.email,
-            emailVerified: this.firebaseAuthPointer.currentUser.emailVerified
-        }
+    get currentUser() : Promise<AuthenticationUser> {
+        return new Promise((res, _) => {
+            firebase.auth().onAuthStateChanged((user:any) => {
+                if (user)
+                    res({
+                        identifier: user.uid,
+                        displayName: user.displayName,
+                        email: user.email,
+                        emailVerified: user.emailVerified
+                    })
+                else res(null);
+            });
+        });
     }
 
     refreshAuthentication = () => {
@@ -321,9 +326,12 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
 
     async authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult> {
         if (request.requestType == "email_pass" || !request.requestType) {
+            await this.firebaseAuthPointer.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
             await this.firebaseAuthPointer.signInWithEmailAndPassword(request.payload.email, request.payload.password)        
             if (this.firebaseAuthPointer.currentUser.emailVerified)
                 this._authenticated = true;
+            else
+                this.firebaseAuthPointer.currentUser.sendEmailVerification();
             return {
                 actionDesired: "authenticate", 
                 actionSuccess: this.firebaseAuthPointer.currentUser.emailVerified ? true : false, 
@@ -507,12 +515,14 @@ class FirebaseProvider extends Provider {
     flush() {
         cache = new Map();
         unsubscribeCallbacks = new Map();
+        snapshots.map((i:any) => i());
     }
 }
 
 function TODOFlushFirebaseData() {
     cache = new Map();
     unsubscribeCallbacks = new Map();
+    snapshots.map((i:any) => i());
 }
 
 export default FirebaseProvider;
