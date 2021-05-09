@@ -303,6 +303,20 @@ class Task extends Component {
         this.initialRenderDone = true;
 
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
+        document.body.onclick = function(e) {   //when the document body is clicked
+            if (window.event) {
+                e = window.event.srcElement;           //assign the element clicked to e (IE 6-8)
+            }
+            else {
+                e = e.target;                   //assign the element clicked to e
+            }
+
+            if (e.className && e.className.indexOf('cm-link') != -1) {
+                //if the element has a class name, and that is 'someclass' then...
+                window.location.href = e.innerText;
+            }
+        }
+
 	//document.addEventListener('click', 
 	//const timer = setTimeout(() => {
 	//    const element = document.querySelector("pre");
@@ -397,12 +411,16 @@ class Task extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.codeMirriscription.current) {
-            let urls = ReactDOM.findDOMNode(this.codeMirriscription.current).getElementsByClassName('cm-url') // Returns the elements
-            for (let url of urls) {
-                console.log(url.innerText, url.innerHTML);
-            }
-        }
+//        if (this.codeMirriscription.current) {
+            //let urls = ReactDOM.findDOMNode(this.codeMirriscription.current).getElementsByClassName('cm-link') // Returns the elements
+            //for (let url of urls) {
+                //let u = url.innerHTML;
+                //if (u.match(/^((https?|ftp):\/\/|\.{0,2}\/)/)) {
+                    //console.log(u);
+                    //url.innerHTML = `<a href="${u}">${u}</a>`
+                //}
+            //}
+        //}
             //console.log(this.codeMirriscription);
         // flush styles
         if (prevState.deferDate !== this.state.deferDate) // if we updated the defer date

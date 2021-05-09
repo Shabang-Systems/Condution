@@ -9,7 +9,7 @@
     color: var(--task-name-text);
 }
 
-.cm-url {
+.cm-url,.cm-link {
     cursor: pointer;
 }
 
