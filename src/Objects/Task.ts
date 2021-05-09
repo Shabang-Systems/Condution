@@ -538,8 +538,10 @@ class Task {
         this.data["due"] = {seconds: Math.floor(dueDate.getTime()/1000), nanoseconds:0};
         this.data["timezone"] = Intl.DateTimeFormat().resolvedOptions().timeZone;
         this.page.set({due: dueDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}, {merge:true}); // weird date handling
-                                                     // because IDK why this
-                                                     // this used to be so yeah
+                                   // because IDK why this
+                                   // this used to be so yeah
+        if (this.isDelegated)
+            this.syncDelegateParentWithData({due: dueDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone});
         this.calculateTreeParams();
     }
 
@@ -576,6 +578,8 @@ class Task {
         this.page.set({defer: deferDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}, {merge:true}); // weird date handling
                                                      // because IDK why this
                                                      // this used to be so yeah
+        if (this.isDelegated)
+            this.syncDelegateParentWithData({defer: deferDate, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone});
         this.calculateTreeParams();
     }
 
@@ -679,6 +683,36 @@ class Task {
 
     get available() : boolean {
         return this._available;
+    }
+
+    /**
+     * delegated task parent task ID
+     * @param
+     *
+     */
+
+    get delegatedTaskID() : string {
+        return this.data["delegatedTaskID"];
+    }
+
+    /**
+     * delegated task parent workspace
+     * @param
+     *
+     */
+
+    get delegatedWorkspace() : string {
+        return this.data["delegatedWorkspace"];
+    }
+
+     /**
+     * whether task is a delegated subtask
+     * @param
+     *
+     */
+
+    get isDelegated() :  boolean {
+        return (this.data["delegatedWorkspace"] && this.data["delegatedWorkspace"] !== "");
     }
 
     /**
@@ -788,6 +822,29 @@ class Task {
     protected sync = () => {
         this.page.set(this.data);
         Hookifier.call(`task.${this.id}`);
+
+        if (this.isDelegated)
+            this.syncDelegateParent();
+    }
+
+    protected syncDelegateParent = async () => {
+        let data:object = Object.assign({}, this.data);
+        delete data["tags"];
+        delete data["project"];
+        delete data["delegatedWorkspace"];
+        delete data["delegatedTaskID"];
+        let page:Page = this.context.referenceManager.page(["workspaces", this.data["delegatedWorkspace"], "tasks", this.data["delegatedTaskID"]]);
+        page.set(data, {merge:true});
+    }
+
+    protected syncDelegateParentWithData = async (d:object) => {
+        let data:object = Object.assign({}, d);
+        delete data["tags"];
+        delete data["project"];
+        delete data["delegatedWorkspace"];
+        delete data["delegatedTaskID"];
+        let page:Page = this.context.referenceManager.page(["workspaces", this.data["delegatedWorkspace"], "tasks", this.data["delegatedTaskID"]]);
+        page.set(data, {merge:true});
     }
 
     private update = (newData:object) => {

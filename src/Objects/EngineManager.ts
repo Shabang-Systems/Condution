@@ -135,7 +135,7 @@ export class Context {
                         // get the task
                         let taskObj:object = await this.rm.page(["workspaces", i["workspace"], "tasks", i["task"]]).get();
                         // Add the task to current user
-                        let result:DataExchangeResult = await this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:"", delegatedWorkspace: i["workspace"]}));
+                        let result:DataExchangeResult = await this.rm.collection(["users", this.userID, "tasks"]).add(Object.assign(taskObj, {project:"", tags:[], delegatedWorkspace: i["workspace"], delegatedTaskID: i["task"]}));
                         // Get the ID of new task, and set it to chains
                         this._chains[i["task"]] = result.identifier;
 
