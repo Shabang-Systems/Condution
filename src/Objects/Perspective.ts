@@ -163,7 +163,7 @@ class LogicGroup {
 class SimpleGroup {
     rawString:string;
 
-    private simpleGroupFilters: RegExp = /(!?[#!.][^#!.\[\]]+)(?<! )/g;  // query for each filter in a simple group
+    private simpleGroupFilters: RegExp = /(!?[#!.][^#!.\[\]]+) */g;  // query for each filter in a simple group
 
     private query:Query;
     private filters: string[];
