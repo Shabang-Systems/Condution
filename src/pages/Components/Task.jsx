@@ -51,7 +51,10 @@ require('codemirror/mode/markdown/markdown');
 require('codemirror/mode/gfm/gfm');
 require('codemirror/addon/display/placeholder');
 require('codemirror/addon/scroll/simplescrollbars');
-require('codemirror/addon/display/fullscreen');
+//require('codemirror/addon/display/fullscreen');
+require('codemirror/addon/edit/matchbrackets');
+require('codemirror/addon/edit/matchbrackets');
+require('codemirror/keymap/vim');
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -567,6 +570,7 @@ class Task extends Component {
                             ref={this.codeMirriscription}
 						    tabIndex='0'
 						    value={this.state.desc}
+
 						    //options={options}
 						    options={{
 							mode: 'gfm',
@@ -578,6 +582,10 @@ class Task extends Component {
 							//xml: true,
 							highlightFormatting: true,
 							spellcheck: true,
+							matchBrackets: false,
+							continueList: true,
+							newineAndIndentContinueMarkdownList: true,
+							//vimMode: true,
 
 							//fullScreen: true,
 						    }}
