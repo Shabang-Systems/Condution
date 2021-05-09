@@ -47,6 +47,7 @@ import {Controlled as CodeMirror} from 'react-codemirror2'
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/mode/markdown/markdown');
+require('codemirror/mode/gfm/gfm');
 require('codemirror/addon/display/placeholder');
 require('codemirror/addon/scroll/simplescrollbars');
 require('codemirror/addon/display/fullscreen');
@@ -561,12 +562,16 @@ class Task extends Component {
 						    
 						    //options={options}
 						    options={{
-							mode: 'markdown',
+							mode: 'gfm',
 							theme: `condution ${this.state.descExpanded? "expanded" : ""} ${this.state.iconHovering? "bghvr" : ""}`,
 							lineNumbers: false,
 							lineWrapping: true,
 							placeholder: this.props.localizations.desc,
 							scrollbarStyle: "null",
+							//xml: true,
+							highlightFormatting: true,
+							spellcheck: true,
+
 							//fullScreen: true,
 						    }}
 						    onBeforeChange={(editor, data, value) => {

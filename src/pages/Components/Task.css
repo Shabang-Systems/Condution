@@ -63,6 +63,20 @@
 .cm-link {
 }
 
+.cm-comment {
+    background: var(--background);
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.cm-variable-2 {
+    color: var(--task-border-delegated)
+}
+
+.cm-quote {
+    color: var( --task-border-repeat)
+}
+
 .CodeMirror-wrap pre {
     word-break: break-word;
 }
