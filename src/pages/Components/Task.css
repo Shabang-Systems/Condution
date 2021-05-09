@@ -74,7 +74,8 @@
 }
 
 .cm-variable-2 {
-    color: var(--task-border-delegated)
+    /*color: var(--task-border-delegated)*/
+    padding-left: 10px;
 }
 
 .cm-quote {
@@ -86,11 +87,27 @@
 }
 
 .cm-header-1 {
-    font-size: 17px;
+    font-size: 19px;
 }
 
 .cm-header-2 {
+    font-size: 17px;
+}
+
+.cm-header-3 {
     font-size: 15px;
+}
+
+.cm-header-4 {
+    font-size: 14px;
+}
+
+.cm-header-5 {
+    color: var(--task-border-delegated);
+}
+
+.cm-header-6 {
+    color: var(--quickadd);
 }
 
 .CodeMirror-focused {
