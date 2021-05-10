@@ -5,47 +5,47 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.045901">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.07592">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: load_json" time="0.000524">
+      <testcase classname="fastlane.lanes" name="1: load_json" time="0.000665">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: create_keychain" time="0.25893">
+      <testcase classname="fastlane.lanes" name="2: create_keychain" time="0.178183">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: is_ci" time="0.000267">
+      <testcase classname="fastlane.lanes" name="3: is_ci" time="0.000303">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: match" time="2.829542">
+      <testcase classname="fastlane.lanes" name="4: match" time="3.182167">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: increment_version_number" time="3.246288">
+      <testcase classname="fastlane.lanes" name="5: increment_version_number" time="3.432464">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: increment_build_number" time="1.710583">
+      <testcase classname="fastlane.lanes" name="6: increment_build_number" time="1.743025">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: build_app" time="179.667823">
+      <testcase classname="fastlane.lanes" name="7: build_app" time="182.740915">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="573.622425">
+      <testcase classname="fastlane.lanes" name="8: upload_to_testflight" time="613.343122">
         
       </testcase>
     
