@@ -206,8 +206,8 @@ class Task extends Component {
             projectDatapack: [], // the calculated project datapack
             tagDatapack: [], // the calculated tag datapack
             activelyRepeating: false, // are we actively playing the repeating animation?
-	    descExpanded: false,
-	    iconHovering: false,
+            descExpanded: false,
+            iconHovering: false,
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -267,7 +267,7 @@ class Task extends Component {
             delegatedWorkspace: task.delegatedWorkspace, // TODO
             delegatedTaskID: task.delegatedTaskID, // TODO,
             projectDatapack: pdp,
-            tagDatapack: tdp
+            tagDatapack: tdp,
         }, this.refreshDecorations);
     }
 

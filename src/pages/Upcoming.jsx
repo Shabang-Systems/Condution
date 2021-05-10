@@ -14,6 +14,7 @@ import BlkArt from './Components/BlkArt';
 
 import T from "../backend/src/Objects/Task.ts";
 import W from "../backend/src/Objects/Workspace.ts";
+import { TagDatapackWidget, ProjectDatapackWidget } from  "../backend/src/Widget";
 import { InboxWidget, DueSoonWidget, TimelineWidget }  from "../backend/src/Widget.ts";
 
 import WorkspaceModal from './Components/WorkspaceModal';
@@ -150,11 +151,15 @@ class Upcoming extends Component { // define the component
         //}
 
         //this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent, workspaces: workspaceNames, currentWorkspace: n, initialRenderingDone: true});
+        // Execute the datapacks to cache them
+        (new ProjectDatapackWidget(this.props.cm)).execute();
+        (new TagDatapackWidget(this.props.cm)).execute();
+
         let inbox = (await this.state.inboxWidget.execute());
         let ds = (await this.state.dsWidget.execute());
-        let dsids = ds.map(i=>i.id);
-        inbox = inbox.filter(i=>!dsids.includes(i.id));
-        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces()), displayName: this.props.authType==="workspace"?"":(await this.props.cm.userDisplayName())});
+        let ibids = inbox.map(i=>i.id);
+        ds = ds.filter(i=>!ibids.includes(i.id));
+        this.setState({initialRenderingDone: true, inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces()), displayName: this.props.authType==="workspace"?"":(await this.props.cm.userDisplayName())});
     }
 
     componentDidMount() {

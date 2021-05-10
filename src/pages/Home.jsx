@@ -29,6 +29,7 @@ import ReleaseNotesModal from './Components/ReleaseNotesModal';
 
 
 import { ProjectMenuWidget, PerspectivesMenuWidget } from "../backend/src/Widget";
+import { TagDatapackWidget, ProjectDatapackWidget } from  "../backend/src/Widget";
 import Project from "../backend/src/Objects/Project";
 import Perspective from "../backend/src/Objects/Perspective";
 
@@ -86,6 +87,11 @@ class Home extends Component {
 
         this.perspectivemenuWidget = new PerspectivesMenuWidget(this.props.cm);
         this.projectmenuWidget = new ProjectMenuWidget(this.props.cm);
+
+        // Execute the datapacks to cache them
+        (new ProjectDatapackWidget(this.props.cm)).execute();
+        (new TagDatapackWidget(this.props.cm)).execute();
+
 
         this.perspectivemenuWidget.hook(this.refresh);
         this.projectmenuWidget.hook(this.refresh);
