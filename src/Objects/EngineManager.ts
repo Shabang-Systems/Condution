@@ -54,26 +54,27 @@ export class Context {
     }
 
     /**
-     *
-     * @method start
-     *
      * Start the context by loading user info and workspaces. 
      * Call before doing anything!
      *
-     * @returns {Promise<void>}
+     * @param{string?} workspaceID    ID for workspace exclusive mode
      *
+     * @returns {Promise<void>}
      */
 
-    async start():Promise<void> {
-        if (this.rm.currentProvider.authSupported) {
-            let user:AuthenticationUser = await this.auth.currentUser;
-            this.ticketID = user.identifier;
-            this.userID = user.identifier;
-            this.authenticatable = true;
-        } else {
-            this.ticketID = this.defaultUsername;
-            this.userID = this.defaultUsername;
+    async start(workspaceID?:string):Promise<void> {
+        if (workspaceID || !this.rm.currentProvider.authSupported) {
+            let wid:string = workspaceID ? workspaceID : this.defaultUsername;
+            this.ticketID = wid;
+            this.userID = wid;
+            this.isWorkspace = workspaceID !== undefined;
+            return;
         }
+
+        let user:AuthenticationUser = await this.auth.currentUser;
+        this.ticketID = user.identifier;
+        this.userID = user.identifier;
+        this.authenticatable = true;
 
         // Get workspaces
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
