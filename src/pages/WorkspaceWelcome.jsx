@@ -6,6 +6,8 @@ import './Pages.css';
 import Task from './Components/Task';
 import { withRouter } from "react-router";
 
+import Workspace from "../backend/src/Objects/Workspace.ts";
+
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
 /*
@@ -33,14 +35,13 @@ class WorkspaceWelcome extends Component {
         };
 
         this.updatePrefix = this.random();
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
         autoBind(this);
     }
 
     async refresh() {
         try {
-            let wsp = await this.props.engine.db.getWorkspace(this.props.id);
-            this.setState({name: wsp.meta.name, loaded: true});
+            let wsp = await Workspace.fetch(this.props.cm, this.props.id);
+            this.setState({name: wsp.name, loaded: true});
         } catch {
             this.setState({error: true, loaded: true});
         }
@@ -51,7 +52,6 @@ class WorkspaceWelcome extends Component {
     }
 
     componentWillUnmount() {
-        this.props.gruntman.halt();
     }
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
 

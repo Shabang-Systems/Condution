@@ -154,7 +154,7 @@ class Upcoming extends Component { // define the component
         let ds = (await this.state.dsWidget.execute());
         let dsids = ds.map(i=>i.id);
         inbox = inbox.filter(i=>!dsids.includes(i.id));
-        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces()), displayName: (await this.props.cm.userDisplayName())});
+        this.setState({initialRenderingDone: true, inbox: (await this.state.inboxWidget.execute()), inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces()), displayName: this.props.authType==="workspace"?"":(await this.props.cm.userDisplayName())});
     }
 
     componentDidMount() {
