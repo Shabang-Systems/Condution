@@ -17,6 +17,7 @@ But! If you are a smart cookie and know where you are going, feel free to browse
 
 .. toctree::
     bigstones
+    context
 
 Hope you enjoy! Have fun with :code:`@condution/engine`!
 

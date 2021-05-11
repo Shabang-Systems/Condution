@@ -4,7 +4,7 @@ Quickstart and Big Stones
 
 A Boring Chapter of Concepts
 ============================
-.. note:: If this is your first time here, **don't glance over this**. Read the next section out loud to your pet duck to ensure understanding!
+.. note:: If this is your first time here, **don't glance over this**. Read this section out loud to your pet duck to ensure understanding!
 
 Condution's API follows an `Event Based <https://en.wikipedia.org/wiki/Event-driven_programming>`_ programming paradigm. We make heavy use of the `Async/Await syntax <https://basarat.gitbook.io/typescript/future-javascript/async-await>`_ of TypeScript in order to create fast and responsive hooks into live-editing enviroments. (Remember, :doc:`../guides/workspaces` exist!) So, if you don't know what those are, read the linked resources.
 
