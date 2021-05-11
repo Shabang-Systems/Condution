@@ -1,4 +1,4 @@
 
-[submodule "Condution/src/backend"]
-	path = src/backend
-	url = https://github.com/Shabang-Systems/CondutionEngine
+[submodule "backend"]
+	path = backend
+	url = https://github.com/Shabang-Systems/CondutionEngine/
