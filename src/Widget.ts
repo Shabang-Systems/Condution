@@ -106,7 +106,6 @@ class DueSoonWidget extends Widget {
 
         let DSTasks:Task[] = await this.query.execute(Task, (i:Task) => i.available && i.due && i.due < tomorrow && !i.isComplete) as Task[];
 
-
         DSTasks.sort((b: Task, a: Task) => (a.due && b.due) ? a.due.getTime()-b.due.getTime() : 0);
 
         return DSTasks;
