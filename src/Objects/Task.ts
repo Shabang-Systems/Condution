@@ -869,7 +869,6 @@ class Task {
 class TaskSearchAdapter extends Task {
     adaptorData: AdapterData;
     private static loadCache:Map<string, Promise<TaskSearchAdapter>> = new Map();
-    private static adaptorCache:Map<string, TaskSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData, taskData:object) {
         super(id, context);
@@ -917,7 +916,6 @@ class TaskSearchAdapter extends Task {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
-        if (TaskSearchAdapter.adaptorCache.has(identifier)) return TaskSearchAdapter.adaptorCache.get(identifier);
         if (TaskSearchAdapter.loadCache.has(identifier)) return await TaskSearchAdapter.loadCache.get(identifier);
 
         let loadTask:Promise<TaskSearchAdapter> = (async () => {
@@ -927,7 +925,6 @@ class TaskSearchAdapter extends Task {
 
             let tsk:TaskSearchAdapter = new this(context, identifier, data, tskObj);
 
-            TaskSearchAdapter.adaptorCache.set(identifier, tsk);
             await tsk.calculateTreeParams();
             return tsk;
         })();
@@ -945,9 +942,7 @@ class TaskSearchAdapter extends Task {
      */
 
     static cleanup = () : void => {
-        delete TaskSearchAdapter.adaptorCache;
         delete TaskSearchAdapter.loadCache;
-        TaskSearchAdapter.adaptorCache = new Map();
         TaskSearchAdapter.loadCache = new Map();
     }
 }
