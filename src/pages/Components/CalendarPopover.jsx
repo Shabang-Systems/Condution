@@ -111,7 +111,7 @@ function CalendarPopover(props) {
                     </div>
                     <div id="calendar-container">
                         {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                        <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
+                        <span key={i.id} className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
                             backgroundColor: ((heat[i.content]&&i.type === "actual") ? 
                                 `#${heat[i.content]}` :
                                 "inherit"),

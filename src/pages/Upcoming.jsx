@@ -73,84 +73,12 @@ class Upcoming extends Component { // define the component
 
         autoBind(this);
     }
+    
+    async refreshWorkspace() {
+        this.setState({workspaces:(await this.props.cm.workspaces()), displayName: this.props.authType==="workspace"?"":(await this.props.cm.userDisplayName())});
+    }
 
-    async refresh() {
-//        let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-        //let pandt = await this.props.engine.db.getInboxandDS(this.props.uid, avail) // get inbox and due soon 
-        //let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-
-
-        //let projectList = []; // define the project list
-        //let tagsList = []; // define the tag list
-
-        //for (let pid in pPandT[1][0]) 
-            //tagsList.push({value: pid, label: pPandT[1][0][pid]});
-        //let views = this;
-        //let projectDB = await (async function() {
-            //let pdb = [];
-            //let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-            //for (let key in topLevels) {
-                //pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-            //}
-            //return pdb;
-        //}());
-
-        //let buildSelectString = function(p, level) {
-            //if (!level)
-                //level = ""
-            //projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-            //if (p.children)
-                //for (let e of p.children)
-                    //if (e.type === "project")
-                        //buildSelectString(e.content, level+":: ");
-        //};
-        //projectDB.map(proj=>buildSelectString(proj));
-
-        //this.up//datePrefix = this.random();
-
-        //let timeline = await this.props.engine.db.selectTasksInRange(this.props.uid, new Date(), new Date(2100, 1, 1), true);
-        
-                            ////timeline.push({type: "label", content: timelineRenderedUntil});
-                        ////for (let task of fTasks)
-                            ////timeline.push({type:"task", content:task});
-
-                        ////this.setState({timelineRenderedUntil, timelineSoFar: timeline});
-        //// Date same date check https://stackoverflow.com/questions/4428327/checking-if-two-dates-have-the-same-date-info
-        //timeline = timeline.filter((x)=>!pandt[1].includes(x[0]))
-        //Date.prototype.isSameDateAs = function(pDate) {
-          //return (
-            //this.getFullYear() === pDate.getFullYear() &&
-            //this.getMonth() === pDate.getMonth() &&
-            //this.getDate() === pDate.getDate()
-          //);
-        //}
-
-        //let refrenceDate = new Date();
-        //let tcontent = [];
-        //for (let task of timeline) {
-            //let due = new Date(task[1].due.seconds*1000);
-            //if (!due.isSameDateAs(refrenceDate)) {
-                //tcontent.push({type:"label", content: due});
-                //refrenceDate = due;
-            //}
-            //tcontent.push({type:"task", content: task[0]});
-        //}
-
-        //let n = this.props.localizations.personal_workspace;
-        //let workspaceNames = []
-
-        //if (this.props.authType === "firebase") {
-            //let workspaces = await this.props.engine.db.getWorkspaces(this.props.actualUID);
-
-            //workspaceNames = await Promise.all(workspaces.map(async function(e){
-                //let name = (await views.props.engine.db.getWorkspace(e)).meta.name
-                //if (e===views.props.uid)
-                    //n = name;
-                //return [e, name]
-            //}));
-        //}
-
-        //this.setState({inbox: pandt[0], dueSoon: pandt[1], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, timeline: tcontent, workspaces: workspaceNames, currentWorkspace: n, initialRenderingDone: true});
+    async refresh(a) {
         // Execute the datapacks to cache them
         (new ProjectDatapackWidget(this.props.cm)).execute();
         (new TagDatapackWidget(this.props.cm)).execute();
@@ -159,14 +87,14 @@ class Upcoming extends Component { // define the component
         let ds = (await this.state.dsWidget.execute());
         let ibids = inbox.map(i=>i.id);
         ds = ds.filter(i=>!ibids.includes(i.id));
-        this.setState({initialRenderingDone: true, inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute()), workspaces:(await this.props.cm.workspaces()), displayName: this.props.authType==="workspace"?"":(await this.props.cm.userDisplayName())});
+        this.setState({initialRenderingDone: true, inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute())});
     }
 
     componentDidMount() {
         this.refresh();
         this.state.inboxWidget.hook(this.refresh);
         this.state.dsWidget.hook(this.refresh);
-        this.props.cm.hookInvite(this.refresh);
+        this.props.cm.hookInvite(this.refreshWorkspace);
         //this.props.gruntman.registerRefresher((this.refresh).bind(this));
     }
 
