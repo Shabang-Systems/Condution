@@ -1,0 +1,251 @@
+/* 
+ * There are some colors
+ * which has no need to be adapted
+ * like task-textbox-background.
+ *
+ * In those cases,
+ * we keep them the same.
+ * With the beginning NO ADAPT.
+ *
+ * Uncomment if you are making a new theme.
+ *
+ * @jemoka
+ *
+ */
+
+.adapted-theme {
+    /* ## Boring Things ## */
+    /* NO ADAPT... 
+        --background: #f4f4f4;
+        --ion-background-color: #f4f4f4;
+        --background-feature: #e5e7ea;
+        --background-feature-overlay: rgba(229,231,234,0.7);
+        --qs-shadow-intensity: -17px;
+        --qs-shadow-color: rgba(0,0,0,0.91);
+        --auth-background: url(./static/auth-background.jpg);
+    */
+
+    /* ## Special Things ## */
+    /* NO ADAPT... 
+        --special: #dadeae;
+        --special-alt: #E2E6B3;
+        --task-textbox-background: #e8e8e8;
+    */
+    --special-bold: var(--content-normal-accent); 
+
+    /* ## Quickadd ## */
+    /* NO ADAPT...
+        --quickadd: #c04f40; 
+        --quickadd-feature: #bf3b2a;
+        --quickadd-text: #eaeaea;
+        --quickadd-success: #b1dcbf;
+        --quickadd-successtext: #03561f;
+        --quickadd-placeholder: #e2c0bc;
+    */
+
+    /* ## Auth ## */
+    --auth-primary: var(--content-normal-alt);
+    --auth-upf-focus: var(--content-normal);
+
+    --auth-login-button-text: var(--content-normal-accent);
+    --auth-login-button-border: var(--content-normal-accent);
+
+    --auth-login-button-hover-text: var(--content-normal-accent);
+    --auth-login-button-hover-background: var(--content-normal);
+
+    --auth-rec-pswd-text: var(--content-normal-accent);
+    --auth-need-verify: var(--content-normal-accent);
+    --auth-image-credit: var(--content-normal);
+
+    --auth-greeting: var(--content-normal-accent);
+
+
+    /* ## Calendar View ## */
+
+    /* Heatmap */
+    --heatmap-lightest: #dee4e8;
+    --heatmap-darkest: #b8c8e0;
+
+    /* Calendar */
+    --calendar-page-hint: var(--content-normal-alt);
+
+    --calendar-page-header-text: var(--content-normal-alt);
+    --calendar-page-largenumber: var(--decorative-light-accent);
+
+    --calendar-page-long-date: var(--content-normal-alt);
+    --calendar-page-long-date-mobile-background: var(--background-feature);
+
+    --calendar-wrapper-background: var(--background-feature);
+    --calendar-popover-background: var(--background-feature);
+
+    --calendar-top-weekdays: var(--decorative-light-alt);
+    --calendar-borders: var(--decorative-light);
+
+    --calendar-task-circle: var(--decorative-light-alt);
+
+    --calendar-date-unhighlighted: var(--decorative-light);
+    --calendar-date-highlighted: var(--content-normal-alt);
+    --calendar-date-hover: var(--decorative-light);
+
+    --calendar-button-text: var(--content-normal-accent);
+    --calendar-button-background: var(--decorative-light);
+
+    /* ## Repeat Popover ## */
+    --repeat-popover-header-background: var(--background-feature);
+    --repeat-popover-header-text: var(--decorative-light-alt);
+
+    --repeat-popover-close: var(--decorative-light-alt);
+    --repeat-popover-close-hover: var(--decorative-light-accent);
+
+    --repeat-select-background: var(--content-normal);
+    --repeat-select-text: var(--content-normal-alt);
+
+    --repeat-select-popover-background: var(--task-textbox-background);
+    --repeat-select-popover-text: var(--task-textbox);
+
+    --repeat-hint-icon: var(--decorative-light-alt);
+
+    --repeat-dategrid-border: var(--task-clickbox-background);
+    --repeat-dategrid-hover: var(--task-clickbox-background);
+    --repeat-dategrid-selected-border: var(--task-clickbox-background);
+    --repeat-dategrid-selected-background: var(--task-clickbox-accent-background);
+
+    /* ## Completed ## */
+    --completed-fetch-more-text: var(--task-datepicker-elems);
+    --completed-fetch-more-hover: var(--task-datepicker-elems);
+
+    /* ## Upcoming ## */
+    --commitid: var(--decorative-light-alt);
+    --timeline-button: var(--decorative-light-alt);
+    --timeline-button-hover: var(--task-textbox);
+    --timeline-text: var(--decorative-light);
+
+    /* ## Projects ## */
+    --subproject-text: var(--task-textbox);
+    --addbutton-text: var(--decorative-light-alt);
+    --addbutton-background-hover: var(--background-feature);
+
+    /* ## Perspectives ## */
+    --perspective-builder-header-background: var(--background-feature);
+    --perspective-builder-header-text: var(--decorative-light-alt);
+    --perspective-builder-label: var(--decorative-light-alt);
+
+    --perspective-builder-help-icon: var(--content-normal-accent);
+    --perspective-builder-help-icon-hover: var(--task-checkmark);
+
+    --perspective-query-string: var(--content-normal-alt);
+    --perspective-query-border: var(--decorative-light-alt);
+    --perspective-query-hover: var(--background-feature);
+    --perspective-query-background: var(--background-feature);
+
+    --perspective-select-background: var(--content-normal);
+    --perspective-select-text: var(--content-normal-alt);
+
+    --perspective-select-focused: var(--decorative-light);
+
+    /* ## Pagewide Colors ## */
+
+    /* Header Area */
+    --page-title: var(--content-normal-alt);
+    --page-header-background: var(--background);
+
+    --page-editable-text: var(--content-normal-alt);
+    --page-editable-focusedBackground: var(--task-clickbox-background);
+
+    --page-greeting-text: var(--decorative-light-accent);
+    --page-greeting-date: var(--decorative-light-accent);
+
+    --page-header-sandwich: var(--decorative-light-alt);
+
+    /* Page Label */
+    --page-label-background: var(--background);
+    --page-label-text: var(--decorative-light-accent);
+
+    /* Count Badge */
+    --page-badge-text: var(--content-normal-accent);
+    --page-badge-border: var(--content-normal-accent);
+    --page-badge-background: var(--task-feature);
+
+    /* ## The Menu ## */
+    /* NO ADAPT...
+        --menu-background: #eaebed;
+        --menu-semiaccent-background: #e5e7ea;
+        --menu-accent-background: #e1e2e5;
+        --menu-text: #414c5e;
+        --menu-accent: #323c4f;
+        --menu-label: #1a283d;
+        --menu-action: #90939a;
+     */
+
+    /* ## Task Colors ## */
+
+    /* Task */
+    --task-selected: var(--task-feature);
+
+    /* Task Name */
+    --task-name-text: var(--content-normal-alt);
+    --task-name-placeholder: var(--decorative-light-alt);
+
+    /* Task Textbox */
+    --task-textbox-text: var(--task-textbox);
+    /* NO ADAPT... 
+        --task-textbox-background: #e8e8e8;
+     */
+    --task-textbox-placeholder: var(--decorative-light-alt);
+
+    /* Task Icons */
+    --task-icon-text: var(--task-textbox);
+    --task-icon-highlighted: var(--task-flagged);
+
+    --task-icon-ring-highlighted: var(--task-flaggedRing);
+    --task-icon-ring: var(--task-checkbox-feature-alt);
+    
+    /* NO ADAPT... 
+        --task-icon: #777777;
+     */
+
+    /* Task Check */
+    /* NO ADAPT...
+       --task-checkbox: #ccc;
+       --task-checkbox-feature: #e0e0e0;
+       --task-checkbox-feature-alt: #c5d0ef;
+       --task-checkbox-ds: #f8974a;
+       --task-checkbox-ds-feature: #f5c09d;
+       --task-checkbox-ds-background: #f4eae4;
+       --task-checkbox-od: #c04f40;
+       --task-checkbox-od-feature: #ed938c;
+       --task-checkbox-od-background: #f7d7d5;
+       --task-checkmark: #2b3749;
+       --task-checkmark-ds: #f4721a;
+       --task-checkmark-od: #d32f19;
+    */
+
+    /* Task Datepicker */
+    /* NO ADAPT...
+        --task-datepicker-elems: grey;
+        --task-datepicker-elem-feature: #f4f4f5;
+        --task-datepicker-elem-feature-alt: #a3a3a3;
+        --task-datepicker-background: #eeeeee;
+        --task-datepicker-selected: #e0e0e0;
+        --task-datepicker-feature: #434d5f;
+        --task-datepicker-action: #656e7a;
+    */
+
+    --task-datepicker-icon: var(--task-clickbox);
+
+    /* Task Menu */
+    --task-select-dropdown-text: var(--content-normal-alt);
+    --task-select-dropdown-background: var(--task-feature);
+
+    --task-select-dropdown-focused-text: var(--content-normal-alt);
+    --task-select-dropdown-focused-background: var(--task-textbox-background);
+
+    --task-select-dropdown-selected-text: var(--content-normal-alt);
+    --task-select-dropdown-selected-background: var(--task-feature-alt);
+
+    --task-tag-background: var(--special);
+    --task-tag-text: var(--content-normal-alt);
+    --task-tag-hover: var(--special-alt);
+}
+
+
