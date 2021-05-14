@@ -60,7 +60,7 @@ class Project {
         let staticData:AdapterData = await queryEngine.orderStaticData();
 
         let loadProject:Promise<Project> = new Promise(async (res, _) => {
-            let projectData:object = staticData.projectCollection.filter((i:object)=>i["id"] === identifier)[0];
+            let projectData:object = staticData.projectMap.get(identifier);
          
             // TODO janky AF this is to wait
             // until the context loads. Someone

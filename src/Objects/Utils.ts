@@ -221,6 +221,8 @@ interface AdapterData {
     projectCollection: object[],
     tagCollection: object[],
     perspectiveCollection: object[],
+    taskMap: Map<string, object>,
+    projectMap: Map<string, object>,
 }
 
 //type TP = Task[] | Project[]
@@ -235,6 +237,10 @@ class Query {
     private static projectPages:object[];
     private static perspectivePages:object[];
     private static tagPages:object[];
+
+    private static taskMap:Map<string,object> = new Map();
+    private static projectMap:Map<string,object> = new Map();
+
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
     // ok look. I know. This should be a template function.
@@ -264,6 +270,9 @@ class Query {
         delete Query.perspectivePages;
         delete Query.tagPages;
 
+        delete Query.taskMap;
+        delete Query.projectMap;
+
         Query.hasIndexed = false;
         Hookifier.call(`QueryEngine`);
     }
@@ -281,12 +290,14 @@ class Query {
     async index() : Promise<void> {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
+            Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
+            Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
@@ -357,6 +368,8 @@ class Query {
             projectCollection: Query.projectPages,
             tagCollection: Query.tagPages,
             perspectiveCollection: Query.perspectivePages,
+            taskMap: Query.taskMap,
+            projectMap: Query.projectMap
         }
 
         return dataObject;

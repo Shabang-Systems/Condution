@@ -62,7 +62,8 @@ class Task {
         tsk._ready = false;
 
         let loadTask:Promise<Task> = new Promise(async (res, _) => {
-            let taskData:object = staticData.taskCollection.filter((i:object)=>i["id"] === identifier)[0];
+            //let taskData:object = staticData.taskCollection.filter((i:object)=>i["id"] === identifier)[0];
+            let taskData:object = staticData.taskMap.get(identifier);
             
             // TODO janky AF this is to wait
             // until the context loads. Someone
