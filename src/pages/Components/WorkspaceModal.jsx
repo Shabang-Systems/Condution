@@ -92,7 +92,7 @@ function WorkspaceModal(props) {
                     {isPublic ? (
                         <>
                             <i class="fas fa-link" style={{color: "var(--content-normal-alt)"}} />
-                            <input value={`https://app.condution.com/workspaces/${props.currentWorkspace.id}`} className="workspace-link" readOnly={true} onClick={(e)=>{
+                            <input value={`https://app.condution.com/workspaces/${props.currentWorkspace?props.currentWorkspace.id:""}`} className="workspace-link" readOnly={true} onClick={(e)=>{
                               /* Select the text field */
                               e.nativeEvent.target.select();
                               e.nativeEvent.target.setSelectionRange(0, 99999); /*For mobile devices*/
