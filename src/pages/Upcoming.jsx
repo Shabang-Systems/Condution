@@ -79,8 +79,8 @@ class Upcoming extends Component { // define the component
 
     async refresh(a) {
         // Execute the datapacks to cache them
-        (new ProjectDatapackWidget(this.props.cm)).execute();
-        (new TagDatapackWidget(this.props.cm)).execute();
+        await (new ProjectDatapackWidget(this.props.cm)).execute();
+        await (new TagDatapackWidget(this.props.cm)).execute();
 
         let inbox = (await this.state.inboxWidget.execute());
         let ds = (await this.state.dsWidget.execute());
