@@ -108,6 +108,17 @@ class ProjectMenuWidget extends Widget {
     }
 }
 
+class MenuWidget extends Widget {
+    name = "menu-widget"
+
+    async calculate() {
+        let psmw:PerspectivesMenuWidget = new PerspectivesMenuWidget(this.query.cm);
+        let pjmw:ProjectMenuWidget = new ProjectMenuWidget(this.query.cm);
+
+        return {"projects": await pjmw.execute(), "perspectives": await psmw.execute()};
+    }
+}
+
 class InboxWidget extends Widget {
     name = "inbox-widget"
 
@@ -345,5 +356,5 @@ class TimelineWidget extends Widget {
     }
 }
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget };
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget, MenuWidget };
 //new line here
