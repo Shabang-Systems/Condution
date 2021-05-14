@@ -506,10 +506,6 @@ class Task extends Component {
                                 {/* Chapter 0: Utility Components */}
 
                                 {/* Gotta get those on hover tips */}
-                                {/* And load up + hide the repeat UI, too! */}
-                                <Repeat taskObj={this.state.taskObj} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
-                                {/* As well as load up + hide the tag editor!*/}
-                                {<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm} localizations={this.props.localizations}/>}
 
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
@@ -573,6 +569,12 @@ class Task extends Component {
                                 {(() => {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
+                                            <>
+                                            {/* And load up + hide the repeat UI, too! */}
+                                            <Repeat taskObj={this.state.taskObj} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
+                                            {/* As well as load up + hide the tag editor!*/}
+                                            {<TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm} localizations={this.props.localizations}/>}
+
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
 
                                                 {/* First, task description field */}
@@ -939,6 +941,7 @@ class Task extends Component {
                                                     </span>
                                                 </div>
                                             </animated.div>
+                                            </>
                                         )
                                 })()}
                             </animated.div>
