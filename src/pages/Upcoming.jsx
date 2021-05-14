@@ -58,8 +58,7 @@ class Upcoming extends Component { // define the component
             workspaces: [],
             workspacesPopoverShown: [false, null],
             workspaceModalShown: false,
-            currentlyEditedWorkspace: null,
-            currentWorkspace: this.props.localizations.personal_workspace,
+            currentWorkspace: null,
             initialRenderingDone: false,
             inboxWidget: new InboxWidget(this.props.cm),
             dsWidget: new DueSoonWidget(this.props.cm),
@@ -74,7 +73,7 @@ class Upcoming extends Component { // define the component
         autoBind(this);
     }
     
-    async refreshWorkspace() {
+    async refreshWorkspace(a) {
         this.setState({workspaces:(await this.props.cm.workspaces()), displayName: this.props.authType==="workspace"?"":(await this.props.cm.userDisplayName())});
     }
 
@@ -92,6 +91,7 @@ class Upcoming extends Component { // define the component
 
     componentDidMount() {
         this.refresh();
+        this.refreshWorkspace();
         this.state.inboxWidget.hook(this.refresh);
         this.state.dsWidget.hook(this.refresh);
         this.props.cm.hookInvite(this.refreshWorkspace);
@@ -140,7 +140,7 @@ class Upcoming extends Component { // define the component
                             return "windows"; // ummm, it does not know about windows pt0
 
                     })()}>
-                        <WorkspaceModal cm={this.props.cm} localizations={this.props.localizations} isShown={this.state.workspaceModalShown} currentWorkspace={this.state.currentlyEditedWorkspace} onDidDismiss={()=>this.setState({workspaceModalShown: false})} getUserByEmail={this.props.getUserByEmail}/>
+                        <WorkspaceModal cm={this.props.cm} localizations={this.props.localizations} isShown={this.state.workspaceModalShown} currentWorkspace={this.state.currentWorkspace} onDidDismiss={()=>this.setState({workspaceModalShown: false})} getUserByEmail={this.props.getUserByEmail}/>
                         <div className="header-container" onTouchMove={(e)=>e.preventDefault()}>
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle><i className="fas fa-bars" style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} /></IonMenuToggle> <h1 className="page-title"><i style={{paddingRight: 10}} className="fas fa-chevron-circle-right"></i>{this.props.localizations.upcoming}</h1> 
@@ -153,7 +153,7 @@ class Upcoming extends Component { // define the component
                             
 
 
-                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600, marginRight: 10}}>{this.state.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace}</a></div>
+                                <div className="greeting-container"><span id="greeting">{this.state.greeting}</span> <span id="greeting-name" style={{fontWeight: 600, marginRight: 10}}>{this.state.displayName}</span><a className="workspace-name"  style={{display: this.props.authType==="firebase"?"inline-block":"none"}} onClick={(e)=>this.setState({workspacesPopoverShown: [true, e.nativeEvent]})}>{this.state.currentWorkspace?this.state.currentWorkspace.name:this.props.localizations.personal_workspace}</a></div>
                             </div>
                         </div>
                         <IonPopover
@@ -169,16 +169,17 @@ class Upcoming extends Component { // define the component
                                 <div className="workspace-name-selection" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
                                     this.props.cm.usePersonalWorkspace();
-                                    this.setState({currentWorkspace: this.props.localizations.personal_workspace});
+                                    this.setState({currentWorkspace: null, initialRenderingDone: false, inbox:[], dueSoon:[]});
                                 }}><i className="fas fa-stream" style={{marginRight: 10}} />{this.props.localizations.personal_workspace}</div></div>
                                 {this.state.workspaces.map((val)=><div key={val.id} className="workspace-name-container">
                                 <div onClick={()=>{
                                     this.workspaceButton.current.dismiss();
                                     this.props.cm.useWorkspace(val);
-                                    this.setState({currentWorkspace: val.name});
+                                    this.setState({currentWorkspace: val, initialRenderingDone: false, inbox:[], dueSoon:[]});
                                 }} className="workspace-name-selection"><i className="fas fa-stream" style={{marginRight: 10}} />{val.name}</div><a className="workspace-edit fas fa-pen" onClick={()=>{
                                     this.workspaceButton.current.dismiss();
-                                    this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true});
+                                    this.props.cm.useWorkspace(val);
+                                    this.setState({currentWorkspace: val, workspaceModalShown: true, initialRenderingDone: false, inbox:[], dueSoon:[]});
                                 }} />
                                 </div>)}
                                 <div className="workspace-name-container" style={{borderTop: "1px solid var(--decorative-light)", fontWeight: 600}}><div className="workspace-name-selection" onClick={(async function(){
@@ -186,7 +187,8 @@ class Upcoming extends Component { // define the component
                                     let val = await W.create(this.props.cm, (await this.props.cm.userEmail()));
                                     this.props.cm.useWorkspace(val);
                                     this.workspaceButton.current.dismiss();
-                                    this.setState({currentlyEditedWorkspace: val, workspaceModalShown: true, currentWorkspace: "New Workspace"});
+                                    this.setState({currentWorkspace: val, workspaceModalShown: true, workspaces: [...this.state.workspaces, val]});
+                                    //, currentWorkspace: "New Workspace"
                                 }).bind(this)}><i className="fas fa-plus-circle" style={{marginRight: 10}} />{this.props.localizations.new_workspace}</div></div>
                             </div>
                         </IonPopover>
