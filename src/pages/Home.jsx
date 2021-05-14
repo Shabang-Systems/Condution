@@ -28,8 +28,7 @@ import Keybinds from './Components/KeybindManager';
 import ReleaseNotesModal from './Components/ReleaseNotesModal';
 
 
-import { ProjectMenuWidget, PerspectivesMenuWidget } from "../backend/src/Widget";
-import { TagDatapackWidget, ProjectDatapackWidget } from  "../backend/src/Widget";
+import { MenuWidget } from "../backend/src/Widget";
 import Project from "../backend/src/Objects/Project";
 import Perspective from "../backend/src/Objects/Perspective";
 
@@ -75,7 +74,8 @@ class Home extends Component {
             itemSelected:{item:"upcoming", id:undefined}, // so what did we actually select
             isWorkspace:false, // current workspace
             workspace: this.props.authType==="workspace" ? this.props.workspace : this.props.uid, // current workspace/uid
-            pendingAcceptances: [] // pending acceptance toasts to show
+            pendingAcceptances: [], // pending acceptance toasts to show
+            menuWidget: new MenuWidget(this.props.cm)
         };
 
         //        if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -85,16 +85,14 @@ class Home extends Component {
 
         //this.props.gruntman.registerGlobalRefresher(this.refresh.bind(this));
 
-        this.perspectivemenuWidget = new PerspectivesMenuWidget(this.props.cm);
-        this.projectmenuWidget = new ProjectMenuWidget(this.props.cm);
+        //this.perspectivemenuWidget = new PerspectivesMenuWidget(this.props.cm);
+        //this.projectmenuWidget = new ProjectMenuWidget(this.props.cm);
 
         // Execute the datapacks to cache them
-        (new ProjectDatapackWidget(this.props.cm)).execute();
-        (new TagDatapackWidget(this.props.cm)).execute();
 
+        //this.perspectivemenuWidget.hook(this.refresh);
+        //this.projectmenuWidget.hook(this.refresh);
 
-        this.perspectivemenuWidget.hook(this.refresh);
-        this.projectmenuWidget.hook(this.refresh);
         this.props.cm.hookInvite(this.updateInvites);
 
 
@@ -136,6 +134,7 @@ class Home extends Component {
             this.setState({itemSelected:{item:hash[1], id:hash[2]}});
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
+       this.state.menuWidget.hook(this.refresh);
 
         this.refresh();
         //    this.refresh().then(()=> {
@@ -151,8 +150,7 @@ class Home extends Component {
     }
 
     componentWillUnmount() {
-        this.perspectivemenuWidget.unhook(this.refresh);
-        this.projectmenuWidget.unhook(this.refresh);
+        this.state.menuWidget.unhook(this.refresh);
         this.props.cm.unhookInvite(this.updateInvites);
     }
 
@@ -171,9 +169,8 @@ class Home extends Component {
 
     async refresh() {
         this.setState({
-	    projects: await this.projectmenuWidget.execute(), 
-	    perspectives: await this.perspectivemenuWidget.execute()
-	});
+            ...(await this.state.menuWidget.execute())
+        });
     }
 
 
