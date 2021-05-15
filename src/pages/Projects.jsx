@@ -21,6 +21,7 @@ import Spinner from './Components/Spinner';
 
 import Project from "../backend/src/Objects/Project";
 import DbTask from "../backend/src/Objects/Task";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 const autoBind = require('auto-bind/react'); // autobind things! 
 
@@ -78,42 +79,6 @@ class Projects extends Component { // define the component
             this.name.current.focus(); // focus the name
     }
 
-    async refresh() {
-        //let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-        //let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-
-        //let projectList = []; // define the project list
-        //let tagsList = []; // define the tag list
-
-        //for (let pid in pPandT[1][0]) 
-        //    tagsList.push({value: pid, label: pPandT[1][0][pid]});
-        //let views = this;
-        //let projectDB = await (async function() {
-        //    let pdb = [];
-        //    let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-        //    for (let key in topLevels) {
-        //        pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-        //    }
-        //    return pdb;
-        //}());
-
-        //let buildSelectString = function(p, level) {
-        //    if (!level)
-        //        level = ""
-        //    projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-        //    if (p.children)
-        //        for (let e of p.children)
-        //            if (e.type === "project")
-        //                buildSelectString(e.content, level+":: ");
-        //};
-
-
-        //projectDB.map(proj=>buildSelectString(proj));
-	this.updatePrefix = this.random();
-        //let cProject = (await views.props.engine.db.getProjectStructure(this.props.uid, this.props.id, true, true));
-
-        //this.setState({isComplete: cProject.isComplete, name:pPandT[0][0][this.props.id], possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, currentProject: cProject, is_sequential: cProject.is_sequential, parent: cProject.parentProj, weight: cProject.weight, pendingWeight: cProject.pendingWeight, initialRenderingDone: true});
-    }
 
     componentDidMount() {
 	//this.props.gruntman.registerRefresher((this.refresh).bind(this));
@@ -146,7 +111,6 @@ class Projects extends Component { // define the component
 	//console.log(this.state.itemList)
 
         let itemList = await this.state.projectObject.async_children;
-	
 	this.setState({
         itemList: this.state.projectObject.isComplete ? itemList : itemList.filter((i)=>!i.isComplete),
 	    is_sequential: this.state.projectObject.isSequential,
@@ -208,7 +172,9 @@ class Projects extends Component { // define the component
 	//console.log("project, uncompleting", this.state.currentProject)
     }
 
+    onDragEnd () {
 
+    }
 
     render() {
         return (
@@ -382,39 +348,71 @@ class Projects extends Component { // define the component
 			    localizations={this.props.localizations}
 			    //activeTaskID={this.state.activeTask}
 			/>*/}
-                {this.state.itemList? this.state.itemList.map(item =>  (
-
-			    ((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
-				(<div 
-				    key={item.id}>
-				    <Task 
-					cm={this.props.cm} 
-					localizations={this.props.localizations} 
-                    taskObject={(item != null && typeof item.then === 'function') ? null : item} 
-                    asyncObject={(item != null && typeof item.then === 'function') ? item : null} 
-                    startOpen={(item != null && typeof item.then === 'function')} 
-					startingCompleted={this.state.projectObject.isComplete}
-                        refreshHook={()=>{
-                            this.setState({onTaskCreate: false}, ()=>this.reloadData());
-                        }}
-
-				    />
-
-				</div>)
-
-				: 
-				    <a className="subproject" 
-                        style={{opacity:item.available?"1":"0.35"}} 
-					onClick={()=>{
-					    this.props.paginate("projects", item.id);
-					    this.props.history.push(`/projects/${item.id}`)
+			<DragDropContext onDragEnd={this.onDragEnd}>
+			    <Droppable droppableId={"prjlst"}>
+				{provided => ( 
+				    <div
+					ref = {provided.innerRef}
+					{...provided.droppableProps}
+					style = {{
 					}}
 				    >
-					<div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
-					    {item.name}</div></div></a>
-			    )
 
-			)) : "" }
+					{this.state.itemList? this.state.itemList.map((item, i) =>  (
+					    <Draggable draggableId={item.id} key={item.id} index={i}>
+						{(provided, snapshot) => (
+						    <div
+							{...provided.draggableProps}
+							{...provided.dragHandleProps}
+							ref={provided.innerRef}
+							key={item.id}
+						    >
+
+							{((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
+								(<div>
+							    <div 
+							    key={item.id}>
+							    <Task 
+								cm={this.props.cm} 
+								localizations={this.props.localizations} 
+								taskObject={(item != null && typeof item.then === 'function') ? null : item} 
+								asyncObject={(item != null && typeof item.then === 'function') ? item : null} 
+								startOpen={(item != null && typeof item.then === 'function')} 
+								startingCompleted={this.state.projectObject.isComplete}
+								refreshHook={()=>{
+								    this.setState({onTaskCreate: false}, ()=>this.reloadData());
+								}}
+							    />
+							</div>
+								</div>
+							)
+							: 
+							    <div>
+							<a className="subproject" 
+							    style={{opacity:item.available?"1":"0.35"}} 
+							    onClick={()=>{
+								this.props.paginate("projects", item.id);
+								this.props.history.push(`/projects/${item.id}`)
+							    }}
+							>
+							    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
+								{item.name}</div></div></a>
+								</div>
+							)}
+
+
+
+						    </div>
+						)}
+					    </Draggable>
+					)
+					) : "" }
+					{provided.placeholder}
+
+				    </div>
+				)}
+			    </Droppable>
+			</DragDropContext>
 
 			<div style={{marginTop: 10}}>
 			    <a className="newbutton" 
@@ -433,14 +431,12 @@ class Projects extends Component { // define the component
 				    //    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
 				    //}) // call the homebar refresh
 
-                            let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
-                    this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
+				    let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
+				    this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
 
 
-				
-				
-                            }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
-                            <a className="newbutton" 
+				}}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
+			    <a className="newbutton" 
 				onClick={
 				    //async function() {
 				    //    let npid = (await this.props.gruntman.do( // call a gruntman function
@@ -453,21 +449,21 @@ class Projects extends Component { // define the component
 				    //}.bind(this)
 				    async () => {
 					let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
-					    //.then(this.props.history.push(`/projects/${newProject.id}/do`))
+					//.then(this.props.history.push(`/projects/${newProject.id}/do`))
 					this.props.history.push(`/projects/${newProject.id}/do`)
 
 				    }
 
 
-			    }><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
+				}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_ap}</div></div></a>
 
-                <BlkArt visible={(this.state.itemList)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
-                            <div className="bottom-helper">&nbsp;</div>
-                        </div>
-                    </div>
-                </div>
+			    <BlkArt visible={(this.state.itemList)==0 && this.state.initialRenderingDone} title={"Nothing in this project."} subtitle={"Add a task?"} />
+			    <div className="bottom-helper">&nbsp;</div>
+			</div>
+		    </div>
+		</div>
 
-            </IonPage>
+	    </IonPage>
         )
     }
 }
