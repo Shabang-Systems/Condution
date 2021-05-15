@@ -173,8 +173,24 @@ class Projects extends Component { // define the component
     //}
 
     onDragEnd = result => {
+	if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
+	    return
+	}
 
+	let itemOrder = this.state.itemList
+
+	let inDrag = itemOrder[result.source.index]
+	itemOrder.splice(result.source.index, 1);
+	itemOrder.splice(result.destination.index, 0, inDrag);
+
+
+	//itemOrder.forEach((v,i) => {
+	//    if (v.order != i) { v.order = i }
+	//})
+
+	this.setState({perspectives: itemOrder})
     }
+
 
     renderTask = (item, i, provided, snapshot) => {
 	return (
