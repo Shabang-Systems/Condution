@@ -195,8 +195,12 @@ class Projects extends Component { // define the component
 		className=""
 	    >
 		<div
-		    key={item.id}
 		    //style={{border: "1px solid red"}}
+		    style={{
+			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
+			borderRadius: "8px",
+
+		    }}
 		>
 		    <Task
 			cm={this.props.cm} 
@@ -233,7 +237,10 @@ class Projects extends Component { // define the component
 		//: {}}
 	    >
 		<a className="subproject" 
-		    style={{opacity:item.available?"1":"0.35"}} 
+		    style={{
+			opacity:item.available?"1":"0.35",
+			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`
+		    }}
 		    onClick={()=>{
 			this.props.paginate("projects", item.id);
 			this.props.history.push(`/projects/${item.id}`)
