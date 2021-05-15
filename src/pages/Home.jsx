@@ -175,7 +175,6 @@ class Home extends Component {
 
 
     onDragEndPsp = result => {
-	console.log(this.state.perspectives)
 
         if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
             return
