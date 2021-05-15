@@ -831,7 +831,7 @@ class ProjectSearchAdapter extends Project {
         if (ProjectSearchAdapter.loadCache.has(identifier)) return await ProjectSearchAdapter.loadCache.get(identifier);
 
         let loadProject:Promise<ProjectSearchAdapter> = (async () => {
-            let projectData:object = data.projectCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+            let projectData:object = data.projectMap.get(identifier);
 
             if (!projectData)
                 return null;

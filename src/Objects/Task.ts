@@ -920,7 +920,8 @@ class TaskSearchAdapter extends Task {
         if (TaskSearchAdapter.loadCache.has(identifier)) return await TaskSearchAdapter.loadCache.get(identifier);
 
         let loadTask:Promise<TaskSearchAdapter> = (async () => {
-            let tskObj:object = data.taskCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+            let tskObj:object = data.taskMap.get(identifier);
+
             if (!tskObj)
                 return null;
 
