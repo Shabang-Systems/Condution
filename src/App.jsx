@@ -121,11 +121,9 @@ async function writeJSON(data) {
         directory: dbRoot,
         data: JSON.stringify(data),
         encoding: FilesystemEncoding.UTF8
-    })
+    });
 }
 
-console.log(require("./demodata.json"));
-//writeJSON()
 
 class App extends Component {
     constructor(props) {
