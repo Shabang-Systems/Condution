@@ -161,19 +161,59 @@ class Projects extends Component { // define the component
 
     }
 
-    async uncompleteProject() {
-	this.props.gruntman.do( // call a gruntman function
-	    "project.update__uncomplete", { 
-		uid: this.props.uid, // pass it the things vvv
-		id: this.props.id, 
-	    }
-	).then(this.props.menuRefresh)
+    //async uncompleteProject() {
+    //    this.props.gruntman.do( // call a gruntman function
+    //        "project.update__uncomplete", { 
+    //            uid: this.props.uid, // pass it the things vvv
+    //            id: this.props.id, 
+    //        }
+    //    ).then(this.props.menuRefresh)
 
-	//console.log("project, uncompleting", this.state.currentProject)
+    //    //console.log("project, uncompleting", this.state.currentProject)
+    //}
+
+    onDragEnd = result => {
+
     }
 
-    onDragEnd () {
+    renderTask = (item, i, provided, snapshot) => {
+	return (
+	    <div>
+		<div
+		    key={item.id}
+		>
+		    <Task
+			cm={this.props.cm} 
+			localizations={this.props.localizations} 
+			taskObject={(item != null && typeof item.then === 'function') ? null : item} 
+			asyncObject={(item != null && typeof item.then === 'function') ? item : null} 
+			startOpen={(item != null && typeof item.then === 'function')} 
+			startingCompleted={this.state.projectObject.isComplete}
+			refreshHook={()=>{
+			    this.setState({onTaskCreate: false}, ()=>this.reloadData());
+			}}
+		    />
+		</div>
+	    </div>
+	)
+    }
 
+    renderProject = (item, i, provided, snapshot) => {
+	return (
+	    <div>
+		<a className="subproject" 
+		    style={{opacity:item.available?"1":"0.35"}} 
+		    onClick={()=>{
+			this.props.paginate("projects", item.id);
+			this.props.history.push(`/projects/${item.id}`)
+		    }}
+		>
+		    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
+			{item.name}</div></div></a>
+	    </div>
+
+
+	)
     }
 
     render() {
@@ -369,38 +409,10 @@ class Projects extends Component { // define the component
 						    >
 
 							{((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
-								(<div>
-							    <div 
-							    key={item.id}>
-							    <Task 
-								cm={this.props.cm} 
-								localizations={this.props.localizations} 
-								taskObject={(item != null && typeof item.then === 'function') ? null : item} 
-								asyncObject={(item != null && typeof item.then === 'function') ? item : null} 
-								startOpen={(item != null && typeof item.then === 'function')} 
-								startingCompleted={this.state.projectObject.isComplete}
-								refreshHook={()=>{
-								    this.setState({onTaskCreate: false}, ()=>this.reloadData());
-								}}
-							    />
-							</div>
-								</div>
-							)
+							    this.renderTask(item, i, provided, snapshot)
 							: 
-							    <div>
-							<a className="subproject" 
-							    style={{opacity:item.available?"1":"0.35"}} 
-							    onClick={()=>{
-								this.props.paginate("projects", item.id);
-								this.props.history.push(`/projects/${item.id}`)
-							    }}
-							>
-							    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
-								{item.name}</div></div></a>
-								</div>
+							    this.renderProject(item, i, provided, snapshot)
 							)}
-
-
 
 						    </div>
 						)}
