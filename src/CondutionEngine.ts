@@ -70,6 +70,7 @@ import { Collection, Page, Provider, AuthenticationUser, AuthenticationResult, A
 
 import FirebaseProvider from "./Storage/Backends/FirebaseBackend";
 import JSONProvider from "./Storage/Backends/JSONBackend";
+import CustomJSONProvider from "./Storage/Backends/CustomJSONBackend";
 
 /*
  * Chapter 2: ReferenceManager
@@ -147,7 +148,7 @@ export {
     Tag, TagSearchAdapter,
     Project, ProjectSearchAdapter, Query,
     Perspective, PerspectiveQuery, AvailabilityTypes, OrderTypes,
-    FirebaseProvider, JSONProvider,
+    FirebaseProvider, JSONProvider, CustomJSONProvider,
     Collection, Page, Provider,
     RepeatRule, RepeatRuleType,
     GloballySelfDestruct, Hookifier, Ticket,

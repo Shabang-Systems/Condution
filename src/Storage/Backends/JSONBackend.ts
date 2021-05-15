@@ -9,7 +9,7 @@ var path = require('path');
 let callbacks:Function[] = [];
 
 /**
- * A firebase collection to operate on 
+ * A json collection to operate on 
  * 
  * Storage/Backend/Backend/Page/Collection abstract 
  * class for usage and documentation.
