@@ -128,7 +128,11 @@ function Auth(props) {
                                                     props.cm.useProvider("firebase");
                                                     setMajorMode(1)
                                                 }}>🌐  in the cloud</div>
-                                                <div className="auth-click-button" onClick={()=>props.dispatch({service: "json", operation: "login"})}>💾  on your device</div>
+                                                <div className="auth-click-button" onClick={()=> {
+                                                    props.cm.useProvider("json");
+
+                                                    props.dispatch({service: "json", operation: "login"})
+                                                }}>💾  on your device</div>
                                             </>
                                         );
                                     case 1:

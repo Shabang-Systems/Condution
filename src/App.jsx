@@ -35,14 +35,14 @@ import './static/fa/scripts/all.min.css';
 import './theme/variables.css';
 
 /* Capacitor core plugins + jQuery */
-import { Plugins } from '@capacitor/core';
+import { FilesystemDirectory, FilesystemEncoding, Plugins } from '@capacitor/core';
 import $ from "jquery";
 
 /* Our Lovley Core Engine */
 //import Engine from './backend/CondutionEngine';
 //import Gruntman from './gruntman';
 
-import { FirebaseProvider, Context, ReferenceManager, GloballySelfDestruct } from "./backend/src/CondutionEngine";
+import { CustomJSONProvider, FirebaseProvider, Context, ReferenceManager, GloballySelfDestruct } from "./backend/src/CondutionEngine";
 
 
 /* Firebase */
@@ -67,7 +67,7 @@ const autoBind = require('auto-bind/react');
 
 
 /* Storage Plugins */
-const { Storage } = Plugins;
+const { Storage, Filesystem, Device } = Plugins;
 
 /* 
  * Hello human, good morning.
@@ -92,11 +92,40 @@ const { Storage } = Plugins;
 
 setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we implemented our own
 
-const providers = {
-    "firebase": new FirebaseProvider(),
+const dbRoot = FilesystemDirectory.Data;
+const dbPath = 'condution.json'; // TODO: use capacitor storage api
+
+async function readJSON() {
+    let contents;
+    try {
+        contents = (await Filesystem.readFile({
+            path: dbPath,
+            directory: dbRoot,
+            encoding: FilesystemEncoding.UTF8
+        })).data;
+    } catch(e) {
+        contents = "{}";
+        await Filesystem.writeFile({
+            path: dbPath,
+            directory: dbRoot,
+            data: JSON.stringify({}),
+            encoding: FilesystemEncoding.UTF8
+        })
+    }
+    return JSON.parse(contents);
 }
 
-let refMgr = new ReferenceManager([providers["firebase"]]);
+async function writeJSON(data) {
+    await Filesystem.writeFile({
+        path: dbPath,
+        directory: dbRoot,
+        data: JSON.stringify(data),
+        encoding: FilesystemEncoding.UTF8
+    })
+}
+
+console.log(require("./demodata.json"));
+//writeJSON()
 
 class App extends Component {
     constructor(props) {
@@ -107,7 +136,8 @@ class App extends Component {
             de: require("./static/I18n/de-DE.json"),
         });
 
-        this.cm = new Context(refMgr, true);
+        
+
 
         // TODO TODO remove this
         //localizations.setLanguage("zh");
@@ -125,6 +155,8 @@ class App extends Component {
                 $("body").addClass("condutiontheme-default-light");
             }
 
+        this.jsondata = {};
+
             // Make ourselves a nice gruntman
             //this.gruntman = new Gruntman(Engine);
             //this.gruntman.localizations = localizations;
@@ -138,6 +170,20 @@ class App extends Component {
             console.log('%cClose this panel now.', "background: #fff0f0;color: transparent; background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);   -webkit-background-clip: text; font-size: 40px; ;");
             console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
             console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
+
+            this.jsondata = await readJSON();
+
+            const providers = {
+                "firebase": new FirebaseProvider(),
+                "json": new CustomJSONProvider("json", () => {
+                    return this.jsondata;
+                }, (data) => {
+                    this.jsondata = data;
+                    writeJSON(data);
+                })
+            }
+            let refMgr = new ReferenceManager([providers["firebase"], providers["json"]]);
+            this.cm = new Context(refMgr);
 
 
             // This IS in fact the view
@@ -186,6 +232,7 @@ class App extends Component {
                     case "json":
                         // Shift the engine into json mode
                         this.cm.useProvider("json");
+                        await this.cm.start();
                         // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
                         this.setState({authMode: "json", uid:"hard-storage-user"});
                         break;
@@ -323,6 +370,7 @@ class App extends Component {
                         //return <Auth gruntman={this.gruntman} dispatch={this.authDispatch} localizations={this.state.localizations} startOnForm={true} engine={Engine}/>;
                     // if we did auth, load it up and get the party going
                     case "firebase":
+                    case "json":
                         return <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
          //email={firebase.auth().currentUser.email}
                     case "workspace":
