@@ -839,7 +839,16 @@ class ProjectSearchAdapter extends Project {
             let tsk:ProjectSearchAdapter = new this(context, identifier, data, projectData);
 
             ProjectSearchAdapter.adaptorCache.set(identifier, tsk);
-            await tsk.calculateTreeParams();
+
+            // await tsk.calculateTreeParams();
+            // TODO IDK how the frick searching projects
+            // by weight is not fricked up but shock surprise
+            // IT ISNT?????? HOW?????? IDK
+            //
+            // But awaiting tree param refresh crashes JSON mode
+            // surprise! IDK why.
+
+            tsk.calculateTreeParams();
             return tsk;
         })();
         

@@ -297,6 +297,7 @@ class Query {
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
+        Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
@@ -304,7 +305,7 @@ class Query {
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
-
+        Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();

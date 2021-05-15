@@ -34,6 +34,7 @@ class JSONCollection extends Collection {
         this.path = path;
 
         callbacks.push(refreshCallback);
+        refreshCallback();
     }
 
     private clean(obj:object) {

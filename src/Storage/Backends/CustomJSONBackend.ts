@@ -21,8 +21,8 @@ class CustomJSONProvider extends Provider {
     name: string;
 
     private defaultUser: string;
-    private loadFunc: Function;
-    private commitFunc: Function;
+    private loadFunc: Function = ()=>{};
+    private commitFunc: Function = ()=>{};
     private data: object;
 
     constructor(name:string="json", loadFunc:Function, commitFunc:Function) {
