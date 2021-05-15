@@ -178,9 +178,25 @@ class Projects extends Component { // define the component
 
     renderTask = (item, i, provided, snapshot) => {
 	return (
-	    <div>
+	    <div
+		{...provided.draggableProps}
+		{...provided.dragHandleProps}
+		ref={provided.innerRef}
+		key={item.id}
+		//style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
+		//style={(snapshot.isDragging)? 
+		//{ 
+		//top : "auto !important", 
+		//left: "auto !important"
+		//border: "1px solid red",
+		//position: "static"
+		//} 
+		//: {}}
+		className=""
+	    >
 		<div
 		    key={item.id}
+		    //style={{border: "1px solid red"}}
 		>
 		    <Task
 			cm={this.props.cm} 
@@ -199,8 +215,23 @@ class Projects extends Component { // define the component
     }
 
     renderProject = (item, i, provided, snapshot) => {
+	//console.log("renddering project")
 	return (
-	    <div>
+	    <div
+		{...provided.draggableProps}
+		{...provided.dragHandleProps}
+		ref={provided.innerRef}
+		key={item.id}
+		//style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
+		//style={(snapshot.isDragging)? 
+		//{ 
+		//top : "auto !important", 
+		//left: "auto !important"
+		//border: "1px solid red",
+		//position: "static"
+		//} 
+		//: {}}
+	    >
 		<a className="subproject" 
 		    style={{opacity:item.available?"1":"0.35"}} 
 		    onClick={()=>{
@@ -389,8 +420,25 @@ class Projects extends Component { // define the component
 			    //activeTaskID={this.state.activeTask}
 			/>*/}
 			<DragDropContext onDragEnd={this.onDragEnd}>
-			    <Droppable droppableId={"prjlst"}>
-				{provided => ( 
+			    <Droppable droppableId={"prjlst"}
+				renderClone={(provided, snapshot, rubric) => (
+					<div
+						//{...provided.draggableProps}
+						//{...provided.dragHandleProps}
+						//ref={provided.innerRef}
+						//key={item.content.id}
+					>
+						{(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
+						    this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
+						: 
+						    this.renderProject(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
+						}
+					    </div>
+					    
+					
+					)}
+					>
+				{(provided, snapshot) => ( 
 				    <div
 					ref = {provided.innerRef}
 					{...provided.droppableProps}
@@ -406,6 +454,12 @@ class Projects extends Component { // define the component
 							{...provided.dragHandleProps}
 							ref={provided.innerRef}
 							key={item.id}
+							style={(snapshot.isDragging)? 
+								{ 
+								    //border: "1px solid red",
+								    //position: "static"
+								} 
+								: {}}
 						    >
 
 							{((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 

@@ -183,7 +183,11 @@
 
 
 
+.clone-wrapper {
+    border: 1px solid blue;
+    margin-bottom: 0px !important;
 
+}
 
 
 
