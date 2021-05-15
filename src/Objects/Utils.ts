@@ -274,6 +274,9 @@ class Query {
         delete Query.projectMap;
 
         Query.hasIndexed = false;
+
+        Query.taskMap = new Map();
+        Query.projectMap = new Map();
         Hookifier.call(`QueryEngine`);
     }
 
