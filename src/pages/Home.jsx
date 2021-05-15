@@ -178,38 +178,23 @@ class Home extends Component {
 
 
     onDragEndPsp = result => {
-        //console.log(result, this.state.perspectives)
 
         if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
             return
         }
 
-        let pspOrder = this.state.perspectives
+	let pspOrder = this.state.perspectives
 
-        let inDrag = pspOrder[result.source.index]
-        pspOrder.splice(result.source.index, 1);
-        pspOrder.splice(result.destination.index, 0, inDrag);
-
-
-        pspOrder.forEach((v,i) => {
-            //console.log(v.name, i)
+	let inDrag = pspOrder[result.source.index]
+	pspOrder.splice(result.source.index, 1);
+	pspOrder.splice(result.destination.index, 0, inDrag);
 
 
-            this.props.gruntman.do(
-                "perspective.update__perspective", {
-                    uid: this.props.uid,
-                    id: v.id,
-                    payload: {order: i}
+	pspOrder.forEach((v,i) => {
+	    if (v.order != i) { v.order = i }
+	})
 
-                }
-            )
-        })
-
-
-        this.setState({perspectives: pspOrder})
-        //this.refresh()
-
-
+	this.setState({perspectives: pspOrder})
     }
 
     onDragEndPrj = result => {
@@ -224,20 +209,9 @@ class Home extends Component {
         prjOrder.splice(result.source.index, 1);
         prjOrder.splice(result.destination.index, 0, inDrag);
 
-
-        prjOrder.forEach((v,i) => {
-            //console.log(v.name, i)
-
-
-            this.props.gruntman.do(
-                "project.update__projectVal", {
-                    uid: this.props.uid,
-                    id: v.id,
-                    payload: {order: i}
-
-                }
-            )
-        })
+	prjOrder.forEach(async (v,i) => {
+	    if (v.order != i) { await v.reorder(i) }
+	})
 
 
         this.setState({projects: prjOrder})
