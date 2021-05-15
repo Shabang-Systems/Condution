@@ -14,14 +14,15 @@ const defaultOptions = {
     animationData: LoadSpinner,
     rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice',
-    }
+    },
+    renderer: 'svg'
 };
 
 
 
 function Spinner(props) {
-    return (
-        <div style={{display: props.ready?"none":"block", position: "relative", marginTop: 20, marginBottom:20}}>
+    return (!props.ready)?(
+        <div style={{position: "relative", marginTop: 20, marginBottom:20}}>
             <Lottie options={defaultOptions}
                 height={150}
                 width={150}
@@ -32,7 +33,7 @@ function Spinner(props) {
             />
             <div style={{margin: "0 auto", width: "100%", textAlign: "center", transform: "translate(-9px, 4px)", color: "var(--decorative-light-alt)", fontWeight: 600}}>Loading...</div>
         </div>
-    )
+    ):null
 }
 
 export default Spinner;
