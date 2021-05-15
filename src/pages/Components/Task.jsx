@@ -336,6 +336,8 @@ class Task extends Component {
 
     closeTask() {
         this.setState({expanded: false});
+	//if (this.props.setExpanded) { this.props.setExpanded(false, this.props.taskObject.id) }
+	console.log("closing a task??")
     }
     //closeTask = () => this.setState({expanded: false}); // util function to close a task
 
@@ -344,6 +346,7 @@ class Task extends Component {
             this.setState({expanded: true});
         else 
             this.setState({haveBeenExpanded: true, expanded:true});
+	if (this.props.setExpanded) { this.props.setExpanded(true, this.props.taskObject.id) }
     }// util function to open a task
 
     _explode() {

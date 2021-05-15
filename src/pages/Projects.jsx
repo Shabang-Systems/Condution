@@ -50,7 +50,8 @@ class Projects extends Component { // define the component
             initialRenderingDone: false,
             projectObject: "",
             itemList: [], 
-            onTaskCreate: false // are we in the middle of task creation? so, should we hang the refreshes?
+            onTaskCreate: false, // are we in the middle of task creation? so, should we hang the refreshes?
+	    expandedChild: {expanded: false, id: null},
         };
 
         this.updatePrefix = this.random();
@@ -184,13 +185,18 @@ class Projects extends Component { // define the component
 	itemOrder.splice(result.destination.index, 0, inDrag);
 
 
-	//itemOrder.forEach((v,i) => {
-	//    if (v.order != i) { v.order = i }
-	//})
+	itemOrder.forEach((v,i) => {
+	    if (v.databaseBadge == "tasks") {
+		if (v.order != i) { v.reorder(i) }
+	    } else {
+		if (v.order != i) { v.reorder(i) }
+	    }
+	})
 
 	this.setState({perspectives: itemOrder})
     }
 
+    exp = "disableInteractiveElementBlocking"
 
     renderTask = (item, i, provided, snapshot) => {
 	return (
@@ -228,6 +234,7 @@ class Projects extends Component { // define the component
 			refreshHook={()=>{
 			    this.setState({onTaskCreate: false}, ()=>this.reloadData());
 			}}
+			setExpanded={(e, id) => { this.setState({expandedChild: {expanded: e, id: id}}) }}
 		    />
 		</div>
 	    </div>
@@ -470,7 +477,24 @@ class Projects extends Component { // define the component
 				    >
 
 					{this.state.itemList? this.state.itemList.map((item, i) =>  (
-					    <Draggable draggableId={item.id} key={item.id} index={i}>
+					    <Draggable 
+						disableInteractiveElementBlocking={(item.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
+
+
+						
+						//disableInteractiveElementBlocking={ () => {
+						//    if (this.state.expandedChild.id == item.id) {
+						//        console.log("yeeet", item.id)
+						//    }
+						//    console.log("hell")
+						//    if (this.state.expandedChild.expanded) {
+						//        return false
+						//    }
+
+						////(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : true} 
+						//}}
+						draggableId={item.id} key={item.id} index={i}
+					    >
 						{(provided, snapshot) => (
 						    <div
 							{...provided.draggableProps}
@@ -484,6 +508,7 @@ class Projects extends Component { // define the component
 								} 
 								: {}}
 						    >
+							{console.log(this.state.expandedChild)}
 
 							{((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
 							    this.renderTask(item, i, provided, snapshot)
