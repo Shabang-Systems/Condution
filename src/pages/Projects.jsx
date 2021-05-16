@@ -52,6 +52,7 @@ class Projects extends Component { // define the component
             itemList: [], 
             onTaskCreate: false, // are we in the middle of task creation? so, should we hang the refreshes?
 	    expandedChild: {expanded: false, id: null},
+	    inDragId: "",
         };
 
         this.updatePrefix = this.random();
@@ -61,7 +62,7 @@ class Projects extends Component { // define the component
 
         this.name = React.createRef();
 	this.checkbox = React.createRef(); // what's my pseudocheck
-        this.closer = React.createRef();
+	this.closer = React.createRef();
 
         autoBind(this);
     }
@@ -198,8 +199,11 @@ class Projects extends Component { // define the component
     }
 
     onBeforeDragStart = initials => {
-	//console.log(things)
-	this.closer.current.closeTask();
+	//console.log(initials)
+	//if (this.closer.current) {
+	//    this.closer.current.closeTask() 
+	//}
+	//this.closer.current.closeTask();
     }
 
     exp = "disableInteractiveElementBlocking"
@@ -241,7 +245,7 @@ class Projects extends Component { // define the component
 			    this.setState({onTaskCreate: false}, ()=>this.reloadData());
 			}}
 			setExpanded={(e, id) => { this.setState({expandedChild: {expanded: e, id: id}}) }}
-			ref={this.closer}
+			//ref={(item.id == this.state.inDragId)? this.closer : null}
 		    />
 		</div>
 	    </div>
@@ -462,12 +466,7 @@ class Projects extends Component { // define the component
 			>
 			    <Droppable droppableId={"prjlst"}
 				renderClone={(provided, snapshot, rubric) => (
-					<div
-						//{...provided.draggableProps}
-						//{...provided.dragHandleProps}
-						//ref={provided.innerRef}
-						//key={item.content.id}
-					>
+					<div>
 						{(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
 						    this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
 						: 
@@ -489,6 +488,7 @@ class Projects extends Component { // define the component
 					{this.state.itemList? this.state.itemList.map((item, i) =>  (
 					    <Draggable 
 						disableInteractiveElementBlocking={(item.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
+						isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
 
 
 						
@@ -530,7 +530,8 @@ class Projects extends Component { // define the component
 					    </Draggable>
 					)
 					) : "" }
-					{provided.placeholder}
+
+					    {provided.placeholder}
 
 				    </div>
 				)}

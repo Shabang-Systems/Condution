@@ -1,6 +1,5 @@
 // A whole lotta imports
 
-
 // Ionic components
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast } from '@ionic/react';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
@@ -172,9 +171,6 @@ class Home extends Component {
             ...(await this.state.menuWidget.execute())
         });
     }
-
-
-
 
 
     onDragEndPsp = result => {
