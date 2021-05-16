@@ -719,7 +719,7 @@ class PerspectiveSearchAdapter extends Perspective {
     constructor(context:Context, id:string, data:AdapterData) {
         super(id, context);
 
-        this.data = data.tagCollection.filter((obj:object)=> obj["id"] === id)[0];
+        this.data = data.perspectiveMap.get(id);
         if (!this.data) 
             this.data = {}
         this._ready = true;

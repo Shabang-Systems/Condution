@@ -217,12 +217,10 @@ class RepeatRule {
 }
 
 interface AdapterData {
-    taskCollection: object[],
-    projectCollection: object[],
-    tagCollection: object[],
-    perspectiveCollection: object[],
     taskMap: Map<string, object>,
     projectMap: Map<string, object>,
+    tagMap: Map<string, object>,
+    perspectiveMap: Map<string, object>,
 }
 
 //type TP = Task[] | Project[]
@@ -238,8 +236,15 @@ class Query {
     private static perspectivePages:object[];
     private static tagPages:object[];
 
+    private static taskAdapters:TaskSearchAdapter[];
+    private static projectAdapters:ProjectSearchAdapter[];
+    private static perspectiveAdapters:PerspectiveSearchAdapter[];
+    private static tagAdapters:TagSearchAdapter[];
+
     private static taskMap:Map<string,object> = new Map();
     private static projectMap:Map<string,object> = new Map();
+    private static tagMap:Map<string,object> = new Map();
+    private static perspectiveMap:Map<string,object> = new Map();
 
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
@@ -272,11 +277,15 @@ class Query {
 
         delete Query.taskMap;
         delete Query.projectMap;
+        delete Query.tagMap;
+        delete Query.perspectiveMap;
 
         Query.hasIndexed = false;
 
         Query.taskMap = new Map();
         Query.projectMap = new Map();
+        Query.tagMap = new Map();
+        Query.perspectiveMap = new Map();
         Hookifier.call(`QueryEngine`);
     }
 
@@ -312,14 +321,36 @@ class Query {
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
+        Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
             if (Query.hasIndexed)
                 Hookifier.call(`QueryEngine`);
         }).data();
+        Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
 
         Query.hasIndexed = true;
+
+        let dataObject:AdapterData = {
+            taskMap: Query.taskMap,
+            projectMap: Query.projectMap,
+            tagMap: Query.tagMap,
+            perspectiveMap: Query.perspectiveMap
+        }
+
+        let taskPages:object[] = Query.taskPages;
+        let projectPages:object[] = Query.projectPages;
+        let tagPages:object[] = Query.tagPages;
+        let perspectivePages:object[] = Query.perspectivePages;
+
+        Query.taskAdapters = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+        Query.projectAdapters = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+        Query.tagAdapters = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+        Query.perspectiveAdapters = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
     }
 
     
@@ -368,12 +399,10 @@ class Query {
             await this.index();
 
         let dataObject:AdapterData = {
-            taskCollection: Query.taskPages,
-            projectCollection: Query.projectPages,
-            tagCollection: Query.tagPages,
-            perspectiveCollection: Query.perspectivePages,
             taskMap: Query.taskMap,
-            projectMap: Query.projectMap
+            projectMap: Query.projectMap,
+            tagMap: Query.tagMap,
+            perspectiveMap: Query.perspectiveMap
         }
 
         return dataObject;
@@ -392,31 +421,24 @@ class Query {
 
     async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[], returnLiveObjects:boolean=true): Promise<Filterable[]> {
         console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
+        if (!Query.hasIndexed)
+            await this.index();
 
         let data:Filterable[] = [];
 
-        let dataObject:AdapterData = await this.orderStaticData();
+        //let taskPages:object[] = dataObject.taskCollection;
+        //let projectPages:object[] = dataObject.projectCollection;
+        //let tagPages:object[] = dataObject.tagCollection;
+        //let perspectivePages:object[] = dataObject.perspectiveCollection;
 
-        let taskPages:object[] = dataObject.taskCollection;
-        let projectPages:object[] = dataObject.projectCollection;
-        let tagPages:object[] = dataObject.tagCollection;
-        let perspectivePages:object[] = dataObject.perspectiveCollection;
-
-        if (objType == Task) {
-            data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        } 
-
-        if (objType == Project) {
-            data = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        }
-
-        if (objType == Tag) {
-            data = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        }
-
-        if (objType == Perspective) {
-            data = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        }
+        if (objType == Task) 
+            data = Query.taskAdapters;
+        if (objType == Project)
+            data = Query.projectAdapters;
+        if (objType == Tag)
+            data = Query.tagAdapters;
+        if (objType == Perspective)
+            data = Query.perspectiveAdapters;
 
         TagSearchAdapter.cleanup();
         TaskSearchAdapter.cleanup();
@@ -576,7 +598,9 @@ class Hookifier {
 }
 
 class Ticket {
-    private objPromise: Promise<Project|Task|Tag>;
+    //private objPromise: Promise<Project|Task|Tag>;
+    private objType: Function;
+    private cm: Context;
     private _id: string;
 
     /**
@@ -589,12 +613,8 @@ class Ticket {
 
     constructor(objType:Function, cm:Context, id:string) {
         this._id = id;
-        if (objType === Task) 
-            this.objPromise = Task.fetch(cm, id);
-        else if (objType === Project)
-            this.objPromise = Project.fetch(cm, id);
-        else if (objType === Tag)
-            this.objPromise = Tag.fetch(cm, id);
+        this.objType = objType;
+        this.cm = cm;
     }
 
     /**
@@ -615,7 +635,12 @@ class Ticket {
      */
 
     async fetch():Promise<Project|Task|Tag> {
-        return await this.objPromise;
+        if (this.objType === Task) 
+            return Task.fetch(this.cm, this._id);
+        else if (this.objType === Project)
+            return Project.fetch(this.cm, this._id);
+        else if (this.objType === Tag)
+            return Tag.fetch(this.cm, this._id);
     }
 }
 
