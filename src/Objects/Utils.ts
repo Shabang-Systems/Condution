@@ -698,8 +698,6 @@ function GloballySelfDestruct() {
     Project.SelfDestruct();
     Perspective.SelfDestruct();
     Query.SelfDestruct();
-    Hookifier.SelfDestruct();
-    console.log("NUKD");
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct, Ticket, Hookifier };
