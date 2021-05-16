@@ -206,6 +206,7 @@ class SimpleGroup {
             
             // Slice out the operation
             filter = filter.slice(1);
+            filter = filter.trim();
 
             switch (operation) {
                 case ".": 
