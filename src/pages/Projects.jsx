@@ -434,32 +434,6 @@ class Projects extends Component { // define the component
 		    <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
 			<Spinner ready={this.state.initialRenderingDone} />
 
-                        {/*{this.state.pendingWeight}/{this.state.weight}*/}
-			{/*<SortableProjectList 
-			    //list={this.state.itemList} 
-			    list={[]}
-			    prefix={this.updatePrefix} 
-			    //uid={this.props.uid} 
-			    //engine={this.props.engine} 
-			    //gruntman={this.props.gruntman} 
-			    //availability={this.state.availability} 
-			    //datapack={[
-			    //    this.state.tagSelects, 
-			    //    this.state.projectSelects, 
-			    //    this.state.possibleProjects, 
-			    //    this.state.possibleProjectsRev, 
-			    //    this.state.possibleTags, 
-			    //    this.state.possibleTagsRev
-			    //]} 
-			    //possibleProjects={this.state.possibleProjects} 
-			    history={this.props.history} 
-			    paginate={this.props.paginate} 
-			    //activeTaskRef={this.activeTask} 
-			    //parentComplete={this.state.isComplete} 
-			    parentComplete={this.state.projectObject.isComplete} 
-			    localizations={this.props.localizations}
-			    //activeTaskID={this.state.activeTask}
-			/>*/}
 			<DragDropContext 
 			    onDragEnd={this.onDragEnd}
 			    onBeforeCapture={this.onBeforeDragStart}
@@ -489,20 +463,6 @@ class Projects extends Component { // define the component
 					    <Draggable 
 						disableInteractiveElementBlocking={(item.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
 						isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
-
-
-						
-						//disableInteractiveElementBlocking={ () => {
-						//    if (this.state.expandedChild.id == item.id) {
-						//        console.log("yeeet", item.id)
-						//    }
-						//    console.log("hell")
-						//    if (this.state.expandedChild.expanded) {
-						//        return false
-						//    }
-
-						////(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : true} 
-						//}}
 						draggableId={item.id} key={item.id} index={i}
 					    >
 						{(provided, snapshot) => (

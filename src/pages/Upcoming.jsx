@@ -16,6 +16,7 @@ import T from "../backend/src/Objects/Task.ts";
 import W from "../backend/src/Objects/Workspace.ts";
 import { TagDatapackWidget, ProjectDatapackWidget } from  "../backend/src/Widget";
 import { InboxWidget, DueSoonWidget, TimelineWidget }  from "../backend/src/Widget.ts";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import WorkspaceModal from './Components/WorkspaceModal';
 
@@ -63,6 +64,7 @@ class Upcoming extends Component { // define the component
             inboxWidget: new InboxWidget(this.props.cm),
             dsWidget: new DueSoonWidget(this.props.cm),
             timelineWidget: new TimelineWidget(this.props.cm),
+	    expandedChild: {expanded: false, id: null}
         };
 
         this.updatePrefix = this.random();
@@ -110,6 +112,36 @@ class Upcoming extends Component { // define the component
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
+
+    onDragEnd = result => {
+    }
+
+
+    renderTask = (t, i, provided, snapshot) => {
+	return (
+	    <div
+		{...provided.draggableProps}
+		{...provided.dragHandleProps}
+		ref={provided.innerRef}
+		key={t.id}
+	    >
+		<div
+		    style={{
+			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
+			borderRadius: "8px",
+		    }}
+		>
+		    <Task 
+			key={t.id}
+			cm={this.props.cm} 
+			localizations={this.props.localizations} 
+			taskObject={t} 
+			setExpanded={(e, id) => { this.setState({expandedChild: {expanded: e, id: id}}) }}
+		    />
+		</div>
+	    </div>
+	)
+    }
 
 
     render() {
@@ -199,16 +231,57 @@ class Upcoming extends Component { // define the component
                                         if (this.state.inbox.length > 0)
                                             return <div className="page-label">{this.props.localizations.unsorted}<IonBadge className="count-badge">{this.state.inbox.length}</IonBadge></div>
                                     })()}
-                                    {this.state.inbox.map(t=>
-                                        (
-                                        <Task 
-                                            key={t.id}
-                                            cm={this.props.cm} 
-                                            localizations={this.props.localizations} 
-                                            taskObject={t} 
-                                        />
-                                    ))}
+	    <div>
+
+				    <DragDropContext
+					onDragEnd={this.onDragEnd}
+				    >
+					<Droppable droppableId={"upcm"}
+					    renderClone={(provided, snapshot, rubric) => (
+						<div 
+						    //style={{background: "indigo", height: 30, width: 200}}
+						>
+						    {
+							this.renderTask(this.state.inbox[rubric.source.index], rubric.source.index, provided, snapshot)
+						    }
+						</div>
+					    )}
+					>
+				{(provided, snapshot) => ( 
+				    <div
+					ref = {provided.innerRef}
+					{...provided.droppableProps}
+					style = {{
+					}}
+				    >
+						{this.state.inbox.map((t, i)=>
+						    (
+							<Draggable draggableId={t.id} key={t.id} index={i}
+							    disableInteractiveElementBlocking={(t.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
+							    isDragDisabled={(t.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
+							>
+						{(provided, snapshot) => (
+						    <div
+							{...provided.draggableProps}
+							{...provided.dragHandleProps}
+							ref={provided.innerRef}
+							key={t.id}
+							style={(snapshot.isDragging)?  { } : {}}
+						    >
+
+							{ this.renderTask(t, i, provided, snapshot) }
+
+						    </div>
+						)}
+							</Draggable>
+						))}
+					    {provided.placeholder}
+				    </div>
+				)}
+					</Droppable>
+				    </DragDropContext>
                                     {/*<SortableTaskList list={this.state.inbox} prefix={this.updatePrefix} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman} availability={this.state.availability} datapack={[this.state.tagSelects, this.state.projectSelects, this.state.possibleProjects, this.state.possibleProjectsRev, this.state.possibleTags, this.state.possibleTagsRev]}/>*/}
+	    </div>
                                 </div>
                                 <div>
                                     {(()=>{
