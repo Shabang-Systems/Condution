@@ -303,35 +303,54 @@ class Query {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
             Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
-            if (Query.hasIndexed)
+            if (Query.hasIndexed) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            }
         }).data();
         Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
             Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
-            if (Query.hasIndexed)
+            if (Query.hasIndexed) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            }
         }).data();
         Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
-            if (Query.hasIndexed)
+            Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
+
+            if (Query.hasIndexed) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            }
         }).data();
         Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
-            if (Query.hasIndexed)
+            Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
+
+            if (Query.hasIndexed) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            }
         }).data();
         Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
+        await this.seedAdapters();
 
         Query.hasIndexed = true;
+    }
 
+    /**
+     * Reseed all the adapters
+     */
+
+    private seedAdapters = async () => {
         let dataObject:AdapterData = {
             taskMap: Query.taskMap,
             projectMap: Query.projectMap,
