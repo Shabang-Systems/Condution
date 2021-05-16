@@ -14,6 +14,8 @@ import PerspectiveEdit from './Components/PerspectiveEditor';
 import Perspective from "../backend/src/Objects/Perspective";
 import Project from "../backend/src/Objects/Project";
 
+import {Hookifier} from "../backend/src/Objects/Utils.ts";
+
 
 import Spinner from './Components/Spinner';
 
@@ -72,11 +74,14 @@ class Perspectives extends Component {
     componentWillUnmount() {
         if (this.state.perspectiveObject)
             this.state.perspectiveObject.unhook(this.reloadData);
+        Hookifier.remove("QueryEngine", this.reloadData);
     }
 
     async load() {
         let perspective = await Perspective.fetch(this.props.cm, this.props.id)
         perspective.hook(this.reloadData);
+
+        Hookifier.push("QueryEngine", this.reloadData);
 
         this.setState({
             perspectiveObject: perspective 
