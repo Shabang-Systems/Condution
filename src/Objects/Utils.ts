@@ -514,6 +514,23 @@ class Hookifier {
     private static freezeStack:Set<string> = new Set<string>();
 
     /**
+     * Nuke
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static SelfDestruct():void {
+        Hookifier._frozen = false;
+        Hookifier.lastFreeze = new Date();
+        Hookifier.freezeStack = new Set<string>();
+
+        Hookifier.hooks = new Map<string, Set<Function>>();
+        Hookifier.pendingCalls.forEach((val:ReturnType<typeof setTimeout>) => clearTimeout(val));
+        Hookifier.pendingCalls = new Map<string, ReturnType<typeof setTimeout>>();
+    }
+
+    /**
      * Freeze all hooks
      * @static
      *
@@ -566,8 +583,10 @@ class Hookifier {
 
     static remove(id:string, fn:Function): void {
         let hooks:Set<Function> = Hookifier.hooks.get(id);
-        hooks.delete(fn);
-        Hookifier.hooks.set(id, hooks);
+        if (hooks) {
+            hooks.delete(fn);
+            Hookifier.hooks.set(id, hooks);
+        }
     }
 
     /**
@@ -679,6 +698,8 @@ function GloballySelfDestruct() {
     Project.SelfDestruct();
     Perspective.SelfDestruct();
     Query.SelfDestruct();
+    Hookifier.SelfDestruct();
+    console.log("NUKD");
 }
 
 export { RepeatRule, RepeatRuleType, Query, GloballySelfDestruct, Ticket, Hookifier };
