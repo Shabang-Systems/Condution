@@ -61,6 +61,7 @@ class Projects extends Component { // define the component
 
         this.name = React.createRef();
 	this.checkbox = React.createRef(); // what's my pseudocheck
+        this.closer = React.createRef();
 
         autoBind(this);
     }
@@ -87,7 +88,7 @@ class Projects extends Component { // define the component
         //if (this.props.options === "do") // if we are trying to create
         //    this.name.current.focus(); // focus the name
 	this.load()
-	console.log("moounting")
+	//console.log("moounting")
     }
 
     async load() {
@@ -196,6 +197,11 @@ class Projects extends Component { // define the component
 	this.setState({perspectives: itemOrder})
     }
 
+    onBeforeDragStart = initials => {
+	//console.log(things)
+	this.closer.current.closeTask();
+    }
+
     exp = "disableInteractiveElementBlocking"
 
     renderTask = (item, i, provided, snapshot) => {
@@ -235,6 +241,7 @@ class Projects extends Component { // define the component
 			    this.setState({onTaskCreate: false}, ()=>this.reloadData());
 			}}
 			setExpanded={(e, id) => { this.setState({expandedChild: {expanded: e, id: id}}) }}
+			ref={this.closer}
 		    />
 		</div>
 	    </div>
@@ -449,7 +456,10 @@ class Projects extends Component { // define the component
 			    localizations={this.props.localizations}
 			    //activeTaskID={this.state.activeTask}
 			/>*/}
-			<DragDropContext onDragEnd={this.onDragEnd}>
+			<DragDropContext 
+			    onDragEnd={this.onDragEnd}
+			    onBeforeCapture={this.onBeforeDragStart}
+			>
 			    <Droppable droppableId={"prjlst"}
 				renderClone={(provided, snapshot, rubric) => (
 					<div
@@ -508,7 +518,6 @@ class Projects extends Component { // define the component
 								} 
 								: {}}
 						    >
-							{console.log(this.state.expandedChild)}
 
 							{((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
 							    this.renderTask(item, i, provided, snapshot)

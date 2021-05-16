@@ -346,7 +346,7 @@ class Task extends Component {
             this.setState({expanded: true});
         else 
             this.setState({haveBeenExpanded: true, expanded:true});
-	if (this.props.setExpanded) { this.props.setExpanded(true, this.props.taskObject.id) }
+	if (this.props.setExpanded && this.props.taskObject) { this.props.setExpanded(true, this.props.taskObject.id) }
     }// util function to open a task
 
     _explode() {
@@ -446,7 +446,8 @@ class Task extends Component {
             if (this.props.refreshHook)
                 setTimeout(()=>this.props.refreshHook(), 300); // let the task close, then refresh
             //this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
-	    if (this.props.setExpanded) { this.props.setExpanded(false, this.props.taskObject.id) }
+	    if (this.props.setExpanded && this.props.taskObject) { this.props.setExpanded(false, this.props.taskObject.id) }
+	    //console.log("over here man")
             setTimeout(()=>Hookifier.unfreeze(), 500);
         }
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
