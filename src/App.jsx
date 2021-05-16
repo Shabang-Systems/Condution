@@ -42,7 +42,7 @@ import $ from "jquery";
 //import Engine from './backend/CondutionEngine';
 //import Gruntman from './gruntman';
 
-import { CustomJSONProvider, FirebaseProvider, Context, ReferenceManager, GloballySelfDestruct } from "./backend/src/CondutionEngine";
+import { CustomJSONProvider, FirebaseProvider, Context, ReferenceManager, GloballySelfDestruct, Hookifier } from "./backend/src/CondutionEngine";
 
 
 /* Firebase */
@@ -332,6 +332,7 @@ class App extends Component {
                 Storage.set({key: 'condution_stotype', value: "none"});
                 // Sign out if we are signed in
                 //firebase.auth().signOut();
+                Hookifier.SelfDestruct();
                 if (this.cm.auth)
                     this.cm.auth.deauthenticate();
                 // Load the auth view
