@@ -125,17 +125,25 @@ async function writeJSON(data) {
 }
 
 async function readPort(portID=18230) {
-    let res = await (await fetch(`http://localhost:${portID}/`)).json();
-    return res;
+    try {
+        let res = await (await fetch(`http://localhost:${portID}/`)).json();
+        return res;
+    } catch {
+        return {};
+    }
 }
 
 async function writePort(data, portID=18230) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    };
-    await fetch(`http://localhost:${portID}/`, requestOptions);
+    try {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        };
+        await fetch(`http://localhost:${portID}/`, requestOptions);
+    } catch {
+        return {};
+    }
 }
 
 //async function writeJSON(data) {

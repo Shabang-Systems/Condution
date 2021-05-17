@@ -52,6 +52,7 @@
     "react-tooltip": "^4.2.10",
     "react-use-gesture": "^8.0.0",
     "rollup-plugin-typescript2": "^0.30.0",
+    "tcp-port-used": "^1.0.2",
     "typescript": "3.8.3"
   },
   "scripts": {
