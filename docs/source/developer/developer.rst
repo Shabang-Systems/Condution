@@ -13,9 +13,12 @@ If you don't know where to start, you could probably read the :doc:`bigstones` a
 
 .. _Big Stones: 
 
-But! If you are a smart cookie and know where you are going, feel free to browse as needed:
+Table of Contexts
+==================
 
 .. toctree::
+    :maxdepth: 2
+
     bigstones
     context
 
