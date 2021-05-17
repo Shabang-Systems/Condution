@@ -38,7 +38,7 @@ class Projects extends Component { // define the component
             isComplete: '', // TODO: replace this
             animClass: '',
             initialRenderingDone: false,
-            projectObject: null,
+            projectObject: '',
             itemList: [], 
             onTaskCreate: false, // are we in the middle of task creation? so, should we hang the refreshes?
             expandedChild: {expanded: false, id: null},
