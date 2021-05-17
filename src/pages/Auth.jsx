@@ -133,6 +133,12 @@ function Auth(props) {
 
                                                     props.dispatch({service: "json", operation: "login"})
                                                 }}>💾  on your device</div>
+                                                <div className="auth-click-button" onClick={()=> {
+                                                    props.cm.useProvider("portjson");
+
+                                                    props.dispatch({service: "portjson", operation: "login"})
+                                                }}>📦 self hosted (beta)</div>
+
                                             </>
                                         );
                                     case 1:

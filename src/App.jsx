@@ -124,6 +124,29 @@ async function writeJSON(data) {
     });
 }
 
+async function readPort(portID=18230) {
+    let res = await (await fetch(`http://localhost:${portID}/`)).json();
+    return res;
+}
+
+async function writePort(data, portID=18230) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    };
+    await fetch(`http://localhost:${portID}/`, requestOptions);
+}
+
+//async function writeJSON(data) {
+    //await Filesystem.writeFile({
+        //path: dbPath,
+        //directory: dbRoot,
+        //data: JSON.stringify(data),
+        //encoding: FilesystemEncoding.UTF8
+    //});
+//}
+
 
 class App extends Component {
     constructor(props) {
@@ -135,8 +158,6 @@ class App extends Component {
         });
 
         
-
-
         // TODO TODO remove this
         //localizations.setLanguage("zh");
 
@@ -153,7 +174,8 @@ class App extends Component {
                 $("body").addClass("condutiontheme-default-light");
             }
 
-        this.jsondata = {};
+            this.jsondata = {};
+            this.portdata = {};
 
             // Make ourselves a nice gruntman
             //this.gruntman = new Gruntman(Engine);
@@ -170,6 +192,7 @@ class App extends Component {
             console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
 
             this.jsondata = await readJSON();
+            this.portdata = await readPort();
 
             const providers = {
                 "firebase": new FirebaseProvider(),
@@ -178,9 +201,15 @@ class App extends Component {
                 }, (data) => {
                     this.jsondata = data;
                     writeJSON(data);
+                }),
+                "portjson": new CustomJSONProvider("portjson", () => {
+                    return this.portdata;
+                }, (data) => {
+                    this.portdata = data;
+                    writePort(data);
                 })
             }
-            let refMgr = new ReferenceManager([providers["firebase"], providers["json"]]);
+            let refMgr = new ReferenceManager([providers["firebase"], providers["json"], providers["portjson"]]);
             this.cm = new Context(refMgr);
 
 
@@ -228,11 +257,12 @@ class App extends Component {
                         break;
                         // If its json
                     case "json":
+                    case "portjson":
                         // Shift the engine into json mode
-                        this.cm.useProvider("json");
+                        this.cm.useProvider(dbType.value);
                         await this.cm.start();
                         // Load the authenticated state, set the authmode as "json" and supply "hard-storage-user" as UID
-                        this.setState({authMode: "json", uid:"hard-storage-user"});
+                        this.setState({authMode: dbType.value, uid:"hard-storage-user"});
                         break;
                         // If its workspace preload
                     case "workspace":
@@ -370,6 +400,7 @@ class App extends Component {
                     // if we did auth, load it up and get the party going
                     case "firebase":
                     case "json":
+                    case "portjson":
                         return <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
          //email={firebase.auth().currentUser.email}
                     case "workspace":
