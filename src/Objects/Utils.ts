@@ -303,7 +303,7 @@ class Query {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
             Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
-            if (Query.hasIndexed) {
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
             }
@@ -313,7 +313,7 @@ class Query {
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
             Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
-            if (Query.hasIndexed) {
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
             }
@@ -324,7 +324,7 @@ class Query {
             Query.tagPages = await this.cm.collection(["tags"]).data();
             Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
 
-            if (Query.hasIndexed) {
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
             }
@@ -335,7 +335,7 @@ class Query {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
             Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
 
-            if (Query.hasIndexed) {
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
             }
@@ -540,6 +540,7 @@ class Hookifier {
     static freeze(): void {
         Hookifier._frozen = true;
         Hookifier.lastFreeze = new Date();
+        console.log("FREEZE!!");
     }
 
     /**
@@ -555,6 +556,15 @@ class Hookifier {
         Hookifier._frozen = false;
         Hookifier.freezeStack.forEach((i:string) => Hookifier.call(i));
         Hookifier.freezeStack = new Set<string>();
+        console.log("UNFREEZE!!");
+    }
+
+    /**
+     * Get whether or not the hook is frozen
+     */
+
+    static getFrozen():boolean {
+        return Hookifier._frozen;
     }
 
     /**
