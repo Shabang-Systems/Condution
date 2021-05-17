@@ -18,10 +18,12 @@ import { withRouter } from "react-router";
 import { SortableProjectList } from './Components/Sortable';
 
 import Spinner from './Components/Spinner';
+import { Hookifier }  from "../backend/src/Objects/Utils.ts";
 
 import Project from "../backend/src/Objects/Project";
 import DbTask from "../backend/src/Objects/Task";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
 
 const autoBind = require('auto-bind/react'); // autobind things! 
 
@@ -487,7 +489,8 @@ class Projects extends Component { // define the component
 
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" 
-                                onClick={ ()=>{
+                                onClick={ async ()=>{
+                                    if (this.state.onTaskCreate) return;
                                     //this.props.gruntman.do( // call a gruntman function
                                     //    "task.create", { 
                                     //        uid: this.props.uid, // pass it the things vvv
@@ -502,9 +505,9 @@ class Projects extends Component { // define the component
                                     //    this.setState({activeTask:result.tid, currentProject: cProject, availability: avail}, () =>  this.activeTask.current._explode() ) // wosh!
                                     //}) // call the homebar refresh
 
+                                    Hookifier.freeze();
                                     let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
                                     this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
-
 
                                 }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
                             <a className="newbutton" 
