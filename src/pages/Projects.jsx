@@ -128,40 +128,50 @@ class Projects extends Component { // define the component
     }
 
 
-    onDragEnd = result => {
+    onDragEnd = async result => {
 	//if (result.combine) {
 	//    return
 	//}
-	//console.log(result, this.state.projectObject)
+	console.log(result)
 	if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
         } // bad drop
 
 	if (result.combine) {
 	    let from = this.state.itemList[result.source.index]
-	    let into = this.state.itemList.filter(i => i.id == result.combine.draggableId);
+	    let intoIdx = null
+	    let into = this.state.itemList.filter((i, idx) => { 
+		if (i.id == result.combine.draggableId) {
+		    intoIdx = idx
+		    return true
+		} else { return false }
+	    });
 	    into = [...into]
-	    if (from.databaseBadge == "tasks" && into[0].databaseBadge == "projects") {
+	    if ((from.databaseBadge == "tasks" && into[0].databaseBadge == "projects") || (from.databaseBadge == "projects" && into[0].databaseBadge == "projects")) {
 		//console.log(into[0], "more")
 		from.moveTo(into[0])
 		let itemOrder = this.state.itemList
 		itemOrder.splice(result.source.index, 1);
 		this.setState({itemList: itemOrder})
 	    }
-
-	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "projects") {
-		from.moveTo(into[0])
+	    if (from.databaseBadge == "tasks" && into[0].databaseBadge == "tasks") {
 		let itemOrder = this.state.itemList
+		if (intoIdx > result.source.index) { intoIdx-- }
 		itemOrder.splice(result.source.index, 1);
+		itemOrder.splice(intoIdx, 1);
 		this.setState({itemList: itemOrder})
+
+		let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
+		from.moveTo(newProject)
+		into[0].moveTo(newProject)
+		this.props.history.push(`/projects/${newProject.id}/do`)
 	    }
-	    //console.log(from, into)
 	    return
 	}
 
         let itemOrder = this.state.itemList
 
-        let inDrag = itemOrder[result.source.index]
+	let inDrag = itemOrder[result.source.index]
         itemOrder.splice(result.source.index, 1);
         itemOrder.splice(result.destination.index, 0, inDrag);
 
@@ -183,7 +193,7 @@ class Projects extends Component { // define the component
 	    let from = this.state.itemList[update.source.index]
 	    let into = this.state.itemList.filter(i => i.id == update.combine.draggableId);
 	    into = [...into] //TODO: change thesee
-	    if ((from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") || (from.databaseBadge == "tasks" && into[0].databaseBadge == "tasks")) {
+	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") {
 		this.setState({combinable: false, combHover: true})
 	    }
 	}
