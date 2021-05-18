@@ -129,10 +129,11 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
+	return
         //if (result.combine) {
         //    return
         //}
-        console.log(result)
+        console.log(result.destination)
         if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
         } // bad drop
@@ -188,6 +189,7 @@ class Projects extends Component { // define the component
     }
 
     onDragUpdate = update => {
+	return
 	if (update.combine) {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
 	    let from = this.state.itemList[update.source.index]
@@ -287,6 +289,11 @@ class Projects extends Component { // define the component
     render() {
         return (
             <IonPage>
+                        <DragDropContext 
+                            onDragEnd={this.onDragEnd}
+                            onBeforeCapture={this.onBeforeDragStart}
+			    onDragUpdate={this.onDragUpdate}
+                        >
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds
@@ -312,10 +319,10 @@ class Projects extends Component { // define the component
 
                     <div className="header-container" >
                         <div style={{display: "inline-block", width: "100%"}}>
-                            <div> 
+                            <div>
                                 <div>
                                     <IonMenuToggle>
-                                        <i className="fas fa-bars" 
+                                        <i className="fas fa-bars"
                                             style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                     </IonMenuToggle> 
                                     <h1 className="page-title">
@@ -324,12 +331,27 @@ class Projects extends Component { // define the component
                                                 return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("/completed", "");this.props.history.push("/completed")}} />
 
                                             } else if (this.state.projectObject.data && this.state.projectObject.data.parent !== "") 
-                                                return <a className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.projectObject.data.parent); this.props.history.push(`/projects/${this.state.projectObject.data.parent}`)}} />
+                                                return (
+
+                            <Droppable droppableId={"backbutton"} isCombineEnabled={true}>
+				{(provided, snapshot) => ( 
+				    <a
+					ref = {provided.innerRef}
+					{...provided.droppableProps}
+					style = {{
+					}}
+					    className="fas fa-chevron-left backbutton" onClick={()=>{this.props.paginate("projects", this.state.projectObject.data.parent); this.props.history.push(`/projects/${this.state.projectObject.data.parent}`)}} />
+
+				)}
+			    </Droppable>
+
+
+						)
                                         })()}
-                                        <i style={{paddingRight: 4}} 
+                                        <i style={{paddingRight: 4}}
                                             className="fas fa-tasks">
                                         </i>
-                                        <input className="editable-title" 
+                                        <input className="editable-title"
                                             onChange={(e)=> {this.setState({name: e.target.value})}}
                                             onBlur={(_)=>{this.state.projectObject.name = this.state.name}}
                                             value={this.state.name}
@@ -430,11 +452,6 @@ class Projects extends Component { // define the component
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll", overflowX: "hidden"}}>
                         <Spinner ready={this.state.initialRenderingDone} />
 
-                        <DragDropContext 
-                            onDragEnd={this.onDragEnd}
-                            onBeforeCapture={this.onBeforeDragStart}
-			    onDragUpdate={this.onDragUpdate}
-                        >
                             <Droppable droppableId={"prjlst"} isCombineEnabled={this.state.combinable}
                                 renderClone={(provided, snapshot, rubric) => (
                                     <div>
@@ -493,7 +510,6 @@ class Projects extends Component { // define the component
                                     </div>
                                 )}
                             </Droppable>
-                        </DragDropContext>
 
                         <div style={{marginTop: 10}}>
                             <a className="newbutton" 
@@ -545,6 +561,7 @@ class Projects extends Component { // define the component
                     </div>
                 </div>
 
+		</DragDropContext>
             </IonPage>
         )
     }
