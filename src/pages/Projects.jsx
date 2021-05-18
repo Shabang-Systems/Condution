@@ -45,6 +45,8 @@ class Projects extends Component { // define the component
             onTaskCreate: false, // are we in the middle of task creation? so, should we hang the refreshes?
             expandedChild: {expanded: false, id: null},
             inDragId: "",
+	    combinable: true,
+	    combHover: false,
         };
 
         this.updatePrefix = this.random();
@@ -127,6 +129,9 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = result => {
+	if (result.combine) {
+	    return
+	}
 	//console.log(result, this.state.projectObject)
 	if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
@@ -161,6 +166,31 @@ class Projects extends Component { // define the component
         })
 
         this.setState({itemList: itemOrder})
+    }
+
+    onDragUpdate = update => {
+	//if (!this.state.combinable) { this.setState({combinable: true}) }
+	//console.log(update)
+
+	if (update.combine) {
+	    if (this.state.combHover) { this.setState({combHover: false}); return }
+	    let from = this.state.itemList[update.source.index]
+	    let into = this.state.itemList.filter(i => i.id == update.combine.draggableId);
+	    into = [...into] //TODO: change thesee
+	    console.log("whooot", from.databaseBadge, into[0].databaseBadge)
+	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") {
+		console.log("yeeet")
+		this.setState({combinable: false, combHover: true})
+	    } 
+	    //else {
+	    //    console.log("truing")
+	    //    this.setState({combinable: true})
+	    //}
+	}
+	else {
+	    if (this.state.combHover) { this.setState({combHover: false}); return }
+	    this.setState({combinable: true})
+	}
     }
 
     onBeforeDragStart = initials => {
@@ -393,8 +423,9 @@ class Projects extends Component { // define the component
                         <DragDropContext 
                             onDragEnd={this.onDragEnd}
                             onBeforeCapture={this.onBeforeDragStart}
+			    onDragUpdate={this.onDragUpdate}
                         >
-                            <Droppable droppableId={"prjlst"} isCombineEnabled
+                            <Droppable droppableId={"prjlst"} isCombineEnabled={this.state.combinable}
                                 renderClone={(provided, snapshot, rubric) => (
                                     <div>
                                         {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
