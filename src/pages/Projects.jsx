@@ -129,14 +129,14 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
-	return
+        console.log(result)
         //if (result.combine) {
         //    return
         //}
-        console.log(result.destination)
         if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
         } // bad drop
+
 
         if (result.combine) {
             let from = this.state.itemList[result.source.index]
@@ -170,6 +170,17 @@ class Projects extends Component { // define the component
             return
         }
 
+	if (result.destination.droppableId == "backbutton") {
+	    let itemOrder = this.state.itemList
+	    let inDrag = itemOrder[result.source.index]
+	    itemOrder.splice(result.source.index, 1);
+	    let prnt = await this.state.projectObject.async_parent
+	    inDrag.moveTo(prnt)
+	    //console.log(prnt)
+	    //console.log(this.state.projectObject.parent)
+	    return
+	}
+
         let itemOrder = this.state.itemList
 
         let inDrag = itemOrder[result.source.index]
@@ -189,7 +200,6 @@ class Projects extends Component { // define the component
     }
 
     onDragUpdate = update => {
-	return
 	if (update.combine) {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
 	    let from = this.state.itemList[update.source.index]
@@ -344,7 +354,6 @@ class Projects extends Component { // define the component
 
 				)}
 			    </Droppable>
-
 
 						)
                                         })()}
