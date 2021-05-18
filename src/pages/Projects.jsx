@@ -129,9 +129,9 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = result => {
-	if (result.combine) {
-	    return
-	}
+	//if (result.combine) {
+	//    return
+	//}
 	//console.log(result, this.state.projectObject)
 	if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
@@ -140,8 +140,17 @@ class Projects extends Component { // define the component
 	if (result.combine) {
 	    let from = this.state.itemList[result.source.index]
 	    let into = this.state.itemList.filter(i => i.id == result.combine.draggableId);
-	    if (from.databaseBadge == "tasks" && into.databaseBadge != "tasks") {
-		from.moveTo(...into)
+	    into = [...into]
+	    if (from.databaseBadge == "tasks" && into[0].databaseBadge == "projects") {
+		//console.log(into[0], "more")
+		from.moveTo(into[0])
+		let itemOrder = this.state.itemList
+		itemOrder.splice(result.source.index, 1);
+		this.setState({itemList: itemOrder})
+	    }
+
+	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "projects") {
+		from.moveTo(into[0])
 		let itemOrder = this.state.itemList
 		itemOrder.splice(result.source.index, 1);
 		this.setState({itemList: itemOrder})
@@ -169,23 +178,14 @@ class Projects extends Component { // define the component
     }
 
     onDragUpdate = update => {
-	//if (!this.state.combinable) { this.setState({combinable: true}) }
-	//console.log(update)
-
 	if (update.combine) {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
 	    let from = this.state.itemList[update.source.index]
 	    let into = this.state.itemList.filter(i => i.id == update.combine.draggableId);
 	    into = [...into] //TODO: change thesee
-	    console.log("whooot", from.databaseBadge, into[0].databaseBadge)
-	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") {
-		console.log("yeeet")
+	    if ((from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") || (from.databaseBadge == "tasks" && into[0].databaseBadge == "tasks")) {
 		this.setState({combinable: false, combHover: true})
-	    } 
-	    //else {
-	    //    console.log("truing")
-	    //    this.setState({combinable: true})
-	    //}
+	    }
 	}
 	else {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
