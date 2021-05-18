@@ -34,8 +34,28 @@ For details, take a look at the article :doc:`context`. But, for the lethargic, 
 
 .. code-block:: javascript
 
-    # import the engine
-    const Engine = require("@condution/engine")
+    // import the engine
+    const Engine = require("@condution/engine");
+
+    // import a Context, a ReferenceManager, and a FirebaseProvider
+    let { ReferenceManager, Context, FirebaseProvider } = Engine;
+
+    // instantiate a FirebaseProvider with no args. This, by default
+    // contains the pointer to the live production database
+    let provider = new FirebaseProvider();
+
+    // create a ReferenceManager (also known as a "database cursor")
+    // with just that one provider. Feel free, of course, to instantiate
+    // any other Providers as you wish based on their docs and add 'em
+    // to the list
+    let rm = new ReferenceManager([provider]);
+
+    // and, finally, make the context that you've always wanted
+    let context = new Context(rm);
+
+    // tell context to use the Firebase provider
+    context.useProvider("firebase");
+
 
 .. toctree::
     :hidden:
