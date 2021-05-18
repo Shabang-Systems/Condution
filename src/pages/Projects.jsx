@@ -45,6 +45,8 @@ class Projects extends Component { // define the component
             onTaskCreate: false, // are we in the middle of task creation? so, should we hang the refreshes?
             expandedChild: {expanded: false, id: null},
             inDragId: "",
+	    combinable: true,
+	    combHover: false,
         };
 
         this.updatePrefix = this.random();
@@ -121,57 +123,55 @@ class Projects extends Component { // define the component
 
     updateName(e) {
         if (e) {
-            //this.props.gruntman.registerScheduler(() => { 
-            //    console.log("DID IT!");
-            //    // Register a scheduler to deal with React's onChange
-            //    // check out the FANCYCHANGE in task.jsx
-            //    this.props.gruntman.do( // call a gruntman function
-            //        "project.update__name", { 
-            //            uid: this.props.uid, // pass it the things vvv
-            //            id: this.props.id, 
-            //            name: e.target.value
-            //        }
-            //    ).then(this.props.menuRefresh) // call the homebar refresh
-            //}, `project.name.${this.props.id}-update`, 1500) // give it a custom id
             this.state.projectObject.name = e.target.value
-
         } else { console.log(e)}
-    } 
-
-
-    async completeProject() {
-        this.props.gruntman.do( // call a gruntman function
-            "project.update__complete", { 
-                uid: this.props.uid, // pass it the things vvv
-                id: this.props.id, 
-            }
-        ).then(this.props.menuRefresh)
-        //console.log(this.state.isComplete)
-
-
-        //console.log("project, completing", this.state.currentProject)
-
     }
 
-    //async uncompleteProject() {
-    //    this.props.gruntman.do( // call a gruntman function
-    //        "project.update__uncomplete", { 
-    //            uid: this.props.uid, // pass it the things vvv
-    //            id: this.props.id, 
-    //        }
-    //    ).then(this.props.menuRefresh)
 
-    //    //console.log("project, uncompleting", this.state.currentProject)
-    //}
-
-    onDragEnd = result => {
-        if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
+    onDragEnd = async result => {
+	//if (result.combine) {
+	//    return
+	//}
+	console.log(result)
+	if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
-        }
+        } // bad drop
+
+	if (result.combine) {
+	    let from = this.state.itemList[result.source.index]
+	    let intoIdx = null
+	    let into = this.state.itemList.filter((i, idx) => { 
+		if (i.id == result.combine.draggableId) {
+		    intoIdx = idx
+		    return true
+		} else { return false }
+	    });
+	    into = [...into]
+	    if ((from.databaseBadge == "tasks" && into[0].databaseBadge == "projects") || (from.databaseBadge == "projects" && into[0].databaseBadge == "projects")) {
+		//console.log(into[0], "more")
+		from.moveTo(into[0])
+		let itemOrder = this.state.itemList
+		itemOrder.splice(result.source.index, 1);
+		this.setState({itemList: itemOrder})
+	    }
+	    if (from.databaseBadge == "tasks" && into[0].databaseBadge == "tasks") {
+		let itemOrder = this.state.itemList
+		if (intoIdx > result.source.index) { intoIdx-- }
+		itemOrder.splice(result.source.index, 1);
+		itemOrder.splice(intoIdx, 1);
+		this.setState({itemList: itemOrder})
+
+		let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
+		from.moveTo(newProject)
+		into[0].moveTo(newProject)
+		this.props.history.push(`/projects/${newProject.id}/do`)
+	    }
+	    return
+	}
 
         let itemOrder = this.state.itemList
 
-        let inDrag = itemOrder[result.source.index]
+	let inDrag = itemOrder[result.source.index]
         itemOrder.splice(result.source.index, 1);
         itemOrder.splice(result.destination.index, 0, inDrag);
 
@@ -184,7 +184,23 @@ class Projects extends Component { // define the component
             }
         })
 
-        this.setState({perspectives: itemOrder})
+        this.setState({itemList: itemOrder})
+    }
+
+    onDragUpdate = update => {
+	if (update.combine) {
+	    if (this.state.combHover) { this.setState({combHover: false}); return }
+	    let from = this.state.itemList[update.source.index]
+	    let into = this.state.itemList.filter(i => i.id == update.combine.draggableId);
+	    into = [...into] //TODO: change thesee
+	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") {
+		this.setState({combinable: false, combHover: true})
+	    }
+	}
+	else {
+	    if (this.state.combHover) { this.setState({combHover: false}); return }
+	    this.setState({combinable: true})
+	}
     }
 
     onBeforeDragStart = initials => {
@@ -249,15 +265,6 @@ class Projects extends Component { // define the component
                 {...provided.dragHandleProps}
                 ref={provided.innerRef}
                 key={item.id}
-                //style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
-                //style={(snapshot.isDragging)? 
-                //{ 
-                //top : "auto !important", 
-                //left: "auto !important"
-                //border: "1px solid red",
-                //position: "static"
-                //} 
-                //: {}}
             >
                 <a className="subproject" 
                     style={{
@@ -426,8 +433,9 @@ class Projects extends Component { // define the component
                         <DragDropContext 
                             onDragEnd={this.onDragEnd}
                             onBeforeCapture={this.onBeforeDragStart}
+			    onDragUpdate={this.onDragUpdate}
                         >
-                            <Droppable droppableId={"prjlst"}
+                            <Droppable droppableId={"prjlst"} isCombineEnabled={this.state.combinable}
                                 renderClone={(provided, snapshot, rubric) => (
                                     <div>
                                         {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
