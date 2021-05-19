@@ -1,7 +1,7 @@
 .clickbutton {
     color: var(--action-button-body);
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -49,7 +49,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 

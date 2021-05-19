@@ -8,6 +8,8 @@ import { withRouter } from "react-router";
 
 import BlkArt from './Components/BlkArt';
 
+import ClickButton from "./Components/Clickbutton.jsx";
+
 import Task from './Components/Task';
 import PerspectiveEdit from './Components/PerspectiveEditor';
 
@@ -193,30 +195,9 @@ class Perspectives extends Component {
                                 </h1> 
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
 
-                                <div className="greeting-container" style={{marginLeft: 11, marginTop: 7, marginBottom: 5}}>
-                                    <a 
-                                        onClick={this.showEdit} 
-                                        data-tip="LOCALIZE: Edit"
-                                        className="perspective-icon" 
-                                        style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}}>
-                                        <i className="fas fa-edit" 
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 10, 
-                                                transform: "translate(2px, -2px)"}} 
-                                        ></i>
-                                    </a>
-
-                                    <a 
-                                        onClick={this.handleDelete} 
-                                        data-tip="LOCALIZE: Delete"
-                                        className="perspective-icon" 
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className="fas fa-trash"
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 10, transform: "translate(2px, -2px)"}}>
-                                        </i>
-                                    </a>
+                                <div className="greeting-container" style={{marginLeft: 6, marginTop: 2, marginBottom: 5}}>
+                                    <ClickButton icon={"fas fa-edit"} onClick={this.showEdit} />
+                                    <ClickButton icon={"fas fa-trash"} onClick={this.handleDelete} />
 
                                 </div> 
                             </div>
