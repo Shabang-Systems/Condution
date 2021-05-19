@@ -130,6 +130,7 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
+	this.setState({combItem: null})
 
 	// BAD DROPS
         if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
