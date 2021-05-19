@@ -306,6 +306,8 @@ class Query {
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
             }
         }).data();
         Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
@@ -316,6 +318,8 @@ class Query {
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
             }
         }).data();
         Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
@@ -327,6 +331,8 @@ class Query {
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
             }
         }).data();
         Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
@@ -338,6 +344,8 @@ class Query {
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
             }
         }).data();
         Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
@@ -556,6 +564,7 @@ class Hookifier {
         Hookifier._frozen = false;
         Hookifier.freezeStack.forEach((i:string) => Hookifier.call(i));
         Hookifier.freezeStack = new Set<string>();
+        Hookifier.call(`QueryEngine`);
         console.log("UNFREEZE!!");
     }
 

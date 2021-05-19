@@ -20,7 +20,7 @@ import type { Filterable } from "./Objects/Utils";
  */
 
 abstract class Widget {
-    protected loadCache:Promise<Filterable[]>|Promise<object>;
+    protected loadCache:Promise<Filterable[]>|Promise<object[]>;
 
     protected abstract name:string;
     protected query:Query;
@@ -35,11 +35,11 @@ abstract class Widget {
     /**
      * Execute the widget
      *
-     * @returns{Promise<Filterable[]|object>} the desired list
+     * @returns{Promise<Filterable[]|object[]>} the desired list
      *
      */
 
-    async execute():Promise<Filterable[]|object> {
+    async execute():Promise<Filterable[]|object[]> {
         return await this.loadCache;
     }
 
@@ -50,10 +50,10 @@ abstract class Widget {
      *
      */
 
-    protected abstract calculate():Promise<Filterable[]>|Promise<object>;
+    protected abstract calculate():Promise<Filterable[]>|Promise<object[]>;
 
     private resolveHooks = async ():Promise<void> => {
-        let loadResult:Promise<Filterable[]|object> = this.calculate();
+        let loadResult:Promise<Filterable[]|object[]> = this.calculate();
 
         if (await loadResult !== await this.loadCache) {
             this.loadCache = loadResult;
@@ -115,7 +115,7 @@ class MenuWidget extends Widget {
         let psmw:PerspectivesMenuWidget = new PerspectivesMenuWidget(this.query.cm);
         let pjmw:ProjectMenuWidget = new ProjectMenuWidget(this.query.cm);
 
-        return {"projects": await pjmw.execute(), "perspectives": await psmw.execute()};
+        return [await pjmw.execute(), await psmw.execute()];
     }
 }
 
@@ -289,7 +289,7 @@ class ProjectDatapackWidget extends Widget {
 
 class TagDatapackWidget extends Widget {
     name = "tag-datapack-widget"
-    private static dataPromise:Promise<object[]>;
+    //private static dataPromise:Promise<object[]>;
 
 //    constructor(context:Context) {
         //super(context);
@@ -312,7 +312,7 @@ class TagDatapackWidget extends Widget {
         let result:object[] = allTags.map((i:Tag)=>({value: i, label:i.name}));
         
         // Clear the promise after a second for a refetch
-        setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 5000);
+        //setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 5000);
 
         return result;
     }
