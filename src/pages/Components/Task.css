@@ -791,4 +791,13 @@ input[name="react-tagsinput-actualinput-delegation"] {
     border: 0.5px dotted var(--task-border-delegated);
 }
 
+.vl {
+    display: inline-block;
+      border-left: 1px solid var(--decorative-light);
+  height: 20px;
+  transform: translate(-5px, 5px);
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
 

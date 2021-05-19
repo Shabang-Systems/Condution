@@ -10,6 +10,7 @@ import ReactTooltip from 'react-tooltip';
 import Task from './Components/Task';
 import GuttedTask from './Components/GuttedTask';
 import BlkArt from './Components/BlkArt';
+import ClickButton from "./Components/Clickbutton.jsx";
 
 import './Components/Task.css';
 
@@ -420,8 +421,7 @@ class Projects extends Component { // define the component
 
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
-                                    <a 
-                                        onClick={()=> {
+                                    <ClickButton icon={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"} onClick={()=> {
                                             this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
                                                 //this.props.gruntman.do( // call a gruntman function
                                                 //    "project.update__pstate", { 
@@ -437,6 +437,7 @@ class Projects extends Component { // define the component
 
 
                                             }); // change the icon
+<<<<<<< HEAD
                                         }} 
                                         data-tip="LOCALIZE: Sequencial/Paralellel"
                                         className="perspective-icon" 
@@ -462,6 +463,21 @@ class Projects extends Component { // define the component
 				    <IonModal isOpen={this.state.deleting} onDidDismiss={() => {this.setState({deleting: false})}}>
 				    <div> yeeetf </div>
 				</IonModal>
+=======
+                                        }} />
+                                    
+
+                                    <ClickButton icon={"fas fa-trash"} onClick={async ()=>{
+                                            await this.state.projectObject.delete()
+                                            if (this.state.projectObject.isComplete) {
+                                                this.props.history.push("/completed", ""); // go back
+                                                this.props.paginate("/completed");
+                                            } else {
+                                                this.props.history.push(
+                                                    (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
+                                                this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
+                                        }} />
+>>>>>>> 89541bd025efd8090ad1768cf18009037c0eb312
                                     <div className="progressbar">
                                         <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
                                             {props =>
