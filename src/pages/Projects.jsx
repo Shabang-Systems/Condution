@@ -47,6 +47,7 @@ class Projects extends Component { // define the component
             inDragId: "",
 	    combinable: true,
 	    combHover: false,
+	    combItem: null,
         };
 
         this.updatePrefix = this.random();
@@ -129,32 +130,33 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
-        console.log(result)
-        //if (result.combine) {
-        //    return
-        //}
+
+	// BAD DROPS
         if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
             return
-        } // bad drop
+        }
 
-
+	// COMBINING
         if (result.combine) {
             let from = this.state.itemList[result.source.index]
             let intoIdx = null
-            let into = this.state.itemList.filter((i, idx) => { 
+            let into = this.state.itemList.filter((i, idx) => {
                 if (i.id == result.combine.draggableId) {
                     intoIdx = idx
                     return true
                 } else { return false }
             });
             into = [...into]
+
+	    // INTO PROJECTS
             if ((from.databaseBadge == "tasks" && into[0].databaseBadge == "projects") || (from.databaseBadge == "projects" && into[0].databaseBadge == "projects")) {
-                //console.log(into[0], "more")
                 from.moveTo(into[0])
                 let itemOrder = this.state.itemList
                 itemOrder.splice(result.source.index, 1);
                 this.setState({itemList: itemOrder})
             }
+
+	    // INTO TASKS
             if (from.databaseBadge == "tasks" && into[0].databaseBadge == "tasks") {
                 let itemOrder = this.state.itemList
                 if (intoIdx > result.source.index) { intoIdx-- }
@@ -170,17 +172,17 @@ class Projects extends Component { // define the component
             return
         }
 
+	// INTO BACK
 	if (result.destination.droppableId == "backbutton") {
 	    let itemOrder = this.state.itemList
 	    let inDrag = itemOrder[result.source.index]
 	    itemOrder.splice(result.source.index, 1);
 	    let prnt = await this.state.projectObject.async_parent
 	    inDrag.moveTo(prnt)
-	    //console.log(prnt)
-	    //console.log(this.state.projectObject.parent)
 	    return
 	}
 
+	// NORMAL REORDER
         let itemOrder = this.state.itemList
 
         let inDrag = itemOrder[result.source.index]
@@ -207,11 +209,13 @@ class Projects extends Component { // define the component
 	    into = [...into] //TODO: change thesee
 	    if (from.databaseBadge == "projects" && into[0].databaseBadge == "tasks") {
 		this.setState({combinable: false, combHover: true})
+	    } else {
+		this.setState({combItem: into[0].id})
 	    }
 	}
 	else {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
-	    this.setState({combinable: true})
+	    this.setState({combinable: true, combItem: null})
 	}
     }
 
@@ -232,15 +236,6 @@ class Projects extends Component { // define the component
                 {...provided.dragHandleProps}
                 ref={provided.innerRef}
                 key={item.id}
-                //style={(snapshot.isDragging)? { top : "auto !important", left: "auto !important"} : {}}
-                //style={(snapshot.isDragging)? 
-                //{ 
-                //top : "auto !important", 
-                //left: "auto !important"
-                //border: "1px solid red",
-                //position: "static"
-                //} 
-                //: {}}
                 className=""
             >
                 <div
@@ -248,8 +243,11 @@ class Projects extends Component { // define the component
                     style={{
                         background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
                         borderRadius: "8px",
-
+			//border: `${(this.state.combItem == item.id)? "1px groove red" : ""}`,
+			transition: "0.3s"
+			//"border-style": "dashed",
                     }}
+		    className={`${(this.state.combItem == item.id)? "comb-hover" : ""}`}
                 >
                     <Task
                         cm={this.props.cm} 
@@ -278,15 +276,17 @@ class Projects extends Component { // define the component
                 ref={provided.innerRef}
                 key={item.id}
             >
-                <a className="subproject" 
+                <a 
                     style={{
                         opacity:item.available?"1":"0.35",
-                        background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`
+                        background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`,
+			transition: "0.3s"
                     }}
                     onClick={()=>{
                         this.props.paginate("projects", item.id);
                         this.props.history.push(`/projects/${item.id}`)
                     }}
+		    className={`${(this.state.combItem == item.id)? "comb-hover" : ""} subproject`}
                 >
                     <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
                         {item.name}</div></div></a>
