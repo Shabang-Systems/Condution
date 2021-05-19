@@ -47,7 +47,7 @@ class Projects extends Component { // define the component
             inDragId: "",
 	    combinable: true,
 	    combHover: false,
-	    combItem: null,
+	    combItem: "notanid",
         };
 
         this.updatePrefix = this.random();
@@ -130,7 +130,7 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
-	this.setState({combItem: null})
+	this.setState({combItem: "notanid"})
 
 	// BAD DROPS
         if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
@@ -216,7 +216,7 @@ class Projects extends Component { // define the component
 	}
 	else {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
-	    this.setState({combinable: true, combItem: null})
+	    this.setState({combinable: true, combItem: "notanid"})
 	}
     }
 
