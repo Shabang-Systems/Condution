@@ -437,33 +437,7 @@ class Projects extends Component { // define the component
 
 
                                             }); // change the icon
-<<<<<<< HEAD
-                                        }} 
-                                        data-tip="LOCALIZE: Sequencial/Paralellel"
-                                        className="perspective-icon" 
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 13, transform: this.state.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
-                                        </i>
-                                    </a>
-                                    <a 
-                                        data-tip="LOCALIZE: Delete"
-                                        className="perspective-icon" 
-                                        onClick={this.deleteProject}
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className="fas fa-trash"
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 10, transform: "translate(2px, -2px)"}}
-                                        >
-                                        </i>
-                                    </a>
-				    <IonModal isOpen={this.state.deleting} onDidDismiss={() => {this.setState({deleting: false})}}>
-				    <div> yeeetf </div>
-				</IonModal>
-=======
+
                                         }} />
                                     
 
@@ -477,7 +451,6 @@ class Projects extends Component { // define the component
                                                     (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
                                                 this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
                                         }} />
->>>>>>> 89541bd025efd8090ad1768cf18009037c0eb312
                                     <div className="progressbar">
                                         <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
                                             {props =>
