@@ -23,6 +23,8 @@ import CreatableSelect from 'react-select/creatable';
 import TagsInput from './TagsInput'
 import AutosizeInput from 'react-input-autosize';
 
+import { TaskButton } from "./Clickbutton";
+
 import 'react-tagsinput/react-tagsinput.css'
 
 // Our very own repeat UI
@@ -639,57 +641,27 @@ class Task extends Component {
                                                 ></i>
 
                                                 {/* Task icon set. TODO delete task */}
-                                                <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
+                                                <div style={{display: "inline-block", marginBottom: 12, marginRight: 5}}>
+                                                    {/* TagEditor icon that shows TagEditor on click*/}
+                                                    <TaskButton icon="fas fa-tag" onClick={this.showTagEditor}/>
+                                                    <div class="vl" />
 
                                                     {/*Delete icon*/}
-                                                    <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
+                                                    <TaskButton icon="fas fa-trash" onClick={()=>{
                                                         //this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
                                                         this.closeTask();
                                                         this.props.taskObject.delete();
 
-                                                    }}><i className="fas fa-trash" style={{margin: 3, fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
+                                                    }} />
 
                                                     {/* Flagged icon */}
-                                                    <a className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{this.setState({isFlagged:!this.state.isFlagged}, ()=>this.state.taskObj.isFlagged = this.state.isFlagged)}}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+                                                    <TaskButton icon="fas fa-flag" onClick={()=>{this.setState({isFlagged:!this.state.isFlagged}, ()=>this.state.taskObj.isFlagged = this.state.isFlagged)}} active={this.state.isFlagged} />
 
                                                     {/* Floating icon */}
-                                                    <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{this.setState({isFloating:!this.state.isFloating}, ()=>this.state.taskObj.isFloating = this.state.isFloating)}}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+                                                    <TaskButton icon="fas fa-globe-americas"  onClick={()=>{this.setState({isFloating:!this.state.isFloating}, ()=>this.state.taskObj.isFloating = this.state.isFloating)}} active={this.state.isFloating} />
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: (this.state.taskObj && this.state.taskObj.repeatRule && this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due)? "var(--task-icon-ring-highlighted)" : "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: (this.state.taskObj &&  this.state.taskObj.repeatRule &&this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due)?"var(--task-icon-highlighted)": "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
-
-                                                    {/* Notification icon that, on click, shows notify popover */}
-                                                    {/*<CalendarPopover  gruntman={this.props.gruntman} reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
-                                                        this.props.gruntman.cancelNotification(this.props.tid).then(()=>{
-                                                            this.props.gruntman.scheduleNotification(this.props.tid, this.props.uid, this.state.name, this.state.desc, d);
-                                                            this.setState({hasNotification: true});
-                                                        });
-                                                    }}/>*/}
-                                                    <IonPopover
-                                                        showBackdrop={false}
-                                                        isOpen={this.state.notificationPopoverShown[0]}
-                                                        cssClass='notif-popover'
-                                                        mode="md" 
-                                                        onDidDismiss={e => this.setState({notificationPopoverShown: [false, null]})}
-                                                        event={this.state.notificationPopoverShown[1]}
-                                                        ref={this.notificationPopover}
-                                                    >
-                                                        <div>
-                                                            <div className="notification-popover-item" onClick={()=>{
-                                                                this.props.gruntman.cancelNotification(this.props.tid)
-                                                                this.setState({hasNotification: false, notificationPopoverShown: [false, null]});
-                                                            }}>Cancel Notification</div>
-                                                            <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true, notificationPopoverShown:[false, null]})}>Change Notification</div>
-                                                        </div>
-                                                    </IonPopover>
-                                                    {/*(()=>{
-                                                    we are just not going to talk about it
-                                                        if (this.props.gruntman.notifPermissionGranted && !(getPlatforms().includes("mobileweb") || getPlatforms().includes("desktop")))
-                                                            return <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
-                                                    })()*/}
-
-                                                    {/* TagEditor icon that shows TagEditor on click*/}
-                                                    <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
+                                                    <TaskButton icon="fas fa-redo"  onClick={this.showRepeat} active={this.state.taskObj && this.state.taskObj.repeatRule && this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due} />
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
 

@@ -109,7 +109,7 @@ class TagEditor extends Component {
                 {/*Text Header*/}
                 <div className="TagEditor-header">
                     <span style={{display: "inline-flex", alignItems: "center"}}>
-			            <b className="bold-prefix" >Tags</b> 
+                        <b className="bold-prefix" >Edit All Tags</b> 
 			        </span>
 
                     {/*Close Button*/}

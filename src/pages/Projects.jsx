@@ -10,6 +10,7 @@ import ReactTooltip from 'react-tooltip';
 import Task from './Components/Task';
 import GuttedTask from './Components/GuttedTask';
 import BlkArt from './Components/BlkArt';
+import ClickButton from "./Components/Clickbutton.jsx";
 
 import './Components/Task.css';
 
@@ -47,7 +48,7 @@ class Projects extends Component { // define the component
             inDragId: "",
 	    combinable: true,
 	    combHover: false,
-	    combItem: null,
+	    combItem: "notanid",
         };
 
         this.updatePrefix = this.random();
@@ -130,6 +131,7 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
+	this.setState({combItem: "notanid"})
 
 	// BAD DROPS
         if ((!result.destination && !result.combine) || ((result.destination)? result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index : false)) {
@@ -215,7 +217,7 @@ class Projects extends Component { // define the component
 	}
 	else {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
-	    this.setState({combinable: true, combItem: null})
+	    this.setState({combinable: true, combItem: "notanid"})
 	}
     }
 
@@ -399,8 +401,7 @@ class Projects extends Component { // define the component
 
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
                                 <div className="greeting-container project-top" style={{marginLeft: 5, marginTop: 7, marginBottom: 5}}>
-                                    <a 
-                                        onClick={()=> {
+                                    <ClickButton icon={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"} onClick={()=> {
                                             this.setState({is_sequential: !this.state.currentProject.is_sequential}, () => {
                                                 //this.props.gruntman.do( // call a gruntman function
                                                 //    "project.update__pstate", { 
@@ -416,20 +417,10 @@ class Projects extends Component { // define the component
 
 
                                             }); // change the icon
-                                        }} 
-                                        data-tip="LOCALIZE: Sequencial/Paralellel"
-                                        className="perspective-icon" 
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className={this.state.is_sequential ? "fas fa-arrows-alt-v":"fas fa-arrows-alt-h"}
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 13, transform: this.state.is_sequential ? "translate(3.5px, -1px)" : "translate(0.25px, -1px)"}}>
-                                        </i>
-                                    </a>
-                                    <a 
-                                        data-tip="LOCALIZE: Delete"
-                                        className="perspective-icon" 
-                                        onClick={async ()=>{
+                                        }} />
+                                    
+
+                                    <ClickButton icon={"fas fa-trash"} onClick={async ()=>{
                                             await this.state.projectObject.delete()
                                             if (this.state.projectObject.isComplete) {
                                                 this.props.history.push("/completed", ""); // go back
@@ -438,15 +429,7 @@ class Projects extends Component { // define the component
                                                 this.props.history.push(
                                                     (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
                                                 this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
-                                        }}
-                                        style={{borderColor: "var(--task-icon-ring)", 
-                                            cursor: "pointer", marginLeft: 5}}>
-                                        <i className="fas fa-trash"
-                                            style={{margin: 3, color: "var(--task-icon-text)", 
-                                                fontSize: 10, transform: "translate(2px, -2px)"}}
-                                        >
-                                        </i>
-                                    </a>
+                                        }} />
                                     <div className="progressbar">
                                         <Spring native to={{width: (this.state.weight > 0 ? `${(1-(this.state.pendingWeight/this.state.weight))*100}%`:"0%")}}>
                                             {props =>
