@@ -641,7 +641,7 @@ class Task extends Component {
                                                 ></i>
 
                                                 {/* Task icon set. TODO delete task */}
-                                                <div style={{display: "inline-block", marginBottom: 7, marginRight: 5}}>
+                                                <div style={{display: "inline-block", marginBottom: 12, marginRight: 5}}>
                                                     {/* TagEditor icon that shows TagEditor on click*/}
                                                     <TaskButton icon="fas fa-tag" onClick={this.showTagEditor}/>
                                                     <div class="vl" />
