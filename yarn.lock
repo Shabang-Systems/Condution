@@ -1228,6 +1228,13 @@
   dependencies:
     tslib "^1.9.0"
 
+"@capacitor/core@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.0.0.tgz#c990688d838d523d6d473281b8a74e6b83b187d5"
+  integrity sha512-JmKE6QEayo8MqWcApwMP5YFimpVb2mcIEHBwgP/P9nSAOxOcbdpJyd9HhBt5pzZAE1MBngPADWWwZLrdNSjCnA==
+  dependencies:
+    tslib "^2.1.0"
+
 "@capacitor/ios@^2.4.1":
   version "2.4.7"
   resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-2.4.7.tgz#03eecc5348d2ac84e62fc17ae37cc266bcc6a437"
