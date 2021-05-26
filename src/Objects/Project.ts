@@ -623,12 +623,13 @@ class Project {
      * for your entertainment if you really wanted to.
      *
      * @param{boolean?} withHook    call hooks on flush
+     * @param{boolean?} isTop   whether the object is the top object
      *
      * @returns{Promise<void>}
      *
      */
 
-    calculateTreeParams = async (withHook:boolean=false) : Promise<void> => {
+    calculateTreeParams = async (withHook:boolean=false, isTop:boolean=true) : Promise<void> => {
         // Get the parent project
         let parent_proj:Project = await this.async_parent;
 
@@ -637,7 +638,7 @@ class Project {
 
             // ... and it's sequential
             if (parent_proj.isSequential)
-                this._available = (parent_proj.available && this.order == 0 && !this.isComplete); // availablitiy is based on order
+                this._available = (parent_proj.available && isTop && !this.isComplete); // availablitiy is based on order
             else
                 this._available = (parent_proj.available && !this.isComplete); // and get the availibilty
         } else if (this.isComplete !== undefined && this.isComplete !== null)// if its complete
@@ -653,10 +654,19 @@ class Project {
             // Get async children
             let children:(Project|Task)[] = (await this.async_children);
 
+            let hasSeenTop:boolean = false;
+
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
+                let isTop:boolean = false;
+
+                if (!i.isComplete && !hasSeenTop) {
+                    isTop = true;
+                    hasSeenTop = true;
+                }
+
                 // Flush their availibilty
-                await i.calculateTreeParams();
+                await i.calculateTreeParams(false, isTop);
 
                 // Return their weight
                 return i.weight;

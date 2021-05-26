@@ -635,8 +635,9 @@ class Task {
 
         this.sync();
 
-        if (this.project)
+        if (this.project) {
             await (await this.async_project).calculateTreeParams(true);
+        }
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
@@ -736,12 +737,13 @@ class Task {
      * for your entertainment if you really wanted to.
      *
      * @param{boolean?} withHook    call hooks on flush
+     * @param{boolean?} isTop   whether the object is the top object
      *
      * @returns{Promise<void>}
      *
      */
 
-    calculateTreeParams = async (withHook:boolean=false) : Promise<void> => {
+    calculateTreeParams = async (withHook:boolean=false, isTop:boolean=false) : Promise<void> => {
         // Get the tags
         let tags: Tag[] = await Promise.all(this.async_tags ? this.async_tags : []);
 
@@ -760,10 +762,11 @@ class Task {
         // If there is a parent
         if (project) {
             // If the parent is sequential
-            if (project.isSequential)
-                this._available = (!this.isComplete && project.available && this.order == 0 && new Date() > this.defer); // Availibilty is calculated based on order
-            else
+            if (project.isSequential) {
+                this._available = (!this.isComplete && project.available && isTop && new Date() > this.defer); // Availibilty is calculated based on order
+            } else {
                 this._available = (!this.isComplete && project.available && new Date() > this.defer); // The availibilty is only based on the availibilty of project
+            }
         } else if (this.isComplete == true) {
             this._available = false; // otherwise, its not available
         } else {  // if no parents
