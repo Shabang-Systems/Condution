@@ -323,5 +323,33 @@ class TimelineWidget extends Widget {
     }
 }
 
+class OnboardWidget extends Widget {
+    name = "onboard-widget"
+    private static dataPromise:Promise<object>;
+    private tz: string;
+    private username: string;
+    private payload: string[];
+    
+    constructor(context:Context, tz: string, username: string, payload: string[]) {
+        super(context);
+        this.tz = tz;
+        this.username = username;
+        this.payload = payload;
+        OnboardWidget.dataPromise = this.calculate(this.tz, this.username, this.payload);
+    }
+
+    async execute() {
+        if (!OnboardWidget.dataPromise)
+            OnboardWidget.dataPromise = this.calculate(this.tz, this.username, this.payload);
+
+        let data = await OnboardWidget.dataPromise;
+        return data;
+    }
+
+    async calculate(tz: string, username: string, payload: string[]) {
+        return {};
+    }
+}
+
 export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget };
 //new line here
