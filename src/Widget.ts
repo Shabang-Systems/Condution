@@ -347,6 +347,84 @@ class OnboardWidget extends Widget {
     }
 
     async calculate(tz: string, username: string, payload: string[]) {
+        // create 3 new tasks and set their descriptions
+        (await Task.create(this.query.cm, payload[0] + ` ${username}, ` + payload[1])).description = payload[2];
+        (await Task.create(this.query.cm, payload[3])).description = payload[4];
+        (await Task.create(this.query.cm, payload[5])).description = payload[6];
+
+        let cdyrslf = await Project.create(this.query.cm, payload[7]);
+        let npd = await Project.create(this.query.cm, payload[8]);
+
+        let od = new Date();
+        let ds = new Date();
+        od.setHours(od.getHours() - 24);
+        ds.setHours(ds.getHours() + 20);
+
+        let odid = await Task.create(this.query.cm, payload[9], npd, [], od);
+        odid.description = payload[10];
+        await npd.associate(odid); // I believe (hope) this is the equivalent to: await associateTask(userID, odid, npd);
+
+        let dsID = await Task.create(this.query.cm, payload[11], npd, [], ds);
+        dsID.description = payload[12];
+        await npd.associate(dsID);
+
+        ds.setHours(ds.getHours() + 2);
+        let checkoutID = await Task.create(this.query.cm, payload[13]);
+        checkoutID.description = payload[14];
+
+        // I did not choose these variable names, I am just using the ones from the old onboarding code
+        let nice = await Task.create(this.query.cm, payload[15], cdyrslf);
+        await cdyrslf.associate(nice);
+
+        let sequential = await Task.create(this.query.cm, payload[16], cdyrslf);
+        sequential.description = payload[17];
+        await cdyrslf.associate(sequential);
+
+        let blocked = await Task.create(this.query.cm, payload[18], cdyrslf);
+        blocked.description = payload[19];
+        await cdyrslf.associate(blocked);
+
+        let click = await Task.create(this.query.cm, payload[20], cdyrslf);
+        click.description = payload[21];
+        await cdyrslf.associate(click);
+
+        let pspDir = await Task.create(this.query.cm, payload[22], cdyrslf);
+        pspDir.description = payload[23];
+        await cdyrslf.associate(pspDir);
+
+        let pspsp = await Project.create(this.query.cm, payload[24]);
+
+        let tags: Tag[] = await Promise.all([
+            Tag.create(this.query.cm, payload[25]),
+            Tag.create(this.query.cm, payload[26]),
+            Tag.create(this.query.cm, payload[27]),
+            Tag.create(this.query.cm, payload[28])
+        ]);
+
+        let specific = await Task.create(this.query.cm, payload[29], pspsp, [tags[2], tags[3]]);
+        await pspsp.associate(specific);
+
+        let sp = await Task.create(this.query.cm, payload[31], pspsp, [tags[0]]);
+        sp.description = payload[32];
+        await pspsp.associate(sp);
+
+        await Perspective.create(this.query.cm, payload[33], payload[34]);
+        
+        let promotion = await Project.create(this.query.cm, payload[35]);
+
+        let online = await Task.create(this.query.cm, payload[36], promotion);
+        await promotion.associate(online);
+
+        let dis = await Task.create(this.query.cm, payload[37], promotion);
+        await promotion.associate(dis);
+
+        let patreon = await Task.create(this.query.cm, payload[38], promotion);
+        await promotion.associate(patreon);
+
+        let yiipee = await Task.create(this.query.cm, payload[39], promotion);
+        yiipee.description = payload[40];
+        await promotion.associate(yiipee);
+        
         return {};
     }
 }
