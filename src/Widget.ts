@@ -20,20 +20,45 @@ import type { Filterable } from "./Objects/Utils";
  */
 
 abstract class Widget {
+    protected loadCache:Promise<Filterable[]>|Promise<object[]>;
+
     protected abstract name:string;
     protected query:Query;
 
+    constructor(context:Context) {
+        this.query = new Query(context);
+        this.loadCache = this.calculate();
+
+        Query.hook(this.resolveHooks);
+    }
+
     /**
      * Execute the widget
+     *
+     * @returns{Promise<Filterable[]|object[]>} the desired list
+     *
+     */
+
+    async execute():Promise<Filterable[]|object[]> {
+        return await this.loadCache;
+    }
+
+    /**
+     * Calculate the results of the widget
      *
      * @returns{Promise<Filterable[]>} the desired list
      *
      */
 
-    abstract execute():Promise<Filterable[]>|Promise<object>;
+    protected abstract calculate():Promise<Filterable[]>|Promise<object[]>;
 
-    constructor(context:Context) {
-        this.query = new Query(context);
+    private resolveHooks = async ():Promise<void> => {
+        let loadResult:Promise<Filterable[]|object[]> = this.calculate();
+
+        if (await loadResult !== await this.loadCache) {
+            this.loadCache = loadResult;
+            Hookifier.call(`widgets.${this.name}`);
+        }
     }
 
     /**
@@ -45,8 +70,7 @@ abstract class Widget {
      */
 
     hook(hookFn: Function): void {
-        Hookifier.push(`Widget.${this.name}`, hookFn);
-        Query.hook(hookFn);
+        Hookifier.push(`widgets.${this.name}`, hookFn);
     }
 
     /**
@@ -58,15 +82,14 @@ abstract class Widget {
      */
 
     unhook(hookFn: Function): void {
-        Hookifier.remove(`Widget.${this.name}`, hookFn);
-        Query.unhook(hookFn);
+        Hookifier.remove(`widgets.${this.name}`, hookFn);
     }
 }
 
 class PerspectivesMenuWidget extends Widget {
     name = "persp-menu-widget"
 
-    async execute() {
+    async calculate() {
         let allPerspectives:Perspective[] = await this.query.execute(Perspective, (_:Perspective)=>true) as Perspective[];
         allPerspectives.sort((a: Perspective, b: Perspective) => a.order-b.order);
 
@@ -77,7 +100,7 @@ class PerspectivesMenuWidget extends Widget {
 class ProjectMenuWidget extends Widget {
     name = "project-menu-widget"
 
-    async execute() {
+    async calculate() {
         let topProjects:Project[] = await this.query.execute(Project, (i:Project)=> i.topLevel && !i.isComplete) as Project[];
         topProjects.sort((a: Project, b: Project) => a.order-b.order);
 
@@ -85,10 +108,21 @@ class ProjectMenuWidget extends Widget {
     }
 }
 
+class MenuWidget extends Widget {
+    name = "menu-widget"
+
+    async calculate() {
+        let psmw:PerspectivesMenuWidget = new PerspectivesMenuWidget(this.query.cm);
+        let pjmw:ProjectMenuWidget = new ProjectMenuWidget(this.query.cm);
+
+        return [await pjmw.execute(), await psmw.execute()];
+    }
+}
+
 class InboxWidget extends Widget {
     name = "inbox-widget"
 
-    async execute(): Promise<Task[]> {
+    async calculate(): Promise<Task[]> {
         let inboxTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.async_project === null) && !i.isComplete) as Task[];
 
         inboxTasks.sort((a: Task, b: Task) => a.order-b.order);
@@ -100,12 +134,11 @@ class InboxWidget extends Widget {
 class DueSoonWidget extends Widget {
     name = "duesoon-widget"
 
-    async execute(): Promise<Task[]> {
+    async calculate(): Promise<Task[]> {
         let tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate()+1);
 
         let DSTasks:Task[] = await this.query.execute(Task, (i:Task) => i.available && i.due && i.due < tomorrow && !i.isComplete) as Task[];
-
 
         DSTasks.sort((b: Task, a: Task) => (a.due && b.due) ? a.due.getTime()-b.due.getTime() : 0);
 
@@ -116,7 +149,7 @@ class DueSoonWidget extends Widget {
 class CompletedWidget extends Widget {
     name = "completed-widget"
 
-    async execute() {
+    async calculate() {
         let completedTasks:Task[] = await this.query.execute(Task, (i:Task) => (i.isComplete)) as Task[];
         let completedProjects:Project[] = await this.query.execute(Project, (i:Project) => (i.isComplete)) as Project[];
 
@@ -167,7 +200,7 @@ class CompletedWidget extends Widget {
 class TagsPaneWidget extends Widget {
     name = "tags-pane-widget"
 
-    async execute(): Promise<Tag[]> {
+    async calculate(): Promise<Tag[]> {
         let tags:Tag[] = await this.query.execute(Tag, (_: Tag) => (true)) as Tag[];
         return tags;
     }
@@ -185,20 +218,20 @@ class TagsPaneWidget extends Widget {
 
 class ProjectDatapackWidget extends Widget {
     name = "project-datapack-widget"
-    private static dataPromise:Promise<object[]>;
+//    private static dataPromise:Promise<object[]>;
     
-    constructor(context:Context) {
-        super(context);
-        ProjectDatapackWidget.dataPromise = this.calculate();
-    }
+    //constructor(context:Context) {
+        //super(context);
+        //ProjectDatapackWidget.dataPromise = this.calculate();
+    //}
 
-    async execute() {
-        if (!ProjectDatapackWidget.dataPromise)
-            ProjectDatapackWidget.dataPromise = this.calculate();
+    //async execute() {
+        //if (!ProjectDatapackWidget.dataPromise)
+            //ProjectDatapackWidget.dataPromise = this.calculate();
 
-        let data = await ProjectDatapackWidget.dataPromise;
-        return data;
-    }
+        //let data = await ProjectDatapackWidget.dataPromise;
+        //return data;
+    //}
 
     async calculate() {
         // Get a list of top-level projects
@@ -239,7 +272,7 @@ class ProjectDatapackWidget extends Widget {
         }
 
         // Clear the promise after a second for a refetch
-        setTimeout(()=>{ProjectDatapackWidget.dataPromise = null}, 5000);
+        //setTimeout(()=>{ProjectDatapackWidget.dataPromise = null}, 5000);
 
         return result;
     }
@@ -256,20 +289,20 @@ class ProjectDatapackWidget extends Widget {
 
 class TagDatapackWidget extends Widget {
     name = "tag-datapack-widget"
-    private static dataPromise:Promise<object[]>;
+    //private static dataPromise:Promise<object[]>;
 
-    constructor(context:Context) {
-        super(context);
-        TagDatapackWidget.dataPromise = this.calculate();
-    }
+//    constructor(context:Context) {
+        //super(context);
+        //TagDatapackWidget.dataPromise = this.calculate();
+    //}
 
-    async execute() {
-        if (!TagDatapackWidget.dataPromise)
-            TagDatapackWidget.dataPromise = this.calculate();
+    //async execute() {
+        //if (!TagDatapackWidget.dataPromise)
+            //TagDatapackWidget.dataPromise = this.calculate();
 
-        let data = await TagDatapackWidget.dataPromise;
-        return data;
-    }
+        //let data = await TagDatapackWidget.dataPromise;
+        //return data;
+    //}
 
     async calculate() {
         // Get a list of all tags
@@ -279,7 +312,7 @@ class TagDatapackWidget extends Widget {
         let result:object[] = allTags.map((i:Tag)=>({value: i, label:i.name}));
         
         // Clear the promise after a second for a refetch
-        setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 5000);
+        //setTimeout(()=>{TagDatapackWidget.dataPromise = null}, 5000);
 
         return result;
     }
@@ -292,7 +325,7 @@ class TagDatapackWidget extends Widget {
 class TimelineWidget extends Widget {
     name = "timeline-pane-widget"
 
-    async execute() {
+    async calculate() {
         let tomorrow:Date = new Date();
         tomorrow.setDate(tomorrow.getDate()+1);
 
@@ -325,109 +358,105 @@ class TimelineWidget extends Widget {
 
 class OnboardWidget extends Widget {
     name = "onboard-widget"
-    private static dataPromise:Promise<object>;
-    private tz: string;
     private username: string;
     private payload: string[];
     
-    constructor(context:Context, tz: string, username: string, payload: string[]) {
+    constructor(context:Context, username: string, payload: string[]) {
         super(context);
-        this.tz = tz;
         this.username = username;
         this.payload = payload;
-        OnboardWidget.dataPromise = this.calculate(this.tz, this.username, this.payload);
     }
 
-    async execute() {
-        if (!OnboardWidget.dataPromise)
-            OnboardWidget.dataPromise = this.calculate(this.tz, this.username, this.payload);
+    // async execute() {
+    //     if (!OnboardWidget.dataPromise)
+    //         OnboardWidget.dataPromise = this.calculate(this.tz, this.username, this.this.payload);
 
-        let data = await OnboardWidget.dataPromise;
-        return data;
-    }
+    //     let data = await OnboardWidget.dataPromise;
+    //     return data;
+    // }
 
-    async calculate(tz: string, username: string, payload: string[]) {
+    async calculate() {
         // create 3 new tasks and set their descriptions
-        (await Task.create(this.query.cm, payload[0] + ` ${username}, ` + payload[1])).description = payload[2];
-        (await Task.create(this.query.cm, payload[3])).description = payload[4];
-        (await Task.create(this.query.cm, payload[5])).description = payload[6];
+        (await Task.create(this.query.cm, this.payload[0] + ` ${this.username}, ` + this.payload[1])).description = this.payload[2];
+        (await Task.create(this.query.cm, this.payload[3])).description = this.payload[4];
+        (await Task.create(this.query.cm, this.payload[5])).description = this.payload[6];
 
-        let cdyrslf = await Project.create(this.query.cm, payload[7]);
-        let npd = await Project.create(this.query.cm, payload[8]);
+        let cdyrslf = await Project.create(this.query.cm, this.payload[7]);
+        let npd = await Project.create(this.query.cm, this.payload[8]);
 
         let od = new Date();
         let ds = new Date();
         od.setHours(od.getHours() - 24);
         ds.setHours(ds.getHours() + 20);
 
-        let odid = await Task.create(this.query.cm, payload[9], npd, [], od);
-        odid.description = payload[10];
+        let odid = await Task.create(this.query.cm, this.payload[9], npd, [], od);
+        odid.description = this.payload[10];
         await npd.associate(odid); // I believe (hope) this is the equivalent to: await associateTask(userID, odid, npd);
 
-        let dsID = await Task.create(this.query.cm, payload[11], npd, [], ds);
-        dsID.description = payload[12];
+        let dsID = await Task.create(this.query.cm, this.payload[11], npd, [], ds);
+        dsID.description = this.payload[12];
         await npd.associate(dsID);
 
         ds.setHours(ds.getHours() + 2);
-        let checkoutID = await Task.create(this.query.cm, payload[13]);
-        checkoutID.description = payload[14];
+        let checkoutID = await Task.create(this.query.cm, this.payload[13]);
+        checkoutID.description = this.payload[14];
 
         // I did not choose these variable names, I am just using the ones from the old onboarding code
-        let nice = await Task.create(this.query.cm, payload[15], cdyrslf);
+        let nice = await Task.create(this.query.cm, this.payload[15], cdyrslf);
         await cdyrslf.associate(nice);
 
-        let sequential = await Task.create(this.query.cm, payload[16], cdyrslf);
-        sequential.description = payload[17];
+        let sequential = await Task.create(this.query.cm, this.payload[16], cdyrslf);
+        sequential.description = this.payload[17];
         await cdyrslf.associate(sequential);
 
-        let blocked = await Task.create(this.query.cm, payload[18], cdyrslf);
-        blocked.description = payload[19];
+        let blocked = await Task.create(this.query.cm, this.payload[18], cdyrslf);
+        blocked.description = this.payload[19];
         await cdyrslf.associate(blocked);
 
-        let click = await Task.create(this.query.cm, payload[20], cdyrslf);
-        click.description = payload[21];
+        let click = await Task.create(this.query.cm, this.payload[20], cdyrslf);
+        click.description = this.payload[21];
         await cdyrslf.associate(click);
 
-        let pspDir = await Task.create(this.query.cm, payload[22], cdyrslf);
-        pspDir.description = payload[23];
+        let pspDir = await Task.create(this.query.cm, this.payload[22], cdyrslf);
+        pspDir.description = this.payload[23];
         await cdyrslf.associate(pspDir);
 
-        let pspsp = await Project.create(this.query.cm, payload[24]);
+        let pspsp = await Project.create(this.query.cm, this.payload[24]);
 
         let tags: Tag[] = await Promise.all([
-            Tag.create(this.query.cm, payload[25]),
-            Tag.create(this.query.cm, payload[26]),
-            Tag.create(this.query.cm, payload[27]),
-            Tag.create(this.query.cm, payload[28])
+            Tag.create(this.query.cm, this.payload[25]),
+            Tag.create(this.query.cm, this.payload[26]),
+            Tag.create(this.query.cm, this.payload[27]),
+            Tag.create(this.query.cm, this.payload[28])
         ]);
 
-        let specific = await Task.create(this.query.cm, payload[29], pspsp, [tags[2], tags[3]]);
+        let specific = await Task.create(this.query.cm, this.payload[29], pspsp, [tags[2], tags[3]]);
         await pspsp.associate(specific);
 
-        let sp = await Task.create(this.query.cm, payload[31], pspsp, [tags[0]]);
-        sp.description = payload[32];
+        let sp = await Task.create(this.query.cm, this.payload[31], pspsp, [tags[0]]);
+        sp.description = this.payload[32];
         await pspsp.associate(sp);
 
-        await Perspective.create(this.query.cm, payload[33], payload[34]);
+        await Perspective.create(this.query.cm, this.payload[33], this.payload[34]);
         
-        let promotion = await Project.create(this.query.cm, payload[35]);
+        let promotion = await Project.create(this.query.cm, this.payload[35]);
 
-        let online = await Task.create(this.query.cm, payload[36], promotion);
+        let online = await Task.create(this.query.cm, this.payload[36], promotion);
         await promotion.associate(online);
 
-        let dis = await Task.create(this.query.cm, payload[37], promotion);
+        let dis = await Task.create(this.query.cm, this.payload[37], promotion);
         await promotion.associate(dis);
 
-        let patreon = await Task.create(this.query.cm, payload[38], promotion);
+        let patreon = await Task.create(this.query.cm, this.payload[38], promotion);
         await promotion.associate(patreon);
 
-        let yiipee = await Task.create(this.query.cm, payload[39], promotion);
-        yiipee.description = payload[40];
+        let yiipee = await Task.create(this.query.cm, this.payload[39], promotion);
+        yiipee.description = this.payload[40];
         await promotion.associate(yiipee);
         
-        return {};
+        return [{}];
     }
 }
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget };
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget, MenuWidget, OnboardWidget };
 //new line here

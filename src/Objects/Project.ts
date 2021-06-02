@@ -60,7 +60,7 @@ class Project {
         let staticData:AdapterData = await queryEngine.orderStaticData();
 
         let loadProject:Promise<Project> = new Promise(async (res, _) => {
-            let projectData:object = staticData.projectCollection.filter((i:object)=>i["id"] === identifier)[0];
+            let projectData:object = staticData.projectMap.get(identifier);
          
             // TODO janky AF this is to wait
             // until the context loads. Someone
@@ -623,12 +623,13 @@ class Project {
      * for your entertainment if you really wanted to.
      *
      * @param{boolean?} withHook    call hooks on flush
+     * @param{boolean?} isTop   whether the object is the top object
      *
      * @returns{Promise<void>}
      *
      */
 
-    calculateTreeParams = async (withHook:boolean=false) : Promise<void> => {
+    calculateTreeParams = async (withHook:boolean=false, isTop:boolean=true) : Promise<void> => {
         // Get the parent project
         let parent_proj:Project = await this.async_parent;
 
@@ -637,7 +638,7 @@ class Project {
 
             // ... and it's sequential
             if (parent_proj.isSequential)
-                this._available = (parent_proj.available && this.order == 0 && !this.isComplete); // availablitiy is based on order
+                this._available = (parent_proj.available && isTop && !this.isComplete); // availablitiy is based on order
             else
                 this._available = (parent_proj.available && !this.isComplete); // and get the availibilty
         } else if (this.isComplete !== undefined && this.isComplete !== null)// if its complete
@@ -653,10 +654,19 @@ class Project {
             // Get async children
             let children:(Project|Task)[] = (await this.async_children);
 
+            let hasSeenTop:boolean = false;
+
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
+                let isTop:boolean = false;
+
+                if (!i.isComplete && !hasSeenTop) {
+                    isTop = true;
+                    hasSeenTop = true;
+                }
+
                 // Flush their availibilty
-                await i.calculateTreeParams();
+                await i.calculateTreeParams(false, isTop);
 
                 // Return their weight
                 return i.weight;
@@ -831,7 +841,7 @@ class ProjectSearchAdapter extends Project {
         if (ProjectSearchAdapter.loadCache.has(identifier)) return await ProjectSearchAdapter.loadCache.get(identifier);
 
         let loadProject:Promise<ProjectSearchAdapter> = (async () => {
-            let projectData:object = data.projectCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+            let projectData:object = data.projectMap.get(identifier);
 
             if (!projectData)
                 return null;
@@ -839,7 +849,16 @@ class ProjectSearchAdapter extends Project {
             let tsk:ProjectSearchAdapter = new this(context, identifier, data, projectData);
 
             ProjectSearchAdapter.adaptorCache.set(identifier, tsk);
-            await tsk.calculateTreeParams();
+
+            // await tsk.calculateTreeParams();
+            // TODO IDK how the frick searching projects
+            // by weight is not fricked up but shock surprise
+            // IT ISNT?????? HOW?????? IDK
+            //
+            // But awaiting tree param refresh crashes JSON mode
+            // surprise! IDK why.
+
+            tsk.calculateTreeParams();
             return tsk;
         })();
         

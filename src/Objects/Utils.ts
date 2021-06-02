@@ -217,10 +217,10 @@ class RepeatRule {
 }
 
 interface AdapterData {
-    taskCollection: object[],
-    projectCollection: object[],
-    tagCollection: object[],
-    perspectiveCollection: object[],
+    taskMap: Map<string, object>,
+    projectMap: Map<string, object>,
+    tagMap: Map<string, object>,
+    perspectiveMap: Map<string, object>,
 }
 
 //type TP = Task[] | Project[]
@@ -235,6 +235,17 @@ class Query {
     private static projectPages:object[];
     private static perspectivePages:object[];
     private static tagPages:object[];
+
+    private static taskAdapters:TaskSearchAdapter[];
+    private static projectAdapters:ProjectSearchAdapter[];
+    private static perspectiveAdapters:PerspectiveSearchAdapter[];
+    private static tagAdapters:TagSearchAdapter[];
+
+    private static taskMap:Map<string,object> = new Map();
+    private static projectMap:Map<string,object> = new Map();
+    private static tagMap:Map<string,object> = new Map();
+    private static perspectiveMap:Map<string,object> = new Map();
+
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
     // ok look. I know. This should be a template function.
@@ -264,7 +275,17 @@ class Query {
         delete Query.perspectivePages;
         delete Query.tagPages;
 
+        delete Query.taskMap;
+        delete Query.projectMap;
+        delete Query.tagMap;
+        delete Query.perspectiveMap;
+
         Query.hasIndexed = false;
+
+        Query.taskMap = new Map();
+        Query.projectMap = new Map();
+        Query.tagMap = new Map();
+        Query.perspectiveMap = new Map();
         Hookifier.call(`QueryEngine`);
     }
 
@@ -281,30 +302,82 @@ class Query {
     async index() : Promise<void> {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
-            if (Query.hasIndexed)
+            Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
+            }
         }).data();
+        Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
-            if (Query.hasIndexed)
+            Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
+            }
         }).data();
-
+        Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
-            if (Query.hasIndexed)
+            Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
+
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
+            }
         }).data();
+        Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
-            if (Query.hasIndexed)
+            Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
+
+            if (Query.hasIndexed && !Hookifier.getFrozen()) {
+                await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
+            } else if (Hookifier.getFrozen()){
+                this.seedAdapters();
+            }
         }).data();
+        Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
+        await this.seedAdapters();
 
         Query.hasIndexed = true;
+    }
+
+    /**
+     * Reseed all the adapters
+     */
+
+    private seedAdapters = async () => {
+        let dataObject:AdapterData = {
+            taskMap: Query.taskMap,
+            projectMap: Query.projectMap,
+            tagMap: Query.tagMap,
+            perspectiveMap: Query.perspectiveMap
+        }
+
+        let taskPages:object[] = Query.taskPages;
+        let projectPages:object[] = Query.projectPages;
+        let tagPages:object[] = Query.tagPages;
+        let perspectivePages:object[] = Query.perspectivePages;
+
+        Query.taskAdapters = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+        Query.projectAdapters = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+        Query.tagAdapters = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+        Query.perspectiveAdapters = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
     }
 
     
@@ -353,10 +426,10 @@ class Query {
             await this.index();
 
         let dataObject:AdapterData = {
-            taskCollection: Query.taskPages,
-            projectCollection: Query.projectPages,
-            tagCollection: Query.tagPages,
-            perspectiveCollection: Query.perspectivePages,
+            taskMap: Query.taskMap,
+            projectMap: Query.projectMap,
+            tagMap: Query.tagMap,
+            perspectiveMap: Query.perspectiveMap
         }
 
         return dataObject;
@@ -375,31 +448,24 @@ class Query {
 
     async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[], returnLiveObjects:boolean=true): Promise<Filterable[]> {
         console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
+        if (!Query.hasIndexed)
+            await this.index();
 
         let data:Filterable[] = [];
 
-        let dataObject:AdapterData = await this.orderStaticData();
+        //let taskPages:object[] = dataObject.taskCollection;
+        //let projectPages:object[] = dataObject.projectCollection;
+        //let tagPages:object[] = dataObject.tagCollection;
+        //let perspectivePages:object[] = dataObject.perspectiveCollection;
 
-        let taskPages:object[] = dataObject.taskCollection;
-        let projectPages:object[] = dataObject.projectCollection;
-        let tagPages:object[] = dataObject.tagCollection;
-        let perspectivePages:object[] = dataObject.perspectiveCollection;
-
-        if (objType == Task) {
-            data = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        } 
-
-        if (objType == Project) {
-            data = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        }
-
-        if (objType == Tag) {
-            data = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        }
-
-        if (objType == Perspective) {
-            data = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
-        }
+        if (objType == Task) 
+            data = Query.taskAdapters;
+        if (objType == Project)
+            data = Query.projectAdapters;
+        if (objType == Tag)
+            data = Query.tagAdapters;
+        if (objType == Perspective)
+            data = Query.perspectiveAdapters;
 
         TagSearchAdapter.cleanup();
         TaskSearchAdapter.cleanup();
@@ -456,6 +522,23 @@ class Hookifier {
     private static freezeStack:Set<string> = new Set<string>();
 
     /**
+     * Nuke
+     * @static
+     *
+     * @returns{void}
+     */
+
+    static SelfDestruct():void {
+        Hookifier._frozen = false;
+        Hookifier.lastFreeze = new Date();
+        Hookifier.freezeStack = new Set<string>();
+
+        Hookifier.hooks = new Map<string, Set<Function>>();
+        Hookifier.pendingCalls.forEach((val:ReturnType<typeof setTimeout>) => clearTimeout(val));
+        Hookifier.pendingCalls = new Map<string, ReturnType<typeof setTimeout>>();
+    }
+
+    /**
      * Freeze all hooks
      * @static
      *
@@ -465,6 +548,7 @@ class Hookifier {
     static freeze(): void {
         Hookifier._frozen = true;
         Hookifier.lastFreeze = new Date();
+        console.log("FREEZE!!");
     }
 
     /**
@@ -480,6 +564,16 @@ class Hookifier {
         Hookifier._frozen = false;
         Hookifier.freezeStack.forEach((i:string) => Hookifier.call(i));
         Hookifier.freezeStack = new Set<string>();
+        Hookifier.call(`QueryEngine`);
+        console.log("UNFREEZE!!");
+    }
+
+    /**
+     * Get whether or not the hook is frozen
+     */
+
+    static getFrozen():boolean {
+        return Hookifier._frozen;
     }
 
     /**
@@ -508,8 +602,10 @@ class Hookifier {
 
     static remove(id:string, fn:Function): void {
         let hooks:Set<Function> = Hookifier.hooks.get(id);
-        hooks.delete(fn);
-        Hookifier.hooks.set(id, hooks);
+        if (hooks) {
+            hooks.delete(fn);
+            Hookifier.hooks.set(id, hooks);
+        }
     }
 
     /**
@@ -536,7 +632,7 @@ class Hookifier {
 
             //console.log(`Calling hooks for ${id}!`);
             let hooks:Set<Function> = Hookifier.hooks.get(id);
-            hooks.forEach((i:Function)=>i());
+            hooks.forEach((i:Function)=>i(id));
         }, timeout));
     }
 
@@ -559,7 +655,9 @@ class Hookifier {
 }
 
 class Ticket {
-    private objPromise: Promise<Project|Task|Tag>;
+    //private objPromise: Promise<Project|Task|Tag>;
+    private objType: Function;
+    private cm: Context;
     private _id: string;
 
     /**
@@ -572,12 +670,8 @@ class Ticket {
 
     constructor(objType:Function, cm:Context, id:string) {
         this._id = id;
-        if (objType === Task) 
-            this.objPromise = Task.fetch(cm, id);
-        else if (objType === Project)
-            this.objPromise = Project.fetch(cm, id);
-        else if (objType === Tag)
-            this.objPromise = Tag.fetch(cm, id);
+        this.objType = objType;
+        this.cm = cm;
     }
 
     /**
@@ -598,7 +692,12 @@ class Ticket {
      */
 
     async fetch():Promise<Project|Task|Tag> {
-        return await this.objPromise;
+        if (this.objType === Task) 
+            return Task.fetch(this.cm, this._id);
+        else if (this.objType === Project)
+            return Project.fetch(this.cm, this._id);
+        else if (this.objType === Tag)
+            return Tag.fetch(this.cm, this._id);
     }
 }
 

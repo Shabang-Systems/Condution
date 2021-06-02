@@ -54,26 +54,27 @@ export class Context {
     }
 
     /**
-     *
-     * @method start
-     *
      * Start the context by loading user info and workspaces. 
      * Call before doing anything!
      *
-     * @returns {Promise<void>}
+     * @param{string?} workspaceID    ID for workspace exclusive mode
      *
+     * @returns {Promise<void>}
      */
 
-    async start():Promise<void> {
-        if (this.rm.currentProvider.authSupported) {
-            let user:AuthenticationUser = await this.auth.currentUser;
-            this.ticketID = user.identifier;
-            this.userID = user.identifier;
-            this.authenticatable = true;
-        } else {
-            this.ticketID = this.defaultUsername;
-            this.userID = this.defaultUsername;
+    async start(workspaceID?:string):Promise<void> {
+        if (workspaceID || !this.rm.currentProvider.authSupported) {
+            let wid:string = workspaceID ? workspaceID : this.defaultUsername;
+            this.ticketID = wid;
+            this.userID = wid;
+            this.isWorkspace = workspaceID !== undefined;
+            return;
         }
+
+        let user:AuthenticationUser = await this.auth.currentUser;
+        this.ticketID = user.identifier;
+        this.userID = user.identifier;
+        this.authenticatable = true;
 
         // Get workspaces
         this._workspaces = (await this.rm.page(["users", this.userID], (newPrefs:object)=>{this._workspaces = newPrefs["workspaces"]}).get())["workspaces"];
@@ -195,6 +196,63 @@ export class Context {
         this.ready = true;
     }
 
+    /**
+     * dump the user, its workspaces, and other fun metadata to a JSON
+     * @async
+     *
+     * @returns {object} in JSONProvider format, everything there is to know
+     */
+
+    async dumpUserData():Promise<object> {
+        let UID:string = this.userID;
+        let workspaces:string[] = this._workspaces;
+        let chains:{} = this._chains;
+
+        let result:object = {}
+        result["users"] = {}
+        result["workspaces"] = {}
+        result["users"][UID] = {}
+        result["users"][UID]["$docdata"] = {"workspaces": workspaces, "chains": chains};
+
+        let taskCol:object[] = await (this.rm.collection(["users", this.userID, "tasks"]).data())
+        let projectCol:object[] = await (this.rm.collection(["users", this.userID, "projects"]).data())
+        let tagCol:object[] = await (this.rm.collection(["users", this.userID, "tags"]).data())
+
+        let taskDB = {}
+        taskCol.forEach((i:object) => taskDB[i["id"]] = i);
+
+        let projectDB = {}
+        projectCol.forEach((i:object) => projectDB[i["id"]] = i);
+
+        let tagDB = {}
+        tagCol.forEach((i:object) => tagDB[i["id"]] = i);
+
+        result["users"][UID]["tasks"] = taskDB;
+        result["users"][UID]["projects"] = projectDB;
+        result["users"][UID]["tags"] = tagDB;
+
+        for (let i of workspaces) {
+            let taskCol:object[] = await (this.rm.collection(["workspaces", i, "tasks"]).data())
+            let projectCol:object[] = await (this.rm.collection(["workspaces", i, "projects"]).data())
+            let tagCol:object[] = await (this.rm.collection(["workspaces", i, "tags"]).data())
+
+            let taskDB = {}
+            taskCol.forEach((i:object) => taskDB[i["id"]] = i);
+
+            let projectDB = {}
+            projectCol.forEach((i:object) => projectDB[i["id"]] = i);
+
+            let tagDB = {}
+            tagCol.forEach((i:object) => tagDB[i["id"]] = i);
+
+            result["workspaces"][i] = {}
+            result["workspaces"][i]["tasks"] = taskDB;
+            result["workspaces"][i]["projects"] = projectDB;
+            result["workspaces"][i]["tags"] = tagDB;
+        }
+
+        return result;
+    }
 
     /**
      * use the specified provider in the context

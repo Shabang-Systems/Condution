@@ -62,7 +62,8 @@ class Task {
         tsk._ready = false;
 
         let loadTask:Promise<Task> = new Promise(async (res, _) => {
-            let taskData:object = staticData.taskCollection.filter((i:object)=>i["id"] === identifier)[0];
+            //let taskData:object = staticData.taskCollection.filter((i:object)=>i["id"] === identifier)[0];
+            let taskData:object = staticData.taskMap.get(identifier);
             
             // TODO janky AF this is to wait
             // until the context loads. Someone
@@ -634,8 +635,9 @@ class Task {
 
         this.sync();
 
-        if (this.project)
+        if (this.project) {
             await (await this.async_project).calculateTreeParams(true);
+        }
 
         let completeDate = new Date();
         this.data["completeDate"] = {seconds: Math.floor(completeDate.getTime()/1000), nanoseconds:0};
@@ -735,12 +737,13 @@ class Task {
      * for your entertainment if you really wanted to.
      *
      * @param{boolean?} withHook    call hooks on flush
+     * @param{boolean?} isTop   whether the object is the top object
      *
      * @returns{Promise<void>}
      *
      */
 
-    calculateTreeParams = async (withHook:boolean=false) : Promise<void> => {
+    calculateTreeParams = async (withHook:boolean=false, isTop:boolean=false) : Promise<void> => {
         // Get the tags
         let tags: Tag[] = await Promise.all(this.async_tags ? this.async_tags : []);
 
@@ -759,10 +762,11 @@ class Task {
         // If there is a parent
         if (project) {
             // If the parent is sequential
-            if (project.isSequential)
-                this._available = (!this.isComplete && project.available && this.order == 0 && new Date() > this.defer); // Availibilty is calculated based on order
-            else
+            if (project.isSequential) {
+                this._available = (!this.isComplete && project.available && isTop && new Date() > this.defer); // Availibilty is calculated based on order
+            } else {
                 this._available = (!this.isComplete && project.available && new Date() > this.defer); // The availibilty is only based on the availibilty of project
+            }
         } else if (this.isComplete == true) {
             this._available = false; // otherwise, its not available
         } else {  // if no parents
@@ -869,7 +873,6 @@ class Task {
 class TaskSearchAdapter extends Task {
     adaptorData: AdapterData;
     private static loadCache:Map<string, Promise<TaskSearchAdapter>> = new Map();
-    private static adaptorCache:Map<string, TaskSearchAdapter> = new Map();
 
     constructor(context:Context, id:string, data:AdapterData, taskData:object) {
         super(id, context);
@@ -917,17 +920,16 @@ class TaskSearchAdapter extends Task {
      */
 
     static async seed(context:Context, identifier:string, data:AdapterData) {
-        if (TaskSearchAdapter.adaptorCache.has(identifier)) return TaskSearchAdapter.adaptorCache.get(identifier);
         if (TaskSearchAdapter.loadCache.has(identifier)) return await TaskSearchAdapter.loadCache.get(identifier);
 
         let loadTask:Promise<TaskSearchAdapter> = (async () => {
-            let tskObj:object = data.taskCollection.filter((obj:object)=> obj["id"] === identifier)[0];
+            let tskObj:object = data.taskMap.get(identifier);
+
             if (!tskObj)
                 return null;
 
             let tsk:TaskSearchAdapter = new this(context, identifier, data, tskObj);
 
-            TaskSearchAdapter.adaptorCache.set(identifier, tsk);
             await tsk.calculateTreeParams();
             return tsk;
         })();
@@ -945,9 +947,7 @@ class TaskSearchAdapter extends Task {
      */
 
     static cleanup = () : void => {
-        delete TaskSearchAdapter.adaptorCache;
         delete TaskSearchAdapter.loadCache;
-        TaskSearchAdapter.adaptorCache = new Map();
         TaskSearchAdapter.loadCache = new Map();
     }
 }

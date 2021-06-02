@@ -327,7 +327,8 @@ class FirebaseAuthenticationProvider extends AuthenticationProvider {
 
     async authenticate(request: AuthenticationRequest) : Promise<AuthenticationResult> {
         if (request.requestType == "email_pass" || !request.requestType) {
-            await this.firebaseAuthPointer.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+            if (request.requestType)
+                await this.firebaseAuthPointer.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
             let e_code:string;
             let e_msg:string;
