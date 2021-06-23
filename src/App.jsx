@@ -35,7 +35,9 @@ import './static/fa/scripts/all.min.css';
 import './theme/variables.css';
 
 /* Capacitor core plugins + jQuery */
-import { FilesystemDirectory, FilesystemEncoding, Plugins } from '@capacitor/core';
+import { FilesystemDirectory } from 'file-system-directory';
+import { FilesystemEncoding } from 'file-system-encoding';
+
 import $ from "jquery";
 
 /* Our Lovley Core Engine */
@@ -64,10 +66,6 @@ import LocalizedStrings from 'react-localization';
 
 /* AutoBind */
 const autoBind = require('auto-bind/react');
-
-
-/* Storage Plugins */
-const { Storage, Filesystem, Device } = Plugins;
 
 /* 
  * Hello human, good morning.
