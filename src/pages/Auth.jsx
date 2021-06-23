@@ -14,6 +14,8 @@ import light_preload from '../static/auth-background-dark.jpg';
 
 import GuttedTask from './Components/GuttedTask';
 
+import { OnboardWidget } from "../backend/src/Widget";
+
 const autoBind = require('auto-bind/react');
 
 
@@ -55,6 +57,10 @@ function Auth(props) {
                         props.cm.auth.createUser({payload: { email, password, displayName: name }}).then((res) => {
                             if (res.actionSuccess) {
                                 // TODO onboarding
+                                props.cm.start().then((_) => {
+                                    let ob_widget = new OnboardWidget(props.cm, name, props.localizations.onboarding_content);
+                                    ob_widget.execute();
+                                });
                                 setSpecialMessage(props.localizations.auth_verification_message);
                                 setMinorMode(2);
                             } else {
