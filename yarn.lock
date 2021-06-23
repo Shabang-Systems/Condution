@@ -1250,6 +1250,11 @@
   resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-2.4.7.tgz#03eecc5348d2ac84e62fc17ae37cc266bcc6a437"
   integrity sha512-XKYU67ZM+yY4/vDJ3ZVfs+phjtWK8TcKwq75fGoxB9PKXuCmMi5bihPuA3Xs/sIFXuozpnaYnspp0eTRJ7bG0w==
 
+"@capacitor/storage@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/storage/-/storage-1.0.1.tgz#5a2ff67e0dc05e6c2c912124bfce3394950089b6"
+  integrity sha512-hY16R8+vygyZx2T2JowiN0VHyQC+Rx9JOMDaJXa8oCwQYoXq+sojNybpTLmZwbcs6pYZBjnGjHiqvNZ9b1ytiA==
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"

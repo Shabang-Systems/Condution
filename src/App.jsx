@@ -35,8 +35,8 @@ import './static/fa/scripts/all.min.css';
 import './theme/variables.css';
 
 /* Capacitor core plugins + jQuery */
-import { FilesystemDirectory } from 'file-system-directory';
-import { FilesystemEncoding } from 'file-system-encoding';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Storage } from '@capacitor/storage';
 
 import $ from "jquery";
 
@@ -90,7 +90,7 @@ const autoBind = require('auto-bind/react');
 
 setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we implemented our own
 
-const dbRoot = FilesystemDirectory.Data;
+const dbRoot = Directory.Data;
 const dbPath = 'condution.json'; // TODO: use capacitor storage api
 
 async function readJSON() {
@@ -99,7 +99,7 @@ async function readJSON() {
         contents = (await Filesystem.readFile({
             path: dbPath,
             directory: dbRoot,
-            encoding: FilesystemEncoding.UTF8
+            encoding: Encoding.UTF8
         })).data;
     } catch(e) {
         contents = "{}";
@@ -107,7 +107,7 @@ async function readJSON() {
             path: dbPath,
             directory: dbRoot,
             data: JSON.stringify({}),
-            encoding: FilesystemEncoding.UTF8
+            encoding: Encoding.UTF8
         })
     }
     return JSON.parse(contents);
@@ -118,7 +118,7 @@ async function writeJSON(data) {
         path: dbPath,
         directory: dbRoot,
         data: JSON.stringify(data),
-        encoding: FilesystemEncoding.UTF8
+        encoding: Encoding.UTF8
     });
 }
 
