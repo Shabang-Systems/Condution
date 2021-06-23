@@ -60,7 +60,7 @@ class Project {
         let staticData:AdapterData = await queryEngine.orderStaticData();
 
         let loadProject:Promise<Project> = new Promise(async (res, _) => {
-            let projectData:object = staticData.projectMap.get(identifier);
+            let projectData:object = staticData.projectMap[identifier];
          
             // TODO janky AF this is to wait
             // until the context loads. Someone
@@ -841,7 +841,7 @@ class ProjectSearchAdapter extends Project {
         if (ProjectSearchAdapter.loadCache.has(identifier)) return await ProjectSearchAdapter.loadCache.get(identifier);
 
         let loadProject:Promise<ProjectSearchAdapter> = (async () => {
-            let projectData:object = data.projectMap.get(identifier);
+            let projectData:object = data.projectMap[identifier];
 
             if (!projectData)
                 return null;

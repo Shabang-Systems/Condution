@@ -248,7 +248,7 @@ class TagSearchAdapter extends Tag {
     constructor(context:Context, id:string, data:AdapterData) {
         super(id, context);
 
-        this.data = data.tagMap.get(id);
+        this.data = data.tagMap[id];
         if (!this.data) 
             this.data = {}
         this._ready = true;

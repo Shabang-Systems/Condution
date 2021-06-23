@@ -217,10 +217,10 @@ class RepeatRule {
 }
 
 interface AdapterData {
-    taskMap: Map<string, object>,
-    projectMap: Map<string, object>,
-    tagMap: Map<string, object>,
-    perspectiveMap: Map<string, object>,
+    taskMap: object,
+    projectMap: object,
+    tagMap: object,
+    perspectiveMap: object,
 }
 
 //type TP = Task[] | Project[]
@@ -241,10 +241,13 @@ class Query {
     private static perspectiveAdapters:PerspectiveSearchAdapter[];
     private static tagAdapters:TagSearchAdapter[];
 
-    private static taskMap:Map<string,object> = new Map();
-    private static projectMap:Map<string,object> = new Map();
-    private static tagMap:Map<string,object> = new Map();
-    private static perspectiveMap:Map<string,object> = new Map();
+    private static taskMap:object = {};
+    private static projectMap:object = {};
+    private static tagMap:object = {};
+    private static perspectiveMap:object = {};
+
+    private adapterSeedPromise:Promise<void> = null;
+    private static queryIndexPromise:Promise<void> = null;
 
 
     // TODO SHIELD YOUR EYES!!!! Incoming language abuse 😱 
@@ -282,10 +285,10 @@ class Query {
 
         Query.hasIndexed = false;
 
-        Query.taskMap = new Map();
-        Query.projectMap = new Map();
-        Query.tagMap = new Map();
-        Query.perspectiveMap = new Map();
+        Query.taskMap = {};
+        Query.projectMap = {};
+        Query.tagMap = {};
+        Query.perspectiveMap = {};
         Hookifier.call(`QueryEngine`);
     }
 
@@ -302,7 +305,7 @@ class Query {
     async index() : Promise<void> {
         Query.taskPages = await this.cm.collection(["tasks"], false, async () => {
             Query.taskPages = await this.cm.collection(["tasks"]).data();
-            Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
+            Query.taskPages.map((i:object) => Query.taskMap[i["id"]] = i);
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
@@ -310,11 +313,12 @@ class Query {
                 this.seedAdapters();
             }
         }).data();
-        Query.taskPages.map((i:object) => Query.taskMap.set(i["id"], i));
+
+        Query.taskPages.map((i:object) => Query.taskMap[i["id"]] = i);
 
         Query.projectPages = await this.cm.collection(["projects"], false, async () => {
             Query.projectPages = await this.cm.collection(["projects"]).data();
-            Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
+            Query.projectPages.map((i:object) => Query.projectMap[i["id"]] = i);
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
                 Hookifier.call(`QueryEngine`);
@@ -322,11 +326,11 @@ class Query {
                 this.seedAdapters();
             }
         }).data();
-        Query.projectPages.map((i:object) => Query.projectMap.set(i["id"], i));
+        Query.projectPages.map((i:object) => Query.projectMap[i["id"]] = i);
 
         Query.tagPages = await this.cm.collection(["tags"], false, async () => {
             Query.tagPages = await this.cm.collection(["tags"]).data();
-            Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
+            Query.tagPages.map((i:object) => Query.tagMap[i["id"]] = i);
 
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
@@ -335,11 +339,11 @@ class Query {
                 this.seedAdapters();
             }
         }).data();
-        Query.tagPages.map((i:object) => Query.tagMap.set(i["id"], i));
+        Query.tagPages.map((i:object) => Query.tagMap[i["id"]] = i);
 
         Query.perspectivePages = await this.cm.collection(["perspectives"], false, async () => {
             Query.perspectivePages = await this.cm.collection(["perspectives"]).data();
-            Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
+            Query.perspectivePages.map((i:object) => Query.perspectiveMap[i["id"]] = i);
 
             if (Query.hasIndexed && !Hookifier.getFrozen()) {
                 await this.seedAdapters();
@@ -348,7 +352,7 @@ class Query {
                 this.seedAdapters();
             }
         }).data();
-        Query.perspectivePages.map((i:object) => Query.perspectiveMap.set(i["id"], i));
+        Query.perspectivePages.map((i:object) => Query.perspectiveMap[i["id"]] = i);
         await this.seedAdapters();
 
         Query.hasIndexed = true;
@@ -359,25 +363,35 @@ class Query {
      */
 
     private seedAdapters = async () => {
-        let dataObject:AdapterData = {
-            taskMap: Query.taskMap,
-            projectMap: Query.projectMap,
-            tagMap: Query.tagMap,
-            perspectiveMap: Query.perspectiveMap
-        }
+        if (this.adapterSeedPromise)
+            return await this.adapterSeedPromise;
 
-        let taskPages:object[] = Query.taskPages;
-        let projectPages:object[] = Query.projectPages;
-        let tagPages:object[] = Query.tagPages;
-        let perspectivePages:object[] = Query.perspectivePages;
+        this.adapterSeedPromise = new Promise(async (res, _) => {
+            let dataObject:AdapterData = {
+                taskMap: Query.taskMap,
+                projectMap: Query.projectMap,
+                tagMap: Query.tagMap,
+                perspectiveMap: Query.perspectiveMap
+            }
 
-        Query.taskAdapters = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
+            let taskPages:object[] = Query.taskPages;
+            let projectPages:object[] = Query.projectPages;
+            let tagPages:object[] = Query.tagPages;
+            let perspectivePages:object[] = Query.perspectivePages;
 
-        Query.projectAdapters = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
+            Query.taskAdapters = await Promise.all(taskPages.map(async (p:object) => await TaskSearchAdapter.seed(this.cm, p["id"], dataObject)));
 
-        Query.tagAdapters = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
+            Query.projectAdapters = await Promise.all(projectPages.map(async (p:object) => await ProjectSearchAdapter.seed(this.cm, p["id"], dataObject)));
 
-        Query.perspectiveAdapters = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
+            Query.tagAdapters = await Promise.all(tagPages.map(async (p:object) => await TagSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+            Query.perspectiveAdapters = await Promise.all(perspectivePages.map(async (p:object) => await PerspectiveSearchAdapter.seed(this.cm, p["id"], dataObject)));
+
+            res();
+        });
+
+        await this.adapterSeedPromise;
+        this.adapterSeedPromise = null;
     }
 
     
@@ -448,8 +462,12 @@ class Query {
 
     async execute(objType:Function, condition:(i:Filterable)=>boolean, conditions?:((i:Filterable)=>boolean)[], returnLiveObjects:boolean=true): Promise<Filterable[]> {
         console.assert(condition||conditions, "CondutionEngine: you gave .execute() a condition and multiple conditions. How the heck am I supposed to know which one to filter by? Choose one to give.");
-        if (!Query.hasIndexed)
-            await this.index();
+
+        if (!Query.queryIndexPromise !== Query.hasIndexed)
+            Query.queryIndexPromise = this.index();
+
+        await Query.queryIndexPromise;
+        Query.queryIndexPromise = null;
 
         let data:Filterable[] = [];
 

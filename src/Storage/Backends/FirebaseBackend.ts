@@ -43,6 +43,8 @@ class FirebaseCollection extends Collection {
                 }
             }));
         }
+
+        cache.set(JSON.stringify(path), this);
     }
 
     async add(payload:object) {
@@ -509,6 +511,8 @@ class FirebaseProvider extends Provider {
      */
 
     collection(path: string[], refreshCallback?:Function) : FirebaseCollection {
+        if (cache.has(JSON.stringify(path))) // TODO
+            return cache.get(JSON.stringify(path))
         return new FirebaseCollection(path, this.firebaseDB, this.firebaseRef, refreshCallback);
     }
 

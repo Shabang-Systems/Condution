@@ -720,7 +720,7 @@ class PerspectiveSearchAdapter extends Perspective {
     constructor(context:Context, id:string, data:AdapterData) {
         super(id, context);
 
-        this.data = data.perspectiveMap.get(id);
+        this.data = data.perspectiveMap[id];
         if (!this.data) 
             this.data = {}
         this._ready = true;

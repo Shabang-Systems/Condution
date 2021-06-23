@@ -63,7 +63,7 @@ class Task {
 
         let loadTask:Promise<Task> = new Promise(async (res, _) => {
             //let taskData:object = staticData.taskCollection.filter((i:object)=>i["id"] === identifier)[0];
-            let taskData:object = staticData.taskMap.get(identifier);
+            let taskData:object = staticData.taskMap[identifier];
             
             // TODO janky AF this is to wait
             // until the context loads. Someone
@@ -923,7 +923,7 @@ class TaskSearchAdapter extends Task {
         if (TaskSearchAdapter.loadCache.has(identifier)) return await TaskSearchAdapter.loadCache.get(identifier);
 
         let loadTask:Promise<TaskSearchAdapter> = (async () => {
-            let tskObj:object = data.taskMap.get(identifier);
+            let tskObj:object = data.taskMap[identifier];
 
             if (!tskObj)
                 return null;
