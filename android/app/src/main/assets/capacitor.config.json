@@ -1,16 +1,16 @@
 {
-  "appId": "cf.shabang.condution",
-  "appName": "Condution",
-  "bundledWebRuntime": false,
-  "npmClient": "yarn",
-  "webDir": "build",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    },
-    "Keyboard": {
-      "resize": "native"
-    }
-  },
-  "cordova": {}
+	"appId": "cf.shabang.condution",
+	"appName": "Condution",
+	"bundledWebRuntime": false,
+	"npmClient": "yarn",
+	"webDir": "build",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		},
+		"Keyboard": {
+			"resize": "native"
+		}
+	},
+	"cordova": {}
 }

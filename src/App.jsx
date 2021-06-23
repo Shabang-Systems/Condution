@@ -35,7 +35,9 @@ import './static/fa/scripts/all.min.css';
 import './theme/variables.css';
 
 /* Capacitor core plugins + jQuery */
-import { FilesystemDirectory, FilesystemEncoding, Plugins } from '@capacitor/core';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Storage } from '@capacitor/storage';
+
 import $ from "jquery";
 
 /* Our Lovley Core Engine */
@@ -65,10 +67,6 @@ import LocalizedStrings from 'react-localization';
 /* AutoBind */
 const autoBind = require('auto-bind/react');
 
-
-/* Storage Plugins */
-const { Storage, Filesystem, Device } = Plugins;
-
 /* 
  * Hello human, good morning.
  *
@@ -92,7 +90,7 @@ const { Storage, Filesystem, Device } = Plugins;
 
 setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we implemented our own
 
-const dbRoot = FilesystemDirectory.Data;
+const dbRoot = Directory.Data;
 const dbPath = 'condution.json'; // TODO: use capacitor storage api
 
 async function readJSON() {
@@ -101,7 +99,7 @@ async function readJSON() {
         contents = (await Filesystem.readFile({
             path: dbPath,
             directory: dbRoot,
-            encoding: FilesystemEncoding.UTF8
+            encoding: Encoding.UTF8
         })).data;
     } catch(e) {
         contents = "{}";
@@ -109,7 +107,7 @@ async function readJSON() {
             path: dbPath,
             directory: dbRoot,
             data: JSON.stringify({}),
-            encoding: FilesystemEncoding.UTF8
+            encoding: Encoding.UTF8
         })
     }
     return JSON.parse(contents);
@@ -120,7 +118,7 @@ async function writeJSON(data) {
         path: dbPath,
         directory: dbRoot,
         data: JSON.stringify(data),
-        encoding: FilesystemEncoding.UTF8
+        encoding: Encoding.UTF8
     });
 }
 
