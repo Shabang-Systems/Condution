@@ -1,4 +1,4 @@
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, withIonLifeCycle } from '@ionic/react';
+import { IonContent, IonModal, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, withIonLifeCycle } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Projects.css';
@@ -49,6 +49,7 @@ class Projects extends Component { // define the component
 	    combinable: true,
 	    combHover: false,
 	    combItem: "notanid",
+	    deleting: false,
         };
 
         this.updatePrefix = this.random();
@@ -229,6 +230,19 @@ class Projects extends Component { // define the component
         //this.closer.current.closeTask();
     }
 
+    async deleteProject() {
+	this.setState({deleting: true})
+	//await this.state.projectObject.delete()
+	//if (this.state.projectObject.isComplete) {
+	//    this.props.history.push("/completed", ""); // go back
+	//    this.props.paginate("/completed");
+	//} else {
+	//    this.props.history.push(
+	//        (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
+	//    this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
+    }
+
+
     exp = "disableInteractiveElementBlocking"
 
     renderTask = (item, i, provided, snapshot) => {
@@ -296,6 +310,12 @@ class Projects extends Component { // define the component
 
 
         )
+    }
+
+    renderModal = provided => {
+	console.log("rendering modal?")
+	//return (
+	//)
     }
 
     render() {
@@ -417,6 +437,7 @@ class Projects extends Component { // define the component
 
 
                                             }); // change the icon
+
                                         }} />
                                     
 

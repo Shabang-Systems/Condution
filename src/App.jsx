@@ -35,7 +35,9 @@ import './static/fa/scripts/all.min.css';
 import './theme/variables.css';
 
 /* Capacitor core plugins + jQuery */
-import { FilesystemDirectory, FilesystemEncoding, Plugins } from '@capacitor/core';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Storage } from '@capacitor/storage';
+
 import $ from "jquery";
 
 /* Our Lovley Core Engine */
@@ -65,10 +67,6 @@ import LocalizedStrings from 'react-localization';
 /* AutoBind */
 const autoBind = require('auto-bind/react');
 
-
-/* Storage Plugins */
-const { Storage, Filesystem, Device } = Plugins;
-
 /* 
  * Hello human, good morning.
  *
@@ -92,7 +90,7 @@ const { Storage, Filesystem, Device } = Plugins;
 
 setupConfig({ swipeBackEnabled: false, }); // globally disable swipe b/c we implemented our own
 
-const dbRoot = FilesystemDirectory.Data;
+const dbRoot = Directory.Data;
 const dbPath = 'condution.json'; // TODO: use capacitor storage api
 
 async function readJSON() {
@@ -101,7 +99,7 @@ async function readJSON() {
         contents = (await Filesystem.readFile({
             path: dbPath,
             directory: dbRoot,
-            encoding: FilesystemEncoding.UTF8
+            encoding: Encoding.UTF8
         })).data;
     } catch(e) {
         contents = "{}";
@@ -109,7 +107,7 @@ async function readJSON() {
             path: dbPath,
             directory: dbRoot,
             data: JSON.stringify({}),
-            encoding: FilesystemEncoding.UTF8
+            encoding: Encoding.UTF8
         })
     }
     return JSON.parse(contents);
@@ -120,7 +118,7 @@ async function writeJSON(data) {
         path: dbPath,
         directory: dbRoot,
         data: JSON.stringify(data),
-        encoding: FilesystemEncoding.UTF8
+        encoding: Encoding.UTF8
     });
 }
 
@@ -129,6 +127,7 @@ async function readPort(portID=18230) {
         let res = await (await fetch(`http://localhost:${portID}/`)).json();
         return res;
     } catch {
+        console.log('CondutionEngine: Failed to access Self-Hosted Backend server; we likely are running on an official build. Disabling self-hosting.');
         return {};
     }
 }
@@ -194,11 +193,8 @@ class App extends Component {
         }
 
         async componentDidMount() {
-            console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
-            console.log('%cClose this panel now.', "background: #fff0f0;color: transparent; background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);   -webkit-background-clip: text; font-size: 40px; ;");
-            console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
-            console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
-
+            console.log("Hello world. This is Condution.");
+            console.log("Reading JSON and self-hosting data into memory.");
             this.jsondata = await readJSON();
             this.portdata = await readPort();
 
@@ -217,6 +213,8 @@ class App extends Component {
                     writePort(data);
                 })
             }
+
+            console.log("Done! Initializing References and yo' Context.");
             let refMgr = new ReferenceManager([providers["firebase"], providers["json"], providers["portjson"]]);
             this.cm = new Context(refMgr);
 
@@ -229,6 +227,7 @@ class App extends Component {
             // and json engines
             //await Engine.start({firebase}, "firebase", "json");
 
+            console.log("Beautiful! Loading Workspace URL info.");
             let url = (new URL(document.URL))
             let uri = url.pathname.split("/");
 
@@ -242,7 +241,13 @@ class App extends Component {
                     return;
                 }
             }
+            console.log("Printing the XSS warning.");
+            console.log('%cSTOP! ', 'background: #fff0f0; color: #434d5f; font-size: 80px');
+            console.log('%cClose this panel now.', "background: #fff0f0;color: transparent; background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);   -webkit-background-clip: text; font-size: 40px; ;");
+            console.log('%c19/10 chance you are either a terribly smart person and should work with us (hliu@shabang.cf) or are being taken advantanged of by a very terrible person. ', 'background: #fff0f0; color: #434d5f; font-size: 20px');
+            console.log('%cPlease help us to help you... Don\'t self XSS yourself.', 'background: #fff0f0; color: #434d5f; font-size: 15px');
 
+            console.log("It's dispatch time, dispathing!");
             // ==Handling cached dispatch==
             // So, do we have a condution_stotype? 
             Storage.get({key: 'condution_stotype'}).then((async function(dbType) {
@@ -295,13 +300,12 @@ class App extends Component {
                         break;
                 }
             }).bind(this));
+
     }
 
     // authDispatch handles the dispatching of auth operations. {login, create, and logout}
     authDispatch(mode) {
-        console.log(mode.operation)
-        console.log(mode.service)
-        console.log("do not delete these console logs above!!!") // TODO: what's actually happining here? why is account creation dud?
+        console.log("Auth dispatch requested for", mode.operation, mode.service)
 
         // TODO: that's a state machine! @zbuster05
         let uid;

@@ -167,8 +167,10 @@ class Home extends Component {
     }
 
     async refresh() {
+        let res = await this.state.menuWidget.execute();
         this.setState({
-            ...(await this.state.menuWidget.execute())
+            projects: res[0],
+            perspectives: res[1],
         });
     }
 
