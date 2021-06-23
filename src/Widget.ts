@@ -356,5 +356,107 @@ class TimelineWidget extends Widget {
     }
 }
 
-export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget, MenuWidget };
+class OnboardWidget extends Widget {
+    name = "onboard-widget"
+    private username: string;
+    private payload: string[];
+    
+    constructor(context:Context, username: string, payload: string[]) {
+        super(context);
+        this.username = username;
+        this.payload = payload;
+    }
+
+    // async execute() {
+    //     if (!OnboardWidget.dataPromise)
+    //         OnboardWidget.dataPromise = this.calculate(this.tz, this.username, this.this.payload);
+
+    //     let data = await OnboardWidget.dataPromise;
+    //     return data;
+    // }
+
+    async calculate() {
+        // create 3 new tasks and set their descriptions
+        (await Task.create(this.query.cm, this.payload[0] + ` ${this.username}, ` + this.payload[1])).description = this.payload[2];
+        (await Task.create(this.query.cm, this.payload[3])).description = this.payload[4];
+        (await Task.create(this.query.cm, this.payload[5])).description = this.payload[6];
+
+        let cdyrslf = await Project.create(this.query.cm, this.payload[7]);
+        let npd = await Project.create(this.query.cm, this.payload[8]);
+
+        let od = new Date();
+        let ds = new Date();
+        od.setHours(od.getHours() - 24);
+        ds.setHours(ds.getHours() + 20);
+
+        let odid = await Task.create(this.query.cm, this.payload[9], npd, [], od);
+        odid.description = this.payload[10];
+        await npd.associate(odid); // I believe (hope) this is the equivalent to: await associateTask(userID, odid, npd);
+
+        let dsID = await Task.create(this.query.cm, this.payload[11], npd, [], ds);
+        dsID.description = this.payload[12];
+        await npd.associate(dsID);
+
+        ds.setHours(ds.getHours() + 2);
+        let checkoutID = await Task.create(this.query.cm, this.payload[13]);
+        checkoutID.description = this.payload[14];
+
+        // I did not choose these variable names, I am just using the ones from the old onboarding code
+        let nice = await Task.create(this.query.cm, this.payload[15], cdyrslf);
+        await cdyrslf.associate(nice);
+
+        let sequential = await Task.create(this.query.cm, this.payload[16], cdyrslf);
+        sequential.description = this.payload[17];
+        await cdyrslf.associate(sequential);
+
+        let blocked = await Task.create(this.query.cm, this.payload[18], cdyrslf);
+        blocked.description = this.payload[19];
+        await cdyrslf.associate(blocked);
+
+        let click = await Task.create(this.query.cm, this.payload[20], cdyrslf);
+        click.description = this.payload[21];
+        await cdyrslf.associate(click);
+
+        let pspDir = await Task.create(this.query.cm, this.payload[22], cdyrslf);
+        pspDir.description = this.payload[23];
+        await cdyrslf.associate(pspDir);
+
+        let pspsp = await Project.create(this.query.cm, this.payload[24]);
+
+        let tags: Tag[] = await Promise.all([
+            Tag.create(this.query.cm, this.payload[25]),
+            Tag.create(this.query.cm, this.payload[26]),
+            Tag.create(this.query.cm, this.payload[27]),
+            Tag.create(this.query.cm, this.payload[28])
+        ]);
+
+        let specific = await Task.create(this.query.cm, this.payload[29], pspsp, [tags[2], tags[3]]);
+        await pspsp.associate(specific);
+
+        let sp = await Task.create(this.query.cm, this.payload[31], pspsp, [tags[0]]);
+        sp.description = this.payload[32];
+        await pspsp.associate(sp);
+
+        await Perspective.create(this.query.cm, this.payload[33], this.payload[34]);
+        
+        let promotion = await Project.create(this.query.cm, this.payload[35]);
+
+        let online = await Task.create(this.query.cm, this.payload[36], promotion);
+        await promotion.associate(online);
+
+        let dis = await Task.create(this.query.cm, this.payload[37], promotion);
+        await promotion.associate(dis);
+
+        let patreon = await Task.create(this.query.cm, this.payload[38], promotion);
+        await promotion.associate(patreon);
+
+        let yiipee = await Task.create(this.query.cm, this.payload[39], promotion);
+        yiipee.description = this.payload[40];
+        await promotion.associate(yiipee);
+        
+        return [{}];
+    }
+}
+
+export { Widget, ProjectMenuWidget, PerspectivesMenuWidget, InboxWidget, CompletedWidget, ProjectDatapackWidget, TagsPaneWidget, TagDatapackWidget, DueSoonWidget, TimelineWidget, MenuWidget, OnboardWidget };
 //new line here
