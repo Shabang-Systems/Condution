@@ -81,7 +81,7 @@ import CustomJSONProvider from "./Storage/Backends/CustomJSONBackend";
  *
  * With ReferenceManager's API, you get to control every data entry of Providers
  * except, of course, if you got blocked server-side. This also means that you 
- * could delete whole users (if you have perms) and mess up the DB. So have fun!
+ * can delete whole users (if you have perms) and mess up the DB. So have fun!
  *
  * To use ReferenceManagers, instantiate with instances of the Providers that you
  * want to setup. Then, call .use on the name on the provider's name that you want
@@ -100,9 +100,9 @@ import ReferenceManager from "./Storage/ReferenceManager";
 /*
  * Chapter 3: The Context
  *
- * This is THE most important piece of thing that may be confusing. Contexts are
+ * This is THE most important confusing bit in this backend. Contexts are
  * a layer above managers that allow you to actually query for specific pages by
- * users, manage workspaces, and get data using a similar syntax as does Managers 
+ * users, and manage workspaces, all while using a similar syntax to that of Managers 
  * but without the confusing confusal of needing the know the UID, worry about workspaces
  * etc.
  *
@@ -120,7 +120,7 @@ import { Context } from "./Objects/EngineManager";
 /*
  * Chapter 4: The Objects
  *
- * Here are all the objects that Condution could manage for you! Tasks, Tags, Projects
+ * Here are all the objects that Condution can manage for you! Tasks, Tags, Projects
  * all the rage! Unfortunately I am too swollen to type up docs at the moment, so
  * TODO and just look in the inline documentation for yourself
  *
