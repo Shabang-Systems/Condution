@@ -11,7 +11,7 @@ import React, { Component, findDOMNode } from 'react';
 import ReactDOM from "react-dom";
 
 // React Spring animation packages
-import { Spring, animated, Keyframes } from 'react-spring/renderprops'
+import { Spring, animated, Keyframes } from 'react-spring'
 
 // Cool components 
 import DatePicker from 'react-datepicker';
