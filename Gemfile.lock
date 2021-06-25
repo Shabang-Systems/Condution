@@ -103,7 +103,7 @@ GEM
       mini_mime (~> 1.0)
       representable (~> 3.0)
       retriable (>= 2.0, < 4.0)
-      rexml
+      rexml (>= 3.2.5)
       signet (~> 0.14)
       webrick
     google-apis-iamcredentials_v1 (0.2.0)
