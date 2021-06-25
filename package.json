@@ -33,6 +33,7 @@
     "mousetrap": "^1.6.5",
     "mousetrap-global-bind": "^1.1.0",
     "node-sass": "^6.0.1",
+    "normalize-url": "^4.5.1",
     "react": "17",
     "react-beautiful-dnd": "^13.0.0",
     "react-bootstrap": "^1.6.1",
