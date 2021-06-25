@@ -34,19 +34,19 @@ Condution attempts to change this. We want to create an open-source productivity
 Condution is a powerful yet incredibly simple check-list application that supports your needs from study, to business, and to life. Bring Condution with you across the globe and let it be your second brain — so you can focus on living your best life.
 
 #### Your Favorite Task-List
-Create tasks, manage them in projects, add some tags, set due dates, and repeat them at will. Condution has the whole nine-yards of the core list-making features nailed so you could create and edit anything from grocery lists to hundred-task projects.
+Create tasks, manage them in projects, add some tags, set due dates, and repeat them at will. Condution has the whole nine-yards of the core list-making features nailed so you can create and edit anything from grocery lists to hundred-task projects.
 
 #### Filters and Perspectives
 Filter tasks by tag? Check. Filter by projects? Check. Filter by due date? Check. Filter by due date and project with tags and sort tasks based on defer date while hiding everything that's not availale? You bet.
 
 #### Collaborative Workspaces
-create and share "workspaces" by tapping on the "personal workspace" badge found on the upcoming view. These workspaces are collaborative Condution views in which everyone — regardless if they have an account — could collaborate on Condution!
+create and share "workspaces" by tapping on the "personal workspace" badge found on the upcoming view. These workspaces are collaborative Condution views in which everyone — regardless if they have an account — can collaborate on Condution!
 
 #### Tag Weights
-Tags are weighted! You could now set a tag to be more "heavy" than others (say.. High Energy with a weight of 10, Low Energy with a weight of 0.5), and these weight values will reflect across various parts of the interface (including a "loading bar" on projects) to give you an intuitive view of how "hard" something will be.
+Tags are weighted! You can now set a tag to be more "heavy" than others (say.. High Energy with a weight of 10, Low Energy with a weight of 0.5), and these weight values will reflect across various parts of the interface (including a "loading bar" on projects) to give you an intuitive view of how "hard" something will be.
 
 #### Due + Start Dates (and Times!)
-Yes, you heard it right! Unlike some of the other apps out there, we know that timing is important to people! Every task is hidden until a certain *time* and due at precisely at a *time*, so your know day could be managed right down to your needs.
+Yes, you heard it right! Unlike some of the other apps out there, we know that timing is important to people! Every task is hidden until a certain *time* and due at precisely at a *time*, so you know your day can be managed right down to your needs.
 
 #### Sequential and Parallel Projects!
 Some tasks can't really be done without others before it being done first, and we understand that. Tasks blocked in a sequential project could be hidden if needed, and shown again when ready.
@@ -98,7 +98,7 @@ We use two different Firebase projects for debug and deploy respectively. If you
 
 `secrets.json` in, you are ready to Conduct (verb: to write Condution)! Get all of the necessary project dependencies by issuing the command `yarn` in `$ROOT`. Just `yarn`.
 
-You probably also need the Ionic CLI tools, which you could install by running `npm install -g @ionic/cli`.
+You probably also need the Ionic CLI tools, which you can install by running `npm install -g @ionic/cli`.
 
 With everything installed, execute your favourite CLI command to get started!
 
