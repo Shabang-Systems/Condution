@@ -10,7 +10,7 @@ import { getPlatforms } from '@ionic/react';
 import React, { Component } from 'react';
 
 // React Spring animation packages
-import { Spring, animated, Keyframes } from 'react-spring/renderprops'
+import { Spring, animated, Keyframes } from 'react-spring'
 
 // Cool components 
 import DatePicker from 'react-datepicker';

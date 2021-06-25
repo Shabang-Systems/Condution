@@ -8,7 +8,7 @@ import GuttedTask from './Components/GuttedTask';
 import { Plugins } from '@capacitor/core';
 
 
-import {Spring, animated, config} from 'react-spring/renderprops'
+import {Spring, animated, config} from 'react-spring'
 
 import logo from '../static/logo.png';
 import dark_preload from '../static/auth-background.jpg';

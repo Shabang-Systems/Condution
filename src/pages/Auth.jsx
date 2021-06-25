@@ -3,7 +3,7 @@ import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuBu
 import React, { useState, useEffect } from 'react';
 import {useSpring, animated} from 'react-spring'
 
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/auth";
 
 import './Pages.css';
