@@ -1199,10 +1199,10 @@
     mime-types "~2.1.27"
     ora "^5.1.0"
 
-"@capacitor/android@^2.4.2":
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-2.4.7.tgz#c7edc5322dbd1db79c61b1f4e579b7b81024ce5d"
-  integrity sha512-7jcmwheo94dJEOX1z4r3SlZrL+MvESav1xsUwC5ydLFZCpuvBKJ0szbDNWzCAglgpXmW9hC0WdwYBErgDrDPRg==
+"@capacitor/android@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-3.0.2.tgz#818c98006456e00b34d11c231a8a53ec971b2ee2"
+  integrity sha512-sn2FGCMscXr8q413gSz8p1TAw69D3i4Hb2Bcd0S0SSDbvXwHCtDgwKQfD777+wmLifSkt8fwWVFIOKdbiGVRHw==
 
 "@capacitor/cli@^3.0.2":
   version "3.0.2"
@@ -1245,10 +1245,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/filesystem/-/filesystem-1.0.1.tgz#48c1987e4eb0b14a27f0805e8debd01800734a6f"
   integrity sha512-DID5qryvvKvcptyxYCGHsq9SENiXiiECH0uuYlS9Eaasd6R+YCnwK2F8mhOOjnElvnaoVXTG1EGVe9mZEfHEEA==
 
-"@capacitor/ios@^2.4.1":
-  version "2.4.7"
-  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-2.4.7.tgz#03eecc5348d2ac84e62fc17ae37cc266bcc6a437"
-  integrity sha512-XKYU67ZM+yY4/vDJ3ZVfs+phjtWK8TcKwq75fGoxB9PKXuCmMi5bihPuA3Xs/sIFXuozpnaYnspp0eTRJ7bG0w==
+"@capacitor/ios@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-3.0.2.tgz#49b3690ce38911ce4254a74860f6ca9dd0ed0303"
+  integrity sha512-BEEwQ7TSGdmTusDPB2+WOOkOFCxYc9C36uzDNNLfwhSdgaDjoKJmVxj0oPb7wpfC1xMPGnTxYPmSjKj5AyKQ/Q==
 
 "@capacitor/storage@^1.0.1":
   version "1.0.1"
