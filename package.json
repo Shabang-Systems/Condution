@@ -4,7 +4,7 @@
   "dependencies": {
     "@capacitor-community/electron": "^1.2.3",
     "@capacitor/android": "^2.4.2",
-    "@capacitor/core": "^3.0.1",
+    "@capacitor/core": "^3.0.2",
     "@capacitor/filesystem": "^1.0.1",
     "@capacitor/ios": "^2.4.1",
     "@capacitor/storage": "^1.0.1",
@@ -96,7 +96,7 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "^3.0.1",
+    "@capacitor/cli": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "electron": "^11.2.3",
