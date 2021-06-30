@@ -215,7 +215,7 @@ class Projects extends Component { // define the component
 		onTransitionEnd({
 		    propertyName: 'transform',
 		});
-	    }, 3330);
+	    }, 330);
 	} else {
 	    toggleIsDragging(false);
 	}
@@ -243,7 +243,7 @@ class Projects extends Component { // define the component
     }
 
     onBeforeDragStart = initials => {
-	console.log(initials)
+	//console.log(initials)
         //if (this.closer.current) {
         //    this.closer.current.closeTask() 
         //}
@@ -499,18 +499,19 @@ class Projects extends Component { // define the component
 				    provided.draggableProps.onTransitionEnd
 				);
 				}}
-				
-				//renderClone={(provided, snapshot, rubric) => (
+				//renderClone={
+				//    (window.screen.width >= 992)? (
+				//    (provided, snapshot, rubric) => (
 				//    <div>
 				//        {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
 				//                this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
-				//                : 
+				//                :
 				//                this.renderProject(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
 				//        }
 				//    </div>
 
 
-				//)}
+				//    )) : false}
                             >
                                 {(provided, snapshot) => ( 
                                     <div
@@ -544,8 +545,9 @@ class Projects extends Component { // define the component
 							style={
 							    //(style, snapshot) => {
 							    //provided.draggableProps.style
-							    {}
-							    ////return ((style, snapshot.isDragging)? {} : {})
+							    (window.screen.width >= 992)? (
+								(snapshot.isDragging)? {transform: "translate(-270px, -200px)"} : {}) : {}
+							    //return ((style, snapshot.isDragging)? {} : {})
 							    //return {}
 							    //}
 							}
@@ -558,7 +560,6 @@ class Projects extends Component { // define the component
                                                         )}
 
                                                     </div>
-						    {console.log(provided.draggableProps.style)}
 						    </div>
 						    )}}
                                             </Draggable>
