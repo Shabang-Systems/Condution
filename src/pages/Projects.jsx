@@ -132,6 +132,7 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
+	console.log("ending drag")
 	this.setState({combItem: "notanid"})
 
 	// BAD DROPS
@@ -204,7 +205,26 @@ class Projects extends Component { // define the component
         this.setState({itemList: itemOrder})
     }
 
+
+
+
+    //onTouchEnd(onTransitionEnd) {
+    //    const { toggleIsDragging } = this.props;
+    //    if (onTransitionEnd) {
+    //        setTimeout(() => {
+    //            onTransitionEnd({
+    //                propertyName: 'transform',
+    //            });
+    //        }, 330);
+    //    } else {
+    //        toggleIsDragging(false);
+    //    }
+    //}
+
+
+
     onDragUpdate = update => {
+	console.log(this.state.expandedChild.expanded)
 	if (update.combine) {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
 	    let from = this.state.itemList[update.source.index]
@@ -223,7 +243,7 @@ class Projects extends Component { // define the component
     }
 
     onBeforeDragStart = initials => {
-        //console.log(initials)
+	console.log(initials)
         //if (this.closer.current) {
         //    this.closer.current.closeTask() 
         //}
@@ -246,6 +266,7 @@ class Projects extends Component { // define the component
     exp = "disableInteractiveElementBlocking"
 
     renderTask = (item, i, provided, snapshot) => {
+	//console.log("rendering clone task", provided)
         return (
             <div
                 {...provided.draggableProps}
@@ -322,10 +343,16 @@ class Projects extends Component { // define the component
         return (
             <IonPage>
                         <DragDropContext 
-                            onDragEnd={this.onDragEnd}
-                            onBeforeCapture={this.onBeforeDragStart}
+			    onDragEnd={this.onDragEnd}
+			    onBeforeCapture={this.onBeforeDragStart}
 			    onDragUpdate={this.onDragUpdate}
-                        >
+			    //onTouchEnd={(provided) => {
+			    //    this.onTouchEnd(
+			    //    provided.draggableProps.onTransitionEnd
+			    //);
+			    //}}
+
+			>
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds
@@ -466,17 +493,17 @@ class Projects extends Component { // define the component
                         <Spinner ready={this.state.initialRenderingDone} />
 
                             <Droppable droppableId={"prjlst"} isCombineEnabled={this.state.combinable}
-                                renderClone={(provided, snapshot, rubric) => (
-                                    <div>
-                                        {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
-                                                this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
-                                                : 
-                                                this.renderProject(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
-                                        }
-                                    </div>
+				//renderClone={(provided, snapshot, rubric) => (
+				//    <div>
+				//        {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
+				//                this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
+				//                : 
+				//                this.renderProject(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
+				//        }
+				//    </div>
 
 
-                                )}
+				//)}
                             >
                                 {(provided, snapshot) => ( 
                                     <div
@@ -489,21 +516,24 @@ class Projects extends Component { // define the component
                                         {this.state.itemList? this.state.itemList.map((item, i) =>  (
                                             <Draggable 
                                                 disableInteractiveElementBlocking={(item.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
-                                                isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
+						isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
                                                 draggableId={item.id} key={item.id} index={i}
                                             >
                                                 {(provided, snapshot) => (
+						    <div>
                                                     <div
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                         ref={provided.innerRef}
                                                         key={item.id}
-                                                        style={(snapshot.isDragging)? 
-                                                                { 
-                                                                    //border: "1px solid red",
-                                                                    //position: "static"
-                                                                } 
-                                                                : {}}
+							style={
+							    //(style, snapshot) => {
+							    provided.draggableProps.style
+							    //{}
+							    ////return ((style, snapshot.isDragging)? {} : {})
+							    //return {}
+							    //}
+							}
                                                     >
 
                                                         {((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
@@ -513,6 +543,8 @@ class Projects extends Component { // define the component
                                                         )}
 
                                                     </div>
+						    {console.log(provided.draggableProps.style)}
+						    </div>
                                                 )}
                                             </Draggable>
                                         )
