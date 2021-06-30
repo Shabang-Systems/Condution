@@ -59,7 +59,6 @@ function Auth(props) {
                                 // TODO onboarding
                                 props.cm.start().then((_) => {
                                     let ob_widget = new OnboardWidget(props.cm, name, props.localizations.onboarding_content);
-                                    ob_widget.execute();
                                 });
                                 setSpecialMessage(props.localizations.auth_verification_message);
                                 setMinorMode(2);
