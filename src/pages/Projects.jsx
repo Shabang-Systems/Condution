@@ -208,18 +208,18 @@ class Projects extends Component { // define the component
 
 
 
-    //onTouchEnd(onTransitionEnd) {
-    //    const { toggleIsDragging } = this.props;
-    //    if (onTransitionEnd) {
-    //        setTimeout(() => {
-    //            onTransitionEnd({
-    //                propertyName: 'transform',
-    //            });
-    //        }, 330);
-    //    } else {
-    //        toggleIsDragging(false);
-    //    }
-    //}
+    onTouchEnd(onTransitionEnd) {
+	const { toggleIsDragging } = this.props;
+	if (onTransitionEnd) {
+	    setTimeout(() => {
+		onTransitionEnd({
+		    propertyName: 'transform',
+		});
+	    }, 3330);
+	} else {
+	    toggleIsDragging(false);
+	}
+    }
 
 
 
@@ -493,6 +493,13 @@ class Projects extends Component { // define the component
                         <Spinner ready={this.state.initialRenderingDone} />
 
                             <Droppable droppableId={"prjlst"} isCombineEnabled={this.state.combinable}
+				onTouchEnd={(provided) => {
+				    console.log("touch ending!")
+				    this.onTouchEnd(
+				    provided.draggableProps.onTransitionEnd
+				);
+				}}
+				
 				//renderClone={(provided, snapshot, rubric) => (
 				//    <div>
 				//        {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
@@ -519,7 +526,15 @@ class Projects extends Component { // define the component
 						isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
                                                 draggableId={item.id} key={item.id} index={i}
                                             >
-                                                {(provided, snapshot) => (
+						{(provided, snapshot) => {
+						    if (typeof provided.draggableProps.onTransitionEnd === 'function') {
+							queueMicrotask(() =>
+							    provided.draggableProps.onTransitionEnd?.({
+								propertyName: 'transform',
+							    })
+							);
+						    }
+						    return (
 						    <div>
                                                     <div
                                                         {...provided.draggableProps}
@@ -528,8 +543,8 @@ class Projects extends Component { // define the component
                                                         key={item.id}
 							style={
 							    //(style, snapshot) => {
-							    provided.draggableProps.style
-							    //{}
+							    //provided.draggableProps.style
+							    {}
 							    ////return ((style, snapshot.isDragging)? {} : {})
 							    //return {}
 							    //}
@@ -545,7 +560,7 @@ class Projects extends Component { // define the component
                                                     </div>
 						    {console.log(provided.draggableProps.style)}
 						    </div>
-                                                )}
+						    )}}
                                             </Draggable>
                                         )
                                         ) : "" }
