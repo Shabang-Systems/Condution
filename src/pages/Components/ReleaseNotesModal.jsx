@@ -30,7 +30,7 @@ function ReleaseNotesModal(props) {
         Storage.get({key: "condution_release"}).then((res) => {
             if (res.value!=="oneonezero" && props.authType!=="workspace") {
                 setIsShown(true);
-                //Storage.set({key: "condution_release", value: "oneonezero"});
+                Storage.set({key: "condution_release", value: "oneonezero"});
             }
         });
     }, []);
