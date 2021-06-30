@@ -3,7 +3,7 @@ import { IonContent, IonModal, IonPage, IonSplitPane, IonMenu, IonText, IonIcon,
 import React, { Component } from 'react';
 import './Projects.css';
 import './Pages.css';
-import {Spring, animated} from 'react-spring'
+import {Spring, animated} from 'react-spring/renderprops'
 
 import ReactTooltip from 'react-tooltip';
 
