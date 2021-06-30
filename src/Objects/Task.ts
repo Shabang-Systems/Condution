@@ -77,14 +77,16 @@ class Task {
                 Task.cache.set(identifier, null);
                 res(null);
             }
+            else {
 
-            tsk.data = taskData;
-            tsk._ready = true;
+                tsk.data = taskData;
+                tsk._ready = true;
 
-            Task.cache.set(identifier, tsk);
-            await tsk.calculateTreeParams();
+                Task.cache.set(identifier, tsk);
+                await tsk.calculateTreeParams();
 
-            res(tsk);
+                res(tsk);
+            }
         });
 
         Task.loadBuffer.set(identifier, loadTask); 

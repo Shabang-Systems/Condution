@@ -73,16 +73,17 @@ class Project {
             if (!projectData || projectData == undefined) {
                 Project.cache.set(identifier, null);
                 res(null); return
+            } else {
+
+                pj.data = projectData;
+                pj._ready = true;
+
+                Project.cache.set(identifier, pj);
+
+                await pj.calculateTreeParams();
+
+                res(pj);
             }
-
-            pj.data = projectData;
-            pj._ready = true;
-
-            Project.cache.set(identifier, pj);
-
-            await pj.calculateTreeParams();
-
-            res(pj);
         });
 
         Project.loadBuffer.set(identifier, loadProject); 
@@ -659,7 +660,9 @@ class Project {
             // Get weights by DFS, while flushing the availibilty of children
             let weights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
                 let isTop:boolean = false;
-
+                if (!i) {
+                    return 0;
+                }
                 if (!i.isComplete && !hasSeenTop) {
                     isTop = true;
                     hasSeenTop = true;
@@ -674,6 +677,9 @@ class Project {
 
             // Get uncompleted weights by DFS
             let uncompletedWeights:number[] = await Promise.all(children.map(async (i):Promise<number> => {
+                if (!i) {
+                    return 0;
+                }
                 // Return their weight
                 if (i.databaseBadge==="tasks" && i.isComplete)
                     return 0;
