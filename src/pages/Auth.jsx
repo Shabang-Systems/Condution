@@ -138,7 +138,7 @@ function Auth(props) {
 
                                                     props.dispatch({service: "json", operation: "login"})
                                                 }}>💾  on your device</div>
-                                                <div className="auth-click-button" onClick={async ()=> {
+                                                {/*<div className="auth-click-button" onClick={async ()=> {
                                                     try {
                                                         await (await fetch(`http://localhost:18230/meta`)).json();
                                                         props.cm.useProvider("portjson");
@@ -148,7 +148,7 @@ function Auth(props) {
                                                     } catch {
                                                         window.location.href = "https://docs.condution.com/developer/selfhosting.html";
                                                     }
-                                                }}>📦 self hosted (beta)</div>
+                                                }}>📦 self hosted (beta)</div>*/}
 
                                             </>
                                         );
