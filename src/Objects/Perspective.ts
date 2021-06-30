@@ -561,6 +561,9 @@ class Perspective {
             case AvailabilityTypes.FLAGGED:
                 additionalFilter = ((i:Task) => (i.isFlagged === true && !i.isComplete));
                 break;
+            case undefined:
+                additionalFilter = ((i:Task) => !i.isComplete);
+                break;
         }
         let baseTasks:Task[] = [];
         try {
