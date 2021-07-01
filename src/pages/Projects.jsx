@@ -132,7 +132,7 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
-	console.log("ending drag")
+	//console.log("ending drag")
 	this.setState({combItem: "notanid"})
 
 	// BAD DROPS
@@ -224,7 +224,7 @@ class Projects extends Component { // define the component
 
 
     onDragUpdate = update => {
-	console.log(this.state.expandedChild.expanded)
+	//console.log(this.state.expandedChild.expanded)
 	if (update.combine) {
 	    if (this.state.combHover) { this.setState({combHover: false}); return }
 	    let from = this.state.itemList[update.source.index]
