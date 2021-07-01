@@ -499,21 +499,21 @@ class Projects extends Component { // define the component
 				    provided.draggableProps.onTransitionEnd
 				);
 				}}
-				//renderClone={
-				//    (window.screen.width >= 992)? (
-				//    (provided, snapshot, rubric) => (
-				//    <div>
-				//        {(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
-				//                this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
-				//                :
-				//                this.renderProject(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
-				//        }
-				//    </div>
+				renderClone={
+				    (window.screen.width >= 992)? (
+				    (provided, snapshot, rubric) => (
+				    <div>
+					{(this.state.itemList[rubric.source.index].databaseBadge == "tasks")? 
+						this.renderTask(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
+						:
+						this.renderProject(this.state.itemList[rubric.source.index], rubric.source.index, provided, snapshot)
+					}
+				    </div>
 
 
-				//    )) : false}
+				    )) : false}
                             >
-                                {(provided, snapshot) => ( 
+                                {(provided, snapshot) => (
                                     <div
                                         ref = {provided.innerRef}
                                         {...provided.droppableProps}
@@ -522,7 +522,7 @@ class Projects extends Component { // define the component
                                     >
 
                                         {this.state.itemList? this.state.itemList.map((item, i) =>  (
-                                            <Draggable 
+                                            <Draggable
                                                 disableInteractiveElementBlocking={(item.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
 						isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
                                                 draggableId={item.id} key={item.id} index={i}
@@ -545,8 +545,9 @@ class Projects extends Component { // define the component
 							style={
 							    //(style, snapshot) => {
 							    //provided.draggableProps.style
-							    (window.screen.width >= 992)? (
-								(snapshot.isDragging)? {transform: "translate(-270px, -200px)"} : {}) : {}
+							    //(window.screen.width >= 992)? (
+							    //    (snapshot.isDragging)? {transform: "translate(-270px, -170px)"} : {}) : {}
+							    {}
 							    //return ((style, snapshot.isDragging)? {} : {})
 							    //return {}
 							    //}
