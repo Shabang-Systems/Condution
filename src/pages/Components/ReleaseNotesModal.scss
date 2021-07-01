@@ -34,6 +34,7 @@ ion-modal.auto-height {
 
 .condution-callout {
     display: inline-block;
+    margin-right: 10px;
 }
 
 .condution-name {
@@ -53,11 +54,11 @@ ion-modal.auto-height {
     color: var(--content-normal);
     display: inline-block;
     font-weight: 600;
-    padding: 8px;
+    padding: 4px;
     border-radius: 5px;
-    margin: 0 10px;
-    transform: translateY(-2px);
-
+    transform: translateY(-4px);
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .header {
