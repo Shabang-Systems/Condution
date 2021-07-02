@@ -251,7 +251,7 @@ class Upcoming extends Component { // define the component
 					onDragEnd={this.onDragEnd}
 				    >
 					<Droppable droppableId={"upcm"}
-					    renderClone={(window.screen.width >= 992)? (provided, snapshot, rubric) => {
+					    renderClone={(window.screen.width >= 992)? ((provided, snapshot, rubric) => {
 						return (<div 
 						    //style={{background: "indigo", height: 30, width: 200}}
 						>
@@ -259,7 +259,7 @@ class Upcoming extends Component { // define the component
 							this.renderTask(this.state.inbox[rubric.source.index], rubric.source.index, provided, snapshot)
 						    }
 						</div>
-                        )}:false}
+                        )}):false}
 					>
 				{(provided, snapshot) => ( 
 				    <div
@@ -274,19 +274,27 @@ class Upcoming extends Component { // define the component
 							    disableInteractiveElementBlocking={(t.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
 							    isDragDisabled={(t.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
 							>
-						{(provided, snapshot) => (
+						{(provided, snapshot) => {
+                            if (typeof provided.draggableProps.onTransitionEnd === 'function') {
+							queueMicrotask(() =>
+							    provided.draggableProps.onTransitionEnd?.({
+								propertyName: 'transform',
+							    })
+							)
+                                }
+                                return (
 						    <div
 							{...provided.draggableProps}
 							{...provided.dragHandleProps}
 							ref={provided.innerRef}
 							key={t.id}
-							style={(snapshot.isDragging)?  { } : {}}
+							style={{}}
 						    >
 
 							{ this.renderTask(t, i, provided, snapshot) }
 
-						    </div>
-						)}
+						    </div>)
+                            }}
 							</Draggable>
 						))}
 					    {provided.placeholder}
