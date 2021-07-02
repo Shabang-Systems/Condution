@@ -251,15 +251,15 @@ class Upcoming extends Component { // define the component
 					onDragEnd={this.onDragEnd}
 				    >
 					<Droppable droppableId={"upcm"}
-					    renderClone={(provided, snapshot, rubric) => (
-						<div 
+					    renderClone={(window.screen.width >= 992)? (provided, snapshot, rubric) => {
+						return (<div 
 						    //style={{background: "indigo", height: 30, width: 200}}
 						>
 						    {
 							this.renderTask(this.state.inbox[rubric.source.index], rubric.source.index, provided, snapshot)
 						    }
 						</div>
-					    )}
+                        )}:false}
 					>
 				{(provided, snapshot) => ( 
 				    <div
