@@ -42,3 +42,28 @@ platform :ios do
     upload_to_testflight
   end
 end
+
+platform :android do
+  desc "Push a new beta build to Google Play Store"
+  lane :build do
+    store_password = ENV["ANDROID_STORE_PASSWORD"]
+    key_password = ENV["ANDROID_KEY_PASSWORD"]
+    gradle(task: "clean", project_dir: 'android')
+
+    versionCode = File.read("android_versioncode").to_i
+    versionCode = versionCode +1
+
+    f = File.new("android_versioncode", "w")
+    f.write(versionCode)
+    f.close
+
+    gradle(task: 'assemble', build_type: 'Release', project_dir: 'android', properties: {
+      "android.injected.signing.store.file" => "upload.jks",
+      "android.injected.signing.store.password" => store_password,
+      "android.injected.signing.key.alias" => "upload",
+      "android.injected.signing.key.password" => key_password,
+      'versionCode' => versionCode,
+    })
+    upload_to_play_store(track: 'internal', json_key: 'playstore_creds.json', skip_upload_apk: true, version_code: versionCode)
+  end
+end
