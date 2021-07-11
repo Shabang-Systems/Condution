@@ -48,6 +48,7 @@ platform :android do
   lane :build do
     store_password = ENV["ANDROID_STORE_PASSWORD"]
     key_password = ENV["ANDROID_KEY_PASSWORD"]
+    json_key = ENV["JSON_KEY_DATA"]
     gradle(task: "clean", project_dir: 'android')
 
     versionCode = File.read("android/versionCode").to_i
@@ -64,6 +65,6 @@ platform :android do
       "android.injected.signing.key.password" => key_password,
       'versionCode' => versionCode,
     })
-    upload_to_play_store(track: 'Alpha', json_key: 'playstore_creds.json', skip_upload_apk: true, version_code: versionCode)
+    upload_to_play_store(track: 'Alpha', json_key_data: json_key, skip_upload_apk: true, version_code: versionCode)
   end
 end

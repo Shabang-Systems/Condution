@@ -9,4 +9,3 @@ gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" --output 
 
 gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" --output upload.jks .secrets/upload.jks.gpg
 
-gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" --output playstore_creds.json .secrets/playstore_creds.json.gpg

@@ -39,7 +39,7 @@ jobs:
             name: built_web_assets
             path: build
 
-    build_and_deploy_ios:
+    build_and_deploy_mobile:
         environment: ios-access
         runs-on: macOS-latest
         needs: build_web_assets
