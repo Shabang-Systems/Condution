@@ -64,6 +64,6 @@ platform :android do
       "android.injected.signing.key.password" => key_password,
       'versionCode' => versionCode,
     })
-    upload_to_play_store(track: 'internal', json_key: 'playstore_creds.json', skip_upload_apk: true, version_code: versionCode)
+    upload_to_play_store(track: 'Alpha', json_key: 'playstore_creds.json', skip_upload_apk: true, version_code: versionCode)
   end
 end
