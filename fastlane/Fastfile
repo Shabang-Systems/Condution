@@ -50,10 +50,10 @@ platform :android do
     key_password = ENV["ANDROID_KEY_PASSWORD"]
     gradle(task: "clean", project_dir: 'android')
 
-    versionCode = File.read("android_versioncode").to_i
+    versionCode = File.read("android/versionCode").to_i
     versionCode = versionCode +1
 
-    f = File.new("android_versioncode", "w")
+    f = File.new("android/versionCode", "w")
     f.write(versionCode)
     f.close
 
