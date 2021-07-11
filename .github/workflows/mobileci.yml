@@ -92,8 +92,10 @@ jobs:
               path: build
         - name: Sync mobile
           run: CI=false npx cap sync
+        - name: Build and publish Android to Play
+          run: fastlane android build
         - name: Build and publish iOS to Testflight
-          run: fastlane build
+          run: fastlane ios build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
