@@ -53,6 +53,8 @@ jobs:
             FASTLANE_KEYCHAIN_PASSWORD: ${{ secrets.FASTLANE_KEYCHAIN_PASSWORD }}
             MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
             SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+            ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+            ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
         steps:
         - name: Check out app
