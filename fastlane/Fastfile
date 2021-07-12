@@ -50,7 +50,9 @@ platform :android do
     key_password = ENV["ANDROID_KEY_PASSWORD"]
     json_key = ENV["JSON_KEY_DATA"]
 
-    android_set_version_code(android_get_version_code()+1)
+    android_set_version_code(
+        gradle_file: "android/app/build.gradle"
+    )
 
     gradle(task: "clean", project_dir: 'android')
     gradle(task: 'assemble', build_type: 'Release', project_dir: 'android', properties: {
