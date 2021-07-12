@@ -153,6 +153,8 @@ jobs:
             export LANG=en_US.UTF-8
         - name: Install Fastlane
           run: sudo bundle install
+        - name: Install Fastlane's Versiony Bumpy Plugin
+          run: sudo bundle exec fastlane add_plugin versioning_android
         - name: Install Android SDK
           run: sudo apt install android-sdk
         - name: Make build directory
