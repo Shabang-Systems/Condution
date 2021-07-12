@@ -151,7 +151,7 @@ jobs:
             export LANG=en_US.UTF-8
         - name: Install Fastlane
           run: 
-            sudo gem install fastlane
+            bundle install
         - name: Install Android SDK
           run:
             sudo apt install android-sdk
@@ -165,7 +165,7 @@ jobs:
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish Android to Play
-          run: sudo fastlane android build
+          run: bundle exec fastlane android build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
