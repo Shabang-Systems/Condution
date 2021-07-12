@@ -145,6 +145,8 @@ jobs:
           run: yarn add @capacitor/core
         - name: Install Ruby
           run: sudo apt install ruby ruby-dev
+        - name: Install Bundle
+          run: gem install bundler
         - name: Set Locale
           run: |
             export LC_ALL=en_US.UTF-8
