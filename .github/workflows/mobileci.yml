@@ -165,7 +165,7 @@ jobs:
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish Android to Play
-          run: fastlane android build
+          run: sudo fastlane android build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
