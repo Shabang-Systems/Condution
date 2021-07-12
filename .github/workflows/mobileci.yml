@@ -117,6 +117,7 @@ jobs:
             SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
             ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
             ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+            JSON_KEY_DATA: ${{ secrets.JSON_KEY_DATA }}
 
         steps:
         - name: Check out app
@@ -152,9 +153,9 @@ jobs:
             export LC_ALL=en_US.UTF-8
             export LANG=en_US.UTF-8
         - name: Install Fastlane
-          run: sudo bundle install
+          run: bundle install
         - name: Install Fastlane's Versiony Bumpy Plugin
-          run: sudo bundle exec fastlane add_plugin versioning_android
+          run: bundle exec fastlane add_plugin versioning_android
         - name: Install Android SDK
           run: sudo apt install android-sdk
         - name: Make build directory
@@ -167,7 +168,7 @@ jobs:
         - name: Sync mobile
           run: CI=false npx cap sync
         - name: Build and publish Android to Play
-          run: sudo bundle exec fastlane android build
+          run: bundle exec fastlane android build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
