@@ -39,7 +39,7 @@ jobs:
             name: built_web_assets
             path: build
 
-    build_and_deploy_mobile:
+    build_and_deploy_ios:
         environment: ios-access
         runs-on: macOS-latest
         needs: build_web_assets
@@ -92,10 +92,80 @@ jobs:
               path: build
         - name: Sync mobile
           run: CI=false npx cap sync
-        - name: Build and publish Android to Play
-          run: fastlane android build
         - name: Build and publish iOS to Testflight
           run: fastlane ios build
+        - name: Commit bumped build code
+          run: |
+              git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+              git pull github ${GITHUB_REF} --ff-only
+              git commit -a -m "[ci skip] [CI] Bump iOS build code"
+              git push -f github HEAD:${GITHUB_REF}
+
+    build_and_deploy_android:
+        environment: ios-access
+        runs-on: ubuntu-latest
+        needs: build_web_assets
+              
+        env:
+            FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+            FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+            FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+            FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+            FASTLANE_KEYCHAIN_NAME: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
+            FASTLANE_KEYCHAIN_PASSWORD: ${{ secrets.FASTLANE_KEYCHAIN_PASSWORD }}
+            MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+            SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+            ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+            ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+        steps:
+        - name: Check out app
+          uses: actions/checkout@v2
+          with:
+              token: ${{ secrets.ALL_POWERFUL_TOKEN }}
+        - name: Update submodules
+          run: git submodule init; git submodule update
+        - name: Configure CI Git User
+          run: |
+            git config --global user.name 'shabangbackend'
+            git config --global user.email 'backend@shabang.cf'
+        - name: Setup Node.js 14.x
+          uses: actions/setup-node@v1
+          with:
+            node-version: 14.x
+        - name: Source config
+          run: source config.sh
+        - name: Decrypt secrets
+          run: ./decrypt.sh
+        - name: Chmoding secret
+          run: chmod 400 id_rsa
+        - name: Install Ionic Tools
+          run: yarn global add @ionic/cli @capacitor/cli
+        - name: Install Capacitor
+          run: yarn add @capacitor/core
+        - name: Install Ruby
+          run: sudo apt install ruby ruby-dev
+        - name: Set Locale
+          run: |
+            export LC_ALL=en_US.UTF-8
+            export LANG=en_US.UTF-8
+        - name: Install Fastlane
+          run: 
+            sudo gem install fastlane
+        - name: Install Android SDK
+          run:
+            sudo apt install android-sdk
+        - name: Make build directory
+          run: mkdir build
+        - name: Download built web assets
+          uses: actions/download-artifact@v2
+          with:
+              name: built_web_assets
+              path: build
+        - name: Sync mobile
+          run: CI=false npx cap sync
+        - name: Build and publish Android to Play
+          run: fastlane android build
         - name: Commit bumped build code
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
