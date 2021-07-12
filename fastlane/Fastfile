@@ -62,6 +62,6 @@ platform :android do
       "android.injected.signing.key.password" => key_password,
       "versionCode" => android_get_version_code(gradle_file: "android/app/build.gradle"),
     })
-    upload_to_play_store(track: 'internal', json_key_data: json_key, skip_upload_apk: true, version_code: android_get_version_code(gradle_file: "android/app/build.gradle"))
+    upload_to_play_store(track: 'internal', json_key_data: json_key, skip_upload_aab: true, version_code: android_get_version_code(gradle_file: "android/app/build.gradle"))
   end
 end
