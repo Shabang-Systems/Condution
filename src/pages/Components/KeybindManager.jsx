@@ -39,13 +39,13 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
-    ["mod+enter", ()=>{this.focusElement(this.props.abtib)}], // focus the FAB
+	["mod+enter", ()=>{this.focusElement(this.props.abtib)}], // focus the FAB
     ]
 
     globalBindings = [
-    ["mod+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
+	["mod+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
     ]
-    
+
     //TODO: this doesnt work with clicking or like anything else but eh
 
     sidebar_switcher(that, num){
@@ -149,9 +149,12 @@ class Keybinds extends Component {
 		items={[this.props.perspectives]}
 		paginate={this.props.paginate}
 		updateIdx={this.setSidebarIndex}
-		engine={this.props.engine} 
-		uid={this.props.uid} 
-		gruntman={this.props.gruntman} 
+		localizations={this.props.localizations}
+		cm={this.props.cm}
+
+		//engine={this.props.engine} 
+	    //    uid={this.props.uid} 
+	    //    gruntman={this.props.gruntman} 
 
 
 	    /> 

@@ -4,9 +4,13 @@ import React, { Component } from 'react';
 import './TagEditor.css';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
-import Select from 'react-select'
+import Select from 'react-select';
+import { TagsPaneWidget } from "../../backend/src/Widget";
+import Tag from "../../backend/src/Objects/Tag";
+
 
 import BlkArt from './BlkArt';
+import { isThisTypeNode } from 'typescript';
 
 /*
  * Although I do not agree
@@ -31,18 +35,7 @@ import BlkArt from './BlkArt';
  * */
 
 const autoBind = require('auto-bind/react');
-/*
-class TagEditor extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
-    }
 
-    render() {
-        return null
-    }
-}
-*/
 class TagEditor extends Component {
     constructor(props) {
         super(props)
@@ -50,11 +43,12 @@ class TagEditor extends Component {
             tagList: [],
             settingState: -1
         }
+        this.tagsPaneWidget = new TagsPaneWidget(this.props.cm);
     }
-    // TODO make not freak out if there aren't any tags
     // TODO make not bad and actually set tag state
     async setTagState() {
-        this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
+        //this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
+        this.state.tagList = await this.tagsPaneWidget.execute();
     }
    // TODO BADDD 
     componentDidMount() {
@@ -62,16 +56,10 @@ class TagEditor extends Component {
     }
     
     async newTagClicked() {
-        let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
+        let newTag = await Tag.create(this.props.cm, this.props.localizations.new_tag_button);
+        //let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
         let temp = this.state.tagList;
-        temp.push(
-            {
-                name: this.props.gruntman.localizations.new_tag_button,
-                tempname: this.props.gruntman.localizations.new_tag_button,
-                weight: 1,
-                id: tagid
-            }
-        )
+        temp.push(newTag);
         this.setState({tagList: temp});
     }
 
@@ -80,22 +68,20 @@ class TagEditor extends Component {
         this.setState({settingState: i});
     }
 
+    tagWeightChanged(e) {
+        let index = this.state.settingState;
+        e.persist();
+        let temp = this.state.tagList;
+        temp[index].weight = Number(e.target.value);
+        this.setState({tagList: temp});
+    }
+
     tagNameChanged(e, index) {
         e.persist();
-        this.props.gruntman.registerScheduler(() => {
-            this.state.tagList[index].name = this.state.tagList[index].tempname; 
-            let newName = this.state.tagList;
-            newName[index].name = e.target.value;
-            this.setState({tagList: newName});
-            this.props.gruntman.do(
-                "tag.update", // the scheduler actually updates the task
-                {
-                    uid: this.props.uid, 
-                    tid: this.state.tagList[index].id, 
-                    query: {name: e.target.value},
-                }
-            )}, `tag-name-${this.props.tid}-update`) // and we will schedule it as this
-
+        this.state.tagList[index].name = this.state.tagList[index].tempname; // TODO: e.target.value instead of tempname?
+        let newName = this.state.tagList;
+        newName[index].name = e.target.value;
+        this.setState({tagList: newName});
     }
 
     tagNameEdited(e, index) {
@@ -106,15 +92,14 @@ class TagEditor extends Component {
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
         e.stopPropagation();
-        if (this.state.settingState == i) {
+        if (this.state.settingState == i) 
             this.state.settingState = 0;
-        }
-        this.props.engine.db.deleteTag(this.props.uid, this.state.tagList[i].id);
+        
+        this.state.tagList[i].delete();
         let tagexclu = this.state.tagList;
-        tagexclu.splice(i,1);
+        tagexclu.splice(i, 1);
 
         this.setState({tagList: tagexclu});
-        
     }
 
     render() {
@@ -124,7 +109,7 @@ class TagEditor extends Component {
                 {/*Text Header*/}
                 <div className="TagEditor-header">
                     <span style={{display: "inline-flex", alignItems: "center"}}>
-			            <b className="bold-prefix" >Tags</b> 
+                        <b className="bold-prefix" >Edit All Tags</b> 
 			        </span>
 
                     {/*Close Button*/}
@@ -133,24 +118,22 @@ class TagEditor extends Component {
                 
                 {/*Like actual tag setting stuff*/}
                 <div className="tag-pane-container">
-                    {this.state.tagList.length>0?(
+                    {true /*TODO Fix this bad solution later I'm too lazy*/? (
                         <>
                     <div className="tag-list">
                         {this.state.tagList.map((tag, index) => {
                             return (
-                                <>
-                                    <div className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
-                                        <div className="tag-name">
-                                            {tag.name}
-                                        </div>
-                                        <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e, index)}><i className="fa fa-times x"></i></a>
+                                <div key={index} className={"tag-in-list "+((index===this.state.settingState) ? "selected":"")} onClick={() => {this.tagClicked(index)}}>
+                                    <div className="tag-name">
+                                        {tag.name}
                                     </div>
-                                </>
+                                    <a className="TagEditor-close" onClick={(e) => this.tagDeleteClicked(e, index)}><i className="fa fa-times x"></i></a>
+                                </div>
                             )
                         })}
                         <div className="new-tag-button" onClick={ () => {this.newTagClicked()}}>
                             <i class="fas fa-plus" style={{marginLeft: "2px"}}></i>
-                            <div className="new-tag-text">{this.props.gruntman.localizations.new_tag_button}</div>
+                            <div className="new-tag-text">{this.props.localizations.new_tag_button}</div>
                         </div>
                     </div>
                     <div className="tag-settings">
@@ -167,24 +150,8 @@ class TagEditor extends Component {
 
                                 <div className="tag-weight-container">
                                     <i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />
-                                    <input type="number" className="tag-weight-input" value={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight!==undefined)?(this.state.tagList[this.state.settingState].weight):1 : 1} onKeyDown={(e)=>{
-                                        let index = this.state.settingState;
-                                        e.persist();
-                                        this.props.gruntman.registerScheduler(() => {
-                                            let tl = this.state.tagList;
-                                            tl[index].weight = Number(e.target.value);
-                                            this.setState({tagList: tl});
-                                            this.props.gruntman.do(
-                                                "tag.update", // the scheduler actually updates the task
-                                                {
-                                                    uid: this.props.uid, 
-                                                    tid: this.state.tagList[index].id, 
-                                                    query: {weight: Number(e.target.value)},
-                                                }
-                                            );
-                                        }, `tagweight-${index}-update`);
-
-                                    }} onChange={(e)=>{
+                                    <input type="number" className="tag-weight-input" value={this.state.tagList[0] ? (this.state.tagList[this.state.settingState].weight!==undefined)?(this.state.tagList[this.state.settingState].weight):1 : 1} onKeyDown={(e)=> {this.tagWeightChanged(e)}} 
+                                        onChange={(e)=>{
                                         let index = this.state.settingState;
                                         let ntl = this.state.tagList;
                                         ntl[index].weight = +Number(e.target.value);
@@ -196,12 +163,11 @@ class TagEditor extends Component {
                         )}
                     </div>
                             </>
-                    ):(<BlkArt visible={this.state.tagList.length<=0} title={this.props.gruntman.localizations.blk_art_tags} subtitle={this.props.gruntman.localizations.blk_art_tags_subtitle} />)}
+                    ):(<BlkArt visible={this.state.tagList.length<=0} title={this.props.localizations.blk_art_tags} subtitle={this.props.localizations.blk_art_tags_subtitle} />)}
                 </div>
             </IonModal>
         )
     }
 }
-
 
 export default TagEditor

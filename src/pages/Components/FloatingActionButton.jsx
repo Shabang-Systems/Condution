@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import './FloatingActionButton.css';
 import * as chrono from 'chrono-node';
 import {useSpring, animated} from 'react-spring'
+import Task from '../../backend/src/Objects/Task';
+
 
 
 /*
@@ -99,15 +101,8 @@ function ABTIB(props) {
                             taskName = taskName.replace(dateInfo[0].text, "").trim();
                         }
                     }
-                    let npobj = { 
-                            uid: props.uid, // pass it the things vvv
-                            pid: "",
-                            due,
-                            defer,
-                            name: taskName
-                    };
-                    props.gruntman.do( // call a gruntman function
-                        "task.create", npobj,
+                    Task.create(
+                        props.cm, taskName, undefined, undefined, due, defer
                     ).then(()=>{
                         event.target.blur();
                     });

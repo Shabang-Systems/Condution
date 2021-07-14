@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "allowJs": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "target": "es5",
+    "rootDir":"src",
+    "outDir": "dist/",
+    "target": "es2018"
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

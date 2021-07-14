@@ -237,6 +237,7 @@
     --task-checkmark-ds: #f4721a;
     --task-checkmark-od: #d32f19;
     --task-border-delegated: #7288c4;
+    --task-border-repeat: #2bbab5;
 
     /* Task Datepicker */
     --task-datepicker-elems: grey;
@@ -262,6 +263,16 @@
     --task-tag-background: var(--special);
     --task-tag-text: var(--content-normal-alt);
     --task-tag-hover: var(--special-alt);
+    
+    /* Task Buttons */
+    --task-button-text: #434d5f;
+    --task-button-feature: #e8e8e8;
+    --task-button-selected: #e5e5e5;
+
+    /* Task Buttons */
+    --action-button-body: #696969;
+    --action-button-feature: #eaeaea;
+    --action-button-selected: #F5F4F4;
 
     /* FI */
     --first-interaction-image-text: #f4f4f4;

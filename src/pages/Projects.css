@@ -181,15 +181,9 @@
     /*width: 100%;<] [> IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
 }
 
-
-
-
-
-
-
-
-
-
-
-
+.comb-hover {
+    /*box-shadow: 0 0 0 4px blue, 2px 1px 6px 4px rgba(10, 10, 0, 0.5);*/
+    -webkit-box-shadow: inset 0px 0px 0px 2px var(--task-border-delegated);
+    box-shadow: inset 0px 0px 0px 2px var(--task-border-delegated);
+}
 

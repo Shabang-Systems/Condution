@@ -1,0 +1,23 @@
+Prueba Condution, una poderosa pero increíblemente simple aplicación de listas de tareas que ayuda en áreas de estudio, negocios y vida. Lleva Condution contigo alrededor del mundo y deja que sea tu segundo cerebro, para que puedas enfocarte en las mejores cosas de la vida. 
+
+## Tu lista de Tareas Favorita!
+Crea tareas, manéjalas en proyectos, añade etiquetas, configura fechas límites y repítelas a voluntad.
+Condution tiene todas aquellas funciones que podrías desear en una lista de tareas perfeccionadas, de forma que puedes crear y editar cualquier cosa, desde una lista de la compra hasta proyectos con cientos de tareas.
+
+
+## Fechas de Inicio y Termino!
+¡Lo oíste bien!, al contrario de otras aplicaciones allá afuera, sabemos que los tiempos son importantes para la gente. Cada tarea esta oculta hasta una hora precisa, y limitada hasta una hora definida, para que puedas manejar tus días de acuerdo con tus necesidades.
+
+
+##Proyectos Secuenciales y Paralelos!
+¡Algunas tareas no pueden hacerse si no se cumplen con otras primero! Lo entendemos.
+Las tareas bloqueadas en un proyecto secuencial pueden ocultarse de ser necesario, y mostrarse otra vez una vez listas para hacerse.
+
+## Filtros y perspectivas
+¿Filtrar tareas por etiquetas? Hecho. ¿Según los proyectos? Hecho. ¿Según fecha de entrega? Hecho.
+¿Filtrar según fecha de entrega y proyecto con etiquetas y ordenar las tareas según la fecha de aplazamiento mientras ocultas todo lo que no está disponible para hacer? ¡Lo tenemos!
+
+
+Visítanos en línea: https://condution.shabang.cf/
+
+Apóyanos: https://patreon.com/condution

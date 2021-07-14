@@ -1,0 +1,39 @@
+# A smoke test for PRs
+
+name: Smoke Test
+on:
+  pull_request:
+    branches:
+      - "*v[0-9].[0-9].[0-9]"
+      - "main"
+
+jobs:
+  build_and_smoke:
+    environment: s3-access
+    runs-on: ubuntu-latest
+          
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update submodules
+      run: git submodule init; git submodule update
+    - name: Set Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Install Ionic
+      run: yarn global add @ionic/cli
+    - name: Install dependencies
+      run: yarn
+    - name: Source config
+      run: ./config.sh
+    - name: Decrypt secret
+      run: ./decrypt.sh
+      env:
+        SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+    - name: Build app
+      run: CI=false yarn ionic:dist
+

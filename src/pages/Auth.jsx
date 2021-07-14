@@ -3,7 +3,7 @@ import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuBu
 import React, { useState, useEffect } from 'react';
 import {useSpring, animated} from 'react-spring'
 
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/auth";
 
 import './Pages.css';
@@ -13,6 +13,8 @@ import dark_preload from '../static/auth-background.jpg';
 import light_preload from '../static/auth-background-dark.jpg';
 
 import GuttedTask from './Components/GuttedTask';
+
+import { BootstrapCondution } from "../backend/src/Objects/Utils.ts";
 
 const autoBind = require('auto-bind/react');
 
@@ -42,49 +44,43 @@ function Auth(props) {
             case 1:
                 switch (minorMode) {
                     case 0:
-                        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
-                            firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
-                                if (firebase.auth().currentUser.emailVerified)
-                                    props.dispatch({service: "firebase", operation: "login"});
-                                else {
-                                    firebase.auth().currentUser.sendEmailVerification();
-                                    setRegularMessage(props.localizations.auth_email_unverified_message);
-                                }
-                            }).catch(function(error) {
-                                // Handle Errors here.
-                                const errorMessage = error.message;
-                                setRegularMessage(errorMessage);
-                            });
+                        props.cm.auth.authenticate({requestType:"email_pass", payload: { email, password }}).then((res) => {
+                            if (res.actionSuccess)
+                                props.dispatch({service: "firebase", operation: "login"});
+                            else if (res.payload.code === "email_verification_needed")
+                                setRegularMessage(props.localizations.auth_email_unverified_message);
+                            else
+                                setRegularMessage(res.payload.msg);
                         });
                         break;
                     case 1:
-                        let problem = false
-                        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-                            const errorMessage = error.message;
-                            setSpecialMessage(errorMessage);
-                            problem = true;
-                        }).then(function() {
-                            if (!problem) {
-                                firebase.auth().currentUser.sendEmailVerification();
-                                firebase.auth().currentUser.updateProfile({displayName: name});
-                                props.engine.use("firebase", props.gruntman.requestRefresh);
-                                props.engine.db.onBoard(firebase.auth().currentUser.uid, Intl.DateTimeFormat().resolvedOptions().timeZone, props.localizations.getLanguage()==="en" ? "there": "", props.localizations.onboarding_content);
-                                setMinorMode(2);
+                        props.cm.auth.createUser({payload: { email, password, displayName: name }}).then((res) => {
+                            if (res.actionSuccess) {
+                                props.cm.start().then((_) => {
+                                    BootstrapCondution(props.cm, name, props.localizations.onboarding_content);
+                                });
                                 setSpecialMessage(props.localizations.auth_verification_message);
+                                setMinorMode(2);
+                            } else {
+                                setSpecialMessage(res.payload.msg);
                             }
-                        }); break;
+                        });
+                        break;
                     case 2:
-                        firebase.auth().currentUser.reload().then(()=>{
-                            if (firebase.auth().currentUser.emailVerified)
-                                props.dispatch({service: "firebase", operation: "create"});
-                            else
-                                setSpecialMessage(props.localizations.auth_verification_check_message);
-                        }); break;
+                        props.cm.auth.refreshAuthentication().then(() => {
+                            props.cm.auth.currentUser.then((user) => {
+                                if (user.emailVerified)
+                                    props.dispatch({service: "firebase", operation: "create"});
+                                else
+                                    setSpecialMessage(props.localizations.auth_verification_check_message);
+                            });
+                        });
+                        break;
                     case 3:
                         let recProblem = false;
                         firebase.auth().sendPasswordResetEmail(email).catch(function(error) {
                             setRecoveryMessage(error.message);
-                            problem=true;
+                            recProblem=true;
                         }).then(function() {
                             if (!recProblem) {
                                 setRecoveryMessage(props.localizations.auth_recovery_check_message);
@@ -132,8 +128,27 @@ function Auth(props) {
                                     case 0:
                                         return (
                                             <>
-                                                <div className="auth-click-button" onClick={()=>setMajorMode(1)}>🌐  in the cloud</div>
-                                                <div className="auth-click-button" onClick={()=>props.dispatch({service: "json", operation: "login"})}>💾  on your device</div>
+                                                <div className="auth-click-button" onClick={()=>{
+                                                    props.cm.useProvider("firebase");
+                                                    setMajorMode(1)
+                                                }}>🌐  in the cloud</div>
+                                                <div className="auth-click-button" onClick={()=> {
+                                                    props.cm.useProvider("json");
+
+                                                    props.dispatch({service: "json", operation: "login"})
+                                                }}>💾  on your device</div>
+                                                {/*<div className="auth-click-button" onClick={async ()=> {
+                                                    try {
+                                                        await (await fetch(`http://localhost:18230/meta`)).json();
+                                                        props.cm.useProvider("portjson");
+
+                                                        props.dispatch({service: "portjson", operation: "login"})
+
+                                                    } catch {
+                                                        window.location.href = "https://docs.condution.com/developer/selfhosting.html";
+                                                    }
+                                                }}>📦 self hosted (beta)</div>*/}
+
                                             </>
                                         );
                                     case 1:
@@ -159,7 +174,7 @@ function Auth(props) {
                     </div>
                 </div>
                 <div className="auth-copyright">
-                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2020 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a href="https://www.condution.com/privacy.html">Privacy Policy</a>.</span>
+                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2021 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a href="https://www.condution.com/privacy">Privacy Policy</a>.</span>
                 </div>
             </animated.div>
             <img rel="preload" src={light_preload} style={{display: "none"}} />

@@ -1,0 +1,3 @@
+Implemented Quarterly Repeats & squashed small flies.
+
+Are you a big business doing things by quarters? Then good news for you! We now have a shortcut to repeat for 3 months at a time, so you get to... repeat by quarters! Nice. 

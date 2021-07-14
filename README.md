@@ -2,11 +2,18 @@
 
 <a href=""><img src="https://img.shields.io/badge/Maintenance%20Level-Actively%20Developed-brightgreen.svg"/> </a>
 <a href="https://github.com/Shabang-Systems/Condution/releases/"><img src="https://img.shields.io/github/package-json/v/shabang-systems/condution"/> </a>
+<a href="https://github.com/Shabang-Systems/Condution/releases/"><img src="https://img.shields.io/github/downloads/shabang-systems/condution/total"/> </a>
 <a href=""><img src="https://img.shields.io/github/license/shabang-systems/condution"/> </a>
 
-**This. Is. Condution.** A personal project management system that makes sense and will not burn your pockets out.
+<div style="display: flex; align-items: center; width: 100%">
+<a href="https://www.producthunt.com/posts/condution?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-condution" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=285358&theme=light" alt="Condution - Open-source, cross-platform task management + collaboration | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+<a href="https://play.google.com/store/apps/details?id=cf.shabang.condution" target="_blank" style="transform: translateY(-10px)"><img src="https://lh3.googleusercontent.com/qF9r3ZjtgG-qyHdmjecArtKiulz1gmwL_xl9R3_fzk6igSeoN0wYbJSKEX5d_fxJRwYZJpHbqcLB3i9atl-9dOfUl9an7U43TfZ9PtQ=s0" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: auto; height:54px" height="54" /></a>
+<a href="https://apps.apple.com/us/app/condution/id1523249900" target="_blank"><img src="https://developer.apple.com/news/images/download-on-the-app-store-badge.png" alt="Condution - Open-source, cross-platform task management + collaboration" style="width: auto; height: 54px;" height="54" /></a>
+</div>
 
 ***
+
+**This. Is. Condution.** A project management system that makes sense and will not burn your pockets out.
 
 ## Those Download Buttons?
 👉 [**Direct Download**](https://www.condution.com/#downloads) the latest version of Condution here! 👈 
@@ -27,19 +34,19 @@ Condution attempts to change this. We want to create an open-source productivity
 Condution is a powerful yet incredibly simple check-list application that supports your needs from study, to business, and to life. Bring Condution with you across the globe and let it be your second brain — so you can focus on living your best life.
 
 #### Your Favorite Task-List
-Create tasks, manage them in projects, add some tags, set due dates, and repeat them at will. Condution has the whole nine-yards of the core list-making features nailed so you could create and edit anything from grocery lists to hundred-task projects.
+Create tasks, manage them in projects, add some tags, set due dates, and repeat them at will. Condution has the whole nine-yards of the core list-making features nailed so you can create and edit anything from grocery lists to hundred-task projects.
 
 #### Filters and Perspectives
 Filter tasks by tag? Check. Filter by projects? Check. Filter by due date? Check. Filter by due date and project with tags and sort tasks based on defer date while hiding everything that's not availale? You bet.
 
 #### Collaborative Workspaces
-create and share "workspaces" by tapping on the "personal workspace" badge found on the upcoming view. These workspaces are collaborative Condution views in which everyone — regardless if they have an account — could collaborate on Condution!
+create and share "workspaces" by tapping on the "personal workspace" badge found on the upcoming view. These workspaces are collaborative Condution views in which everyone — regardless if they have an account — can collaborate on Condution!
 
 #### Tag Weights
-Tags are weighted! You could now set a tag to be more "heavy" than others (say.. High Energy with a weight of 10, Low Energy with a weight of 0.5), and these weight values will reflect across various parts of the interface (including a "loading bar" on projects) to give you an intuitive view of how "hard" something will be.
+Tags are weighted! You can now set a tag to be more "heavy" than others (say.. High Energy with a weight of 10, Low Energy with a weight of 0.5), and these weight values will reflect across various parts of the interface (including a "loading bar" on projects) to give you an intuitive view of how "hard" something will be.
 
 #### Due + Start Dates (and Times!)
-Yes, you heard it right! Unlike some of the other apps out there, we know that timing is important to people! Every task is hidden until a certain *time* and due at precisely at a *time*, so your know day could be managed right down to your needs.
+Yes, you heard it right! Unlike some of the other apps out there, we know that timing is important to people! Every task is hidden until a certain *time* and due at precisely at a *time*, so you know your day can be managed right down to your needs.
 
 #### Sequential and Parallel Projects!
 Some tasks can't really be done without others before it being done first, and we understand that. Tasks blocked in a sequential project could be hidden if needed, and shown again when ready.
@@ -91,7 +98,7 @@ We use two different Firebase projects for debug and deploy respectively. If you
 
 `secrets.json` in, you are ready to Conduct (verb: to write Condution)! Get all of the necessary project dependencies by issuing the command `yarn` in `$ROOT`. Just `yarn`.
 
-You probably also need the Ionic CLI tools, which you could install by running `npm install -g @ionic/cli`.
+You probably also need the Ionic CLI tools, which you can install by running `npm install -g @ionic/cli`.
 
 With everything installed, execute your favourite CLI command to get started!
 
@@ -112,10 +119,10 @@ We love contributions! You are welcome to contribute, just keep in mind that we 
 
 ## Thank you!
 Thank you for supporting us on this project. We want to give a special shout out to the parteons that have supported us. 
-Thanks to Greirson, cyberic, and Reidel Law Firm for their support
+Thanks to Greirson, cyberic, Martin, and Reidel Law Firm for their support!
 
 We could not be here without this community, your insightful feedback, and the support of our generous [Patrons](https://www.patreon.com/condution). Thank you for using our application, sticking with us, and supporting us along the way.
 
 ***
 
-Designed with :heart: and :green_salad: by #!/Shabang.
+Designed with :heart: and :green_salad: by #!/Shabang

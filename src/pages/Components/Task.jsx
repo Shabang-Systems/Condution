@@ -7,7 +7,8 @@ import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, Ion
 import { getPlatforms } from '@ionic/react';
 
 // Like, your heart and soul
-import React, { Component } from 'react';
+import React, { Component, findDOMNode } from 'react';
+import ReactDOM from "react-dom";
 
 // React Spring animation packages
 import { Spring, animated, Keyframes } from 'react-spring/renderprops'
@@ -22,6 +23,8 @@ import CreatableSelect from 'react-select/creatable';
 import TagsInput from './TagsInput'
 import AutosizeInput from 'react-input-autosize';
 
+import { TaskButton } from "./Clickbutton";
+
 import 'react-tagsinput/react-tagsinput.css'
 
 // Our very own repeat UI
@@ -35,6 +38,25 @@ import CalendarPopover from './CalendarPopover';
 
 // Our very own CSS
 import './Task.css';
+
+// Our very own Backend Objects
+import T from "../../backend/src/Objects/Task.ts";
+import Tag from "../../backend/src/Objects/Tag.ts";
+import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Widget";
+
+import { RepeatRule, RepeatRuleType, Hookifier }  from "../../backend/src/Objects/Utils.ts";
+import {Controlled as CodeMirror} from 'react-codemirror2'
+//import 'codemirror/theme/material.css';
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/javascript/javascript');
+require('codemirror/mode/markdown/markdown');
+require('codemirror/mode/gfm/gfm');
+require('codemirror/addon/display/placeholder');
+require('codemirror/addon/scroll/simplescrollbars');
+//require('codemirror/addon/display/fullscreen');
+require('codemirror/addon/edit/matchbrackets');
+require('codemirror/addon/edit/matchbrackets');
+require('codemirror/keymap/vim');
 
 // FNS date parcing utils
 const { parseFromTimeZone } = require('date-fns-timezone')
@@ -154,6 +176,7 @@ class Task extends Component {
         autoBind(this);
 
         this.state = { 
+            taskObj: null, // the object we are reading from
             expanded: false, // are we expanded?
             deferDate: undefined, // what's our defer date?
             dueDate: undefined, // what's our due date?
@@ -161,24 +184,32 @@ class Task extends Component {
             desc: "",  // what's our description string?
             isFlagged: false, // are we flagged?
             isFloating: false, // are we floating? or just eating jello?
-            project:"", // what's our project ID?
+            project:null, // what's our project?
             tags: [], // what are the IDs of our tags?
             decoration: "",  // are we "od" "ds" or just just good ol' ""?
             availability: true, // are we avaliable? or are we deferred or blocked (in which case it'd be false.)
             isComplete: false, // are we completed?
+            repeatRule: null, // do we have a repeatRule
             showRepeat: false, // is our repeat UI shown?
             showTagEditor: false, // is our TagEditor UI shown?
             deferPopoverShown: false, // is the defer calendar popover shown?
             duePopoverShown: false, // is the due calendar popover shown?
             startingCompleted: this.props.startingCompleted, // disable immediate onComplete animation for completed
-            possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
+            //possibleTags: this.props.datapack[0], // tags will need to be dynamically added, so
             haveBeenExpanded: (this.props.startOpen !== undefined && this.props.startOpen !== false), // did we render the edit part yet? optimization
             notificationPopoverShown: [false, null], // is our notification popover shown?
             notificationCalendarShown: false, // is the notification calendar shown?
             hasNotification: false, // do we have a notification scheudled?
             delegations: [], // task is delegated to...
             delegatedWorkspace: "", // task is delegated to workspace...
-            delegatedTaskID: "" // the ID of the shadow task
+            delegatedTaskID: "", // the ID of the shadow task
+            projectDatapackWidget: new ProjectDatapackWidget(props.cm), // the project datapack widget
+            tagDatapackWidget: new TagDatapackWidget(props.cm), // the tag datapack widget
+            projectDatapack: [], // the calculated project datapack
+            tagDatapack: [], // the calculated tag datapack
+            activelyRepeating: false, // are we actively playing the repeating animation?
+            descExpanded: false,
+            iconHovering: false,
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
@@ -190,6 +221,7 @@ class Task extends Component {
         this.deferPopover = React.createRef(); // what's my defer popover?
         this.notificationPopover = React.createRef(); // what's my notification popover?
         this.notificationCalender = React.createRef(); // what's my notification calandar?
+        this.codeMirriscription = React.createRef(); // what's my description?
     }
 
     showRepeat() {this.setState({showRepeat: true})} // util func for showing repeat
@@ -207,51 +239,43 @@ class Task extends Component {
 
     // Monster function to query task info TODO TODO #cleanmeup
     async loadTask() {
+        let task = "chickeN";
 
         // Obviously we need this, the task info
-        let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
+        if (this.props.asyncObject) {
+            this.openTask();
+            task = await this.props.asyncObject;
+        } else  {
+            task = this.props.taskObject;
+        }
+
+        let [pdp, tdp] = await Promise.all([this.state.projectDatapackWidget.execute(), this.state.tagDatapackWidget.execute()]);
 
         // Setting state to update the rest of them elements
         this.setState({
-            name: taskInfo.name, // Set name field
-            desc: taskInfo.desc, // Set task description
-            project: taskInfo.project,  // Set project ID
-            tags: taskInfo.tags, // Set tag ID array
-            isFloating: taskInfo.isFloating, // Set isFloating bool
-            isFlagged: taskInfo.isFlagged, // Set is Flagged bool
-            isComplete: taskInfo.isComplete, // Set is complete style
-            dueDate: (
-                taskInfo.due ? // If we have a due date
-                (taskInfo.isFloating ? // and if we are floating
-                    new Date(taskInfo.due.seconds*1000) : // then the due date in just... the due date
-                    parseFromTimeZone( // otherwise, we stringify the date to remove timezone info
-                        (new Date(taskInfo.due.seconds*1000)).toISOString(), 
-                        {timeZone: taskInfo.timezone} // and cast it to the right time zone
-                    )
-                ):
-                undefined 
-            ), 
-            deferDate: (
-                taskInfo.defer ? // If we have a defer date
-                (taskInfo.isFloating ?  // and if we are floating
-                    new Date(taskInfo.defer.seconds*1000) : // then the defer date is just... the defer date
-                    parseFromTimeZone( // otherwise, we stringify the date to remove timezone info
-                        (new Date(taskInfo.defer.seconds*1000)).toISOString(), 
-                        {timeZone: taskInfo.timezone} // and cast it to the right time zone
-                    )
-                ): undefined
-            ),
-            hasNotification: await this.props.gruntman.checkNotification(this.props.tid),
-            delegations: taskInfo.delegations ? taskInfo.delegations : [],
-            delegatedWorkspace: taskInfo.delegatedWorkspace ? taskInfo.delegatedWorkspace : "",
-            delegatedTaskID: taskInfo.delegatedTaskID ? taskInfo.delegatedTaskID : "",
+            taskObj: task, // set task object
+            name: task.name, // Set name field
+            desc: task.description, // Set task description
+            project: await task.async_project,  // Set project
+            tags: await Promise.all(task.async_tags), // Set tag array
+            isFloating: task.isFloating, // Set isFloating bool
+            isFlagged: task.isFlagged, // Set is Flagged bool
+            isComplete: task.isComplete, // Set is complete style
+            repeatRule:task.repeatRule, // Set the repeat rule
+            dueDate: task.due, 
+            deferDate: task.defer,
+            hasNotification: true, // TODO
+            delegations: task.delegates, // TODO
+            delegatedWorkspace: task.delegatedWorkspace, // TODO
+            delegatedTaskID: task.delegatedTaskID, // TODO,
+            projectDatapack: pdp,
+            tagDatapack: tdp,
         }, this.refreshDecorations);
-        this.initialRenderDone = true;
     }
 
     refreshDecorations() {
         let base = ""
-        if (this.state.delegatedWorkspace !== "") 
+        if (this.state.delegatedWorkspace && this.state.delegatedWorkspace !== "") 
             base = "delegated"
         if (this.state.dueDate && this.state.dueDate-(new Date()) < 0)
             this.setState({decoration: base+" od"}); // give 'em a red badge
@@ -260,27 +284,61 @@ class Task extends Component {
         else
             this.setState({decoration: base}); // give 'em an nothing badge
 
-        if (this.state.deferDate&&this.state.deferDate-(new Date()) > 0) // and this kid is trying to start early
-            this.setState({availability: false}); // tell 'em it's not avaliable
-        else if (this.state.deferDate&&this.props.availability === true) //  otherwise, if this thing's avaliable
-            this.setState({availability: true}); // set it to be so!
-        else if (!this.props.availability) // or if my props make me disabled
-            this.setState({availability: false}); // well then you gotta follow them props, no?
+        this.setState({availability: this.state.taskObj.available});
 
-        
+    }
+
+    componentWillUnmount() {
+        // TODO this seems to not work???
+        this.props.taskObject.unhook(this.loadTask);
+        this.state.tagDatapackWidget.unhook(this.loadTask);
+        this.state.projectDatapack.unhook(this.loadTask);
     }
 
     componentDidMount() {
+
         this.loadTask(); // load the task when we mount   
+        if (this.props.taskObject)
+            this.props.taskObject.hook(this.loadTask);
+        this.state.tagDatapackWidget.hook(this.loadTask);
+        this.state.projectDatapackWidget.hook(this.loadTask);
+        this.initialRenderDone = true;
+
         document.addEventListener('mousedown', this.detectOutsideClick, false); // and listen for clicks everywhere
+        document.body.onclick = function(e) {   //when the document body is clicked
+            if (window.event) {
+                e = window.event.srcElement;           //assign the element clicked to e (IE 6-8)
+            }
+            else {
+                e = e.target;                   //assign the element clicked to e
+            }
+
+            if (e.className && (e.className.indexOf('cm-link') != -1 || e.className.indexOf('cm-url') != -1)) {
+                //if the element has a class name, and that is 'someclass' then...
+                window.open(e.innerText, "_blank");
+            }
+        }
+
+        //document.addEventListener('click', 
+        //const timer = setTimeout(() => {
+        //    const element = document.querySelector("pre");
+        //    console.log("element!", element)
+        //    //}, 2000)
+        //console.log(findDOMNode("CodeMirror"))
+        //console.log(document.getElementsByClassName("cm-link"))
+
+        //element.addEventListener("click", () => {
+        //    console.log("clicked element");
+        //});
     }
 
     componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false); // remove the listener... no memory leaks plez
 
     toggleTask = () => this.setState(state => ({expanded: !state.expanded})); // util function to toggl a task
-    
+
     closeTask() {
         this.setState({expanded: false});
+	//if (this.props.setExpanded) { this.props.setExpanded(false, this.props.taskObject.id) }
     }
     //closeTask = () => this.setState({expanded: false}); // util function to close a task
 
@@ -288,7 +346,8 @@ class Task extends Component {
         if (this.state.haveBeenExpanded)
             this.setState({expanded: true});
         else 
-            this.setState({haveBeenExpanded: true}, ()=>this.setState({expanded: true}));
+            this.setState({haveBeenExpanded: true, expanded:true});
+	if (this.props.setExpanded && this.props.taskObject) { this.props.setExpanded(true, this.props.taskObject.id) }
     }// util function to open a task
 
     _explode() {
@@ -298,7 +357,6 @@ class Task extends Component {
     }
 
     detectOutsideClick(e) {
-
         if (this.me.current) // if we are mounted
             if (this.me.current.contains(e.target)) // if we are clicking me
                 return; //click inside
@@ -322,15 +380,15 @@ class Task extends Component {
         if (this.notificationCalender.current) // if our notification calendar is a thing that mounted
             if (this.notificationCalender.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
-        
+
         if (this.TagEditorRef.current) // if our repeater is a thing that mounted
             if (this.TagEditorRef.current.contains(e.target)) // and we are clicking inside that
                 return; //click inside
-        
+
         //if (this.props.envelope) // if we have a drag envelope
-            //if (this.props.envelope.current) // if we have a drag envelope
-                //if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
-                    {/*return; //click inside*/}
+        //if (this.props.envelope.current) // if we have a drag envelope
+        //if (this.props.envelope.current.contains(e.target)) // and we are clicking inside that
+        {/*return; //click inside*/}
 
         // DRAG ENVELOPES ARE SUPPOSED TO PROTECT AGAINST DRAGGING, AND ARE UNIVERSAL ACROSS ALL TASKS
         // UNCOMMENTING THIS WILL MAKE MULTIPLE TASKS OPEN AT ONCE ON UPCOMING
@@ -339,7 +397,7 @@ class Task extends Component {
             return;
 
         if (this.props.onModal)
-            if (document.getElementById("airplane-hanger").contains(e.target))
+            if (document.getElementById("airplane-hanger") && document.getElementById("airplane-hanger").contains(e.target))
                 return;
 
         if (this.state.showRepeat) // if we are showing our repeat
@@ -347,12 +405,27 @@ class Task extends Component {
 
         if (this.state.showTagEditor) // if we are showing TagEditor
             return; // click inside
+        //
+        if (e.target.className == " CodeMirror-line ") {
+            return;
+        }
 
         //otherwise,
         this.closeTask();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        //        if (this.codeMirriscription.current) {
+        //let urls = ReactDOM.findDOMNode(this.codeMirriscription.current).getElementsByClassName('cm-link') // Returns the elements
+        //for (let url of urls) {
+        //let u = url.innerHTML;
+        //if (u.match(/^((https?|ftp):\/\/|\.{0,2}\/)/)) {
+        //console.log(u);
+        //url.innerHTML = `<a href="${u}">${u}</a>`
+        //}
+        //}
+        //}
+        //console.log(this.codeMirriscription);
         // flush styles
         if (prevState.deferDate !== this.state.deferDate) // if we updated the defer date
             this.refreshDecorations();
@@ -363,14 +436,20 @@ class Task extends Component {
                 document.getElementById("abtib").style.display = "none";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(false); // disable drag
-            this.props.gruntman.lockUpdates(); // tell gruntman to chill
+            Hookifier.freeze();
+            //this.props.gruntman.lockUpdates(); // tell gruntman to chill
         }
         else if (prevState.expanded !== this.state.expanded && this.state.expanded === false) { // if we closed a task
             if (getPlatforms().includes("mobile"))
                 document.getElementById("abtib").style.display = "block";
             if (this.props.setDragEnabled) // if we are a draggable task
                 this.props.setDragEnabled(true); // enable drag
-            this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
+            if (this.props.refreshHook)
+                setTimeout(()=>this.props.refreshHook(), 300); // let the task close, then refresh
+            //this.props.gruntman.unlockUpdates(); // tell gruntman to... grunt!
+	    if (this.props.setExpanded && this.props.taskObject) { this.props.setExpanded(false, this.props.taskObject.id) }
+	    //console.log("over here man")
+            setTimeout(()=>Hookifier.unfreeze(), 500);
         }
         if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
             this.openTask(); // open task
@@ -382,7 +461,7 @@ class Task extends Component {
     render() {
 
         return (
-            <div>
+            <div ref={this.me}>
 
                 {/*animation factory to orchistrate animations*/}
 
@@ -415,7 +494,7 @@ class Task extends Component {
                                 }}
                                 className={"task "+(this.state.expanded?"expanded":"collapsed")} 
 
-                                ref={this.me} 
+
 
                                 style={{
                                     minHeight: animatedProps.taskHeight, 
@@ -427,17 +506,13 @@ class Task extends Component {
                                     display: animatedProps.taskDisplay,
                                     position: animated.taskPosition,
                                     padding: animatedProps.taskPadding,
-				}}
+                                }}
                             >
 
                                 {/* Chapter 0: Utility Components */}
 
                                 {/* Gotta get those on hover tips */}
-                                {/* And load up + hide the repeat UI, too! */}
-                                <Repeat tid={this.props.tid} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
-                                {/* As well as load up + hide the tag editor!*/}
-                                <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} uid={this.props.uid} engine={this.props.engine} gruntman={this.props.gruntman}/>
-                                
+
                                 {/* Chapter 1: Task Checkmark */}
                                 {/* Who could have thought so much code goes into a checkbox? */}
                                 <div style={{display: "inline-block", transform: "translateY(-3px)"}}>
@@ -445,32 +520,24 @@ class Task extends Component {
                                     <input 
                                         type="checkbox" 
 
-     ref={this.actualCheck}
-                                        id={"task-check-"+this.props.tid} 
+                                        ref={this.actualCheck}
+                                        id={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} 
                                         className="task-check"
-                                        defaultChecked={this.props.startingCompleted}
+                                        checked={this.state.isComplete}
                                         onChange={()=>{
-
-                                            // If we are uncompleting a task (that is, currently task is complete)
+                                            //console.log(this.state.taskObj.isComplete)//;
                                             if (this.state.isComplete) {
-                                                this.props.gruntman.lockUpdates();
-                                                // Well, first, uncomplete it
-                                                this.setState({isComplete: false})
-                                                // Update the database, registering a gruntman action while you are at it.
-                                                this.props.gruntman.do("task.update__uncomplete", { uid: this.props.uid, tid: this.props.tid}, true)
-                                                // Whatever this is
-                                                this.props.gruntman.unlockUpdates(1000)
-                                            }
-                                            // If we are completing a task (that is, currently task is incomplete)
-                                            else if (!this.state.isComplete) {
-                                                // Lock updates so that animation could finish
-                                                this.props.gruntman.lockUpdates();
-                                                // Complete it
-                                                this.setState({isComplete: true})
-                                                // Update the database, registering a gruntman action while you are at it.
-                                                this.props.gruntman.do("task.update__complete", { uid: this.props.uid, tid: this.props.tid}, true)
-                                                //TODO wait for animation to finish before state update??
-                                                this.props.gruntman.unlockUpdates(1000)
+                                                this.setState({isComplete: false}, ()=>setTimeout(()=>this.state.taskObj.uncomplete(), 800));
+
+                                            } else {
+                                                if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
+                                                    this.setState({activelyRepeating: true, isComplete:true}, async ()=> {
+                                                        setTimeout(()=>this.state.taskObj.complete(), 800)
+                                                        this.setState({activelyRepeating: false});
+                                                    });
+                                                else {
+                                                    this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
+                                                }
                                             }
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
@@ -478,34 +545,16 @@ class Task extends Component {
 
                                     {/* Oh yeah, that checkmark above you can't actually see */}
                                     {/* Here's what the user actually clicks on, the label! */}
-                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration} id={"task-pseudocheck-"+this.props.tid} htmlFor={"task-check-"+this.props.tid}>&zwnj;</label>
+                                    <label ref={this.checkbox} className={"task-pseudocheck "+this.state.decoration+((this.state.activelyRepeating)?" repeat":"")} id={"task-pseudocheck-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} htmlFor={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")}>&zwnj;</label>
                                 </div>
 
                                 {/* The animated input box */}
+                                {/*	
+                                */}
                                 <animated.input 
                                     defaultValue={this.state.name} 
-                                    onChange={
-                                        (e)=>{
-                                            // THIS. REFER TO THIS. YOU ARE HERE. STOP SEARCHING.
-                                            // :point down: is FANCYCHANGE
-
-                                            // If somebody dares to do the complicated action of task name change
-                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-
-                                            // Register a scheduler to watch for more changes
-                                            // because dang react calls onChange on every freaking change
-                                            // TODO TODO destruct all schedulers on view change
-                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                                "task.update", // the scheduler actually updates the task
-                                                {
-                                                    uid: this.props.uid, 
-                                                    tid: this.props.tid, 
-                                                    query:{name: e.target.value} // setting the name to the name
-                                                }
-                                            ), `task-name-${this.props.tid}-update`) // and we will schedule it as this
-                                        }
-                                    } 
-
+                                    onChange={(e)=>this.setState({name:e.target.value})} 
+                                    onBlur={(_)=>{if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name}}
                                     onFocus={(e)=>{ 
                                         // open the task if its not open already
                                         if(!this.state.expanded) { 
@@ -517,112 +566,102 @@ class Task extends Component {
                                     readOnly={(!this.state.expanded)} 
                                     type="text" 
                                     autoComplete="off" 
-                                    placeholder={this.props.gruntman.localizations.nt} 
+                                    placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
-				    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
-				    />
+                                    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
+                                />
 
                                 {/* Task edit. The thing that slides open on edit. */}
                                 {(() => {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
+                                            <>
+                                            {/* And load up + hide the repeat UI, too! */}
+                                            <Repeat taskObj={this.state.taskObj} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
+                                            {/* As well as load up + hide the tag editor!*/}
+                                            <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm} localizations={this.props.localizations}/>
+
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
 
                                                 {/* First, task description field */}
+                                                {/*
                                                 <textarea 
-						    tabIndex='0'
-                                                    placeholder={this.props.gruntman.localizations.desc} 
+                            tabIndex='0'
+                                                    placeholder={this.props.localizations.desc} 
                                                     className="task-desc" 
                                                     style={{marginBottom: 10}} 
                                                     defaultValue={this.state.desc}
-                                                    onChange={
-                                                        (e)=>{
-                                                            // Register a scheduler to deal with React's onChange
-                                                            // Search for the word FANCYCHANGE to read my spheal on this
-                                                            e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                            this.props.gruntman.registerScheduler(() => this.props.gruntman.do(
-                                                                "task.update", 
-                                                                {
-                                                                    uid: this.props.uid, 
-                                                                    tid: this.props.tid, 
-                                                                    query:{desc: e.target.value}
-                                                                }
-                                                            ), `task-desc-${this.props.tid}-update`)
-                                                        }
-                                                    }
+                                                    onChange={(e)=>this.setState({desc:e.target.value})} 
+                                                    onBlur={(_)=>{if (this.state.description !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc}}
                                                 >
-                                                </textarea>
+                        </textarea>
+                        */}
+                                                <CodeMirror
+                                                    ref={this.codeMirriscription}
+                                                    tabIndex='0'
+                                                    value={this.state.desc}
+
+                                                    //options={options}
+                                                    options={{
+                                                        mode: 'gfm',
+                                                        theme: `condution ${this.state.descExpanded? "expanded" : ""} ${this.state.iconHovering? "bghvr" : ""}`,
+                                                        lineNumbers: false,
+                                                        lineWrapping: true,
+                                                        placeholder: this.props.localizations.desc,
+                                                        scrollbarStyle: "null",
+                                                        //xml: true,
+                                                        highlightFormatting: true,
+                                                        spellcheck: true,
+                                                        matchBrackets: true,
+                                                        continueList: true,
+                                                        newineAndIndentContinueMarkdownList: true,
+                                                        //vimMode: true,
+
+                                                        //fullScreen: true,
+                                                    }}
+                                                    onBeforeChange={(editor, data, value) => {
+                                                        this.setState({desc: value});
+                                                        //console.log(value, editor, data)
+                                                    }}
+                                                    onBlur={(_)=>{
+                                                        if (this.state.desc !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc
+                                                    }}
+                                                    //onChange={(editor, data, value) => {
+                                                    //}}
+                                                />
+                                                <i 
+                                                    className={`fas fa-chevron-down expand-icon ${this.state.descExpanded? "rotated" : ""}`}
+                                                    onClick={() => {
+                                                        this.setState({descExpanded: !this.state.descExpanded}); 
+                                                        //setTimeout(() => {this.forceUpdate()}, 3000);
+                                                    }}
+                                                    onMouseEnter={() => { this.setState({ iconHovering: true  })}}
+                                                    onMouseLeave={() => { this.setState({ iconHovering: false })}}
+                                                    //style={{transform: `${this.state.descExpanded? "rotate(180)" : "rotate(0)"}`}}
+                                                ></i>
 
                                                 {/* Task icon set. TODO delete task */}
-                                                <div style={{display: "inline-block", marginBottom: 6, transform: "translateY(-5px)"}}>
-                                                    
-                                                {/*Deltete icon*/}
-                                                    <a data-tip={"LOCALIZE: Delete"} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
-                                                        this.closeTask();
+                                                <div style={{display: "inline-block", marginBottom: 12, marginRight: 5}}>
+                                                    {/* TagEditor icon that shows TagEditor on click*/}
+                                                    <TaskButton icon="fas fa-tag" onClick={this.showTagEditor}/>
+                                                    <div class="vl" />
 
-                                                    }}><i className="fas fa-trash" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}}></i></a>
+                                                    {/*Delete icon*/}
+                                                    <TaskButton icon="fas fa-trash" onClick={()=>{
+                                                        //this.props.engine.db.deleteTask(this.props.uid, this.props.tid);
+                                                        this.closeTask();
+                                                        this.props.taskObject.delete();
+
+                                                    }} />
 
                                                     {/* Flagged icon */}
-                                                    <a data-tip={this.props.gruntman.psp_flg} className="task-icon" style={{borderColor: this.state.isFlagged ? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        // On change, set the flagged state to the opposite of whatever it is
-                                                        // Both on the db...
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFlagged: !this.state.isFlagged}}
-                                                        )
-                                                        // And the task!
-                                                        this.setState({isFlagged: !this.state.isFlagged});
-
-                                                    }}><i className="fas fa-flag" style={{margin: 3, color: this.state.isFlagged ? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+                                                    <TaskButton icon="fas fa-flag" onClick={()=>{this.setState({isFlagged:!this.state.isFlagged}, ()=>this.state.taskObj.isFlagged = this.state.isFlagged)}} active={this.state.isFlagged} />
 
                                                     {/* Floating icon */}
-                                                    <a data-tip="LOCALIZE: Floating" className="task-icon" style={{borderColor: this.state.isFloating? "var(--task-icon-ring-highlighted)":"var(--task-icon-ring)", cursor: "pointer"}} onClick={()=>{
-                                                        // On change, set the floating state to the opposite of whatever it is
-                                                        // Both on the db... TODO flush the timezone too?
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{isFloating: !this.state.isFloating}}
-                                                        )
-                                                        // And the task!
-                                                        this.setState({isFloating: !this.state.isFloating});
-
-                                                    }}><i className="fas fa-globe-americas" style={{margin: 3, color: this.state.isFloating? "var(--task-icon-highlighted)" : "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5px)"}} ></i></a>
+                                                    <TaskButton icon="fas fa-globe-americas"  onClick={()=>{this.setState({isFloating:!this.state.isFloating}, ()=>this.state.taskObj.isFloating = this.state.isFloating)}} active={this.state.isFloating} />
 
                                                     {/* Repeat icon that, on click, shows repeat */}
-                                                    <a onClick={this.showRepeat} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-redo" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}} ></i></a>
-
-                                                    {/* Notification icon that, on click, shows notify popover */}
-                                                    <CalendarPopover  gruntman={this.props.gruntman} reference={this.notificationCalender} uid={this.props.uid} disableOnclick engine={this.props.engine} isShown={this.state.notificationCalendarShown} onDidDismiss={()=>this.setState({notificationCalendarShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
-                                                        this.props.gruntman.cancelNotification(this.props.tid).then(()=>{
-                                                            this.props.gruntman.scheduleNotification(this.props.tid, this.props.uid, this.state.name, this.state.desc, d);
-                                                            this.setState({hasNotification: true});
-                                                        });
-                                                    }}/>
-                                                    <IonPopover
-                                                        showBackdrop={false}
-                                                        isOpen={this.state.notificationPopoverShown[0]}
-                                                        cssClass='notif-popover'
-                                                        mode="md" 
-                                                        onDidDismiss={e => this.setState({notificationPopoverShown: [false, null]})}
-                                                        event={this.state.notificationPopoverShown[1]}
-                                                        ref={this.notificationPopover}
-                                                    >
-                                                        <div>
-                                                            <div className="notification-popover-item" onClick={()=>{
-                                                                this.props.gruntman.cancelNotification(this.props.tid)
-                                                                this.setState({hasNotification: false, notificationPopoverShown: [false, null]});
-                                                            }}>Cancel Notification</div>
-                                                            <div className="notification-popover-item" onClick={()=>this.setState({notificationCalendarShown: true, notificationPopoverShown:[false, null]})}>Change Notification</div>
-                                                        </div>
-                                                    </IonPopover>
-                                                    {(()=>{
-                                                        if (this.props.gruntman.notifPermissionGranted && !(getPlatforms().includes("mobileweb") || getPlatforms().includes("desktop")))
-                                                            return <a onClick={this.showNotificationPopover} className="task-icon" style={{borderColor: "var(--task-icon-ring)", cursor: "pointer"}} data-tip="LOCALIZE: Repeat"><i className="fas fa-bell" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(7px, 5.5px)"}} ></i></a>
-                                                    })()}
-
-                                                    {/* TagEditor icon that shows TagEditor on click*/}
-                                                    <a onClick={this.showTagEditor} className="task-icon" style={{borderColor: "var(--task-icon-ring)", marginRight: 20, cursor: "pointer"}} data-tip="LOCALIZE: Freaking TagEditor"><i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon-text)", fontSize: 15, transform: "translate(6.5px, 5.5px)"}}></i></a>
+                                                    <TaskButton icon="fas fa-redo"  onClick={this.showRepeat} active={this.state.taskObj && this.state.taskObj.repeatRule && this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due} />
                                                     {/*<div className="task-icon" style={{borderColor: "var(--task-checkbox-feature-alt)", marginRight: 20}}><a className="fas fa-globe-americas" style={{margin: 3, color: "var(--task-textbox)", fontSize: 13, transform: "translate(2.5px, -0.5px)"}}></a></div>*/}
                                                 </div>
 
@@ -634,10 +673,11 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginRight: 10, marginBottom: 5, marginLeft: 6}}>
                                                         {/* The. Defer. Date. */}
                                                         <i className="fas fa-play" data-tip="LOCALIZE: Defer Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
-                                                        <CalendarPopover  gruntman={this.props.gruntman} reference={this.deferPopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
-                                                            this.props.gruntman.do(
-                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                            )
+                                                        <CalendarPopover localizations={this.props.localizations} cm={this.props.cm} reference={this.deferPopover} uid={this.props.uid} isShown={this.state.deferPopoverShown} onDidDismiss={()=>this.setState({deferPopoverShown: false})} useTime initialDate={this.state.deferDate} onDateSelected={(d)=>{
+                                                            this.state.taskObj.defer = d;
+                                                            //                                                            this.props.gruntman.do(
+                                                            //"task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            //)
                                                             this.setState({deferDate: d});
 
                                                         }}/>
@@ -646,31 +686,23 @@ class Task extends Component {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
                                                                     <input 
-									tabIndex='0'
-									className={"task-datebox "+this.state.decoration}
-									readOnly={(getPlatforms().includes("mobile"))} defaultValue={value}  onChange={(e)=>{
-                                                                        // Register a scheduler to deal with React's onChange
-                                                                        // Search for the word FANCYCHANGE to read my spheal on this
-                                                                        // DATEHANDLING is here too. If you are looking for that, stop searching
+                                                                        tabIndex='0'
+                                                                        className={"task-datebox "+this.state.decoration}
+                                                                        readOnly={(getPlatforms().includes("mobile"))} defaultValue={value} onKeyPress={(e)=>{
+                                                                            let d = chrono.parseDate(e.target.value);
+                                                                            if (e.key==="Enter" && d)
+                                                                                this.setState({deferDate: d}, ()=>{this.state.taskObj.defer = d});
 
-                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                                        this.props.gruntman.registerScheduler(() => {
-                                                                            let d = chrono.parseDate(e.target.value); // NLP that date!
-                                                                            if (d) this.setState({deferDate: d}); // we we got a valid date, update the calendar UI
-                                                                            if (d) // and update the database too!
-                                                                                this.props.gruntman.do(
-                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                                )
-                                                                        }, `task-defer-${this.props.tid}-update`)
-                                                                    }} onFocus={(e) => {
-                                                                        if (getPlatforms().includes("mobile"))
-                                                                            this.setState({deferPopoverShown: true})
-                                                                        else {
-                                                                            onClick();
-                                                                            e.target.focus();
-                                                                        }
+                                                                        }} 
+                                                                        onFocus={(e) => {
+                                                                            if (getPlatforms().includes("mobile"))
+                                                                                this.setState({deferPopoverShown: true})
+                                                                            else {
+                                                                                onClick();
+                                                                                e.target.focus();
+                                                                            }
 
-                                                                    }}
+                                                                        }}
                                                                     />
                                                                 );
                                                             };
@@ -698,12 +730,7 @@ class Task extends Component {
                                                                     onChange={date => {
                                                                         // If the calendar got a new date, set it
                                                                         this.setState({deferDate: date});
-
-                                                                        // No longer needed. State updates handle decoration udpates. Kept here for decorative purposes:
-                                                                        // and hit the DB too!
-                                                                        this.props.gruntman.do(
-                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{defer: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                        )
+                                                                        this.state.taskObj.defer = date;
                                                                     }}
                                                                     showTimeInput
                                                                     dateFormat="MM/dd/yyyy h:mm aa"
@@ -717,10 +744,11 @@ class Task extends Component {
                                                     <div style={{display: "inline-block", marginBottom: 5, marginLeft: 6}}>
                                                         <i className="fas fa-stop" data-tip="LOCALIZE: Due Date" style={{transform: "translateY(-1px)", marginRight: 10, color: "var(--task-icon)", fontSize: 10}}></i>
                                                         {/* Due date popover */}
-                                                        <CalendarPopover  gruntman={this.props.gruntman} reference={this.duePopover} uid={this.props.uid} engine={this.props.engine} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
-                                                            this.props.gruntman.do(
-                                                                "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                            )
+                                                        <CalendarPopover localizations={this.props.localizations} reference={this.duePopover} uid={this.props.uid} cm={this.props.cm} isShown={this.state.duePopoverShown} onDidDismiss={()=>this.setState({duePopoverShown: false})} useTime initialDate={this.state.dueDate} onDateSelected={(d)=>{
+                                                            this.state.taskObj.due = d;
+                                                            //                                                            this.props.gruntman.do(
+                                                            //"task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
+                                                            //)
                                                             this.setState({dueDate: d});
 
                                                         }}/>
@@ -728,24 +756,16 @@ class Task extends Component {
                                                             const DateInput = ({ value, onClick }) => { 
                                                                 return (
                                                                     <input 
-									tabIndex='0'
-									className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onChange={(e)=>{
-                                                                        // Register a scheduler to deal with React's onChange
-                                                                        // Search for the word FANCYCHANGE to read my spheal on this
-                                                                        // Search for the word DATEHANDLING for what the heck the code actually does
-
-                                                                        e.persist(); //https://reactjs.org/docs/events.html#event-pooling
-                                                                        this.props.gruntman.registerScheduler(() => {
+                                                                        tabIndex='0'
+                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onKeyPress={(e)=>{
                                                                             let d = chrono.parseDate(e.target.value);
-                                                                            if (d) this.setState({dueDate: d});
-                                                                            if (d)
-                                                                                this.props.gruntman.do(
-                                                                                    "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due:d, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                                )
+                                                                            if (e.key==="Enter" && d)
+                                                                                this.setState({dueDate: d}, ()=>{this.state.taskObj.due= d});
 
-                                                                        }, `task-due-${this.props.tid}-update`)
-                                                                    }
-                                                                        } onFocus={(e) => {
+                                                                        }}
+
+
+                                                                        onFocus={(e) => {
                                                                             if (getPlatforms().includes("mobile"))
                                                                                 this.setState({duePopoverShown: true})
                                                                             else {
@@ -788,49 +808,37 @@ class Task extends Component {
                                                                         this.setState({dueDate: date});
 
                                                                         // and hit the DB too!
-                                                                        this.props.gruntman.do(
-                                                                            "task.update", { uid: this.props.uid, tid: this.props.tid, query:{due: date, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone}}
-                                                                        )
+                                                                        this.state.taskObj.due = date;
                                                                     }}
                                                                 />
                                                             )
                                                         })()}
                                                     </div>
                                                 </div>
-                                                <div className="tag-container" style={{display: this.props.engine.db.getWorkspaceMode() ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
+                                                <div className="tag-container" style={{display: this.props.cm.isInWorkspace ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
                                                     <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
                                                         let isValid = true;
                                                         list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
                                                             if (/\w+@\w+\.\w+/.test(newAccount))
-                                                                this.props.engine.db.delegateTaskToUser(this.props.uid, newAccount, this.props.tid);
+                                                                this.state.taskObj.delegateTo(newAccount);
                                                             else 
                                                                 isValid = false;
                                                         });
                                                         this.state.delegations.filter(e=>!list.includes(e)).forEach(removedAccount => {
-                                                            this.props.engine.db.revokeTaskToUser(this.props.uid, removedAccount, this.props.tid);
+                                                            this.state.taskObj.dedelegateFrom(removedAccount);
                                                         });
-                                                        if (isValid) {
-                                                            this.props.gruntman.do(
-                                                                "task.update", // the scheduler actually updates the task
-                                                                {
-                                                                    uid: this.props.uid, 
-                                                                    tid: this.props.tid, 
-                                                                    query:{delegations: list} // setting the name to the name
-                                                                }
-                                                            )
+
+                                                        if (isValid)
                                                             this.setState({delegations: list});
-                                                        }}} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.gruntman.localizations.workspace_email}} />
+                                                    }} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.localizations.workspace_email}} />
                                                 </div>
 
                                                 <div>
-                                                    {/* Task project container */}
                                                     <span className="task-project-container">
-                                                        {/* Icon */}
                                                         <i className="fas fa-list-ul" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, marginRight: 5, transform: "translateY(5px)"}}></i>
-                                                        {/* Project select */}
                                                         <Select 
-                                                            options={this.props.datapack[1]}
+                                                            options={this.state.projectDatapack}
                                                             className='task-project'
                                                             classNamePrefix='task-select'
                                                             isClearable
@@ -839,66 +847,77 @@ class Task extends Component {
                                                                 menuPortal: provided => ({ ...provided, zIndex: "99999 !important" })
                                                             }}
                                                             menuPortalTarget={document.body}
-                                                            value={this.props.datapack[1].filter(option => option.value === this.state.project)}
+                                                            value={this.state.project ? {value: this.state.project, label: this.state.project?this.state.project.name:""} : null}
                                                             onChange={(e)=>{
-                                                                {/* :point up: filter for only options with this project and set that to be the value */}
-                                                                {/* Actually update the project */}
-                                                                this.props.gruntman.do("task.update__project", { uid: this.props.uid, tid: this.props.tid, oldProject: this.state.project===""?undefined:this.state.project, project: (e?e.value:"")})
-                                                                {/* And set the state, too! */}
-                                                                this.setState({project:(e?e.value:"")});
+                                                                if (!e) {
+                                                                    this.setState({project: null}, ()=>this.state.taskObj.moveTo(null));
+                                                                    return;
+                                                                }
+
+                                                                this.setState({project: e.value}, ()=>this.state.taskObj.moveTo(e.value));
                                                             }}
                                                         />
                                                     </span>
-                                                    {/* Task tag container */}
+
+
                                                     <span className="task-tag-container">
-                                                        {/* Icon */}
                                                         <i className="fas fa-tags" style={{margin: 3, color: "var(--task-icon)", fontSize: 13, transform: "translateY(5px)"}}></i>
-                                                        {/* Tag select */}
                                                         <CreatableSelect
-                                                            options={this.props.datapack[0]}
+                                                            options={this.state.tagDatapack}
                                                             className='task-tag'
                                                             classNamePrefix='task-select'
                                                             isClearable
                                                             isMulti
                                                             styles={{ menuPortal: base => ({ ...base, zIndex: "99999 !important" }) }}
                                                             menuPortalTarget={document.body}
-                                                            value={this.props.datapack[0].filter(option => this.state.tags.includes(option.value))}
-                                                            onChange={(newValue, actionMeta) => {
-                                                                let view = this;
-                                                                let tids = newValue?newValue.map(async function (e) { // for each tag
-                                                                    if (e.__isNew__) { // if it's a new tag
-                                                                        let tagID = (await view.props.gruntman.do( // create it!
-                                                                            "tag.create",
-                                                                            {
-                                                                                uid: view.props.uid,
-                                                                                name: e.label,
-                                                                            } 
-                                                                        )).id;
+                                                            value={this.state.tagDatapack.filter(option => this.state.tags.includes(option.value))}
+                                                            onChange={async (newValue, _) => {
+                                                                let tags = await Promise.all(newValue?newValue.map(async (e) => { // for each tag
+                                                                    if (e.__isNew__) {// if it's a new tag
+                                                                        // TODO TODO
+                                                                        let newTag = await Tag.create(this.props.cm, e.label);
+                                                                        this.setState({tagDatapack: [...this.state.tagDatapack, {value: newTag, label:e.label}]});
+                                                                        return (newTag);
+                                                                    } else {
+                                                                        return e.value
+                                                                    }
+                                                                }):[]);
+                                                                this.setState({tags}, ()=>{this.state.taskObj.tags = tags});
 
-                                                                        // TODO new tags don't show up to tags pane
-                                                                        let originalTags = view.state.possibleTags; // get tags
-                                                                        originalTags.push({label: e.label, value: tagID}); // add our new tag
-                                                                        view.setState({possibleTags: originalTags}); // sax-a-boom!
-                                                                        return tagID;
-                                                                    } else
-                                                                        return e.value;
-                                                                }):[]; // find the correct tags sets, or set it to an empty set
-                                                                Promise.all(tids).then(tagIDs => {
-                                                                    this.setState({tags: tagIDs}); // set the state
-                                                                    this.props.gruntman.do(
-                                                                        "task.update", 
-                                                                        {
-                                                                            uid: this.props.uid, 
-                                                                            tid: this.props.tid, 
-                                                                            query:{tags: tagIDs} // set a taskID
-                                                                        }
-                                                                    )
-                                                                });
+
+                                                                //"tag.create",
+                                                                //{
+                                                                //uid: view.props.uid,
+                                                                //name: e.label,
+                                                                //} 
+                                                                //)).id;
+
+                                                                //// TODO new tags don't show up to tags pane
+                                                                //let originalTags = view.state.possibleTags; // get tags
+                                                                //                                                                        originalTags.push({label: e.label, value: tagID}); // add our new tag
+                                                                //view.setState({possibleTags: originalTags}); // sax-a-boom!
+                                                                //return tagID;
+                                                                //} else
+                                                                //return e.value;
+                                                                //}):[]; // find the correct tags sets, or set it to an empty set
+                                                                // TODO TODO
+                                                                //                                                                Promise.all(tids).then(tagIDs => {
+                                                                //this.setState({tags: tagIDs}); // set the state
+                                                                //this.props.gruntman.do(
+                                                                //"task.update", 
+                                                                //{
+                                                                //uid: this.props.uid, 
+                                                                //tid: this.props.tid, 
+                                                                //query:{tags: tagIDs} // set a taskID
+                                                                //}
+                                                                //)
+                                                                //});
                                                             }}
                                                         />
                                                     </span>
                                                 </div>
                                             </animated.div>
+                                            </>
                                         )
                                 })()}
                             </animated.div>

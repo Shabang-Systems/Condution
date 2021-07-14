@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
+import { RepeatRule, RepeatRuleType } from "../../backend/src/Objects/Utils.ts";
 
 /*
  * Hello human,
@@ -32,20 +33,22 @@ class Repeat extends Component {
 
         this.state = {
             name: "", // task's name
-            rule: "none", // the repeat rule
+            rule: RepeatRuleType.NONE, // the repeat rule
             advanced: false, // advanced or not
             on: undefined, // advanced repeat rules
         }
     }
 
     async loadTask() {
-        let taskInfo = await this.props.engine.db.getTaskInformation(this.props.uid, this.props.tid);
-        this.setState({
-            name: taskInfo.name, // name is name
-            rule: taskInfo.repeat ? taskInfo.repeat.rule : "none", // rule is rule, if there's a rule
-            advanced: taskInfo.repeat ? (taskInfo.repeat.on !== undefined) : false, // on is on, if there's a rule
-            on: taskInfo.repeat ? taskInfo.repeat.on : undefined, // on is on, if there's a rule
-        });
+        if (this.props.taskObj) {
+            let taskInfo = this.props.taskObj;
+            this.setState({
+                name: taskInfo.name, // name is name
+                rule: taskInfo.repeatRule ? taskInfo.repeatRule.ruleType : RepeatRuleType.NONE, // rule is rule, if there's a rule
+                advanced: taskInfo.repeatRule ? (taskInfo.repeatRule.constraints !== null) : false, // on is on, if there's a rule
+                on: taskInfo.repeatRule ? taskInfo.repeatRule.constraints : undefined, // on is on, if there's a rule
+            });
+        }
     }
 
     componentDidMount() {
@@ -65,6 +68,8 @@ class Repeat extends Component {
                           return (this.state.advanced ? "task-repeat__advanced-weekly" : "task-repeat__default");
                       case "monthly":
                           return (this.state.advanced ? "task-repeat__advanced-monthly" : "task-repeat__default");
+                      case "quarterly":
+                          return "task-repeat__default";
                       case "yearly":
                           return "task-repeat__default";
                   }
@@ -74,7 +79,7 @@ class Repeat extends Component {
                     <div className="repeat-header">
                         {/* Repeat name */}
                         <span style={{display: "flex", alignItems: "center", width: "100%"}}>
-			                <b className="bold-prefix" >{this.props.gruntman.localizations.repeat_word}</b> 
+			                <b className="bold-prefix" >{this.props.localizations.repeat_word}</b> 
 			                <div className="repeat-task-name">{this.state.name}</div>
 			            </span>
                         {/* Close button */}
@@ -85,41 +90,38 @@ class Repeat extends Component {
                             <div className="repeat-rule-selector">
                             <span>
                                 <i className="repeat-label fa fa-redo"></i>
-                                <span className="repeat-label">{this.props.gruntman.localizations.repeat_word}</span>
+                                <span className="repeat-label">{this.props.localizations.repeat_word}</span>
                             </span>
                             {/* The big select, force iOS style */}
-                            <IonSelect className="repeat-select" interface="popover" value={this.state.rule} mode="ios" onIonChange={e=>{
+                                <IonSelect className="repeat-select" interface="popover" value={this.state.rule} mode="ios" onIonChange={e=>{
                                     // Set the repeat
-                                    this.props.gruntman.do(
-                                        "task.update", 
-                                        { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: e.detail.value}}}
-                                    )
+                                    let rule = new RepeatRule(e.detail.value);
+                                    this.props.taskObj.repeatRule = rule;
 
                                     // Set the state too!
                                     this.setState({rule: e.detail.value, advanced: false, on: undefined});
- 
+
                                 }}>
-                                <IonSelectOption className="repeat-select__option" value="none">{this.props.gruntman.localizations.none}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="daily">{this.props.gruntman.localizations.repeat_every_day}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="weekly">{this.props.gruntman.localizations.repeat_every_week}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="monthly">{this.props.gruntman.localizations.repeat_every_month}</IonSelectOption>
-                                <IonSelectOption className="repeat-select__option" value="yearly">{this.props.gruntman.localizations.repeat_every_year}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="none">{this.props.localizations.none}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="daily">{this.props.localizations.repeat_every_day}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="weekly">{this.props.localizations.repeat_every_week}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="monthly">{this.props.localizations.repeat_every_month}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="quarterly">{this.props.localizations.repeat_every_quarter}</IonSelectOption>
+                                <IonSelectOption className="repeat-select__option" value="yearly">{this.props.localizations.repeat_every_year}</IonSelectOption>
                             </IonSelect>
                             </div>
                                 {
                                     
                                 <a style={{color: "var(--decorative-light-alt)", float: "right", cursor: "pointer", display: ["weekly", "monthly"].includes(this.state.rule) ? "inline" : "none" }} className={"fas " + (this.state.advanced ? "fa-caret-down":"fa-caret-up")} onClick={()=> {
                                     if (this.state.advanced) {
-                                        this.props.gruntman.do(
-                                            "task.update", 
-                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule}}}
-                                        ) // undo advanced 
+                                        let rule = new RepeatRule(this.state.rule);
+                                        if (this.props.taskObj)
+                                            this.props.taskObj.repeatRule = rule;
                                         this.setState({rule: this.state.rule, advanced: false, on: undefined}); // set the state too!
                                     } else {
-                                        this.props.gruntman.do(
-                                            "task.update", 
-                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: []}}}
-                                        ) // do advanced 
+                                        let rule = new RepeatRule(this.state.rule, []);
+                                        if (this.props.taskObj)
+                                            this.props.taskObj.repeatRule = rule;
                                         this.setState({rule: this.state.rule, advanced: true, on: []}); // set the state too!
                                     }
                                 }}></a>
@@ -135,25 +137,23 @@ class Repeat extends Component {
                                             <div className="repeat-weekgrid">
                                                 {/* DONT LOCALIZE THESE VALUES. THEY WILL CAUSE PROBLEMS. ON LOCALIZATION, MAKE THESE ARRAYS */}
                                                 {/* ["originalString", "localizedString"] <= localize in this way */}
-                                                {[["M", this.props.gruntman.localizations.repeat_datework_weekname_m], ["T", this.props.gruntman.localizations.repeat_datework_weekname_tu], ["W",  this.props.gruntman.localizations.repeat_datework_weekname_w], ["Th",  this.props.gruntman.localizations.repeat_datework_weekname_th], ["F",  this.props.gruntman.localizations.repeat_datework_weekname_f], ["S",  this.props.gruntman.localizations.repeat_datework_weekname_sa], ["Su",  this.props.gruntman.localizations.repeat_datework_weekname_su]].map(e => <a key={e} className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
+                                                {[["M", this.props.localizations.repeat_datework_weekname_m], ["T", this.props.localizations.repeat_datework_weekname_tu], ["W",  this.props.localizations.repeat_datework_weekname_w], ["Th",  this.props.localizations.repeat_datework_weekname_th], ["F",  this.props.localizations.repeat_datework_weekname_f], ["S",  this.props.localizations.repeat_datework_weekname_sa], ["Su",  this.props.localizations.repeat_datework_weekname_su]].map(e => <a key={e} className={"repeat-weekgrid-number "+ (()=>{if(this.state.on)  return (this.state.on.includes(e[0]) ? "repeat-weekgrid-number-selected":""); else return ""})()} onClick={()=>{
                                                     if (this.state.on.includes(e[0])) {
                                                         let oldOn = this.state.on;
                                                         let newOn = oldOn.filter(elem=>elem!==e[0]);
                                                         // toggle it off
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
-                                                        )
+                                                        let rule = new RepeatRule(this.state.rule, newOn);
+                                                        if (this.props.taskObj)
+                                                            this.props.taskObj.repeatRule = rule;
                                                         this.setState({on: newOn});
                                                     } else  {
                                                         let oldOn = this.state.on;
                                                         oldOn.push(e[0]);
                                                         let newOn = oldOn;
                                                         // toggle it on
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
-                                                        )
+                                                        let rule = new RepeatRule(this.state.rule, newOn);
+                                                        if (this.props.taskObj)
+                                                            this.props.taskObj.repeatRule = rule;
                                                         this.setState({on: newOn});
                                                     }
                                                 }}>{e[1]}</a>)}
@@ -167,21 +167,17 @@ class Repeat extends Component {
                                                     if (this.state.on.includes(e.toLowerCase())) {
                                                         let oldOn = this.state.on;
                                                         let newOn = oldOn.filter(elem=>elem!==e.toLowerCase());
-                                                        // toggle it off
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
-                                                        )
+                                                        let rule = new RepeatRule(this.state.rule, newOn);
+                                                        if (this.props.taskObj)
+                                                            this.props.taskObj.repeatRule = rule;
                                                         this.setState({on: newOn});
                                                     } else  {
                                                         let oldOn = this.state.on;
                                                         oldOn.push(e.toLowerCase());
                                                         let newOn = oldOn;
-                                                        // toggle it on
-                                                        this.props.gruntman.do(
-                                                            "task.update", 
-                                                            { uid: this.props.uid, tid: this.props.tid, query:{repeat: {rule: this.state.rule, on: newOn}}}
-                                                        )
+                                                        let rule = new RepeatRule(this.state.rule, newOn);
+                                                        if (this.props.taskObj)
+                                                            this.props.taskObj.repeatRule = rule;
                                                         this.setState({on: newOn});
                                                     }
                                                 }}>{e}</a>)}

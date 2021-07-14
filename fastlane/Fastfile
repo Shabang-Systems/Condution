@@ -1,0 +1,67 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+#
+# TODO compliance info
+#
+
+
+default_platform(:ios)
+
+desc "Sync Developer ID Certificates"
+lane :syncdevid do
+    fastkeychain_name = ENV["FASTLANE_KEYCHAIN_NAME"]
+    fastkeychain_password = ENV["FASTLANE_KEYCHAIN_PASSWORD"]
+    create_keychain(name: fastkeychain_name, password: fastkeychain_password, default_keychain: true, unlock: true, timeout: 3600, lock_when_sleeps: false)
+    match(type: "developer_id", readonly: is_ci, git_private_key: 'id_rsa', keychain_name: fastkeychain_name, keychain_password: fastkeychain_password, skip_provisioning_profiles: true)
+end
+
+
+platform :ios do
+  desc "Push a new beta build to Testflight"
+  lane :build do
+    package = load_json(json_path: "package.json")
+    fastkeychain_name = ENV["FASTLANE_KEYCHAIN_NAME"]
+    fastkeychain_password = ENV["FASTLANE_KEYCHAIN_PASSWORD"]
+    create_keychain(name: fastkeychain_name, password: fastkeychain_password, default_keychain: true, unlock: true, timeout: 3600, lock_when_sleeps: false)
+    match(type: "appstore", readonly: is_ci, git_private_key: 'id_rsa', keychain_name: fastkeychain_name, keychain_password: fastkeychain_password)
+    increment_version_number(version_number: package["version"], xcodeproj: "ios/App/App.xcodeproj")
+    increment_build_number(xcodeproj: "ios/App/App.xcodeproj")
+    build_app(workspace: "ios/App/App.xcworkspace", scheme: "Condution")
+    upload_to_testflight
+  end
+end
+
+platform :android do
+  desc "Push a new beta build to Google Play Store"
+  lane :build do
+    store_password = ENV["ANDROID_STORE_PASSWORD"]
+    key_password = ENV["ANDROID_KEY_PASSWORD"]
+    json_key = ENV["JSON_KEY_DATA"]
+
+    android_set_version_code(
+        gradle_file: "android/app/build.gradle"
+    )
+
+    gradle(task: "clean", project_dir: 'android')
+    gradle(task: 'assemble', build_type: 'Release', project_dir: 'android', properties: {
+      "android.injected.signing.store.file" => "upload.jks",
+      "android.injected.signing.store.password" => store_password,
+      "android.injected.signing.key.alias" => "upload",
+      "android.injected.signing.key.password" => key_password,
+      "versionCode" => android_get_version_code(gradle_file: "android/app/build.gradle"),
+    })
+    upload_to_play_store(track: 'internal', json_key_data: json_key, skip_upload_aab: true, version_code: android_get_version_code(gradle_file: "android/app/build.gradle"))
+  end
+end

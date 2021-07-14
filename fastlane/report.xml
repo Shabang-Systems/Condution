@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.00030059">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: android_set_version_code" time="0.000813186">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: clean" time="7.419486873">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: android_get_version_code" time="0.000473944">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: assembleRelease" time="3.569296621">
+        
+          <failure message="/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/actions/actions_helper.rb:67:in `execute_action'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:255:in `block in execute_action'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:229:in `chdir'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:229:in `execute_action'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:157:in `trigger_action_by_name'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/fast_file.rb:159:in `method_missing'&#10;Fastfile:58:in `block (2 levels) in parsing_binding'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/lane.rb:33:in `call'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/lane_manager.rb:47:in `cruise_lane'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/command_line_handler.rb:36:in `handle'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/commands_generator.rb:109:in `block (2 levels) in run'&#10;/var/lib/gems/2.7.0/gems/commander-4.6.0/lib/commander/command.rb:187:in `call'&#10;/var/lib/gems/2.7.0/gems/commander-4.6.0/lib/commander/command.rb:157:in `run'&#10;/var/lib/gems/2.7.0/gems/commander-4.6.0/lib/commander/runner.rb:444:in `run_active_command'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:76:in `run!'&#10;/var/lib/gems/2.7.0/gems/commander-4.6.0/lib/commander/delegates.rb:18:in `run!'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/commands_generator.rb:353:in `run'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/commands_generator.rb:42:in `start'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/fastlane/lib/fastlane/cli_tools_distributor.rb:122:in `take_off'&#10;/var/lib/gems/2.7.0/gems/fastlane-2.187.0/bin/fastlane:23:in `&lt;top (required)&gt;'&#10;/usr/local/bin/fastlane:23:in `load'&#10;/usr/local/bin/fastlane:23:in `&lt;main&gt;'&#10;&#10;Exit status of command '/projects/Condution/android/gradlew assembleRelease -p android -Pandroid.injected.signing.store.file=upload.jks -Pandroid.injected.signing.store.password='' -Pandroid.injected.signing.key.alias=upload -Pandroid.injected.signing.key.password='' -PversionCode=33' was 1 instead of 0.&#10;&#10;&gt; Configure project :app&#10;google-services.json not found, google-services plugin not applied. Push Notifications won't work&#10;WARNING:: Using flatDirs should be avoided because it doesn't support any meta-data formats.&#10;Currently detected usages:&#10;- repository flatDir used in: project ':app', project ':capacitor-cordova-android-plugins'&#10;WARNING:: Please remove usages of `jcenter()` Maven repository from your build scripts and migrate your build to other Maven repositories.&#10;This repository is deprecated and it will be shut down in the future.&#10;See http://developer.android.com/r/tools/jcenter-end-of-service for more information.&#10;Currently detected usages in: root project 'android', project ':app', project ':capacitor-android', ...&#10;File /home/behzad/.android/repositories.cfg could not be loaded.&#10;Checking the license for package Android SDK Build-Tools 30.0.2 in /home/behzad/Android/Sdk/licenses&#10;Warning: License for package Android SDK Build-Tools 30.0.2 not accepted.&#10;Checking the license for package Android SDK Platform 29 in /home/behzad/Android/Sdk/licenses&#10;Warning: License for package Android SDK Platform 29 not accepted.&#10;&#10;FAILURE: Build failed with an exception.&#10;&#10;* What went wrong:&#10;Could not determine the dependencies of task ':app:processReleaseResources'.&#10;&gt; Failed to install the following Android SDK packages as some licences have not been accepted.&#10;     build-tools;30.0.2 Android SDK Build-Tools 30.0.2&#10;     platforms;android-29 Android SDK Platform 29&#10;  To build this project, accept the SDK license agreements and install the missing components using the Android Studio SDK Manager.&#10;  Alternatively, to transfer the license agreements from one workstation to another, see http://d.android.com/r/studio-ui/export-licenses.html&#10;  &#10;  Using Android SDK: /home/behzad/Android/Sdk&#10;&#10;* Try:&#10;Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.&#10;&#10;* Get more help at https://help.gradle.org&#10;&#10;BUILD FAILED in 3s&#10;" />
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

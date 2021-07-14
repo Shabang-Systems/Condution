@@ -7,6 +7,9 @@ import { withRouter } from "react-router";
 import { IonModal, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonSearchbar, IonFooter } from '@ionic/react';
 import './QuickSwitcher.css'
 import '../Pages.css';
+import { Query } from "../../backend/src/Objects/Utils.ts";
+//import Project from "../backend/src/Objects/Project";
+import Project from "../../backend/src/Objects/Project";
 
 const autoBind = require('auto-bind/react');
 
@@ -64,10 +67,16 @@ class QuickSwitcher extends Component {
     }
 
     async getProjs() { // get our projects 
-	const subs = (await this.props.engine.db.getProjectsandTags(this.props.uid))[0][0] // hit the cache 
-	const mod = Object.entries(subs).map(([key, value]) => { // process it 
-	    return ['.' + value, 'projects', key, 'fas fa-tasks']
-	});
+	let q = new Query(this.props.cm);
+	let subs = await q.execute(Project, (i)=>!i.isComplete)
+
+	//const subs = (await this.props.engine.db.getProjectsandTags(this.props.uid))[0][0] // hit the cache 
+	//const mod = Object.entries(subs).map(([key, value]) => { // process it 
+	//    return ['.' + value, 'projects', key, 'fas fa-tasks']
+	//});
+	const mod = subs.map((i) => {
+	    return ['.' + i.name, 'projects', i.id, 'fas fa-tasks']
+	})
 	this.setState({projs: mod}) // and set our state 
     }
 
@@ -90,10 +99,10 @@ class QuickSwitcher extends Component {
 	// name, url prefix, id, icon classname 
 	this.setState({items: 
 	    [
-		[this.props.gruntman.localizations.qs_upcoming, 'upcoming', '', 'fas fa-chevron-circle-right'], // set the first item to upcoming 
+		[this.props.localizations.qs_upcoming, 'upcoming', '', 'fas fa-chevron-circle-right'], // set the first item to upcoming 
 		// (i could do + but i think thats less efficent 
-		[this.props.gruntman.localizations.qs_completed, 'completed', '', 'fas fa-check-circle'], // set the second item to completed
-		[this.props.gruntman.localizations.qs_calendar, 'calendar', '', 'fas fa-calendar-alt'], // set the third item to calendar
+		[this.props.localizations.qs_completed, 'completed', '', 'fas fa-check-circle'], // set the second item to completed
+		[this.props.localizations.qs_calendar, 'calendar', '', 'fas fa-calendar-alt'], // set the third item to calendar
 		...this.props.items[0].map(o => ['!'+o.name, 'perspectives', o.id, 'fas fa-layer-group']), // map the perspectives
 		...this.state.projs // the projects! 
 	    ],
@@ -180,6 +189,7 @@ class QuickSwitcher extends Component {
 			{this.filterItems(this.state.query).map((item, i) => {
 			    return (
 				<div 
+                    key={i}
 				    className="option-line"
 				    className= {`option-line ${(this.state.selected == i)? 'option-text-hover' : ''}`}
 				    ref={(this.state.selected == i)? this.currentlySelected : null}

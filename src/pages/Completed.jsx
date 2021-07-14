@@ -5,6 +5,7 @@ import './Completed.css';
 import './Pages.css';
 import Spinner from './Components/Spinner';
 import Task from './Components/Task';
+import { CompletedWidget } from "../backend/src/Widget";
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
 /*
@@ -33,84 +34,48 @@ class Completed extends Component {
         this.state = {
             taskList: [], // the objects we render
             tasksShown: 1, // track the number of times we have fetched more
-            taskCats: this.props.gruntman.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+            //taskCats: this.props.gruntman.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
+            taskCats: this.props.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
             rendering: true, // define whether or not the element is rendering 
-            possibleProjects:{}, // see jacks comments in upcoming 
-            possibleTags:{}, 
-            possibleProjectsRev:{}, 
-            possibleTagsRev:{}, 
-            availability: [], 
-            projectSelects:[], 
-            tagSelects: [], 
-            projectDB: {},
-	    pPandT: '',
             initialRenderingDone: false,
         };
 
         this.updatePrefix = this.random();
         autoBind(this);
+
+        this.completedWidget = new CompletedWidget(this.props.cm);
     }
 
-    componentWillUnmount() {
-        this.props.gruntman.halt();
+    async componentDidMount() {
+	this.setState({rendering: false})
+        this.refresh();
+        this.completedWidget.hook(this.refresh);
     }
 
-    async refresh() {
-        let taskArr = []; // define temp array
-        let full = await this.props.engine.db.getCompletedItems(this.props.uid); // get the tasks from the database 
+    async componentWillUnmount() {
+        if (this.completedWidget)
+            this.completedWidget.unhook(this.refresh);
+    }
 
-        let avail = await this.props.engine.db.getItemAvailability(this.props.uid) // get availability of items
-        let pPandT = await this.props.engine.db.getProjectsandTags(this.props.uid); // get projects and tags
-        // loop through the tasks, converting to objects and inserting labels between each cat
-        full.forEach((cat, i) => {
+    async refresh(){
+	let taskArr = [];
+        let i = await this.completedWidget.execute()
+	i.forEach((cat, i) => {
             taskArr.push(new TaskObject("label", this.state.taskCats[i])) // each iteration, push the next label to the temp arr
 	    // if item[0] == task, ... else, ...
             cat.forEach(item => { // this loops through each cat
-		if (item[1] == "task") {
+		if (item.databaseBadge == "tasks") {
 		    // convert each task to an object then push it to the temp arr
-		    taskArr.push(new TaskObject("task", item[0])) 
-		} else if (item[1] == "project")
+		    taskArr.push(new TaskObject("task", item)) 
+		} else if (item.databaseBadge == "projects")
 		{
-		    taskArr.push(new TaskObject("project", item[0])) 
+		    taskArr.push(new TaskObject("project", item)) 
 		}
             })
         });
 
-        let projectList = []; // define the project list
-        let tagsList = []; // define the tag list
 
-        for (let pid in pPandT[1][0]) 
-            tagsList.push({value: pid, label: pPandT[1][0][pid]});
-        let views = this;
-        let projectDB = await (async function() {
-            let pdb = [];
-            let topLevels = (await views.props.engine.db.getTopLevelProjects(views.props.uid))[0];
-            for (let key in topLevels) {
-                pdb.push(await views.props.engine.db.getProjectStructure(views.props.uid, key, true));
-            }
-            return pdb;
-        }());
-
-        let buildSelectString = function(p, level) {
-            if (!level)
-                level = ""
-            projectList.push({value: p.id, label: level+pPandT[0][0][p.id]})
-            if (p.children)
-                for (let e of p.children)
-                    if (e.type === "project")
-                        buildSelectString(e.content, level+":: ");
-        };
-        projectDB.map(proj=>buildSelectString(proj));
-
-        this.setState({pPandT: pPandT, taskList: taskArr, rendering: false, possibleProjects: pPandT[0][0], possibleTags: pPandT[1][0], possibleProjectsRev: pPandT[0][1], possibleTagsRev: pPandT[1][1], availability: avail, projectSelects: projectList, tagSelects: tagsList, projectDB, initialRenderingDone: true}); // once we finish, set the state
-
-        // also set rendering to false. 
-        // This is a hacky solution instead of creating an entirely new async function.
-    }
-
-    async componentDidMount() {
-        this.refresh(); // refresh when the component mounts
-        this.props.gruntman.registerRefresher((this.refresh).bind(this));
+        this.setState({taskList: taskArr, initialRenderingDone: true});
     }
 
     handleFetchMore() {
@@ -165,7 +130,7 @@ class Completed extends Component {
                         <div className="header-container">
                             <div style={{display: "inline-block"}}>
                                 <IonMenuToggle>
-                                    <i class="fas fa-bars" 
+                                    <i className="fas fa-bars" 
                                         style={{marginLeft: 20, color: "var(--page-header-sandwich)"}} />
                                 </IonMenuToggle> 
                                 <h1 className="page-title">
@@ -183,9 +148,12 @@ class Completed extends Component {
                         {/* Otherwise, render a fetch more.*/}
                         <div style={{overflowY: "scroll"}}>
                             <Spinner ready={this.state.initialRenderingDone} />
-                            {this.state.taskList.slice(0, 10*this.state.tasksShown).map((content, i) => (
-                                <div style={{marginLeft: 10, marginRight: 10}}>
-                                    {(content.type == "label")?  
+                            {this.state.taskList? (this.state.taskList.
+				    slice(0, 10*this.state.tasksShown).
+				    map((content, i) => (
+                        <div key={i} style={{marginLeft: 10, marginRight: 10}}>
+				    {/*console.log("something here??", this.state.taskList[4])*/}
+				    {(content.type == "label")?  
 
 					(this.state.taskList[i+1] ? 
 					    ((this.state.taskList[i+1].type == "label" || this.state.taskList.slice(0, 10*this.state.tasksShown).length == i+1) ? 
@@ -196,40 +164,37 @@ class Completed extends Component {
 						    style={{marginBottom:0}}
 						>{content.contents}</p>) 
 					    : "")
-					: (content.type == "task"? 
-					    <Task 
-						tid={content.contents} 
-						startingCompleted={true}
-						key={content.contents+"-"+this.updatePrefix} 
-						uid={this.props.uid} 
-						engine={this.props.engine} 
-						gruntman={this.props.gruntman} 
-						availability={this.state.availability[content.contents]} 
-						datapack={[this.state.tagSelects,
-							this.state.projectSelects, 
-							this.state.possibleProjects, 
-							this.state.possibleProjectsRev, 
-							this.state.possibleTags, 
-							this.state.possibleTagsRev]}
-					    />
+					    : (content.type == "task"? 
+						(<div 
+						    key={content.contents}>
+						    <Task 
+							cm={this.props.cm} 
+							localizations={this.props.localizations} 
+							taskObject={content.contents} 
+							startingCompleted={true}
+						    />
+							
+						</div>)
+
+
 					    : 
 						<a className="subproject" 
 						    //style={{opacity:props.availability[item.content.id]?"1":"0.35"}} 
 						    onClick={()=>{
-							this.props.paginate("projects", content.contents);
-							this.props.history.push(`/projects/${content.contents}`)
+							this.props.paginate("projects", content.contents.id);
+							this.props.history.push(`/projects/${content.contents.id}`)
 						    }}
-						>
+                        >
 						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
-					    {this.state.pPandT[0][0][content.contents]}</div></div></a>
+					    {content.contents.name}</div></div></a>
 					)
-				    }
+				    } 
 				</div>
-			    ))}
+				    ))) : ""}
 
 			    <div className="fetch-more" > 
 				{/* define the fetch more button */}
-				{this.state.rendering? <p className="loader" >{this.props.gruntman.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.gruntman.localizations.fetchmore}</p>}
+				{this.state.rendering? <p className="loader" >{this.props.localizations.loading}</p> : <p onClick={this.handleFetchMore}>{this.props.localizations.fetchmore}</p>}
 			    </div> 
 			    <div className="bottom-helper">&nbsp;</div>
 			</div>

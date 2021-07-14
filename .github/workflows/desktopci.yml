@@ -1,0 +1,107 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Desktop CI
+on:
+  push:
+    branches:
+      - "*v[0-9].[0-9].[0-9]"
+      - "main"
+
+jobs:
+    build_electron_web_assets:
+        runs-on: ubuntu-latest
+        env:
+            SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+
+        steps:
+        - name: Check out app
+          uses: actions/checkout@v2
+        - name: Update submodules
+          run: git submodule init; git submodule update
+        - name: Setup Node.js 14.x
+          uses: actions/setup-node@v1
+          with:
+            node-version: 14.x
+        - name: Source config
+          run: source config.sh
+        - name: Decrypt secrets
+          run: ./decrypt.sh
+        - name: Install Ionic
+          run: yarn global add @ionic/cli
+        - name: Install dependencies
+          run: yarn
+        - name: Build app
+          run: CI=false PUBLIC_URL=./ npx ionic build --prod --aot --optimizejs && cp build/index.html build/404.html
+        - name: Upload built web assets
+          uses: actions/upload-artifact@v2
+          with:
+            name: built_electron_web_assets
+            path: build
+
+    build_and_deploy_electron:
+        environment: ios-access
+        runs-on: macOS-latest
+        needs: build_electron_web_assets
+              
+        env:
+            FASTLANE_KEYCHAIN_NAME: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
+            FASTLANE_KEYCHAIN_PASSWORD: ${{ secrets.FASTLANE_KEYCHAIN_PASSWORD }}
+            MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+            SECRETS_PASSPHRASE: ${{ secrets.ENCRYPTION_KEY }}
+            GH_TOKEN: ${{ secrets.ALL_POWERFUL_TOKEN }}
+
+        steps:
+        - name: Check out app
+          uses: actions/checkout@v2
+          with:
+              token: ${{ secrets.ALL_POWERFUL_TOKEN }}
+        - name: Update submodules
+          run: git submodule init; git submodule update
+        - name: Configure CI Git User
+          run: |
+            git config --global user.name 'shabangbackend'
+            git config --global user.email 'backend@shabang.cf'
+        - name: Setup Node.js 14.x
+          uses: actions/setup-node@v1
+          with:
+            node-version: 14.x
+        - name: Source config
+          run: source config.sh
+        - name: Decrypt secrets
+          run: ./decrypt.sh
+        - name: Chmoding secret
+          run: chmod 400 id_rsa
+        - name: Setup fastlane
+          run: brew install fastlane
+        - name: Install certificates
+          run: fastlane syncdevid
+        - name: Install Electron dependencies
+          run: |
+              cd electron
+              yarn
+        - name: Make build and target directories
+          run: |
+              mkdir build
+              mkdir electron/src
+        - name: Download built electron web assets
+          uses: actions/download-artifact@v2
+          with:
+              name: built_electron_web_assets
+              path: build
+        - name: Sync electron
+          run: |
+              cp -r build/* electron/src/
+              cp src/about.html electron/src/
+        - name: Build and notarize electron app
+          run: |
+              cd electron
+              npx electron-builder -mwl
+          env: 
+              CSC_KEYCHAIN: ${{ secrets.FASTLANE_KEYCHAIN_NAME }}
+        - name: Upload built binaries
+          uses: actions/upload-artifact@v2
+          with:
+            name: built_electron_app_binaries
+            path: electron/dist
+          

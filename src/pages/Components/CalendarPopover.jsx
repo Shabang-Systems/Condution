@@ -7,7 +7,8 @@ import '../Calendar.css';
 import "react-datepicker/dist/react-datepicker.css";
 import * as chrono from 'chrono-node';
 import Select from 'react-select'
-
+import { Query } from "../../backend/src/Objects/Utils.ts";
+import T from "../../backend/src/Objects/Task.ts";
 
 /*
  * Hello human,
@@ -71,17 +72,18 @@ function CalendarPopover(props) {
         (async function() {
             let map = new Map();
             let hm = {};
-            let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
-            await Promise.all(taskList.map((async function ([id, val]){
-                let weight = await props.engine.db.getTaskWeight(props.uid, id);
-                let date = new Date(val.due.seconds*1000);
+            let q = new Query(props.cm);
+            let taskList = await q.execute(T, (tsk => (firstDayMonth <= tsk.due && tsk.due <= lastDayMonth && !tsk.isComplete)));
+            await Promise.all(taskList.map(task => {
+                let weight = task.weight;
+                let date = task.due ? task.due : new Date();
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
                 if(map.has(time))
                     map.set(time, map.get(time)+weight);
                 else
                     map.set(time, weight);
-            }).bind(this)));
+            }));
             let values = Array.from(map.values());
             if (values.length > 0) {
                 let max = values.max();
@@ -99,17 +101,17 @@ function CalendarPopover(props) {
             <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
                 <div id="calendar-wrapper-popover">
                     <div id="calendar-daterow">
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[0]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[1]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[2]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[3]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[4]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[5]}</span>
-                        <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[6]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[0]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[1]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[2]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[3]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[4]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[5]}</span>
+                        <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[6]}</span>
                     </div>
                     <div id="calendar-container">
                         {[...daysBefore,...contentDays,...daysAfter].map(i =>
-                        <span className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
+                        <span key={i.id} className={`calendar-container-item calendar-container-item-${i.type} calendar-container-item-${i.content}`} style={{
                             backgroundColor: ((heat[i.content]&&i.type === "actual") ? 
                                 `#${heat[i.content]}` :
                                 "inherit"),
@@ -184,7 +186,7 @@ function CalendarPopover(props) {
                         if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
-                    }}>{props.gruntman.localizations.clbtd}</div>
+                    }}>{props.localizations.clbtd}</div>
                         <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={()=>{
                             if (dateSelected)
                                 props.onDateSelected(dateSelected);
@@ -244,18 +246,29 @@ function CalendarUnit(props) {
         (async function() {
             let map = new Map();
             let hm = {};
-            let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
-            await Promise.all(taskList.map((async function ([id, val]){
-                let weight = await props.engine.db.getTaskWeight(props.uid, id);
-                let date = new Date(val.due.seconds*1000);
+            let q = new Query(props.cm);
+            let taskList = await q.execute(T, (tsk => (firstDayMonth <= tsk.due && tsk.due <= lastDayMonth && !tsk.isComplete)));
+            await Promise.all(taskList.map(task => {
+                let weight = task.weight;
+                let date = task.due;
                 date.setHours(0, 0, 0, 0);
                 let time = date.getDate();
                 if(map.has(time))
                     map.set(time, map.get(time)+weight);
                 else
                     map.set(time, weight);
-            }).bind(this)));
-
+            }))
+//            let taskList = await props.engine.db.selectTasksInRange(props.uid, firstDayMonth, lastDayMonth, true);
+            //await Promise.all(taskList.map((async function ([id, val]){
+                //let weight = await props.engine.db.getTaskWeight(props.uid, id);
+                //let date = new Date(val.due.seconds*1000);
+                //date.setHours(0, 0, 0, 0);
+                //let time = date.getDate();
+                //if(map.has(time))
+                    //map.set(time, map.get(time)+weight);
+                //else
+                    //map.set(time, weight);
+            //}).bind(this)));
             let values = Array.from(map.values());
             if (values.length > 0) {
                 let max = values.max();
@@ -270,13 +283,13 @@ function CalendarUnit(props) {
         <div id="calendar-page-calendar-wrapper" style={{display: "inline-block", ...props.style}}>
             <div id="calendar-wrapper-popover">
                 <div id="calendar-daterow">
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[0]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[1]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[2]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[3]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[4]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[5]}</span>
-                    <span className="calendar-daterow-item">{props.gruntman.localizations.calendar_day_abrvs[6]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[0]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[1]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[2]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[3]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[4]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[5]}</span>
+                    <span className="calendar-daterow-item">{props.localizations.calendar_day_abrvs[6]}</span>
                 </div>
                 <div id="calendar-container">
                     {[...daysBefore,...contentDays,...daysAfter].map(i =>
@@ -305,8 +318,8 @@ function CalendarUnit(props) {
                 </div>
                 <div id="calendar-infopanel">
                     <div className="calendar-infopanel-dateselected">{dateSelected.getDate()}</div>
-                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), {  weekday: 'long' })}</div>
-                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString(props.gruntman.localizations.getLanguage(), { month: 'long' })}</div>
+                    <div className="calendar-infopanel-datename">{dateSelected.toLocaleString(props.localizations.getLanguage(), {  weekday: 'long' })}</div>
+                    <div className="calendar-infopanel-month">{dateSelected.toLocaleString(props.localizations.getLanguage(), { month: 'long' })}</div>
                     <div className="calendar-infopanel-year">{dateSelected.getFullYear()}</div>
                 </div>
                 {(()=>{
@@ -355,7 +368,7 @@ function CalendarUnit(props) {
                         if (props.onDateSelected && !props.disableOnclick)
                             props.onDateSelected(new Date());
 
-                    }}>{props.gruntman.localizations.clbtd}</div>
+                    }}>{props.localizations.clbtd}</div>
                     <div className="calendar-today" style={{marginRight: 10, float: "right"}} onClick={()=>{
                         if (dateSelected)
                             props.onDateSelected(dateSelected);
