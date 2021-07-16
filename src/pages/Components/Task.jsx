@@ -557,6 +557,12 @@ class Task extends Component {
                                     defaultValue={this.state.name} 
                                     onChange={(e)=>this.setState({name:e.target.value})} 
                                     onBlur={(_)=>{if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name}}
+                                    onKeyPress={(e)=>{
+                                        // TODO why????
+                                        // Not matter. It works now @TheEnquirer, but will address later.
+                                        if (e.key = "Enter")
+                                            if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name
+                                    }}
                                     onFocus={(e)=>{ 
                                         // open the task if its not open already
                                         if(!this.state.expanded) { 
