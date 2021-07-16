@@ -1,5 +1,7 @@
 // A whole lotta imports
 
+import { Browser } from '@capacitor/browser';
+
 // Ionic components
 import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton, IonPopover } from '@ionic/react';
 
@@ -46,6 +48,7 @@ import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Wid
 
 import { RepeatRule, RepeatRuleType, Hookifier }  from "../../backend/src/Objects/Utils.ts";
 import {Controlled as CodeMirror} from 'react-codemirror2'
+
 //import 'codemirror/theme/material.css';
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
@@ -314,8 +317,7 @@ class Task extends Component {
             }
 
             if (e.className && (e.className.indexOf('cm-link') != -1 || e.className.indexOf('cm-url') != -1)) {
-                //if the element has a class name, and that is 'someclass' then...
-                window.open(e.innerText, "_blank");
+                Browser.open({ url: e.innerText });
             }
         }
 

@@ -1,6 +1,6 @@
 {
   "name": "Condution",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "main.js",
   "postinstall": {
     "postinstall": "electron-builder install-app-deps"

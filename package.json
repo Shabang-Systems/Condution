@@ -1,9 +1,10 @@
 {
   "name": "Condution",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "dependencies": {
     "@capacitor-community/electron": "^3.0.1",
     "@capacitor/android": "^3.0.2",
+    "@capacitor/browser": "^1.0.2",
     "@capacitor/core": "^3.1.1",
     "@capacitor/filesystem": "^1.0.2",
     "@capacitor/ios": "^3.0.2",
@@ -28,6 +29,7 @@
     "electron-is-dev": "^2.0.0",
     "electron-updater": "^4.3.9",
     "firebase": "^8.6.8",
+    "install": "^0.13.0",
     "ionicons": "^5.5.2",
     "jquery": "^3.5.1",
     "mousetrap": "^1.6.5",

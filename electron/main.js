@@ -1,4 +1,4 @@
-const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, systemPreferences, nativeTheme, ipcMain, Menu, shell } = require('electron');
 const { autoUpdater } = require("electron-updater");
 autoUpdater.checkForUpdatesAndNotify();
 const path = require('path');
@@ -44,7 +44,6 @@ function createWindow () {
     else
         win.loadURL(`file://${path.join(__dirname, './src/index.html')}`);
 
-    
     nativeTheme.addListener("updated", function() {
         if(nativeTheme.shouldUseDarkColors) {
             win.setBackgroundColor("#161616");
@@ -53,6 +52,15 @@ function createWindow () {
             win.setBackgroundColor("#f4f4f4");
             win.webContents.send("systheme-light", "hello")
         }
+    });
+
+    win.webContents.setWindowOpenHandler(({ url }) => {
+        // config.fileProtocol is my custom file protocol
+        if (url.startsWith("http") || url.startsWith("https")) {
+            shell.openExternal(url);
+            return { action: 'deny' };
+        }
+        return { action: 'allow' };
     });
 
     win.once('ready-to-show', function() {
@@ -71,7 +79,9 @@ function createAbout () {
         'maxHeight': 175,
         'title': "About Condution",
         'webPreferences': {
-            'nodeIntegration': true
+            'nodeIntegration': true,
+            'contextIsolation': false
+
         },
         'maximizable': false,
         //'frame': false,
@@ -197,5 +207,7 @@ const template = [
 
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
+
 app.name = 'Condution';
 app.whenReady().then(createWindow);
+
