@@ -46,6 +46,8 @@ end
 platform :android do
   desc "Push a new beta build to Google Play Store"
   lane :build do
+    package = load_json(json_path: "package.json")
+
     store_password = ENV["ANDROID_STORE_PASSWORD"]
     key_password = ENV["ANDROID_KEY_PASSWORD"]
     json_key = ENV["JSON_KEY_DATA"]
@@ -53,6 +55,7 @@ platform :android do
     android_set_version_code(
         gradle_file: "android/app/build.gradle"
     )
+    android_set_version_name(version_name: package["version"], gradle_file: "android/app/build.gradle")
 
     gradle(task: "clean", project_dir: 'android')
     gradle(task: 'assemble', build_type: 'Release', project_dir: 'android', properties: {
@@ -61,7 +64,9 @@ platform :android do
       "android.injected.signing.key.alias" => "upload",
       "android.injected.signing.key.password" => key_password,
       "versionCode" => android_get_version_code(gradle_file: "android/app/build.gradle"),
+      "versionName" => package["version"]
     })
+
     upload_to_play_store(track: 'internal', json_key_data: json_key, skip_upload_aab: true, version_code: android_get_version_code(gradle_file: "android/app/build.gradle"))
   end
 end
