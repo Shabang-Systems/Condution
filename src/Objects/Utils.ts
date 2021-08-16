@@ -822,7 +822,8 @@ async function BootstrapCondution(context:Context, username:string, payload:stri
 async function ParseABTIBIntention(context:Context, intention:string) {
     const ABTIB_PROJECT_PATTERN = /for (.+)$/;
 
-    let dateInfo = chrono.parse(intention);
+    console.log(intention)
+    let dateInfo = chrono.parse(intention, undefined, { forwardDate: true });   // some issues here: https://github.com/wanasit/chrono/issues/402
     let due = undefined;
     let defer = undefined;
     if (dateInfo.length > 0) {
