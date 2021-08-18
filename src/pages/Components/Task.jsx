@@ -316,7 +316,7 @@ class Task extends Component {
                 e = e.target;                   //assign the element clicked to e
             }
 
-            if (e.className && (e.className.indexOf('cm-link') != -1 || e.className.indexOf('cm-url') != -1)) {
+            if (e.className && e.className.indexOf && (e.className.indexOf('cm-link') != -1 || e.className.indexOf('cm-url') != -1)) {
                 Browser.open({ url: e.innerText });
             }
         }
