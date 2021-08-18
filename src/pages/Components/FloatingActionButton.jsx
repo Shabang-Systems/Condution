@@ -1,10 +1,9 @@
 //import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import React, { useState } from 'react';
 import './FloatingActionButton.css';
-import * as chrono from 'chrono-node';
 import {useSpring, animated} from 'react-spring'
 import Task from '../../backend/src/Objects/Task';
-
+import { ParseABTIBIntention } from '../../backend/src/Objects/Utils'
 
 
 /*
@@ -79,33 +78,8 @@ function ABTIB(props) {
                 if (event.key === 'Enter') {
                     event.persist(); //https://reactjs.org/docs/events.html#event-pooling
                     setisSaving(true);
-                    let taskName = event.target.value;
-                    let dateInfo = chrono.parse(taskName);
-                    let due = undefined;
-                    let defer = undefined;
-                    if (dateInfo.length > 0) {
-                        // we got a date!
-                        if (dateInfo[0].end) {
-                            // both start (defer) and end (due)
-                            // get end (due) date
-                            due = dateInfo[0].end.date();
-                            defer = dateInfo[0].start.date();
-                            // strip the due date string
-                            taskName = taskName.replace(dateInfo[0].text, "").trim();
-
-                        }
-                        else {
-                            // only start (due)
-                            due = dateInfo[0].start.date();
-                            // strip the due date string
-                            taskName = taskName.replace(dateInfo[0].text, "").trim();
-                        }
-                    }
-                    Task.create(
-                        props.cm, taskName, undefined, undefined, due, defer
-                    ).then(()=>{
-                        event.target.blur();
-                    });
+                    ParseABTIBIntention(props.cm, event.target.value)
+                        .then(()=>{ event.target.blur(); });
                 }
             }
         }
