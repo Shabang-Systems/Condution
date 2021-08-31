@@ -1,6 +1,7 @@
 // A whole lotta imports
 
 import { Browser } from '@capacitor/browser';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 // Ionic components
 import { IonItem, IonInput, IonContent, IonGrid, IonRow, IonCol, IonSegment, IonLabel, IonButton, IonPopover } from '@ionic/react';
@@ -540,6 +541,7 @@ class Task extends Component {
                                                 else {
                                                     this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
                                                 }
+                                                Haptics.impact({ style: ImpactStyle.Light });
                                             }
                                         }} 
                                         style={{opacity: this.state.availability?1:0.35}}
