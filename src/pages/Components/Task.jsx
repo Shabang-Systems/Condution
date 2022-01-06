@@ -579,14 +579,14 @@ class Task extends Component {
                                     placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
 				  onKeyDown={(e) => {
-                                      if (e.key == "Enter") {
+				      if (!(getPlatforms().includes("mobile")) && (e.key == "Enter")) {
 					  if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name;
 					  this.setState({expanded: false});
-                                            }
-				    }}
+				      }
+				  }}
 				/>
 
-                                {/* Task edit. The thing that slides open on edit. */}
+				{/* Task edit. The thing that slides open on edit. */}
                                 {(() => {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
