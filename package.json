@@ -103,7 +103,7 @@
     "@capacitor/cli": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^4.28.0",
     "@typescript-eslint/parser": "^4.28.0",
-    "electron": "^13.1.4",
+    "electron": "^13.3.0",
     "electron-builder": "^22.11.7",
     "electron-notarize": "^1.0.0"
   },
