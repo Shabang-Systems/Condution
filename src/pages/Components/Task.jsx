@@ -576,8 +576,13 @@ class Task extends Component {
                                     autoComplete="off" 
                                     placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
-                                    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
-                                />
+				  onKeyDown={(e) => {
+                                      if (e.key == "Enter") {
+					  if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name;
+					  this.setState({expanded: false});
+                                            }
+				    }}
+				/>
 
                                 {/* Task edit. The thing that slides open on edit. */}
                                 {(() => {
