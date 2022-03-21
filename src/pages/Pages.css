@@ -192,3 +192,44 @@
    contain: content;
 }
 
+
+.settings-modal {
+    /*--max-height: 100vh%;*/
+    --height: 100%;
+    --width: 100%;
+    /*--color: var(--decorative-light-alt);*/
+    color: var(--menu-label);
+    /*--max-width: 520px;*/
+    /*--ion-backdrop-opacity: 0.5;*/
+    /*--border-radius: 8px;*/
+}
+
+.settings-main {
+    /*border: 1px solid red;*/
+    height: 100%;
+}
+
+.settings-floating {
+    border: 0px solid blue;
+    padding: 1rem;
+    margin: 15%;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    /*align-items: center;*/
+    justify-content: center;
+    /*margin: auto;*/
+    /*height: 100%;*/
+}
+
+.settings-sidebar {
+    border: 0px solid red;
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-content {
+    margin-left: 3rem;
+
+}

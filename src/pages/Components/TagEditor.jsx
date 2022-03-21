@@ -92,9 +92,9 @@ class TagEditor extends Component {
 
     tagDeleteClicked(e, i) { // TODO Later make it so get projects and tags prunes dead tags
         e.stopPropagation();
-        if (this.state.settingState == i) 
+        if (this.state.settingState == i)
             this.state.settingState = 0;
-        
+
         this.state.tagList[i].delete();
         let tagexclu = this.state.tagList;
         tagexclu.splice(i, 1);
