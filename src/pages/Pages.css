@@ -233,3 +233,11 @@
     margin-left: 3rem;
 
 }
+
+.settings-esc {
+    display: flex;
+    flex-direction: column;
+
+}
+
+
