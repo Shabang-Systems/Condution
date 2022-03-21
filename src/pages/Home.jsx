@@ -25,6 +25,7 @@ import WorkspaceWelcome from './WorkspaceWelcome';
 import ABTIB from './Components/FloatingActionButton';
 import Keybinds from './Components/KeybindManager';
 import ReleaseNotesModal from './Components/ReleaseNotesModal';
+import Settings from './Settings';
 
 
 import { MenuWidget } from "../backend/src/Widget";
@@ -448,7 +449,7 @@ class Home extends Component {
                                     </DragDropContext> 
 
                                 </IonContent>
-
+				<Settings />
                                 {/* Logout button */}
                                 <div className="menu-item" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
                             </IonMenu>
