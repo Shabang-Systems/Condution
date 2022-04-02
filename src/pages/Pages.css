@@ -235,9 +235,31 @@
 }
 
 .settings-esc {
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+    /*font-variant: small-caps;*/
+    align-content: right;
+    justify-content: right;
+    /*border: 1px solid red;*/
     display: flex;
     flex-direction: column;
-
+    transition: 0.3s;
 }
 
+/*.settings-esc:hover {*/
+/*    background: red;*/
+/*}*/
 
+
+.esc-button {
+    transition: 0.3s;
+    /*background: blue;*/
+    /*border: 1px solid green;*/
+}
+
+.esc-button:hover {
+    color: var(--task-checkmark) !important;
+    /*color: red;*/
+    /*background: red;*/
+}

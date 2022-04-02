@@ -20,9 +20,25 @@ const Settings = (props) => {
 	    >
 		<div class="settings-main">
 		    {/*<p class="settings-esc">wwfj:w</p>*/}
-		    <div class="settings-esc">
-			<i class="far fa-times-circle" style={{color: "var(--content-normal-alt)", marginRight: 1, fontSize: "30px"}}></i>
-			esc
+		    <div class="settings-esc"
+			onClick={() => {
+			    //console.log("w")
+			    setOpen(!open)
+			}}
+		    >
+			<i class="far fa-times-circle esc-button" style={{
+			    color: "var(--content-normal-alt)",
+			    marginRight: 24,
+			    marginTop: 24,
+			    fontSize: "30px",
+			    textAlign: "right",
+			    }}>
+			</i>
+			<span style={{
+			    textAlign: "right", marginRight: 24+3,
+			    marginTop: 3,
+			    color: "var(--ion-color-medium-shade)",
+			}}>esc</span>
 		    </div>
 
 		    {/*<i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />*/}
