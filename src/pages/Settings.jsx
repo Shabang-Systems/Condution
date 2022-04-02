@@ -66,10 +66,18 @@ const Settings = (props) => {
 				width: "100%",
 				marginRight: "20%",
 				//border: "1px solid teal"
-				textAlign: "right"
+				textAlign: "right",
 			    }}
 			>
-			    {bundles[activeBundleIdx].content}
+			    <span style={{
+				border: "0px solid red",
+				textDecoration: "underline",
+				fontWeight: 700,
+			    }}>{bundles[activeBundleIdx].title}</span>
+			    <div class=""
+				style={{textAlign: "left"}}>
+				contenty contenty and content content 
+			    </div>
 			</div>
 		    </div>
 		</div>
@@ -85,31 +93,31 @@ export default Settings
 const bundles = [
     {
 	name: "Keybinds",
-	content: <>
+	title: <>
 	    Bind 'em keys!
 	</>
     },
     {
 	name: "Theme",
-	content: <>
+	title: <>
 	    Set that theme!
 	</>
     },
     {
 	name: "Account",
-	content: <>
+	title: <>
 	    Manage that account!
 	</>
     },
     {
 	name: "Tags",
-	content: <>
+	title: <>
 	    Wrangle those tags!
 	</>
     },
     {
 	name: "Experimental",
-	content: <>
+	title: <>
 	    Experimental features 👀
 	</>
     },

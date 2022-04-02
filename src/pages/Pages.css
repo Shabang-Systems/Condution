@@ -279,3 +279,7 @@
     background-color: var(--decorative-light) !important;
 }
 
+
+.debug {
+    border: 1px solid red;
+}
