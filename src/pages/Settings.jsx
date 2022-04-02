@@ -6,6 +6,7 @@ import './Components/TagEditor.css';
 
 const Settings = (props) => {
     const [open, setOpen] = useState(false)
+    const [activeBundleIdx, setActiveBundleIdx] = useState(0)
 
     return (
 	<>
@@ -19,10 +20,8 @@ const Settings = (props) => {
 		cssClass="settings-modal"
 	    >
 		<div class="settings-main">
-		    {/*<p class="settings-esc">wwfj:w</p>*/}
 		    <div class="settings-esc"
 			onClick={() => {
-			    //console.log("w")
 			    setOpen(!open)
 			}}
 		    >
@@ -41,7 +40,6 @@ const Settings = (props) => {
 			}}>esc</span>
 		    </div>
 
-		    {/*<i class="fas fa-weight-hanging" style={{color: "var(--content-normal-alt)", marginRight: 1}} />*/}
 
 
 		    <div class="settings-floating">
@@ -50,16 +48,21 @@ const Settings = (props) => {
 				"font-weight": "900",
 				"font-size": "20px",
 			    }}> Settings </p>
-			    <p> Location </p>
-			    <p> Location </p>
-			    <p> Location </p>
-			    <p> Location </p>
-			    <p> Location </p>
+			    {bundles.map( (b,i) => {
+				return <p
+				    onClick={() => {
+					setActiveBundleIdx(i)
+				    }}
+				    >{b.name}</p>
+			    })}
 			</div>
-			<div class="settings-content">
-			    content
-			    this is more contents
-			    wheee more content fdsakfjklasjdflkajsdklfjakl;sjdfl;jaslkdfjasd
+			<div class="settings-content"
+			    style={{
+				width: "500px",
+				//border: "1px solid teal"
+			    }}
+			>
+			    {bundles[activeBundleIdx].content}
 			</div>
 		    </div>
 		</div>
@@ -69,3 +72,42 @@ const Settings = (props) => {
 };
 
 export default Settings
+
+
+
+const bundles = [
+    {
+	name: "Keybinds",
+	content: <>
+	    Bind 'em keys!
+	</>
+    },
+    {
+	name: "Theme",
+	content: <>
+	    Set that theme!
+	</>
+    },
+    {
+	name: "Account",
+	content: <>
+	    Manage that account!
+	</>
+    },
+    {
+	name: "Tags",
+	content: <>
+	    Wrangle those tags!
+	</>
+    },
+    {
+	name: "Experimental",
+	content: <>
+	    Experimental features 👀
+	</>
+    },
+]
+
+
+
+
