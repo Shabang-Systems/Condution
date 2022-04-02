@@ -53,13 +53,20 @@ const Settings = (props) => {
 				    onClick={() => {
 					setActiveBundleIdx(i)
 				    }}
+				    className="settings-option"
+				    style={{
+					fontWeight: (i == activeBundleIdx)? 900 : 200,
+					//transition: "0.3s"
+				    }}
 				    >{b.name}</p>
 			    })}
 			</div>
 			<div class="settings-content"
 			    style={{
-				width: "500px",
+				width: "100%",
+				marginRight: "20%",
 				//border: "1px solid teal"
+				textAlign: "right"
 			    }}
 			>
 			    {bundles[activeBundleIdx].content}

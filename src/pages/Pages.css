@@ -212,18 +212,19 @@
 .settings-floating {
     border: 0px solid blue;
     padding: 1rem;
-    margin: 15%;
+    margin-top: 10%;
+    margin-left: 20%;
     display: flex;
     flex-direction: row;
     align-content: center;
     /*align-items: center;*/
-    justify-content: center;
+    justify-content: flex-start;
     /*margin: auto;*/
     /*height: 100%;*/
 }
 
 .settings-sidebar {
-    border: 0px solid red;
+    /*border: 0px solid red;*/
     margin-right: 1rem;
     display: flex;
     flex-direction: column;
@@ -263,3 +264,18 @@
     /*color: red;*/
     /*background: red;*/
 }
+
+.settings-option {
+    border-radius: 8px;
+    background-color: none;
+    /*padding-left: 5px;*/
+    /*padding-right: 5px;*/
+    padding: 5px;
+    transition: 0.3s;
+    margin-bottom: 3px;
+}
+
+.settings-option:hover {
+    background-color: var(--decorative-light) !important;
+}
+
