@@ -6,8 +6,7 @@ import './Components/TagEditor.css';
 
 const Settings = (props) => {
     const [open, setOpen] = useState(false)
-    const [activeBundleIdx, setActiveBundleIdx] = useState(1)
-    const [activeTheme, setActiveTheme] = useState(0)
+    const [activeBundleIdx, setActiveBundleIdx] = useState(0)
 
     return (
 	<>
@@ -78,7 +77,7 @@ const Settings = (props) => {
 			    }}>{bundles[activeBundleIdx].title}</span>
 			    <div class=""
 				style={{textAlign: "left"}}>
-				{bundles[activeBundleIdx].content(setActiveTheme)}
+				{bundles[activeBundleIdx].content}
 			    </div>
 			</div>
 		    </div>
@@ -105,27 +104,17 @@ const bundles = [
 	title: <>
 	    Set that theme!
 	</>,
-	content: (props) => {
-		//props(1)
-		return (<>
-		    <div class="settings-theme-wrapper">
-			<div class="settings-theme-option-wrapper">
-			    <p class="settings-theme-option-maintext settings-theme-option-highlight">Dark Mode</p>
-			    <p class="settings-theme-option-subtext">(recommended)</p>
-			</div>
+	content: <>
+	    <div class="settings-theme-wrapper">
+		<div class="settings-theme-option-wrapper">
+		    <p class="">Dark Mode</p>
+		    <p class="">(recommended)</p>
+		</div>
 
-			<div class="settings-theme-option-wrapper">
-			    <p class="settings-theme-option-maintext">Light Mode</p>
-			    <p class="settings-theme-option-subtext">(not recommended)</p>
-			</div>
-			<div class="settings-theme-option-wrapper">
-			    <p class="settings-theme-option-maintext">System</p>
-			    <p class="settings-theme-option-subtext">(should be the same as dark mode.. right?)</p>
-			</div>
-
-		    </div>
-	    </>)
-	}
+		<div class="">Light Mode</div>
+		<div class="">System</div>
+	    </div>
+	</>
     },
     {
 	name: "Account",
