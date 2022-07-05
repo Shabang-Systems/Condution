@@ -78,7 +78,12 @@ const Settings = (props) => {
 			    }}>{bundles[activeBundleIdx].title}</span>
 			    <div class=""
 				style={{textAlign: "left"}}>
-				{bundles[activeBundleIdx].content(activeTheme, setActiveTheme)}
+				{bundles[activeBundleIdx].content({
+				    theme: {
+					activeTheme: activeTheme,
+					setActiveTheme: setActiveTheme
+				    },
+				})}
 			    </div>
 			</div>
 		    </div>
@@ -105,32 +110,30 @@ const bundles = [
 	title: <>
 	    Set that theme!
 	</>,
-	content: (activeTheme, setActiveTheme) => {
-	    console.log(activeTheme, "here")
-		//props(1)
+	content: (props) => {
 		return (<>
 		    <div class="settings-theme-wrapper">
 			<div class="settings-theme-option-wrapper">
-			    <p class={`settings-theme-option-maintext ${(activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
+			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
 				onClick={() => {
-				    setActiveTheme(0)
+				    props.theme.setActiveTheme(0)
 				}}
 			    >Dark Mode</p>
 			    <p class="settings-theme-option-subtext">(recommended)</p>
 			</div>
 
 			<div class="settings-theme-option-wrapper">
-			    <p class={`settings-theme-option-maintext ${(activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
+			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
 				onClick={() => {
-				    setActiveTheme(1)
+				    props.theme.setActiveTheme(1)
 				}}
 			    >Light Mode</p>
 			    <p class="settings-theme-option-subtext">(not recommended)</p>
 			</div>
 			<div class="settings-theme-option-wrapper">
-			    <p class={`settings-theme-option-maintext ${(activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
+			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
 				onClick={() => {
-				    setActiveTheme(2)
+				    props.theme.setActiveTheme(2)
 				}}
 			    >System</p>
 			    <p class="settings-theme-option-subtext">(should be the same as dark mode.. right?)</p>
