@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { IonModal, IonContent, IonButton } from '@ionic/react';
 import './Pages.css'
 import './Components/TagEditor.css';
+import RollingReleaseNotesModal from './Components/RollingReleaseNotesModal'
 
 
 const Settings = (props) => {
@@ -58,7 +59,6 @@ const Settings = (props) => {
 				    className="settings-option"
 				    style={{
 					fontWeight: (i == activeBundleIdx)? 900 : 200,
-					//transition: "0.3s"
 				    }}
 				    >{b.name}</p>
 			    })}
@@ -67,7 +67,6 @@ const Settings = (props) => {
 			    style={{
 				width: "100%",
 				marginRight: "20%",
-				//border: "1px solid teal"
 				textAlign: "right",
 			    }}
 			>
@@ -82,6 +81,9 @@ const Settings = (props) => {
 				    theme: {
 					activeTheme: activeTheme,
 					setActiveTheme: setActiveTheme
+				    },
+				    ChangeLog: {
+					authType: props.authType,
 				    },
 				})}
 			    </div>
@@ -171,10 +173,13 @@ const bundles = [
 	title: <>
 	    Check out the Change Log!
 	</>,
-	content: () => { return <> ch-ch-ch-CHANGES</> }
+	content: (props) => {
+	    return <>
+		<RollingReleaseNotesModal
+		    authType={props.ChangeLog.authType}
+		/>
+	    </>
+	}
     },
 ]
-
-
-
 

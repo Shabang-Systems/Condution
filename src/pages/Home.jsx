@@ -449,7 +449,7 @@ class Home extends Component {
                                     </DragDropContext> 
 
                                 </IonContent>
-				<Settings />
+				<Settings authType={this.props.authType}/>
                                 {/* Logout button */}
                                 <div className="menu-item" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
                             </IonMenu>
