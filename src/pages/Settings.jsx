@@ -78,7 +78,7 @@ const Settings = (props) => {
 			    }}>{bundles[activeBundleIdx].title}</span>
 			    <div class=""
 				style={{textAlign: "left"}}>
-				{bundles[activeBundleIdx].content(setActiveTheme)}
+				{bundles[activeBundleIdx].content(activeTheme, setActiveTheme)}
 			    </div>
 			</div>
 		    </div>
@@ -98,28 +98,41 @@ const bundles = [
 	title: <>
 	    Bind 'em keys!
 	</>,
-	content: <> whee </>
+	content: () => { return <> whee </> }
     },
     {
 	name: "Theme",
 	title: <>
 	    Set that theme!
 	</>,
-	content: (props) => {
+	content: (activeTheme, setActiveTheme) => {
+	    console.log(activeTheme, "here")
 		//props(1)
 		return (<>
 		    <div class="settings-theme-wrapper">
 			<div class="settings-theme-option-wrapper">
-			    <p class="settings-theme-option-maintext settings-theme-option-highlight">Dark Mode</p>
+			    <p class={`settings-theme-option-maintext ${(activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
+				onClick={() => {
+				    setActiveTheme(0)
+				}}
+			    >Dark Mode</p>
 			    <p class="settings-theme-option-subtext">(recommended)</p>
 			</div>
 
 			<div class="settings-theme-option-wrapper">
-			    <p class="settings-theme-option-maintext">Light Mode</p>
+			    <p class={`settings-theme-option-maintext ${(activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
+				onClick={() => {
+				    setActiveTheme(1)
+				}}
+			    >Light Mode</p>
 			    <p class="settings-theme-option-subtext">(not recommended)</p>
 			</div>
 			<div class="settings-theme-option-wrapper">
-			    <p class="settings-theme-option-maintext">System</p>
+			    <p class={`settings-theme-option-maintext ${(activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
+				onClick={() => {
+				    setActiveTheme(2)
+				}}
+			    >System</p>
 			    <p class="settings-theme-option-subtext">(should be the same as dark mode.. right?)</p>
 			</div>
 
@@ -132,7 +145,7 @@ const bundles = [
 	title: <>
 	    Manage that account!
 	</>,
-	content: <> whee </>
+	content: () => { return <> whee </> }
 
 
     },
@@ -141,21 +154,21 @@ const bundles = [
 	title: <>
 	    Wrangle those tags!
 	</>,
-	content: <> whee </>
+	content: () => { return <> whee </> }
     },
     {
 	name: "Experimental",
 	title: <>
 	    Experimental features 👀
 	</>,
-	content: <> Coming soon... </>
+	content: () => { return <> Coming soon... </> }
     },
     {
 	name: "Change Log",
 	title: <>
 	    Check out the Change Log!
 	</>,
-	content: <> ch-ch-ch-CHANGES</>
+	content: () => { return <> ch-ch-ch-CHANGES</> }
     },
 ]
 
