@@ -827,7 +827,9 @@ class Task extends Component {
                                                 </div>
                                                 <div className="tag-container" style={{display: this.props.cm.isInWorkspace ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
-                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
+                                                    <TagsInput 
+							className="react-tagsinput delegation-textbox" 
+							tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
                                                         let isValid = true;
                                                         list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
                                                             if (/\w+@\w+\.\w+/.test(newAccount))

@@ -1,15 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IonModal, IonContent, IonButton } from '@ionic/react';
 import './Pages.css'
 import './Components/TagEditor.css';
 import RollingReleaseNotesModal from './Components/RollingReleaseNotesModal'
 import TagEditor from './Components/TagEditor'
+import { TagsPaneWidget } from "../backend/src/Widget";
+import Tag from "../backend/src/Objects/Tag";
 
+
+/*
+ * Settings.jsx
+ *  -------------
+ *  Settings page for the app.
+ *  This page is a modal that is displayed when the user clicks the
+ *  settings button in the top right of the app.
+ *  The page contains a list of bundles, each of which contains a
+ *  list of settings.
+ *  The page is divided into two parts:
+ *  - The sidebar contains a list of bundles.
+ *  - The content contains the settings for the currently selected bundle.
+ *  The sidebar is fixed at the top of the page.
+ *  The content is scrollable.
+ *  The content is divided into two parts:
+ *  - The header contains the title of the currently selected bundle.
+ *  - The content contains the settings for the currently selected bundle.
+ *  The header is fixed at the top of the page.
+ *  The content is scrollable.
+ *  The content is divided into two parts:
+ *  - written by @enquirer in collboration with @joshuaclayton. i mean, @copilot..
+*/
 
 const Settings = (props) => {
     const [open, setOpen] = useState(false)
     const [activeBundleIdx, setActiveBundleIdx] = useState(1)
     const [activeTheme, setActiveTheme] = useState(0)
+    const [update, setUpdate] = useState(0)
+
+    useEffect(() => {
+	setTimeout(() => {
+	    setUpdate(update+1)
+	}, 1);
+    }, [activeBundleIdx, open])
 
     return (
 	<>
@@ -164,9 +195,16 @@ const bundles = [
 	title: <>
 	    Wrangle those tags!
 	</>,
-	content: (props) => { 
-	    return <TagEditor nonModal={true} localizations={props.tagsPane.localizations} cm={props.tagsPane.cm}/>
-
+	content: (props) => {
+	    return <div
+		style={{marginTop: "1rem", border: "0px solid red"}}
+		>
+		    <TagEditor
+			nonModal={true}
+			localizations={props.tagsPane.localizations}
+			cm={props.tagsPane.cm}
+		    />
+	    </div>
 	}
     },
     {
@@ -184,7 +222,7 @@ const bundles = [
 	content: (props) => {
 	    return <>
 		<RollingReleaseNotesModal
-		    authType={props.ChangeLog.authType}
+		    authType={props.changeLog.authType}
 		/>
 	    </>
 	}

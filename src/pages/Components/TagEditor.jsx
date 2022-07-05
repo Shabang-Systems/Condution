@@ -23,7 +23,7 @@ import { isThisTypeNode } from 'typescript';
  * This thing makes me want to cry
  * Front-end is far from a drug
  *
- * I may be exageratting
+ * I may be exaggerating
  * Maybe this bug wasn't so bad
  * But still I cannot add padding
  * and it still makes me very sad
@@ -50,11 +50,11 @@ class TagEditor extends Component {
         //this.state.tagList = await this.props.engine.db.getTags(this.props.uid);
         this.state.tagList = await this.tagsPaneWidget.execute();
     }
-   // TODO BADDD 
+   // TODO BADDD
     componentDidMount() {
         this.setTagState();
     }
-    
+
     async newTagClicked() {
         let newTag = await Tag.create(this.props.cm, this.props.localizations.new_tag_button);
         //let tagid = await this.props.engine.db.newTag(this.props.uid, this.props.gruntman.localizations.new_tag_button);
