@@ -104,13 +104,23 @@ class TagEditor extends Component {
 
     render() {
         return (
+	    <>
+		{this.props.nonModal? <div> :
             <IonModal ref={this.props.reference} isOpen={this.props.isShown} onDidPresent={() => {this.setTagState()}} onDidDismiss={() => {if(this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5, border: "1px solid red"}} cssClass={"tag-editor"}>
+		}
 
                 {/*Text Header*/}
+
+            </IonModal>
+	    </>
+        )
+    }
+}
+
+		const Inner = () => (
+
                 <div className="TagEditor-header">
-                    <span style={{display: "inline-flex", alignItems: "center"}}>
-                        <b className="bold-prefix" >Edit All Tags</b> 
-			        </span>
+                    <span style={{display: "inline-flex", alignItems: "center"}}> <b className="bold-prefix" >Edit All Tags</b> </span>
 
                     {/*Close Button*/}
                     <a className="TagEditor-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
@@ -164,10 +174,6 @@ class TagEditor extends Component {
                     </div>
                             </>
                     ):(<BlkArt visible={this.state.tagList.length<=0} title={this.props.localizations.blk_art_tags} subtitle={this.props.localizations.blk_art_tags_subtitle} />)}
-                </div>
-            </IonModal>
-        )
-    }
-}
+                </div>)
 
 export default TagEditor

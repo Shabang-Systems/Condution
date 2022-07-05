@@ -158,8 +158,4 @@ function RollingReleaseNotesModal(props) {
     )
 }
 
-
-
-
 export default RollingReleaseNotesModal;
-
