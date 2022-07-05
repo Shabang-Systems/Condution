@@ -3,6 +3,7 @@ import { IonModal, IonContent, IonButton } from '@ionic/react';
 import './Pages.css'
 import './Components/TagEditor.css';
 import RollingReleaseNotesModal from './Components/RollingReleaseNotesModal'
+import TagEditor from './Components/TagEditor'
 
 
 const Settings = (props) => {
@@ -82,8 +83,12 @@ const Settings = (props) => {
 					activeTheme: activeTheme,
 					setActiveTheme: setActiveTheme
 				    },
-				    ChangeLog: {
+				    changeLog: {
 					authType: props.authType,
+				    },
+				    tagsPane: {
+					localizations: props.localizations,
+					cm: props.cm,
 				    },
 				})}
 			    </div>
@@ -159,7 +164,10 @@ const bundles = [
 	title: <>
 	    Wrangle those tags!
 	</>,
-	content: () => { return <> whee </> }
+	content: (props) => { 
+	    return <TagEditor nonModal={true} localizations={props.tagsPane.localizations} cm={props.tagsPane.cm}/>
+
+	}
     },
     {
 	name: "Experimental",

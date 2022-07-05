@@ -31,6 +31,7 @@
     "electron-updater": "^4.3.9",
     "firebase": "^8.6.8",
     "install": "^0.13.0",
+    "ionic": "^5.4.16",
     "ionicons": "^5.5.2",
     "jquery": "^3.5.1",
     "mousetrap": "^1.6.5",
