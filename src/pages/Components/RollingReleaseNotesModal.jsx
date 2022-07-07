@@ -35,8 +35,8 @@ function RollingReleaseNotesModal(props) {
 		borderRadius: 5,
 		overflow: "scroll",
 		//border:  "1px solid #ccc",
-		height: "50rem",
-		marginTop: "-3rem",
+		height: "60vh",
+		marginTop: "0.5rem",
 	    }}
 	    class="releasenote-popover"
 	>
