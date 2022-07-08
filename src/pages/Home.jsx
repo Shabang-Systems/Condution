@@ -221,328 +221,328 @@ class Home extends Component {
     render() {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
-            <IonPage>
+	    <IonPage>
 		<ShortcutProvider>
-                {/* The central router that controls the routing of views */}
-                <Router history={history}>
-                    {/* @TheEnquirer TODO
-		    */}
-		    <Keybinds 
-			paginate={this.paginate} 
-                        ref={this.keybindRef} 
-                        perspectives={this.state.perspectives}
-                        projects={this.state.projects}
-                        abtib={this.abtibRef} 
-			localizations={this.props.localizations}
-			cm={this.props.cm}
-                        /*engine={this.props.engine} */
-                        /*uid={this.state.workspace} */
-                        /*gruntman={this.props.gruntman} */
-                    />
-                    {/* OoIp */}
-                    <ReactTooltip />
-                    {/* App container */}
-                    <IonContent noBounce forceOverscroll={false}>
-                        {/* Menu pane to control mobile view splitting */}
-                        <IonSplitPane id="main-split" contentId="main" mode="md">
-                            {/* The left: menu! */}
-                            <IonMenu id="main-menu" contentId="main" ref={this.menu}>
-                                <br />
-                                <IonContent id="menu-content" ref={this.menuContent} className={(()=>{
-                                    if (!isPlatform("electron")) // if we are not running electron
-                                        return "normal"; // normal windowing proceeds
-                                    else if (window.navigator.platform.includes("Mac")){ // macos
-                                        return "darwin"; // frameless setup
-                                    }
-                                    else if (process.platform === "win32") // windows
-                                        return "windows"; // non-frameless
+		    {/* The central router that controls the routing of views */}
+		    <Router history={history}>
+			{/* @TheEnquirer TODO
+			*/}
+			<Keybinds 
+			    paginate={this.paginate} 
+			    ref={this.keybindRef} 
+			    perspectives={this.state.perspectives}
+			    projects={this.state.projects}
+			    abtib={this.abtibRef} 
+			    localizations={this.props.localizations}
+			    cm={this.props.cm}
+			    /*engine={this.props.engine} */
+			    /*uid={this.state.workspace} */
+			    /*gruntman={this.props.gruntman} */
+			/>
+			{/* OoIp */}
+			<ReactTooltip />
+			{/* App container */}
+			<IonContent noBounce forceOverscroll={false}>
+			    {/* Menu pane to control mobile view splitting */}
+			    <IonSplitPane id="main-split" contentId="main" mode="md">
+				{/* The left: menu! */}
+				<IonMenu id="main-menu" contentId="main" ref={this.menu}>
+				    <br />
+				    <IonContent id="menu-content" ref={this.menuContent} className={(()=>{
+					if (!isPlatform("electron")) // if we are not running electron
+					    return "normal"; // normal windowing proceeds
+					else if (window.navigator.platform.includes("Mac")){ // macos
+					    return "darwin"; // frameless setup
+					}
+					else if (process.platform === "win32") // windows
+					    return "windows"; // non-frameless
 
-                                })()}>
-                                    {/* === Built Ins: upcoming + completed == */}
-                                    {/* Upcoming button + link */}
-                                    <Link to="/upcoming" onClick={()=>{
-                                        this.setState({itemSelected:{item:"upcoming", id:undefined}});
-                                        if (this.menu.current)
-                                            this.menu.current.close();
+		      		    })()}>
+					{/* === Built Ins: upcoming + completed == */}
+					{/* Upcoming button + link */}
+					<Link to="/upcoming" onClick={()=>{
+					    this.setState({itemSelected:{item:"upcoming", id:undefined}});
+					    if (this.menu.current)
+						this.menu.current.close();
 
-                                    }}> {/* Link to trigger router */}
-                                        {/* Upcoming button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />{this.props.localizations.upcoming}</div>
-                                    </Link>
+					}}> {/* Link to trigger router */}
+					    {/* Upcoming button */}
+					    <div className={"menu-item "+(this.state.itemSelected.item === "upcoming" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20}} icon={chevronForwardCircle} />{this.props.localizations.upcoming}</div>
+					</Link>
 
-                                    {/* Completed button + link */}
-                                    <Link to="/completed" onClick={()=>{
-                                        this.setState({itemSelected:{item:"completed", id:undefined}});
-                                        if (this.menu.current)
-                                            this.menu.current.close();
-                                    }}> {/* Link to trigger router */}
-                                        {/* Completed button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={checkmarkCircle} />{this.props.localizations.completed}</div>
-                                    </Link>
+					{/* Completed button + link */}
+					<Link to="/completed" onClick={()=>{
+					    this.setState({itemSelected:{item:"completed", id:undefined}});
+					    if (this.menu.current)
+						this.menu.current.close();
+					}}> {/* Link to trigger router */}
+					    {/* Completed button */}
+					    <div className={"menu-item "+(this.state.itemSelected.item === "completed" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={checkmarkCircle} />{this.props.localizations.completed}</div>
+					</Link>
 
-                                    {/* Calendar button + link */}
-                                    <Link to="/calendar" onClick={()=>{
-                                        this.setState({itemSelected:{item:"calendar", id:undefined}})
-                                        if (this.menu.current)
-                                            this.menu.current.close();
+					{/* Calendar button + link */}
+					<Link to="/calendar" onClick={()=>{
+					    this.setState({itemSelected:{item:"calendar", id:undefined}})
+					    if (this.menu.current)
+						this.menu.current.close();
 
-                                    }}> {/* Link to trigger router */}
-                                        {/* Calendar button */}
-                                        <div className={"menu-item "+(this.state.itemSelected.item === "calendar" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={calendar} />{this.props.localizations.calendar}</div>
-                                    </Link>
+					}}> {/* Link to trigger router */}
+					    {/* Calendar button */}
+					    <div className={"menu-item "+(this.state.itemSelected.item === "calendar" ? "menu-item-selected" : "")} style={{fontSize: 18}}><IonIcon style={{fontSize: 20, transform: "translateY(3.5px)"}} icon={calendar} />{this.props.localizations.calendar}</div>
+					</Link>
 
-                                    {/* === Perspectives == */}
-                                    <div className="menu-sublabel menu-decoration">{this.props.localizations.perspectives} <a onClick={()=>{
-                                        if (this.menu.current)
-                                            this.menu.current.close();
-                                        let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-                                            let np = await Perspective.create(this.props.cm)
-                                            let npid = np.id
+					{/* === Perspectives == */}
+					<div className="menu-sublabel menu-decoration">{this.props.localizations.perspectives} <a onClick={()=>{
+					    if (this.menu.current)
+						this.menu.current.close();
+					    let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+						let np = await Perspective.create(this.props.cm)
+						let npid = np.id
 
-                                            history.push(`/perspectives/${npid}/do`);
-                                            this.paginate("perspectives", npid);
-                                            this.refresh();
-                                        }).bind(this);
-                                        f();
-                                        //if (this.menu.current)
-                                            //this.menu.current.close();
-                                        //let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-                                            //let npid = (await this.props.gruntman.do(
-                                                //"perspective.create", {
-                                                    //uid: this.state.workspace,
-                                                //},
-                                                //true
-                                            //)).pid;
-                                            //history.push(`/perspectives/${npid}/do`);
-                                            //this.paginate("perspectives", npid);
-                                            //this.refresh();
-                                        //}).bind(this);
-                                        //f();
+						history.push(`/perspectives/${npid}/do`);
+						this.paginate("perspectives", npid);
+						this.refresh();
+					    }).bind(this);
+					    f();
+					    //if (this.menu.current)
+					    //this.menu.current.close();
+					    //let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+					    //let npid = (await this.props.gruntman.do(
+					    //"perspective.create", {
+					    //uid: this.state.workspace,
+					    //},
+					    //true
+					    //)).pid;
+					    //history.push(`/perspectives/${npid}/do`);
+					    //this.paginate("perspectives", npid);
+					    //this.refresh();
+					    //}).bind(this);
+					    //f();
 
-                                    }} className="fa fa-plus add"></a></div>
+					}} className="fa fa-plus add"></a></div>
 
-                                    {/* === Perspective button + link == */}
-
-
-
-                                    <DragDropContext onDragEnd={this.onDragEndPsp}>
-                                        <Droppable droppableId={"psp"}>
-                                            {provided => (
-                                                <div
-                                                    ref = {provided.innerRef}
-                                                    {...provided.droppableProps}
-                                                    style = {{
-                                                        //height: 500
+					{/* === Perspective button + link == */}
 
 
-                                                    }}
-                                                >
 
-                                                    {this.state.perspectives.map((psp, i) => (
-                                                        <Draggable draggableId={psp.id} key={psp.id} index={i}>
-                                                            {(provided, snapshot) => (
-                                                                <div
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
-                                                                    ref={provided.innerRef}
-                                                                    key={psp.id}
-
-                                                                    //style = {{
-                                                                    //background: "red"
-                                                                    //border: "1px solid red"
-
-                                                                    //}}
-
-                                                                >
-                                                                    <Link key={psp.id} to={`/perspectives/${psp.id}`} 
-                                                                        //style={{
-                                                                        //border: "1px solid red"
-                                                                        //backgroundColor: "blue"
-                                                                        //}}
+					<DragDropContext onDragEnd={this.onDragEndPsp}>
+					    <Droppable droppableId={"psp"}>
+						{provided => (
+						    <div
+							ref = {provided.innerRef}
+							{...provided.droppableProps}
+							style = {{
+							    //height: 500
 
 
-                                                                        onClick={()=>{
-                                                                            this.setState({itemSelected:{item:"perspectives", id:psp.id}});
-                                                                            if (this.menu.current)
-                                                                                this.menu.current.close();
-                                                                        }}> {/* Link to trigger router */}
-                                                                        {/* Perspective button */}
-                                                                        <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}
-                                                                            style = {{
-                                                                                //border: "1px solid red"
-                                                                                background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
+							}}
+						    >
 
-                                                                            }}
+							{this.state.perspectives.map((psp, i) => (
+							    <Draggable draggableId={psp.id} key={psp.id} index={i}>
+								{(provided, snapshot) => (
+								    <div
+									{...provided.draggableProps}
+									{...provided.dragHandleProps}
+									ref={provided.innerRef}
+									key={psp.id}
 
-                                                                        >
-                                                                            <i className="fas fa-layer-group" 
-                                                                                style={{
-                                                                                    paddingRight: 2,
-                                                                                    //backgroundColor: "red"
-                                                                                }}>
-                                                                            </i> {psp.name}
-                                                                        </div> 
-                                                                    </Link>
-                                                                </div>
-                                                            )}
-                                                        </Draggable>
-                                                    )
-                                                    )}
-                                                    {provided.placeholder}
-                                                </div> )
-                                            }
-                                        </Droppable>
-                                    </DragDropContext>
+									//style = {{
+									//background: "red"
+									//border: "1px solid red"
+
+									//}}
+
+								    >
+									<Link key={psp.id} to={`/perspectives/${psp.id}`} 
+									    //style={{
+									    //border: "1px solid red"
+									    //backgroundColor: "blue"
+									    //}}
 
 
-                                    {/* === Projects == */}
-                                    <div className="menu-sublabel menu-decoration">{this.props.localizations.projects}<a onClick={()=>{
-                                        if (this.menu.current)
-                                            this.menu.current.close();
-                                        let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
-                                            let np = await Project.create(this.props.cm)
-                                            let npid = np.id
+									    onClick={()=>{
+										this.setState({itemSelected:{item:"perspectives", id:psp.id}});
+										if (this.menu.current)
+										    this.menu.current.close();
+									    }}> {/* Link to trigger router */}
+									    {/* Perspective button */}
+									    <div className={"menu-item "+(this.state.itemSelected.item === "perspectives" && this.state.itemSelected.id === psp.id ? "menu-item-selected" : "")}
+										style = {{
+										    //border: "1px solid red"
+										    background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
 
-                                            history.push(`/projects/${npid}/do`);
-                                            this.paginate("projects", npid);
-                                            this.refresh();
-                                        }).bind(this);
-                                        f();
+										}}
 
-                                    }} className="fa fa-plus add"></a></div>
+									    >
+										<i className="fas fa-layer-group" 
+										    style={{
+											paddingRight: 2,
+											//backgroundColor: "red"
+										    }}>
+										</i> {psp.name}
+									    </div> 
+									</Link>
+								    </div>
+								)}
+							    </Draggable>
+							)
+							)}
+							{provided.placeholder}
+						    </div> )
+						}
+					    </Droppable>
+					</DragDropContext>
 
-                                    {/* === Project Contents == */}
-                                    <DragDropContext onDragEnd={this.onDragEndPrj}> 
-                                        <Droppable droppableId={"prj"}>
-                                            {provided => (
-                                                <div 
-                                                    ref = {provided.innerRef}
-                                                    {...provided.droppableProps}
-                                                >
-                                                    {this.state.projects.map((proj, i) => (
-                                                        <Draggable draggableId={proj.id} key={proj.id} index={i}>
-                                                            {(provided, snapshot) => (
-                                                                <div
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
-                                                                    ref={provided.innerRef}
-                                                                    key={proj.id}
-                                                                >
-                                                                    <Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
-                                                                        this.setState({itemSelected:{item:"projects", id:proj.id}})
-                                                                        //console.log(proj)
-                                                                        if (this.menu.current)
-                                                                            this.menu.current.close();
-                                                                    }}> {/* Link to trigger router */}
-                                                                        {/* Perspective button */}
-                                                                        <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}
-                                                                            style = {{
-                                                                                background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
-                                                                            }}
 
-                                                                        ><IonIcon icon={listOutline}/>{proj.name}</div></Link>
-                                                                </div>
-                                                            )}
-                                                        </Draggable>
-                                                    )
-                                                    )}
-                                                    {provided.placeholder}
-                                                </div> )}
-                                        </Droppable>
-                                    </DragDropContext>
+					{/* === Projects == */}
+					<div className="menu-sublabel menu-decoration">{this.props.localizations.projects}<a onClick={()=>{
+					    if (this.menu.current)
+						this.menu.current.close();
+					    let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+						let np = await Project.create(this.props.cm)
+						let npid = np.id
 
-                                </IonContent>
-				<Settings 
-				    authType={this.props.authType} 
-				    localizations={this.props.localizations} 
-				    cm={this.props.cm}
-				    dispatch={this.props.dispatch}
-				/>
-                                {/* Logout button */}
-                                <div className="menu-item" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
-                            </IonMenu>
-                            <IonPage id="main">
-                                {/* raise a glass to Workspace Add */}
-                                <IonToast
-                                    mode="ios"
-                                    cssClass="workspace-toast"
-                                    isOpen={this.state.pendingAcceptances.length > 0}
-                                    message={`Invitation to join workspace ${this.state.pendingAcceptances[0]? this.state.pendingAcceptances[0].ws.name: ""}`}
-                                    position="bottom"
-                                    buttons={[
-                                        {
-                                            text: 'Reject',
-                                                role: 'cancel',
-                                                handler: (async function () {
-                                                    this.props.cm.rescindWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
-                                                    //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                    //this.setState({isWorkspaceRequestShown: [false, null]});
-                                                }).bind(this)
-                                        },
-                                        {
-                                            text: 'Accept',
-                                            handler: (async function () {
-                                                                                                    this.props.cm.acceptWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
+						history.push(`/projects/${npid}/do`);
+						this.paginate("projects", npid);
+						this.refresh();
+					    }).bind(this);
+					    f();
 
-//                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
-                                                //let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
-                                                //await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
-                                                //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
-                                                //this.setState({isWorkspaceRequestShown: [false, null]});
-                                            }).bind(this)
-                                        }
-                                    ]}
-                                />
-                                {/* the add button to inbox button*/}
-                                <ABTIB reference={this.abtibRef} cm={this.props.cm} localizations={this.props.localizations} />
-                                <ReleaseNotesModal authType={this.props.authType} />
-                                {/* the portal root for DOM elements to park */}
-                                <div id="parking-lot"></div>
-                                {/* The actual page */}
-                                <IonRouterOutlet>
-                                    {/* empty => /upcoming*/}
-                                    <Route render={() => <Redirect to="/upcoming" />} />
-                                    {/* / => /upcoming */}
-                                    <Route exact path="/" render={() => <Redirect to="/upcoming" />} />
-                                    {/* and the perspective switch */}
-                                    <Switch>
-                                        {/* upcoming renders upcoming */}
+					}} className="fa fa-plus add"></a></div>
 
-                                        <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome cm={this.props.cm} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} />} />
+					{/* === Project Contents == */}
+					<DragDropContext onDragEnd={this.onDragEndPrj}> 
+					    <Droppable droppableId={"prj"}>
+						{provided => (
+						    <div 
+							ref = {provided.innerRef}
+							{...provided.droppableProps}
+						    >
+							{this.state.projects.map((proj, i) => (
+							    <Draggable draggableId={proj.id} key={proj.id} index={i}>
+								{(provided, snapshot) => (
+								    <div
+									{...provided.draggableProps}
+									{...provided.dragHandleProps}
+									ref={provided.innerRef}
+									key={proj.id}
+								    >
+									<Link key={proj.id} to={`/projects/${proj.id}`} onClick={()=>{
+									    this.setState({itemSelected:{item:"projects", id:proj.id}})
+									    //console.log(proj)
+									    if (this.menu.current)
+										this.menu.current.close();
+									}}> {/* Link to trigger router */}
+									    {/* Perspective button */}
+									    <div className={"menu-item "+(this.state.itemSelected.item === "projects" && this.state.itemSelected.id === proj.id ? "menu-item-selected" : "")}
+										style = {{
+										    background: `${snapshot.isDragging ? "var(--menu-semiaccent-background)" : ""}`
+										}}
 
-                                        <Route path="/upcoming" exact render={() => <Upcoming cm={this.props.cm} uid={this.state.workspace} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
-                                        <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} localizations={this.props.localizations} />} />
-                                        <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
+									    ><IonIcon icon={listOutline}/>{proj.name}</div></Link>
+								    </div>
+								)}
+							    </Draggable>
+							)
+							)}
+							{provided.placeholder}
+						    </div> )}
+					    </Droppable>
+					</DragDropContext>
 
-                                        <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history}/>} />
+				    </IonContent>
+				    <Settings 
+					authType={this.props.authType} 
+					localizations={this.props.localizations} 
+					cm={this.props.cm}
+					dispatch={this.props.dispatch}
+				    />
+				    {/* Logout button */}
+				    <div className="menu-item" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
+				</IonMenu>
+				<IonPage id="main">
+				    {/* raise a glass to Workspace Add */}
+				    <IonToast
+					mode="ios"
+					cssClass="workspace-toast"
+					isOpen={this.state.pendingAcceptances.length > 0}
+					message={`Invitation to join workspace ${this.state.pendingAcceptances[0]? this.state.pendingAcceptances[0].ws.name: ""}`}
+					position="bottom"
+					buttons={[
+					    {
+						text: 'Reject',
+						    role: 'cancel',
+						    handler: (async function () {
+							this.props.cm.rescindWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
+							//await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+							//this.setState({isWorkspaceRequestShown: [false, null]});
+						    }).bind(this)
+					    },
+					    {
+						text: 'Accept',
+						handler: (async function () {
+						    this.props.cm.acceptWorkspace(this.state.pendingAcceptances[0].ws.id, this.state.pendingAcceptances[0].inviteID);
 
-                                        <Route 
-					    path="/projects/:id/:create?" 
-					    render={({match}) => 
-						<Projects 
-						    cm={this.props.cm}
-						    id={match.params.id} 
-						    //engine={this.props.engine} 
-						    //uid={this.state.workspace} 
-						    //gruntman={this.props.gruntman} 
-						    menuRefresh={this.refresh} 
-						    paginate={this.paginate} 
-						    options={match.params.create} 
-						    localizations={this.props.localizations} 
-						    history={history}
-						    
-						/>
+						    //                                                let workspace = this.state.isWorkspaceRequestShown[1][0];
+						    //let newWorkspaces = [...(await this.props.engine.db.getWorkspaces(this.props.uid)), workspace];
+						    //await this.props.engine.db.updateWorkspaces(this.props.uid, newWorkspaces);
+						    //await this.props.engine.db.resolveInvitation(this.state.isWorkspaceRequestShown[1][2], this.props.email)
+						    //this.setState({isWorkspaceRequestShown: [false, null]});
+						}).bind(this)
+					    }
+					]}
+				    />
+				    {/* the add button to inbox button*/}
+				    <ABTIB reference={this.abtibRef} cm={this.props.cm} localizations={this.props.localizations} />
+				    <ReleaseNotesModal authType={this.props.authType} />
+				    {/* the portal root for DOM elements to park */}
+				    <div id="parking-lot"></div>
+				    {/* The actual page */}
+				    <IonRouterOutlet>
+					{/* empty => /upcoming*/}
+					<Route render={() => <Redirect to="/upcoming" />} />
+					{/* / => /upcoming */}
+					<Route exact path="/" render={() => <Redirect to="/upcoming" />} />
+					{/* and the perspective switch */}
+					<Switch>
+					    {/* upcoming renders upcoming */}
+
+					    <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome cm={this.props.cm} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} />} />
+
+					    <Route path="/upcoming" exact render={() => <Upcoming cm={this.props.cm} uid={this.state.workspace} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
+					    <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} localizations={this.props.localizations} />} />
+					    <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
+
+					    <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history}/>} />
+
+					    <Route 
+						path="/projects/:id/:create?" 
+						render={({match}) => 
+						    <Projects 
+							cm={this.props.cm}
+							id={match.params.id} 
+							//engine={this.props.engine} 
+							//uid={this.state.workspace} 
+							//gruntman={this.props.gruntman} 
+							menuRefresh={this.refresh} 
+							paginate={this.paginate} 
+							options={match.params.create} 
+							localizations={this.props.localizations} 
+							history={history}
+
+						    />
 						} 
 					    />
-                                        
-                                    </Switch>
-                                </IonRouterOutlet>
-                            </IonPage>
-                        </IonSplitPane>
-                    </IonContent>
-                </Router>
+
+					</Switch>
+				    </IonRouterOutlet>
+				</IonPage>
+			    </IonSplitPane>
+			</IonContent>
+		    </Router>
 		</ShortcutProvider>
-            </IonPage>
+	    </IonPage>
         );
     }
 };
