@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { IonModal, IonContent, IonButton } from '@ionic/react';
+import { IonModal, IonContent, IonButton, isPlatform } from '@ionic/react';
+
 import './Pages.css'
 import './Components/TagEditor.css';
 import RollingReleaseNotesModal from './Components/RollingReleaseNotesModal'
 import TagEditor from './Components/TagEditor'
 import { TagsPaneWidget } from "../backend/src/Widget";
 import Tag from "../backend/src/Objects/Tag";
+import { createBrowserHistory, createHashHistory } from 'history';
+
+const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
 
 /*
@@ -35,12 +39,24 @@ const Settings = (props) => {
     const [activeBundleIdx, setActiveBundleIdx] = useState(1)
     const [activeTheme, setActiveTheme] = useState(0)
     const [update, setUpdate] = useState(0)
+    const [name, setName] = useState("")
 
     useEffect(() => {
 	setTimeout(() => {
 	    setUpdate(update+1)
 	}, 1);
     }, [activeBundleIdx, open])
+
+    useEffect(async () => {
+	console.log(props.authType)
+	let n = ''
+	let at = props.authType
+
+	if (at !== "workspace") {
+	    n = await props.cm.userDisplayName()
+	}
+	setName(n)
+    })
 
     return (
 	<>
@@ -121,6 +137,14 @@ const Settings = (props) => {
 					localizations: props.localizations,
 					cm: props.cm,
 				    },
+				    account: {
+					localizations: props.localizations,
+					cm: props.cm,
+					dispatch: props.dispatch,
+					authType: props.authType,
+					name: name,
+
+				    },
 				})}
 			    </div>
 			</div>
@@ -186,7 +210,36 @@ const bundles = [
 	title: <>
 	    Manage that account!
 	</>,
-	content: () => { return <> whee </> }
+	content: (props) => {
+	    const greetings = props.account.localizations.greetings_setA;
+	    const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+
+
+
+	    return <> 
+		<div 
+		    style={{
+			marginTop: "1rem",
+		    }}>
+		    <div
+			style={{
+			    display: "flex",
+			}}
+		    > <p
+			style={{
+			    paddingRight: "10px",
+			    fontWeight: "900",
+			}}
+		    >{greeting+" "}</p>{`${" "+props.account.name}`} </div>
+		    <div className="menu-item" id="logout" 
+			style={{
+			    borderRadius: "5px",
+			}}
+			onClick={() => {history.push(`/`); props.account.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{props.account.authType == "workspace" ? props.account.localizations.exitworkspace : props.account.localizations.logout}</div>
+
+		</div>
+	    </>
+	}
 
 
     },
@@ -197,7 +250,9 @@ const bundles = [
 	</>,
 	content: (props) => {
 	    return <div
-		style={{marginTop: "1rem", border: "0px solid red"}}
+		style={{marginTop: "1rem", border: "0px solid red", maxHeight: "60vh",
+		    overflowY: "scroll",
+		}}
 		>
 		    <TagEditor
 			nonModal={true}
