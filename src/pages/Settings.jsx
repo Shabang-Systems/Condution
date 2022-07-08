@@ -228,6 +228,7 @@ const bundles = [
 		    > <p
 			style={{
 			    paddingRight: "10px",
+			    paddingLeft: "10px",
 			    fontWeight: "900",
 			}}
 		    >{greeting+" "}</p>{`${" "+props.account.name}`} </div>
