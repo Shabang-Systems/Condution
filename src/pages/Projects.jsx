@@ -27,7 +27,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
 
 
-const autoBind = require('auto-bind/react'); // autobind things! 
+const autoBind = require('auto-bind/react'); // autobind things!
 
 class Projects extends Component { // define the component
     constructor(props) {
@@ -62,8 +62,8 @@ class Projects extends Component { // define the component
         autoBind(this);
     }
 
-    componentWillUnmount() {
-        //this.props.gruntman.halt();
+    keybindTest(e) {
+	console.log("hi albert!")
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -79,12 +79,16 @@ class Projects extends Component { // define the component
 
 
     componentDidMount() {
-        //this.props.gruntman.registerRefresher((this.refresh).bind(this));
-        //this.refresh();
-        //if (this.props.options === "do") // if we are trying to create
-        //    this.name.current.focus(); // focus the name
+	const { shortcut } = this.props
+	shortcut.registerShortcut(this.keybindTest, ['alt+shift+j'], 'Test out keybinds', 'Test out keybinds 2?')
+
         this.load()
-        //console.log("moounting")
+    }
+
+    componentWillUnmount() {
+        //this.props.gruntman.halt();
+	const { shortcut } = this.props
+	shortcut.unregisterShortcut(['alt+shift+j'])
     }
 
     async load() {
@@ -630,5 +634,5 @@ class Projects extends Component { // define the component
     }
 }
 
-export default withIonLifeCycle(withRouter(Projects));
+export default withShortcut(withIonLifeCycle(withRouter(Projects)));
 
