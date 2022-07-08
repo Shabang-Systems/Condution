@@ -24,6 +24,7 @@ import { Hookifier }  from "../backend/src/Objects/Utils.ts";
 import Project from "../backend/src/Objects/Project";
 import DbTask from "../backend/src/Objects/Task";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
 
 
 const autoBind = require('auto-bind/react'); // autobind things! 

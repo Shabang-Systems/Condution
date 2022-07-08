@@ -38,6 +38,8 @@ import './theme/variables.css';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 
+/* Keybinds! */
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
 import $ from "jquery";
 
 /* Our Lovley Core Engine */

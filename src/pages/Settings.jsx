@@ -216,8 +216,8 @@ const bundles = [
 
 
 
-	    return <> 
-		<div 
+	    return <>
+		<div
 		    style={{
 			marginTop: "1rem",
 		    }}>
@@ -232,7 +232,7 @@ const bundles = [
 			    fontWeight: "900",
 			}}
 		    >{greeting+" "}</p>{`${" "+props.account.name}`} </div>
-		    <div className="menu-item" id="logout" 
+		    <div className="menu-item" id="logout"
 			style={{
 			    borderRadius: "5px",
 			}}
