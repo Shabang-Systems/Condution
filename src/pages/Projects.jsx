@@ -66,6 +66,12 @@ class Projects extends Component { // define the component
 	console.log("hi albert!")
     }
 
+    async makeNewProject(e) {
+	let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
+	this.props.history.push(`/projects/${newProject.id}/do`)
+
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
         if (prevProps.id !== this.props.id) {
@@ -79,8 +85,10 @@ class Projects extends Component { // define the component
 
 
     componentDidMount() {
+	console.log("we are mounting")
 	const { shortcut } = this.props
-	shortcut.registerShortcut(this.keybindTest, ['alt+shift+j'], 'Test out keybinds', 'Test out keybinds 2?')
+	shortcut.registerShortcut(this.keybindTest, ['alt+shift+j'], 'Test out keybinds', 'desc test out keybinds 2?')
+	shortcut.registerSequenceShortcut(this.keybindTest, ['ctrl+alt+n', 'p'], 'Create new project', 'Creates a new project')
 
         this.load()
     }
@@ -89,6 +97,7 @@ class Projects extends Component { // define the component
         //this.props.gruntman.halt();
 	const { shortcut } = this.props
 	shortcut.unregisterShortcut(['alt+shift+j'])
+	//shortcut.registerShortcut(this.makeNewProject, ['j'], 'Create new project')
     }
 
     async load() {
@@ -601,7 +610,7 @@ class Projects extends Component { // define the component
                                     this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
 
                                 }}><div><i className="fas fa-plus-circle subproject-icon"/><div style={{display: "inline-block", fontWeight: 500}}>{this.props.localizations.nb_at}</div></div></a>
-                            <a className="newbutton" 
+                            <a className="newbutton"
                                 onClick={
                                     //async function() {
                                     //    let npid = (await this.props.gruntman.do( // call a gruntman function
