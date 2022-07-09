@@ -25,6 +25,7 @@ import Project from "../backend/src/Objects/Project";
 import DbTask from "../backend/src/Objects/Task";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
 
 
 const autoBind = require('auto-bind/react'); // autobind things!
@@ -63,89 +64,6 @@ class Projects extends Component { // define the component
         autoBind(this);
     }
 
-    keybindTest(e) {
-	console.log("hi albert!", e)
-    }
-
-    async makeNewProject(e) {
-	let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
-	this.props.history.push(`/projects/${newProject.id}/do`)
-
-    }
-
-    keybindHandler(keybinds) { // holy hell why did i make it this way this sucks so bad oml
-	let ctrlNeedsMigrate = []
-	let cmdNeedsMigrate = []
-	const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
-	for (const i in keybinds) {
-	    if (!!keybinds[i][4]) {
-		for (const ii in keybinds[i][1]) {
-		    for (const iii in keybinds[i][1][ii]) {
-			if (keybinds[i][1][ii][iii].includes("ctrl")) {
-			    ctrlNeedsMigrate.push(clone(keybinds[i]))
-			}
-			if (keybinds[i][1][ii][iii].includes("cmd")) {
-			    cmdNeedsMigrate.push(clone(keybinds[i]))
-			}
-		    }
-		}
-	    }
-	}
-
-	for (const i in ctrlNeedsMigrate) {
-	    for (const ii in ctrlNeedsMigrate[i][1]) {
-		for (const iii in ctrlNeedsMigrate[i][1][ii]) {
-		    if (ctrlNeedsMigrate[i][1][ii][iii].includes("ctrl")) {
-			ctrlNeedsMigrate[i][1][ii][iii] = ctrlNeedsMigrate[i][1][ii][iii].replace("ctrl", "cmd")
-		    }
-		}
-	    }
-	}
-
-
-	for (const i in cmdNeedsMigrate) {
-	    for (const ii in cmdNeedsMigrate[i][1]) {
-		for (const iii in cmdNeedsMigrate[i][1][ii]) {
-		    if (cmdNeedsMigrate[i][1][ii][iii].includes("cmd")) {
-			cmdNeedsMigrate[i][1][ii][iii] = cmdNeedsMigrate[i][1][ii][iii].replace("cmd", "ctrl")
-		    }
-		}
-	    }
-	}
-
-	keybinds = keybinds.concat(ctrlNeedsMigrate)
-	keybinds = keybinds.concat(cmdNeedsMigrate)
-
-
-	for (const i in keybinds) {
-	    this.keybindWrapper(...keybinds[i])
-	}
-
-	let toUnbind = []
-	for (const i in keybinds) {
-	    if (!!keybinds[i][5] == false) { // if not global
-		toUnbind.push(...keybinds[i][1])
-	    }
-	}
-
-	this.setState({
-	    keybinds: toUnbind
-	})
-    }
-
-    keybindWrapper(action, bindings, title, desc, crossPlatform=true, global=false) {
-	const { shortcut } = this.props
-	for (const i in bindings) {
-	    if (bindings[i].length == 1) {
-		// bind normal
-		shortcut.registerShortcut(action, bindings[i], title, desc)
-	    } else {
-		// bind sequence
-		shortcut.registerSequenceShortcut(action, bindings[i], title, desc)
-	    }
-	}
-    }
-
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
@@ -159,11 +77,19 @@ class Projects extends Component { // define the component
     }
 
 
+    keybindTest(e) {
+	console.log("hi albert!", e)
+    }
+
+    async makeNewProject(e) {
+	let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
+	this.props.history.push(`/projects/${newProject.id}/do`)
+    }
+
     componentDidMount() {
-	console.log("we are mounting")
 	const { shortcut } = this.props
 
-	this.keybindHandler([
+	keybindHandler(this, [
 	    [() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
 	    [() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
 	    [() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
@@ -173,13 +99,13 @@ class Projects extends Component { // define the component
     }
 
     componentWillUnmount() {
-        //this.props.gruntman.halt();
 	const { shortcut } = this.props
-	//shortcut.unregisterShortcut(['alt+shift+j'])
 	for (const i in this.state.keybinds) {
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
     }
+
+
 
     async load() {
         let project = await Project.fetch(this.props.cm, this.props.id)
