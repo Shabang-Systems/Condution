@@ -73,30 +73,69 @@ class Projects extends Component { // define the component
 
     }
 
+    keybindHandler(keybinds) { // holy hell why did i make it this way this sucks so bad oml
+	let ctrlNeedsMigrate = []
+	let cmdNeedsMigrate = []
+	const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
+	for (const i in keybinds) {
+	    if (!!keybinds[i][4]) {
+		for (const ii in keybinds[i][1]) {
+		    for (const iii in keybinds[i][1][ii]) {
+			if (keybinds[i][1][ii][iii].includes("ctrl")) {
+			    ctrlNeedsMigrate.push(clone(keybinds[i]))
+			}
+			if (keybinds[i][1][ii][iii].includes("cmd")) {
+			    cmdNeedsMigrate.push(clone(keybinds[i]))
+			}
+		    }
+		}
+	    }
+	}
 
-    keybindHandler(keybinds) {
-	//console.log(keybinds)
+	for (const i in ctrlNeedsMigrate) {
+	    for (const ii in ctrlNeedsMigrate[i][1]) {
+		for (const iii in ctrlNeedsMigrate[i][1][ii]) {
+		    if (ctrlNeedsMigrate[i][1][ii][iii].includes("ctrl")) {
+			ctrlNeedsMigrate[i][1][ii][iii] = ctrlNeedsMigrate[i][1][ii][iii].replace("ctrl", "cmd")
+		    }
+		}
+	    }
+	}
+
+
+	for (const i in cmdNeedsMigrate) {
+	    for (const ii in cmdNeedsMigrate[i][1]) {
+		for (const iii in cmdNeedsMigrate[i][1][ii]) {
+		    if (cmdNeedsMigrate[i][1][ii][iii].includes("cmd")) {
+			cmdNeedsMigrate[i][1][ii][iii] = cmdNeedsMigrate[i][1][ii][iii].replace("cmd", "ctrl")
+		    }
+		}
+	    }
+	}
+
+	keybinds = keybinds.concat(ctrlNeedsMigrate)
+	keybinds = keybinds.concat(cmdNeedsMigrate)
+
+
 	for (const i in keybinds) {
 	    this.keybindWrapper(...keybinds[i])
 	}
 
-	let allBindings = []
+	let toUnbind = []
 	for (const i in keybinds) {
-	    allBindings.push(...keybinds[i][1])
+	    if (!!keybinds[i][5] == false) { // if not global
+		toUnbind.push(...keybinds[i][1])
+	    }
 	}
 
 	this.setState({
-	    keybinds: allBindings
+	    keybinds: toUnbind
 	})
     }
 
     keybindWrapper(action, bindings, title, desc, crossPlatform=true, global=false) {
 	const { shortcut } = this.props
-	//if (!global) {
-	//    console.log(...bindings, this.state.keybinds, "here")
-	//}
 	for (const i in bindings) {
-	    console.log(bindings[i])
 	    if (bindings[i].length == 1) {
 		// bind normal
 		shortcut.registerShortcut(action, bindings[i], title, desc)
@@ -123,15 +162,11 @@ class Projects extends Component { // define the component
     componentDidMount() {
 	console.log("we are mounting")
 	const { shortcut } = this.props
-	//shortcut.registerShortcut(this.keybindTest, ['alt+shift+j'], 'Test out keybinds', 'desc test out keybinds 2?')
-	//shortcut.registerSequenceShortcut(this.keybindTest, ['c', 'c'], 'Create new project', 'Creates a new project')
-	//shortcut.registerSequenceShortcut(action, binding[i], title, desc)
 
-	//this.keybindWrapper(() => this.keybindTest(2), [['ctrl+m']], 'Create new project', 'Creates a new project')
-	//this.keybindWrapper(() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project')
 	this.keybindHandler([
 	    [() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
-	    [() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project']
+	    [() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
+	    [() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
 	])
 
         this.load()
@@ -141,7 +176,6 @@ class Projects extends Component { // define the component
         //this.props.gruntman.halt();
 	const { shortcut } = this.props
 	//shortcut.unregisterShortcut(['alt+shift+j'])
-	console.log(this.state.keybinds)
 	for (const i in this.state.keybinds) {
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
