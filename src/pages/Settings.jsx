@@ -48,7 +48,6 @@ const Settings = (props) => {
     }, [activeBundleIdx, open])
 
     useEffect(async () => {
-	console.log(props.authType)
 	let n = ''
 	let at = props.authType
 

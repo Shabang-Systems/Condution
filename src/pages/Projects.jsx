@@ -51,6 +51,7 @@ class Projects extends Component { // define the component
 	    combHover: false,
 	    combItem: "notanid",
 	    deleting: false,
+	    keybinds: [],
         };
 
         this.updatePrefix = this.random();
@@ -63,7 +64,7 @@ class Projects extends Component { // define the component
     }
 
     keybindTest(e) {
-	console.log("hi albert!")
+	console.log("hi albert!", e)
     }
 
     async makeNewProject(e) {
@@ -71,6 +72,41 @@ class Projects extends Component { // define the component
 	this.props.history.push(`/projects/${newProject.id}/do`)
 
     }
+
+
+    keybindHandler(keybinds) {
+	//console.log(keybinds)
+	for (const i in keybinds) {
+	    this.keybindWrapper(...keybinds[i])
+	}
+
+	let allBindings = []
+	for (const i in keybinds) {
+	    allBindings.push(...keybinds[i][1])
+	}
+
+	this.setState({
+	    keybinds: allBindings
+	})
+    }
+
+    keybindWrapper(action, bindings, title, desc, crossPlatform=true, global=false) {
+	const { shortcut } = this.props
+	//if (!global) {
+	//    console.log(...bindings, this.state.keybinds, "here")
+	//}
+	for (const i in bindings) {
+	    console.log(bindings[i])
+	    if (bindings[i].length == 1) {
+		// bind normal
+		shortcut.registerShortcut(action, bindings[i], title, desc)
+	    } else {
+		// bind sequence
+		shortcut.registerSequenceShortcut(action, bindings[i], title, desc)
+	    }
+	}
+    }
+
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // flush styles
@@ -87,8 +123,16 @@ class Projects extends Component { // define the component
     componentDidMount() {
 	console.log("we are mounting")
 	const { shortcut } = this.props
-	shortcut.registerShortcut(this.keybindTest, ['alt+shift+j'], 'Test out keybinds', 'desc test out keybinds 2?')
-	shortcut.registerSequenceShortcut(this.keybindTest, ['ctrl+alt+n', 'p'], 'Create new project', 'Creates a new project')
+	//shortcut.registerShortcut(this.keybindTest, ['alt+shift+j'], 'Test out keybinds', 'desc test out keybinds 2?')
+	//shortcut.registerSequenceShortcut(this.keybindTest, ['c', 'c'], 'Create new project', 'Creates a new project')
+	//shortcut.registerSequenceShortcut(action, binding[i], title, desc)
+
+	//this.keybindWrapper(() => this.keybindTest(2), [['ctrl+m']], 'Create new project', 'Creates a new project')
+	//this.keybindWrapper(() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project')
+	this.keybindHandler([
+	    [() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
+	    [() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project']
+	])
 
         this.load()
     }
@@ -96,8 +140,11 @@ class Projects extends Component { // define the component
     componentWillUnmount() {
         //this.props.gruntman.halt();
 	const { shortcut } = this.props
-	shortcut.unregisterShortcut(['alt+shift+j'])
-	//shortcut.registerShortcut(this.makeNewProject, ['j'], 'Create new project')
+	//shortcut.unregisterShortcut(['alt+shift+j'])
+	console.log(this.state.keybinds)
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
     }
 
     async load() {
