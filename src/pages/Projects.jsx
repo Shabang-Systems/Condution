@@ -81,8 +81,8 @@ class Projects extends Component { // define the component
 
 
     keybindTest(e) {
-	console.log("hi albert!", e)
-	console.log(this.state.itemList)
+	console.log("hi albert!")
+	//console.log(this.state.itemList)
     }
 
 
@@ -126,27 +126,57 @@ class Projects extends Component { // define the component
     }
 
     handleVirtualNav(direction) {
+	const { shortcut } = this.props
 	let newSelect = (this.state.virtualSelectIndex + direction) % (this.state.itemList.length);
 	this.setState({
 	    virtualSelectIndex: newSelect,
 	    showVirtualSelect: true
 	})
+
+	//const highestId = window.setTimeout(() => {
+	//    for (let i = highestId; i >= 0; i--) {
+	//        window.clearInterval(i);
+	//    }
+	//}, 0);
+	//const hId = window.setTimeout(() => {}, 0);
+	//console.log(hId)
+	//shortcut.triggerShortcut("alt+shift+k")
+	//shortcut.triggerShortcut(["c", "p"], true)
+	//window.clearTimeout(hId-1);
+	//window.clearTimeout(hId-2);
+	//window.clearTimeout(hId-3);
+	//console.log("bluring")
+	//window.blur()
+	//shortcut.unregisterShortcut(["j"])
     }
 
     componentDidMount() {
 	const { shortcut } = this.props
+	//console.log(this.props)
 
 	keybindHandler(this, [
 	    //[() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
 	    //[() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
 	    //[() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
-	    //[this.keybindTest, [['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
-	    [this.makeNewProject, [['n', 'p']], 'Create new project', 'Creates a new project'],
-	    [this.makeNewTask, [['n', 't']], 'Create new task', 'Creates a new task'],
-	    [this.completeProject, [['c', 'p']], 'Toggle project complete', 'Toggles the project complete status'],
-	    [this.deleteProject, [['d', 'p']], 'Delete project', 'Deletes the project'],
+
+
+	    //[this.keybindTest, [["Escape", "Escape"]], 'Navigate down', 'Navigates down in the current project', true],
+	    //[this.makeNewProject, [['n', 'p']], 'Create new project', 'Creates a new project'],
+	    //[this.makeNewTask, [['n', 't']], 'Create new task', 'Creates a new task'],
+	    //[this.completeProject, [['c', 'p']], 'Toggle project complete', 'Toggles the project complete status'],
+	    //[this.deleteProject, [['d', 'p']], 'Delete project', 'Deletes the project'],
+	    //[() => this.handleVirtualNav(1), [["shift",'j'], ["shift",'ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
+	    //[() => this.handleVirtualNav(this.state.itemList.length-1), [["shift", 'k'], ["shift", 'ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
+
+
+	    //[this.keybindTest, [["Escape", "Escape"]], 'Navigate down', 'Navigates down in the current project', true],
+	    [this.makeNewProject, [['n+p']], 'Create new project', 'Creates a new project'],
+	    [this.makeNewTask, [['n+t']], 'Create new task', 'Creates a new task'],
+	    [this.completeProject, [['c+p']], 'Toggle project complete', 'Toggles the project complete status'],
+	    [this.deleteProject, [['d+p']], 'Delete project', 'Deletes the project'],
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
+
 	])
 
         this.load()
@@ -322,12 +352,6 @@ class Projects extends Component { // define the component
         //}
         //this.closer.current.closeTask();
     }
-
-    hoverEvent = new MouseEvent('mouseover', {
-	view: window,
-	bubbles: true,
-	cancelable: true
-    })
 
     exp = "disableInteractiveElementBlocking"
 
