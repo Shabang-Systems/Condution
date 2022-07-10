@@ -125,18 +125,12 @@ class Projects extends Component { // define the component
 	    this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
     }
 
-    handleVirtualNavDown() {
-	let newSelect = (this.state.virtualSelectIndex + 1) % (this.state.itemList.length);
+    handleVirtualNav(direction) {
+	let newSelect = (this.state.virtualSelectIndex + direction) % (this.state.itemList.length);
 	this.setState({
 	    virtualSelectIndex: newSelect,
 	    showVirtualSelect: true
 	})
-	console.log(newSelect)
-
-	// https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
-	//this.state.virtualSelectRef.current.dispatchEvent(event)
-	//console.log(this.state.virtualSelectRef.current)
-	//console.log(this.state.itemList)
     }
 
     componentDidMount() {
@@ -146,11 +140,13 @@ class Projects extends Component { // define the component
 	    //[() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
 	    //[() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
 	    //[() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
+	    //[this.keybindTest, [['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [this.makeNewProject, [['n', 'p']], 'Create new project', 'Creates a new project'],
 	    [this.makeNewTask, [['n', 't']], 'Create new task', 'Creates a new task'],
 	    [this.completeProject, [['c', 'p']], 'Toggle project complete', 'Toggles the project complete status'],
 	    [this.deleteProject, [['d', 'p']], 'Delete project', 'Deletes the project'],
-	    [this.handleVirtualNavDown, [['j'], ['down']], 'Navigate down', 'Navigates down in the current project'],
+	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
+	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
 	])
 
         this.load()
