@@ -1,5 +1,3 @@
-import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
-
 function keybindHandler(that, keybinds) { // holy hell why did i make it this way this sucks so bad oml
     const { shortcut } = that.props
     const keybindWrapper = (action, bindings, title, desc, crossPlatform=true, global=false)  => {

@@ -53,6 +53,9 @@ class Projects extends Component { // define the component
 	    combItem: "notanid",
 	    deleting: false,
 	    keybinds: [],
+	    virtualSelectIndex: 0,
+	    virtualSelectRef: null,
+	    showVirtualSelect: false,
         };
 
         this.updatePrefix = this.random();
@@ -79,20 +82,75 @@ class Projects extends Component { // define the component
 
     keybindTest(e) {
 	console.log("hi albert!", e)
+	console.log(this.state.itemList)
     }
 
-    async makeNewProject(e) {
+
+    // TODO these should show toasts when they are hit?
+    async makeNewProject() {
+	console.log("making new project")
 	let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
 	this.props.history.push(`/projects/${newProject.id}/do`)
+    }
+    async makeNewTask() {
+	console.log("making new task")
+	if (this.state.onTaskCreate) return;
+	Hookifier.freeze();
+	let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
+	this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
+    }
+    async completeProject() {
+	console.log("completing project")
+	this.setState({animClass: "complete-anim"})
+	setTimeout(() => {
+	    this.setState({animClass: ""}, ()=>{
+		if (this.state.projectObject.data.isComplete)
+		    this.state.projectObject.uncomplete()
+		else if (!this.state.projectObject.data.isComplete)
+		    this.state.projectObject.complete()
+	    });
+	}, 100);
+    }
+
+    // TODO a confirm screen?
+    async deleteProject() {
+	console.log("deleting project")
+	await this.state.projectObject.delete()
+	if (this.state.projectObject.isComplete) {
+	    this.props.history.push("/completed", ""); // go back
+	    this.props.paginate("/completed");
+	} else {
+	    this.props.history.push(
+		(this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
+	    this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
+    }
+
+    handleVirtualNavDown() {
+	let newSelect = (this.state.virtualSelectIndex + 1) % (this.state.itemList.length);
+	this.setState({
+	    virtualSelectIndex: newSelect,
+	    showVirtualSelect: true
+	})
+	console.log(newSelect)
+
+	// https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/dispatchEvent
+	//this.state.virtualSelectRef.current.dispatchEvent(event)
+	//console.log(this.state.virtualSelectRef.current)
+	//console.log(this.state.itemList)
     }
 
     componentDidMount() {
 	const { shortcut } = this.props
 
 	keybindHandler(this, [
-	    [() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
-	    [() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
-	    [() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
+	    //[() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
+	    //[() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
+	    //[() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
+	    [this.makeNewProject, [['n', 'p']], 'Create new project', 'Creates a new project'],
+	    [this.makeNewTask, [['n', 't']], 'Create new task', 'Creates a new task'],
+	    [this.completeProject, [['c', 'p']], 'Toggle project complete', 'Toggles the project complete status'],
+	    [this.deleteProject, [['d', 'p']], 'Delete project', 'Deletes the project'],
+	    [this.handleVirtualNavDown, [['j'], ['down']], 'Navigate down', 'Navigates down in the current project'],
 	])
 
         this.load()
@@ -104,8 +162,6 @@ class Projects extends Component { // define the component
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
     }
-
-
 
     async load() {
         let project = await Project.fetch(this.props.cm, this.props.id)
@@ -271,18 +327,11 @@ class Projects extends Component { // define the component
         //this.closer.current.closeTask();
     }
 
-    async deleteProject() {
-	this.setState({deleting: true})
-	//await this.state.projectObject.delete()
-	//if (this.state.projectObject.isComplete) {
-	//    this.props.history.push("/completed", ""); // go back
-	//    this.props.paginate("/completed");
-	//} else {
-	//    this.props.history.push(
-	//        (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "/upcoming/" : `/projects/${this.state.projectObject.data.parent}`); // go back
-	//    this.props.paginate((this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? "upcoming" : `projects`, (this.state.projectObject.data.parent === "" || this.state.projectObject.data.parent === undefined) ? undefined : this.state.projectObject.data.parent);}
-    }
-
+    hoverEvent = new MouseEvent('mouseover', {
+	view: window,
+	bubbles: true,
+	cancelable: true
+    })
 
     exp = "disableInteractiveElementBlocking"
 
@@ -302,7 +351,8 @@ class Projects extends Component { // define the component
                         background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
                         borderRadius: "8px",
 			//border: `${(this.state.combItem == item.id)? "1px groove red" : ""}`,
-			transition: "0.3s"
+			transition: "0.3s",
+			background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? "var(--background-feature)" : "",
 			//"border-style": "dashed",
                     }}
 		    className={`${(this.state.combItem == item.id)? "comb-hover" : ""}`}
@@ -337,8 +387,10 @@ class Projects extends Component { // define the component
                 <a 
                     style={{
                         opacity:item.available?"1":"0.35",
-                        background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`,
-			transition: "0.3s"
+                        //background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`,
+			transition: "0.3s",
+			//background: "red",
+			background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? "var(--background-feature)" : "",
                     }}
                     onClick={()=>{
                         this.props.paginate("projects", item.id);
@@ -436,13 +488,17 @@ class Projects extends Component { // define the component
                                             value={this.state.name}
                                             style={{transform: "transformY(-2px)"}}
                                             ref={this.name}
-                                        />
+					    onKeyDown={(e) => { if (e.code == "Enter") e.target.blur();
+					    }
+					    }
+					/>
 
                                     </h1> 
                                     <div className="complete-container">
                                         <a className={"complete-name " + this.state.animClass}
                                             style={{color: (this.state.animClass == "complete-anim")? "var(--background-feature)" : "var(--page-title)"}} 
-                                            onClick={async () => { 
+                                            onClick={
+						async () => { 
                                                 this.setState({animClass: "complete-anim"})
                                                 setTimeout(() => {
                                                     this.setState({animClass: ""}, ()=>{
@@ -558,22 +614,33 @@ class Projects extends Component { // define the component
 						    }
 						    return (
 						    <div>
+							{this.state.virtualSelectRef? "" : 
+								this.setState({virtualSelectRef: provided.innerRef})
+							}
                                                     <div
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
                                                         ref={provided.innerRef}
                                                         key={item.id}
-							style={
-							    //(style, snapshot) => {
-							    //provided.draggableProps.style
-							    //(window.screen.width >= 992)? (
-							    //    (snapshot.isDragging)? {transform: "translate(-270px, -170px)"} : {}) : {}
-							    {}
-							    //return ((style, snapshot.isDragging)? {} : {})
-							    //return {}
-							    //}
-							}
+							style={ {
+							    //border: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? 
+								//"1px solid #ccc" : "",
+							    //filter: (this.state.virtualSelectIndex == i)? 
+								//"invert(43%) sepia(24%) saturate(3836%) hue-rotate(163deg) brightness(101%) contrast(101%)" : "",
+							} }
+							onMouseEnter={(e) => {
+							    this.setState({
+								virtualSelectIndex: i,
+								showVirtualSelect: false,
+							    })
+							    //this.setState({virtualSelectRef: provided.innerRef})
+							}}
                                                     >
+							{/*{(this.virtualSelectIndex == i)? 
+								provided.innerRef.dispatchEvent(this.hoverEvent)
+							:
+								""
+							}*/}
 
                                                         {((item.databaseBadge == "tasks" || (item != null && typeof item.then === 'function'))? 
                                                             this.renderTask(item, i, provided, snapshot)
