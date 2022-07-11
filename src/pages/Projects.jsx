@@ -214,7 +214,7 @@ class Projects extends Component { // define the component
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
 	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
-	    [this.handleItemComplete, [['Enter']], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, [['Enter'], ["x"], ["Space"]], 'Complete item', 'Completes a task, or enters a project'],
 
 	])
 
