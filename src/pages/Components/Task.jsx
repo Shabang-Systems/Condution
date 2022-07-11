@@ -337,7 +337,14 @@ class Task extends Component {
 
     componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false); // remove the listener... no memory leaks plez
 
-    toggleTask = () => this.setState(state => ({expanded: !state.expanded})); // util function to toggl a task
+    toggleTask = () => { // util function to toggl a task
+	//this.setState(state => ({expanded: !state.expanded}));
+	if (this.state.expanded) {
+	    this.closeTask()
+	} else {
+	    this.openTask()
+	}
+    }
 
     closeTask() {
         this.setState({expanded: false});
@@ -458,7 +465,22 @@ class Task extends Component {
             this.openTask(); // open task
     }
 
+    completeTask() {
+	if (this.state.isComplete) {
+	    this.setState({isComplete: false}, ()=>setTimeout(()=>this.state.taskObj.uncomplete(), 800));
 
+	} else {
+	    if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
+		this.setState({activelyRepeating: true, isComplete:true}, async ()=> {
+		    setTimeout(()=>this.state.taskObj.complete(), 800)
+		    this.setState({activelyRepeating: false});
+		});
+	    else {
+		this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
+	    }
+	    Haptics.notification();
+	}
+    }
     // ready fo this?
 
     render() {
@@ -527,23 +549,7 @@ class Task extends Component {
                                         id={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} 
                                         className="task-check"
                                         checked={this.state.isComplete}
-                                        onChange={()=>{
-                                            //console.log(this.state.taskObj.isComplete)//;
-                                            if (this.state.isComplete) {
-                                                this.setState({isComplete: false}, ()=>setTimeout(()=>this.state.taskObj.uncomplete(), 800));
-
-                                            } else {
-                                                if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
-                                                    this.setState({activelyRepeating: true, isComplete:true}, async ()=> {
-                                                        setTimeout(()=>this.state.taskObj.complete(), 800)
-                                                        this.setState({activelyRepeating: false});
-                                                    });
-                                                else {
-                                                    this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
-                                                }
-                                                Haptics.notification();
-                                            }
-                                        }} 
+                                        onChange={this.completeTask} 
                                         style={{opacity: this.state.availability?1:0.35}}
                                     />
 
@@ -827,9 +833,7 @@ class Task extends Component {
                                                 </div>
                                                 <div className="tag-container" style={{display: this.props.cm.isInWorkspace ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
-                                                    <TagsInput 
-							className="react-tagsinput delegation-textbox" 
-							tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
+                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
                                                         let isValid = true;
                                                         list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
                                                             if (/\w+@\w+\.\w+/.test(newAccount))

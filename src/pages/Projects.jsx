@@ -64,6 +64,9 @@ class Projects extends Component { // define the component
         this.checkbox = React.createRef(); // what's my pseudocheck
         this.closer = React.createRef();
 
+	//this.virtualNonActive = React.createRef();
+	this.virtualActive = React.createRef();
+
         autoBind(this);
     }
 
@@ -94,10 +97,15 @@ class Projects extends Component { // define the component
     }
     async makeNewTask() {
 	console.log("making new task")
+	//this.handleItemClose()
 	if (this.state.onTaskCreate) return;
 	Hookifier.freeze();
 	let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
-	this.setState({itemList:[...this.state.itemList, newTask], onTaskCreate: true});
+	this.setState({
+	    itemList: [...this.state.itemList, newTask],
+	    onTaskCreate: true,
+	    virtualSelectIndex: this.state.itemList.length,
+	});
     }
     async completeProject() {
 	console.log("completing project")
@@ -127,11 +135,15 @@ class Projects extends Component { // define the component
 
     handleVirtualNav(direction) {
 	const { shortcut } = this.props
+
+	this.handleItemClose()
+
 	let newSelect = (this.state.virtualSelectIndex + direction) % (this.state.itemList.length);
 	this.setState({
 	    virtualSelectIndex: newSelect,
 	    showVirtualSelect: true
 	})
+
 
 	//const highestId = window.setTimeout(() => {
 	//    for (let i = highestId; i >= 0; i--) {
@@ -149,6 +161,31 @@ class Projects extends Component { // define the component
 	//window.blur()
 	//shortcut.unregisterShortcut(["j"])
     }
+
+    handleItemClose() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.closeTask()
+	}
+    }
+
+    handleItemOpen() {
+	//console.log(this.state.virtualSelectIndex)
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.toggleTask()
+	} else {
+	    if (this.virtualActive.current) this.virtualActive.current.click()
+	}
+    }
+
+    handleItemComplete() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.completeTask()
+	    this.handleVirtualNav(this.state.itemList.length-1)
+	} else {
+	    if (this.virtualActive.current) this.virtualActive.current.click()
+	}
+    }
+	//this.virtualActive.current.closeTask()
 
     componentDidMount() {
 	const { shortcut } = this.props
@@ -176,6 +213,8 @@ class Projects extends Component { // define the component
 	    [this.deleteProject, [['d+p']], 'Delete project', 'Deletes the project'],
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
+	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemComplete, [['Enter']], 'Complete item', 'Completes a task, or enters a project'],
 
 	])
 
@@ -389,6 +428,7 @@ class Projects extends Component { // define the component
                         }}
                         setExpanded={(e, id) => { this.setState({expandedChild: {expanded: e, id: id}}) }}
                         //ref={(item.id == this.state.inDragId)? this.closer : null}
+			ref={(i == this.state.virtualSelectIndex)? this.virtualActive : null}
                     />
                 </div>
             </div>
@@ -397,6 +437,7 @@ class Projects extends Component { // define the component
 
     renderProject = (item, i, provided, snapshot) => {
         //console.log("renddering project")
+	//this.myRef = React.createRef();
         return (
             <div
                 {...provided.draggableProps}
@@ -417,6 +458,8 @@ class Projects extends Component { // define the component
                         this.props.history.push(`/projects/${item.id}`)
                     }}
 		    className={`${(this.state.combItem == item.id)? "comb-hover" : ""} subproject`}
+		    //ref={parseInt(i)}
+		    ref={(i == this.state.virtualSelectIndex)? this.virtualActive : null}
                 >
                     <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
                         {item.name}</div></div></a>
