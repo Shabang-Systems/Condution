@@ -56,6 +56,7 @@ class Projects extends Component { // define the component
 	    virtualSelectIndex: 0,
 	    virtualSelectRef: null,
 	    showVirtualSelect: false,
+	    draggableRefs: null,
         };
 
         this.updatePrefix = this.random();
@@ -66,6 +67,7 @@ class Projects extends Component { // define the component
 
 	//this.virtualNonActive = React.createRef();
 	this.virtualActive = React.createRef();
+	this.DNDVirtualActive = React.createRef();
 
         autoBind(this);
     }
@@ -166,6 +168,11 @@ class Projects extends Component { // define the component
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.closeTask()
 	}
+
+	if (this.virtualActive.current) {
+	    //this.virtualActive.current.focus()
+	    //console.log(this.virtualActive.current)
+	}
     }
 
     handleItemOpen() {
@@ -185,9 +192,15 @@ class Projects extends Component { // define the component
 	    if (this.virtualActive.current) this.virtualActive.current.click()
 	}
     }
+
+    handleVirtualDragStart() {
+	//console.log(this.DNDVirtualActive.current.focus())
+	console.log(this.virtualActive.current.focus())
+    }
 	//this.virtualActive.current.closeTask()
 
     componentDidMount() {
+	this.setState({draggableRefs: new Array(this.state.itemList.length).fill(null)})
 	const { shortcut } = this.props
 	//console.log(this.props)
 
@@ -206,15 +219,17 @@ class Projects extends Component { // define the component
 	    //[() => this.handleVirtualNav(this.state.itemList.length-1), [["shift", 'k'], ["shift", 'ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
 
 
-	    //[this.keybindTest, [["Escape", "Escape"]], 'Navigate down', 'Navigates down in the current project', true],
+	    //[this.keybindTest, [["SpaceBar"]], 'Navigate down', 'Navigates down in the current project', true],
 	    [this.makeNewProject, [['n+p']], 'Create new project', 'Creates a new project'],
 	    [this.makeNewTask, [['n+t']], 'Create new task', 'Creates a new task'],
 	    [this.completeProject, [['c+p']], 'Toggle project complete', 'Toggles the project complete status'],
 	    [this.deleteProject, [['d+p']], 'Delete project', 'Deletes the project'],
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
-	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
-	    [this.handleItemComplete, [['Enter'], ["x"], ["Space"]], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, [['o'], ['e']], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    //[this.handleVirtualDragStart, [['c+l']], 'Complete Task', 'Completes a task, or enters a project'],
 
 	])
 
@@ -390,6 +405,15 @@ class Projects extends Component { // define the component
         //    this.closer.current.closeTask() 
         //}
         //this.closer.current.closeTask();
+    }
+
+    setDraggableRefState = (i, ref) => {
+	let temp = this.state.draggableRefs
+	console.log(i, ref.current)
+	if (temp[i] != ref) {
+	    temp[i] = ref
+	    this.setState({draggableRefs: temp})
+	}
     }
 
     exp = "disableInteractiveElementBlocking"
@@ -666,6 +690,8 @@ class Projects extends Component { // define the component
                                                 disableInteractiveElementBlocking={(item.id == this.state.expandedChild.id)? !this.state.expandedChild.expanded : true}
 						isDragDisabled={(item.id == this.state.expandedChild.id)? this.state.expandedChild.expanded : false}
                                                 draggableId={item.id} key={item.id} index={i}
+						//ref={(i == this.state.virtualSelectIndex)? this.DNDVirtualActive : null}
+						//ref={(i == this.state.virtualSelectIndex)? this.DNDVirtualActive : null}
                                             >
 						{(provided, snapshot) => {
 						    if (typeof provided.draggableProps.onTransitionEnd === 'function') {
@@ -676,15 +702,17 @@ class Projects extends Component { // define the component
 							);
 						    }
 						    return (
-						    <div>
+						    <div
+						    >
 							{this.state.virtualSelectRef? "" : 
 								this.setState({virtualSelectRef: provided.innerRef})
 							}
                                                     <div
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
-                                                        ref={provided.innerRef}
-                                                        key={item.id}
+							ref={provided.innerRef}
+							//ref={(el)=> {provided.innerRef(el); this.DNDVirtualActive(el);}}
+							key={item.id}
 							style={ {
 							    //border: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? 
 								//"1px solid #ccc" : "",
@@ -698,7 +726,9 @@ class Projects extends Component { // define the component
 							    })
 							    //this.setState({virtualSelectRef: provided.innerRef})
 							}}
-                                                    >
+						    >
+							{/*{this.setDraggableRefState(i, provided.innerRef)}*/}
+							{/*{(i == this.state.virtualSelectIndex)? console.log(provided.dragHandleProps.onDragStart()) : ""}*/}
 							{/*{(this.virtualSelectIndex == i)? 
 								provided.innerRef.dispatchEvent(this.hoverEvent)
 							:
