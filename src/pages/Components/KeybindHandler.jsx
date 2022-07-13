@@ -17,6 +17,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
     let cmdNeedsMigrate = []
     const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
     for (const i in keybinds) {
+	if (!!keybinds[i]) continue; // this is erroring for some reason?
 	if (!!keybinds[i][4]) {
 	    for (const ii in keybinds[i][1]) {
 		for (const iii in keybinds[i][1][ii]) {

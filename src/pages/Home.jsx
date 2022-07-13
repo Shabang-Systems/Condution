@@ -7,7 +7,7 @@ import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, cale
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 /* Keybinds! */
-import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 
 // Routing
 import { IonReactRouter, IonReactHashRouter } from '@ionic/react-router';

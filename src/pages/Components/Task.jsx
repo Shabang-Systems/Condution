@@ -49,6 +49,8 @@ import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Wid
 
 import { RepeatRule, RepeatRuleType, Hookifier }  from "../../backend/src/Objects/Utils.ts";
 import {Controlled as CodeMirror} from 'react-codemirror2'
+import AsyncSelect from 'react-select/async';
+
 
 //import 'codemirror/theme/material.css';
 require('codemirror/mode/xml/xml');
@@ -83,8 +85,18 @@ const autoBind = require('auto-bind/react');
 
 function autosizingRenderInput ({addTag, ...props}) {
     let {onChange, value, ...other} = props
+    //let onChange = (e) => {
+    //    console.log("please")
+    //}
+    //console.log('this is getting loaded', props)
     return (
-        <AutosizeInput style={{border: 0}} name="react-tagsinput-actualinput-delegation" type='text' onChange={onChange} value={value} {...other} />
+        <AutosizeInput style={{border: 0}} name="react-tagsinput-actualinput-delegation" type='text' onChange={
+	    (e) => {
+		console.log(e)
+		onChange(e)
+	    }
+	} 
+	value={value} {...other} />
     )
 }
 
@@ -222,6 +234,8 @@ class Task extends Component {
         this.TagEditorRef = React.createRef(); // what's my tag editor
         this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
         this.duePopover = React.createRef(); // what's my due popover?
+        this.dueInput = React.createRef(); // what's my due popover?
+        this.tagsInput = React.createRef(); // what's my due popover?
         this.deferPopover = React.createRef(); // what's my defer popover?
         this.notificationPopover = React.createRef(); // what's my notification popover?
         this.notificationCalender = React.createRef(); // what's my notification calandar?
@@ -619,7 +633,7 @@ class Task extends Component {
 
                                                     //options={options}
                                                     options={{
-                                                        mode: 'gfm',
+							mode: 'gfm',
                                                         theme: `condution ${this.state.descExpanded? "expanded" : ""} ${this.state.iconHovering? "bghvr" : ""}`,
                                                         lineNumbers: false,
                                                         lineWrapping: true,
@@ -630,15 +644,25 @@ class Task extends Component {
                                                         spellcheck: true,
                                                         matchBrackets: true,
                                                         continueList: true,
-                                                        newineAndIndentContinueMarkdownList: true,
-                                                        //vimMode: true,
+							newineAndIndentContinueMarkdownList: true,
+							//vimMode: true,
 
                                                         //fullScreen: true,
                                                     }}
                                                     onBeforeChange={(editor, data, value) => {
-                                                        this.setState({desc: value});
+							if (data.text == "\t") {
+							//    console.log(value, data, editor)
+							//    //const form = event.target.form;
+							//    //const index = [...form].indexOf(event.target);
+							//    //form.elements[index + 1].focus();
+							//    //event.preventDefault();
+							    this.dueInput.current.focus()
+							} else {
+							    this.setState({desc: value});
+							}
                                                         //console.log(value, editor, data)
                                                     }}
+
                                                     onBlur={(_)=>{
                                                         if (this.state.desc !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc
                                                     }}
@@ -773,7 +797,9 @@ class Task extends Component {
                                                                 return (
                                                                     <input 
                                                                         tabIndex='0'
-                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onKeyPress={(e)=>{
+                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} 
+									ref={this.dueInput}
+								    onKeyPress={(e)=>{
                                                                             let d = chrono.parseDate(e.target.value);
                                                                             if (e.key==="Enter" && d)
                                                                                 this.setState({dueDate: d}, ()=>{this.state.taskObj.due= d});
@@ -833,8 +859,14 @@ class Task extends Component {
                                                 </div>
                                                 <div className="tag-container" style={{display: this.props.cm.isInWorkspace ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
-                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
+                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} 
+					    inputProps={{
+						className: "react-tagsinput-input delegation-input",
+					    }}
+							//ref={this.tagsInput}
+					    value={this.state.delegations} onChange={(list)=>{
                                                         let isValid = true;
+						//console.log(list, "list!!")
                                                         list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
                                                             if (/\w+@\w+\.\w+/.test(newAccount))
                                                                 this.state.taskObj.delegateTo(newAccount);
@@ -847,7 +879,9 @@ class Task extends Component {
 
                                                         if (isValid)
                                                             this.setState({delegations: list});
-                                                    }} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.localizations.workspace_email}} />
+                                                    }} 
+						    renderInput={autosizingRenderInput} 
+						    inputProps={{placeholder: this.props.localizations.workspace_email}} />
                                                 </div>
 
                                                 <div>
@@ -887,6 +921,14 @@ class Task extends Component {
                                                             styles={{ menuPortal: base => ({ ...base, zIndex: "99999 !important" }) }}
                                                             menuPortalTarget={document.body}
                                                             value={this.state.tagDatapack.filter(option => this.state.tags.includes(option.value))}
+							    onKeyDown={(e)=>{
+								if (e.key == "Escape") {
+								    e.preventDefault()
+								    this.tagsInput.current.blur()
+								    console.log("fasdf")
+								}
+							    }}
+							    ref={this.tagsInput}
                                                             onChange={async (newValue, _) => {
                                                                 let tags = await Promise.all(newValue?newValue.map(async (e) => { // for each tag
                                                                     if (e.__isNew__) {// if it's a new tag
