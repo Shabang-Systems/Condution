@@ -39,7 +39,8 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 
 /* Keybinds! */
-import { withShortcut, ShortcutProvider, ShortcutConsumer } from 'react-keybind'
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from './static/react-keybind'
+
 import $ from "jquery";
 
 /* Our Lovley Core Engine */
@@ -415,10 +416,10 @@ class App extends Component {
                     case "firebase":
                     case "json":
                     case "portjson":
-                        return <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
+			return <ShortcutProvider> <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/> </ShortcutProvider>;
          //email={firebase.auth().currentUser.email}
                     case "workspace":
-                        return <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
+			return <ShortcutProvider> <Home cm={this.cm} dispatch={this.authDispatch} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/> </ShortcutProvider>;
                         //return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode} workspace={this.state.workspace}/>;
                     case "json":
                         //return <Home engine={Engine} uid={this.state.uid} dispatch={this.authDispatch} gruntman={this.gruntman} displayName={this.state.displayName} localizations={this.state.localizations} authType={this.state.authMode}/>;
@@ -437,7 +438,7 @@ class App extends Component {
     }
 }
 
-export default App;
+export default withShortcut(App);
 //class App extends Component {
 //render() {
 //return (

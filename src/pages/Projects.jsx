@@ -46,7 +46,7 @@ class Projects extends Component { // define the component
             animClass: '',
             initialRenderingDone: false,
             projectObject: '',
-            itemList: [], 
+            itemList: [],
             onTaskCreate: false, // are we in the middle of task creation? so, should we hang the refreshes?
             expandedChild: {expanded: false, id: null},
             inDragId: "",
@@ -205,7 +205,6 @@ class Projects extends Component { // define the component
 	this.setState({draggableRefs: new Array(this.state.itemList.length).fill(null)})
 	const { shortcut } = this.props
 	//console.log(this.props)
-
 	keybindHandler(this, [
 	    //[() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
 	    //[() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],

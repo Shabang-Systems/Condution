@@ -33,6 +33,7 @@ import Settings from './Settings';
 import { MenuWidget } from "../backend/src/Widget";
 import Project from "../backend/src/Objects/Project";
 import Perspective from "../backend/src/Objects/Perspective";
+import keybindHandler from "./Components/KeybindHandler"
 
 
 // Our very own CSS
@@ -77,7 +78,10 @@ class Home extends Component {
             isWorkspace:false, // current workspace
             workspace: this.props.authType==="workspace" ? this.props.workspace : this.props.uid, // current workspace/uid
             pendingAcceptances: [], // pending acceptance toasts to show
-            menuWidget: new MenuWidget(this.props.cm)
+            menuWidget: new MenuWidget(this.props.cm),
+
+	    keybinds: [],
+
         };
 
         //        if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -114,7 +118,24 @@ class Home extends Component {
 
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
 
-   async componentDidMount() {
+    handleHistoryBack = () => {
+	//this.setState({itemSelected: {item:"perspectives", id:psp.id}});
+	//if (this.menu.current)
+	//    this.menu.current.close();
+	//console.log(String(history.location.pathname).split("/"))
+	history.goBack() // TODO this doesnt highlight the sides?
+	// TODO fix later! w/ @jemoka
+	const locals = String(history.location.pathname).split("/")
+	this.setState({itemSelected: {item: locals[1], id: locals[2]}})
+	if (this.menu.current)
+	    this.menu.current.close();
+    }
+
+    handleHistoryForward = () => {
+	history.goForward()
+    }
+
+    async componentDidMount() {
         const content = this.menuContent.current;
         const styles = document.createElement('style');
         styles.textContent = `
@@ -136,13 +157,17 @@ class Home extends Component {
             this.setState({itemSelected:{item:hash[1], id:hash[2]}});
         else
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
-       this.state.menuWidget.hook(this.refresh);
+        this.state.menuWidget.hook(this.refresh);
+
+
+	const { shortcut } = this.props
+
+	keybindHandler(this, [
+	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
+	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
+	])
 
         this.refresh();
-        //    this.refresh().then(()=> {
-        //if (uri[1] === "workspaces")
-        //this.switch("workspace", uri[2]);
-        //});
 
     }
 
@@ -154,6 +179,10 @@ class Home extends Component {
     componentWillUnmount() {
         this.state.menuWidget.unhook(this.refresh);
         this.props.cm.unhookInvite(this.updateInvites);
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -222,7 +251,7 @@ class Home extends Component {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
 	    <IonPage>
-		<ShortcutProvider>
+		{/*<ShortcutProvider>*/}
 		    {/* The central router that controls the routing of views */}
 		    <Router history={history}>
 			{/* @TheEnquirer TODO
@@ -541,10 +570,10 @@ class Home extends Component {
 			    </IonSplitPane>
 			</IonContent>
 		    </Router>
-		</ShortcutProvider>
+		{/*</ShortcutProvider>*/}
 	    </IonPage>
         );
     }
 };
 
-export default Home;
+export default withShortcut(Home);
