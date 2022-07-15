@@ -53,6 +53,7 @@ const Settings = (props) => {
 
     const launchSettings = () => {
 	setOpen(!open)
+	console.log("this is running")
     }
 
 
@@ -70,7 +71,7 @@ const Settings = (props) => {
 	keybindHandler(props, [
 	    [launchSettings, [['l+j']], 'Settings', 'Launch the settings page'],
 	])
-    })
+    }, [])
 
 
     return (

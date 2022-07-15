@@ -68,10 +68,12 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	    toUnbind.push(...keybinds[i][1])
 	}
     }
-
-    that.setState({
-	keybinds: toUnbind
-    })
+    
+    if (that.props) {
+	that.setState({
+	    keybinds: toUnbind
+	})
+    }
 }
 
 export default keybindHandler
