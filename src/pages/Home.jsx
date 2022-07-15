@@ -159,7 +159,6 @@ class Home extends Component {
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
         this.state.menuWidget.hook(this.refresh);
 
-
 	const { shortcut } = this.props
 
 	keybindHandler(this, [

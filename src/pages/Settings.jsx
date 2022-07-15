@@ -8,6 +8,8 @@ import TagEditor from './Components/TagEditor'
 import { TagsPaneWidget } from "../backend/src/Widget";
 import Tag from "../backend/src/Objects/Tag";
 import { createBrowserHistory, createHashHistory } from 'history';
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
 
 const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
@@ -40,12 +42,19 @@ const Settings = (props) => {
     const [activeTheme, setActiveTheme] = useState(0)
     const [update, setUpdate] = useState(0)
     const [name, setName] = useState("")
+    const [keybind, setKeybinds] = useState([])
 
     useEffect(() => {
 	setTimeout(() => {
 	    setUpdate(update+1)
 	}, 1);
     }, [activeBundleIdx, open])
+
+
+    const launchSettings = () => {
+	setOpen(!open)
+    }
+
 
     useEffect(async () => {
 	let n = ''
@@ -55,7 +64,14 @@ const Settings = (props) => {
 	    n = await props.cm.userDisplayName()
 	}
 	setName(n)
+
+	const { shortcut } = props
+
+	keybindHandler(props, [
+	    [launchSettings, [['l+j']], 'Settings', 'Launch the settings page'],
+	])
     })
+
 
     return (
 	<>
@@ -154,7 +170,7 @@ const Settings = (props) => {
     );
 };
 
-export default Settings
+export default withShortcut(Settings)
 
 
 

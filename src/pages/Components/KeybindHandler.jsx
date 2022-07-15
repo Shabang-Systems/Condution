@@ -1,7 +1,8 @@
 function keybindHandler(that, keybinds) { // holy hell why did i make it this way this sucks so bad oml
-    const { shortcut } = that.props
+
+    const { shortcut } = (that.props? that.props : that)
     const keybindWrapper = (action, bindings, title, desc, crossPlatform=true, global=false)  => {
-	const { shortcut } = that.props
+	const { shortcut } = (that.props? that.props : that)
 	for (const i in bindings) {
 	    if (bindings[i].length == 1) {
 		// bind normal
