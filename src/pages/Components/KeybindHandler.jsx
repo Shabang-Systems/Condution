@@ -18,7 +18,13 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
     let cmdNeedsMigrate = []
     const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
     for (const i in keybinds) {
-	if (!!keybinds[i]) continue; // this is erroring for some reason?
+	// TODO idk why i had this..
+	//console.log("adsf", !!keybinds[i][4])
+	//if (i != 4 && i != 5 && !!keybinds[i]) {
+	//    console.log("erroring!", keybinds[i])
+	//    continue; // this is erroring for some reason?
+	//}
+	//console.log("here??")
 	if (!!keybinds[i][4]) {
 	    for (const ii in keybinds[i][1]) {
 		for (const iii in keybinds[i][1][ii]) {
@@ -56,6 +62,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 
     keybinds = keybinds.concat(ctrlNeedsMigrate)
     keybinds = keybinds.concat(cmdNeedsMigrate)
+    //console.log(ctrlNeedsMigrate, cmdNeedsMigrate, "here")
 
 
     for (const i in keybinds) {
@@ -68,7 +75,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	    toUnbind.push(...keybinds[i][1])
 	}
     }
-    
+
     if (that.props) {
 	that.setState({
 	    keybinds: toUnbind

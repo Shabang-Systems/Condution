@@ -138,7 +138,8 @@ class Home extends Component {
 
     focusFab = () => {
 	console.log("Focusing fab")
-	this.abtibRef.current.focus()
+	if (this.abtibRef.current) this.abtibRef.current.focus()
+	console.log(this.state.keybinds)
     }
 
     async componentDidMount() {
@@ -170,7 +171,7 @@ class Home extends Component {
 	keybindHandler(this, [
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
-	    [this.focusFab, [['i'], ['']], 'Go forwards', 'Navigates forward in history', true],
+	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
 	    //[this.focusFab, [['shift'], ['shift']], 'Go forwards', 'Navigates forward in history', true],
 	])
 
