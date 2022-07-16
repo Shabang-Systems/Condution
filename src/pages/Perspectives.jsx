@@ -61,6 +61,7 @@ class Perspectives extends Component {
 	    keybinds: [],
 	    virtualSelectIndex: 0,
 	    virtualSelectRef: null,
+	    showVirtualSelect: false,
         };
 
 
@@ -132,7 +133,7 @@ class Perspectives extends Component {
         //
         //
         // @jemoka
-        
+
         let taskList = await this.state.perspectiveObject.execute();
         this.setState({
             taskList,
@@ -146,12 +147,8 @@ class Perspectives extends Component {
         this.props.history.push("/upcoming/");
     }
 
-    
-
     componentDidMount() {
 	const { shortcut } = this.props
-
-
 
 
 	keybindHandler(this, [
@@ -243,7 +240,23 @@ class Perspectives extends Component {
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
-                        {this.state.taskList.map(i => <div key={i.id}><Task cm={this.props.cm} localizations={this.props.localizations} taskObject={i} /></div>)}
+                        {this.state.taskList.map((i, idx) => <div
+			    key={i.id}
+			    style={{
+				borderRadius: "8px",
+				transition: "0.3s",
+				background: (this.state.virtualSelectIndex == idx && this.state.showVirtualSelect)? "var(--background-feature)" : "",
+			    }}
+			    onMouseEnter={(e) => {
+				this.setState({
+				    virtualSelectIndex: idx,
+				    showVirtualSelect: false,
+				})
+			    }}
+			>
+			    <Task cm={this.props.cm} localizations={this.props.localizations} taskObject={i} />
+			</div>
+			)}
                         <Spinner ready={this.state.initialRenderingDone} />
                         <BlkArt visible={this.state.initialRenderingDone && this.state.taskList.length === 0} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
