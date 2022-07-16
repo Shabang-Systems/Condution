@@ -135,6 +135,12 @@ class Home extends Component {
 	history.goForward()
     }
 
+
+    focusFab = () => {
+	console.log("Focusing fab")
+	this.abtibRef.current.focus()
+    }
+
     async componentDidMount() {
         const content = this.menuContent.current;
         const styles = document.createElement('style');
@@ -164,6 +170,8 @@ class Home extends Component {
 	keybindHandler(this, [
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
+	    [this.focusFab, [['i'], ['']], 'Go forwards', 'Navigates forward in history', true],
+	    //[this.focusFab, [['shift'], ['shift']], 'Go forwards', 'Navigates forward in history', true],
 	])
 
         this.refresh();

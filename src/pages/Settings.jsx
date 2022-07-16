@@ -68,7 +68,7 @@ const Settings = (props) => {
 	const { shortcut } = props
 
 	keybindHandler(props, [
-	    [launchSettings, [["cmd+,"]], 'Settings', 'Launch the settings page'],
+	    [launchSettings, [["cmd+,"]], 'Settings', 'Launch the settings page', true],
 	])
     }, [])
 
