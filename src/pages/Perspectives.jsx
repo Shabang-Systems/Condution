@@ -15,6 +15,8 @@ import PerspectiveEdit from './Components/PerspectiveEditor';
 
 import Perspective from "../backend/src/Objects/Perspective";
 import Project from "../backend/src/Objects/Project";
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
 
 import {Hookifier} from "../backend/src/Objects/Utils.ts";
 
@@ -55,13 +57,17 @@ class Perspectives extends Component {
             initialRenderingDone: false,
             perspectiveObject: null,
             taskList:[],
-            showEdit: false
+            showEdit: false,
+	    keybinds: [],
+	    virtualSelectIndex: 0,
+	    virtualSelectRef: null,
         };
 
 
         this.updatePrefix = this.random();
         this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
 
+	this.virtualActive = React.createRef();
 
         // AutoBind!
         autoBind(this);
@@ -88,6 +94,25 @@ class Perspectives extends Component {
         this.setState({
             perspectiveObject: perspective 
         }, this.reloadData)
+    }
+
+    handleVirtualNav(direction) {
+	const { shortcut } = this.props
+
+	this.handleItemClose()
+
+	let newSelect = (this.state.virtualSelectIndex + direction) % (this.state.taskList.length);
+	this.setState({
+	    virtualSelectIndex: newSelect,
+	    showVirtualSelect: true
+	})
+    }
+
+
+    handleItemClose() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.closeTask()
+	}
     }
 
     async reloadData() {
@@ -124,6 +149,19 @@ class Perspectives extends Component {
     
 
     componentDidMount() {
+	const { shortcut } = this.props
+
+
+
+
+	keybindHandler(this, [
+	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
+	    [() => this.handleVirtualNav(this.state.taskList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
+	    //[this.handleItemOpen, [['o'], ['e']], 'Open item', 'Opens the currently selected item'],
+	    //[this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
+	    //[this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	])
+
         this.load()
         this.setState({showEdit: this.props.options === "do"});
 
@@ -216,5 +254,5 @@ class Perspectives extends Component {
     }
 }
 
-export default withRouter(Perspectives);
+export default withShortcut(withRouter(Perspectives));
 
