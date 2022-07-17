@@ -229,6 +229,7 @@ class Task extends Component {
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
+        this.name = React.createRef(); // what's my name? Button Gwinnett!
         this.repeater = React.createRef(); // what's my repeater?
         this.checkbox = React.createRef(); // what's my pseudocheck
         this.TagEditorRef = React.createRef(); // what's my tag editor
@@ -371,7 +372,11 @@ class Task extends Component {
             this.setState({expanded: true});
         else 
             this.setState({haveBeenExpanded: true, expanded:true});
-	if (this.props.setExpanded && this.props.taskObject) { this.props.setExpanded(true, this.props.taskObject.id) }
+	if (this.props.setExpanded && this.props.taskObject) {
+            if (!getPlatforms().includes("mobile") && this.name.current)
+                this.name.current.focus();
+            this.props.setExpanded(true, this.props.taskObject.id)
+        }
     }// util function to open a task
 
     _explode() {
@@ -579,6 +584,8 @@ class Task extends Component {
                                     defaultValue={this.state.name} 
                                     onChange={(e)=>this.setState({name:e.target.value})} 
                                     onBlur={(_)=>{if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name}}
+                                    ref={this.name}
+                                    
                                     onKeyPress={(e)=>{
                                         // TODO why????
                                         // Not matter. It works now @TheEnquirer, but will address later.
@@ -586,11 +593,11 @@ class Task extends Component {
                                             if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name
                                     }}
                                     onFocus={(e)=>{ 
-                                        // open the task if its not open already
-                                        if(!this.state.expanded) { 
-                                            //this.openTask(); // open the task
-                                            if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs
-                                        }
+                                        // https://stackoverflow.com/questions/44983286/send-cursor-to-the-end-of-input-value-in-react
+                                        e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length);
+                                        /* if(!this.state.expanded) {  */
+                                        /*     if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs */
+                                        /* } */
                                     }} 
                                     className={"task-name "+(this.state.expanded?"":"no-select")} 
                                     readOnly={(!this.state.expanded)} 
