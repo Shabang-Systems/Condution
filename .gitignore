@@ -32,3 +32,4 @@ ionic.config.json
 
 *.jks
 playstore_creds.json
+/.log/
