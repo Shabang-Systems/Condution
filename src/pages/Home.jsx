@@ -137,9 +137,7 @@ class Home extends Component {
 
 
     focusFab = () => {
-	console.log("Focusing fab")
 	if (this.abtibRef.current) this.abtibRef.current.focus()
-	console.log(this.state.keybinds)
     }
 
     async componentDidMount() {
@@ -189,6 +187,7 @@ class Home extends Component {
         this.props.cm.unhookInvite(this.updateInvites);
 	const { shortcut } = this.props
 	for (const i in this.state.keybinds) {
+	    console.log(this.state.keybinds[i], "home.jsx!")
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
     }

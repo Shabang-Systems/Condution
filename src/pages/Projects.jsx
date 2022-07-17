@@ -201,6 +201,10 @@ class Projects extends Component { // define the component
     }
 	//this.virtualActive.current.closeTask()
 
+    focusName() {
+	if (this.name.current) this.name.current.focus();
+    }
+
     componentDidMount() {
 	this.setState({draggableRefs: new Array(this.state.itemList.length).fill(null)})
 	const { shortcut } = this.props
@@ -224,12 +228,17 @@ class Projects extends Component { // define the component
 	    [this.makeNewProject, [['n+p']], 'Create new project', 'Creates a new project'],
 	    [this.makeNewTask, [['n+t']], 'Create new task', 'Creates a new task'],
 	    [this.completeProject, [['c+p']], 'Toggle project complete', 'Toggles the project complete status'],
-	    [this.deleteProject, [['d+p']], 'Delete project', 'Deletes the project'],
+
+	    // TODO does this work?
+	    [this.deleteProject, [['']], 'Delete project', 'Deletes the project'],
+
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
-	    [this.handleItemOpen, [['o'], ['e']], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
 	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
 	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.focusName, [['e+n']], 'Edit name', 'Focuses the perspective name'],
 	    //[this.handleVirtualDragStart, [['c+l']], 'Complete Task', 'Completes a task, or enters a project'],
 
 	])

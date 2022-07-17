@@ -28,10 +28,17 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	if (!!keybinds[i][4]) {
 	    for (const ii in keybinds[i][1]) {
 		for (const iii in keybinds[i][1][ii]) {
-		    if (keybinds[i][1][ii][iii].includes("ctrl")) {
+		    if (!keybinds[i][1][ii][iii]) console.log("erroring!", keybinds[i][1][ii][iii])
+
+		    if (!keybinds[i][1][ii][iii].includes) {
+			console.log("no includes??", keybinds[i][1][ii][iii], keybinds)
+			continue;
+		    }
+
+		    if (keybinds[i][1][ii][iii] && keybinds[i][1][ii][iii].includes("ctrl")) {
 			ctrlNeedsMigrate.push(clone(keybinds[i]))
 		    }
-		    if (keybinds[i][1][ii][iii].includes("cmd")) {
+		    if (keybinds[i][1][ii][iii] && keybinds[i][1][ii][iii].includes("cmd")) {
 			cmdNeedsMigrate.push(clone(keybinds[i]))
 		    }
 		}
@@ -42,7 +49,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
     for (const i in ctrlNeedsMigrate) {
 	for (const ii in ctrlNeedsMigrate[i][1]) {
 	    for (const iii in ctrlNeedsMigrate[i][1][ii]) {
-		if (ctrlNeedsMigrate[i][1][ii][iii].includes("ctrl")) {
+		if (ctrlNeedsMigrate[i][1][ii][iii] && ctrlNeedsMigrate[i][1][ii][iii].includes("ctrl")) {
 		    ctrlNeedsMigrate[i][1][ii][iii] = ctrlNeedsMigrate[i][1][ii][iii].replace("ctrl", "cmd")
 		}
 	    }
@@ -53,7 +60,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
     for (const i in cmdNeedsMigrate) {
 	for (const ii in cmdNeedsMigrate[i][1]) {
 	    for (const iii in cmdNeedsMigrate[i][1][ii]) {
-		if (cmdNeedsMigrate[i][1][ii][iii].includes("cmd")) {
+		if (cmdNeedsMigrate[i][1][ii][iii] && cmdNeedsMigrate[i][1][ii][iii].includes("cmd")) {
 		    cmdNeedsMigrate[i][1][ii][iii] = cmdNeedsMigrate[i][1][ii][iii].replace("cmd", "ctrl")
 		}
 	    }
