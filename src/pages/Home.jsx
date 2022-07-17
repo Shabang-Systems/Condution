@@ -35,6 +35,8 @@ import Project from "../backend/src/Objects/Project";
 import Perspective from "../backend/src/Objects/Perspective";
 import keybindHandler from "./Components/KeybindHandler"
 
+import { KBarProvider , KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches, NO_GROUP, KBarResults } from "kbar";
+import CommandPalette from "./Components/CommandPalette";
 
 // Our very own CSS
 import './Home.css';
@@ -62,6 +64,7 @@ const history = isPlatform("electron") ? createHashHistory() : createBrowserHist
  * Thanks. @jemoka.
  *
  */
+
 
 // Welp. The Home.
 class Home extends Component {
@@ -254,11 +257,41 @@ class Home extends Component {
         this.setState({projects: prjOrder})
     }
 
+
+    actions = [
+	{
+	    id: "blog",
+	    name: "Blog",
+	    shortcut: ["b"],
+	    keywords: "writing words",
+	    perform: () => (window.location.pathname = "blog"),
+	},
+	{
+	    id: "contact",
+	    name: "Contact",
+	    shortcut: ["c"],
+	    keywords: "email",
+	    perform: () => (window.location.pathname = "contact"),
+	},
+    ]
+
     render() {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
 	    <IonPage>
-		{/*<ShortcutProvider>*/}
+		<KBarProvider
+		    actions = {this.actions}
+		    //options = {
+		    //    toggleSharp
+		    //}
+		    options = {{
+			toggleShortcut: "$mod+p",
+		    }}
+		>
+		    <CommandPalette
+		    />
+
+		    {/*<ShortcutProvider>*/}
 		    {/* The central router that controls the routing of views */}
 		    <Router history={history}>
 			{/* @TheEnquirer TODO
@@ -579,6 +612,7 @@ class Home extends Component {
 			</IonContent>
 		    </Router>
 		{/*</ShortcutProvider>*/}
+		</KBarProvider>
 	    </IonPage>
         );
     }
