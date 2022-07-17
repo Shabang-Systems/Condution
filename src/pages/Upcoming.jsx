@@ -17,6 +17,8 @@ import W from "../backend/src/Objects/Workspace.ts";
 import { TagDatapackWidget, ProjectDatapackWidget } from  "../backend/src/Widget";
 import { InboxWidget, DueSoonWidget, TimelineWidget }  from "../backend/src/Widget.ts";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
 
 import WorkspaceModal from './Components/WorkspaceModal';
 
@@ -64,13 +66,21 @@ class Upcoming extends Component { // define the component
             inboxWidget: new InboxWidget(this.props.cm),
             dsWidget: new DueSoonWidget(this.props.cm),
             timelineWidget: new TimelineWidget(this.props.cm),
-	    expandedChild: {expanded: false, id: null}
+	    expandedChild: {expanded: false, id: null},
+
+	    keybinds: [],
+	    virtualSelectIndex: 0,
+	    showVirtualSelect: false,
+	    activeField: 0,
         };
+
+	this.fields = [this.state.inbox, this.state.dueSoon, this.state.timeline].filter(i=>i.length > 0);
 
         this.updatePrefix = this.random();
 
         this.workspaceButton = React.createRef();
 
+	this.virtualActive = React.createRef();
 
         autoBind(this);
     }
@@ -91,13 +101,88 @@ class Upcoming extends Component { // define the component
         this.setState({initialRenderingDone: true, inbox: inbox, dueSoon: ds, timeline: (await this.state.timelineWidget.execute())});
     }
 
+    handleVirtualNav(direction) {
+	const { shortcut } = this.props
+
+	this.handleItemClose()
+
+	let newSelect = (this.state.virtualSelectIndex + direction) % (this.getCurrentField().length);
+	if (this.state.activeField == 2 && this.state.timeline[newSelect].type == "label") {
+	    newSelect = (newSelect + direction) % (this.getCurrentField().length);
+	}
+	if (this.state.activeField == 2) {
+	    console.log(this.state.timeline[newSelect])
+	}
+	this.setState({
+	    virtualSelectIndex: newSelect,
+	    showVirtualSelect: true
+	})
+    }
+
+    getCurrentField() {
+	return [this.state.inbox, this.state.dueSoon, this.state.timeline][this.state.activeField]
+    }
+
+    moveField(direction) {
+	let curField = (this.state.activeField + direction) % 3;
+	while ([this.state.inbox, this.state.dueSoon, this.state.timeline][curField].length == 0) {
+	    curField = (curField + direction) % 3;
+	}
+	if (curField == 2) this.setState({timelineShown: true})
+	this.setState({
+	    activeField: curField,
+	    virtualSelectIndex: 0,
+	})
+	//console.log(this.getCurrentField(curField))
+    }
+
+    kb() {
+	this.moveField(1)
+    }
+
     componentDidMount() {
         this.refresh();
         this.refreshWorkspace();
         this.state.inboxWidget.hook(this.refresh);
         this.state.dsWidget.hook(this.refresh);
         this.props.cm.hookInvite(this.refreshWorkspace);
-        //this.props.gruntman.registerRefresher((this.refresh).bind(this));
+
+	const { shortcut } = this.props
+
+	keybindHandler(this, [
+	    [this.kb, [['l']], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
+
+	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
+	    [() => this.handleVirtualNav(this.getCurrentField().length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
+
+	    [() => this.moveField(2), [['shift+k'], ['shift+ArrowUp']], 'Navigate up', 'Navigates up in the current project'],
+	    [() => this.moveField(1), [['shift+j'], ['shift+ArrowDown']], 'Navigate up', 'Navigates up in the current project'],
+
+	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
+	])
+    }
+
+    handleItemOpen() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.toggleTask()
+	    console.log("triggerin")
+	}
+    }
+
+    handleItemComplete() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask && !this.showEdit) {
+	    this.virtualActive.current.completeTask()
+	    this.handleVirtualNav(this.getCurrentField.length-1)
+	}
+    }
+
+    handleItemClose() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.closeTask()
+	}
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -109,6 +194,11 @@ class Upcoming extends Component { // define the component
         this.state.inboxWidget.unhook(this.refresh);
         this.state.dsWidget.unhook(this.refresh);
         this.props.cm.unhookInvite(this.refresh);
+
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -143,6 +233,14 @@ class Upcoming extends Component { // define the component
 		    style={{
 			background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`, // TODO: make this work
 			borderRadius: "8px",
+			background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect && this.state.activeField == 0)? "var(--background-feature)" : "",
+		    }}
+		    onMouseEnter={(e) => {
+			this.setState({
+			    virtualSelectIndex: i,
+			    showVirtualSelect: false,
+			    activeField: 0,
+			})
 		    }}
 		>
 		    <Task 
@@ -151,6 +249,7 @@ class Upcoming extends Component { // define the component
 			localizations={this.props.localizations} 
 			taskObject={t} 
 			setExpanded={(e, id) => { this.setState({expandedChild: {expanded: e, id: id}}) }}
+			ref={(i == this.state.virtualSelectIndex && this.state.activeField == 0)? this.virtualActive : null}
 		    />
 		</div>
 	    </div>
@@ -310,14 +409,30 @@ class Upcoming extends Component { // define the component
                                         if (this.state.dueSoon.length > 0)
                                             return <div className="page-label">{this.props.localizations.ds}<IonBadge className="count-badge">{this.state.dueSoon.length}</IonBadge></div>
                                     })()}
-                                    {this.state.dueSoon.map(t=>
-                                        (
-                                            <Task 
-                                                key={t.id}
-                                                cm={this.props.cm} 
-                                                localizations={this.props.localizations} 
-                                                taskObject={t} 
-                                            />
+				    {this.state.dueSoon.map( (t, i) =>
+					(
+					    <div
+
+						style={{
+						    borderRadius: "8px",
+						    background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect && this.state.activeField == 1)? "var(--background-feature)" : "",
+						}}
+						onMouseEnter={(e) => {
+						    this.setState({
+							virtualSelectIndex: i,
+							showVirtualSelect: false,
+							activeField: 1,
+						    })
+						}}
+					    >
+						<Task 
+						    key={t.id}
+						    cm={this.props.cm} 
+						    localizations={this.props.localizations} 
+						    taskObject={t} 
+						    ref={(i == this.state.virtualSelectIndex && this.state.activeField == 1)? this.virtualActive : null}
+						/>
+					    </div>
                                         ))}
 
                                 </div>
@@ -345,19 +460,34 @@ class Upcoming extends Component { // define the component
                                 {
                                     (()=>{
                                         if (this.state.timelineShown)
-                                            return this.state.timeline.map(timelineItem => {
+                                            return this.state.timeline.map((timelineItem, i) => {
                                                 if (timelineItem.type === "task")
-                                                    return (<Task 
-                                                        key={timelineItem.content.id}
-                                                        cm={this.props.cm} 
-                                                        localizations={this.props.localizations} 
-                                                        taskObject={timelineItem.content} 
-                                                    />)
+						    return (
+							<div
+							    style={{
+								borderRadius: "8px",
+								background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect && this.state.activeField == 2)? "var(--background-feature)" : "",
+							    }}
+							    onMouseEnter={(e) => {
+								this.setState({
+								    virtualSelectIndex: i,
+								    showVirtualSelect: false,
+								    activeField: 2,
+								})
+							    }}
+							>
+							    <Task 
+								key={timelineItem.content.id}
+								cm={this.props.cm} 
+								localizations={this.props.localizations} 
+								taskObject={timelineItem.content} 
+								ref={(i == this.state.virtualSelectIndex && this.state.activeField == 2)? this.virtualActive : null}
+							    />
+							</div>
+						    )
 
                                                 else if (timelineItem.type === "label")
                                                     return <div key={`timeline-${timelineItem.content.getTime()}-${this.random()}`} className="timeline-box"><div className="timeline-line-container"><div className="timeline-line">&nbsp;</div></div><div className="timeline-text"><span className="timeline-weekname">{timelineItem.content.toLocaleDateString(this.props.localizations.getLanguage(), { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span></div></div>
-
-
                                             })
                                     })()
                                 }
@@ -376,5 +506,5 @@ class Upcoming extends Component { // define the component
 
 
 
-export default Upcoming;
+export default withShortcut(Upcoming);
 
