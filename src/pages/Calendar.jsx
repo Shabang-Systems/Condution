@@ -1,6 +1,6 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
 //import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
-import React, { Component, useState, useEffect } from 'react';
+import React, { Component, useState, useEffect, useRef } from 'react';
 import {withGetScreen} from 'react-getscreen'
 import './Calendar.css'
 import './Pages.css';
@@ -12,6 +12,8 @@ import { Query } from "../backend/src/Objects/Utils.ts";
 import T from "../backend/src/Objects/Task.ts";
 import CalendarPopover, { CalendarUnit } from './Components/CalendarPopover';
 import CalendarTasklistPopover from './Components/CalendarTasklistPopover';
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
 
 const autoBind = require('auto-bind/react');
 
@@ -88,6 +90,20 @@ function CalPageBigOllendar(props) {
     //};
 
 
+    const goRight = useRef(null);
+    const goLeft = useRef(null);
+
+    const navigateLeft = () => {
+	if (goLeft.current) {
+	    goLeft.current.click()
+	}
+    }
+
+    const navigateRight = () => {
+	if (goRight.current) {
+	    goRight.current.click()
+	}
+    }
     let refresh = (async function() {
             let map = new Map();
             let names = new Map();
@@ -131,6 +147,27 @@ function CalPageBigOllendar(props) {
     useEffect(()=>{
         refresh();
     },[dateSelected, refreshed]);
+    
+    const keybindTest = () => {
+	console.log("sdf")
+    }
+    const { shortcut } = props
+    useEffect(() => {
+
+	const { shortcut } = props
+
+	const toUnbind = keybindHandler(props, [
+	    [navigateRight, [['h'], ['ArrowRight']], 'Next month', 'Goes to the next month'],
+	    [navigateLeft, [['l'], ['ArrowLeft']], 'Previous month', 'Goes to the previous month'],
+	])
+
+	return () => {
+	    const { shortcut } = props
+	    for (const i in toUnbind) {
+		shortcut.unregisterShortcut(toUnbind[i])
+	    }
+	}
+    }, [])
 
     return (
         <div id="calendar-page-bigol-calendar-wrapper" style={{display: "inline-block", height: "85%", width: "95%", ...props.style}}>
@@ -175,14 +212,18 @@ function CalPageBigOllendar(props) {
                     )}
                 </div>
                 <div id="bigol-calendar-tools">
-                    <a className="fas fa-caret-left calendar-button" onClick={()=>{
+                    <a 
+			ref={goLeft}
+			className="fas fa-caret-left calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()-1, 1);
                         setDateSelected(date);
                         if (props.onDateSelected)
                             props.onDateSelected(date);
 
                     }}></a>
-                    <a className="fas fa-caret-right calendar-button" onClick={()=>{
+                    <a 
+			ref={goRight}
+			className="fas fa-caret-right calendar-button" onClick={()=>{
                         let date = new Date(firstDayMonth.getFullYear(), firstDayMonth.getMonth()+1, 1);
                         setDateSelected(date);
                         if (props.onDateSelected)
@@ -226,11 +267,13 @@ class Calendar extends Component {
             currentDate: (today), // new date
             taskList: [],
             popoverIsVisible: false,
+	    keybinds: [],
 
         };
 
         this.updatePrefix = this.random();
         this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
+        this.calPageBigRef = React.createRef();
 
         // AutoBind!
         autoBind(this);
@@ -242,8 +285,12 @@ class Calendar extends Component {
         this.setState({showEdit: false});
     } // util func for hiding repeat
 
-    componentWillUnmount() {
-    }
+    //componentWillUnmount() {
+    //    const { shortcut } = this.props
+    //    for (const i in this.state.keybinds) {
+    //        shortcut.unregisterShortcut(this.state.keybinds[i])
+    //    }
+    //}
 
     async refresh() {
 //        projectDB.map(proj=>buildSelectString(proj));
@@ -267,8 +314,19 @@ class Calendar extends Component {
         //}); // once we finish, set the state
     }
 
+    //keybindTest() {
+    //    console.log(this.calPageBigRef.current)
+    //}
+
     componentDidMount() {
-        this.refresh()
+	//const { shortcut } = this.props
+
+	//keybindHandler(this, [
+	//    [() => this.calPageBigRef.current? this.calPageBigRef.current.navigatePage(1) : "", [['j']], 'Create new project', 'Creates a new project'],
+	//    [this.keybindTest, [['l']], 'Create new project', 'Creates a new project'],
+	//])
+
+	this.refresh()
     }
 
     random() { return (((1+Math.random())*0x10000)|0).toString(16)+"-"+(((1+Math.random())*0x10000)|0).toString(16);}
@@ -329,7 +387,14 @@ class Calendar extends Component {
                                         this.setState({currentDate: d, taskList});
                                     }).bind(this)}/>
                                 else 
-                                    return <CalPageBigOllendar localizations={this.props.localizations} uid={this.props.uid} cm={this.props.cm} availability={this.state.availability}/>
+                                    return <CalPageBigOllendar 
+						localizations={this.props.localizations}
+						uid={this.props.uid} 
+						cm={this.props.cm} 
+						availability={this.state.availability}
+						{...this.props}
+						//ref={this.calPageBigRef} // not working
+					/>
                             })()}
                             {(()=>{
                                 if (this.props.isMobile())
@@ -352,5 +417,4 @@ class Calendar extends Component {
         )
     }
 }
-export default withGetScreen(Calendar, {mobileLimit: 720, tabletLimit:768, shouldListenOnResize: true});
-
+export default withShortcut(withGetScreen(Calendar, {mobileLimit: 720, tabletLimit:768, shouldListenOnResize: true}));

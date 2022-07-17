@@ -88,6 +88,8 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	    keybinds: toUnbind
 	})
     }
+    //console.log(toUnbind)
+    return toUnbind
 }
 
 export default keybindHandler
