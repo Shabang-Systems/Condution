@@ -6,6 +6,9 @@ import './Pages.css';
 import Spinner from './Components/Spinner';
 import Task from './Components/Task';
 import { CompletedWidget } from "../backend/src/Widget";
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
+
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
 /*
@@ -38,24 +41,111 @@ class Completed extends Component {
             taskCats: this.props.localizations.completed_categories,//["Today", "Yesterday", "This Week", "This Month", "Even Before"], // define task categories (cats!)
             rendering: true, // define whether or not the element is rendering 
             initialRenderingDone: false,
+
+	    keybinds: [],
+	    virtualSelectIndex: 0,
+	    virtualSelectRef: null,
+	    showVirtualSelect: false,
         };
 
         this.updatePrefix = this.random();
         autoBind(this);
 
         this.completedWidget = new CompletedWidget(this.props.cm);
+
+	this.virtualActive = React.createRef();
     }
 
     async componentDidMount() {
 	this.setState({rendering: false})
         this.refresh();
         this.completedWidget.hook(this.refresh);
+
+
+
+	const { shortcut } = this.props
+
+
+	keybindHandler(this, [
+	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
+	    [() => this.handleVirtualNav(-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
+	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
+	])
     }
 
     async componentWillUnmount() {
         if (this.completedWidget)
             this.completedWidget.unhook(this.refresh);
+
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
     }
+
+
+
+    handleVirtualNav(direction) {
+
+	const { shortcut } = this.props
+
+	this.handleItemClose()
+
+	let newSelect = (this.state.virtualSelectIndex + direction) //% (this.state.taskList.length);
+	if (newSelect < 0) {
+	    newSelect = (10*this.state.tasksShown) - 1 // doesn't highlight for some reason
+	}
+
+	if (this.state.taskList[newSelect].type == "label") newSelect += direction
+	
+	this.setState({
+	    virtualSelectIndex: newSelect,
+	    showVirtualSelect: true
+	})
+	if (this.state.virtualSelectIndex == 10*this.state.tasksShown) {
+	    this.handleFetchMore()
+	}
+	//console.log(this.state.virtualSelectIndex, 10*this.state.tasksShown)
+
+    }
+
+    handleItemOpen() {
+	//console.log(this.state.virtualSelectIndex)
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.toggleTask()
+	} else {
+	    if (this.virtualActive.current) this.virtualActive.current.click()
+	}
+    }
+
+    handleItemClose() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.closeTask()
+	}
+    }
+
+    handleItemComplete() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.completeTask() // TODO this is probably broken.. what does it do to completed tasks?
+	    this.handleVirtualNav(-1)
+	} else {
+	    if (this.virtualActive.current) this.virtualActive.current.click()
+	}
+    }
+
+    //handleItemComplete() {
+    //    if (this.virtualActive.current && this.virtualActive.current.closeTask && !this.showEdit) {
+    //        this.virtualActive.current.completeTask()
+    //        this.handleVirtualNav(this.state.taskList.length-1)
+    //    }
+    //}
+
+
+
+
 
     async refresh(){
 	let taskArr = [];
@@ -152,6 +242,7 @@ class Completed extends Component {
 				    slice(0, 10*this.state.tasksShown).
 				    map((content, i) => (
                         <div key={i} style={{marginLeft: 10, marginRight: 10}}>
+
 				    {/*console.log("something here??", this.state.taskList[4])*/}
 				    {(content.type == "label")?  
 
@@ -166,12 +257,26 @@ class Completed extends Component {
 					    : "")
 					    : (content.type == "task"? 
 						(<div 
-						    key={content.contents}>
+						    key={content.contents}
+
+						    style={{
+							borderRadius: "8px",
+							transition: "0.3s",
+							background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? "var(--background-feature)" : "",
+						    }}
+						    onMouseEnter={(e) => {
+							this.setState({
+							    virtualSelectIndex: i,
+							    showVirtualSelect: false,
+							})
+			    }}
+						>
 						    <Task 
 							cm={this.props.cm} 
 							localizations={this.props.localizations} 
 							taskObject={content.contents} 
 							startingCompleted={true}
+							ref={(i == this.state.virtualSelectIndex)? this.virtualActive : null}
 						    />
 							
 						</div>)
@@ -184,10 +289,16 @@ class Completed extends Component {
 							this.props.paginate("projects", content.contents.id);
 							this.props.history.push(`/projects/${content.contents.id}`)
 						    }}
-                        >
+
+						    style={{
+							transition: "0.3s",
+							background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? "var(--background-feature)" : "",
+						    }}
+						    ref={(i == this.state.virtualSelectIndex)? this.virtualActive : null}
+						>
 						    <div><i className="far fa-arrow-alt-circle-right subproject-icon"/><div style={{display: "inline-block"}}>
-					    {content.contents.name}</div></div></a>
-					)
+							{content.contents.name}</div></div></a>
+					    )
 				    } 
 				</div>
 				    ))) : ""}
@@ -206,4 +317,4 @@ class Completed extends Component {
     }
 }
 
-export default Completed;
+export default withShortcut(Completed);

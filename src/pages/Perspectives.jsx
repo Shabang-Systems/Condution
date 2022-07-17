@@ -58,6 +58,7 @@ class Perspectives extends Component {
             perspectiveObject: null,
             taskList:[],
             showEdit: false,
+
 	    keybinds: [],
 	    virtualSelectIndex: 0,
 	    virtualSelectRef: null,

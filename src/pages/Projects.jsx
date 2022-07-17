@@ -188,7 +188,8 @@ class Projects extends Component { // define the component
 
     handleItemComplete() {
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
-	    this.virtualActive.current.completeTask()
+	    this.virtualActive.current.completeTask() // TODO this is probably broken.. what does it do to completed tasks?
+	    // nahh should be fine actually
 	    this.handleVirtualNav(this.state.itemList.length-1)
 	} else {
 	    if (this.virtualActive.current) this.virtualActive.current.click()

@@ -110,9 +110,7 @@ class Upcoming extends Component { // define the component
 	if (this.state.activeField == 2 && this.state.timeline[newSelect].type == "label") {
 	    newSelect = (newSelect + direction) % (this.getCurrentField().length);
 	}
-	if (this.state.activeField == 2) {
-	    console.log(this.state.timeline[newSelect])
-	}
+
 	this.setState({
 	    virtualSelectIndex: newSelect,
 	    showVirtualSelect: true
@@ -136,6 +134,10 @@ class Upcoming extends Component { // define the component
 	//console.log(this.getCurrentField(curField))
     }
 
+    toggleTimeline() {
+	this.setState({timelineShown: !this.state.timelineShown})
+    }
+
     kb() {
 	this.moveField(1)
     }
@@ -156,19 +158,20 @@ class Upcoming extends Component { // define the component
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.getCurrentField().length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
 
-	    [() => this.moveField(2), [['shift+k'], ['shift+ArrowUp']], 'Navigate up', 'Navigates up in the current project'],
-	    [() => this.moveField(1), [['shift+j'], ['shift+ArrowDown']], 'Navigate up', 'Navigates up in the current project'],
+	    [() => this.moveField(2), [['shift+k'], ['shift+ArrowUp']], 'Jump field up', 'Jump to the previous field'],
+	    [() => this.moveField(1), [['shift+j'], ['shift+ArrowDown']], 'Jump field down', 'Jump to the next field'],
 
 	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
 	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
 	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
+
+	    [this.toggleTimeline, [['s+t']], 'Show timeline', 'Shows the timeline'],
 	])
     }
 
     handleItemOpen() {
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.toggleTask()
-	    console.log("triggerin")
 	}
     }
 
