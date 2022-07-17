@@ -488,14 +488,15 @@ class Home extends Component {
 					</DragDropContext>
 
 				    </IonContent>
+                                  <div id="bottombar">
+				    <div className="menu-item bottomitem" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
 				    <Settings 
 					authType={this.props.authType} 
 					localizations={this.props.localizations} 
 					cm={this.props.cm}
 					dispatch={this.props.dispatch}
 				    />
-				    {/* Logout button */}
-				    <div className="menu-item" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
+                                </div>
 				</IonMenu>
 				<IonPage id="main">
 				    {/* raise a glass to Workspace Add */}

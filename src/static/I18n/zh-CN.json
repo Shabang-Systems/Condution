@@ -5,6 +5,7 @@
     "missing_internet_content": "在脱机状态下连不上互联网版的Condution",
     "missing_internet_action": "请联网后继续。或者",
     "missing_internet_action_button": "使用脱机数据库",
+    "settings": "设置",
     "setting_up_callout": "正在配置Condution...",
     "setting_up_action": "我们正在努力的设置您的Condution账户",
     "setting_up_hold": "准备好了吗？",

@@ -58,9 +58,26 @@ a {
     background: var(--menu-semiaccent-background);
 }
 
-#logout {
+.bottomitem {
+    display: inline;
+}
+
+#bottombar {
     border-radius: 0;
-    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    /* padding: 10px; */
+}
+
+#settings {
+    height: auto;
+    width: 0;
+    padding-right: 10%;
+}
+
+#logout {
+    padding-left:15px;
+    flex-grow: 1;
 }
 
 #logout:hover {

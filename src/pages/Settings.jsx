@@ -76,9 +76,11 @@ const Settings = (props) => {
     return (
 	<>
 	    <div
+              id="settings"
+                alt={props.localizations.settings}
+                className="menu-item bottomitem" 
 		onClick={() => { setOpen(!open) }}
-		style={{"border":"1px solid grey", "padding": "1rem"}}
-	    > Settings </div>
+	    > <i className="fas fa-cog" style={{paddingRight: 5}} /> </div>
 
 	    <IonModal isOpen={open}
 		onDidDismiss={() => setOpen(false)}
