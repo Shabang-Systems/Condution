@@ -83,9 +83,10 @@ function CalPageBigOllendar(props) {
 
     let [shownList, setShownList] = useState([]);
     
-    Array.prototype.max = function() {
-        return Math.max.apply(null, this);
-    };
+    //Array.prototype.max = function() { // THIS POLLUTES THE PROTOTYPE. IT BREAKS LOOPING THROUGH THE KEYS.
+    //    return Math.max.apply(null, this);
+    //};
+
 
     let refresh = (async function() {
             let map = new Map();
@@ -118,9 +119,10 @@ function CalPageBigOllendar(props) {
             let nameList = Array.from(names.values());
             let idList = Array.from(ids.values());
             if (values.length > 0) {
-                let max = values.max();
+		const max = (arr) => arr.reduce((a, b) => { return Math.max(a, b) })
+                let val_max = max(values)
                 let style = getComputedStyle(document.body);
-                let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/max));
+                let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/val_max));
                 Array.from(map.keys()).forEach((e, i)=>{hm[e]={color:hexes[i], value:values[i], names:nameList[i], ids: idList[i]}});
             }
             setHeat(hm);

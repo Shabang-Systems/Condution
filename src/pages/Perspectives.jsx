@@ -67,6 +67,7 @@ class Perspectives extends Component {
 
         this.updatePrefix = this.random();
         this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
+        this.perspectiveNameRef = React.createRef(); // what's my repeater? | i.. i dont know what this does...
 
 	this.virtualActive = React.createRef();
 
@@ -83,6 +84,12 @@ class Perspectives extends Component {
     componentWillUnmount() {
         if (this.state.perspectiveObject)
             this.state.perspectiveObject.unhook(this.reloadData);
+
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
+
         Hookifier.remove("QueryEngine", this.reloadData);
     }
 
@@ -109,10 +116,22 @@ class Perspectives extends Component {
 	})
     }
 
+    handleItemOpen() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.toggleTask()
+	}
+    }
 
     handleItemClose() {
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.closeTask()
+	}
+    }
+
+    handleItemComplete() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask && !this.showEdit) {
+	    this.virtualActive.current.completeTask()
+	    this.handleVirtualNav(this.state.taskList.length-1)
 	}
     }
 
@@ -147,6 +166,11 @@ class Perspectives extends Component {
         this.props.history.push("/upcoming/");
     }
 
+
+    focusName() {
+	if (this.perspectiveNameRef.current) this.perspectiveNameRef.current.focus();
+    }
+
     componentDidMount() {
 	const { shortcut } = this.props
 
@@ -154,9 +178,13 @@ class Perspectives extends Component {
 	keybindHandler(this, [
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.taskList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
-	    //[this.handleItemOpen, [['o'], ['e']], 'Open item', 'Opens the currently selected item'],
-	    //[this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
-	    //[this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
+	    [this.showEdit, [['e+p']], 'Edit perspective', 'Opens the perspective editor'],
+	    [this.focusName, [['e+n']], 'Edit name', 'Focuses the perspective name'],
+	    [this.handleDelete, [['']], 'Delete perspective', 'Deletes the perspective'],
 	])
 
         this.load()
@@ -185,7 +213,7 @@ class Perspectives extends Component {
                     isShown={this.state.showEdit} 
                     onDidDismiss={this.hideEdit}
                     perspective={this.state.perspectiveObject}
-                    startHighlighted={this.props.options === "do"}
+                    startHighlighted={this.props.options === true}
                     localizations={this.props.localizations}
                 />
                 <div className={"page-invis-drag " + (()=>{
@@ -226,6 +254,8 @@ class Perspectives extends Component {
                                         onChange={(e)=> {this.setState({perspectiveName:e.target.value})}}
                                         onBlur={(_)=>{this.state.perspectiveObject.name = this.state.perspectiveName}}
                                         value={this.state.perspectiveName} // TODO: jack this is hecka hacky
+					ref={this.perspectiveNameRef}
+					onKeyDown={(e) => { if (e.code == "Enter") e.target.blur();}}
                                     />
                                 </h1> 
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
@@ -254,7 +284,12 @@ class Perspectives extends Component {
 				})
 			    }}
 			>
-			    <Task cm={this.props.cm} localizations={this.props.localizations} taskObject={i} />
+			    <Task 
+				cm={this.props.cm}
+				localizations={this.props.localizations}
+				taskObject={i}
+				ref={(idx == this.state.virtualSelectIndex)? this.virtualActive : null}
+			    />
 			</div>
 			)}
                         <Spinner ready={this.state.initialRenderingDone} />

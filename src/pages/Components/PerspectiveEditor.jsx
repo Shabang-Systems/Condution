@@ -61,6 +61,10 @@ class PerspectiveEdit extends Component {
             this.fetchData();
         if (this.props.startHighlighted !== prevProps.startHighlighted && this.name.current)
             this.name.current.focus(); // focus the name
+
+	if (prevProps.isShown == false && this.props.isShown == true && this.name.current) {
+	    setTimeout(() => this.name.current.focus(), 350) // focus the name. TODO super janky.
+	}
     }
 
     async getItems(){
