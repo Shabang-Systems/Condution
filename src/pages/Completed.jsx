@@ -73,6 +73,7 @@ class Completed extends Component {
 	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
 	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
 	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
+	    [this.handleFetchMore, [['shift+f+m'], ['s+m']], 'Fetch more', 'Fetches more completed items'],
 	])
     }
 
@@ -85,7 +86,6 @@ class Completed extends Component {
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
     }
-
 
 
     handleVirtualNav(direction) {
@@ -108,12 +108,9 @@ class Completed extends Component {
 	if (this.state.virtualSelectIndex == 10*this.state.tasksShown) {
 	    this.handleFetchMore()
 	}
-	//console.log(this.state.virtualSelectIndex, 10*this.state.tasksShown)
-
     }
 
     handleItemOpen() {
-	//console.log(this.state.virtualSelectIndex)
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.toggleTask()
 	} else {
@@ -135,17 +132,6 @@ class Completed extends Component {
 	    if (this.virtualActive.current) this.virtualActive.current.click()
 	}
     }
-
-    //handleItemComplete() {
-    //    if (this.virtualActive.current && this.virtualActive.current.closeTask && !this.showEdit) {
-    //        this.virtualActive.current.completeTask()
-    //        this.handleVirtualNav(this.state.taskList.length-1)
-    //    }
-    //}
-
-
-
-
 
     async refresh(){
 	let taskArr = [];
