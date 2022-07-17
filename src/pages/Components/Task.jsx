@@ -362,6 +362,7 @@ class Task extends Component {
     }
 
     closeTask() {
+        this.name.current.blur();
         this.setState({expanded: false});
 	//if (this.props.setExpanded) { this.props.setExpanded(false, this.props.taskObject.id) }
     }
@@ -605,7 +606,7 @@ class Task extends Component {
                                     autoComplete="off" 
                                     placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
-                                    onKeyDown={e => (e.key == "Enter")? this.setState({expanded: false}) : undefined}
+                                    onKeyDown={e => (e.key == "Enter")? this.closeTask() : undefined}
                                 />
 
                                 {/* Task edit. The thing that slides open on edit. */}
