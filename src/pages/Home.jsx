@@ -85,6 +85,7 @@ class Home extends Component {
             menuWidget: new MenuWidget(this.props.cm),
 
 	    keybinds: [],
+	    mounted: false,
 
         };
 
@@ -146,6 +147,7 @@ class Home extends Component {
     }
 
     async componentDidMount() {
+	console.log("Home mounted")
         const content = this.menuContent.current;
         const styles = document.createElement('style');
         styles.textContent = `
@@ -179,7 +181,7 @@ class Home extends Component {
 	])
 
         this.refresh();
-
+	this.setState({ mounted: true });
     }
 
     updateInvites() {
@@ -188,6 +190,7 @@ class Home extends Component {
     }
 
     componentWillUnmount() {
+	console.log("Unmounting home")
         this.state.menuWidget.unhook(this.refresh);
         this.props.cm.unhookInvite(this.updateInvites);
 	const { shortcut } = this.props
@@ -299,13 +302,16 @@ class Home extends Component {
         return (
 	    <IonPage>
 		<KBarProvider
-		    actions = {this.getActions()}
+		    //actions = {this.getActions()}
+		    actions = {[]}
 		    options = {{
 			toggleShortcut: "$mod+Shift+P",
 			enableHistory: true,
 		    }}
 		>
 		    <CommandPalette
+			historyPath = {history.location.pathname}
+			mounted = {this.state.mounted}
 		    />
 
 		    {/*<ShortcutProvider>*/}

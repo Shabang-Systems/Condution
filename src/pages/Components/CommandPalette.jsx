@@ -16,9 +16,9 @@ import {
     useMatches,
     useRegisterActions,
     ActionImpl,
-
+    useKBar,
 } from "kbar";
-
+import { nanoid } from 'nanoid'
 
 
 const searchStyle = {
@@ -98,9 +98,88 @@ const groupNameStyle = {
 
 
 function CommandPalette(props) {
+    const { query } = useKBar();
+    const getActions = () => {
+	const { shortcut } = props;
+	
+	let actionDict = {}
+    
+	let actions = []
+
+	// check if keybind already exists
+	// if so, push the new shortcut keys to the existing shortcut keys, 
+	// otherwise, create a new keybind
+	for (const [idx, s] of shortcut.shortcuts.entries()) {
+	    if (s.title in actionDict) {
+		actions[actionDict[s.title]].keys.push(s.keys)
+		//console.log(actionDict)
+		    //.keys.push(s.keys)
+	    } else {
+		actionDict[s.title] = actions.length
+		actions.push(s)
+	    }
+	}
+
+	actions = actions.map(v => {
+	    return {
+		id: nanoid(),
+		name: v.title,
+		subtitle: v.desciption, // TODO impl
+		shortcut: v.keys,
+		perform: () => { 
+		    setTimeout(() => {
+			v.method() 
+		    }, 1) // man.
+		},
+		keywords: v.desciption, // jank?
+	    }
+	})
+	
+	//let actions = shortcut.shortcuts.map(v => {
+	//    return {
+	//        id: nanoid(),
+	//        name: v.title,
+	//        subtitle: v.desciption, // TODO impl
+	//        shortcut: v.keys,
+	//        perform: () => { 
+	//            setTimeout(() => {
+	//                v.method() 
+	//            }, 1) // man.
+	//        },
+	//        keywords: v.desciption, // jank?
+	//    }
+	//})
+
+	//let actions = [
+	//    {
+	//        id: "blog",
+	//        name: "Blog",
+	//        shortcut: ["b"],
+	//        keywords: "writing words",
+	//        perform: () => (window.location.pathname = "blog"),
+	//    },
+	//    {
+	//        id: "contact",
+	//        name: nanoid(),
+	//        shortcut: ["c"],
+	//        keywords: "email",
+	//        perform: () => (window.location.pathname = "contact"),
+	//    },
+	//]
+	return actions
+    }
     //useDocsActions();
     //useThemeActions();
-    useRegisterActions
+    useRegisterActions(getActions(), [props.historyPath, props.mounted])
+    //const idk = () => {
+    //}
+    //React.useEffect(() => {
+    //    console.log("hist changing");
+    //    const { shortcut } = props
+    //    //console.log(shortcut.shortcuts.length)
+    //    //useRegisterActions(getActions())
+    //    idk()
+    //}, [props.historyPath])
     return (
 	<KBarPortal>
 	    <KBarPositioner>

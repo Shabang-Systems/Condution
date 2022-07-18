@@ -46,6 +46,8 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	}
     }
 
+    // TODO this migrate duplicates all keybinds, not just the ones that need to be migrated
+
     for (const i in ctrlNeedsMigrate) {
 	for (const ii in ctrlNeedsMigrate[i][1]) {
 	    for (const iii in ctrlNeedsMigrate[i][1][ii]) {
