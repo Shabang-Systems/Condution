@@ -87,6 +87,8 @@ class Home extends Component {
 	    keybinds: [],
 	    mounted: false,
 
+	    activatingPalette: false,
+
         };
 
         //        if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -177,7 +179,6 @@ class Home extends Component {
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
 	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-	    [this.getActions, [['l']], 'Go forwards', 'Navigates forward in history', true],
 	])
 
         this.refresh();
@@ -262,39 +263,9 @@ class Home extends Component {
         this.setState({projects: prjOrder})
     }
 
-    getActions() {
-	const { shortcut } = this.props
-
-	let actions = shortcut.shortcuts.map(v => {
-	    //console.log(v)
-	    return {
-		id: nanoid(),
-		name: v.title,
-		desciption: v.desciption, // TODO impl
-		shortcut: v.keys,
-		perform: v.method,
-		keywords: v.desciption, // jank?
-	    }
-	})
-
-	//let actions = [
-	//    {
-	//        id: "blog",
-	//        name: "Blog",
-	//        shortcut: ["b"],
-	//        keywords: "writing words",
-	//        perform: () => (window.location.pathname = "blog"),
-	//    },
-	//    {
-	//        id: "contact",
-	//        name: "Contact",
-	//        shortcut: ["c"],
-	//        keywords: "email",
-	//        perform: () => (window.location.pathname = "contact"),
-	//    },
-	//]
-
-	return actions
+    onPaletteActivate() {
+	this.setState({activatingPalette: nanoid()})
+	console.log("appele isfs actioating")	
     }
 
     render() {
@@ -302,7 +273,6 @@ class Home extends Component {
         return (
 	    <IonPage>
 		<KBarProvider
-		    //actions = {this.getActions()}
 		    actions = {[]}
 		    options = {{
 			toggleShortcut: "$mod+Shift+P",
@@ -312,6 +282,7 @@ class Home extends Component {
 		    <CommandPalette
 			historyPath = {history.location.pathname}
 			mounted = {this.state.mounted}
+			shouldUpdate = {this.state.activatingPalette}
 		    />
 
 		    {/*<ShortcutProvider>*/}
@@ -327,6 +298,7 @@ class Home extends Component {
 			    abtib={this.abtibRef} 
 			    localizations={this.props.localizations}
 			    cm={this.props.cm}
+			    onPaletteActivate={this.onPaletteActivate}
 			    /*engine={this.props.engine} */
 			    /*uid={this.state.workspace} */
 			    /*gruntman={this.props.gruntman} */

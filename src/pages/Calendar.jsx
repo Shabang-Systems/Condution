@@ -94,12 +94,14 @@ function CalPageBigOllendar(props) {
     const goLeft = useRef(null);
 
     const navigateLeft = () => {
+	console.log("navin")
 	if (goLeft.current) {
 	    goLeft.current.click()
 	}
     }
 
     const navigateRight = () => {
+	console.log("navin right")
 	if (goRight.current) {
 	    goRight.current.click()
 	}
@@ -157,15 +159,17 @@ function CalPageBigOllendar(props) {
 	const { shortcut } = props
 
 	const toUnbind = keybindHandler(props, [
-	    [navigateRight, [['h'], ['ArrowRight']], 'Next month', 'Goes to the next month'],
-	    [navigateLeft, [['l'], ['ArrowLeft']], 'Previous month', 'Goes to the previous month'],
+	    [navigateRight, [['l'], ['ArrowRight']], 'Next month', 'Goes to the next month'],
+	    [navigateLeft, [['h'], ['ArrowLeft']], 'Previous month', 'Goes to the previous month'],
 	])
 
 	return () => {
 	    const { shortcut } = props
-	    for (const i in toUnbind) {
+	    for (const i in toUnbind) { // this doesn't seem to be working?
 		shortcut.unregisterShortcut(toUnbind[i])
 	    }
+	    shortcut.unregisterShortcut(["h", "l", "ArrowLeft", "ArrowRight"]) // so i'll do it manually.. 
+	    // TODO figure this one out
 	}
     }, [])
 

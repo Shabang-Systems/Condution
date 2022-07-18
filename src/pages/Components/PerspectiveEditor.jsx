@@ -147,7 +147,9 @@ class PerspectiveEdit extends Component {
                 isOpen={this.props.isShown} 
                 onWillPresent={() => {}}
                 onDidDismiss={() => {
-                    if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}
+                    if (this.props.onDidDismiss) this.props.onDidDismiss()
+		    //this.props.that.setState({showEdit: false})
+		}} style={{borderRadius: 5}
                 } 
                 cssClass={`perspective-modal ${this.state.expanded? "expanded" : ""}`}
             > 

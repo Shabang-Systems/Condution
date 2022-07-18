@@ -256,7 +256,8 @@ export class ShortcutProvider extends React.PureComponent {
 
 	// create new shortcut
 	const shortcut = {
-	    id: Date.now().toString(36),
+	    //id: Date.now().toString(36),
+	    id: Math.random().toString(36).substr(2, 9),
 	    description,
 	    hold,
 	    holdDuration: duration,

@@ -179,6 +179,7 @@ class Projects extends Component { // define the component
 
     handleItemOpen() {
 	//console.log(this.state.virtualSelectIndex)
+	console.log("opening pro")
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.toggleTask()
 	} else {

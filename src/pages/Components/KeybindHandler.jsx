@@ -7,6 +7,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	    if (bindings[i].length == 1) {
 		// bind normal
 		shortcut.registerShortcut(action, bindings[i], title, desc)
+		//console.log(that.props && that.props.id, "right here baby")
 	    } else {
 		// bind sequence
 		shortcut.registerSequenceShortcut(action, bindings[i], title, desc)
@@ -31,7 +32,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 		    if (!keybinds[i][1][ii][iii]) console.log("erroring!", keybinds[i][1][ii][iii])
 
 		    if (!keybinds[i][1][ii][iii].includes) {
-			console.log("no includes??", keybinds[i][1][ii][iii], keybinds)
+			//console.log("no includes??", keybinds[i][1][ii][iii], keybinds)
 			continue;
 		    }
 

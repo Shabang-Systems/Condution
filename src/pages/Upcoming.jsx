@@ -152,7 +152,7 @@ class Upcoming extends Component { // define the component
 	const { shortcut } = this.props
 
 	keybindHandler(this, [
-	    [this.kb, [['l']], 'Complete item', 'Completes a task, or enters a project'],
+	    //[this.kb, [['l']], 'Complete item', 'Completes a task, or enters a project'],
 	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
 
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
@@ -176,6 +176,7 @@ class Upcoming extends Component { // define the component
     }
 
     handleItemComplete() {
+	console.log("completing item")
 	if (this.virtualActive.current && this.virtualActive.current.closeTask && !this.showEdit) {
 	    this.virtualActive.current.completeTask()
 	    this.handleVirtualNav(this.getCurrentField.length-1)

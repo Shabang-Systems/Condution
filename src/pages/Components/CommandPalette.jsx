@@ -54,132 +54,74 @@ const groupNameStyle = {
 
 
 
-
-
-
-//const CommandPalette = (props) => {
-//    const { shortcut } = props;
-//    //console.log(shortcut);
-
-//    return (
-//        <KBarPortal>
-//            <KBarPositioner>
-//                <KBarAnimator>
-//                    <KBarSearch />
-//                    <RenderResults />;
-//                </KBarAnimator>
-//            </KBarPositioner>
-//        </KBarPortal>
-//    )
-//}
-
-//const RenderResults = () =>  {
-//    const { results } = useMatches();
-
-//    return (
-//        <KBarResults
-//            items={results}
-//            onRender={({ item, active }) =>
-//                    typeof item === "string" ? (
-//                        <div>{item}</div>
-//                    ) : (
-//                        <div
-//                            style={{
-//                                background: active ? "#eee" : "transparent",
-//                            }}
-//                        >
-//                            {item.name}
-//                        </div>
-//                    )
-//            }
-//        />
-//    );
-//}
-
-
 function CommandPalette(props) {
+    const [shouldUpdate, setShouldUpdate] = React.useState(0);
+    const { shortcut } = props;
+
+
     const { query } = useKBar();
+
+
+    React.useEffect(() => {
+	    //console.log(shortcut.shortcuts.length)
+	    //setShouldUpdate(shouldUpdate + 1);
+	    //console.log("should update", shortcut.shortcuts)
+	//query.toggle()
+	//setTimeout(() => {
+	    //query.toggle()
+	//}, 10) 
+    }, [props.shouldUpdate])
+
     const getActions = () => {
-	const { shortcut } = props;
 	
 	let actionDict = {}
     
 	let actions = []
 
+	const { shortcut } = props;
 	// check if keybind already exists
 	// if so, push the new shortcut keys to the existing shortcut keys, 
 	// otherwise, create a new keybind
 	for (const [idx, s] of shortcut.shortcuts.entries()) {
+	    //console.log(s)
 	    if (s.title in actionDict) {
-		actions[actionDict[s.title]].keys.push(s.keys)
-		//console.log(actionDict)
-		    //.keys.push(s.keys)
+		if (!actions[actionDict[s.title]].keys.includes(...s.keys)) {
+		    actions[actionDict[s.title]].keys.push(...s.keys)
+		    //console.log(s.keys, "whee", actions[actionDict[s.title]].keys)
+		}
 	    } else {
 		actionDict[s.title] = actions.length
 		actions.push(s)
 	    }
 	}
-
 	actions = actions.map(v => {
 	    return {
 		id: nanoid(),
 		name: v.title,
-		subtitle: v.desciption, // TODO impl
-		shortcut: v.keys,
+		subtitle: v.description, // TODO impl
+		shortcut: Array.from(new Set(v.keys)),
 		perform: () => { 
 		    setTimeout(() => {
+			//console.log("running keyind function from palette", v.title)
 			v.method() 
-		    }, 1) // man.
+		    }, 10) // man.
 		},
-		keywords: v.desciption, // jank?
+		keywords: v.description, // jank?
+		//section: "test",
 	    }
 	})
-	
-	//let actions = shortcut.shortcuts.map(v => {
-	//    return {
-	//        id: nanoid(),
-	//        name: v.title,
-	//        subtitle: v.desciption, // TODO impl
-	//        shortcut: v.keys,
-	//        perform: () => { 
-	//            setTimeout(() => {
-	//                v.method() 
-	//            }, 1) // man.
-	//        },
-	//        keywords: v.desciption, // jank?
-	//    }
-	//})
 
-	//let actions = [
-	//    {
-	//        id: "blog",
-	//        name: "Blog",
-	//        shortcut: ["b"],
-	//        keywords: "writing words",
-	//        perform: () => (window.location.pathname = "blog"),
-	//    },
-	//    {
-	//        id: "contact",
-	//        name: nanoid(),
-	//        shortcut: ["c"],
-	//        keywords: "email",
-	//        perform: () => (window.location.pathname = "contact"),
-	//    },
-	//]
+	//console.log(shortcut, actions.map(v => v.perform), "here.")
 	return actions
     }
-    //useDocsActions();
-    //useThemeActions();
-    useRegisterActions(getActions(), [props.historyPath, props.mounted])
-    //const idk = () => {
-    //}
-    //React.useEffect(() => {
-    //    console.log("hist changing");
-    //    const { shortcut } = props
-    //    //console.log(shortcut.shortcuts.length)
-    //    //useRegisterActions(getActions())
-    //    idk()
-    //}, [props.historyPath])
+
+    //const { shortcut } = props;
+    //console.log("sfs", shortcut.shortcuts)
+
+    useRegisterActions([], [props.shouldUpdate, props.historyPath, shortcut.shortcuts])
+    useRegisterActions(getActions(), [props.shouldUpdate, props.historyPath, shortcut.shortcuts])
+    //console.log(props, useKBar())
+
     return (
 	<KBarPortal>
 	    <KBarPositioner>
@@ -305,7 +247,7 @@ const ResultItem = React.forwardRef(
           >
             {action.shortcut.map((sc) => (
               <kbd
-                key={sc}
+                key={nanoid()}
                 style={{
                   padding: "4px 6px",
                   background: "rgba(0 0 0 / .1)",
