@@ -37,6 +37,7 @@ import keybindHandler from "./Components/KeybindHandler"
 
 import { KBarProvider , KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches, NO_GROUP, KBarResults } from "kbar";
 import CommandPalette from "./Components/CommandPalette";
+import { nanoid } from 'nanoid'
 
 // Our very own CSS
 import './Home.css';
@@ -140,6 +141,7 @@ class Home extends Component {
 
 
     focusFab = () => {
+	console.log("Focusing fab", this, "ss")
 	if (this.abtibRef.current) this.abtibRef.current.focus()
     }
 
@@ -173,7 +175,7 @@ class Home extends Component {
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
 	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-	    //[this.focusFab, [['shift'], ['shift']], 'Go forwards', 'Navigates forward in history', true],
+	    [this.getActions, [['l']], 'Go forwards', 'Navigates forward in history', true],
 	])
 
         this.refresh();
@@ -257,35 +259,50 @@ class Home extends Component {
         this.setState({projects: prjOrder})
     }
 
+    getActions() {
+	const { shortcut } = this.props
 
-    actions = [
-	{
-	    id: "blog",
-	    name: "Blog",
-	    shortcut: ["b"],
-	    keywords: "writing words",
-	    perform: () => (window.location.pathname = "blog"),
-	},
-	{
-	    id: "contact",
-	    name: "Contact",
-	    shortcut: ["c"],
-	    keywords: "email",
-	    perform: () => (window.location.pathname = "contact"),
-	},
-    ]
+	let actions = shortcut.shortcuts.map(v => {
+	    //console.log(v)
+	    return {
+		id: nanoid(),
+		name: v.title,
+		desciption: v.desciption, // TODO impl
+		shortcut: v.keys,
+		perform: v.method,
+		keywords: v.desciption, // jank?
+	    }
+	})
+
+	//let actions = [
+	//    {
+	//        id: "blog",
+	//        name: "Blog",
+	//        shortcut: ["b"],
+	//        keywords: "writing words",
+	//        perform: () => (window.location.pathname = "blog"),
+	//    },
+	//    {
+	//        id: "contact",
+	//        name: "Contact",
+	//        shortcut: ["c"],
+	//        keywords: "email",
+	//        perform: () => (window.location.pathname = "contact"),
+	//    },
+	//]
+
+	return actions
+    }
 
     render() {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
 	    <IonPage>
 		<KBarProvider
-		    actions = {this.actions}
-		    //options = {
-		    //    toggleSharp
-		    //}
+		    actions = {this.getActions()}
 		    options = {{
-			toggleShortcut: "$mod+p",
+			toggleShortcut: "$mod+Shift+P",
+			enableHistory: true,
 		    }}
 		>
 		    <CommandPalette

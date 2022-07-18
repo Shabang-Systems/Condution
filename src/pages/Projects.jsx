@@ -99,9 +99,9 @@ class Projects extends Component { // define the component
 	let newProject = await Project.create(this.props.cm, "", this.state.projectObject)
 	this.props.history.push(`/projects/${newProject.id}/do`)
     }
+
     async makeNewTask() {
 	console.log("making new task")
-	//this.handleItemClose()
 	if (this.state.onTaskCreate) return;
 	Hookifier.freeze();
 	let newTask = DbTask.create(this.props.cm, "", this.state.projectObject)
