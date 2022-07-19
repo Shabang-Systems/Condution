@@ -67,9 +67,9 @@ function CommandPalette(props) {
     const { query } = useKBar();
 
     const getActions = () => {
-	
+
 	let actionDict = {}
-    
+
 	let actions = []
 
 	const { shortcut } = props;
@@ -80,11 +80,11 @@ function CommandPalette(props) {
 	    const [,registerType, registerId] = s.description.split("&")[1].split("/")
 	    const [,currentType, currentId] = window.location.pathname.split("/")
 	    // if we are in a project,
-		// ignore perspective keybinds
-		// ignore keybinds that are not in the current project
+	    // ignore perspective keybinds
+	    // ignore keybinds that are not in the current project
 	    // if we are in a perspective,
-		// ignore project keybinds
-		// ignore keybinds that are not in the current perspective
+	    // ignore project keybinds
+	    // ignore keybinds that are not in the current perspective
 	    // if we are not in either, ignore keybinds from both
 
 	    //if (registerType === "project" && currentType === "project") {
@@ -97,7 +97,7 @@ function CommandPalette(props) {
 		    //console.log("no good", registerId, currentId, s, 1)
 		    continue;
 		}
-		
+
 		if (registerId != currentId  // if we are in diff ids
 		    && currentType != "projects")  // projects don't seem to err?
 		{
@@ -111,7 +111,7 @@ function CommandPalette(props) {
 		    //console.log("no good", registerId, currentId, s, 3)
 		    continue
 		}
-		
+
 		// if register type is different and not home, then don't show it
 		if (
 		    s.description.split("&").length != 3  && // not registered in home
@@ -153,9 +153,36 @@ function CommandPalette(props) {
 	})
 
 	//console.log(shortcut, actions.map(v => v.perform), "here.")
-	actions.push({
+	actions.push(
+	    {
+		id: nanoid(),
+		name: "Command palette",
+		subtitle: "Toggle this command palette",
+		//subtitle: v.description,
+		shortcut: ["ctrl+shift+p", "mod+shift+p"],
+		perform: () => { 
+		    setTimeout(() => {
+		    }, 10) // man.
+		},
+		//keywords: v.description, // jank?
+		keywords: "Activate this command palette!",
+		//section: "test",
 
-	})
+	    },
+	    {
+		id: nanoid(),
+		name: "Quick switcher",
+		subtitle: "Toggle the quick switcher",
+		//subtitle: v.description,
+		shortcut: ["ctrl+k", "mod+k"],
+		perform: () => { 
+		    setTimeout(() => {
+			props.activateQuickSwitcher()
+		    }, 10) // man.
+		},
+		keywords: "Toggle the quick switcher",
+	    },
+	)
 
 	return actions
     }
@@ -169,20 +196,20 @@ function CommandPalette(props) {
 
     return (
 	<KBarPortal>
-		    <div style={{
-			position: "absolute",
-			//height: "100vh",
-			//width: "100vh",
-			top: 0,
-			right: 0,
-			bottom: 0,
-			left: 0,
-			//border: "1px solid red",
-			background: "#000",
-			opacity: "0.5",
-		    }}> 
+	    <div style={{
+		position: "absolute",
+		//height: "100vh",
+		//width: "100vh",
+		top: 0,
+		right: 0,
+		bottom: 0,
+		left: 0,
+		//border: "1px solid red",
+		background: "#000",
+		opacity: "0.5",
+	    }}> 
 
-		    </div>
+	    </div>
 	    <KBarPositioner>
 		<KBarAnimator style={animatorStyle}>
 		    <KBarSearch style={searchStyle} />
@@ -194,24 +221,24 @@ function CommandPalette(props) {
 }
 
 function RenderResults() {
-  const { results, rootActionId } = useMatches();
+    const { results, rootActionId } = useMatches();
 
-  return (
-    <KBarResults
-      items={results}
-      onRender={({ item, active }) =>
-        typeof item === "string" ? (
-          <div style={groupNameStyle}>{item}</div>
-        ) : (
-          <ResultItem
-            action={item}
-            active={active}
-            currentRootActionId={rootActionId}
-          />
-        )
-      }
-    />
-  );
+    return (
+	<KBarResults
+	    items={results}
+	    onRender={({ item, active }) =>
+		    typeof item === "string" ? (
+			<div style={groupNameStyle}>{item}</div>
+		    ) : (
+			<ResultItem
+			    action={item}
+			    active={active}
+			    currentRootActionId={rootActionId}
+			/>
+		    )
+	    }
+	/>
+    );
 }
 
 
@@ -222,109 +249,109 @@ function RenderResults() {
 
 
 const ResultItem = React.forwardRef(
-  (
-    {
-      action,
-      active,
-      currentRootActionId,
-    }: {
-      action: ActionImpl;
-      active: boolean;
-      currentRootActionId: ActionId;
-    },
-    ref: React.Ref<HTMLDivElement>
-  ) => {
-    const ancestors = React.useMemo(() => {
-      if (!currentRootActionId) return action.ancestors;
-      const index = action.ancestors.findIndex(
-        (ancestor) => ancestor.id === currentRootActionId
-      );
-      // +1 removes the currentRootAction; e.g.
-      // if we are on the "Set theme" parent action,
-      // the UI should not display "Set theme… > Dark"
-      // but rather just "Dark"
-      return action.ancestors.slice(index + 1);
-    }, [action.ancestors, currentRootActionId]);
+    (
+	{
+	    action,
+	    active,
+	    currentRootActionId,
+	}: {
+	    action: ActionImpl;
+	    active: boolean;
+	    currentRootActionId: ActionId;
+	},
+	ref: React.Ref<HTMLDivElement>
+    ) => {
+	const ancestors = React.useMemo(() => {
+	    if (!currentRootActionId) return action.ancestors;
+	    const index = action.ancestors.findIndex(
+		(ancestor) => ancestor.id === currentRootActionId
+	    );
+	    // +1 removes the currentRootAction; e.g.
+	    // if we are on the "Set theme" parent action,
+	    // the UI should not display "Set theme… > Dark"
+	    // but rather just "Dark"
+	    return action.ancestors.slice(index + 1);
+	}, [action.ancestors, currentRootActionId]);
 
-    return (
-      <div
-        ref={ref}
-        style={{
-          padding: "12px 16px",
-          background: active ? "var(--background-feature)" : "transparent",
-          borderLeft: `2px solid ${
-            active ? "var(--content-normal-accent)" : "transparent"
-          }`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          cursor: "pointer",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            gap: "8px",
-            alignItems: "center",
-            fontSize: 14,
-          }}
-        >
-          {action.icon && action.icon}
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div>
-              {ancestors.length > 0 &&
-                ancestors.map((ancestor) => (
-                  <React.Fragment key={ancestor.id}>
-                    <span
-                      style={{
-                        opacity: 0.5,
-                        marginRight: 8,
-                      }}
-                    >
-                      {ancestor.name}
-                    </span>
-                    <span
-                      style={{
-                        marginRight: 8,
-                      }}
-                    >
-                      &rsaquo;
-                    </span>
-                  </React.Fragment>
-                ))}
-              <span>{action.name}</span>
-            </div>
-            {action.subtitle && (
-              <span style={{ fontSize: 12 }}>{action.subtitle}</span>
-            )}
-          </div>
-        </div>
-        {action.shortcut?.length ? (
-          <div
-            aria-hidden
-            style={{ display: "grid", gridAutoFlow: "column", gap: "4px" }}
-          >
-            {action.shortcut.map((sc) => (
-	    sc && 
-              <kbd
-                key={nanoid()}
-                style={{
-	          color: "var(--decorative-light-accent)",
-                  padding: "4px 6px",
-                  background: "var(--content-normal)",
-                  borderRadius: "4px",
-                  fontSize: 14,
-                }}
-              >
-                {sc}
-              </kbd>
-	    
-            ))}
-          </div>
-        ) : null}
-      </div>
-    );
-  }
+	return (
+	    <div
+		ref={ref}
+		style={{
+		    padding: "12px 16px",
+		    background: active ? "var(--background-feature)" : "transparent",
+		    borderLeft: `2px solid ${
+			active ? "var(--content-normal-accent)" : "transparent"
+		    }`,
+		    display: "flex",
+		    alignItems: "center",
+		    justifyContent: "space-between",
+		    cursor: "pointer",
+		}}
+	    >
+		<div
+		    style={{
+			display: "flex",
+			gap: "8px",
+			alignItems: "center",
+			fontSize: 14,
+		    }}
+		>
+		    {action.icon && action.icon}
+		    <div style={{ display: "flex", flexDirection: "column" }}>
+			<div>
+			    {ancestors.length > 0 &&
+				    ancestors.map((ancestor) => (
+					<React.Fragment key={ancestor.id}>
+					    <span
+						style={{
+						    opacity: 0.5,
+						    marginRight: 8,
+						}}
+					    >
+						{ancestor.name}
+					    </span>
+					    <span
+						style={{
+						    marginRight: 8,
+						}}
+					    >
+						&rsaquo;
+					    </span>
+					</React.Fragment>
+				    ))}
+			    <span>{action.name}</span>
+			</div>
+			{action.subtitle && (
+			    <span style={{ fontSize: 12 }}>{action.subtitle}</span>
+			)}
+		    </div>
+		</div>
+		{action.shortcut?.length ? (
+		    <div
+			aria-hidden
+			style={{ display: "grid", gridAutoFlow: "column", gap: "4px" }}
+		    >
+			{action.shortcut.map((sc) => (
+			    sc && 
+				<kbd
+				    key={nanoid()}
+				    style={{
+					color: "var(--decorative-light-accent)",
+					padding: "4px 6px",
+					background: "var(--content-normal)",
+					borderRadius: "4px",
+					fontSize: 14,
+				    }}
+				>
+				    {sc}
+				</kbd>
+
+			))}
+		    </div>
+		) : null}
+	    </div>
+	);
+    }
 );
 
 

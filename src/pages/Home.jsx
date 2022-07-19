@@ -88,6 +88,7 @@ class Home extends Component {
 	    mounted: false,
 
 	    activatingPalette: false,
+	    qs_show: false,
 
         };
 
@@ -264,6 +265,14 @@ class Home extends Component {
 	this.setState({activatingPalette: nanoid()})
     }
 
+    activateQuickSwitcher(that) {
+	this.setState({qs_show: !this.state.qs_show}); 
+    }
+
+    dismissQs() {
+	this.setState({qs_show: false}); 
+    }
+
     render() {
         const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter; // Router workaround for electron
         return (
@@ -279,6 +288,7 @@ class Home extends Component {
 			historyPath = {history.location.pathname}
 			mounted = {this.state.mounted}
 			shouldUpdate = {this.state.activatingPalette}
+			activateQuickSwitcher = {this.activateQuickSwitcher}
 		    />
 
 		    {/*<ShortcutProvider>*/}
@@ -295,6 +305,9 @@ class Home extends Component {
 			    localizations={this.props.localizations}
 			    cm={this.props.cm}
 			    onPaletteActivate={this.onPaletteActivate}
+			    activateQuickSwitcher={this.activateQuickSwitcher}
+			    qs_show={this.state.qs_show}
+			    dismissQs={this.dismissQs}
 			    /*engine={this.props.engine} */
 			    /*uid={this.state.workspace} */
 			    /*gruntman={this.props.gruntman} */

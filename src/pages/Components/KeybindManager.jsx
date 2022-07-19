@@ -44,7 +44,7 @@ class Keybinds extends Component {
     ]
 
     globalBindings = [
-	["mod+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
+	["mod+k", ()=>{this.props.activateQuickSwitcher(1)}], // toggle quick swithcher keybind 
     ]
 
     //TODO: this doesnt work with clicking or like anything else but eh
@@ -145,8 +145,9 @@ class Keybinds extends Component {
     render() { 
 	return (
 	    <QuickSwitcher 
-		qs_show={this.state.qs_show} 
-		dismiss={()=> this.setState({qs_show: false})}
+		//qs_show={this.state.qs_show} 
+		qs_show={this.props.qs_show} 
+		dismiss={this.props.dismissQs}
 		items={[this.props.perspectives]}
 		paginate={this.props.paginate}
 		updateIdx={this.setSidebarIndex}
