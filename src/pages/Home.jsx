@@ -179,6 +179,7 @@ class Home extends Component {
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
 	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
+	    //[() => {}, [['cmd+k']], 'Quick switcher', 'Launch the quick switcher', true, true],
 	])
 
         this.refresh();
@@ -523,6 +524,7 @@ class Home extends Component {
 					localizations={this.props.localizations} 
 					cm={this.props.cm}
 					dispatch={this.props.dispatch}
+					isSettings={true}
 				    />
                                 </div>
 				</IonMenu>

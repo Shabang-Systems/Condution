@@ -6,7 +6,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	for (const i in bindings) {
 	    if (bindings[i].length == 1) {
 		// bind normal
-		shortcut.registerShortcut(action, bindings[i], title, desc + "&" + (that.menu? "&" : "") + window.location.pathname)
+		shortcut.registerShortcut(action, bindings[i], title, desc + "&" + ((that.menu || that.isSettings)? "&" : "") + window.location.pathname)
 		//console.log(that.props && that.props.id, "right here baby")
 	    } else {
 		// bind sequence

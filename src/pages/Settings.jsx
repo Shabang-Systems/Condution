@@ -53,6 +53,7 @@ const Settings = (props) => {
 
     const launchSettings = () => {
 	setOpen(!open)
+	console.log(props, "sfssaklsjdfs")
     }
 
 

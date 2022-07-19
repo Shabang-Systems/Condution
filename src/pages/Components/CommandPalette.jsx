@@ -58,19 +58,7 @@ function CommandPalette(props) {
     const [shouldUpdate, setShouldUpdate] = React.useState(0);
     const { shortcut } = props;
 
-
     const { query } = useKBar();
-
-
-    React.useEffect(() => {
-	    //console.log(shortcut.shortcuts.length)
-	    //setShouldUpdate(shouldUpdate + 1);
-	    //console.log("should update", shortcut.shortcuts)
-	//query.toggle()
-	//setTimeout(() => {
-	    //query.toggle()
-	//}, 10) 
-    }, [props.shouldUpdate])
 
     const getActions = () => {
 	
@@ -117,6 +105,17 @@ function CommandPalette(props) {
 		    console.log("no good", registerId, currentId, s, 3)
 		    continue
 		}
+		
+		// if register type is different and not home, then don't show it
+		if (
+		    s.description.split("&").length != 3  && // not registered in home
+		    (["completed", "upcoming", "calendar"].includes(registerType)) && 
+		    (["completed", "upcoming", "calendar"].includes(currentType)) && // both in one of the constant pages
+		    registerType != currentType) // but the constant pages dont match
+		{
+		    console.log("no good", registerId, currentId, s, 4)
+		    continue
+		}
 	    }
 
 	    if (s.title in actionDict) {
@@ -154,8 +153,8 @@ function CommandPalette(props) {
     //const { shortcut } = props;
     //console.log("sfs", shortcut.shortcuts)
 
-    useRegisterActions([], [props.shouldUpdate, props.historyPath, shortcut.shortcuts])
-    useRegisterActions(getActions(), [props.shouldUpdate, props.historyPath, shortcut.shortcuts])
+    useRegisterActions([], [shortcut.shortcuts])
+    useRegisterActions(getActions(), [shortcut.shortcuts])
     //console.log(props, useKBar())
 
     return (
