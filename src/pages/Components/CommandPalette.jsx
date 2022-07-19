@@ -28,21 +28,28 @@ const searchStyle = {
     boxSizing: "border-box",
     outline: "none",
     border: "none",
-    background: "var(--background)",
+    //background: "var(--background-feature)",
+    background: "var(--ion-background-color)",
+    //background: "var(--background-feature)",
     //color: "var(--foreground)",
     //color: "var(--menu-background)",
-    color: "white",
+    //color: "white",
+    color: "var(--decorative-light-accent)",
+    //color: "var(--content-normal-accent)",
 };
 
 const animatorStyle = {
     maxWidth: "600px",
     width: "100%",
-    background: "var(--background)",
+    //background: "var(--background)",
+    //background: "var(--background-feature)",
+    background: "var(--ion-background-color)",
     //color: "var(--foreground)",
-    color: "white",
+    color: "var(--decorative-light-accent)",
     borderRadius: "8px",
     overflow: "hidden",
     boxShadow: "var(--shadow)",
+    //boxShadow: "0px 13px 39px var(--qs-shadow-intensity) var(--qs-shadow-color);",
 };
 
 const groupNameStyle = {
@@ -51,7 +58,6 @@ const groupNameStyle = {
     textTransform: "uppercase",
     opacity: 0.5,
 };
-
 
 
 function CommandPalette(props) {
@@ -88,21 +94,21 @@ function CommandPalette(props) {
 		(["projects", "perspectives"].includes(currentType)) // if we are in either a project or perspective,
 	    ) {
 		if (registerType != currentType) { // if we are in diff types
-		    console.log("no good", registerId, currentId, s, 1)
+		    //console.log("no good", registerId, currentId, s, 1)
 		    continue;
 		}
 		
 		if (registerId != currentId  // if we are in diff ids
 		    && currentType != "projects")  // projects don't seem to err?
 		{
-		    console.log("no good", registerId, currentId, s, 2)
+		    //console.log("no good", registerId, currentId, s, 2)
 		    continue;
 		}
 	    } 
 
 	    if (!["projects", "perspectives"].includes(currentType)) { // if we are not in either,
 		if (["projects", "perspectives"].includes(registerType)) { // and we registered in one
-		    console.log("no good", registerId, currentId, s, 3)
+		    //console.log("no good", registerId, currentId, s, 3)
 		    continue
 		}
 		
@@ -113,7 +119,7 @@ function CommandPalette(props) {
 		    (["completed", "upcoming", "calendar"].includes(currentType)) && // both in one of the constant pages
 		    registerType != currentType) // but the constant pages dont match
 		{
-		    console.log("no good", registerId, currentId, s, 4)
+		    //console.log("no good", registerId, currentId, s, 4)
 		    continue
 		}
 	    }
@@ -147,6 +153,10 @@ function CommandPalette(props) {
 	})
 
 	//console.log(shortcut, actions.map(v => v.perform), "here.")
+	actions.push({
+
+	})
+
 	return actions
     }
 
@@ -159,6 +169,20 @@ function CommandPalette(props) {
 
     return (
 	<KBarPortal>
+		    <div style={{
+			position: "absolute",
+			//height: "100vh",
+			//width: "100vh",
+			top: 0,
+			right: 0,
+			bottom: 0,
+			left: 0,
+			//border: "1px solid red",
+			background: "#000",
+			opacity: "0.5",
+		    }}> 
+
+		    </div>
 	    <KBarPositioner>
 		<KBarAnimator style={animatorStyle}>
 		    <KBarSearch style={searchStyle} />
@@ -227,9 +251,9 @@ const ResultItem = React.forwardRef(
         ref={ref}
         style={{
           padding: "12px 16px",
-          background: active ? "var(--a1)" : "transparent",
+          background: active ? "var(--background-feature)" : "transparent",
           borderLeft: `2px solid ${
-            active ? "var(--foreground)" : "transparent"
+            active ? "var(--content-normal-accent)" : "transparent"
           }`,
           display: "flex",
           alignItems: "center",
@@ -281,17 +305,20 @@ const ResultItem = React.forwardRef(
             style={{ display: "grid", gridAutoFlow: "column", gap: "4px" }}
           >
             {action.shortcut.map((sc) => (
+	    sc && 
               <kbd
                 key={nanoid()}
                 style={{
+	          color: "var(--decorative-light-accent)",
                   padding: "4px 6px",
-                  background: "rgba(0 0 0 / .1)",
+                  background: "var(--content-normal)",
                   borderRadius: "4px",
                   fontSize: 14,
                 }}
               >
                 {sc}
               </kbd>
+	    
             ))}
           </div>
         ) : null}
@@ -299,11 +326,6 @@ const ResultItem = React.forwardRef(
     );
   }
 );
-
-
-
-
-
 
 
 export default withShortcut(CommandPalette);

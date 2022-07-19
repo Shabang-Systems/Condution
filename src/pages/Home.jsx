@@ -144,12 +144,11 @@ class Home extends Component {
 
 
     focusFab = () => {
-	console.log("Focusing fab", this, "ss")
+	console.log("Focusing fab")
 	if (this.abtibRef.current) this.abtibRef.current.focus()
     }
 
     async componentDidMount() {
-	console.log("Home mounted")
         const content = this.menuContent.current;
         const styles = document.createElement('style');
         styles.textContent = `
@@ -192,12 +191,10 @@ class Home extends Component {
     }
 
     componentWillUnmount() {
-	console.log("Unmounting home")
         this.state.menuWidget.unhook(this.refresh);
         this.props.cm.unhookInvite(this.updateInvites);
 	const { shortcut } = this.props
 	for (const i in this.state.keybinds) {
-	    console.log(this.state.keybinds[i], "home.jsx!")
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
     }
@@ -206,7 +203,7 @@ class Home extends Component {
         if (prevState.to !== this.state.to && this.state.to !== undefined)
             this.setState({sends:{to:undefined, id:undefined}})
 
-        if (prevState.workspace !== this.state.workspace) 
+        if (prevState.workspace !== this.state.workspace)
             this.refresh();
 
         /*            if (this.state.isWorkspace)*/
@@ -246,7 +243,6 @@ class Home extends Component {
 
     onDragEndPrj = result => {
         if (!result.destination || (result.destination.droppableId == result.source.droppableId && result.destination.index == result.source.index)) {
-            //console.log("bad drop prj")
             return
         }
 
@@ -266,7 +262,6 @@ class Home extends Component {
 
     onPaletteActivate() {
 	this.setState({activatingPalette: nanoid()})
-	console.log("appele isfs actioating")	
     }
 
     render() {
