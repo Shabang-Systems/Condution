@@ -89,6 +89,8 @@ class Home extends Component {
 
 	    activatingPalette: false,
 	    qs_show: false,
+	    goBackSkip: false,
+	    goForwardSkip: false,
 
         };
 
@@ -127,6 +129,11 @@ class Home extends Component {
     paginate = (to, id) => this.setState({itemSelected:{item:to ,id}}) // Does not actually paginate; instead, it... uh... sets the highlighting of the menu
 
     handleHistoryBack = () => {
+	if (this.state.goForwardSkip == true) {
+	    this.setState({goForwardSkip: false});
+	    return
+	}
+	this.setState({goForwardSkip: true});
 	//this.setState({itemSelected: {item:"perspectives", id:psp.id}});
 	//if (this.menu.current)
 	//    this.menu.current.close();
@@ -140,9 +147,13 @@ class Home extends Component {
     }
 
     handleHistoryForward = () => {
+	if (this.state.goBackSkip == true) {
+	    this.setState({goBackSkip: false});
+	    return
+	}
+	this.setState({goBackSkip: true});
 	history.goForward()
     }
-
 
     focusFab = () => {
 	console.log("Focusing fab")
@@ -179,9 +190,9 @@ class Home extends Component {
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
 	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-	    //[() => {}, [['cmd+k']], 'Quick switcher', 'Launch the quick switcher', true, true],
+	    [() => {console.log(shortcut.shortcuts)}, [['q']], 'saf', 'fdass', true, true],
 	])
-
+	//console.log(shortcut.shortcuts, "da shortcuts")
         this.refresh();
 	this.setState({ mounted: true });
     }

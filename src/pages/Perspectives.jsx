@@ -81,7 +81,6 @@ class Perspectives extends Component {
     } // util func for showing repeat
     hideEdit() {
         this.setState({showEdit: false});
-	console.log("hiding the edit")
     } // util func for hiding repeat
 
     componentWillUnmount() {
@@ -91,8 +90,6 @@ class Perspectives extends Component {
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
 
-	console.log(this.state.keybinds, "sssfa")
-	console.log("perspective unmounting")
         if (this.state.perspectiveObject)
             this.state.perspectiveObject.unhook(this.reloadData);
 
@@ -124,7 +121,6 @@ class Perspectives extends Component {
     }
 
     handleItemOpen() {
-	console.log("opening", this.virtualActive, "ss", this)
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.toggleTask()
 	}
@@ -137,7 +133,6 @@ class Perspectives extends Component {
     }
 
     handleItemComplete() {
-	console.log("completing", this.virtualActive.current)
 	if (this.virtualActive.current && this.virtualActive.current.closeTask && (this.state.showEdit === false)) {
 	    this.virtualActive.current.completeTask()
 	    this.handleVirtualNav(this.state.taskList.length-1)
