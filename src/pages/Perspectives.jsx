@@ -17,6 +17,7 @@ import Perspective from "../backend/src/Objects/Perspective";
 import Project from "../backend/src/Objects/Project";
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
+import { nanoid } from 'nanoid'
 
 import {Hookifier} from "../backend/src/Objects/Utils.ts";
 
@@ -75,7 +76,7 @@ class Perspectives extends Component {
         // AutoBind!
         autoBind(this);
     }
-    showEdite() {
+    showEdit() {
         this.setState({showEdit: true})
     } // util func for showing repeat
     hideEdit() {
@@ -110,7 +111,7 @@ class Perspectives extends Component {
         }, this.reloadData)
     }
 
-    handleVirtualNave(direction) {
+    handleVirtualNav(direction) {
 	const { shortcut } = this.props
 
 	this.handleItemClose()
@@ -122,7 +123,7 @@ class Perspectives extends Component {
 	})
     }
 
-    handleItemOpene() {
+    handleItemOpen() {
 	console.log("opening", this.virtualActive, "ss", this)
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.toggleTask()
@@ -135,11 +136,11 @@ class Perspectives extends Component {
 	}
     }
 
-    handleItemCompletee() {
+    handleItemComplete() {
 	console.log("completing", this.virtualActive.current)
 	if (this.virtualActive.current && this.virtualActive.current.closeTask && (this.state.showEdit === false)) {
 	    this.virtualActive.current.completeTask()
-	    this.handleVirtualNave(this.state.taskList.length-1)
+	    this.handleVirtualNav(this.state.taskList.length-1)
 	}
     }
 
@@ -169,32 +170,39 @@ class Perspectives extends Component {
         });
     }
 
-    handleDeletee() {
+    handleDelete() {
         this.state.perspectiveObject.delete();
         this.props.history.push("/upcoming/");
     }
 
 
-    focusNamee() {
+    focusName() {
 	if (this.perspectiveNameRef.current) this.perspectiveNameRef.current.focus();
+    }
+
+    registerKeybinds() {
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
+
+	keybindHandler(this, [
+	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project'],
+	    [() => this.handleVirtualNav(this.state.taskList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project'],
+	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
+	    //[this.handleItemOpene, [['e+t'], ['o']], 'Open item _', 'Edits the currently sel _ected task'],
+	    [this.handleItemOpen, [['e+t'], ['o']], `Open item `, 'Edits the currently selected task'],
+	    [this.showEdit, [['e+p']], 'Edit perspective', 'Opens the perspective editor'],
+	    [this.focusName, [['e+n']], 'Edit name', 'Focuses the perspective name'],
+	    [this.handleDelete, [['']], 'Delete perspective', 'Deletes the perspective'],
+	])
     }
 
     componentDidMount() {
 	const { shortcut } = this.props
 
-
-	keybindHandler(this, [
-	    [() => this.handleVirtualNave(1), [['j'], ['ArrowDown']], 'Navigate dow _n', 'Naviga _tes down in the current project'],
-	    [() => this.handleVirtualNave(this.state.taskList.length-1), [['k'], ['ArrowUp']], 'N _avigate up', 'Navigates up in the current project'],
-	    //[this.handleItemOpen, [['o']], 'Openn ijtem', 'Opeiins the currently selected item'],
-	    //[this.handleItemOpen, [['o+_']], 'O_pen item', 'Edeits the currently selected task'],
-	    [this.handleItemCompletee, [['Enter'], ["x"]], 'Compl _ete item', 'Completes a task, o _r enters a project'],
-	    [this.handleItemCompletee, [['c+t']], 'Complete Task _', 'Completes a task, or enters a _ project'],
-	    [this.handleItemOpene, [['e+t'], ['o']], 'Open item _', 'Edits the currently sel _ected task'],
-	    [this.showEdite, [['e+p']], 'Edit perspective _', 'Opens the perspecti _ve editor'],
-	    [this.focusNamee, [['e+n']], 'Edit _ name', 'Focuses the perspecti _ve name'],
-	    [this.handleDeletee, [['']], 'Delete persp _ective', 'Deletes the  _perspective'],
-	])
+	this.registerKeybinds()
 
         this.load()
         this.setState({showEdit: this.props.options === "do"});
@@ -205,24 +213,8 @@ class Perspectives extends Component {
         if (prevProps.id !== this.props.id) {
             prevState.perspectiveObject.unhook(this.reloadData);
             this.load();
-	    const { shortcut } = this.props
-	    for (const i in this.state.keybinds) {
-		shortcut.unregisterShortcut(this.state.keybinds[i])
-	    }
 
-
-	    keybindHandler(this, [
-		[() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project'],
-		[() => this.handleVirtualNav(this.state.taskList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project'],
-		//[this.handleItemOpen, [['o']], 'Openn ijtem', 'Opeiins the currently selected item'],
-		//[this.handleItemOpen, [['o']], 'Open item', 'Edeits the currently selected task'],
-		[this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
-		[this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
-		[this.handleItemOpen, [['e+t'], ['o']], 'Open item', 'Edits the currently selected task'],
-		[this.showEdit, [['e+p']], 'Edit perspective', 'Opens the perspective editor'],
-		[this.focusName, [['e+n']], 'Edit name', 'Focuses the perspective name'],
-		[this.handleDelete, [['']], 'Delete perspective', 'Deletes the perspective'],
-	    ])
+	    this.registerKeybinds()
 
         }
         if (prevProps.options !== this.props.options)
@@ -290,8 +282,8 @@ class Perspectives extends Component {
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
 
                                 <div className="greeting-container" style={{marginLeft: 6, marginTop: 2, marginBottom: 5}}>
-                                    <ClickButton icon={"fas fa-edit"} onClick={this.showEdite} />
-                                    <ClickButton icon={"fas fa-trash"} onClick={this.handleDeletee} />
+                                    <ClickButton icon={"fas fa-edit"} onClick={this.showEdit} />
+                                    <ClickButton icon={"fas fa-trash"} onClick={this.handleDelete} />
 
                                 </div> 
                             </div>

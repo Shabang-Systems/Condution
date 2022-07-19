@@ -83,7 +83,42 @@ function CommandPalette(props) {
 	// if so, push the new shortcut keys to the existing shortcut keys, 
 	// otherwise, create a new keybind
 	for (const [idx, s] of shortcut.shortcuts.entries()) {
-	    //console.log(s)
+	    const [,registerType, registerId] = s.description.split("&")[1].split("/")
+	    const [,currentType, currentId] = window.location.pathname.split("/")
+	    // if we are in a project,
+		// ignore perspective keybinds
+		// ignore keybinds that are not in the current project
+	    // if we are in a perspective,
+		// ignore project keybinds
+		// ignore keybinds that are not in the current perspective
+	    // if we are not in either, ignore keybinds from both
+
+	    //if (registerType === "project" && currentType === "project") {
+	    //console.log(registerType, currentType, ["project", "perspective"].includes(registerType))
+	    if (
+		(["projects", "perspectives"].includes(registerType)) && 
+		(["projects", "perspectives"].includes(currentType)) // if we are in either a project or perspective,
+	    ) {
+		if (registerType != currentType) { // if we are in diff types
+		    console.log("no good", registerId, currentId, s, 1)
+		    continue;
+		}
+		
+		if (registerId != currentId  // if we are in diff ids
+		    && currentType != "projects")  // projects don't seem to err?
+		{
+		    console.log("no good", registerId, currentId, s, 2)
+		    continue;
+		}
+	    } 
+
+	    if (!["projects", "perspectives"].includes(currentType)) { // if we are not in either,
+		if (["projects", "perspectives"].includes(registerType)) { // and we registered in one
+		    console.log("no good", registerId, currentId, s, 3)
+		    continue
+		}
+	    }
+
 	    if (s.title in actionDict) {
 		if (!actions[actionDict[s.title]].keys.includes(...s.keys)) {
 		    actions[actionDict[s.title]].keys.push(...s.keys)
@@ -98,7 +133,8 @@ function CommandPalette(props) {
 	    return {
 		id: nanoid(),
 		name: v.title,
-		subtitle: v.description, // TODO impl
+		subtitle: v.description.split("&")[0],
+		//subtitle: v.description,
 		shortcut: Array.from(new Set(v.keys)),
 		perform: () => { 
 		    setTimeout(() => {
