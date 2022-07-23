@@ -149,8 +149,7 @@ function CommandPalette(props) {
 		},
 		keywords: v.description, // jank?
 		//section: "test",
-	    }
-	})
+	    } })
 
 	//console.log(shortcut, actions.map(v => v.perform), "here.")
 	actions.push(
@@ -332,7 +331,7 @@ const ResultItem = React.forwardRef(
 			style={{ display: "grid", gridAutoFlow: "column", gap: "4px" }}
 		    >
 			{action.shortcut.map((sc) => (
-			    sc && 
+			    sc && (sc != "‎") &&
 				<kbd
 				    key={nanoid()}
 				    style={{

@@ -154,6 +154,8 @@ class Keybinds extends Component {
 		localizations={this.props.localizations}
 		cm={this.props.cm}
 
+		launchedWithButton={true} // TODO @exr0n @zbuster05 pass this when you click the button!
+
 		//engine={this.props.engine} 
 	    //    uid={this.props.uid} 
 	    //    gruntman={this.props.gruntman} 
@@ -166,5 +168,3 @@ class Keybinds extends Component {
 }
 
 export default withRouter(Keybinds);
-
-
