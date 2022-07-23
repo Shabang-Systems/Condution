@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IonModal, IonContent, IonButton, isPlatform } from '@ionic/react';
 
 import './Pages.css'
+import './Settings.css'
 import './Components/TagEditor.css';
 import RollingReleaseNotesModal from './Components/RollingReleaseNotesModal'
 import TagEditor from './Components/TagEditor'
@@ -88,26 +89,33 @@ const Settings = (props) => {
 		onDidDismiss={() => setOpen(false)}
 		cssClass="settings-modal"
 	    >
-		<div class="settings-main">
-		    <div class="settings-esc"
-			onClick={() => {
-			    setOpen(!open)
-			}}
-		    >
-			<i class="far fa-times-circle esc-button" style={{
-			    color: "var(--content-normal-alt)",
-			    marginRight: 24,
-			    marginTop: 24,
-			    fontSize: "30px",
-			    textAlign: "right",
-			    }}>
-			</i>
-			<span style={{
-			    textAlign: "right", marginRight: 24+3,
-			    marginTop: 3,
-			    color: "var(--ion-color-medium-shade)",
-			}}>esc</span>
-		    </div>
+              <div class="settings-main">
+                <div className="settings-header">
+                  {/* <span style={{display: "inline-flex", alignItems: "center"}}> <b className="bold-prefix" >Edit All Tags</b> </span> */}
+
+                  {/* {/\*   {/\\*Close Button*\\/} *\/} */}
+                  <a className="settings-close" onClick={() => {setOpen(!open);}}><i className="fa fa-times" onClick={() => {setOpen(!open);}}></i></a>
+                </div>
+
+		    {/* <div class="settings-esc" */}
+		        {/* onClick={() => { */}
+		        {/*     setOpen(!open) */}
+		        {/* }} */}
+		    {/* > */}
+			{/* <i class="far fa-times-circle esc-button" style={{ */}
+			{/*     color: "var(--content-normal-alt)", */}
+			{/*     marginRight: 24, */}
+			{/*     marginTop: 24, */}
+			{/*     fontSize: "30px", */}
+			{/*     textAlign: "right", */}
+			{/*     }}> */}
+			{/* </i> */}
+			{/* <span style={{ */}
+			{/*     textAlign: "right", marginRight: 24+3, */}
+			{/*     marginTop: 3, */}
+			{/*     color: "var(--ion-color-medium-shade)", */}
+			{/* }}>esc</span> */}
+		    {/* </div> */}
 
 
 
@@ -133,10 +141,8 @@ const Settings = (props) => {
 			<div class="settings-content"
 			    style={{
 				width: "100%",
-				marginRight: "20%",
-				textAlign: "right",
 			    }}
-			>
+                        >
 			    <span style={{
 				border: "0px solid red",
 				textDecoration: "underline",
