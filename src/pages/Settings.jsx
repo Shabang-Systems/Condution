@@ -11,6 +11,7 @@ import Tag from "../backend/src/Objects/Tag";
 import { createBrowserHistory, createHashHistory } from 'history';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
+import KeybindPicker from "./Components/KeybindPicker"
 import ShortcutPicker from "react-shortcut-picker";
 
 const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
@@ -190,15 +191,9 @@ const bundles = [
 	title: <>
 	    Bind 'em keys!
 	</>,
-	content: (props) => {
-	    return <>
-		<ShortcutPicker
-		    shortcutCmd={"SS"}
-		    id={"adfdsa"}
-		    handleShortcutCmd={() => {}}
-		/>
-	    </>
-	}
+	content: (props) => (<KeybindPicker
+
+		/>)
     },
     {
 	name: "Theme",
