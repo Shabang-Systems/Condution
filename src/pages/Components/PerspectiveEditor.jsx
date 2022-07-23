@@ -165,7 +165,7 @@ class PerspectiveEdit extends Component {
                                     ref={this.name}
                                     value={this.state.perspectiveName} 
                                     onChange={(e)=> {this.setState({perspectiveName: e.target.value})}}
-                                    onBlur={(e)=>{this.props.perspective.name = this.state.perspectiveName}}
+				    onBlur={(e)=>{if (this.props.perspective) this.props.perspective.name = this.state.perspectiveName}}
                                     style={{minWidth: 0}}
                                     placeholder={this.props.localizations.perspective_modal_placeholder}
                                 />

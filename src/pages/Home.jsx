@@ -160,8 +160,29 @@ class Home extends Component {
 	if (this.abtibRef.current) this.abtibRef.current.focus()
     }
 
+    handleLogout = () => {
+	history.push(`/`)
+	this.props.dispatch({operation: "logout"})
+    }
+
+
+    handleNewPerspective = () => {
+	if (this.menu.current)
+	    this.menu.current.close();
+	let f = (async function() { // minification breaks double-called anonomous functions, so we must declare them explicitly
+	    let np = await Perspective.create(this.props.cm)
+	    let npid = np.id
+
+	    history.push(`/perspectives/${npid}/do`);
+	    this.paginate("perspectives", npid);
+	    this.refresh();
+	}).bind(this);
+	f();
+    }
+
+
     async componentDidMount() {
-        const content = this.menuContent.current;
+	const content = this.menuContent.current;
         const styles = document.createElement('style');
         styles.textContent = `
             .scroll-y::-webkit-scrollbar {
@@ -189,8 +210,9 @@ class Home extends Component {
 	keybindHandler(this, [
 	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
 	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
+	    [this.handleLogout, [['‎']], 'Logout', 'Logout of Condution'],
+	    [this.handleNewPerspective, [['‎']], 'New perspective', 'Create a new perspective'],
 	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-	    [() => {console.log(shortcut.shortcuts)}, [['q']], 'saf', 'fdass', true, true],
 	])
 	//console.log(shortcut.shortcuts, "da shortcuts")
         this.refresh();
@@ -403,7 +425,8 @@ class Home extends Component {
 					    //}).bind(this);
 					    //f();
 
-					}} className="fa fa-plus add"></a></div>
+					}
+					} className="fa fa-plus add"></a></div>
 
 					{/* === Perspective button + link == */}
 
@@ -537,7 +560,7 @@ class Home extends Component {
 
 				    </IonContent>
                                   <div id="bottombar">
-				    <div className="menu-item bottomitem" id="logout" onClick={() => {history.push(`/`); this.props.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
+				    <div className="menu-item bottomitem" id="logout" onClick={this.handleLogout}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
 				    <Settings 
 					authType={this.props.authType} 
 					localizations={this.props.localizations} 

@@ -157,6 +157,7 @@ class QuickSwitcher extends Component {
 
     render() { 
 	return (
+	    <>
 	    <IonModal 
 		isOpen={this.props.qs_show}  // are we open? 
 		animated={false} // don't animate the opening. 
@@ -166,6 +167,7 @@ class QuickSwitcher extends Component {
 		onDidDismiss={this.props.dismiss} // set the state toggle when we dismiss the modal
 	    >
 		<div className='modal-content-wrapper'>
+
 		    <IonSearchbar 
 			autoFocus={true} // more wishful thinking?
 			ref={this.searcher} // give it a ref!
@@ -185,6 +187,8 @@ class QuickSwitcher extends Component {
 		    ////////
 
 		    />
+
+
 		    <div className='option-wrapper'> 
 			{this.filterItems(this.state.query).map((item, i) => {
 			    return (
@@ -207,7 +211,8 @@ class QuickSwitcher extends Component {
 				    }}></i>
 				    <p 
 					className= {`option-text`}
-				    >{item[0]}</p>
+				    >{item[0]}
+				    </p>
 				</div>
 				)
 
@@ -218,7 +223,35 @@ class QuickSwitcher extends Component {
 		</div>
 
 	    </IonModal>
-	) 
+		{this.props.qs_show && this.props.launchedWithButton && 
+		<div
+		    style={{
+			position: "absolute",
+			//color: `${this.props.qs_show? "white" : "black"}`,
+			color: "var(--decorative-light-accent)",
+			transition: "all 0.2s ease-in-out",
+			fontWeight: "700",
+			fontStyle: "italic",
+			//marginTop: "3rem",
+			//bottom: -30,
+			zIndex: "100",
+			top: "50%",
+			left: "50%",
+			transform: "translate(-50%, -50%)",
+		    }}
+		    className="tip"
+		> 
+		    <p
+			style={{
+			    marginTop: "18rem",
+			}}
+		    > 
+			Tip: use <kdb className="key"> ctrl/cmd+k </kdb> to launch the quick switcher faster!
+		    </p> 
+		</div>
+		}
+	    </>
+) 
     }
 
 }
