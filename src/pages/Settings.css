@@ -1,0 +1,170 @@
+
+.settings-modal {
+/*     /\*--max-height: 100vh%;*\/ */
+/*     --height: 100%; */
+/*     --width: 100%; */
+/*     /\*--color: var(--decorative-light-alt);*\/ */
+    color: var(--menu-label);
+/*     /\*--max-width: 520px;*\/ */
+/*     /\*--ion-backdrop-opacity: 0.5;*\/ */
+/*     /\*--border-radius: 8px;*\/ */
+    height: 100%;
+    --border-radius: 5px;
+}
+
+.settings-main {
+    /*border: 1px solid red;*/
+    height: 100%;
+}
+
+.settings-floating {
+    border: 0px solid blue;
+    /* padding: 1rem; */
+    /* margin-top: 10%; */
+    /* margin-left: 20%; */
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    /*align-items: center;*/
+    justify-content: flex-start;
+    /*margin: auto;*/
+    height: 100%;
+}
+
+.settings-sidebar {
+    height: 100%;
+}
+
+.settings-close {
+    position: relative;
+    float: right;
+    padding: 10px;
+    padding-right: 15px;
+    cursor: pointer;
+}
+
+.settings-close > i {
+    color: var(--decorative-light);
+    transition: color 0.3s;
+}
+
+.settings-close > i:hover {
+    color: var(--decorative-light-alt);
+}
+
+.settings-sidebar {
+    /*border: 0px solid red;*/
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    /* margin-right: 1rem; */
+    background: var(--menu-background)
+}
+
+.settings-content {
+    padding-top: 5px;
+    margin: 20px;
+    margin-left: 30px;
+}
+
+.settings-esc {
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+    /*font-variant: small-caps;*/
+    align-content: right;
+    justify-content: right;
+    /*border: 1px solid red;*/
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+/*.settings-esc:hover {*/
+/*    background: red;*/
+/*}*/
+
+
+.esc-button {
+    transition: 0.3s;
+    /*background: blue;*/
+    /*border: 1px solid green;*/
+}
+
+.esc-button:hover {
+    color: var(--task-checkmark) !important;
+    /*color: red;*/
+    /*background: red;*/
+}
+
+.settings-option {
+    border-radius: 8px;
+    background-color: none;
+    /*padding-left: 5px;*/
+    /*padding-right: 5px;*/
+    padding: 5px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: var(--content-normal-alt);
+}
+
+.settings-option:hover {
+    color: var(--decorative-light-accent);
+}
+
+
+/* .settings-option:hover { */
+/*     background-color: var(--decorative-light) !important; */
+/* } */
+
+
+.settings-theme-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.settings-theme-option-wrapper {
+    /*background-color: var(--decorative-light);*/
+    display: flex;
+    flex-direction: row;
+    /*justify-content: center;*/
+    align-items: center;
+    border-radius: 4px;
+    /*border: 1px solid red;*/
+    /*padding-top: 20px;*/
+    margin-top: 5px;
+    /*padding: 0 !important;*/
+    /*margin: 0 !important;*/
+}
+
+.settings-theme-option-subtext {
+    padding-left: 8px;
+    font-size: 10px;
+    font-weight: 900;
+    /*margin-bottom: 0;*/
+}
+
+.settings-theme-option-maintext {
+    /*margin-bottom: 0;*/
+    /*background-color: var(--decorative-light);*/
+    padding: 5px;
+    border-radius: 5px;
+    transition: 0.3s;
+
+}
+
+.settings-theme-option-maintext:hover {
+    background-color: var(--decorative-light);
+}
+
+.settings-theme-option-highlight {
+    background-color: var(--decorative-light);
+}
+
+.debug {
+    border: 1px solid red;
+}
+
