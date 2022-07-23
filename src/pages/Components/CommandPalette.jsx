@@ -17,6 +17,7 @@ import {
     useRegisterActions,
     ActionImpl,
     useKBar,
+    Priority
 } from "kbar";
 import { nanoid } from 'nanoid'
 
@@ -148,7 +149,7 @@ function CommandPalette(props) {
 		    }, 10) // man.
 		},
 		keywords: v.description, // jank?
-		//section: "test",
+		section: (v.description.split("&").length == 3)? "Global" : "Local",
 	    } })
 
 	//console.log(shortcut, actions.map(v => v.perform), "here.")
@@ -165,7 +166,8 @@ function CommandPalette(props) {
 		},
 		//keywords: v.description, // jank?
 		keywords: "Activate this command palette!",
-		//section: "test",
+		priority: Priority.HIGH,
+		section: "Global",
 
 	    },
 	    {
@@ -180,6 +182,8 @@ function CommandPalette(props) {
 		    }, 10) // man.
 		},
 		keywords: "Toggle the quick switcher",
+		priority: Priority.HIGH,
+		section: "Global"
 	    },
 	)
 
