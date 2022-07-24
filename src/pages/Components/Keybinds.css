@@ -17,6 +17,7 @@
     display: flex;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    caret-color: transparent;
     /*margin-bottom: -10px;*/
 
     /*&:hover { */

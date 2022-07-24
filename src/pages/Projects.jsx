@@ -207,6 +207,10 @@ class Projects extends Component { // define the component
 	if (this.name.current) this.name.current.focus();
     }
 
+    keybindTest() {
+	console.log("triggerin")
+    }
+
     componentDidMount() {
 	this.setState({draggableRefs: new Array(this.state.itemList.length).fill(null)})
 	const { shortcut } = this.props
@@ -232,7 +236,7 @@ class Projects extends Component { // define the component
 	    [this.completeProject, [['c+p']], 'Toggle project complete', 'Toggles the project complete status'],
 
 	    // TODO does this work?
-	    [this.deleteProject, [['']], 'Delete project', 'Deletes the project'],
+	    [this.deleteProject, [['‎']], 'Delete project', 'Deletes the project'],
 
 	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
 	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],

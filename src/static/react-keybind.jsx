@@ -115,6 +115,7 @@ export class ShortcutProvider extends React.PureComponent {
 	    key &&
 	    ignore.indexOf(target.tagName.toLowerCase()) < 0 &&
 	    this.keysDown.indexOf(key) < 0
+	    && !(e.srcElement.contentEditable === "true")
 	) {
 	    const keysDown = []
 	    const modKeys = []

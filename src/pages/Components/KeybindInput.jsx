@@ -19,16 +19,16 @@ const KeybindInput = (props) => {
     }, [props.keys]);
 
     const rec = (e) => {
-	if (e.key == "Escape") {
-	    setKeybindInput("")
-	    e.stopPropagation()
-	}
+	//if (e.key == "Escape") {
+	//    setKeybindInput("")
+	//    e.stopPropagation()
+	//}
 	e.preventDefault()
-	setKeybindInput(keybindInput? keybindInput+"+"+e.key : e.key)
-    }
-
-    const clear = () => {
-	setKeybindInput("")
+	let input = e.key
+	input = input.toLowerCase()
+	input = input.replace("Control", "ctrl")
+	input = (keybindInput? keybindInput+"+"+input : input)
+	setKeybindInput(input)
     }
 
     return (
@@ -40,6 +40,7 @@ const KeybindInput = (props) => {
 		}}
 	    >
 		<p
+		    contentEditable
 		    onKeyDown={rec}
 		    onChange={(e) => {e.preventDefault()}}
 		    className="keybind-display"

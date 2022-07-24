@@ -12,6 +12,17 @@ import "./Keybinds.css"
 
 //var Mousetrap = require('mousetrap-record')(require('mousetrap'));
 
+// TODO @jemoka
+// the height of this needs to be set so that scrolling works, but i don;t know how to set the height correctly?
+// 	line 117
+// the getActions function should read from some static thing which contains all possible keybinds
+// 	currently, it is dependant on the currently mounted keybind
+// three functions: 
+// 	handleAdd,
+// 	handleDelete,
+// 	and then a function called rec in KeybindInput.jsx
+// 	these need to hook into the static whatever storage and change things.
+
 const KeybindPicker = (props) => {
     const [keybindActions, setActions] = useState([]);
     const [render, triggerRender] = useState(0);
@@ -92,16 +103,16 @@ const KeybindPicker = (props) => {
 	setActions(getActions())
     }, [])
 
-    const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
-
     const handleDelete = (i, j) => { // man, this function sucks
 	const temp = keybindActions
-	temp[i].keys[j] = ""
+	temp[i].keys.splice(j, 1)
 	setActions([...temp])
     }
 
     const handleAdd = (i) => {
-	setActions(keybindActions[i].keys.concat(""))
+	const temp = keybindActions
+	temp[i].keys.push("")
+	setActions([...temp])
     }
 
 
@@ -148,7 +159,7 @@ const KeybindPicker = (props) => {
 			    {s.keys.map((k, j) => {
 				console.log(k == "ctrl+i")
 				return (
-			    <> {(k != "‎" && k != "") &&
+			    <> {(k != "‎") &&
 				    <p
 					style={{
 					    display: "flex",
