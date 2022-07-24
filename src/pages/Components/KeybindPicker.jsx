@@ -102,6 +102,7 @@ const KeybindPicker = (props) => {
 		    overflow: "scroll",
 		    //border: "1px solid red",
 		    height: "500px", // TODO
+                    width: "100%",
 		    marginTop: "1.5rem"
 		}}
 	    >
@@ -109,7 +110,8 @@ const KeybindPicker = (props) => {
 		return (<> 
 		    <div 
 			style={{
-			    /* display: "flex", */
+			    display: "flex",
+                            width: "100%"
 			}}
 		    >
 			<p
@@ -125,10 +127,11 @@ const KeybindPicker = (props) => {
 			<div
 			    style={{
 				display: "inline-flex",
-                                width: "100%",
+                                /* width: "100%", */
 				overflowX: "hidden",
 				"text-overflow": "ellipsis",
 				"word-wrap": "break-word",
+                                "flex-wrap": "wrap"
 			    }}
 			>
 			    {s.keys.map((k, j) => {

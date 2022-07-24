@@ -19,6 +19,7 @@
 
 .settings-floating {
     border: 0px solid blue;
+    width:100%;
     /* padding: 1rem; */
     /* margin-top: 10%; */
     /* margin-left: 20%; */
@@ -37,6 +38,7 @@
 
 .settings-close {
     position: relative;
+    display: none;
     float: right;
     padding: 10px;
     padding-right: 15px;
@@ -59,6 +61,11 @@
     padding: 20px;
     /* margin-right: 1rem; */
     background: var(--menu-background)
+}
+
+.settings-header {
+    display: inline;
+    position: absolute;
 }
 
 .settings-content {
