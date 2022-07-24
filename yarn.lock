@@ -10079,24 +10079,11 @@ mousetrap-global-bind@^1.1.0:
   resolved "https://registry.npmjs.org/mousetrap-global-bind/-/mousetrap-global-bind-1.1.0.tgz"
   integrity sha1-zX3pIivQZG+i4BDVTISnTCaojt0=
 
-<<<<<<< HEAD
-mousetrap-record@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/mousetrap-record/-/mousetrap-record-1.0.1.tgz#c8301a616576e4d619e7fd69384616badf19d876"
-  integrity sha512-0cHFVL3MpH6qRJFe/3svt/hwQJArl2tArW4mt9k51auiFKlWz27DQ6U82aasvuILExvPOa/B7wxngEHxBTQIwQ==
-
 mousetrap@^1.6.5:
   version "1.6.5"
   resolved "https://registry.npmjs.org/mousetrap/-/mousetrap-1.6.5.tgz"
   integrity sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==
 
-=======
-mousetrap@^1.6.5:
-  version "1.6.5"
-  resolved "https://registry.npmjs.org/mousetrap/-/mousetrap-1.6.5.tgz"
-  integrity sha512-QNo4kEepaIBwiT8CDhP98umTetp+JNfQYBWvC1pc6/OAibuXtRcxZ58Qz8skvEHYvURne/7R8T5VoOI7rDsEUA==
-
->>>>>>> 9c968a5726bed8ffe8fa7a20327dcdd48dc534eb
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/move-concurrently/-/move-concurrently-1.0.1.tgz"
@@ -12262,11 +12249,7 @@ react-dev-utils@^11.0.3:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-<<<<<<< HEAD
-react-dom@^15.5.4, react-dom@^15.6.1:
-=======
 react-dom@^15.6.1:
->>>>>>> 9c968a5726bed8ffe8fa7a20327dcdd48dc534eb
   version "15.7.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-15.7.0.tgz"
   integrity sha512-mpjXqC2t1FuYsILOLCj0kg6pbg460byZkVA/80VtDmKU/pYmoTdHOtaMcTRIDiyXLz4sIur0cQ04nOC6iGndJg==
@@ -12314,15 +12297,6 @@ react-input-autosize@^3.0.0:
   dependencies:
     prop-types "^15.5.8"
 
-<<<<<<< HEAD
-react-input-shortcut@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/react-input-shortcut/-/react-input-shortcut-0.0.1.tgz#887cf976e94e07d6a445f888e94a038b874a20db"
-  integrity sha512-qZTQrw03yiU3COOukIx0ffYhnGn9siZIbTetUCC6F/OLk+ZDtLK5lLcjTnhA/+rARAUx4M6b+VaCp/9V56BYrw==
-  dependencies:
-    react "^15.5.4"
-    react-dom "^15.5.4"
-
 react-is@^16.13.1, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
@@ -12374,59 +12348,6 @@ react-outside-click-handler@^1.3.0:
     object.values "^1.1.0"
     prop-types "^15.7.2"
 
-=======
-react-is@^16.13.1, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
-  version "16.13.1"
-  resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
-  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
-
-react-is@^17.0.1:
-  version "17.0.2"
-  resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
-  integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
-
-react-keybind@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.npmjs.org/react-keybind/-/react-keybind-0.9.4.tgz"
-  integrity sha512-JVlXJ4ONQFQtEDZqXpc5NZ3oLEJtj7lKCPMLsbAO6FfkXJ21VHKyDtiLUIMio3d3oSC8QfxDOQtUEeVrMW6HfQ==
-
-react-lifecycles-compat@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
-  integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
-
-react-localization@^1.0.17:
-  version "1.0.17"
-  resolved "https://registry.npmjs.org/react-localization/-/react-localization-1.0.17.tgz"
-  integrity sha512-UowuLAvnEPXJgzxjDX/9hKdKYvtUgC6hQ5PV0CnT5f/77tItIUru5tTwgrDY2UL5oUK3JRMgz42tqnAU2W5eoA==
-  dependencies:
-    localized-strings "^0.2.0"
-
-react-lottie@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.npmjs.org/react-lottie/-/react-lottie-1.2.3.tgz"
-  integrity sha512-qLCERxUr8M+4mm1LU0Ruxw5Y5Fn/OmYkGfnA+JDM/dZb3oKwVAJCjwnjkj9TMHtzR2U6sMEUD3ZZ1RaHagM7kA==
-  dependencies:
-    babel-runtime "^6.26.0"
-    lottie-web "^5.1.3"
-
-react-onclickoutside@^6.10.0:
-  version "6.11.2"
-  resolved "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-6.11.2.tgz"
-  integrity sha512-640486eSwU/t5iD6yeTlefma8dI3bxPXD93hM9JGKyYITAd0P1JFkkcDeyHZRqNpY/fv1YW0Fad9BXr44OY8wQ==
-
-react-outside-click-handler@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/react-outside-click-handler/-/react-outside-click-handler-1.3.0.tgz"
-  integrity sha512-Te/7zFU0oHpAnctl//pP3hEAeobfeHMyygHB8MnjP6sX5OR8KHT1G3jmLsV3U9RnIYo+Yn+peJYWu+D5tUS8qQ==
-  dependencies:
-    airbnb-prop-types "^2.15.0"
-    consolidated-events "^1.1.1 || ^2.0.0"
-    document.contains "^1.0.1"
-    object.values "^1.1.0"
-    prop-types "^15.7.2"
-
->>>>>>> 9c968a5726bed8ffe8fa7a20327dcdd48dc534eb
 react-overlays@^5.0.1:
   version "5.1.0"
   resolved "https://registry.npmjs.org/react-overlays/-/react-overlays-5.1.0.tgz"
@@ -12641,11 +12562,7 @@ react@17:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-<<<<<<< HEAD
-react@^15.5.4, react@^15.6.1:
-=======
 react@^15.6.1:
->>>>>>> 9c968a5726bed8ffe8fa7a20327dcdd48dc534eb
   version "15.7.0"
   resolved "https://registry.npmjs.org/react/-/react-15.7.0.tgz"
   integrity sha512-5/MMRYmpmM0sMTHGLossnJCrmXQIiJilD6y3YN3TzAwGFj6zdnMtFv6xmi65PHKRV+pehIHpT7oy67Sr6s9AHA==
