@@ -6,6 +6,7 @@ import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../../static/r
 import keybindHandler from "./KeybindHandler"
 import ShortcutPicker from "react-shortcut-picker";
 import KeybindInput from "./KeybindInput"
+import "./Keybinds.css"
 //import Mousetrap from 'mousetrap';
 //import 'mousetrap-record';
 
@@ -111,7 +112,8 @@ const KeybindPicker = (props) => {
 		    <div 
 			style={{
 			    display: "flex",
-                            width: "100%"
+                            width: "100%",
+			    marginTop: "1.5rem",
 			}}
 		    >
 			<p
@@ -131,16 +133,17 @@ const KeybindPicker = (props) => {
 				overflowX: "hidden",
 				"text-overflow": "ellipsis",
 				"word-wrap": "break-word",
-                                "flex-wrap": "wrap"
+                                "flex-wrap": "wrap",
 			    }}
 			>
 			    {s.keys.map((k, j) => {
-				console.log(k)
 				return (
 				    <p
 					style={{
 					    display: "flex",
 					    flexDirection: "row",
+					    //border: "1px solid red",
+					    maxHeight: "1.8em",
 					}}
 				    > 
 					<div
@@ -153,12 +156,19 @@ const KeybindPicker = (props) => {
 				    </p>
 				)	
 			    })}
+
+
+			    <p className="keybind-display round-right">
+				+
+			    </p>
+
+
 			</div>
 		    </div>
 		</>
 		)
 	    })}
-	</div>
+	    </div>
 	</>
     );
 };

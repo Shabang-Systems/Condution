@@ -5,6 +5,7 @@ import { createBrowserHistory, createHashHistory } from 'history';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../../static/react-keybind'
 import keybindHandler from "./KeybindHandler"
 import ShortcutPicker from "react-shortcut-picker";
+import "./Keybinds.css"
 //import Mousetrap from 'mousetrap';
 //import 'mousetrap-record';
 
@@ -12,7 +13,7 @@ import ShortcutPicker from "react-shortcut-picker";
 
 const KeybindInput = (props) => {
     const [keybindInput, setKeybindInput] = useState(props.keys);
-    
+
     const rec = (e) => {
 	if (e.key == "Escape") {
 	    setKeybindInput("")
@@ -38,28 +39,11 @@ const KeybindInput = (props) => {
 		    contentEditable="true"
 		    onKeyDown={rec}
 		    onChange={(e) => {e.preventDefault()}}
-		    style={{
-			marginLeft: "10px",
-			background: "var(--background-feature)",
-			maxWidth: "200px",
-			minWidth: "10px",
-			//maxHeight: "20px",
-			"text-overflow": "ellipsis",
-			"word-wrap": "break-word",
-			"max-height": "1.8em",
-			"line-height": "1.8em",
-			display: "block",
-			overflow: "scroll",
-			"align-content": "space-between",
-			"border-radius": "5px",
-			paddingLeft: "10px",
-			paddingRight: "10px",
-			//paddingBottom: "20px",
-
-		    }}
+		    className="keybind-display"
 		>
 		    {keybindInput}
 		</p>
+		<div className="keybind-deleter">x</div>
 
 		{/*<button onClick={clear}
 		>Clear</button>
