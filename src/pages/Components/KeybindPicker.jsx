@@ -109,7 +109,7 @@ const KeybindPicker = (props) => {
 		return (<> 
 		    <div 
 			style={{
-			    display: "flex",
+			    /* display: "flex", */
 			}}
 		    >
 			<p
@@ -125,6 +125,7 @@ const KeybindPicker = (props) => {
 			<div
 			    style={{
 				display: "inline-flex",
+                                width: "100%",
 				overflowX: "hidden",
 				"text-overflow": "ellipsis",
 				"word-wrap": "break-word",

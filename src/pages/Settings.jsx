@@ -248,7 +248,7 @@ const bundles = [
 		    }}>
 		    <div
 			style={{
-			    display: "flex",
+			    /* display: "flex", */
 			}}
 		    > <p
 			style={{
