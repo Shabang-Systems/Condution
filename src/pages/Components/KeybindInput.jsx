@@ -14,6 +14,10 @@ import "./Keybinds.css"
 const KeybindInput = (props) => {
     const [keybindInput, setKeybindInput] = useState(props.keys);
 
+    useEffect(() => {
+	setKeybindInput(props.keys);
+    }, [props.keys]);
+
     const rec = (e) => {
 	if (e.key == "Escape") {
 	    setKeybindInput("")
@@ -36,7 +40,6 @@ const KeybindInput = (props) => {
 		}}
 	    >
 		<p
-		    contentEditable="true"
 		    onKeyDown={rec}
 		    onChange={(e) => {e.preventDefault()}}
 		    className="keybind-display"

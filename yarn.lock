@@ -10079,6 +10079,11 @@ mousetrap-global-bind@^1.1.0:
   resolved "https://registry.npmjs.org/mousetrap-global-bind/-/mousetrap-global-bind-1.1.0.tgz"
   integrity sha1-zX3pIivQZG+i4BDVTISnTCaojt0=
 
+mousetrap-record@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mousetrap-record/-/mousetrap-record-1.0.1.tgz#c8301a616576e4d619e7fd69384616badf19d876"
+  integrity sha512-0cHFVL3MpH6qRJFe/3svt/hwQJArl2tArW4mt9k51auiFKlWz27DQ6U82aasvuILExvPOa/B7wxngEHxBTQIwQ==
+
 mousetrap@^1.6.5:
   version "1.6.5"
   resolved "https://registry.npmjs.org/mousetrap/-/mousetrap-1.6.5.tgz"
@@ -12249,7 +12254,7 @@ react-dev-utils@^11.0.3:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@^15.6.1:
+react-dom@^15.5.4, react-dom@^15.6.1:
   version "15.7.0"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-15.7.0.tgz"
   integrity sha512-mpjXqC2t1FuYsILOLCj0kg6pbg460byZkVA/80VtDmKU/pYmoTdHOtaMcTRIDiyXLz4sIur0cQ04nOC6iGndJg==
@@ -12296,6 +12301,14 @@ react-input-autosize@^3.0.0:
   integrity sha512-nL9uS7jEs/zu8sqwFE5MAPx6pPkNAriACQ2rGLlqmKr2sPGtN7TXTyDdQt4lbNXVx7Uzadb40x8qotIuru6Rhg==
   dependencies:
     prop-types "^15.5.8"
+
+react-input-shortcut@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/react-input-shortcut/-/react-input-shortcut-0.0.1.tgz#887cf976e94e07d6a445f888e94a038b874a20db"
+  integrity sha512-qZTQrw03yiU3COOukIx0ffYhnGn9siZIbTetUCC6F/OLk+ZDtLK5lLcjTnhA/+rARAUx4M6b+VaCp/9V56BYrw==
+  dependencies:
+    react "^15.5.4"
+    react-dom "^15.5.4"
 
 react-is@^16.13.1, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
@@ -12562,7 +12575,7 @@ react@17:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-react@^15.6.1:
+react@^15.5.4, react@^15.6.1:
   version "15.7.0"
   resolved "https://registry.npmjs.org/react/-/react-15.7.0.tgz"
   integrity sha512-5/MMRYmpmM0sMTHGLossnJCrmXQIiJilD6y3YN3TzAwGFj6zdnMtFv6xmi65PHKRV+pehIHpT7oy67Sr6s9AHA==

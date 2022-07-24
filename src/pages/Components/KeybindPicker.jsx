@@ -92,12 +92,12 @@ const KeybindPicker = (props) => {
 	setActions(getActions())
     }, [])
 
-    const handleDelete = (i, j) => {
+    const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
+
+    const handleDelete = (i, j) => { // man, this function sucks
 	const temp = keybindActions
-	console.log(temp, i, temp[i].keys[j])
-	console.log(temp[i].keys.splice(j, 1))
-	setActions(temp)
-	triggerRender(render + 1)
+	temp[i].keys[j] = ""
+	setActions([...temp])
     }
 
     const handleAdd = (i) => {
@@ -111,7 +111,7 @@ const KeybindPicker = (props) => {
 		style={{
 		    overflow: "scroll",
 		    //border: "1px solid red",
-		    height: "500px", // TODO
+		    height: "500px", // TODO @jemoka
                     width: "100%",
 		    marginTop: "1.5rem"
 		}}
@@ -146,8 +146,9 @@ const KeybindPicker = (props) => {
 			    }}
 			>
 			    {s.keys.map((k, j) => {
+				console.log(k == "ctrl+i")
 				return (
-			    <> {(k != "‎") &&
+			    <> {(k != "‎" && k != "") &&
 				    <p
 					style={{
 					    display: "flex",
