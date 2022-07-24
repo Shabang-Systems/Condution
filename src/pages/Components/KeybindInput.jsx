@@ -51,10 +51,10 @@ const KeybindInput = (props) => {
 			display: "block",
 			overflow: "scroll",
 			"align-content": "space-between",
-			"border-radius": "8px",
-			paddingLeft: "3px",
-			paddingRight: "5px",
-			paddingBottom: "20px",
+			"border-radius": "5px",
+			paddingLeft: "10px",
+			paddingRight: "10px",
+			//paddingBottom: "20px",
 
 		    }}
 		>

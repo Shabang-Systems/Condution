@@ -100,32 +100,57 @@ const KeybindPicker = (props) => {
 	    <div
 		style={{
 		    overflow: "scroll",
-		    border: "1px solid red",
+		    //border: "1px solid red",
 		    height: "500px", // TODO
+		    marginTop: "1.5rem"
 		}}
 	    >
 	    {getActions().map((s, i) => {
 		return (<> 
-		    <p> {s.title} </p> 
-		    {s.keys.map((k, j) => {
-			console.log(k)
-			return (
-			    <p
-				style={{
-				    display: "flex",
-				    flexDirection: "row",
-				}}
-			    > 
-				<div
-				    style={{
-					marginLeft: "auto",
-				    }}
-				> 
-				    <KeybindInput keys={k}/> 
-				</div>
-			    </p>
-			)	
-		    })}
+		    <div 
+			style={{
+			    display: "flex",
+			}}
+		    >
+			<p
+			    style={{
+				"max-height": "1.8em",
+				"line-height": "1.8em",
+				"text-overflow": "ellipsis",
+				"word-wrap": "break-word",
+				border: "0px solid red",
+				minWidth: "8rem",
+			    }}
+			> {s.title} </p> 
+			<div
+			    style={{
+				display: "inline-flex",
+				overflowX: "hidden",
+				"text-overflow": "ellipsis",
+				"word-wrap": "break-word",
+			    }}
+			>
+			    {s.keys.map((k, j) => {
+				console.log(k)
+				return (
+				    <p
+					style={{
+					    display: "flex",
+					    flexDirection: "row",
+					}}
+				    > 
+					<div
+					    style={{
+						marginLeft: "auto",
+					    }}
+					> 
+					    <KeybindInput keys={k}/> 
+					</div>
+				    </p>
+				)	
+			    })}
+			</div>
+		    </div>
 		</>
 		)
 	    })}

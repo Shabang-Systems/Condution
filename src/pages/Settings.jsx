@@ -209,7 +209,6 @@ const bundles = [
 				    props.theme.setActiveTheme(0)
 				}}
 			    >Dark Mode</p>
-			    <p class="settings-theme-option-subtext">(recommended)</p>
 			</div>
 
 			<div class="settings-theme-option-wrapper">
@@ -218,7 +217,6 @@ const bundles = [
 				    props.theme.setActiveTheme(1)
 				}}
 			    >Light Mode</p>
-			    <p class="settings-theme-option-subtext">(not recommended)</p>
 			</div>
 			<div class="settings-theme-option-wrapper">
 			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
@@ -226,7 +224,6 @@ const bundles = [
 				    props.theme.setActiveTheme(2)
 				}}
 			    >System</p>
-			    <p class="settings-theme-option-subtext">(should be the same as dark mode.. right?)</p>
 			</div>
 
 		    </div>
