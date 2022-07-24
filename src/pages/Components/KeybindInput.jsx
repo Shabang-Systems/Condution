@@ -43,7 +43,9 @@ const KeybindInput = (props) => {
 		>
 		    {keybindInput}
 		</p>
-		<div className="keybind-deleter">x</div>
+		<div className="keybind-deleter"
+		    onClick={props.handleDelete}
+		>x</div>
 
 		{/*<button onClick={clear}
 		>Clear</button>

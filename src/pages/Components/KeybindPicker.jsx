@@ -13,6 +13,9 @@ import "./Keybinds.css"
 //var Mousetrap = require('mousetrap-record')(require('mousetrap'));
 
 const KeybindPicker = (props) => {
+    const [keybindActions, setActions] = useState([]);
+    const [render, triggerRender] = useState(0);
+
 
     const getActions = () => {
 
@@ -85,16 +88,22 @@ const KeybindPicker = (props) => {
 	return actions
     }
 
-    const [keybindInput, setKeybindInput] = useState("");
-    
-    const rec = (e) => {
-	setKeybindInput(keybindInput? keybindInput+"+"+e.key : e.key)
-    }
-    const clear = () => {
-	setKeybindInput("")
+    useEffect(() => {
+	setActions(getActions())
+    }, [])
+
+    const handleDelete = (i, j) => {
+	const temp = keybindActions
+	console.log(temp, i, temp[i].keys[j])
+	console.log(temp[i].keys.splice(j, 1))
+	setActions(temp)
+	triggerRender(render + 1)
     }
 
-    const { shortcut } = props;
+    const handleAdd = (i) => {
+	setActions(keybindActions[i].keys.concat(""))
+    }
+
 
     return (
 	<>
@@ -107,7 +116,7 @@ const KeybindPicker = (props) => {
 		    marginTop: "1.5rem"
 		}}
 	    >
-	    {getActions().map((s, i) => {
+	    {keybindActions.map((s, i) => {
 		return (<> 
 		    <div 
 			style={{
@@ -138,6 +147,7 @@ const KeybindPicker = (props) => {
 			>
 			    {s.keys.map((k, j) => {
 				return (
+			    <> {(k != "‎") &&
 				    <p
 					style={{
 					    display: "flex",
@@ -151,14 +161,19 @@ const KeybindPicker = (props) => {
 						marginLeft: "auto",
 					    }}
 					> 
-					    <KeybindInput keys={k}/> 
+					    <KeybindInput 
+						keys={k}
+						handleDelete={() => handleDelete(i, j)}
+					    /> 
 					</div>
-				    </p>
-				)	
+				    </p>} 
+				    </>)
 			    })}
 
 
-			    <p className="keybind-display round-right">
+			    <p className="keybind-display round-right"
+				onClick={() => handleAdd(i)}
+			    >
 				+
 			    </p>
 
