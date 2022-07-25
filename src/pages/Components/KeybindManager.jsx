@@ -44,7 +44,7 @@ class Keybinds extends Component {
     ]
 
     globalBindings = [
-	["mod+k", ()=>{this.props.activateQuickSwitcher(1)}], // toggle quick swithcher keybind 
+	["mod+k", ()=>{this.props.activateQuickSwitcher(false)}], // toggle quick swithcher keybind 
     ]
 
     //TODO: this doesnt work with clicking or like anything else but eh
@@ -154,7 +154,7 @@ class Keybinds extends Component {
 		localizations={this.props.localizations}
 		cm={this.props.cm}
 
-		launchedWithButton={true} // TODO @exr0n @zbuster05 pass this when you click the button!
+		launchedWithButton={this.props.qs_launched_with_button}
 
 		//engine={this.props.engine} 
 	    //    uid={this.props.uid} 

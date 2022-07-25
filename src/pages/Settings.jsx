@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IonModal, IonContent, IonButton, isPlatform } from '@ionic/react';
+import { IonModal, IonContent, IonFabButton, IonButton, isPlatform } from '@ionic/react';
 
 import './Pages.css'
 import './Settings.css'
@@ -79,18 +79,22 @@ const Settings = (props) => {
 
     return (
 	<>
-	    <div
+        {/*<div
               id="settings"
                 alt={props.localizations.settings}
                 className="menu-item bottomitem" 
 		onClick={() => { setOpen(!open) }}
-	    > <i className="fas fa-cog" style={{paddingRight: 5}} /> </div>
+	    > */}
+        <IonFabButton color="light" onClick={() => { setOpen(!open) }}>
+        <i className="fas fa-cog" alt={props.localizations.settings}/>
+        </IonFabButton>
+        { /* </div> */ }
 
 	    <IonModal isOpen={open}
 		onDidDismiss={() => setOpen(false)}
 		cssClass="settings-modal"
 	    >
-              <div class="settings-main">
+              <div className="settings-main">
                 <div className="settings-header">
                   {/* <span style={{display: "inline-flex", alignItems: "center"}}> <b className="bold-prefix" >Edit All Tags</b> </span> */}
 
@@ -120,12 +124,12 @@ const Settings = (props) => {
 
 
 
-		    <div class="settings-floating">
-			<div class="settings-sidebar">
+		    <div className="settings-floating">
+			<div className="settings-sidebar">
 			    <p style={{
-				"font-weight": "900",
-				"font-size": "20px",
-				"min-width": "111px",
+				"fontWeight": "900",
+				"fontSize": "20px",
+				"minWidth": "111px",
 			    }}> Settings </p>
 			    {bundles.map( (b,i) => {
 				return <p
@@ -136,10 +140,11 @@ const Settings = (props) => {
 				    style={{
 					fontWeight: (i == activeBundleIdx)? 900 : 200,
 				    }}
+                    key={i}
 				    >{b.name}</p>
 			    })}
 			</div>
-			<div class="settings-content"
+			<div className="settings-content"
 			    style={{
 				width: "100%",
 			    }}
@@ -149,7 +154,7 @@ const Settings = (props) => {
 				textDecoration: "underline",
 				fontWeight: 700,
 			    }}>{bundles[activeBundleIdx].title}</span>
-			    <div class=""
+			    <div className=""
 				style={{textAlign: "left"}}>
 				{bundles[activeBundleIdx].content({
 				    theme: {
@@ -202,24 +207,24 @@ const bundles = [
 	</>,
 	content: (props) => {
 		return (<>
-		    <div class="settings-theme-wrapper">
-			<div class="settings-theme-option-wrapper">
-			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
+		    <div className="settings-theme-wrapper">
+			<div className="settings-theme-option-wrapper">
+			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
 				onClick={() => {
 				    props.theme.setActiveTheme(0)
 				}}
 			    >Dark Mode</p>
 			</div>
 
-			<div class="settings-theme-option-wrapper">
-			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
+			<div className="settings-theme-option-wrapper">
+			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
 				onClick={() => {
 				    props.theme.setActiveTheme(1)
 				}}
 			    >Light Mode</p>
 			</div>
-			<div class="settings-theme-option-wrapper">
-			    <p class={`settings-theme-option-maintext ${(props.theme.activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
+			<div className="settings-theme-option-wrapper">
+			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
 				onClick={() => {
 				    props.theme.setActiveTheme(2)
 				}}

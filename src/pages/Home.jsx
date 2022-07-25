@@ -1,7 +1,7 @@
 // A whole lotta imports
 
 // Ionic components
-import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast } from '@ionic/react';
+import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, isPlatform, IonToast, IonFab, IonFabButton, IonFabList } from '@ionic/react';
 import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, calendar } from 'ionicons/icons';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -28,6 +28,7 @@ import ABTIB from './Components/FloatingActionButton';
 import Keybinds from './Components/KeybindManager';
 import ReleaseNotesModal from './Components/ReleaseNotesModal';
 import Settings from './Settings';
+import DropupMenu from './Components/DropupMenu';
 
 
 import { MenuWidget } from "../backend/src/Widget";
@@ -89,6 +90,7 @@ class Home extends Component {
 
 	    activatingPalette: false,
 	    qs_show: false,
+        qs_launched_with_button: false,
 	    goBackSkip: false,
 	    goForwardSkip: false,
 
@@ -298,12 +300,12 @@ class Home extends Component {
 	this.setState({activatingPalette: nanoid()})
     }
 
-    activateQuickSwitcher(that) {
-	this.setState({qs_show: !this.state.qs_show}); 
+    activateQuickSwitcher(launched_with_button) {
+        this.setState({qs_show: !this.state.qs_show, qs_launched_with_button: launched_with_button}); 
     }
 
     dismissQs() {
-	this.setState({qs_show: false}); 
+        this.setState({qs_show: false}); 
     }
 
     render() {
@@ -340,6 +342,7 @@ class Home extends Component {
 			    onPaletteActivate={this.onPaletteActivate}
 			    activateQuickSwitcher={this.activateQuickSwitcher}
 			    qs_show={this.state.qs_show}
+                qs_launched_with_button={this.state.qs_launched_with_button}
 			    dismissQs={this.dismissQs}
 			    /*engine={this.props.engine} */
 			    /*uid={this.state.workspace} */
@@ -559,16 +562,23 @@ class Home extends Component {
 					</DragDropContext>
 
 				    </IonContent>
-                                  <div id="bottombar">
+                <div id="bottombar">
 				    <div className="menu-item bottomitem" id="logout" onClick={this.handleLogout}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
-				    <Settings 
-					authType={this.props.authType} 
-					localizations={this.props.localizations} 
-					cm={this.props.cm}
-					dispatch={this.props.dispatch}
-					isSettings={true}
-				    />
-                                </div>
+                    <div className="menu-item bottomitem">
+                        <DropupMenu
+                            settingsButtonComponent={
+                                <Settings 
+                                    authType={this.props.authType} 
+                                    localizations={this.props.localizations} 
+                                    cm={this.props.cm}
+                                    dispatch={this.props.dispatch}
+                                    isSettings={true}
+                                />
+                            }
+                            activateQuickSwitcher={this.activateQuickSwitcher}
+                        />
+                    </div>
+                </div>
 				</IonMenu>
 				<IonPage id="main">
 				    {/* raise a glass to Workspace Add */}

@@ -39,8 +39,10 @@
     "mousetrap-global-bind": "^1.1.0",
     "mousetrap-record": "^1.0.1",
     "nanoid": "^4.0.0",
+    "node-polyfill-webpack-plugin": "^2.0.0",
     "node-sass": "^6.0.1",
     "normalize-url": "^4.5.1",
+    "path-browserify": "^1.0.1",
     "react": "17",
     "react-beautiful-dnd": "^13.0.0",
     "react-bootstrap": "^1.6.1",
@@ -112,7 +114,9 @@
     "@typescript-eslint/parser": "^4.28.0",
     "electron": "^13.1.4",
     "electron-builder": "^22.11.7",
-    "electron-notarize": "^1.0.0"
+    "electron-notarize": "^1.0.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-config-react-app": "^7.0.1"
   },
   "description": "Tasks? Done. That was quick.",
   "build": {
