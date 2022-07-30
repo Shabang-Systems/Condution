@@ -12,6 +12,15 @@
     --border-radius: 5px;
 }
 
+ion-fab-list {
+    margin: 0 !important;
+    transform: translateY(-40px) translateX(-10px);
+}
+
+.button-inner {
+    background-color: red;
+}
+
 .settings-main {
     /*border: 1px solid red;*/
     height: 100%;

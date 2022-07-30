@@ -564,8 +564,10 @@ class Home extends Component {
 				    </IonContent>
                 <div id="bottombar">
 				    <div className="menu-item bottomitem" id="logout" onClick={this.handleLogout}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{this.props.authType == "workspace" ? this.props.localizations.exitworkspace : this.props.localizations.logout}</div>
-                    <div className="menu-item bottomitem">
+                    <div className="">
                         <DropupMenu
+
+                            localizations={this.props.localizations} 
                             settingsButtonComponent={
                                 <Settings 
                                     authType={this.props.authType} 
