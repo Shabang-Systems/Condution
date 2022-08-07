@@ -86,7 +86,7 @@ const Settings = (props) => {
 		onClick={() => { setOpen(!open) }}
 	    > */}
         <IonFabButton color="light" onClick={() => { setOpen(!open) }}>
-            <i className="fas fa-directions" alt={props.localizations.settings}/>
+            <i className="fas fa-cog" alt={props.localizations.settings}/>
           <i />
         </IonFabButton>
         { /* </div> */ }
