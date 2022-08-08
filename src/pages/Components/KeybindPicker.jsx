@@ -57,6 +57,8 @@ const KeybindPicker = (props) => {
 	setActions([...temp])
     }
 
+    const handleSave = () => {
+    }
 
     return (
 	<>
@@ -144,7 +146,7 @@ const KeybindPicker = (props) => {
 		})
 		    }</>)
 	    })}
-		<div> save </div>
+		<div onClick={handleSave}> save </div>
 	    </div>
 	</>
     );
