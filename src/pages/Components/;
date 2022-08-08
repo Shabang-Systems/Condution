@@ -72,12 +72,12 @@ const Settings = (props) => {
 	setName(n)
 
 	const { shortcut } = props
-	await keybindSource.then(keybindSource => {
-	    keybindHandler(props, [
-		[launchSettings, keybindSource.Settings['Settings'], 'Settings', 'Launch the settings page', true],
-	    ])
-	})
 
+	keybindHandler(props, [
+	    [launchSettings, [["cmd+,"]], 'Settings', 'Launch the settings page', true],
+	])
+
+	
 	const theme = await Preferences.get({ key: 'theme' });
 
 	if (theme == null) {

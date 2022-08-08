@@ -8,6 +8,7 @@ import Task from './Components/Task';
 import { CompletedWidget } from "../backend/src/Widget";
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
+import keybindSource from "./Components/KeybindSource"
 
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
@@ -65,15 +66,16 @@ class Completed extends Component {
 
 	const { shortcut } = this.props
 
-
+    	let ks = await keybindSource
 	keybindHandler(this, [
-	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
-	    [() => this.handleVirtualNav(-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
-	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
-	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
-	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
-	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
-	    [this.handleFetchMore, [['shift+f+m'], ['s+m']], 'Fetch more', 'Fetches more completed items'],
+	    [() => this.handleVirtualNav(1), ks.Completed['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
+	    [() => this.handleVirtualNav(-1), ks.Completed['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
+	    [this.handleItemOpen, ks.Completed['Open item'], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemComplete, ks.Completed['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
+	    [this.handleItemComplete, ks.Completed["Complete task"], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.handleItemOpen, ks.Completed['Edit task'], 'Edit task', 'Edits the currently selected task'],
+
+	    [this.handleFetchMore, ks.Completed['Fetch more'], 'Fetch more', 'Fetches more completed items'],
 	])
     }
 
@@ -100,7 +102,7 @@ class Completed extends Component {
 	}
 
 	if (this.state.taskList[newSelect].type == "label") newSelect += direction
-	
+
 	this.setState({
 	    virtualSelectIndex: newSelect,
 	    showVirtualSelect: true

@@ -26,6 +26,7 @@ import DbTask from "../backend/src/Objects/Task";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
+import keybindSource from "./Components/KeybindSource"
 //const ignoreForTagNames = ['']
 //ignoreForTagNames = ['']
 
@@ -211,43 +212,30 @@ class Projects extends Component { // define the component
 	console.log("triggerin")
     }
 
+    async registerKeybinds() {
+	let ks = await keybindSource;
+	keybindHandler(this, [
+	    [this.makeNewProject, ks.Projects['Create new project'], 'Create new project', 'Creates a new project'],
+	    [this.makeNewTask, ks.Projects['Create new task'], 'Create new task', 'Creates a new task'],
+	    [this.completeProject, ks.Projects['Toggle project complete'], 'Toggle project complete', 'Toggles the project complete status'],
+
+	    // TODO does this work?
+	    [this.deleteProject, ks.Projects['Delete project'], 'Delete project', 'Deletes the project'],
+
+	    [() => this.handleVirtualNav(1), ks.Projects['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
+	    [() => this.handleVirtualNav(this.state.itemList.length-1), ks.Projects['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
+	    [this.handleItemOpen, ks.Projects['Open item'], 'Open item', 'Opens the currently selected item'],
+	    [this.handleItemOpen, ks.Projects['Edit task'], 'Edit task', 'Edits the currently selected task'],
+	    [this.handleItemComplete, ks.Projects['Complete item'], 'Complete item', 'Completes a task, or enters a project'], [this.handleItemComplete, ks.Projects['Complete Task'], 'Complete Task', 'Completes a task, or enters a project'],
+	    [this.focusName, ks.Projects['Edit name'], 'Edit name', 'Focuses the perspective name'],
+	])
+    }
+
     componentDidMount() {
 	this.setState({draggableRefs: new Array(this.state.itemList.length).fill(null)})
 	const { shortcut } = this.props
-	//console.log(this.props)
-	keybindHandler(this, [
-	    //[() => this.keybindTest(1), [['n'], ['p'], ["a", "b"]], 'Create new project', 'Creates a new project'],
-	    //[() => this.keybindTest(2), [["ctrl+m"]], 'Create new project', 'Creates a new project', true, false],
-	    //[() => this.keybindTest(3), [["cmd+;"]], 'testing cmd', 'sffj', true],
 
-
-	    //[this.keybindTest, [["Escape", "Escape"]], 'Navigate down', 'Navigates down in the current project', true],
-	    //[this.makeNewProject, [['n', 'p']], 'Create new project', 'Creates a new project'],
-	    //[this.makeNewTask, [['n', 't']], 'Create new task', 'Creates a new task'],
-	    //[this.completeProject, [['c', 'p']], 'Toggle project complete', 'Toggles the project complete status'],
-	    //[this.deleteProject, [['d', 'p']], 'Delete project', 'Deletes the project'],
-	    //[() => this.handleVirtualNav(1), [["shift",'j'], ["shift",'ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
-	    //[() => this.handleVirtualNav(this.state.itemList.length-1), [["shift", 'k'], ["shift", 'ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
-
-
-	    //[this.keybindTest, [["SpaceBar"]], 'Navigate down', 'Navigates down in the current project', true],
-	    [this.makeNewProject, [['n+p']], 'Create new project', 'Creates a new project'],
-	    [this.makeNewTask, [['n+t']], 'Create new task', 'Creates a new task'],
-	    [this.completeProject, [['c+p']], 'Toggle project complete', 'Toggles the project complete status'],
-
-	    // TODO does this work?
-	    [this.deleteProject, [['‎']], 'Delete project', 'Deletes the project'],
-
-	    [() => this.handleVirtualNav(1), [['j'], ['ArrowDown']], 'Navigate down', 'Navigates down in the current project', true],
-	    [() => this.handleVirtualNav(this.state.itemList.length-1), [['k'], ['ArrowUp']], 'Navigate up', 'Navigates up in the current project', true],
-	    [this.handleItemOpen, [['o']], 'Open item', 'Opens the currently selected item'],
-	    [this.handleItemOpen, [['e+t']], 'Edit task', 'Edits the currently selected task'],
-	    [this.handleItemComplete, [['Enter'], ["x"]], 'Complete item', 'Completes a task, or enters a project'],
-	    [this.handleItemComplete, [['c+t']], 'Complete Task', 'Completes a task, or enters a project'],
-	    [this.focusName, [['e+n']], 'Edit name', 'Focuses the perspective name'],
-	    //[this.handleVirtualDragStart, [['c+l']], 'Complete Task', 'Completes a task, or enters a project'],
-
-	])
+	this.registerKeybinds()
 
         this.load()
     }

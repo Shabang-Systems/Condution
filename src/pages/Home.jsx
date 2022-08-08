@@ -39,6 +39,7 @@ import keybindHandler from "./Components/KeybindHandler"
 import { KBarProvider , KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches, NO_GROUP, KBarResults } from "kbar";
 import CommandPalette from "./Components/CommandPalette";
 import { nanoid } from 'nanoid'
+import keybindSource from "./Components/KeybindSource";
 
 // Our very own CSS
 import './Home.css';
@@ -208,14 +209,15 @@ class Home extends Component {
         this.state.menuWidget.hook(this.refresh);
 
 	const { shortcut } = this.props
-
-	keybindHandler(this, [
-	    [this.handleHistoryBack, [['b']], 'Go back', 'Navigates backward in history'],
-	    [this.handleHistoryForward, [['f']], 'Go forwards', 'Navigates forward in history'],
-	    [this.handleLogout, [['‎']], 'Logout', 'Logout of Condution'],
-	    [this.handleNewPerspective, [['‎']], 'New perspective', 'Create a new perspective'],
-	    [this.focusFab, [['i'], ['cmd+i'], ['ctrl+enter']], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-	])
+	await keybindSource.then(keybindSource => {
+	    keybindHandler(this, [
+		[this.handleHistoryBack, keybindSource.Global["Go back"], 'Go back', 'Navigates backward in history'],
+		[this.handleHistoryForward, keybindSource.Global["Go forwards"], 'Go forwards', 'Navigates forward in history'],
+		[this.handleLogout, keybindSource.Global['Logout'], 'Logout', 'Logout of Condution'],
+		[this.handleNewPerspective, keybindSource.Global['New perspective'], 'New perspective', 'Create a new perspective'],
+		[this.focusFab, keybindSource.Global['Add to inbox'], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
+	    ])
+	})
 	//console.log(shortcut.shortcuts, "da shortcuts")
         this.refresh();
 	this.setState({ mounted: true });
@@ -342,7 +344,7 @@ class Home extends Component {
 			    onPaletteActivate={this.onPaletteActivate}
 			    activateQuickSwitcher={this.activateQuickSwitcher}
 			    qs_show={this.state.qs_show}
-                qs_launched_with_button={this.state.qs_launched_with_button}
+			    qs_launched_with_button={this.state.qs_launched_with_button}
 			    dismissQs={this.dismissQs}
 			    /*engine={this.props.engine} */
 			    /*uid={this.state.workspace} */

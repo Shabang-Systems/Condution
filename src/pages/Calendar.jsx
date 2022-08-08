@@ -14,6 +14,7 @@ import CalendarPopover, { CalendarUnit } from './Components/CalendarPopover';
 import CalendarTasklistPopover from './Components/CalendarTasklistPopover';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
+import keybindSource from "./Components/KeybindSource"
 
 const autoBind = require('auto-bind/react');
 
@@ -159,8 +160,8 @@ function CalPageBigOllendar(props) {
 	const { shortcut } = props
 
 	const toUnbind = keybindHandler(props, [
-	    [navigateRight, [['l'], ['ArrowRight']], 'Next month', 'Goes to the next month'],
-	    [navigateLeft, [['h'], ['ArrowLeft']], 'Previous month', 'Goes to the previous month'],
+	    [navigateRight, keybindSource.Calendar['Next month'], 'Next month', 'Goes to the next month'],
+	    [navigateLeft, keybindSource.Calendar['Previous month'], 'Previous month', 'Goes to the previous month'],
 	])
 
 	return () => {

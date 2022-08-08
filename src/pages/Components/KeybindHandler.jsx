@@ -81,6 +81,7 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 
     let toUnbind = []
     for (const i in keybinds) {
+	//console.log(keybinds[i], keybinds[i-1])
 	if (!!keybinds[i][5] == false) { // if not global
 	    toUnbind.push(...keybinds[i][1])
 	}
