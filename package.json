@@ -9,6 +9,7 @@
     "@capacitor/filesystem": "^1.0.2",
     "@capacitor/haptics": "^1.0.2",
     "@capacitor/ios": "^3.0.2",
+    "@capacitor/preferences": "^4.0.1",
     "@capacitor/storage": "^1.0.2",
     "@ionic/core": "^5.6.10",
     "@ionic/react": "^5.6.10",

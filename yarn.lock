@@ -1842,6 +1842,11 @@
   resolved "https://registry.npmjs.org/@capacitor/ios/-/ios-3.0.2.tgz"
   integrity sha512-BEEwQ7TSGdmTusDPB2+WOOkOFCxYc9C36uzDNNLfwhSdgaDjoKJmVxj0oPb7wpfC1xMPGnTxYPmSjKj5AyKQ/Q==
 
+"@capacitor/preferences@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@capacitor/preferences/-/preferences-4.0.1.tgz#fd56f24fe2cde1222cf5c3057d52cd55fd033e7b"
+  integrity sha512-FffJjKS4XcodUj/rtFtWizQ9q/oYDSn5opZ+JYwj/EkjiMWMhY/Pk9lN3vwQfp+VJrTt3hjr+bwKXjhTbYBqKw==
+
 "@capacitor/storage@^1.0.2":
   version "1.0.2"
   resolved "https://registry.npmjs.org/@capacitor/storage/-/storage-1.0.2.tgz"

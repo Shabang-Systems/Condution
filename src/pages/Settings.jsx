@@ -12,8 +12,9 @@ import { createBrowserHistory, createHashHistory } from 'history';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
 import KeybindPicker from "./Components/KeybindPicker"
-import ShortcutPicker from "react-shortcut-picker";
-import { Storage } from '@capacitor/storage';
+//import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
+import $ from "jquery";
 
 const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
@@ -43,7 +44,7 @@ const history = isPlatform("electron") ? createHashHistory() : createBrowserHist
 const Settings = (props) => {
     const [open, setOpen] = useState(false)
     const [activeBundleIdx, setActiveBundleIdx] = useState(1)
-    const [activeTheme, setActiveTheme] = useState(0)
+    const [activeTheme, setActiveTheme] = useState(null)
     const [update, setUpdate] = useState(0)
     const [name, setName] = useState("")
     const [keybind, setKeybinds] = useState([])
@@ -57,7 +58,6 @@ const Settings = (props) => {
 
     const launchSettings = () => {
 	setOpen(!open)
-	console.log(props, "sfssaklsjdfs")
     }
 
 
@@ -75,8 +75,58 @@ const Settings = (props) => {
 	keybindHandler(props, [
 	    [launchSettings, [["cmd+,"]], 'Settings', 'Launch the settings page', true],
 	])
+
+	
+	const theme = await Preferences.get({ key: 'theme' });
+
+	if (theme == null) {
+	    setObject("theme", 2)
+	    setActiveTheme(2)
+	} else {
+	    setActiveTheme(theme.value)
+	}
+
     }, [])
 
+    const changeWindowTheme = async (theme) => {
+	if (theme == 0) {
+	    $("body").removeClass();
+	    $("body").addClass("condutiontheme-default-dark");
+	    return 
+	}
+
+	if (theme == 1) {
+	    $("body").removeClass();
+	    $("body").addClass("condutiontheme-default-light");
+	    return 
+	}
+
+	if (theme == 2) {
+	    if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
+		$("body").removeClass();
+		$("body").addClass("condutiontheme-default-dark");
+	    }
+	    else {
+		$("body").removeClass();
+		$("body").addClass("condutiontheme-default-light");
+	    }
+	    return
+	}
+    }
+
+    const setObject = async (k, v) => {
+	if (v !== null) {
+	    await Preferences.set({
+		key: k,
+		value: v
+	    });
+	}
+    }
+
+    useEffect(() => {
+	setObject('theme', activeTheme)
+	changeWindowTheme(activeTheme)
+    }, [activeTheme])
 
     return (
 	<>
@@ -222,8 +272,7 @@ const bundles = [
 			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
 				onClick={async () => {
 				    props.theme.setActiveTheme(1)
-				    let ret = await Storage.get({key: 'condution_onboarding'})
-				    console.log(ret)
+				    //let ret = await Storage.get({key: 'condution_onboarding'})
 
 				}}
 			    >Light Mode</p>
