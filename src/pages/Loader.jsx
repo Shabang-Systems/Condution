@@ -29,7 +29,7 @@ function Loader(props) {
                 isPaused={false}
             />
             <div style={{position: "absolute", bottom: 15, color: "var(--decorative-light-alt)", fontSize: 8, paddingLeft:20, paddingRight:10}}>
-                ©2019-2021 Shabang Systems, LLC and the Condution Authors. Software released under GNU-GPLv3.
+                ©2019-2022 Shabang Systems, LLC and the Condution Authors. Software released under GNU-GPLv3.
             </div>
         </div>
     )

@@ -610,6 +610,7 @@ class Task extends Component {
                                 />
 
                                 {/* Task edit. The thing that slides open on edit. */}
+
                                 {(() => {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
