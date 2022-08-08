@@ -151,7 +151,6 @@ const Settings = (props) => {
                   {/* <span style={{display: "inline-flex", alignItems: "center"}}> <b className="bold-prefix" >Edit All Tags</b> </span> */}
 
                   {/* {/\*   {/\\*Close Button*\\/} *\/} */}
-                  <a className="settings-close" onClick={() => {setOpen(!open);}}><i className="fa fa-times" onClick={() => {setOpen(!open);}}></i></a>
                 </div>
 
 		    {/* <div class="settings-esc" */}
@@ -199,9 +198,12 @@ const Settings = (props) => {
 			<div className="settings-content"
 			    style={{
 				width: "100%",
-			    }}
+                            }}
                         >
-			    <span style={{
+
+                            <a className="settings-close" onClick={() => {setOpen(!open);}}><i className="fa fa-times" onClick={() => {setOpen(!open);}}></i></a>
+			  <span style={{
+
 				border: "0px solid red",
 				textDecoration: "underline",
 				fontWeight: 700,

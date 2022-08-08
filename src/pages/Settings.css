@@ -46,13 +46,10 @@ ion-fab-list {
 }
 
 .settings-close {
-    position: relative;
-    display: none;
-    float: right;
-    padding: 10px;
-    padding-right: 15px;
     cursor: pointer;
-}
+    transform: translateY(-10px);
+    float: right;
+ }
 
 .settings-close > i {
     color: var(--decorative-light);
