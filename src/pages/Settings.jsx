@@ -13,6 +13,7 @@ import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/reac
 import keybindHandler from "./Components/KeybindHandler"
 import KeybindPicker from "./Components/KeybindPicker"
 import ShortcutPicker from "react-shortcut-picker";
+import { Storage } from '@capacitor/storage';
 
 const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
@@ -219,8 +220,11 @@ const bundles = [
 
 			<div className="settings-theme-option-wrapper">
 			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
-				onClick={() => {
+				onClick={async () => {
 				    props.theme.setActiveTheme(1)
+				    let ret = await Storage.get({key: 'condution_onboarding'})
+				    console.log(ret)
+
 				}}
 			    >Light Mode</p>
 			</div>
