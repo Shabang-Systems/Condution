@@ -174,7 +174,7 @@ function Auth(props) {
                     </div>
                 </div>
                 <div className="auth-copyright">
-                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2021 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a href="https://www.condution.com/privacy">Privacy Policy</a>.</span>
+                    <span syle={{display: "inline-block", paddingLeft: 10, paddingRight: 10}}>©2022 Shabang Systems, LLC & the Condution Authors.</span><span syle={{display: "inline-block"}}> Licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL v3.0</a> with a cloud database also governed by our <a href="https://www.condution.com/privacy">Privacy Policy</a>.</span>
                 </div>
             </animated.div>
             <img rel="preload" src={light_preload} style={{display: "none"}} />
