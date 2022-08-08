@@ -101,6 +101,7 @@ const Settings = (props) => {
 	    return 
 	}
 
+
 	if (theme == 2) {
 	    if (window.matchMedia('(prefers-color-scheme:dark)').matches) {
 		$("body").removeClass();
@@ -202,12 +203,7 @@ const Settings = (props) => {
                         >
 
                             <a className="settings-close" onClick={() => {setOpen(!open);}}><i className="fa fa-times" onClick={() => {setOpen(!open);}}></i></a>
-			  <span style={{
-
-				border: "0px solid red",
-				textDecoration: "underline",
-				fontWeight: 700,
-			    }}>{bundles[activeBundleIdx].title}</span>
+			  <span className="settings-callout">{bundles[activeBundleIdx].title}</span>
 			    <div className=""
 				style={{textAlign: "left"}}>
 				{bundles[activeBundleIdx].content({
@@ -242,8 +238,6 @@ const Settings = (props) => {
 
 export default withShortcut(Settings)
 
-
-
 const bundles = [
     {
 	name: "Keybinds",
@@ -259,37 +253,40 @@ const bundles = [
 	title: <>
 	    Set that theme!
 	</>,
-	content: (props) => {
-		return (<>
-		    <div className="settings-theme-wrapper">
-			<div className="settings-theme-option-wrapper">
-			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
-				onClick={() => {
-				    props.theme.setActiveTheme(0)
-				}}
-			    >Dark Mode</p>
-			</div>
+        content: (props) => {
+            return (
+                <div className="settings-theme-wrapper">
+                  <div className={`settings-theme-option-wrapper ${(props.theme.activeTheme == 0) ? 'active-theme' : ''}`}>
+                    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 0)? "settings-theme-option-highlight" : "" }`}
+                       onClick={() => {
+                           props.theme.setActiveTheme(0);
+                       }}
+                    >Dark</p>
+                  </div>
 
-			<div className="settings-theme-option-wrapper">
-			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
-				onClick={async () => {
-				    props.theme.setActiveTheme(1)
-				    //let ret = await Storage.get({key: 'condution_onboarding'})
+                  <div className={`settings-theme-option-wrapper ${(props.theme.activeTheme == 1) ? 'active-theme' : ''}`}>
+                    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 1)? "settings-theme-option-highlight" : "" }`}
+                       onClick={async () => {
+                           props.theme.setActiveTheme(1);
+                           //let ret = await Storage.get({key: 'condution_onboarding'})
 
-				}}
-			    >Light Mode</p>
-			</div>
-			<div className="settings-theme-option-wrapper">
-			    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
-				onClick={() => {
-				    props.theme.setActiveTheme(2)
-				}}
-			    >System</p>
-			</div>
+                       }}
+                    >Light</p>
+                  </div>
 
-		    </div>
-	    </>)
-	}
+                  <div className={`settings-theme-option-wrapper ${(props.theme.activeTheme == 2) ? 'active-theme' : ''}`}>
+                    <p className={`settings-theme-option-maintext ${(props.theme.activeTheme == 2)? "settings-theme-option-highlight" : "" }`}
+                       onClick={() => {
+                           props.theme.setActiveTheme(2);
+                       }}
+                    >System</p>
+                  </div>
+
+
+
+                </div>
+            );
+        }
     },
     {
 	name: "Account",
