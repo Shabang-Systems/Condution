@@ -17,7 +17,8 @@ import keybindSource from "./KeybindSource"
 // the height of this needs to be set so that scrolling works, but i don;t know how to set the height correctly?
 // 	line 117
 // the getActions function should read from some static thing which contains all possible keybinds
-// 	currently, it is dependant on the currently mounted keybind
+// 	currently, it is dependant on the currently mounted keybinds
+// 	nvm!
 // three functions: 
 // 	handleAdd,
 // 	handleDelete,
@@ -40,7 +41,6 @@ const KeybindPicker = (props) => {
 
     useEffect(async () => {
 	let actions = await getActions()
-	console.log(actions)
 	setActions(actions)
     }, [])
 
@@ -52,12 +52,20 @@ const KeybindPicker = (props) => {
 
     const handleAdd = (i, catIdx) => {
 	const temp = keybindActions
-	//console.log(temp[catIdx][1][i][1])
 	temp[catIdx][1][i][1].push("")
 	setActions([...temp])
     }
 
     const handleSave = () => {
+	// reconstruct the actions object
+	let obj = {}
+	for (const cat of keybindActions) {
+	    obj[cat[0]] = {}
+	    for (const bind of cat[1]) {
+		obj[cat[0]][bind[0]] = bind[1]
+	    }
+	}
+	// save it to preferences, then reload
     }
 
     return (
@@ -72,11 +80,9 @@ const KeybindPicker = (props) => {
 		}}
 	    >
 	    {keybindActions.map((cat, catIdx) => {
-		//console.log(cat)
 		return (<> 
 		    {cat[0]}
 		    {cat[1].map((s, i) => {
-			console.log(s)
 		    return (<> 
 			<div 
 			    style={{
@@ -106,7 +112,6 @@ const KeybindPicker = (props) => {
 				}}
 			    >
 				{s[1].map((k, j) => {
-				    console.log(k == "ctrl+i")
 				    return (
 				<> {(k != "‎") &&
 					<p
