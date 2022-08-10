@@ -9,6 +9,7 @@ import "./Keybinds.css"
 import keybindSource from "./KeybindSource"
 import { Preferences } from '@capacitor/preferences';
 import "../Upcoming.scss"
+import "../Projects.css"
 //import Mousetrap from 'mousetrap';
 //import 'mousetrap-record';
 
@@ -177,10 +178,22 @@ const KeybindPicker = (props) => {
 		})
 		    }</>)
 	    })}
-		<div onClick={handleSave}> save </div>
+
+
 	    </div>
+	    <div className="complete-container" style={{marginTop: "-1.5rem", marginRight: "-0.5rem", zIndex: "200"}}onClick={handleSave}>
+			<a
+			    className="complete-name"
+			    style={{color: "var(--page-title)"}}
+			>
+			    Save
+			</a>
+		    </div>
 	</>
     );
 };
+
+
+
 
 export default withShortcut(KeybindPicker)
