@@ -42,7 +42,11 @@ const KeybindInput = (props) => {
 		<p
 		    contentEditable
 		    onKeyDown={rec}
-		    onChange={(e) => {e.preventDefault()}}
+		    onBlur={(e) => {
+			props.editCallback(keybindInput);
+			console.log("is it editing?", e)
+			//e.preventDefault()
+		    }}
 		    className="keybind-display"
 		>
 		    {keybindInput}
@@ -50,11 +54,6 @@ const KeybindInput = (props) => {
 		<div className="keybind-deleter"
 		    onClick={props.handleDelete}
 		>x</div>
-
-		{/*<button onClick={clear}
-		>Clear</button>
-		<button onClick={() => {}}
-		>Done</button>*/}
 	    </p>
 	</>
     );

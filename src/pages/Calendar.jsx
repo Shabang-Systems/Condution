@@ -155,13 +155,14 @@ function CalPageBigOllendar(props) {
 	console.log("sdf")
     }
     const { shortcut } = props
-    useEffect(() => {
+    useEffect(async () => {
 
 	const { shortcut } = props
 
+	let ks = await keybindSource;
 	const toUnbind = keybindHandler(props, [
-	    [navigateRight, keybindSource.Calendar['Next month'], 'Next month', 'Goes to the next month'],
-	    [navigateLeft, keybindSource.Calendar['Previous month'], 'Previous month', 'Goes to the previous month'],
+	    [navigateRight, ks.Calendar['Next month'], 'Next month', 'Goes to the next month'],
+	    [navigateLeft, ks.Calendar['Previous month'], 'Previous month', 'Goes to the previous month'],
 	])
 
 	return () => {

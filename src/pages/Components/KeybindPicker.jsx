@@ -4,10 +4,11 @@ import { IonModal, IonContent, IonButton, isPlatform } from '@ionic/react';
 import { createBrowserHistory, createHashHistory } from 'history';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../../static/react-keybind'
 import keybindHandler from "./KeybindHandler"
-import ShortcutPicker from "react-shortcut-picker";
 import KeybindInput from "./KeybindInput"
 import "./Keybinds.css"
 import keybindSource from "./KeybindSource"
+import { Preferences } from '@capacitor/preferences';
+import "../Upcoming.scss"
 //import Mousetrap from 'mousetrap';
 //import 'mousetrap-record';
 
@@ -56,7 +57,15 @@ const KeybindPicker = (props) => {
 	setActions([...temp])
     }
 
-    const handleSave = () => {
+    const handleEdit = (val, i, j, catIdx) => {
+	const temp = keybindActions
+	temp[catIdx][1][i][1][j] = [val]
+	setActions([...temp])
+	//console.log(e.target.value)
+	//console.log(val)
+    }
+
+    const handleSave = async () => {
 	// reconstruct the actions object
 	let obj = {}
 	for (const cat of keybindActions) {
@@ -65,6 +74,9 @@ const KeybindPicker = (props) => {
 		obj[cat[0]][bind[0]] = bind[1]
 	    }
 	}
+	await Preferences.set({ key: 'keybinds', value: JSON.stringify(obj) });
+	//console.log(JSON.stringify(obj))
+	window.location.reload()
 	// save it to preferences, then reload
     }
 
@@ -81,7 +93,20 @@ const KeybindPicker = (props) => {
 	    >
 	    {keybindActions.map((cat, catIdx) => {
 		return (<> 
-		    {cat[0]}
+		    <div className="timeline-box">
+			<div className="timeline-line-container">
+			    <div className="timeline-line">&nbsp;</div>
+			</div>
+			<div className="timeline-text">
+			    <span className="timeline-weekname">
+				{cat[0]}
+			    </span>
+			</div>
+		    </div>
+
+
+
+
 		    {cat[1].map((s, i) => {
 		    return (<> 
 			<div 
@@ -100,7 +125,7 @@ const KeybindPicker = (props) => {
 				    border: "0px solid red",
 				    minWidth: "8rem",
 				}}
-			    > {s[0]} </p> 
+			    > {s[0]} </p>
 			    <div
 				style={{
 				    display: "inline-flex",
@@ -130,6 +155,7 @@ const KeybindPicker = (props) => {
 						<KeybindInput 
 						    keys={k}
 						    handleDelete={() => handleDelete(i, j, catIdx)}
+						    editCallback={(val) => handleEdit(val, i, j, catIdx)}
 						/> 
 					    </div>
 					</p>} 
