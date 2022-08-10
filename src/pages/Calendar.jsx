@@ -85,7 +85,7 @@ function CalPageBigOllendar(props) {
     let [isPopoverShown, setIsPopoverShown] = useState(false);
 
     let [shownList, setShownList] = useState([]);
-    
+
     //Array.prototype.max = function() { // THIS POLLUTES THE PROTOTYPE. IT BREAKS LOOPING THROUGH THE KEYS.
     //    return Math.max.apply(null, this);
     //};
@@ -95,14 +95,12 @@ function CalPageBigOllendar(props) {
     const goLeft = useRef(null);
 
     const navigateLeft = () => {
-	console.log("navin")
 	if (goLeft.current) {
 	    goLeft.current.click()
 	}
     }
 
     const navigateRight = () => {
-	console.log("navin right")
 	if (goRight.current) {
 	    goRight.current.click()
 	}
@@ -150,10 +148,7 @@ function CalPageBigOllendar(props) {
     useEffect(()=>{
         refresh();
     },[dateSelected, refreshed]);
-    
-    const keybindTest = () => {
-	console.log("sdf")
-    }
+
     const { shortcut } = props
     useEffect(async () => {
 
@@ -320,9 +315,6 @@ class Calendar extends Component {
         //}); // once we finish, set the state
     }
 
-    //keybindTest() {
-    //    console.log(this.calPageBigRef.current)
-    //}
 
     componentDidMount() {
 	//const { shortcut } = this.props
