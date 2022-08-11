@@ -12,7 +12,7 @@ import { createBrowserHistory, createHashHistory } from 'history';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
 import KeybindPicker from "./Components/KeybindPicker"
-import keybindSource from "./Components/KeybindSource"
+//import keybindSource from "./Components/KeybindSource"
 //import { Storage } from '@capacitor/storage';
 import { Preferences } from '@capacitor/preferences';
 import $ from "jquery";
@@ -72,11 +72,11 @@ const Settings = (props) => {
 	setName(n)
 
 	const { shortcut } = props
-	await keybindSource.then(keybindSource => {
+	if (props.allKeybinds !== null) {
 	    keybindHandler(props, [
-		[launchSettings, keybindSource.Settings['Settings'], 'Settings', 'Launch the settings page', true],
+		[launchSettings, props.allKeybinds.Settings['Settings'], 'Settings', 'Launch the settings page', true],
 	    ])
-	})
+	}
 
 	const theme = await Preferences.get({ key: 'theme' });
 
@@ -87,7 +87,7 @@ const Settings = (props) => {
 	    setActiveTheme(theme.value)
 	}
 
-    }, [])
+    }, [props.allKeybinds])
 
     const changeWindowTheme = async (theme) => {
 	if (theme == 0) {

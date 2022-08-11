@@ -14,7 +14,7 @@ import CalendarPopover, { CalendarUnit } from './Components/CalendarPopover';
 import CalendarTasklistPopover from './Components/CalendarTasklistPopover';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
-import keybindSource from "./Components/KeybindSource"
+//import keybindSource from "./Components/KeybindSource"
 
 const autoBind = require('auto-bind/react');
 
@@ -154,21 +154,23 @@ function CalPageBigOllendar(props) {
 
 	const { shortcut } = props
 
-	let ks = await keybindSource;
-	const toUnbind = keybindHandler(props, [
-	    [navigateRight, ks.Calendar['Next month'], 'Next month', 'Goes to the next month'],
-	    [navigateLeft, ks.Calendar['Previous month'], 'Previous month', 'Goes to the previous month'],
-	])
+	// let ks = await keybindSource;
+	if (props.allKeybinds !== null) {
+	    const toUnbind = keybindHandler(props, [
+		[navigateRight, props.allKeybinds.Calendar['Next month'], 'Next month', 'Goes to the next month'],
+		[navigateLeft, props.allKeybinds.Calendar['Previous month'], 'Previous month', 'Goes to the previous month'],
+	    ])
 
-	return () => {
-	    const { shortcut } = props
-	    for (const i in toUnbind) { // this doesn't seem to be working?
-		shortcut.unregisterShortcut(toUnbind[i])
+	    return () => {
+		const { shortcut } = props
+		for (const i in toUnbind) { // this doesn't seem to be working?
+		    shortcut.unregisterShortcut(toUnbind[i])
+		}
+		shortcut.unregisterShortcut(["h", "l", "ArrowLeft", "ArrowRight"]) // so i'll do it manually.. 
+		// TODO figure this one out
 	    }
-	    shortcut.unregisterShortcut(["h", "l", "ArrowLeft", "ArrowRight"]) // so i'll do it manually.. 
-	    // TODO figure this one out
 	}
-    }, [])
+    }, [props.allKeybinds])
 
     return (
         <div id="calendar-page-bigol-calendar-wrapper" style={{display: "inline-block", height: "85%", width: "95%", ...props.style}}>

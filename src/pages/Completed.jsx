@@ -8,7 +8,7 @@ import Task from './Components/Task';
 import { CompletedWidget } from "../backend/src/Widget";
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
-import keybindSource from "./Components/KeybindSource"
+// import keybindSource from "./Components/KeybindSource"
 
 const autoBind = require('auto-bind/react'); // autobind is a lifesaver
 
@@ -57,26 +57,36 @@ class Completed extends Component {
 	this.virtualActive = React.createRef();
     }
 
+    async registerKeybinds() {
+	//let ks = await keybindSource
+	if (this.props.allKeybinds !== null) {
+	    keybindHandler(this, [
+		[() => this.handleVirtualNav(1), this.props.allKeybinds.Completed['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
+		[() => this.handleVirtualNav(-1), this.props.allKeybinds.Completed['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
+		[this.handleItemOpen, this.props.allKeybinds.Completed['Open item'], 'Open item', 'Opens the currently selected item'],
+		[this.handleItemComplete, this.props.allKeybinds.Completed['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
+		[this.handleItemComplete, this.props.allKeybinds.Completed["Complete task"], 'Complete Task', 'Completes a task, or enters a project'],
+		[this.handleItemOpen, this.props.allKeybinds.Completed['Edit task'], 'Edit task', 'Edits the currently selected task'],
+
+		[this.handleFetchMore, this.props.allKeybinds.Completed['Fetch more'], 'Fetch more', 'Fetches more completed items'],
+	    ])
+	}
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.allKeybinds !== this.props.allKeybinds) {
+	    this.registerKeybinds()
+        }
+    }
+
     async componentDidMount() {
 	this.setState({rendering: false})
         this.refresh();
         this.completedWidget.hook(this.refresh);
 
-
-
 	const { shortcut } = this.props
 
-    	let ks = await keybindSource
-	keybindHandler(this, [
-	    [() => this.handleVirtualNav(1), ks.Completed['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
-	    [() => this.handleVirtualNav(-1), ks.Completed['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
-	    [this.handleItemOpen, ks.Completed['Open item'], 'Open item', 'Opens the currently selected item'],
-	    [this.handleItemComplete, ks.Completed['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
-	    [this.handleItemComplete, ks.Completed["Complete task"], 'Complete Task', 'Completes a task, or enters a project'],
-	    [this.handleItemOpen, ks.Completed['Edit task'], 'Edit task', 'Edits the currently selected task'],
-
-	    [this.handleFetchMore, ks.Completed['Fetch more'], 'Fetch more', 'Fetches more completed items'],
-	])
+	this.registerKeybinds()
     }
 
     async componentWillUnmount() {

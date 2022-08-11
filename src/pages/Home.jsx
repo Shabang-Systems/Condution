@@ -91,10 +91,10 @@ class Home extends Component {
 
 	    activatingPalette: false,
 	    qs_show: false,
-        qs_launched_with_button: false,
+	    qs_launched_with_button: false,
 	    goBackSkip: false,
 	    goForwardSkip: false,
-
+	    allKeybinds: null,
         };
 
         //        if (this.state.isWorkspace || this.props.authType==="workspace")
@@ -159,7 +159,7 @@ class Home extends Component {
     }
 
     focusFab = () => {
-	console.log("Focusing fab")
+	//console.log("Focusing fab")
 	if (this.abtibRef.current) this.abtibRef.current.focus()
     }
 
@@ -208,16 +208,19 @@ class Home extends Component {
             this.setState({itemSelected:{item:uri[1], id:uri[2]}});
         this.state.menuWidget.hook(this.refresh);
 
-	const { shortcut } = this.props
-	await keybindSource.then(keybindSource => {
-	    keybindHandler(this, [
-		[this.handleHistoryBack, keybindSource.Global["Go back"], 'Go back', 'Navigates backward in history'],
-		[this.handleHistoryForward, keybindSource.Global["Go forwards"], 'Go forwards', 'Navigates forward in history'],
-		[this.handleLogout, keybindSource.Global['Logout'], 'Logout', 'Logout of Condution'],
-		[this.handleNewPerspective, keybindSource.Global['New perspective'], 'New perspective', 'Create a new perspective'],
-		[this.focusFab, keybindSource.Global['Add to inbox'], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-	    ])
-	})
+	await keybindSource.then(k => {
+	    if (k.Global) {
+		this.setState({allKeybinds: k})
+		keybindHandler(this, [
+		    [this.handleHistoryBack, k.Global["Go back"], 'Go back', 'Navigates backward in history'],
+		    [this.handleHistoryForward, k.Global["Go forwards"], 'Go forwards', 'Navigates forward in history'],
+		    [this.handleLogout, k.Global['Logout'], 'Logout', 'Logout of Condution'],
+		    [this.handleNewPerspective, k.Global['New perspective'], 'New perspective', 'Create a new perspective'],
+		    [this.focusFab, k.Global['Add to inbox'], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
+		])
+	    }
+	});
+
 	//console.log(shortcut.shortcuts, "da shortcuts")
         this.refresh();
 	this.setState({ mounted: true });
@@ -577,6 +580,7 @@ class Home extends Component {
                                     cm={this.props.cm}
                                     dispatch={this.props.dispatch}
                                     isSettings={true}
+				    allKeybinds={this.state.allKeybinds}
                                 />
                             }
                             activateQuickSwitcher={this.activateQuickSwitcher}
@@ -633,11 +637,11 @@ class Home extends Component {
 
 					    <Route path="/workspaces/:id" render={({match}) => <WorkspaceWelcome cm={this.props.cm} paginate={this.paginate} id={match.params.id} actualUID={this.props.uid} menuRefresh={this.refresh} localizations={this.props.localizations} authType={this.props.authType} />} />
 
-					    <Route path="/upcoming" exact render={() => <Upcoming cm={this.props.cm} uid={this.state.workspace} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
-					    <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} localizations={this.props.localizations} />} />
-					    <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} localizations={this.props.localizations} cm={this.props.cm} />} />
+					    <Route path="/upcoming" exact render={() => <Upcoming cm={this.props.cm} uid={this.state.workspace} allKeybinds={this.state.allKeybinds} displayName={this.props.displayName} localizations={this.props.localizations} actualUID={this.props.uid} switch={this.switch} authType={this.props.authType} email={this.props.email} />} />
+					    <Route path="/calendar" exact render={() => <Calendar cm={this.props.cm} uid={this.state.workspace} allKeybinds={this.state.allKeybinds} localizations={this.props.localizations} />} />
+					    <Route path="/completed" exact render={() => <Completed history={history} paginate={this.paginate} allKeybinds={this.state.allKeybinds} localizations={this.props.localizations} cm={this.props.cm} />} />
 
-					    <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history}/>} />
+					    <Route path="/perspectives/:id/:create?" render={({match}) => <Perspectives cm={this.props.cm} paginate={this.paginate} id={match.params.id} menuRefresh={this.refresh} options={match.params.create} localizations={this.props.localizations} history={history} allKeybinds={this.state.allKeybinds}/>} />
 
 					    <Route 
 						path="/projects/:id/:create?" 
@@ -653,6 +657,7 @@ class Home extends Component {
 							options={match.params.create} 
 							localizations={this.props.localizations} 
 							history={history}
+							allKeybinds={this.state.allKeybinds}
 
 						    />
 						} 

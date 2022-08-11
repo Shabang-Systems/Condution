@@ -26,7 +26,7 @@ import DbTask from "../backend/src/Objects/Task";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
-import keybindSource from "./Components/KeybindSource"
+// import keybindSource from "./Components/KeybindSource"
 //const ignoreForTagNames = ['']
 //ignoreForTagNames = ['']
 
@@ -85,12 +85,10 @@ class Projects extends Component { // define the component
 
         if (prevProps.id !== this.props.id && this.props.options === "do") // if we are trying to create
             this.name.current.focus(); // focus the name
-    }
 
-
-    keybindTest(e) {
-	console.log("hi albert!")
-	//console.log(this.state.itemList)
+        if (prevProps.allKeybinds !== this.props.allKeybinds) {
+	    this.registerKeybinds()
+        }
     }
 
 
@@ -113,7 +111,6 @@ class Projects extends Component { // define the component
 	});
     }
     async completeProject() {
-	console.log("completing project")
 	this.setState({animClass: "complete-anim"})
 	setTimeout(() => {
 	    this.setState({animClass: ""}, ()=>{
@@ -199,36 +196,33 @@ class Projects extends Component { // define the component
     }
 
     handleVirtualDragStart() {
-	//console.log(this.DNDVirtualActive.current.focus())
 	console.log(this.virtualActive.current.focus())
     }
-	//this.virtualActive.current.closeTask()
 
     focusName() {
 	if (this.name.current) this.name.current.focus();
     }
 
-    keybindTest() {
-	console.log("triggerin")
-    }
 
     async registerKeybinds() {
-	let ks = await keybindSource;
-	keybindHandler(this, [
-	    [this.makeNewProject, ks.Projects['Create new project'], 'Create new project', 'Creates a new project'],
-	    [this.makeNewTask, ks.Projects['Create new task'], 'Create new task', 'Creates a new task'],
-	    [this.completeProject, ks.Projects['Toggle project complete'], 'Toggle project complete', 'Toggles the project complete status'],
+	//let ks = await keybindSource;
+	if (this.props.allKeybinds !== null) {
+	    keybindHandler(this, [
+		[this.makeNewProject, this.props.allKeybinds.Projects['Create new project'], 'Create new project', 'Creates a new project'],
+		[this.makeNewTask, this.props.allKeybinds.Projects['Create new task'], 'Create new task', 'Creates a new task'],
+		[this.completeProject, this.props.allKeybinds.Projects['Toggle project complete'], 'Toggle project complete', 'Toggles the project complete status'],
 
-	    // TODO does this work?
-	    [this.deleteProject, ks.Projects['Delete project'], 'Delete project', 'Deletes the project'],
+		// TODO does this work?
+		[this.deleteProject, this.props.allKeybinds.Projects['Delete project'], 'Delete project', 'Deletes the project'],
 
-	    [() => this.handleVirtualNav(1), ks.Projects['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
-	    [() => this.handleVirtualNav(this.state.itemList.length-1), ks.Projects['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
-	    [this.handleItemOpen, ks.Projects['Open item'], 'Open item', 'Opens the currently selected item'],
-	    [this.handleItemOpen, ks.Projects['Edit task'], 'Edit task', 'Edits the currently selected task'],
-	    [this.handleItemComplete, ks.Projects['Complete item'], 'Complete item', 'Completes a task, or enters a project'], [this.handleItemComplete, ks.Projects['Complete Task'], 'Complete Task', 'Completes a task, or enters a project'],
-	    [this.focusName, ks.Projects['Edit name'], 'Edit name', 'Focuses the perspective name'],
-	])
+		[() => this.handleVirtualNav(1), this.props.allKeybinds.Projects['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
+		[() => this.handleVirtualNav(this.state.itemList.length-1), this.props.allKeybinds.Projects['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
+		[this.handleItemOpen, this.props.allKeybinds.Projects['Open item'], 'Open item', 'Opens the currently selected item'],
+		[this.handleItemOpen, this.props.allKeybinds.Projects['Edit task'], 'Edit task', 'Edits the currently selected task'],
+		[this.handleItemComplete, this.props.allKeybinds.Projects['Complete item'], 'Complete item', 'Completes a task, or enters a project'], [this.handleItemComplete, this.props.allKeybinds.Projects['Complete Task'], 'Complete Task', 'Completes a task, or enters a project'],
+		[this.focusName, this.props.allKeybinds.Projects['Edit name'], 'Edit name', 'Focuses the perspective name'],
+	    ])
+	}
     }
 
     componentDidMount() {

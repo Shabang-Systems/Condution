@@ -18,7 +18,7 @@ import Project from "../backend/src/Objects/Project";
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
 import { nanoid } from 'nanoid'
-import keybindSource from "./Components/KeybindSource"
+//import keybindSource from "./Components/KeybindSource"
 
 import {Hookifier} from "../backend/src/Objects/Utils.ts";
 
@@ -181,18 +181,22 @@ class Perspectives extends Component {
 	for (const i in this.state.keybinds) {
 	    shortcut.unregisterShortcut(this.state.keybinds[i])
 	}
-	let ks = await keybindSource
-	keybindHandler(this, [
-	    [() => this.handleVirtualNav(1), ks.Perspectives['Navigate down'], 'Navigate down', 'Navigates down in the current project'],
-	    [() => this.handleVirtualNav(this.state.taskList.length-1), ks.Perspectives['Navigate up'], 'Navigate up', 'Navigates up in the current project'],
-	    [this.handleItemComplete, ks.Perspectives['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
-	    [this.handleItemComplete, ks.Perspectives['Complete task'], 'Complete Task', 'Completes a task, or enters a project'],
-	    //[this.handleItemOpene, [['e+t'], ['o']], 'Open item _', 'Edits the currently sel _ected task'],
-	    [this.handleItemOpen, ks.Perspectives['Open item'], `Open item `, 'Edits the currently selected task'],
-	    [this.showEdit, ks.Perspectives['Edit perspective'], 'Edit perspective', 'Opens the perspective editor'],
-	    [this.focusName, ks.Perspectives['Edit name'], 'Edit name', 'Focuses the perspective name'],
-	    [this.handleDelete, ks.Perspectives["Delete perspective"], 'Delete perspective', 'Deletes the perspective'],
-	])
+
+	if (this.props.allKeybinds !== null) {
+	// let ks = await keybindSource
+	//if (this.props.
+	    keybindHandler(this, [
+		[() => this.handleVirtualNav(1), this.props.allKeybinds.Perspectives['Navigate down'], 'Navigate down', 'Navigates down in the current project'],
+		[() => this.handleVirtualNav(this.state.taskList.length-1), this.props.allKeybinds.Perspectives['Navigate up'], 'Navigate up', 'Navigates up in the current project'],
+		[this.handleItemComplete, this.props.allKeybinds.Perspectives['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
+		[this.handleItemComplete, this.props.allKeybinds.Perspectives['Complete task'], 'Complete Task', 'Completes a task, or enters a project'],
+		//[this.handleItemOpene, [['e+t'], ['o']], 'Open item _', 'Edits the currently sel _ected task'],
+		[this.handleItemOpen, this.props.allKeybinds.Perspectives['Open item'], `Open item `, 'Edits the currently selected task'],
+		[this.showEdit, this.props.allKeybinds.Perspectives['Edit perspective'], 'Edit perspective', 'Opens the perspective editor'],
+		[this.focusName, this.props.allKeybinds.Perspectives['Edit name'], 'Edit name', 'Focuses the perspective name'],
+		[this.handleDelete, this.props.allKeybinds.Perspectives["Delete perspective"], 'Delete perspective', 'Deletes the perspective'],
+	    ])
+	}
     }
 
     componentDidMount() {
@@ -213,6 +217,11 @@ class Perspectives extends Component {
 	    this.registerKeybinds()
 
         }
+
+        if (prevProps.allKeybinds !== this.props.allKeybinds) {
+	    this.registerKeybinds()
+        }
+
         if (prevProps.options !== this.props.options)
             this.setState({showEdit: this.props.options === "do"});
     }

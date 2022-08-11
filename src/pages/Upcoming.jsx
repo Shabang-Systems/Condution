@@ -19,7 +19,7 @@ import { InboxWidget, DueSoonWidget, TimelineWidget }  from "../backend/src/Widg
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
-import keybindSource from "./Components/KeybindSource"
+//import keybindSource from "./Components/KeybindSource"
 
 import WorkspaceModal from './Components/WorkspaceModal';
 
@@ -143,22 +143,24 @@ class Upcoming extends Component { // define the component
 	this.moveField(1)
     }
     async setKeybinds() {
-	let ks = await keybindSource;
-	keybindHandler(this, [
-	    //[this.kb, [['l']], 'Complete item', 'Completes a task, or enters a project'],
-	    [this.handleItemOpen, ks.Upcoming['Open item'], 'Open item', 'Opens the currently selected item'],
+	//let ks = await keybindSource;
+	if (this.props.allKeybinds !== null) {
+	    keybindHandler(this, [
+		//[this.kb, [['l']], 'Complete item', 'Completes a task, or enters a project'],
+		[this.handleItemOpen, this.props.allKeybinds.Upcoming['Open item'], 'Open item', 'Opens the currently selected item'],
 
-	    [() => this.handleVirtualNav(1), ks.Upcoming['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
-	    [() => this.handleVirtualNav(this.getCurrentField().length-1), ks.Upcoming['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
+		[() => this.handleVirtualNav(1), this.props.allKeybinds.Upcoming['Navigate down'], 'Navigate down', 'Navigates down in the current project', true],
+		[() => this.handleVirtualNav(this.getCurrentField().length-1), this.props.allKeybinds.Upcoming['Navigate up'], 'Navigate up', 'Navigates up in the current project', true],
 
-	    [() => this.moveField(2), ks.Upcoming['Jump field up'], 'Jump field up', 'Jump to the previous field'],
-	    [() => this.moveField(1), ks.Upcoming['Jump field down'], 'Jump field down', 'Jump to the next field'],
-	    [this.handleItemComplete, ks.Upcoming['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
-	    [this.handleItemComplete, ks.Upcoming['Complete task'], 'Complete Task', 'Completes a task, or enters a project'],
-	    [this.handleItemOpen, ks.Upcoming['Edit task'], 'Edit task', 'Edits the currently selected task'],
+		[() => this.moveField(2), this.props.allKeybinds.Upcoming['Jump field up'], 'Jump field up', 'Jump to the previous field'],
+		[() => this.moveField(1), this.props.allKeybinds.Upcoming['Jump field down'], 'Jump field down', 'Jump to the next field'],
+		[this.handleItemComplete, this.props.allKeybinds.Upcoming['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
+		[this.handleItemComplete, this.props.allKeybinds.Upcoming['Complete task'], 'Complete Task', 'Completes a task, or enters a project'],
+		[this.handleItemOpen, this.props.allKeybinds.Upcoming['Edit task'], 'Edit task', 'Edits the currently selected task'],
 
-	    [this.toggleTimeline, ks.Upcoming['Show timeline'], 'Show timeline', 'Shows the timeline'],
-	])
+		[this.toggleTimeline, this.props.allKeybinds.Upcoming['Show timeline'], 'Show timeline', 'Shows the timeline'],
+	    ])
+	}
     }
     componentDidMount() {
         this.refresh();
@@ -196,6 +198,9 @@ class Upcoming extends Component { // define the component
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.uid != this.props.uid) 
             this.refresh();
+        if (prevProps.allKeybinds !== this.props.allKeybinds) {
+	    this.setKeybinds()
+        }
     }
 
     componentWillUnmount() {
