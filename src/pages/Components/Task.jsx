@@ -264,6 +264,8 @@ class Task extends Component {
         if (this.props.asyncObject) {
             this.openTask();
             task = await this.props.asyncObject;
+            if (!getPlatforms().includes("mobile") && this.name.current)
+                this.name.current.focus();
         } else  {
             task = this.props.taskObject;
         }
@@ -374,10 +376,11 @@ class Task extends Component {
         else 
             this.setState({haveBeenExpanded: true, expanded:true});
 	if (this.props.setExpanded && this.props.taskObject) {
-            if (!getPlatforms().includes("mobile") && this.name.current)
-                this.name.current.focus();
             this.props.setExpanded(true, this.props.taskObject.id)
         }
+        if (!getPlatforms().includes("mobile") && this.name.current)
+            this.name.current.focus();
+
     }// util function to open a task
 
     _explode() {
@@ -481,8 +484,9 @@ class Task extends Component {
 	    //console.log("over here man")
             setTimeout(()=>Hookifier.unfreeze(), 500);
         }
-        if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
-            this.openTask(); // open task
+        if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) { // we are newly starting open
+            this.openTask(); 
+        }
     }
 
     completeTask() {
