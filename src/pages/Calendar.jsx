@@ -14,7 +14,6 @@ import CalendarPopover, { CalendarUnit } from './Components/CalendarPopover';
 import CalendarTasklistPopover from './Components/CalendarTasklistPopover';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
-//import keybindSource from "./Components/KeybindSource"
 
 const autoBind = require('auto-bind/react');
 
@@ -288,44 +287,12 @@ class Calendar extends Component {
         this.setState({showEdit: false});
     } // util func for hiding repeat
 
-    //componentWillUnmount() {
-    //    const { shortcut } = this.props
-    //    for (const i in this.state.keybinds) {
-    //        shortcut.unregisterShortcut(this.state.keybinds[i])
-    //    }
-    //}
+    componentWillUnmount() {}
 
-    async refresh() {
-//        projectDB.map(proj=>buildSelectString(proj));
-
-        //let endDate = new Date(this.state.currentDate);
-        //endDate.setHours(23,59,59,60);
-        //let taskList = await this.props.engine.db.selectTasksInRange(this.props.uid, this.state.currentDate, endDate);
-
-        //refreshed++;
-
-        //this.setState({
-            //possibleProjects: pPandT[0][0],	     // set the project stuff
-            //possibleTags: pPandT[1][0],		    // set the tag stuff  
-            //possibleProjectsRev: pPandT[0][1],	   // set more projects stuff  
-            //possibleTagsRev: pPandT[1][1],	  // set more tags stuff  
-            //availability: avail,		 // set the avail
-            //projectSelects: projectList,	// set the project list  
-            //tagSelects: tagsList,	       // set the tag list
-            //projectDB, 			      // and the project db 
-            //taskList
-        //}); // once we finish, set the state
-    }
+    async refresh() {}
 
 
     componentDidMount() {
-	//const { shortcut } = this.props
-
-	//keybindHandler(this, [
-	//    [() => this.calPageBigRef.current? this.calPageBigRef.current.navigatePage(1) : "", [['j']], 'Create new project', 'Creates a new project'],
-	//    [this.keybindTest, [['l']], 'Create new project', 'Creates a new project'],
-	//])
-
 	this.refresh()
     }
 
