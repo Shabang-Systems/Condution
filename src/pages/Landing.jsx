@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Plugins } from '@capacitor/core';
 
- import Particles from 'react-particles-js';
+import Particles from 'react-particles-js';
 
 
 import './Landing.css';
@@ -17,7 +17,7 @@ import '../themefiles/condutiontheme-default-adapter.css';
 const autoBind = require('auto-bind/react');
 
 
-const { Storage } = Plugins;
+const { Storage } = Plugins; // Unbelievably deprecated
 
 class Landing extends Component {
     constructor(props) {

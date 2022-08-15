@@ -22,7 +22,6 @@ ion-fab-list {
 }
 
 .settings-main {
-    /*border: 1px solid red;*/
     height: 100%;
 }
 
@@ -67,7 +66,6 @@ ion-fab-list {
 }
 
 .settings-sidebar {
-    /*border: 0px solid red;*/
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -93,27 +91,18 @@ ion-fab-list {
     /*font-variant: small-caps;*/
     align-content: right;
     justify-content: right;
-    /*border: 1px solid red;*/
     display: flex;
     flex-direction: column;
     transition: 0.3s;
 }
 
-/*.settings-esc:hover {*/
-/*    background: red;*/
-/*}*/
-
-
 .esc-button {
     transition: 0.3s;
     /*background: blue;*/
-    /*border: 1px solid green;*/
 }
 
 .esc-button:hover {
     color: var(--task-checkmark) !important;
-    /*color: red;*/
-    /*background: red;*/
 }
 
 .settings-option {
@@ -146,10 +135,6 @@ ion-fab-list {
     margin-top: 5px;
 }
 
-/* .settings-theme-option-highlight { */
-
-
-
 .settings-theme-option-wrapper {
     /*background-color: var(--decorative-light);*/
     display: flex;
@@ -169,7 +154,6 @@ ion-fab-list {
     transition: background-color 0.3s linear;
 }
 
-
 .settings-theme-option-wrapper:hover {
     background-color: var(--background-feature);
 }
@@ -184,7 +168,6 @@ ion-fab-list {
     padding-left: 8px;
     font-size: 10px;
     font-weight: 900;
-    /*margin-bottom: 0;*/
 }
 
 .settings-theme-option-maintext {

@@ -97,12 +97,6 @@ class Home extends Component {
 	    allKeybinds: null,
         };
 
-        //        if (this.state.isWorkspace || this.props.authType==="workspace")
-        //this.props.engine.workspaceify()
-        //else
-        //this.props.engine.userlandify()
-
-        //this.props.gruntman.registerGlobalRefresher(this.refresh.bind(this));
 
         //this.perspectivemenuWidget = new PerspectivesMenuWidget(this.props.cm);
         //this.projectmenuWidget = new ProjectMenuWidget(this.props.cm);
@@ -462,19 +456,8 @@ class Home extends Component {
 									ref={provided.innerRef}
 									key={psp.id}
 
-									//style = {{
-									//background: "red"
-									//border: "1px solid red"
-
-									//}}
-
 								    >
 									<Link key={psp.id} to={`/perspectives/${psp.id}`} 
-									    //style={{
-									    //border: "1px solid red"
-									    //backgroundColor: "blue"
-									    //}}
-
 
 									    onClick={()=>{
 										this.setState({itemSelected:{item:"perspectives", id:psp.id}});

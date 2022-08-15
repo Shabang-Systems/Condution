@@ -1,11 +1,9 @@
-import { IonModal, IonContent, IonSearchbar, IonPage, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonModal, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Repeat.css';
 import '../Perspectives.css';
 import "react-datepicker/dist/react-datepicker.css";
-import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
 const autoBind = require('auto-bind/react');

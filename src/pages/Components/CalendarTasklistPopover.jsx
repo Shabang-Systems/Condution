@@ -1,6 +1,5 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { createRef, useEffect, useRef, useState } from 'react';
 import '../Calendar.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
@@ -51,7 +50,6 @@ function CalendarTasklistPopover(props) {
                         <Task cm={props.cm} localizations={props.localizations} key={item.id} taskObject={item} envelope={refs.current[i]} onModal={true}/>
                     </div>
                 )}
-
 
                 <div className="bottom-helper" style={{height: 150}}>&nbsp;</div>
             </div>

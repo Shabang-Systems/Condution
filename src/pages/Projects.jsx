@@ -1,5 +1,4 @@
 import { IonContent, IonModal, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, withIonLifeCycle } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Projects.css';
 import './Pages.css';
@@ -169,14 +168,13 @@ class Projects extends Component { // define the component
 	    this.virtualActive.current.closeTask()
 	}
 
-	if (this.virtualActive.current) {
-	    //this.virtualActive.current.focus()
-	    //console.log(this.virtualActive.current)
-	}
+	// if (this.virtualActive.current) {
+	//     this.virtualActive.current.focus()
+	//     console.log(this.virtualActive.current)
+	// }
     }
 
     handleItemOpen() {
-	//console.log(this.state.virtualSelectIndex)
 	console.log("opening pro")
 	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
 	    this.virtualActive.current.toggleTask()
@@ -205,7 +203,6 @@ class Projects extends Component { // define the component
 
 
     async registerKeybinds() {
-	//let ks = await keybindSource;
 	if (this.props.allKeybinds !== null) {
 	    keybindHandler(this, [
 		[this.makeNewProject, this.props.allKeybinds.Projects['Create new project'], 'Create new project', 'Creates a new project'],
@@ -271,9 +268,6 @@ class Projects extends Component { // define the component
             weight: this.state.projectObject.weight,
             pendingWeight: this.state.projectObject.uncompleteWeight,
         })
-        //console.log(this.state.projectObject, "parnent")
-        //console.log(this.state.itemList, this.state.is_sequential, this.state.projectObject)
-
     }
 
 
@@ -287,7 +281,6 @@ class Projects extends Component { // define the component
 
 
     onDragEnd = async result => {
-	//console.log("ending drag")
 	this.setState({combItem: "notanid"})
 
 	// BAD DROPS
@@ -458,7 +451,6 @@ class Projects extends Component { // define the component
     }
 
     renderProject = (item, i, provided, snapshot) => {
-        //console.log("renddering project")
 	//this.myRef = React.createRef();
         return (
             <div
@@ -472,7 +464,6 @@ class Projects extends Component { // define the component
                         opacity:item.available?"1":"0.35",
                         //background: `${snapshot.isDragging ? "var(--background-feature)" : ""}`,
 			transition: "0.3s",
-			//background: "red",
 			background: (this.state.virtualSelectIndex == i && this.state.showVirtualSelect)? "var(--background-feature)" : "",
                     }}
                     onClick={()=>{
@@ -525,7 +516,7 @@ class Projects extends Component { // define the component
                 <div className={"page-content " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
                         return "normal"; // normal windowing proceeds
-                    else if (window.navigator.platform.includes("Mac")){ // macos
+                    else if (window.navigator.platform.includes("Mac")){ // macos, we also really should do feature detection here since navigator.platform is deprecated
                         return "darwin"; // frameless setup
                     }
                     else if (process.platform === "win32") // windows
@@ -594,12 +585,6 @@ class Projects extends Component { // define the component
                                                     });
                                                 }, 100);
 
-
-                                                //} else {
-                                                //console.log("completing")
-                                                //this.state.projectObject.complete()
-                                                //.then(console.log(this.state.projectObject.isComplete))
-                                                //}
                                             }}
                                         >{(window.screen.width >= 400)? 
                                                 (this.state.projectObject.data && this.state.projectObject.data.isComplete? "Uncomplete" : "Complete") :
