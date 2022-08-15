@@ -12,7 +12,6 @@ import { createBrowserHistory, createHashHistory } from 'history';
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
 import KeybindPicker from "./Components/KeybindPicker"
-//import keybindSource from "./Components/KeybindSource"
 //import { Storage } from '@capacitor/storage';
 import { Preferences } from '@capacitor/preferences';
 import $ from "jquery";

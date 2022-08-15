@@ -1,5 +1,4 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, {useEffect, useState} from 'react';
 //import OutsideClickHandler from 'react-outside-click-handler';
 
@@ -34,7 +33,6 @@ function RollingReleaseNotesModal(props) {
 	    style={{
 		borderRadius: 5,
 		overflow: "scroll",
-		//border:  "1px solid #ccc",
 		height: "60vh",
 		marginTop: "0.5rem",
 	    }}

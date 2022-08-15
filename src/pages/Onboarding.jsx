@@ -1,9 +1,7 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Pages.css';
 import Lottie from 'react-lottie';
-
 
 const autoBind = require('auto-bind/react');
 const LoadSpinner = require('../static/onboarding.json');
@@ -16,8 +14,6 @@ const defaultOptions = {
         preserveAspectRatio: 'xMidYMid slice',
     }
 };
-
-
 
 function Onboarding(props) {
     return (

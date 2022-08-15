@@ -1,12 +1,10 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, IonBadge, isPlatform, IonInfiniteScroll, IonInfiniteScrollContent, IonPopover } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Upcoming.scss';
 import './Pages.css';
 
 import Spinner from './Components/Spinner';
 
-//import { SortableTaskList } from './Components/Sortable';
 import { SortableTaskList } from './Components/Sortable';
 
 import Task from './Components/Task';
@@ -19,7 +17,6 @@ import { InboxWidget, DueSoonWidget, TimelineWidget }  from "../backend/src/Widg
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
 import keybindHandler from "./Components/KeybindHandler"
-//import keybindSource from "./Components/KeybindSource"
 
 import WorkspaceModal from './Components/WorkspaceModal';
 
@@ -132,7 +129,6 @@ class Upcoming extends Component { // define the component
 	    activeField: curField,
 	    virtualSelectIndex: 0,
 	})
-	//console.log(this.getCurrentField(curField))
     }
 
     toggleTimeline() {
@@ -143,7 +139,6 @@ class Upcoming extends Component { // define the component
 	this.moveField(1)
     }
     async setKeybinds() {
-	//let ks = await keybindSource;
 	if (this.props.allKeybinds !== null) {
 	    keybindHandler(this, [
 		//[this.kb, [['l']], 'Complete item', 'Completes a task, or enters a project'],
@@ -517,7 +512,4 @@ class Upcoming extends Component { // define the component
 
 // Hiding scrollbar, a journey
 
-
-
 export default withShortcut(Upcoming);
-

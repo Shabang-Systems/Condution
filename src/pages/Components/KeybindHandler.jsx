@@ -25,14 +25,12 @@ function keybindHandler(that, keybinds) { // holy hell why did i make it this wa
 	//    console.log("erroring!", keybinds[i])
 	//    continue; // this is erroring for some reason?
 	//}
-	//console.log("here??")
 	if (!!keybinds[i][4]) {
 	    for (const ii in keybinds[i][1]) {
 		for (const iii in keybinds[i][1][ii]) {
 		    if (!keybinds[i][1][ii][iii]) console.log("erroring!", keybinds[i][1][ii][iii])
 
 		    if (!keybinds[i][1][ii][iii].includes) {
-			//console.log("no includes??", keybinds[i][1][ii][iii], keybinds)
 			continue;
 		    }
 

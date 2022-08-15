@@ -1,5 +1,4 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, {useEffect, useState} from 'react';
 //import OutsideClickHandler from 'react-outside-click-handler';
 

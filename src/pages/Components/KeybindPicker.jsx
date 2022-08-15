@@ -62,8 +62,6 @@ const KeybindPicker = (props) => {
 	const temp = keybindActions
 	temp[catIdx][1][i][1][j] = [val]
 	setActions([...temp])
-	//console.log(e.target.value)
-	//console.log(val)
     }
 
     const handleSave = async () => {
