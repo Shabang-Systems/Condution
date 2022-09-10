@@ -133,3 +133,7 @@ ion-icon {
 }
 
 
+
+* {
+    scrollbar-color: transparent transparent;
+}
