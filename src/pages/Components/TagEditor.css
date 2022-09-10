@@ -185,5 +185,6 @@ input[type=number] {
 .new-tag-text {
     color: var(--perspective-query-string);
     float: right;
-    margin-right: 45px;
+    margin-right: 30px;
+    margin-left: 10px;
 }

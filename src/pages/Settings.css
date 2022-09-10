@@ -55,6 +55,9 @@ ion-fab-list {
     cursor: pointer;
     transform: translateY(-10px);
     float: right;
+    position: absolute;
+    top: 20px;
+    right: 20px;
  }
 
 .settings-close > i {
@@ -185,4 +188,7 @@ ion-fab-list {
 }
 
 
+.settings-content {
+    overflow-y: scroll;
+}
 

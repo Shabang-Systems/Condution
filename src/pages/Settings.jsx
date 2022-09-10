@@ -199,7 +199,7 @@ const Settings = (props) => {
 			<div className="settings-content"
 			    style={{
 			      width: "100%",
-                              overflow: "hidden"
+                              overflowY: "scroll"
                             }}
                         >
 
@@ -300,7 +300,8 @@ const bundles = [
 		    <TagEditor
 			nonModal={true}
 			localizations={props.tagsPane.localizations}
-			cm={props.tagsPane.cm}
+		      cm={props.tagsPane.cm}
+                      headerless={true}
 		    />
 	    </div>
 	}

@@ -41,7 +41,8 @@ class TagEditor extends Component {
         super(props)
         this.state = {
             tagList: [],
-            settingState: -1
+          settingState: -1,
+          headerless: props.headerless
         }
         this.tagsPaneWidget = new TagsPaneWidget(this.props.cm);
     }
@@ -109,8 +110,8 @@ class TagEditor extends Component {
 
 	return (
 	    <>
-		<div className="TagEditor-header">
-		    <span style={{display: "inline-flex", alignItems: "center"}}> <b className="bold-prefix" >Edit All Tags</b> </span>
+	      <div className="TagEditor-header" style={{display: this.state.headerless?"none":"block"}}>
+		  <span style={{display: "inline-flex", alignItems: "center"}}> <b className="bold-prefix" >Edit All Tags</b> </span>
 
 		    {/*Close Button*/}
 		    <a className="TagEditor-close" onClick={this.props.onDidDismiss}><i className="fa fa-times"></i></a>
