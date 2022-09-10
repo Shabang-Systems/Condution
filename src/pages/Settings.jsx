@@ -199,8 +199,7 @@ const Settings = (props) => {
 			<div className="settings-content"
 			    style={{
 			      width: "100%",
-                              overflowY: "scroll",
-                              overflowX: "hidden"
+                              overflow: "hidden"
                             }}
                         >
 

@@ -70,16 +70,11 @@
     background: var(--decorative-light);
 }
 
-
-.keybind-chooser-category {
-
+.complete-container {
+    position: absolute;
+    right: 20px;
+    bottom: 0;
 }
-
-
-
-
-
-
 
 
 
