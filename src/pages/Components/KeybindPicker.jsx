@@ -83,9 +83,7 @@ const KeybindPicker = (props) => {
 	<>
 	    <div
 		style={{
-		    overflow: "scroll",
 		    //border: "1px solid red",
-		    height: "500px", // TODO @jemoka
                     width: "100%",
 		    marginTop: "1.5rem"
 		}}
@@ -129,7 +127,7 @@ const KeybindPicker = (props) => {
 				style={{
 				    display: "inline-flex",
 				    /* width: "100%", */
-				    overflowX: "hidden",
+				    overflow: "hidden",
 				    "text-overflow": "ellipsis",
 				    "word-wrap": "break-word",
 				    "flex-wrap": "wrap",

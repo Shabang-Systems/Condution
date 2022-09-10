@@ -198,7 +198,9 @@ const Settings = (props) => {
 			</div>
 			<div className="settings-content"
 			    style={{
-				width: "100%",
+			      width: "100%",
+                              overflowY: "scroll",
+                              overflowX: "hidden"
                             }}
                         >
 
@@ -287,53 +289,13 @@ const bundles = [
         }
     },
     {
-	name: "Account",
-	title: <>
-	    Manage that account!
-	</>,
-	content: (props) => {
-	    const greetings = props.account.localizations.greetings_setA;
-	    const greeting = greetings[Math.floor(Math.random() * greetings.length)]
-
-
-
-	    return <>
-		<div
-		    style={{
-			marginTop: "1rem",
-		    }}>
-		    <div
-			style={{
-			    /* display: "flex", */
-			}}
-		    > <p
-			style={{
-			    paddingRight: "10px",
-			    paddingLeft: "10px",
-			    fontWeight: "900",
-			}}
-		    >{greeting+" "}</p>{`${" "+props.account.name}`} </div>
-		    <div className="menu-item" id="logout"
-			style={{
-			    borderRadius: "5px",
-			}}
-			onClick={() => {history.push(`/`); props.account.dispatch({operation: "logout"})}}><i className="fas fa-snowboarding" style={{paddingRight: 5}} />{props.account.authType == "workspace" ? props.account.localizations.exitworkspace : props.account.localizations.logout}</div>
-
-		</div>
-	    </>
-	}
-
-
-    },
-    {
 	name: "Tags",
 	title: <>
 	    Wrangle those tags!
 	</>,
 	content: (props) => {
 	    return <div
-		style={{marginTop: "1rem", border: "0px solid red", maxHeight: "60vh",
-		    overflowY: "scroll",
+		style={{marginTop: "1rem", border: "0px solid red", overflowY: "none",
 		}}
 		>
 		    <TagEditor
@@ -345,24 +307,17 @@ const bundles = [
 	}
     },
     {
-	name: "Experimental",
-	title: <>
-	    Experimental features 👀
-	</>,
-	content: () => { return <> Coming soon... </> }
-    },
-    {
-	name: "Change Log",
-	title: <>
-	    Check out the Change Log!
-	</>,
-	content: (props) => {
-	    return <>
-		<RollingReleaseNotesModal
-		    authType={props.changeLog.authType}
-		/>
-	    </>
-	}
+        name: "Change Log",
+        title: <>
+            Check out the Change Log!
+        </>,
+        content: (props) => {
+            return <>
+        	<RollingReleaseNotesModal
+        	    authType={props.changeLog.authType}
+        	/>
+            </>
+        }
     },
 ]
 

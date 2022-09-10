@@ -2,20 +2,16 @@
     transition: 0.2s ease-in-out;
     margin-left: 10px;
     background: var(--background-feature);
-    max-width: 200px;
-    min-width: 10px;
     text-overflow: ellipsis;
     word-wrap: break-word;
-    max-height: 1.8em;
     line-height: 1.8em;
     display: block;
-    overflow: scroll;
     align-content: space-between;
     /*border-radius: 5px;*/
     padding-left: 10px;
     padding-right: 10px;
     display: flex;
-    border-top-left-radius: 5px;
+    border-radius: 5px;
     border-bottom-left-radius: 5px;
     caret-color: transparent;
     /*margin-bottom: -10px;*/
@@ -51,10 +47,6 @@
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     background: var(--background-feature);
-
-
-
-
     transition: 0.2s ease-in-out;
     max-width: 200px;
     min-width: 10px;
@@ -63,7 +55,6 @@
     max-height: 1.8em;
     line-height: 1.8em;
     display: block;
-    overflow: scroll;
     align-content: space-between;
     /*border-radius: 5px;*/
     padding-left: 5px;

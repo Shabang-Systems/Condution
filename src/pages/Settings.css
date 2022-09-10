@@ -1,3 +1,4 @@
+html {overflow: -moz-scrollbars-none;}
 
 .settings-modal {
 /*     /\*--max-height: 100vh%;*\/ */
@@ -175,15 +176,13 @@ ion-fab-list {
     padding-left: 10px;
 }
 
-/* .settings-theme-option-maintext:hover { */
-/*     background-color: var(--decorative-light); */
-/* } */
-
-/* .settings-theme-option-highlight { */
-/*     background-color: var(--decorative-light); */
-/* } */
-
 .debug {
     border: 1px solid red;
 }
+
+.timeline-box {
+    transform: translateY(-10px);
+}
+
+
 
