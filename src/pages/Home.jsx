@@ -214,7 +214,7 @@ class Home extends Component {
 		    [this.handleLogout, k.Global['Logout'], 'Logout', 'Logout of Condution'],
 		    [this.handleNewPerspective, k.Global['New perspective'], 'New perspective', 'Create a new perspective'],
 		    [this.focusFab, k.Global['Add to inbox'], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
-		    [this.launchCmpP, k.Global["Command palette"], 'temp', 'sfs', true, true],
+		    [this.launchCmpP, k.Global["Command palette"], 'Command palette', 'Toggle this command palette', true, true],
 
 		])
 	    }
