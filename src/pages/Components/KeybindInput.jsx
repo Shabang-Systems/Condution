@@ -25,7 +25,7 @@ const KeybindInput = (props) => {
 	input = input.replace("Control", "ctrl")
 
 	let temp_old = (keybindInput? "+"+keybindInput+"+" : "")
-	if (!temp_old.includes("+"+input+"+")) {
+	if (!temp_old.includes("+"+input+"+") && (keybindInput+input).length < 25) {
 	    input = (keybindInput? keybindInput+"+"+input : input)
 	    setKeybindInput(input)
 	}
@@ -36,6 +36,7 @@ const KeybindInput = (props) => {
 	    <p
 		style={{
 		    display: "flex",
+		    //maxWidth: "100px",
 
 		}}
 	    >
