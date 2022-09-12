@@ -7,6 +7,7 @@ const deriveSource = async () => {
 	    "Logout": [['‎']],
 	    'New perspective': [['‎']],
 	    'Add to inbox': [['i'], ['cmd+i'], ['ctrl+enter']],
+	    'Command palette': [['shift+p'], ['p'], ["control+p"]],
 	},
 	"Upcoming": {
 	    'Open item': [['o']],
@@ -67,7 +68,7 @@ const deriveSource = async () => {
 	kbs = defaults;
 	await Preferences.set({ key: 'keybinds', value: JSON.stringify(defaults) });
     }
-    // await Preferences.set({ key: 'keybinds', value: JSON.stringify(defaults) });
+     //await Preferences.set({ key: 'keybinds', value: JSON.stringify(defaults) });
     return kbs
 }
 

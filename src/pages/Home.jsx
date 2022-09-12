@@ -35,6 +35,7 @@ import { MenuWidget } from "../backend/src/Widget";
 import Project from "../backend/src/Objects/Project";
 import Perspective from "../backend/src/Objects/Perspective";
 import keybindHandler from "./Components/KeybindHandler"
+import CommandPaletteHookExposer from "./Components/CommandPalleteHookExposer"
 
 import { KBarProvider , KBarPortal, KBarPositioner, KBarAnimator, KBarSearch, useMatches, NO_GROUP, KBarResults } from "kbar";
 import CommandPalette from "./Components/CommandPalette";
@@ -95,6 +96,7 @@ class Home extends Component {
 	    goBackSkip: false,
 	    goForwardSkip: false,
 	    allKeybinds: null,
+	    update_cmdpalette: 0,
         };
 
 
@@ -204,6 +206,7 @@ class Home extends Component {
 
 	await keybindSource.then(k => {
 	    if (k.Global) {
+		//console.log(k.Global["Command palette"], "da shortcut")
 		this.setState({allKeybinds: k})
 		keybindHandler(this, [
 		    [this.handleHistoryBack, k.Global["Go back"], 'Go back', 'Navigates backward in history'],
@@ -211,13 +214,19 @@ class Home extends Component {
 		    [this.handleLogout, k.Global['Logout'], 'Logout', 'Logout of Condution'],
 		    [this.handleNewPerspective, k.Global['New perspective'], 'New perspective', 'Create a new perspective'],
 		    [this.focusFab, k.Global['Add to inbox'], 'Add to inbox', 'Focus the Add to Inbox button', true, true],
+		    [this.launchCmpP, k.Global["Command palette"], 'temp', 'sfs', true, true],
+
 		])
 	    }
 	});
 
-	//console.log(shortcut.shortcuts, "da shortcuts")
         this.refresh();
 	this.setState({ mounted: true });
+
+    }
+
+    launchCmpP = () => {
+	this.setState({update_cmdpalette: this.state.update_cmdpalette + 1})
     }
 
     updateInvites() {
@@ -347,6 +356,7 @@ class Home extends Component {
 			    /*uid={this.state.workspace} */
 			    /*gruntman={this.props.gruntman} */
 			/>
+			<CommandPaletteHookExposer update={this.state.update_cmdpalette}/>
 			{/* OoIp */}
 			<ReactTooltip />
 			{/* App container */}
