@@ -7,7 +7,6 @@ const CommandPaletteHookExposer = (props) => {
     let { query } = useKBar()
 
     useEffect(() => {
-	console.log(props.update)
 	if (props.update != 0 && props.update != prev) {
 	    setPrev(props.update)
 	    query.setVisualState("visible");
