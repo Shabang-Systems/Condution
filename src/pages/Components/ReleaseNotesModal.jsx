@@ -40,9 +40,9 @@ function ReleaseNotesModal(props) {
                 <div className="condution-callout"><span className="condution-name">Condution</span><span className="condution-vn">1.2.0 <b>snow crash</b></span></div>
                 <div className="releasenotes">Release Notes</div>
                 <h1 className="header"> 👋 Heyooyoo! How goes it? </h1>
-                <p className="content">Thanks for entrusting Condution for your task management. We are back with a release packed with cool user experience updates.</p>
+                <p className="content">Thanks for entrusting Condution for your task management. We are back with a release packed with features to make using Condution blazingly fast.</p>
                 <h1 className="header"> 🏃 tl;dr </h1>
-                <p className="content">Tags pane! Settings page! Command Palette! Wiz through our interface with blazing speed.</p>
+                <p className="content">Keybinds! Settings page! Command Palette! Wiz through our interface with blazing speed. Also, please tell those who you think could benefit about Condution! Us here at the Condution team would be eternally grateful.</p>
                 <div style={{borderTop: "solid 1px var(--background-feature)", width: "100%", height: 1}}>&nbsp;</div>
                 <h1 className="header"> ⚙️ Settings Page </h1>
               <p className="content">Take a looksee! To the right of the logout button, there's now a new setting page.</p>
