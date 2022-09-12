@@ -19,16 +19,16 @@ const KeybindInput = (props) => {
     }, [props.keys]);
 
     const rec = (e) => {
-	//if (e.key == "Escape") {
-	//    setKeybindInput("")
-	//    e.stopPropagation()
-	//}
 	e.preventDefault()
 	let input = e.key
 	input = input.toLowerCase()
 	input = input.replace("Control", "ctrl")
-	input = (keybindInput? keybindInput+"+"+input : input)
-	setKeybindInput(input)
+
+	let temp_old = (keybindInput? "+"+keybindInput+"+" : "")
+	if (!temp_old.includes("+"+input+"+")) {
+	    input = (keybindInput? keybindInput+"+"+input : input)
+	    setKeybindInput(input)
+	}
     }
 
     return (
@@ -44,8 +44,6 @@ const KeybindInput = (props) => {
 		    onKeyDown={rec}
 		    onBlur={(e) => {
 			props.editCallback(keybindInput);
-			console.log("is it editing?", e)
-			//e.preventDefault()
 		    }}
 		    className="keybind-display"
 		>
