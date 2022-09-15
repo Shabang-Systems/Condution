@@ -154,22 +154,6 @@ function CommandPalette(props) {
 
 	//console.log(shortcut, actions.map(v => v.perform), "here.")
 	actions.push(
-	    //{
-	    //    id: nanoid(),
-	    //    name: "Command palette",
-	    //    subtitle: "Toggle this command palette",
-	    //    //subtitle: v.description,
-	    //    shortcut: ["ctrl+shift+p", "mod+shift+p"],
-	    //    perform: () => { 
-	    //        setTimeout(() => {
-	    //        }, 10) // man.
-	    //    },
-	    //    //keywords: v.description, // jank?
-	    //    keywords: "Activate this command palette!",
-	    //    priority: Priority.HIGH,
-	    //    section: "Global",
-
-	    //},
 	    {
 		id: nanoid(),
 		name: "Quick switcher",
