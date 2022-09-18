@@ -1,0 +1,194 @@
+html {overflow: -moz-scrollbars-none;}
+
+.settings-modal {
+/*     /\*--max-height: 100vh%;*\/ */
+/*     --height: 100%; */
+/*     --width: 100%; */
+/*     /\*--color: var(--decorative-light-alt);*\/ */
+    color: var(--menu-label);
+/*     /\*--max-width: 520px;*\/ */
+/*     /\*--ion-backdrop-opacity: 0.5;*\/ */
+/*     /\*--border-radius: 8px;*\/ */
+    height: 100%;
+    --border-radius: 5px;
+}
+
+ion-fab-list {
+    margin: 0 !important;
+    transform: translateY(-40px) translateX(-10px);
+}
+
+.button-inner {
+    background-color: red;
+}
+
+.settings-main {
+    height: 100%;
+}
+
+.settings-floating {
+    border: 0px solid blue;
+    width:100%;
+    /* padding: 1rem; */
+    /* margin-top: 10%; */
+    /* margin-left: 20%; */
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    /*align-items: center;*/
+    justify-content: flex-start;
+    /*margin: auto;*/
+    height: 100%;
+}
+
+.settings-callout {
+    font-weight: 300px;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.settings-sidebar {
+    height: 100%;
+}
+
+.settings-close {
+    cursor: pointer;
+    transform: translateY(-10px);
+    float: right;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+ }
+
+.settings-close > i {
+    color: var(--decorative-light);
+    transition: color 0.3s;
+}
+
+.settings-close > i:hover {
+    color: var(--decorative-light-alt);
+}
+
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    /* margin-right: 1rem; */
+    background: var(--menu-background)
+}
+
+.settings-header {
+    display: inline;
+    position: absolute;
+}
+
+.settings-content {
+    padding-top: 5px;
+    margin: 20px;
+    margin-left: 30px;
+}
+
+.settings-esc {
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+    /*font-variant: small-caps;*/
+    align-content: right;
+    justify-content: right;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+.esc-button {
+    transition: 0.3s;
+    /*background: blue;*/
+}
+
+.esc-button:hover {
+    color: var(--task-checkmark) !important;
+}
+
+.settings-option {
+    border-radius: 8px;
+    background-color: none;
+    /*padding-left: 5px;*/
+    /*padding-right: 5px;*/
+    padding: 5px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: var(--content-normal-alt);
+}
+
+.settings-option:hover {
+    color: var(--decorative-light-accent);
+}
+
+
+/* .settings-option:hover { */
+/*     background-color: var(--decorative-light) !important; */
+/* } */
+
+
+.settings-theme-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
+.settings-theme-option-wrapper {
+    /*background-color: var(--decorative-light);*/
+    display: flex;
+    flex-direction: column;
+    vertical-align: center;
+    justify-content: center;
+    /*justify-content: center;*/
+    border-radius: 4px;
+    /*border: 1px solid red;*/
+    /*padding-top: 20px;*/
+    /*padding: 0 !important;*/
+    /*margin: 0 !important;*/
+    margin-top: 10px;
+    padding: 10px 0;
+    border: 1px solid var(--decorative-light);
+    cursor: pointer;
+    transition: background-color 0.3s linear;
+}
+
+.settings-theme-option-wrapper:hover {
+    background-color: var(--background-feature);
+}
+
+.active-theme {
+    background-color: var(--content-normal);
+    font-weight: 600;
+
+}
+
+.settings-theme-option-subtext {
+    padding-left: 8px;
+    font-size: 10px;
+    font-weight: 900;
+}
+
+.settings-theme-option-maintext {
+    margin: 0;
+    padding-left: 10px;
+}
+
+.debug {
+    border: 1px solid red;
+}
+
+.timeline-box {
+    transform: translateY(-10px);
+}
+
+
+.settings-content {
+    overflow-y: scroll;
+}
+

@@ -1,6 +1,5 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component, useState, useEffect } from 'react';
 import '../Calendar.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
@@ -63,9 +62,9 @@ function CalendarPopover(props) {
     let [heat, setHeat] = useState({});
     
  
-    Array.prototype.max = function() {
-        return Math.max.apply(null, this);
-    };
+    //Array.prototype.max = function() {
+    //    return Math.max.apply(null, this);
+    //};
 
     
     useEffect(()=>{
@@ -86,7 +85,7 @@ function CalendarPopover(props) {
             }));
             let values = Array.from(map.values());
             if (values.length > 0) {
-                let max = values.max();
+                let max = values.reduce((a, b) => { return Math.max(a, b) });
                 let style = getComputedStyle(document.body);
                 let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/max));
                 Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});
@@ -237,9 +236,9 @@ function CalendarUnit(props) {
     let [heat, setHeat] = useState({});
     
  
-    Array.prototype.max = function() {
-        return Math.max.apply(null, this);
-    };
+    //Array.prototype.max = function() {
+    //    return Math.max.apply(null, this);
+    //};
 
     
     useEffect(()=>{
@@ -271,7 +270,7 @@ function CalendarUnit(props) {
             //}).bind(this)));
             let values = Array.from(map.values());
             if (values.length > 0) {
-                let max = values.max();
+                let max = values.reduce((a, b) => { return Math.max(a, b) });
                 let style = getComputedStyle(document.body);
                 let hexes = values.map(e=>__util_calculate_gradient(style.getPropertyValue('--heatmap-darkest').trim().slice(1), style.getPropertyValue('--heatmap-lightest').trim().slice(1), e/max));
                 Array.from(map.keys()).forEach((e, i)=>{hm[e]=hexes[i]});

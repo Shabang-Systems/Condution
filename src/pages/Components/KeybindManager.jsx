@@ -39,11 +39,12 @@ class Keybinds extends Component {
 	["alt+0", ()=>{this.sidebar_switcher(this, this.state.sidebar_list.length-1)}], // nav to last item keybind
 	["alt+j", ()=>{this.sidebar_incrimentor(this, 1)}], // nav down keybind 
 	["alt+k", ()=>{this.sidebar_incrimentor(this, -1)}], // nav up keybind 
-	["mod+enter", ()=>{this.focusElement(this.props.abtib)}], // focus the FAB
+	["mod+shift+p", ()=>{this.props.onPaletteActivate()}], // palette keybind
+	//["mod+enter", ()=>{this.focusElement(this.props.abtib)}], // focus the FAB
     ]
 
     globalBindings = [
-	["mod+k", ()=>{this.manageQs(this)}], // toggle quick swithcher keybind 
+	["mod+k", ()=>{this.props.activateQuickSwitcher(false)}], // toggle quick swithcher keybind 
     ]
 
     //TODO: this doesnt work with clicking or like anything else but eh
@@ -144,13 +145,16 @@ class Keybinds extends Component {
     render() { 
 	return (
 	    <QuickSwitcher 
-		qs_show={this.state.qs_show} 
-		dismiss={()=> this.setState({qs_show: false})}
+		//qs_show={this.state.qs_show} 
+		qs_show={this.props.qs_show} 
+		dismiss={this.props.dismissQs}
 		items={[this.props.perspectives]}
 		paginate={this.props.paginate}
 		updateIdx={this.setSidebarIndex}
 		localizations={this.props.localizations}
 		cm={this.props.cm}
+
+		launchedWithButton={this.props.qs_launched_with_button}
 
 		//engine={this.props.engine} 
 	    //    uid={this.props.uid} 
@@ -164,5 +168,3 @@ class Keybinds extends Component {
 }
 
 export default withRouter(Keybinds);
-
-

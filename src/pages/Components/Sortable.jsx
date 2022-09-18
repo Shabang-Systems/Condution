@@ -101,13 +101,6 @@ const SortableTaskList = (props)=>{
             setTimeout(()=> setActivelyDragging(activelyDragging.filter(x=>x!==index)), 100); // wait for the lovely event bubble and say we are done
             moveApplied.current = 0; // moves applied
             currentIndex.current = 0; // currentIndex
-            //await props.gruntman.do( // call a gruntman function
-            //    "macro.applyOrder", { 
-            //        uid: props.uid, // pass it the things vvv
-            //        order: order.current, 
-            //        items: props.list.map(i=>{return {type:"task", content:i}}),
-            //    }
-            //);
 
             if (props.onSortEnd)
                 props.onSortEnd({sorted: index, sortedID: props.list[index], newOrder: order.current, movementY, moveBy, list:props.list});

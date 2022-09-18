@@ -1,5 +1,4 @@
 import { IonContent, IonPage, IonSplitPane, IonMenu, IonText, IonIcon, IonMenuButton, IonRouterOutlet, IonMenuToggle, isPlatform } from '@ionic/react';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Perspectives.css'
 import './Pages.css';
@@ -15,6 +14,9 @@ import PerspectiveEdit from './Components/PerspectiveEditor';
 
 import Perspective from "../backend/src/Objects/Perspective";
 import Project from "../backend/src/Objects/Project";
+import { withShortcut, ShortcutProvider, ShortcutConsumer } from '../static/react-keybind'
+import keybindHandler from "./Components/KeybindHandler"
+import { nanoid } from 'nanoid'
 
 import {Hookifier} from "../backend/src/Objects/Utils.ts";
 
@@ -55,13 +57,20 @@ class Perspectives extends Component {
             initialRenderingDone: false,
             perspectiveObject: null,
             taskList:[],
-            showEdit: false
+            showEdit: false,
+
+	    keybinds: [],
+	    virtualSelectIndex: 0,
+	    virtualSelectRef: null,
+	    showVirtualSelect: false,
         };
 
 
         this.updatePrefix = this.random();
         this.repeater = React.createRef(); // what's my repeater? | i.. i dont know what this does...
+        this.perspectiveNameRef = React.createRef(); // what's my repeater? | i.. i dont know what this does...
 
+	this.virtualActive = React.createRef();
 
         // AutoBind!
         autoBind(this);
@@ -74,8 +83,16 @@ class Perspectives extends Component {
     } // util func for hiding repeat
 
     componentWillUnmount() {
+
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
+
         if (this.state.perspectiveObject)
             this.state.perspectiveObject.unhook(this.reloadData);
+
+
         Hookifier.remove("QueryEngine", this.reloadData);
     }
 
@@ -88,6 +105,37 @@ class Perspectives extends Component {
         this.setState({
             perspectiveObject: perspective 
         }, this.reloadData)
+    }
+
+    handleVirtualNav(direction) {
+	const { shortcut } = this.props
+
+	this.handleItemClose()
+
+	let newSelect = (this.state.virtualSelectIndex + direction) % (this.state.taskList.length);
+	this.setState({
+	    virtualSelectIndex: newSelect,
+	    showVirtualSelect: true
+	})
+    }
+
+    handleItemOpen() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.toggleTask()
+	}
+    }
+
+    handleItemClose() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask) {
+	    this.virtualActive.current.closeTask()
+	}
+    }
+
+    handleItemComplete() {
+	if (this.virtualActive.current && this.virtualActive.current.closeTask && (this.state.showEdit === false)) {
+	    this.virtualActive.current.completeTask()
+	    this.handleVirtualNav(this.state.taskList.length-1)
+	}
     }
 
     async reloadData() {
@@ -107,7 +155,7 @@ class Perspectives extends Component {
         //
         //
         // @jemoka
-        
+
         let taskList = await this.state.perspectiveObject.execute();
         this.setState({
             taskList,
@@ -121,9 +169,36 @@ class Perspectives extends Component {
         this.props.history.push("/upcoming/");
     }
 
-    
+
+    focusName() {
+	if (this.perspectiveNameRef.current) this.perspectiveNameRef.current.focus();
+    }
+
+    async registerKeybinds() {
+	const { shortcut } = this.props
+	for (const i in this.state.keybinds) {
+	    shortcut.unregisterShortcut(this.state.keybinds[i])
+	}
+
+	if (this.props.allKeybinds !== null) {
+	    keybindHandler(this, [
+		[() => this.handleVirtualNav(1), this.props.allKeybinds.Perspectives['Navigate down'], 'Navigate down', 'Navigates down in the current project'],
+		[() => this.handleVirtualNav(this.state.taskList.length-1), this.props.allKeybinds.Perspectives['Navigate up'], 'Navigate up', 'Navigates up in the current project'],
+		[this.handleItemComplete, this.props.allKeybinds.Perspectives['Complete item'], 'Complete item', 'Completes a task, or enters a project'],
+		[this.handleItemComplete, this.props.allKeybinds.Perspectives['Complete task'], 'Complete Task', 'Completes a task, or enters a project'],
+		[this.handleItemOpen, this.props.allKeybinds.Perspectives['Open item'], `Open item `, 'Edits the currently selected task'],
+		[this.showEdit, this.props.allKeybinds.Perspectives['Edit perspective'], 'Edit perspective', 'Opens the perspective editor'],
+		[this.focusName, this.props.allKeybinds.Perspectives['Edit name'], 'Edit name', 'Focuses the perspective name'],
+		[this.handleDelete, this.props.allKeybinds.Perspectives["Delete perspective"], 'Delete perspective', 'Deletes the perspective'],
+	    ])
+	}
+    }
 
     componentDidMount() {
+	const { shortcut } = this.props
+
+	this.registerKeybinds()
+
         this.load()
         this.setState({showEdit: this.props.options === "do"});
 
@@ -133,7 +208,15 @@ class Perspectives extends Component {
         if (prevProps.id !== this.props.id) {
             prevState.perspectiveObject.unhook(this.reloadData);
             this.load();
+
+	    this.registerKeybinds()
+
         }
+
+        if (prevProps.allKeybinds !== this.props.allKeybinds) {
+	    this.registerKeybinds()
+        }
+
         if (prevProps.options !== this.props.options)
             this.setState({showEdit: this.props.options === "do"});
     }
@@ -150,8 +233,9 @@ class Perspectives extends Component {
                     isShown={this.state.showEdit} 
                     onDidDismiss={this.hideEdit}
                     perspective={this.state.perspectiveObject}
-                    startHighlighted={this.props.options === "do"}
+                    startHighlighted={this.props.options === true}
                     localizations={this.props.localizations}
+		    that={this}
                 />
                 <div className={"page-invis-drag " + (()=>{
                     if (!isPlatform("electron")) // if we are not running electron
@@ -191,6 +275,8 @@ class Perspectives extends Component {
                                         onChange={(e)=> {this.setState({perspectiveName:e.target.value})}}
                                         onBlur={(_)=>{this.state.perspectiveObject.name = this.state.perspectiveName}}
                                         value={this.state.perspectiveName} // TODO: jack this is hecka hacky
+					ref={this.perspectiveNameRef}
+					onKeyDown={(e) => { if (e.code == "Enter") e.target.blur();}}
                                     />
                                 </h1> 
                                 {/*<ReactTooltip effect="solid" offset={{top: 3}} backgroundColor="black" className="tooltips" />*/}
@@ -205,7 +291,28 @@ class Perspectives extends Component {
                     </div>
 
                     <div style={{marginLeft: 10, marginRight: 10, overflowY: "scroll"}}>
-                        {this.state.taskList.map(i => <div key={i.id}><Task cm={this.props.cm} localizations={this.props.localizations} taskObject={i} /></div>)}
+                        {this.state.taskList.map((i, idx) => <div
+			    key={i.id}
+			    style={{
+				borderRadius: "8px",
+				transition: "0.3s",
+				background: (this.state.virtualSelectIndex == idx && this.state.showVirtualSelect)? "var(--background-feature)" : "",
+			    }}
+			    onMouseEnter={(e) => {
+				this.setState({
+				    virtualSelectIndex: idx,
+				    showVirtualSelect: false,
+				})
+			    }}
+			>
+			    <Task 
+				cm={this.props.cm}
+				localizations={this.props.localizations}
+				taskObject={i}
+				ref={(idx == this.state.virtualSelectIndex)? this.virtualActive : null}
+			    />
+			</div>
+			)}
                         <Spinner ready={this.state.initialRenderingDone} />
                         <BlkArt visible={this.state.initialRenderingDone && this.state.taskList.length === 0} title={"Nothing in this perspective."} subtitle={"Add some more filters?"} />
                         <div className="bottom-helper">&nbsp;</div>
@@ -216,5 +323,5 @@ class Perspectives extends Component {
     }
 }
 
-export default withRouter(Perspectives);
+export default withShortcut(withRouter(Perspectives));
 

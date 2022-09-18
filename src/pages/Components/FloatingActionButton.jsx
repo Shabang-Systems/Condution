@@ -75,12 +75,15 @@ function ABTIB(props) {
         }}
         onKeyUp={
             (event) => {
-                if (event.key === 'Enter') {
+                if (event.key === 'Enter' && event.target.value.length > 0) {
                     event.persist(); //https://reactjs.org/docs/events.html#event-pooling
                     setisSaving(true);
                     ParseABTIBIntention(props.cm, event.target.value)
                         .then(()=>{ event.target.blur(); });
                 }
+		if (event.key === 'Escape') {
+		    event.target.blur();
+		}
             }
         }
         placeholder={ defaultValue + ((Math.random()*128 < 1) ? " ^-^" : "")}

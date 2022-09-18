@@ -1,11 +1,9 @@
-import { IonModal, IonContent, IonSearchbar, IonPage, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonModal, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Repeat.css';
 import '../Perspectives.css';
 import "react-datepicker/dist/react-datepicker.css";
-import * as chrono from 'chrono-node';
 import Select from 'react-select'
 
 const autoBind = require('auto-bind/react');
@@ -61,6 +59,10 @@ class PerspectiveEdit extends Component {
             this.fetchData();
         if (this.props.startHighlighted !== prevProps.startHighlighted && this.name.current)
             this.name.current.focus(); // focus the name
+
+	if (prevProps.isShown == false && this.props.isShown == true && this.name.current) {
+	    setTimeout(() => this.name.current.focus(), 350) // focus the name. TODO super janky.
+	}
     }
 
     async getItems(){
@@ -143,7 +145,9 @@ class PerspectiveEdit extends Component {
                 isOpen={this.props.isShown} 
                 onWillPresent={() => {}}
                 onDidDismiss={() => {
-                    if (this.props.onDidDismiss) this.props.onDidDismiss()}} style={{borderRadius: 5}
+                    if (this.props.onDidDismiss) this.props.onDidDismiss()
+		    //this.props.that.setState({showEdit: false})
+		}} style={{borderRadius: 5}
                 } 
                 cssClass={`perspective-modal ${this.state.expanded? "expanded" : ""}`}
             > 
@@ -159,7 +163,7 @@ class PerspectiveEdit extends Component {
                                     ref={this.name}
                                     value={this.state.perspectiveName} 
                                     onChange={(e)=> {this.setState({perspectiveName: e.target.value})}}
-                                    onBlur={(e)=>{this.props.perspective.name = this.state.perspectiveName}}
+				    onBlur={(e)=>{if (this.props.perspective) this.props.perspective.name = this.state.perspectiveName}}
                                     style={{minWidth: 0}}
                                     placeholder={this.props.localizations.perspective_modal_placeholder}
                                 />

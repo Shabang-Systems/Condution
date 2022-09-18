@@ -49,6 +49,8 @@ import { TagDatapackWidget, ProjectDatapackWidget } from  "../../backend/src/Wid
 
 import { RepeatRule, RepeatRuleType, Hookifier }  from "../../backend/src/Objects/Utils.ts";
 import {Controlled as CodeMirror} from 'react-codemirror2'
+import AsyncSelect from 'react-select/async';
+
 
 //import 'codemirror/theme/material.css';
 require('codemirror/mode/xml/xml');
@@ -83,8 +85,18 @@ const autoBind = require('auto-bind/react');
 
 function autosizingRenderInput ({addTag, ...props}) {
     let {onChange, value, ...other} = props
+    //let onChange = (e) => {
+    //    console.log("please")
+    //}
+    //console.log('this is getting loaded', props)
     return (
-        <AutosizeInput style={{border: 0}} name="react-tagsinput-actualinput-delegation" type='text' onChange={onChange} value={value} {...other} />
+        <AutosizeInput style={{border: 0}} name="react-tagsinput-actualinput-delegation" type='text' onChange={
+	    (e) => {
+		console.log(e)
+		onChange(e)
+	    }
+	} 
+	value={value} {...other} />
     )
 }
 
@@ -217,11 +229,14 @@ class Task extends Component {
         }
         this.initialRenderDone = false; // wait for data to load to make animation decisions
         this.me = React.createRef(); // who am I? what am I?
+        this.name = React.createRef(); // what's my name? Button Gwinnett!
         this.repeater = React.createRef(); // what's my repeater?
         this.checkbox = React.createRef(); // what's my pseudocheck
         this.TagEditorRef = React.createRef(); // what's my tag editor
         this.actualCheck = React.createRef(); // what's my (actual, non-seen) checkmark
         this.duePopover = React.createRef(); // what's my due popover?
+        this.dueInput = React.createRef(); // what's my due popover?
+        this.tagsInput = React.createRef(); // what's my due popover?
         this.deferPopover = React.createRef(); // what's my defer popover?
         this.notificationPopover = React.createRef(); // what's my notification popover?
         this.notificationCalender = React.createRef(); // what's my notification calandar?
@@ -249,6 +264,8 @@ class Task extends Component {
         if (this.props.asyncObject) {
             this.openTask();
             task = await this.props.asyncObject;
+            if (!getPlatforms().includes("mobile") && this.name.current)
+                this.name.current.focus();
         } else  {
             task = this.props.taskObject;
         }
@@ -337,9 +354,17 @@ class Task extends Component {
 
     componentWillUnmount = () => document.removeEventListener('mousedown', this.detectOutsideClick, false); // remove the listener... no memory leaks plez
 
-    toggleTask = () => this.setState(state => ({expanded: !state.expanded})); // util function to toggl a task
+    toggleTask = () => { // util function to toggl a task
+	//this.setState(state => ({expanded: !state.expanded}));
+	if (this.state.expanded) {
+	    this.closeTask()
+	} else {
+	    this.openTask()
+	}
+    }
 
     closeTask() {
+        this.name.current.blur();
         this.setState({expanded: false});
 	//if (this.props.setExpanded) { this.props.setExpanded(false, this.props.taskObject.id) }
     }
@@ -350,7 +375,12 @@ class Task extends Component {
             this.setState({expanded: true});
         else 
             this.setState({haveBeenExpanded: true, expanded:true});
-	if (this.props.setExpanded && this.props.taskObject) { this.props.setExpanded(true, this.props.taskObject.id) }
+	if (this.props.setExpanded && this.props.taskObject) {
+            this.props.setExpanded(true, this.props.taskObject.id)
+        }
+        if (!getPlatforms().includes("mobile") && this.name.current)
+            this.name.current.focus();
+
     }// util function to open a task
 
     _explode() {
@@ -454,11 +484,27 @@ class Task extends Component {
 	    //console.log("over here man")
             setTimeout(()=>Hookifier.unfreeze(), 500);
         }
-        if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) // we are newly starting open
-            this.openTask(); // open task
+        if (prevProps.startOpen !== this.props.startOpen && this.props.startOpen) { // we are newly starting open
+            this.openTask(); 
+        }
     }
 
+    completeTask() {
+	if (this.state.isComplete) {
+	    this.setState({isComplete: false}, ()=>setTimeout(()=>this.state.taskObj.uncomplete(), 800));
 
+	} else {
+	    if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
+		this.setState({activelyRepeating: true, isComplete:true}, async ()=> {
+		    setTimeout(()=>this.state.taskObj.complete(), 800)
+		    this.setState({activelyRepeating: false});
+		});
+	    else {
+		this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
+	    }
+	    Haptics.notification();
+	}
+    }
     // ready fo this?
 
     render() {
@@ -527,23 +573,7 @@ class Task extends Component {
                                         id={"task-check-"+(this.props.taskObject ? this.props.taskObject.id : "temp-creation-task")} 
                                         className="task-check"
                                         checked={this.state.isComplete}
-                                        onChange={()=>{
-                                            //console.log(this.state.taskObj.isComplete)//;
-                                            if (this.state.isComplete) {
-                                                this.setState({isComplete: false}, ()=>setTimeout(()=>this.state.taskObj.uncomplete(), 800));
-
-                                            } else {
-                                                if (this.state.taskObj.repeatRule.isRepeating && this.state.taskObj.due) 
-                                                    this.setState({activelyRepeating: true, isComplete:true}, async ()=> {
-                                                        setTimeout(()=>this.state.taskObj.complete(), 800)
-                                                        this.setState({activelyRepeating: false});
-                                                    });
-                                                else {
-                                                    this.setState({isComplete: true}, ()=>setTimeout(()=>this.state.taskObj.complete(), 800));
-                                                }
-                                                Haptics.notification();
-                                            }
-                                        }} 
+                                        onChange={this.completeTask} 
                                         style={{opacity: this.state.availability?1:0.35}}
                                     />
 
@@ -559,6 +589,8 @@ class Task extends Component {
                                     defaultValue={this.state.name} 
                                     onChange={(e)=>this.setState({name:e.target.value})} 
                                     onBlur={(_)=>{if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name}}
+                                    ref={this.name}
+                                    
                                     onKeyPress={(e)=>{
                                         // TODO why????
                                         // Not matter. It works now @TheEnquirer, but will address later.
@@ -566,11 +598,11 @@ class Task extends Component {
                                             if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name
                                     }}
                                     onFocus={(e)=>{ 
-                                        // open the task if its not open already
-                                        if(!this.state.expanded) { 
-                                            //this.openTask(); // open the task
-                                            if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs
-                                        }
+                                        // https://stackoverflow.com/questions/44983286/send-cursor-to-the-end-of-input-value-in-react
+                                        e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length);
+                                        /* if(!this.state.expanded) {  */
+                                        /*     if (getPlatforms().includes("mobile")) e.target.blur(); // blur, only if mobile to fix bugs where even in attempted readonly the cursor blurs */
+                                        /* } */
                                     }} 
                                     className={"task-name "+(this.state.expanded?"":"no-select")} 
                                     readOnly={(!this.state.expanded)} 
@@ -578,15 +610,11 @@ class Task extends Component {
                                     autoComplete="off" 
                                     placeholder={this.props.localizations.nt} 
                                     style={{opacity: this.state.availability?1:0.35, textDecoration: animatedProps.taskNameDecoration}}
-				  onKeyDown={(e) => {
-				      if (!(getPlatforms().includes("mobile")) && (e.key == "Enter")) {
-					  if (this.state.name !== this.state.taskObj.name) this.state.taskObj.name = this.state.name;
-					  this.setState({expanded: false});
-				      }
-				  }}
-				/>
+                                    onKeyDown={e => (e.key == "Enter")? this.closeTask() : undefined}
+                                />
 
-				{/* Task edit. The thing that slides open on edit. */}
+                                {/* Task edit. The thing that slides open on edit. */}
+
                                 {(() => {
                                     if (this.state.haveBeenExpanded===true)
                                         return(
@@ -594,7 +622,7 @@ class Task extends Component {
                                             {/* And load up + hide the repeat UI, too! */}
                                             <Repeat taskObj={this.state.taskObj} reference={this.repeater} isShown={this.state.showRepeat} onDidDismiss={this.hideRepeat} cm={this.props.cm} localizations={this.props.localizations}/>
                                             {/* As well as load up + hide the tag editor!*/}
-                                            <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm} localizations={this.props.localizations}/>
+                                            <TagEditor reference={this.TagEditorRef} isShown={this.state.showTagEditor} onDidDismiss={()=>this.setState({showTagEditor: false})} localizations={this.props.localizations} cm={this.props.cm}/>
 
                                             <animated.div className="task-edit" style={{opacity: animatedProps.taskEditOpacity, overflow: "hidden",maxHeight: animatedProps.taskEditMaxHeight}}>
 
@@ -618,7 +646,7 @@ class Task extends Component {
 
                                                     //options={options}
                                                     options={{
-                                                        mode: 'gfm',
+							mode: 'gfm',
                                                         theme: `condution ${this.state.descExpanded? "expanded" : ""} ${this.state.iconHovering? "bghvr" : ""}`,
                                                         lineNumbers: false,
                                                         lineWrapping: true,
@@ -629,15 +657,25 @@ class Task extends Component {
                                                         spellcheck: true,
                                                         matchBrackets: true,
                                                         continueList: true,
-                                                        newineAndIndentContinueMarkdownList: true,
-                                                        //vimMode: true,
+							newineAndIndentContinueMarkdownList: true,
+							//vimMode: true,
 
                                                         //fullScreen: true,
                                                     }}
                                                     onBeforeChange={(editor, data, value) => {
-                                                        this.setState({desc: value});
+							if (data.text == "\t") {
+							//    console.log(value, data, editor)
+							//    //const form = event.target.form;
+							//    //const index = [...form].indexOf(event.target);
+							//    //form.elements[index + 1].focus();
+							//    //event.preventDefault();
+							    this.dueInput.current.focus()
+							} else {
+							    this.setState({desc: value});
+							}
                                                         //console.log(value, editor, data)
                                                     }}
+
                                                     onBlur={(_)=>{
                                                         if (this.state.desc !== this.state.taskObj.description) this.state.taskObj.description = this.state.desc
                                                     }}
@@ -772,7 +810,9 @@ class Task extends Component {
                                                                 return (
                                                                     <input 
                                                                         tabIndex='0'
-                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} onKeyPress={(e)=>{
+                                                                        className={"task-datebox "+this.state.decoration} readOnly={(getPlatforms().includes("mobile")) ? true : false} defaultValue={value} 
+									ref={this.dueInput}
+								    onKeyPress={(e)=>{
                                                                             let d = chrono.parseDate(e.target.value);
                                                                             if (e.key==="Enter" && d)
                                                                                 this.setState({dueDate: d}, ()=>{this.state.taskObj.due= d});
@@ -832,8 +872,14 @@ class Task extends Component {
                                                 </div>
                                                 <div className="tag-container" style={{display: this.props.cm.isInWorkspace ? "inline-flex":"none", marginBottom: 8, marginLeft: 5, alignItems: "center"}}>
                                                     <i className="fas fa-user-plus" style={{marginRight: 10, color: "var(--task-icon)", fontSize: 12}}></i>
-                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} inputProps={{className: "react-tagsinput-input delegation-input"}} value={this.state.delegations} onChange={(list)=>{
+                                                    <TagsInput className="react-tagsinput delegation-textbox" tagProps={{className: "react-tagsinput-tag delegation-delegate"}} 
+					    inputProps={{
+						className: "react-tagsinput-input delegation-input",
+					    }}
+							//ref={this.tagsInput}
+					    value={this.state.delegations} onChange={(list)=>{
                                                         let isValid = true;
+						//console.log(list, "list!!")
                                                         list.filter(e=>!this.state.delegations.includes(e)).forEach(newAccount => {
                                                             if (/\w+@\w+\.\w+/.test(newAccount))
                                                                 this.state.taskObj.delegateTo(newAccount);
@@ -846,7 +892,9 @@ class Task extends Component {
 
                                                         if (isValid)
                                                             this.setState({delegations: list});
-                                                    }} renderInput={autosizingRenderInput} inputProps={{placeholder: this.props.localizations.workspace_email}} />
+                                                    }} 
+						    renderInput={autosizingRenderInput} 
+						    inputProps={{placeholder: this.props.localizations.workspace_email}} />
                                                 </div>
 
                                                 <div>
@@ -886,6 +934,14 @@ class Task extends Component {
                                                             styles={{ menuPortal: base => ({ ...base, zIndex: "99999 !important" }) }}
                                                             menuPortalTarget={document.body}
                                                             value={this.state.tagDatapack.filter(option => this.state.tags.includes(option.value))}
+							    onKeyDown={(e)=>{
+								if (e.key == "Escape") {
+								    e.preventDefault()
+								    this.tagsInput.current.blur()
+								    console.log("fasdf")
+								}
+							    }}
+							    ref={this.tagsInput}
                                                             onChange={async (newValue, _) => {
                                                                 let tags = await Promise.all(newValue?newValue.map(async (e) => { // for each tag
                                                                     if (e.__isNew__) {// if it's a new tag

@@ -32,6 +32,14 @@ ion-modal.auto-height {
     padding: 10px;
 }
 
+.rollingreleasenote-inside {
+    background: var(--background-feature);
+    //width: unquote("min(600px, 80vw)");
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 1rem;
+}
+
 .condution-callout {
     display: inline-block;
     margin-right: 10px;

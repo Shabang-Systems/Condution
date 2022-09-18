@@ -333,6 +333,7 @@ class TagsInput extends React.Component {
   }
 
   handleKeyDown (e) {
+    console.log(e, "WHAAAAAAAAASD")
     if (e.defaultPrevented) {
       return
     }
@@ -365,6 +366,7 @@ class TagsInput extends React.Component {
   }
 
   handleChange (e) {
+    //console.log(e, "jsadf")
     let {onChangeInput} = this.props
     let {onChange} = this.props.inputProps
     let tag = e.target.value

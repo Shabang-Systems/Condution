@@ -1,6 +1,5 @@
 import { IonModal, IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 import { Dropdown } from 'react-bootstrap';
-//import { chevronForwardCircle, checkmarkCircle, filterOutline, listOutline, bicycle } from 'ionicons/icons';
 import React, { Component } from 'react';
 import './Repeat.css';
 //import OutsideClickHandler from 'react-outside-click-handler';
