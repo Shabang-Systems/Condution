@@ -15,6 +15,9 @@ import KeybindPicker from "./Components/KeybindPicker"
 //import { Storage } from '@capacitor/storage';
 import { Preferences } from '@capacitor/preferences';
 import $ from "jquery";
+// Detect whether is mobile
+import { getPlatforms } from '@ionic/react';
+
 
 const history = isPlatform("electron") ? createHashHistory() : createBrowserHistory({basename: process.env.PUBLIC_URL});
 
@@ -239,16 +242,7 @@ const Settings = (props) => {
 
 export default withShortcut(Settings)
 
-const bundles = [
-    {
-	name: "Keybinds",
-	title: <>
-	    Bind 'em keys!
-	</>,
-	content: (props) => (<KeybindPicker
-
-		/>)
-    },
+let bundles = [
     {
 	name: "Theme",
 	title: <>
@@ -321,3 +315,14 @@ const bundles = [
     },
 ]
 
+if (!getPlatforms().includes("mobile")) {
+	bundles.push({
+		name: "Keybinds",
+		title: <>
+			Bind 'em keys!
+		</>,
+		content: (props) => (<KeybindPicker
+
+		/>)
+	});
+}
