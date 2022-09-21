@@ -5390,11 +5390,6 @@ caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.300011
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001370.tgz#0a30d4f20d38b9e108cc5ae7cc62df9fe66cd5ba"
   integrity sha512-3PDmaP56wz/qz7G508xzjx8C+MC2qEm4SYhSEzC9IBROo+dGXFWRuaXkWti0A9tuI00g+toiriVqxtWMgl350g==
 
-capacitor-native-settings@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/capacitor-native-settings/-/capacitor-native-settings-4.0.0.tgz#c06e38f44d49e8a69437655e6e7339baf260dded"
-  integrity sha512-H8lNw+zCVhNveb4tbI22CAYgarRjMV5ETcSyo5ehAlHyHiE3aGgDoVjF6ne525wGu685dyFDFXAKKbSaz8sk0A==
-
 capture-exit@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/capture-exit/-/capture-exit-2.0.0.tgz#fb953bfaebeb781f62898239dabb426d08a509a4"
