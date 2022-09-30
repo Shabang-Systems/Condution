@@ -1,6 +1,6 @@
 {
   "name": "Condution",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "dependencies": {
     "@babel/helper-string-parser": "^7.18.10",
     "@capacitor-community/electron": "^3.0.1",
