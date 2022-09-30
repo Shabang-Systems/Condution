@@ -1832,10 +1832,10 @@
   dependencies:
     tslib "^2.1.0"
 
-"@capacitor/core@^3.3.4":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.7.0.tgz#2278b49aae18b63661c60637d35a4b9bf48ca340"
-  integrity sha512-Y6Wrt1Im246fIfAIAsOElqPkBgzV1w9jG/NnBtxCb5kJ6IGtszl9fOvJ3WdGAfh9UOnEBr4m3iaz2L7ZGkQzWg==
+"@capacitor/core@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-4.3.0.tgz#3f769b5b3791ce51903b0965f9af587d8db7977e"
+  integrity sha512-zb225feaiHYcttHqw7SnKVj9gjOh3yoM2ol0Efky4kd80qZvqPHt7nRI1XZmGUKid5j3AVggULd5rRke5OEOXQ==
   dependencies:
     tslib "^2.1.0"
 
