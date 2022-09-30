@@ -42,7 +42,7 @@
     "mousetrap-record": "^1.0.1",
     "nanoid": "^4.0.0",
     "node-polyfill-webpack-plugin": "^2.0.0",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "normalize-url": "^4.5.1",
     "path-browserify": "^1.0.1",
     "react": "17",
