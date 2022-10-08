@@ -1,6 +1,9 @@
 import { IonFab, IonFabButton, IonFabList, IonIcon } from '@ionic/react';
 import { useKBar } from 'kbar';
 
+// Detect whether is mobile
+import { getPlatforms } from '@ionic/react';
+
 export default function DropUpMenu({ settingsButtonComponent, activateQuickSwitcher,localizations }) {
     const { query } = useKBar();
 
@@ -18,9 +21,7 @@ export default function DropUpMenu({ settingsButtonComponent, activateQuickSwitc
 	    >
                 <i className="fas fa-none" />
             </IonFabButton>
-	    {
-		settingsButtonComponent
-	    }
+            {!getPlatforms().includes("mobile")? settingsButtonComponent: <div/>}
             <IonFabButton color="light" onClick={activateQuickSwitcher} >
                 <i className="fas fa-plane-departure"/>
             </IonFabButton>
