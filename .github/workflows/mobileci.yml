@@ -98,6 +98,7 @@ jobs:
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
               git checkout -- fastlane/report.xml
+              git config pull.rebase false
               git commit -a -m "[ci skip] [CI] Bump iOS build code"
               git pull --commit github ${GITHUB_REF}
               git push -f github HEAD:${GITHUB_REF}
@@ -174,6 +175,7 @@ jobs:
           run: |
               git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
               git checkout -- fastlane/report.xml
+              git config pull.rebase false
               git commit -a -m "[ci skip] [CI] Bump Android build code"
               git pull --commit github ${GITHUB_REF}
               git push -f github HEAD:${GITHUB_REF}
