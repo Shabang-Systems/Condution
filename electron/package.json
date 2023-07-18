@@ -34,7 +34,7 @@
     "extends": null,
     "appId": "cf.shabang.condution",
     "productName": "Condution",
-    "copyright": "Copyright © 2021 Shabang Systems, LLC and the Condution Project Contributors.",
+    "copyright": "Copyright © 2023 Shabang Systems, LLC and the Condution Project Contributors.",
     "directories": {
       "buildResources": "resources"
     },
