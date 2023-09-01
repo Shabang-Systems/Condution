@@ -146,8 +146,10 @@ jobs:
           run: yarn global add @ionic/cli @capacitor/cli
         - name: Install Capacitor
           run: yarn add @capacitor/core
-        - name: Install Ruby
-          run: sudo apt install ruby ruby-dev
+        - name: Setup Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: 2.6
         - name: Install Bundle
           run: sudo gem install bundler
         - name: Set Locale
