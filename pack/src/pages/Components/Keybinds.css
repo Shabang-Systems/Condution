@@ -1,0 +1,81 @@
+.keybind-display {
+    transition: 0.2s ease-in-out;
+    margin-left: 10px;
+    background: var(--background-feature);
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    line-height: 1.8em;
+    display: block;
+    align-content: space-between;
+    /*border-radius: 5px;*/
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    border-radius: 5px;
+    border-bottom-left-radius: 5px;
+    caret-color: transparent;
+    /*max-width: 50px;*/
+    /*margin-bottom: -10px;*/
+
+    /*&:hover { */
+    /*    background: var(--content-normal-alt);*/
+    /*}*/
+}
+
+.round-right {
+    border-radius: 5px;
+}
+
+
+.help {
+    border: 1px solid red;
+}
+
+.keybind-display:hover {
+    background: var(--decorative-light);
+}
+
+.keybind-deleter {
+    /*color: red !important;*/
+    /*position: relative;*/
+    /*top: -8px;*/
+    /*left: -8px;*/
+    /*z-index: 100;*/
+    /*background: var(--decorative-light);*/
+    /*border-radius: 5px;*/
+    margin-left: -2px;
+    border-radius: 0;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background: var(--background-feature);
+    transition: 0.2s ease-in-out;
+    max-width: 200px;
+    min-width: 10px;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    max-height: 1.8em;
+    line-height: 1.8em;
+    display: block;
+    align-content: space-between;
+    /*border-radius: 5px;*/
+    padding-left: 5px;
+    padding-right: 8px;
+    display: flex;
+    font-weight: 900;
+    border-left: 1px solid var(--decorative-light);
+
+}
+
+
+.keybind-deleter:hover {
+    background: var(--decorative-light);
+}
+
+.complete-container {
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+}
+
+
+

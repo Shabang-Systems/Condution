@@ -1,0 +1,139 @@
+
+a {
+    text-decoration: none !important;
+}
+
+#main-split {
+    --side-max-width: 100px;
+}
+
+#main-menu {
+    --background: var(--menu-background);
+    border: 0;
+}
+
+#main-menu ion-content {
+    --background: var(--menu-background);
+    --padding-start: 15px;
+    --padding-end: 15px;
+    --padding-top:min(env(safe-area-inset-top), 35px);
+}
+
+#menu-hero {
+    padding: 10px;
+    font-weight: 600;
+    box-shadow: 0px 1px 2px var(--menu-semiaccent-background);
+    color: var(--theme);
+}
+
+.menu-decoration {
+    font-size: 11px;
+    color: var(--menu-action);
+}
+
+.menu-sublabel {
+    margin-top: 15px;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.menu-item {
+    font-weight: 500;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-top: 7px;
+    padding-left: 10px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    font-size: 15px;
+    border-radius: 5px;
+    color: var(--menu-text);
+    transition: background-color 0.5s;
+    cursor: default;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+}
+
+.menu-item:hover:not(.menu-item-selected) {
+    background: var(--menu-semiaccent-background);
+}
+
+.bottomitem {
+    display: inline;
+}
+
+#bottombar {
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    /* padding: 10px; */
+}
+
+#settings {
+    height: auto;
+    width: 0;
+    padding-right: 10%;
+}
+
+#logout {
+    padding-left:15px;
+    flex-grow: 1;
+}
+
+#logout:hover {
+    background: var(--menu-accent-background);
+}
+
+
+.menu-item-selected {
+    background: var(--menu-accent-background);
+}
+
+ion-icon {
+    transform: translateY(2.5px);
+    margin-right: 5px;
+}
+
+#menu-content.darwin {
+    --padding-top: 13px;
+}
+
+#main.darwin {
+    --padding-top: 15px !important;
+}
+
+#page-header.darwin {
+    height: 30px;
+    -webkit-app-region: drag;
+    position: fixed;
+}
+
+#page-header.normal {
+    display: none;
+}
+
+#main {
+    --padding-bottom: 30px;
+}
+
+.add {
+    float: right;
+    transform: translateY(-2px);
+    padding: 5px;
+    border-radius: 1px;
+    transition: background 1s;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.workspace-toast {
+    --background: var(--background-feature);
+    --button-color: var(--content-normal-accent);
+    --color: var(--content-normal-alt);
+}
+
+
+
+* {
+    scrollbar-color: transparent transparent;
+}

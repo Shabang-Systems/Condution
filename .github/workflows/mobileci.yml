@@ -161,7 +161,7 @@ jobs:
         - name: Install Fastlane's Versiony Bumpy Plugin
           run: bundle exec fastlane add_plugin versioning_android
         - name: Install Android SDK
-          run: sudo apt update && sudo apt install android-sdk
+          run: sudo apt update && sudp apt upgrade && sudo apt install android-sdk
         - name: Make build directory
           run: mkdir build
         - name: Download built web assets

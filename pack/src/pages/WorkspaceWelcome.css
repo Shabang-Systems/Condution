@@ -1,0 +1,66 @@
+.workspace-title {
+    margin: 0;
+    font-weight: 600;
+    color: var(--content-normal-accent);
+}
+
+.workspace-welcome-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.workspace-subtitle {
+    color: var(--content-normal-accent);
+    margin-top: 10px;
+    line-height: 1.7;
+    font-weight: 200;
+    font-size: 15px;
+}
+
+.workspace-forbidden {
+    margin-top: 10px;
+    padding: 3px 10px;
+    color: var(--content-normal);
+    background-color: var(--content-normal-accent);
+    font-weight: 600;
+    border-radius: 5px;
+}
+
+.workspace-error {
+    color: var(--content-normal-accent);
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.button-right {
+    margin-right: 8px;
+}
+
+.continue-button {
+    font-weight: 600;
+    color: var(--content-normal-accent);
+    background-color: var(--special);
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.continue-button:hover {
+    background-color: var(--special-alt);
+}
+
+.link {
+    color: var(--content-normal-alt);
+}
+
+.link:hover {
+    color: var(--content-normal-accent);
+}
+
+

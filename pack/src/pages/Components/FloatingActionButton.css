@@ -1,0 +1,19 @@
+#abtib {
+    height: 2em;
+    z-index: 1;
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    border: 0px;
+    border-radius: 10px;
+    background-color: var(--quickadd);
+    color: var(--quickadd-text);
+    padding: 10px;
+    font-size: 15px;
+}
+
+#abtib::placeholder {
+    color: var(--quickadd-placeholder);
+}
+
+

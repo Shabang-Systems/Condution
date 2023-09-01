@@ -1,0 +1,28 @@
+
+.fetch-more { /* fetch more css */ 
+    font-size: 12px;
+    color: var(--completed-fetch-more-text);
+    padding-left: 17px;
+    margin-bottom: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition-duration: 0.3s;
+
+}
+
+.fetch-more:hover { /* fetch more on hover */
+    color: var(--completed-fetch-more-hover)
+}
+
+.loader {
+    animation: phase 1.6s infinite; /* define animation time */
+}
+
+/* keyframes */
+@keyframes phase {
+  0% {opacity: 0.7}
+  50% {opacity: 0.3}
+  100% {opacity: 0.7}
+}
+
+

@@ -1,0 +1,236 @@
+/* Perspectives CSS!*/
+
+.perspective-icon {
+    border-radius: 50%;
+    border: 3px solid;
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+    transform: scale(0.9);
+    transform: translateX(-4px);
+}
+
+.pbuilder-pname {
+    background: var(--task-clickbox-background);
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.pbuilder-pname:hover {
+    background: var(--task-clickbox-accent-background);
+}
+
+.pbuilder-pname:focus {
+    background: var(--task-clickbox-accent-background);
+}
+
+
+
+.perspective-modal {
+    overflow-y: hidden;
+    /*--height: 148px;*/
+    --max-height: 200px;
+    --height: 200px;
+    /*--width: 460px;*/
+    --width: 80%;
+    --max-width: 503px;
+    --ion-backdrop-opacity: 0.5;
+    transition: 0.3s;
+}
+
+@media (max-width: 585px) {
+    .perspective-modal {
+        --height: 230px;
+    }
+}
+
+@media (min-width: 585px) { 
+    .perspective-modal {
+        --height: 165px;
+    }
+}
+
+
+.perspective-header {
+    background-color: var(--perspective-builder-header-background);
+    padding: 12px;
+    color: var(--perspective-builder-header-text);
+    text-overflow: ellipsis;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+
+.build-input-edit {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--perspective-query-string);
+    font-family: "Courier New", Courier, monospace;
+    outline: 0;
+    background: transparent;
+    border: 0px solid red;
+    transition: background 0.3s;
+    padding: 5px;
+    border-radius: 3px;
+    width: 100%;
+    border: 1px solid var(--perspective-query-border);
+
+}
+
+
+.build-input-edit:hover {
+    background: var(--perspective-query-hover);
+}
+
+.build-input-edit:focus {
+    background: var(--perspective-query-background);
+}
+
+
+.build-input {
+    display: flex;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+    background: transparent;
+
+
+}
+
+.perspective-select {
+    background-color: var(--perspective-select-background) !important;
+    color: var(--perspective-select-text) !important;
+    box-shadow: 0 0 0 0 transparent !important;
+    border: 0;
+    border-radius: 3px;
+    padding: 4px 7px;
+    margin-left: 3px;
+    margin-right: 0px;
+    font-size: 15px;
+    transition: 0.3s;
+    min-width: 115px;
+    display: inline-block;
+
+}
+
+.perspective-select::part(icon) {
+    display: none;
+}
+
+.pbasic-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+
+
+/*.select-icon {*/
+    /*display: none !important*/
+/*}*/
+
+.perspective-select:hover {
+    background-color: var(--perspective-select-focused) !important;
+}
+
+
+.perspective-basic-row {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    /*justify-content: space-between;*/
+
+}
+
+
+.perspective-label {
+    color: var(--perspective-builder-label);
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.help-icon {
+    margin-left: 15px;
+    font-size: 18px;
+    color: var(--perspective-builder-help-icon);
+    transition: 0.2s;
+    transform: translate(9px, 1px);
+    cursor: pointer;
+}
+
+.help-icon:hover {
+    color: var(--perspective-builder-help-icon-hover);
+}
+
+
+.edit-close {
+    right: 0;
+    color: var(--repeat-popover-close);
+    transition: color 0.5s;
+}
+
+.edit-close:hover {
+    color: var(--repeat-popover-close-hover);
+    cursor: pointer;
+}
+
+.check {
+    color: var(--repeat-popover-close);
+    transition: 0.25s;
+}
+
+.check:hover {
+    color: var(--repeat-popover-close-hover);
+}
+
+
+.dropdown {
+    overflow-y: hidden;
+    margin-top: 5px;
+    /*text-align: center;*/
+    /*color: var(--decorative-light-alt);*/
+    /*font-size: 15px;*/
+    /*padding-top: 1px;*/
+    /*z-index: 10000;*/
+    background: var(--heatmap-lightest);
+    border-radius: 5px;
+    height: 100%;
+}
+
+.expanded {
+    --max-height: 320px;
+    --height: 320px;
+}
+
+.search-add {
+    overflow-y: hidden;
+    --background: var(--decorative-light);
+    --border-radius: 5px;
+    --box-shadow: 0px 13px 39px var(--qs-shadow-intensity) var(--qs-shadow-color);
+    /*--color: var(--content-normal);*/
+    /*--icon-color: var(--content-normal);*/
+    /*--cancel-button-color: var(--content-normal);*/
+}
+
+.poption-line {
+    display: flex;
+    width: 100%;
+    border-radius: 5px;
+    cursor: default;
+    transition: background-color 0.2s;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+
+}
+
+.poption-text-hover {
+    background-color: var(--decorative-light);
+}
+
+.modal-content-wrapper {
+    overflow-y: hidden;
+}
+

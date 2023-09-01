@@ -1,0 +1,137 @@
+/*TODO: make this work in light mode. */
+.qs_modal {
+    --max-height: 162px;
+    /*--height: 150px;*/
+    --width: 80%;
+    --max-width: 520px;
+    --ion-backdrop-opacity: 0.5;
+    --border-radius: 8px;
+
+}
+
+.search-bar {
+    /*--background: var(--content-normal-accent);*/
+    --background: var(--background-feature);
+    --border-radius: 5px;
+    /*--box-shadow: 0px 13px 39px -12px rgba(0,0,0,0.91);*/
+    --box-shadow: 0px 13px 39px var(--qs-shadow-intensity) var(--qs-shadow-color);
+    --color: var(--decorative-light-alt);
+}
+
+
+.option-line {
+    display: flex;
+    width: 100%;
+    border-radius: 5px;
+    /*padding-left: 10px;*/
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
+    /*margin-bottom: 0px;*/
+    /*margin-top: 0px;*/
+    cursor: default;
+    transition: background-color 0.2s;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+
+}
+
+.option-text-hover {
+    background-color: var(--background-feature);
+}
+
+.option-text {
+    display: inline-block;
+    flex-grow: 10;
+    /*width: 100%;*/
+    font-weight: 600;
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 15px;
+    border-radius: 2px;
+    color: var(--menu-label);
+    transition: background-color 0.2s;
+    cursor: default;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+}
+
+
+.option-icon {
+    display: inline-block;
+    color: var(--content-normal-accent);
+    padding-top: 8px;
+    padding-left: 15px;
+}
+
+.option-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-x: auto;
+    max-height: 110px;
+    padding-bottom: 8px;
+
+
+}
+
+.modal-content-wrapper {
+
+}
+
+
+@keyframes fadeIn {
+    0% {
+	opacity: 0;
+    }
+    70% {
+	opacity: 0;
+    }
+    100% {
+	opacity: 1;
+    }
+}
+
+.tip {
+    animation: fadeIn 2.5s ease;
+}
+
+
+.key {
+    --kbd-color-background: var(--background-feature);
+    --kbd-color-border:     var(--decorative-light-alt);
+    --kbd-color-text:       var(--decorative-light-accent);
+
+    background-color: var(--kbd-color-background);
+    color: var(--kbd-color-text);
+
+    border-radius: 0.25rem;
+
+    border: 1px solid var(--kbd-color-border);
+
+    box-shadow: 0 2px 0 1px var(--kbd-color-border);
+
+    cursor: default;
+
+    font-family: var(--font-family-sans-serif);
+
+    font-size: 0.75em;
+
+    line-height: 1;
+
+    /*min-width: 0.75rem;*/
+    /*display: block;*/
+    text-align: center;
+
+    padding: 4px;
+    margin-right: 4px;
+    /*position: relative;*/
+    top: -1px;
+
+    &:hover {
+	box-shadow: 0 1px 0 0.5px var(--kbd-color-border);
+	top: 1px;
+    }
+}

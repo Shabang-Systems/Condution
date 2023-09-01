@@ -1,0 +1,146 @@
+ion-modal.auto-height {
+    &.bottom {
+        align-items: flex-end;
+    }
+
+    --height: auto;
+
+    .ion-page {
+        position: relative;
+        display: block;
+        contain: content;
+
+        .inner-content {
+            max-height: 80vh;
+            overflow: auto;
+            padding: 10px;
+        }
+    }
+}
+
+.workspace-popover {
+    --background: transparent;
+    --width: min(600px, 80vw);
+    --box-shadow: 0 !important;
+}
+
+.workspace-inside {
+    background: var(--ion-background-color);
+    width: unquote("min(600px, 80vw)");
+    border-radius: 5px;
+    padding: 10px;
+}
+
+
+.editable-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--page-editable-text);
+    outline: 0;
+    background: transparent;
+    border: 0px solid red;
+    transition: background 0.3s;
+    padding: 5px;
+    border-radius: 3px;
+    /*width: 95%;*/ /* IF YOU DO THIS THE HEADER BREAKS ON MOBILE */
+    transform: translateY(-1px);
+}
+
+.workspace-header {
+    width: 100%;
+    display: flex;
+    align-items:baseline;
+    margin-bottom: 5px;
+    //flex-wrap: wrap;
+}
+
+.workspace-callout {
+    color: var(--content-normal-accent);
+    font-weight: 600;
+    margin-right: 7px;
+}
+
+.workspace-input {
+    flex-grow: 10;
+    //background: var(--background-feature);
+    margin-bottom: 10px;
+    transform: translateY(-1px);
+}
+
+
+@media (max-width: 575px) { 
+    .workspace-callout {
+        font-size: 14px;
+    }
+
+    .workspace-input {
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 576px) { 
+    .workspace-callout {
+        font-size: 16px;
+    }
+
+    .workspace-input {
+        font-size: 15px;
+    }
+}
+
+    
+.react-tagsinput {
+    border-radius: 5px;
+    border: 0;
+    background: var(--background-feature);
+    flex-grow: 10;
+    margin-left: 12px;
+    cursor: text;
+}
+
+.react-tagsinput-tag {
+    background: var(--special);
+    border: 0;
+    color: var(--content-normal-alt);
+    border-radius: 3px;
+}
+
+.react-tagsinput-input {
+    border: 0;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+}
+
+input[name="react-tagsinput-actualinput"] {
+    border: 0;
+    background: 0;
+    -webkit-appearance: none;
+    color: var(--content-normal-accent);
+}
+
+.workspace-link {
+    border: 0;
+    -webkit-appearance: none;
+    color: var(--decorative-light-accent);
+    margin-left: 15px;
+    background: var(--background-feature);
+    flex-grow: 10;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 5px 6px;
+}
+
+.linkaccess {
+    margin-left: 15px;
+    padding: 5px 8px;
+    background: var(--special-alt);
+    color: var(--content-normal-alt) !important;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+

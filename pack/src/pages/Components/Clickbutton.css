@@ -1,0 +1,62 @@
+.clickbutton {
+    color: var(--action-button-body);
+    width: 22px;
+    height: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius:5px;
+    transition: background-color 0.3s linear;
+    background-color: inherit;
+    cursor: pointer;
+    margin-right: 3px;
+    display: inline-flex;
+}
+
+.clickbutton:hover {
+    background-color: var(--action-button-feature);
+}
+
+.cilckbutton-active {
+    background-color: var(--action-button-selected)!important;
+}
+
+
+.taskbutton {
+    color: var(--task-button-text) !important;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius:5px;
+    /*transition: background-color 0.3s linear;*/
+    background-color: inherit;
+    cursor: pointer;
+    margin-right: 10px;
+    display: inline-flex;
+}
+
+/*.taskbutton:hover {*/
+    /*background-color: var(--task-button-feature);*/
+/*}*/
+
+.taskbutton-active {
+    background-color: var(--task-button-selected)!important;
+}
+
+.clickicon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    font-size: 13px;
+}
+
+
+.taskicon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+    font-size: 13px;
+}
+

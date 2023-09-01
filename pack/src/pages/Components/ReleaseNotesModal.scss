@@ -1,0 +1,89 @@
+ion-modal.auto-height {
+    &.bottom {
+        align-items: flex-end;
+    }
+
+    --height: auto;
+
+    .ion-page {
+        position: relative;
+        display: block;
+        contain: content;
+
+        .inner-content {
+            max-height: 70vh;
+            overflow: auto;
+            padding: 2vh;
+        }
+    }
+}
+
+.releasenote-popover {
+    --background: transparent;
+    --width: min(600px, 80vw);
+    --box-shadow: 0 !important;
+    //--padding: 20px;
+}
+
+.releasenote-inside {
+    background: var(--ion-background-color);
+    width: unquote("min(600px, 80vw)");
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.rollingreleasenote-inside {
+    background: var(--background-feature);
+    //width: unquote("min(600px, 80vw)");
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 1rem;
+}
+
+.condution-callout {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.condution-name {
+    color: var(--content-normal-accent);
+    font-weight: 600;
+    font-size: 32px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif !important; 
+}
+
+.condution-vn {
+    color: var(--content-normal-alt);
+    margin-left: 5px;
+}
+
+.releasenotes {
+    background: var(--content-normal-alt);
+    color: var(--content-normal);
+    display: inline-block;
+    font-weight: 600;
+    padding: 4px;
+    border-radius: 5px;
+    transform: translateY(-4px);
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.header {
+    font-weight: 600;
+    color: var(--content-normal-accent);
+    font-size: 22px;
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.content {
+    font-size: 15px;
+    margin-bottom: 7px;
+    color: var(--content-normal-alt);
+    padding: 8px;
+}
+
+
+

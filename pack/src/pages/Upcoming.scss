@@ -1,0 +1,115 @@
+.datebar {
+    background-color: var(--decorative-light);
+    margin: 10px 30px;
+    height: 50px;
+    flex-grow: 2;
+    border-radius: 5px;
+      display: flex !important;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+}
+
+.workspace-name {
+    display: inline-block;
+    background: var(--background-feature);
+    margin-top: 3px;
+    //margin-left: 10px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 17px;
+    transform: translateY(-1.5px);
+    cursor: pointer;
+}
+
+.workspaces-popover {
+    --background: var(--ion-background-color);
+    --width: 200px;
+    font-size: 14px;
+    margin-top: 3px;
+    margin-left: 5px;
+}
+
+.workspace-name-container {
+    display: flex;
+    align-items: center;
+}
+
+.workspace-name-selection {
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: var(--content-normal-alt);
+    transition: background 0.3s;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    flex-grow: 10;
+}
+
+.workspace-name-selection:hover {
+    background: var(--background-feature);
+}
+
+.workspace-edit {
+    display: inline-block;
+    padding: 10px;
+    font-size: 12px;
+    color: var(--content-normal-alt) !important;
+    transform: translateY(-1px);
+    transition: background 0.3s;
+}
+
+.workspace-edit:hover {
+    background: var(--background-feature);
+}
+
+
+.timeline-box {
+    display: flex;
+    position: sticky;
+    background: var(--background);
+    z-index: 1;
+    top: -1px;
+}
+
+.timeline-line {
+    height: 1px;
+    transform: translateY(2px);
+    background: var(--background-feature);
+    margin-left: 10px;
+}
+
+.timeline-text {
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 5px;
+    color: var(--timeline-text);
+    text-align: right;
+    font-weight: 200
+}
+
+.timeline-weekname {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.timeline-line-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+    flex-grow: 1;
+}
+
+.timeline-button {
+    color: var(--timeline-button); 
+    transition: 0.3s;
+}
+
+.timeline-button:hover {
+    color: var(--timeline-button-hover); 
+}
+
